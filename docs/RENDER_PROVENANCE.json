@@ -30,11 +30,11 @@
   "n_canonical_features": 4,
   "n_features": 12,
   "provenance_schema": "content-addressed-v2",
-  "render_fingerprint": "a1d50ea5b596c6102e1400e5591478f96fa492e29622233f4ef073b73952cda4",
+  "render_fingerprint": "58732c77b518524b18fd1d960a4657c2f5fc022f52b287caa37d5157622d8c71",
   "render_script": "scripts/render_capability_tables.py",
   "source_sha256": {
-    "scripts/render_capability_tables.py": "f182fc28ce17e048595a85066bb5af8f7f3053e7e32661c73a8227c8483407a9",
-    "scripts/sync_test_counts.py": "29a7ecf9cb813aed99eee0be58bbc98db975491af168926f2006b70487778a3a",
+    "scripts/render_capability_tables.py": "95d8b90bf1874bd65b0a4845dadeaac577178ef3cc84b6c1915a472a73deac09",
+    "scripts/sync_test_counts.py": "588f80a2ddb3f8e45ac39c4e77ad327e96001a068b42c564b19646b07fe17e4e",
     "src/rabbit/config/backend_capabilities.py": "3b5f35ae94436f7fa2dddb4e1277a11680f4cdaf381e2a949e727610be021f20",
     "src/rabbit/config/claim_gates.py": "577eaf06c17aa5b460764378f874b0b48f7a65fe0d46db6ad5d4a0b0a35167db",
     "src/rabbit/config/feature_capabilities.py": "7344aaedc222dabdd7d71ae50aff8e1b26901fb950ae529b270299fd73fb0625"

@@ -66,7 +66,7 @@ pred = canonical_forward_solver(Sigma_H=0.05, backend="auto")
 <!-- END:README_QUICKSTART -->
 
 <!-- BEGIN:TEST_COUNTS -->
-Overlapping marker subsets: **106 gold** BBN regression gates | 244 release smoke | `@production`: 443 total, 393 production-and-not-slow | build-env total: 2538 tests across 279 files
+Overlapping marker subsets: **105 gold** BBN regression gates | 245 release smoke | `@production`: 444 total, 400 production-and-not-slow | build-env total: 2421 tests across 280 files
 <!-- END:TEST_COUNTS -->
 
 <!-- BEGIN:README_FOOTER -->
