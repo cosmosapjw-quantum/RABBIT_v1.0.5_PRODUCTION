@@ -14,7 +14,7 @@
     "README.md#README_HEADER": "257cb494cdf727a4f1b0ae0dabe526e406d23b875dc5f485df9f876456d5237f",
     "README.md#README_QUICKSTART": "900cdb4032e349fb3cd945af59602a72caa0a1af0b38e7af73cee014b6fef687",
     "STATUS.md#STATUS_BACKENDS": "cf96e10d39b19243e3a883547ad37c05989fa275be8884e18f1a9a8d9e5253e3",
-    "STATUS.md#STATUS_DETAIL": "7810be782acd5eee1a17d655671d946deefeca8067106dc96d8250b8f7b0b719",
+    "STATUS.md#STATUS_DETAIL": "1903fa355170100c2b33fe91c447de63f362224aa55df1bb4f97f51bf9b5f4dd",
     "STATUS.md#STATUS_HEADER": "a2c8457067f054d80e3d73c8cf81df33b8acf561f2353b1f629598fd294fc1d0",
     "STATUS.md#TIER_SUMMARY": "7725ef61e04bf474ce8901dcf8896069bae5dcf305cb9bfa168625b405ce83b2",
     "SUPPORTED_CAPABILITIES.md#BACKEND_TABLE": "6a9452b5041563574c4c849062dc67890ffbb75b5291b7f0d76010d711e209dd",
@@ -30,7 +30,7 @@
   "n_canonical_features": 4,
   "n_features": 12,
   "provenance_schema": "content-addressed-v2",
-  "render_fingerprint": "58732c77b518524b18fd1d960a4657c2f5fc022f52b287caa37d5157622d8c71",
+  "render_fingerprint": "0a04884f2166f435d3400e04bf7f6a45d7887c93e0997ce62e16315e41427e3b",
   "render_script": "scripts/render_capability_tables.py",
   "source_sha256": {
     "scripts/render_capability_tables.py": "95d8b90bf1874bd65b0a4845dadeaac577178ef3cc84b6c1915a472a73deac09",

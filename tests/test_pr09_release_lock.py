@@ -170,6 +170,30 @@ class TestManifestProvenance:
         )
         assert module.release_path_allowed("docs/ROADMAP_INDEX.md")
 
+    def test_release_version_matches_project_metadata(self):
+        script = Path("scripts/package_release.py").resolve()
+        spec = importlib.util.spec_from_file_location("rabbit_package_release", script)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        assert module.read_project_version() == "1.0.0"
+
+    def test_release_archive_includes_tracked_native_crate(self):
+        script = Path("scripts/package_release.py").resolve()
+        spec = importlib.util.spec_from_file_location("rabbit_package_release", script)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        release_files = module.tracked_release_files()
+        assert "LICENSE" in release_files
+        assert "native/rabbit_cpu/Cargo.toml" in release_files
+        assert "native/rabbit_cpu/src/lib.rs" in release_files
+        assert not any(
+            path.startswith("docs/RABBIT_report/") for path in release_files
+        )
+
     def test_fast_production_timeout_is_explicit_sufficient_and_wired(
         self, monkeypatch
     ):

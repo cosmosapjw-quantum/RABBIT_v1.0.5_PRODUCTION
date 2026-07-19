@@ -12,6 +12,7 @@ Pre-flight pipeline:
   [5] create zip (only if all above pass)
 """
 import subprocess, sys, re, os, json, glob, zipfile, datetime
+from pathlib import Path
 
 
 FAST_PRODUCTION_TIMEOUT_SECONDS = 600
@@ -74,6 +75,39 @@ def release_path_allowed(path):
     return not normalized.startswith("docs/RABBIT_report/")
 
 
+def read_project_version(path=Path("pyproject.toml")):
+    """Read the canonical package version without adding a TOML dependency."""
+    in_project = False
+    for raw_line in Path(path).read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if line.startswith("[") and line.endswith("]"):
+            in_project = line == "[project]"
+            continue
+        if in_project:
+            match = re.fullmatch(r'version\s*=\s*"([^"]+)"(?:\s*#.*)?', line)
+            if match:
+                return match.group(1)
+    raise RuntimeError(f"project version not found in {path}")
+
+
+def tracked_release_files():
+    """Return the exact tracked public surface admitted to the release zip."""
+    result = subprocess.run(
+        ["git", "ls-files", "-z"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    if result.returncode != 0:
+        print("RELEASE BLOCKED: cannot enumerate tracked release files.")
+        raise SystemExit(1)
+    return [
+        path
+        for path in result.stdout.split("\0")
+        if path and Path(path).is_file() and release_path_allowed(path)
+    ]
+
+
 def get_counts():
     def _run(marker=None):
         cmd = [sys.executable, "-m", "pytest", "tests/", "--collect-only", "-q"]
@@ -96,7 +130,12 @@ def get_counts():
 
 
 def main():
-    output = sys.argv[1] if len(sys.argv) > 1 else "RABBIT_v9rc_release.zip"
+    version = read_project_version()
+    output = (
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else f"RABBIT_v{version}_release.zip"
+    )
     print("═" * 60)
     print("RABBIT Release Packaging — Mandatory Pre-flight")
     print("═" * 60)
@@ -168,9 +207,10 @@ def main():
     except Exception:
         git_dirty = True
 
+    release_files = tracked_release_files()
     manifest = {
         "package": "rabbit",
-        "version": "9.0.0rc1",
+        "version": version,
         "build_timestamp": datetime.datetime.now(datetime.UTC).isoformat() + "Z",
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
@@ -190,6 +230,11 @@ def main():
             "docs/BACKEND_CAPABILITY_MATRIX.md: full overwrite",
         ],
         "render_targets_count": 23,
+        "archive_scope": "git-tracked files except declared historical exclusions",
+        "tracked_release_file_count": len(release_files),
+        "native_rust_crate_included": any(
+            path.startswith("native/rabbit_cpu/") for path in release_files
+        ),
         "excluded_paths": [
             "docs/RABBIT_report/ (historical manuscript; excluded until M-08/B-06 freeze)"
         ],
@@ -204,23 +249,11 @@ def main():
 
     # [5] Package
     print(f"\n[5/6] Creating {output}...")
-    includes = ["pyproject.toml", "README.md", "STATUS.md", "RELEASE_MANIFEST.json",
-                "SUPPORTED_CAPABILITIES.md", "PROMOTION_GATES.md", "REBUTTAL.md", "Makefile"]
-    dirs = ["src/rabbit", "tests", "scripts", "docs"]
-    excludes = {"__pycache__", ".pyc", ".egg-info"}
-
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for f in includes:
-            if os.path.exists(f):
-                zf.write(f)
-        for d in dirs:
-            for root, dirs_list, files in os.walk(d):
-                dirs_list[:] = [x for x in dirs_list if not any(e in x for e in excludes)]
-                for fn in files:
-                    if not any(e in fn for e in excludes):
-                        fp = os.path.join(root, fn)
-                        if release_path_allowed(fp):
-                            zf.write(fp)
+        zf.write("RELEASE_MANIFEST.json")
+        for path in release_files:
+            if path != "RELEASE_MANIFEST.json":
+                zf.write(path)
 
     size = os.path.getsize(output)
     print(f"  ✅ {output} ({size / 1024:.0f} KB)")
