@@ -1,0 +1,17 @@
+{
+  "generated": "2026-03-30",
+  "code_version": "8.6.1",
+  "backend": "jax_rodas5p",
+  "description": "JAX canonical FLRW baseline. Rate table fixed (31rxn indexed source).",
+  "entries": [
+    {
+      "n_rxn": 12,
+      "N_q": 6,
+      "CL": 0,
+      "Sigma_H": 0.0,
+      "Yp": 0.2400688433,
+      "DH": 2.48258e-05,
+      "N_eff": 3.010697
+    }
+  ]
+}

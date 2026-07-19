@@ -1,0 +1,27 @@
+{
+  "contract": "regime_aware_policy_recommendation_v1",
+  "cases": [
+    {
+      "label": "FLRW",
+      "shear_regime": "flrw",
+      "validated_default_policy": "exact_per_step",
+      "experimental_recommendation": "phasewise_cadence",
+      "in_locked_policy_scope": true
+    },
+    {
+      "label": "small_shear",
+      "shear_regime": "small_shear",
+      "validated_default_policy": "exact_per_step",
+      "experimental_recommendation": "dependency_cadence",
+      "in_locked_policy_scope": true
+    },
+    {
+      "label": "finite_shear",
+      "shear_regime": "finite_shear",
+      "validated_default_policy": "exact_per_step",
+      "experimental_recommendation": "exact_per_step",
+      "in_locked_policy_scope": false
+    }
+  ],
+  "note": "Current recommendation contract is instrumentation-only and never promotes an experimental cadence to the validated default path."
+}

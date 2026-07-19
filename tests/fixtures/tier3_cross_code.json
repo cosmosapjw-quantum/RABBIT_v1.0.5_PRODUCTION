@@ -1,0 +1,113 @@
+{
+  "_metadata": {
+    "purpose": "Tier-3 full-collision incomplete-decoupling cross-code reference values for the future PR-T3D canonical promotion. All entries are at FLRW (Σ=0), CL2, η=6.104e-10, τ_n=878.4. Y_p is the primordial He-4 mass fraction; N_eff is the effective neutrino number including incomplete-decoupling heating.",
+    "frozen_for": "PR-T3D-PF cross-code skeleton (preflight)",
+    "fixture_format_version": "v1",
+    "tolerance_target_canonical": {
+      "Y_p_abs": 5e-4,
+      "N_eff_abs": 5e-3
+    },
+    "preflight_status": "Numbers are sourced from the published references. The PR-T3B canonical milestone (ap_unified_preflight, publicly dispatchable as backend='jax_ap_unified_tier3') passes the canonical anisotropy + grid gates; the residual FLRW Mangano gap (~0.0095) is documented as the AP-form model approximation limit per PR-T3B-PF #15 scope reframing. Canonical-tier promotion remains gated on Option E (post-canonical, deferred). See docs/audit/PR-T3D_preflight.md, docs/audit/PR-T3B_jax_kernel_runtime.md, and tests/test_pr_t3d_ap_unified_dispatch.py for the full trail.",
+    "preflight_measurements": {
+      "_note": "Per-mode FLRW measurements at the bounded preflight grids, captured via tests/test_pr_t3b_cross_mode_neff.py and tests/test_pr_t3b_ap_convergence.py. These are MEASURED values from the current preflight surface, not target values, included in the fixture so the canonical work has a reproducible baseline.",
+      "spectral_relaxation_preflight": {
+        "_grid": "(N_mu=4, N_q=6)",
+        "Y_p": 0.241417,
+        "N_eff": 3.034495,
+        "_note": "AP-form spectral damping; closer to Mangano than jax_kernel; fails at larger grids due to max_steps budget."
+      },
+      "ap_unified_preflight": {
+        "_canonical_milestone": "PR-T3B canonical #1 (publicly dispatchable via canonical_forward_solver(backend='jax_ap_unified_tier3') after PR-T3D canonical #2). Combines spectral psi_target + projected damping decomposition + soft total-rate enforcement; achieves the canonical PR-T3D §5 anisotropy gate AND grid scaling, with the FLRW Mangano gap surfaced as flrw_mangano_gap_documented=0.0095.",
+        "_grid_4_6":   {"Y_p": 0.2413912333, "N_eff": 3.034488},
+        "_grid_8_12":  {"Y_p": 0.2413928062, "N_eff": 3.034483},
+        "_grid_12_20": {"Y_p": 0.2413928598, "N_eff": 3.034483},
+        "_grid_spread_n_eff": 5.27e-6,
+        "_anisotropic_sweep_4_6": {
+          "_sigma_0p00": {"Y_p": 0.2413912333, "N_eff": 3.034488},
+          "_sigma_0p05": {"Y_p": 0.2376974663, "N_eff": 3.034481},
+          "_sigma_0p10": {"Y_p": 0.2334759957, "N_eff": 3.034477},
+          "_measured_n_eff_spread": 1.06e-5,
+          "_canonical_target": "|N_eff spread across Sigma sweep| < 1e-3 (PR-T3D phase prompt §5)",
+          "_canonical_target_passed": true
+        },
+        "_cl_ladder_flrw_4_6": {
+          "_note": "Full CL0-CL3 ladder publicly dispatchable on the tier-3 surface (PR-T3 full CL envelope, see tests/test_pr_t3_full_cl_envelope.py). Y_p increases monotonically with CL (Born/+Coulomb+Sirlin/+finite-mass weak corrections); N_eff is CL-invariant at the AP-form FLRW value with the documented Mangano gap.",
+          "_cl0": {"Y_p": 0.2413912333, "N_eff": 3.034488},
+          "_cl1": {"Y_p": 0.2452896005, "N_eff": 3.034485},
+          "_cl2": {"Y_p": 0.2469861143, "N_eff": 3.034481},
+          "_cl3": {"Y_p": 0.2474967478, "N_eff": 3.034488},
+          "_yp_ordering_passed": true,
+          "_n_eff_cl_invariant_spread": 7e-6,
+          "_yp_cl3_vs_primat_ac2024_gap": 4.7e-4,
+          "_yp_cl2_vs_lasagna_gap": 5.7e-5
+        },
+        "_flrw_gap_to_mangano_2005": 0.0095,
+        "_flrw_gap_origin": "ap_form_model_approximation_limit (PR-T3B-PF #15 scope reframing; closing this requires Option E or research-grade IMEX/AP-Rosenbrock variant)",
+        "_note": "Canonical-track candidate; passes 2 of 3 canonical gates (anisotropy + grid) at every CL. Y_p at CL2/CL3 already lands within ~5e-5 / ~5e-4 of LASAGNA / PRIMAT-AC2024. The remaining FLRW N_eff gap is the documented AP-form model fidelity limit, not a numerical defect."
+      },
+      "projected_physical_preflight": {
+        "_grid_4_6": {"Y_p": 0.241451, "N_eff": 3.030738},
+        "_grid_8_12": {"Y_p": null, "N_eff": 3.030755},
+        "_grid_12_20": {"Y_p": null, "N_eff": 3.030729},
+        "_note": "AP-form projected source+damping; FULLY GRID-CONVERGED. Spread < 3e-5 across grids vs ~1.3e-2 gap to Mangano. Calibration signal: residual gap is AP-form model approximation, not quadrature resolution."
+      },
+      "jax_kernel_preflight": {
+        "_grid": "(N_mu=4, N_q=6)",
+        "Y_p": 0.241704,
+        "N_eff": 2.993427,
+        "_note": "Full Hannestad-Madsen JAX kernel; anti-heating bug from T_e=T_ν approx (q-grid remap fix exposes stiff manifold; canonical needs IMEX/AP hybrid)."
+      },
+      "jax_kernel_remap_preconditioned_preflight": {
+        "_note": "Electron-frame remapped kernel RHS with a modified collision-bank Jacobian preconditioner. This is a Rodas5P stiffness diagnostic, not a canonical calibration: it reaches the full ODE handoff and has a bounded tolerance envelope, but the N_q=6/8/10 spread shows it is not grid-converged and should not be tuned to N_eff=3.044 without a fuller non-QKE collision calibration.",
+        "_grid_4_6": {"Y_p": 0.2412517503, "N_eff": 3.0759385750},
+        "_grid_4_8": {"Y_p": 0.2416687155, "N_eff": 3.0666735570},
+        "_grid_4_10": {"Y_p": 0.2417421617, "N_eff": 3.0554849097},
+        "_grid_spread_n_eff": 0.0204536653,
+        "_tolerance_envelope_4_6": {
+          "_loose_rtol_1e_4": {"Y_p": 0.2414233130, "N_eff": 3.0788138688, "phase1_steps": 112},
+          "_production_rtol_1e_5": {"Y_p": 0.2412517503, "N_eff": 3.0759385750, "phase1_steps": 848},
+          "_tight_rtol_3e_6": {"Y_p": 0.2411321841, "N_eff": 3.0744215874, "phase1_steps": 4235},
+          "_production_to_tight_n_eff_gap": 0.0015169876,
+          "_loose_to_tight_n_eff_gap": 0.0043922814
+        }
+      },
+      "collisionless_tier1": {
+        "_grid": "(N_mu=4, N_q=6)",
+        "Y_p": 0.242350,
+        "N_eff": 3.010697,
+        "_note": "Sanity floor: no collision source; close to standard adiabatic 4/11 ratio."
+      },
+      "anisotropic_sweep_projected_physical": {
+        "_grid": "(N_mu=4, N_q=6)",
+        "_canonical_target": "|N_eff spread across Sigma sweep| < 1e-3 (PR-T3D phase prompt §5)",
+        "_sigma_0p00": {"Y_p": 0.241451, "N_eff": 3.030738},
+        "_sigma_0p05": {"Y_p": 0.238548, "N_eff": 2.753109},
+        "_sigma_0p10": {"Y_p": 0.235152, "N_eff": 2.487129},
+        "_sigma_0p30": "FAILED: max_steps exceeded",
+        "_measured_n_eff_spread": 0.5436,
+        "_note": "Anisotropic N_eff drops monotonically with Sigma_H by 0.54 across the bounded sweep -- 100x above canonical target. AP-form damping does not track shear-driven transport asymmetry. Canonical PR-T3B fix: species-dependent damping coefficients tuned against linearised-PSTF reference, or shear-aware equilibration projections."
+      }
+    }
+  },
+  "lasagna": {
+    "Y_p": 0.2470,
+    "N_eff": 3.044,
+    "reference": "Escudero 2019, JCAP 02:007 (arXiv:1812.05605)"
+  },
+  "fortepiano": {
+    "Y_p": 0.2470,
+    "N_eff": 3.043,
+    "reference": "Froustey, Pitrou, Volpe 2020, JCAP 12:015 (arXiv:2008.01074)"
+  },
+  "primat_ac2024": {
+    "Y_p": 0.24703,
+    "N_eff": 3.044,
+    "reference": "Pitrou 2024 (PRIMAT AC2024)"
+  },
+  "mangano_2005": {
+    "Y_p": null,
+    "N_eff": 3.044,
+    "reference": "Mangano et al. 2005, NPB 729:221 (arXiv:hep-ph/0506164)",
+    "note": "Y_p not quoted to the same precision in the original; N_eff = 3.044 is the SM benchmark for the FLRW baseline."
+  }
+}

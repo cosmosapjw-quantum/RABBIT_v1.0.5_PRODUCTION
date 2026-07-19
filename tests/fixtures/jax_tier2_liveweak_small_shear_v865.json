@@ -1,0 +1,33 @@
+{
+  "config": {
+    "Sigma_H_plus": 0.001,
+    "Sigma_H_minus": 0.0,
+    "N_q": 6,
+    "thermo_tier": 2,
+    "use_live_weak_monopoles": true,
+    "correction_level": 2,
+    "enable_teff": false,
+    "rtol": 1e-06,
+    "atol": 1e-08
+  },
+  "required_metadata": {
+    "backend": "jax_typeI_tier3_weak_budget",
+    "weak_mode": "live_f0_cl0_cl3",
+    "shear_regime": "small_shear",
+    "live_weak_runtime_scope": "tier2_experimental_flrw_small_shear_locked",
+    "live_weak_kernel_signature": "liveweak_q6_tier2_cl2",
+    "runtime_signature_phase1": "phase1_q6_l2_tier2_livecl2",
+    "runtime_signature_phase2": "phase2_q6_l2_tier2_livecl2"
+  },
+  "Yp": 0.2473566784537842,
+  "N_eff": 3.0344812763566256,
+  "phase1_handoff_lambda_np": 0.0011467645232963502,
+  "phase1_handoff_lambda_pn": 2.056471808281919e-11,
+  "bounds": {
+    "abs_phase1_event_residual_lt": 1e-06,
+    "abs_delta_lambda_np_lt": 5e-10,
+    "abs_delta_lambda_pn_lt": 5e-13,
+    "abs_delta_Yp_lt": 2e-05,
+    "abs_delta_Neff_lt": 5e-05
+  }
+}

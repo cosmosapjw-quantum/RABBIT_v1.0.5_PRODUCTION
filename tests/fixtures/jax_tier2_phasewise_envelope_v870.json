@@ -1,0 +1,48 @@
+{
+  "config": {
+    "N_q": 6,
+    "thermo_tier": 2,
+    "use_live_weak_monopoles": true,
+    "correction_level": 2,
+    "exact_mode": "exact_per_step",
+    "phasewise_mode": "experimental_dependency_cadence",
+    "global_stride": 3,
+    "phase1_stride": 4,
+    "phase2_stride": 2,
+    "rtol": 1e-06,
+    "atol": 1e-08
+  },
+  "bounds": {
+    "abs_delta_Yp_lt": 2e-05,
+    "abs_delta_Neff_lt": 6e-05
+  },
+  "cases": [
+    {
+      "label": "FLRW",
+      "sigma_plus": 0.0,
+      "sigma_minus": 0.0,
+      "delta_Yp": 3.0768985026519147e-06,
+      "delta_Neff": 2.685398340052103e-05,
+      "reuse_phase1_min": 100,
+      "reuse_phase2_min": 120,
+      "dependency_trigger_phase1_min": 0,
+      "dependency_trigger_phase2_min": 10,
+      "phase1_cache_bucket_suffix": "s4",
+      "phase2_cache_bucket_suffix": "s2"
+    },
+    {
+      "label": "small_shear",
+      "sigma_plus": 0.001,
+      "sigma_minus": 0.0,
+      "delta_Yp": 1.5918334518028043e-05,
+      "delta_Neff": 5.433784873920544e-05,
+      "reuse_phase1_min": 100,
+      "reuse_phase2_min": 120,
+      "dependency_trigger_phase1_min": 1,
+      "dependency_trigger_phase2_min": 10,
+      "phase1_cache_bucket_suffix": "s4",
+      "phase2_cache_bucket_suffix": "s2"
+    }
+  ],
+  "note": "PR-L locks the current exact-per-step vs phase-wise dependency-cadence envelope for the tested FLRW and small-shear tier-2 live-weak CL2 cases. This is a regression fixture for the current solver policy, not a validated default path."
+}

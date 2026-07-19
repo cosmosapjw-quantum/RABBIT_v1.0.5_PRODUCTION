@@ -1,0 +1,570 @@
+{
+  "classB_typeV_A001": {
+    "Yp": 0.2442869,
+    "A_init": 0.001,
+    "Sigma_H": 0.05
+  },
+  "classB_typeV_A0": {
+    "Yp": 0.24236481,
+    "A_init": 0.0,
+    "Sigma_H": 0.05
+  },
+  "classB_typeV_A1e4": {
+    "Yp": 0.24237194337494503,
+    "DH": 2.4967180305638096e-05,
+    "A_init": 0.0001,
+    "Sigma_H": 0.02,
+    "DYp_A": 1.783944438108146e-05,
+    "note": "Type V conservative frame-variable gold cell. DYp_A = Yp(A=1e-4) - Yp(A=0) at Sigma_H=0.02."
+  },
+  "classB_typeV_A0_sigma002": {
+    "Yp": 0.24235410393056395,
+    "DH": 2.4888433860277975e-05,
+    "A_init": 0.0,
+    "Sigma_H": 0.02
+  },
+  "tilted_typeV_A0_sigma002_v1e7": {
+    "Yp": 0.24235961191305658,
+    "DH": 2.488801476589987e-05,
+    "v0": 1e-07,
+    "A_init": 0.0,
+    "Sigma_H": 0.02,
+    "note": "Type V tilted scalar zero-frame public baseline."
+  },
+  "tilted_typeV_A1e4_sigma002_v1e7": {
+    "Yp": 0.24237745708463584,
+    "DH": 2.496839084555238e-05,
+    "v0": 1e-07,
+    "A_init": 0.0001,
+    "Sigma_H": 0.02,
+    "DYp_A": 1.7845171579267127e-05,
+    "DDH_A": 8.037607965250955e-08,
+    "frame_cA_sq_final": 0.19127670051286694,
+    "Omega_final": 0.8087232294102983,
+    "note": "Type V tilted scalar finite-frame public gold cell. DYp_A = Yp(A=1e-4) - Yp(A=0) at Sigma_H=0.02, v0=1e-7."
+  },
+  "classB_typeIV_N10_A1e5_sigma001": {
+    "Yp": 0.2423533934465187,
+    "DH": 2.48889980577423e-05,
+    "A_init": 1e-05,
+    "N1_init": 0.0,
+    "Sigma_H": 0.01
+  },
+  "classB_typeIV_N1e3_A1e5_sigma001": {
+    "Yp": 0.24240039371972077,
+    "DH": 2.5075446878691976e-05,
+    "A_init": 1e-05,
+    "N1_init": 0.001,
+    "Sigma_H": 0.01,
+    "DYp_N1": 4.700027320206357e-05,
+    "curvature_K_final": 0.10648557578375785,
+    "note": "Type IV conservative reduced-mask A+N1 gold cell. DYp_N1 = Yp(N1=1e-3) - Yp(N1=0) at Sigma_H=0.01, A=1e-5."
+  },
+  "tilted_typeIV_N1e3_A1e5_sigma001_v1e7": {
+    "Yp": 0.24240157185523115,
+    "DH": 2.5075540573627473e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "N1_init": 0.001,
+    "Sigma_H": 0.01,
+    "DYp_N1": 4.791363391642989e-05,
+    "curvature_K_final": 0.10649189351060069,
+    "note": "Type IV tilted scalar reduced-mask A+N1 gold cell."
+  },
+  "classB_typeIII_N0_A1e5_sigma001": {
+    "Yp": 0.2423533934465187,
+    "DH": 2.48889980577423e-05,
+    "A_init": 1e-05,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V frame-only baseline used as the N_i->0 limit for conservative Type III gates."
+  },
+  "classB_typeIII_N2_1em4_N3_m1em4_A1e5_sigma001": {
+    "Yp": 0.2423544142260489,
+    "DH": 2.4898105915622492e-05,
+    "A_init": 1e-05,
+    "N2_init": 0.0001,
+    "N3_init": -0.0001,
+    "Sigma_H": 0.01,
+    "DYp_N23": 1.0207795301808709e-06,
+    "DDH_N23": 9.107857880192238e-09,
+    "curvature_K_final": 0.025382118115566916,
+    "transport_kappa_final": 0.39024698422076437,
+    "frame_cA_sq_final": 0.0022843906304010372,
+    "Omega_final": 0.97207546616354,
+    "note": "Type III conservative h=-1 h-locked reduced-mask A+N2/N3 gold cell. DYp_N23 = Yp(N2=1e-4,N3=-1e-4) - Type V frame baseline."
+  },
+  "tilted_typeIII_N0_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235365822131472,
+    "DH": 2.488942022696195e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V tilted frame-only baseline used as the N_i->0 limit for conservative Type III tilted gates."
+  },
+  "tilted_typeIII_N2_1em4_N3_m1em4_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235547328638077,
+    "DH": 2.4898095271339714e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "N2_init": 0.0001,
+    "N3_init": -0.0001,
+    "Sigma_H": 0.01,
+    "DYp_N23": 1.8150650660520018e-06,
+    "DDH_N23": 8.675044377764112e-09,
+    "curvature_K_final": 0.02540214252204337,
+    "transport_kappa_final": 0.39040089028108044,
+    "frame_cA_sq_final": 0.002286192826983899,
+    "Omega_final": 0.972053224931505,
+    "note": "Type III tilted scalar conservative h=-1 h-locked reduced-mask A+N2/N3 gold cell."
+  },
+  "classB_typeVI_m19_N0_A1e5_sigma001": {
+    "Yp": 0.2423533934465187,
+    "DH": 2.48889980577423e-05,
+    "A_init": 1e-05,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V frame-only baseline used as the N_i->0 limit for conservative Type VI_{-1/9} gates."
+  },
+  "classB_typeVI_m19_N2_1em4_N3_mN2over9_A1e5_sigma001": {
+    "Yp": 0.24235369674014956,
+    "DH": 2.4892203072553864e-05,
+    "A_init": 1e-05,
+    "N2_init": 0.0001,
+    "N3_init": -1.1111111111111112e-05,
+    "Sigma_H": 0.01,
+    "c_factor": 3.75,
+    "h": -0.1111111111111111,
+    "DYp_N23": 3.032936308489109e-07,
+    "DDH_N23": 3.2050148115642953e-09,
+    "curvature_K_init": 1.0288065843621398e-09,
+    "curvature_K_final": 0.007948608303230627,
+    "transport_kappa_final": 0.27966820645863444,
+    "frame_cA_sq_final": 0.0029743747166183694,
+    "Omega_final": 0.9889960518253402,
+    "note": "Type VI_{-1/9} conservative h=-1/9 h-locked reduced-mask A+N2/N3 gold cell. DYp_N23 = Yp(N2=1e-4,N3=-N2/9) - Type V frame baseline."
+  },
+  "tilted_typeVI_m19_N0_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235365822131472,
+    "DH": 2.488942022696195e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V tilted frame-only baseline used as the N_i->0 limit for conservative Type VI_{-1/9} tilted gates."
+  },
+  "tilted_typeVI_m19_N2_1em4_N3_mN2over9_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235396157121775,
+    "DH": 2.489200023292215e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "N2_init": 0.0001,
+    "N3_init": -1.1111111111111112e-05,
+    "Sigma_H": 0.01,
+    "c_factor": 3.75,
+    "h": -0.1111111111111111,
+    "DYp_N23": 3.0334990303027e-07,
+    "DDH_N23": 2.580005960199069e-09,
+    "curvature_K_init": 1.0288065843621398e-09,
+    "curvature_K_final": 0.007936993777624989,
+    "transport_kappa_final": 0.2794638058350846,
+    "frame_cA_sq_final": 0.002969910795044038,
+    "Omega_final": 0.9890123707021286,
+    "note": "Type VI_{-1/9} tilted scalar conservative h=-1/9 h-locked reduced-mask A+N2/N3 gold cell."
+  },
+  "classB_typeVIh_hm2_N0_A1e5_sigma001": {
+    "Yp": 0.2423533934465187,
+    "DH": 2.48889980577423e-05,
+    "A_init": 1e-05,
+    "h": -2.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V frame-only baseline used as the N_i->0 limit for conservative Type VI_h(h=-2) gates."
+  },
+  "classB_typeVIh_hm2_N2_1em4_N3_m2em4_A1e5_sigma001": {
+    "Yp": 0.24235675762566916,
+    "DH": 2.490955897730097e-05,
+    "A_init": 1e-05,
+    "h": -2.0,
+    "N2_init": 0.0001,
+    "N3_init": -0.0002,
+    "Sigma_H": 0.01,
+    "c_factor": 3.0,
+    "DYp_N23": 3.364179150450175e-06,
+    "DDH_N23": 2.056091955867124e-08,
+    "curvature_K_init": 7.500000000000001e-09,
+    "curvature_K_final": 0.05748947652071651,
+    "transport_kappa_final": 0.6190825282664475,
+    "frame_cA_sq_final": 0.0021245639138704735,
+    "Omega_final": 0.9385852104205856,
+    "note": "Type VI_h(h=-2) conservative h-locked reduced-mask A+N2/N3 gold cell. DYp_N23 = Yp(N2=1e-4,N3=h*N2) - Type V frame baseline."
+  },
+  "tilted_typeVIh_hm2_N0_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235365822131472,
+    "DH": 2.488942022696195e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "h": -2.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V tilted frame-only baseline used as the N_i->0 limit for conservative Type VI_h(h=-2) tilted gates."
+  },
+  "tilted_typeVIh_hm2_N2_1em4_N3_m2em4_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235867410846124,
+    "DH": 2.4909757360182264e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "h": -2.0,
+    "N2_init": 0.0001,
+    "N3_init": -0.0002,
+    "Sigma_H": 0.01,
+    "c_factor": 3.0,
+    "DYp_N23": 5.015887146520015e-06,
+    "DDH_N23": 2.033713322031365e-08,
+    "curvature_K_init": 7.500000000000001e-09,
+    "curvature_K_final": 0.057474248363423554,
+    "transport_kappa_final": 0.6190005296897225,
+    "frame_cA_sq_final": 0.002124047104763639,
+    "Omega_final": 0.9386019178526624,
+    "note": "Type VI_h(h=-2) tilted scalar conservative h-locked reduced-mask A+N2/N3 gold cell."
+  },
+  "classB_typeVIIh_h0p5_N0_A1e5_sigma001": {
+    "Yp": 0.2423533934465187,
+    "DH": 2.48889980577423e-05,
+    "A_init": 1e-05,
+    "h": 0.5,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V frame-only baseline used as the N_i->0 limit for conservative Type VII_h(h=0.5) gates."
+  },
+  "classB_typeVIIh_h0p5_N2_5em4_N3_2p5em4_A1e5_sigma001": {
+    "Yp": 0.24235523038921292,
+    "DH": 2.4903522806529695e-05,
+    "A_init": 1e-05,
+    "h": 0.5,
+    "N2_init": 0.0005,
+    "N3_init": 0.00025,
+    "Sigma_H": 0.01,
+    "c_factor": 3.0,
+    "DYp_N23": 1.8369426942055345e-06,
+    "DDH_N23": 1.452474878739507e-08,
+    "curvature_K_init": 5.2083333333333295e-09,
+    "curvature_K_final": 0.025481941739731482,
+    "transport_kappa_final": 1.2364936329734533,
+    "frame_cA_sq_final": 0.0022569816143514394,
+    "Omega_final": 0.9605165753121602,
+    "note": "Type VII_h(h=0.5) conservative h-locked reduced-mask A+N2/N3 gold cell. DYp_N23 = Yp(N2=5e-4,N3=h*N2) - Type V frame baseline."
+  },
+  "tilted_typeVIIh_h0p5_N0_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235365822131472,
+    "DH": 2.488942022696195e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "h": 0.5,
+    "N2_init": 0.0,
+    "N3_init": 0.0,
+    "Sigma_H": 0.01,
+    "note": "Type V tilted frame-only baseline used as the N_i->0 limit for conservative Type VII_h(h=0.5) tilted gates."
+  },
+  "tilted_typeVIIh_h0p5_N2_5em4_N3_2p5em4_A1e5_sigma001_v1e7": {
+    "Yp": 0.24235803725009727,
+    "DH": 2.4903554190719484e-05,
+    "v0": 1e-07,
+    "A_init": 1e-05,
+    "h": 0.5,
+    "N2_init": 0.0005,
+    "N3_init": 0.00025,
+    "Sigma_H": 0.01,
+    "c_factor": 3.0,
+    "DYp_N23": 4.3790287825584695e-06,
+    "DDH_N23": 1.4133963757533816e-08,
+    "curvature_K_init": 5.2083333333333295e-09,
+    "curvature_K_final": 0.025476774131354178,
+    "transport_kappa_final": 1.2363682493016597,
+    "frame_cA_sq_final": 0.002256230561137453,
+    "Omega_final": 0.9605285468476076,
+    "note": "Type VII_h(h=0.5) tilted scalar conservative h-locked reduced-mask A+N2/N3 gold cell."
+  },
+  "classA_typeII_N1_1em1_sigma005": {
+    "Yp": 0.25271594961538957,
+    "DH": 2.8506533730992546e-05,
+    "Sigma_H": 0.05,
+    "N1_init": 0.1,
+    "curvature_K_init": 0.0008333333333333335,
+    "curvature_K_final": 0.0783909682898581,
+    "transport_kappa_final": 0.9698925814121362,
+    "Omega_final": 0.8604750663309875,
+    "note": "Type II public jax_classA representative cell. Matches direct Class A reduced-transport driver at N_q=20."
+  },
+  "tilted_typeII_N1_1em1_sigma005_v1e7": {
+    "Yp": 0.2538071163540862,
+    "DH": 2.8639165122947154e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.05,
+    "N1_init": 0.1,
+    "curvature_K_init": 0.0008333333333333335,
+    "curvature_K_final": 0.0783903872748731,
+    "transport_kappa_final": 0.9698889871003162,
+    "Omega_final": 0.8604743852642881,
+    "note": "Type II public tilted representative cell. Matches tilted reduced-transport driver at N_q=6."
+  },
+  "classA_typeVII0_N0_sigma003": {
+    "Yp": 0.2417189792641235,
+    "DH": 2.479965078722135e-05,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "classA_typeVII0_N2_5e3_N3_3e3_sigma003": {
+    "Yp": 0.24186986637275337,
+    "DH": 2.494784537572788e-05,
+    "Sigma_H": 0.03,
+    "N2_init": 0.005,
+    "N3_init": 0.003,
+    "DYp_N23": 0.00015088710862987131,
+    "curvature_K_final": 0.0001506528379194653,
+    "transport_kappa_final": 15.51077104498108,
+    "note": "Type VII0 conservative reduced-transport gold cell. DYp_N23 = Yp(N2=5e-3,N3=3e-3) - Yp(N2=N3=0)."
+  },
+  "tilted_typeVII0_N0_sigma003_v1e7": {
+    "Yp": 0.24235896950997837,
+    "DH": 2.4888649342205944e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "tilted_typeVII0_N2_5e3_N3_3e3_sigma003_v1e7": {
+    "Yp": 0.2425117070334905,
+    "DH": 2.5036608666559668e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.03,
+    "N2_init": 0.005,
+    "N3_init": 0.003,
+    "DYp_N23": 0.00015273752351213643,
+    "curvature_K_final": 0.00021831204326344778,
+    "transport_kappa_final": 15.535901226197863,
+    "note": "Type VII0 tilted scalar conservative reduced-transport gold cell."
+  },
+  "classA_typeVI0_N0_sigma003": {
+    "Yp": 0.2417189792641235,
+    "DH": 2.479965078722135e-05,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "classA_typeVI0_N2_2em4_N3_m1p2em4_sigma003": {
+    "Yp": 0.2417220951836507,
+    "DH": 2.4824635313452723e-05,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0002,
+    "N3_init": -0.00012,
+    "DYp_N23": 3.11591952720236e-06,
+    "curvature_K_final": 0.061928283384044894,
+    "transport_kappa_final": 0.6239615827209102,
+    "Omega_final": 0.9361321520977879,
+    "note": "Type VI0 conservative opposite-sign reduced-transport gold cell. DYp_N23 = Yp(N2=2e-4,N3=-1.2e-4) - Yp(N2=N3=0)."
+  },
+  "tilted_typeVI0_N0_sigma003_v1e7": {
+    "Yp": 0.24235896950997837,
+    "DH": 2.4888649342205944e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "tilted_typeVI0_N2_2em4_N3_m1p2em4_sigma003_v1e7": {
+    "Yp": 0.2423621013755741,
+    "DH": 2.4913294665376192e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.03,
+    "N2_init": 0.0002,
+    "N3_init": -0.00012,
+    "DYp_N23": 3.1318655957235375e-06,
+    "curvature_K_final": 0.062117955605101846,
+    "transport_kappa_final": 0.6249028258450604,
+    "Omega_final": 0.9359301165545179,
+    "note": "Type VI0 tilted scalar conservative opposite-sign reduced-transport gold cell."
+  },
+  "classA_typeVIII_N0_sigma001": {
+    "Yp": 0.2417173187811608,
+    "DH": 2.4799982925806466e-05,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "classA_typeVIII_N1_m1em4_N2_1em4_N3_1em4_sigma001": {
+    "Yp": 0.24171781960118593,
+    "DH": 2.4810676600190284e-05,
+    "Sigma_H": 0.01,
+    "N1_init": -0.0001,
+    "N2_init": 0.0001,
+    "N3_init": 0.0001,
+    "DYp_N123": 5.008200251455097e-07,
+    "DDH_N123": 1.0693674383818036e-08,
+    "curvature_K_final": 0.03016820044370159,
+    "transport_kappa_final": 0.4782276307156063,
+    "Omega_final": 0.9696097969098619,
+    "note": "Type VIII conservative mixed-sign reduced-transport gold cell. DYp_N123 = Yp(N1=-1e-4,N2=N3=1e-4) - Yp(N_i=0)."
+  },
+  "tilted_typeVIII_N0_sigma001_v1e7": {
+    "Yp": 0.2423532139746801,
+    "DH": 2.4888489516516226e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "tilted_typeVIII_N1_m1em4_N2_1em4_N3_1em4_sigma001_v1e7": {
+    "Yp": 0.24235461608296155,
+    "DH": 2.489926064051232e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.01,
+    "N1_init": -0.0001,
+    "N2_init": 0.0001,
+    "N3_init": 0.0001,
+    "DYp_N123": 1.4021082814508201e-06,
+    "DDH_N123": 1.077112399609331e-08,
+    "curvature_K_final": 0.03026559007255013,
+    "transport_kappa_final": 0.4790207313616441,
+    "Omega_final": 0.9695109627558588,
+    "note": "Type VIII tilted scalar conservative mixed-sign reduced-transport gold cell."
+  },
+  "classA_typeIX_N0_sigma001": {
+    "Yp": 0.2417173187811608,
+    "DH": 2.4799982925806466e-05,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "classA_typeIX_N1_1em4_N2_1em4_N3_1em4_sigma001": {
+    "Yp": 0.2417154451561893,
+    "DH": 2.4793223172509977e-05,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0001,
+    "N2_init": 0.0001,
+    "N3_init": 0.0001,
+    "DYp_N123": -1.873624971476806e-06,
+    "DDH_N123": -6.759753296489159e-09,
+    "curvature_K_final": -0.01994953295926255,
+    "transport_kappa_final": 0.4895942174107109,
+    "Omega_final": 1.01994940719434,
+    "note": "Type IX conservative same-sign closed-curvature reduced-transport gold cell. DYp_N123 = Yp(N1=N2=N3=1e-4) - Yp(N_i=0). Larger N_i remain honesty-gated for curvature runaway."
+  },
+  "tilted_typeIX_N0_sigma001_v1e7": {
+    "Yp": 0.2423532139746801,
+    "DH": 2.4888489516516226e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0,
+    "N2_init": 0.0,
+    "N3_init": 0.0
+  },
+  "tilted_typeIX_N1_1em4_N2_1em4_N3_1em4_sigma001_v1e7": {
+    "Yp": 0.24235133077429133,
+    "DH": 2.4881302548604667e-05,
+    "v0": 1e-07,
+    "Sigma_H": 0.01,
+    "N1_init": 0.0001,
+    "N2_init": 0.0001,
+    "N3_init": 0.0001,
+    "DYp_N123": -1.8832003887692128e-06,
+    "DDH_N123": -7.18696791155945e-09,
+    "curvature_K_final": -0.02005225450341558,
+    "transport_kappa_final": 0.49085300070136945,
+    "Omega_final": 1.020052127463148,
+    "note": "Type IX tilted scalar conservative same-sign closed-curvature reduced-transport gold cell."
+  },
+  "tilted_v0": {
+    "Yp": 0.24238922,
+    "v0": 0.0,
+    "Sigma_H": 0.1
+  },
+  "tilted_v1e7": {
+    "Yp": 0.24238922,
+    "v0": 1e-07,
+    "Sigma_H": 0.1
+  },
+  "jax_flrw": {
+    "Yp": 0.2612549484,
+    "Sigma_H": 0.0,
+    "weak_mode": "live_f0_cl0"
+  },
+  "jax_typeI_01": {
+    "Yp": 0.2612581499,
+    "Sigma_H": 0.1,
+    "weak_mode": "live_f0_cl0"
+  },
+  "tilted_v0_envelope": {
+    "v0_grid": [
+      0.0,
+      1e-09,
+      1e-07,
+      1e-05,
+      0.0001,
+      0.001
+    ],
+    "Yp_grid": [
+      0.2423892198,
+      0.2423892198,
+      0.2423892198,
+      0.242389278,
+      0.2423950095,
+      0.2429474662
+    ],
+    "DYp_grid": [
+      0.0,
+      6.3e-12,
+      2.9e-12,
+      5.8e-08,
+      5.8e-05,
+      0.00056
+    ],
+    "Sigma_H": 0.1,
+    "bianchi_type": "TYPE_I",
+    "correction_level": 0,
+    "observable_threshold": 1e-05,
+    "monotonic_above": 1e-05,
+    "note": "v0<1e-7 is solver noise; v0>=1e-5 shows smooth monotonic growth"
+  },
+  "matched_physics_parity": {
+    "scipy_live_Yp": 0.2612565043,
+    "jax_equilibrium_Yp": 0.2423503959,
+    "jax_live_weak_Yp": 0.2612549484,
+    "equilibrium_gap_pct": 7.24,
+    "matched_physics_gap_pct": 0.0006,
+    "residual_delta_Yp": 1.56e-05,
+    "root_cause": "weak_rate_mode: equilibrium_fd vs live_f0",
+    "resolution": "use_live_weak_monopoles=True matches SciPy to 0.0006%"
+  },
+  "jax_flrw_equilibrium": {
+    "Yp": 0.2423504,
+    "Sigma_H": 0.0,
+    "weak_mode": "equilibrium_fd_cl0",
+    "note": "explicit use_live_weak_monopoles=False"
+  },
+  "jax_typeI_01_equilibrium": {
+    "Yp": 0.24238755,
+    "Sigma_H": 0.1,
+    "weak_mode": "equilibrium_fd_cl0"
+  },
+  "classB_typeV": {
+    "Yp": 0.24237194337494503,
+    "DH": 2.4967180305638096e-05,
+    "A_init": 0.0001,
+    "Sigma_H": 0.02,
+    "DYp_A": 1.783944438108146e-05,
+    "note": "Type V conservative frame-variable gold cell. DYp_A = Yp(A=1e-4) - Yp(A=0) at Sigma_H=0.02."
+  }
+}

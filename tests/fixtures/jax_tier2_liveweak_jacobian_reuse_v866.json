@@ -1,0 +1,17 @@
+{
+  "config": {
+    "N_q": 6,
+    "correction_level": 2,
+    "rtol": 1.0e-6,
+    "atol": 1.0e-8,
+    "reuse_stride": 2
+  },
+  "tolerances": {
+    "abs_delta_Yp_lt": 2.0e-5,
+    "abs_delta_Neff_lt": 6.0e-5
+  },
+  "cases": [
+    {"name": "flrw", "sigma_plus": 0.0, "sigma_minus": 0.0},
+    {"name": "small_shear", "sigma_plus": 1.0e-3, "sigma_minus": 0.0}
+  ]
+}

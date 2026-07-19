@@ -1,0 +1,50 @@
+{
+  "config": {
+    "N_q": 6,
+    "thermo_tier": 2,
+    "use_live_weak_monopoles": true,
+    "correction_level": 2,
+    "rtol": 1e-06,
+    "atol": 1e-08,
+    "exact_mode": "exact_per_step",
+    "dependency_mode": "experimental_dependency_cadence",
+    "dependency_stride": 3
+  },
+  "bounds": {
+    "abs_delta_Yp_lt": 1e-05,
+    "abs_delta_Neff_lt": 6e-05
+  },
+  "cases": [
+    {
+      "label": "FLRW",
+      "sigma_plus": 0.0,
+      "sigma_minus": 0.0,
+      "Yp_exact": 0.26251040387109936,
+      "Yp_dependency": 0.2625071444929137,
+      "N_eff_exact": 3.034505309419898,
+      "N_eff_dependency": 3.034477854754978,
+      "abs_delta_Yp": 3.259378185682671e-06,
+      "abs_delta_Neff": 2.7454664919712712e-05,
+      "dependency_trigger_phase1_min": 0,
+      "dependency_trigger_phase2_min": 1,
+      "reuse_phase1_min": 1,
+      "reuse_phase2_min": 1
+    },
+    {
+      "label": "small_shear",
+      "sigma_plus": 0.001,
+      "sigma_minus": 0.0,
+      "Yp_exact": 0.2625029453489937,
+      "Yp_dependency": 0.26250745940160186,
+      "N_eff_exact": 3.034526291264051,
+      "N_eff_dependency": 3.0344771573561338,
+      "abs_delta_Yp": 4.514052608151076e-06,
+      "abs_delta_Neff": 4.913390791738692e-05,
+      "dependency_trigger_phase1_min": 1,
+      "dependency_trigger_phase2_min": 1,
+      "reuse_phase1_min": 1,
+      "reuse_phase2_min": 1
+    }
+  ],
+  "note": "Locked current envelope for exact-per-step vs experimental dependency-cadence on the tier-2 live-weak CL2 JAX path. This is a tested current envelope, not a validated default dispatch path."
+}

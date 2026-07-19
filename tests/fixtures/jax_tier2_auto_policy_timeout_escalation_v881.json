@@ -1,0 +1,57 @@
+{
+  "contract": "auto_policy_timeout_escalation_v1",
+  "source_recording_plan_contract": "auto_policy_recording_plan_v1",
+  "source_recording_status": "all_cases_attempted_incomplete",
+  "timeout_ladder_seconds": [
+    5.0,
+    15.0,
+    60.0
+  ],
+  "cases": [
+    {
+      "order": 1,
+      "label": "finite_shear",
+      "resolved_solver_jacobian_mode": "exact_per_step",
+      "resolved_solver_jacobian_refresh_stride_phase1": 1,
+      "resolved_solver_jacobian_refresh_stride_phase2": 1,
+      "previous_recording_status": "timed_out",
+      "previous_timeout_seconds": 5.0,
+      "next_timeout_seconds": 15.0,
+      "should_retry": true,
+      "escalation_state": "retry_with_escalated_budget",
+      "recording_output_stem": "auto_policy_smoke_finite_shear"
+    },
+    {
+      "order": 2,
+      "label": "small_shear",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride_phase1": 3,
+      "resolved_solver_jacobian_refresh_stride_phase2": 3,
+      "previous_recording_status": "timed_out",
+      "previous_timeout_seconds": 5.0,
+      "next_timeout_seconds": 15.0,
+      "should_retry": true,
+      "escalation_state": "retry_with_escalated_budget",
+      "recording_output_stem": "auto_policy_smoke_small_shear"
+    },
+    {
+      "order": 3,
+      "label": "FLRW",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride_phase1": 4,
+      "resolved_solver_jacobian_refresh_stride_phase2": 2,
+      "previous_recording_status": "timed_out",
+      "previous_timeout_seconds": 5.0,
+      "next_timeout_seconds": 15.0,
+      "should_retry": true,
+      "escalation_state": "retry_with_escalated_budget",
+      "recording_output_stem": "auto_policy_smoke_flrw"
+    }
+  ],
+  "next_attempt_order": [
+    "finite_shear",
+    "small_shear",
+    "FLRW"
+  ],
+  "note": "This escalation plan is advisory and operational only. It maps the current advisory auto-smoke recording state to the next honest timeout budget without claiming that a fresh complete numerical smoke summary already exists."
+}

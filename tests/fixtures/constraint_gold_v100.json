@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "description": "Production constraint regression lock.",
+  "flrw_gold": {
+    "CL0": {"Yp": 0.2423494, "tolerance": 1e-5},
+    "CL2": {"Yp": 0.2480311, "tolerance": 1e-5}
+  },
+  "primat_parity": {
+    "delta_Yp_max": 1e-4,
+    "note": "Matched-physics Born-Born |ΔYp| ≈ 6.7e-5; locked at 1e-4"
+  },
+  "constraint_95cl": {
+    "CL2": {"Sigma_H_upper": 0.66, "tolerance": 0.05}
+  },
+  "eigenvalues": {
+    "description": "2x2 linearised shear-stress system with M = [[-1, C_fb*f_nu], [C_src, -C_drain]]",
+    "lambda_slow": -0.687,
+    "lambda_fast": -4.313,
+    "trace": -5.0,
+    "tolerance": 0.01,
+    "transport_typeI": {
+      "description": "Type I exact PSTF truncation (M22=0): complex eigenvalues",
+      "real_part": -0.5,
+      "omega": 1.023,
+      "decay_law": "sigma proportional to a^{-5/2}"
+    }
+  },
+  "gradient_bridge": {
+    "d_logL_d_eta10": -44.09,
+    "d_logL_d_tau_n": 0.114,
+    "tolerance_rel": 0.15
+  }
+}

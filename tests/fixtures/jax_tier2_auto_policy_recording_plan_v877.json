@@ -1,0 +1,75 @@
+{
+  "contract": "auto_policy_recording_plan_v1",
+  "source_smoke_contract": "auto_policy_end_to_end_smoke_v1",
+  "cases": [
+    {
+      "order": 1,
+      "label": "finite_shear",
+      "common": {
+        "N_q": 6,
+        "n_ell": 2,
+        "thermo_tier": 2,
+        "use_live_weak_monopoles": true,
+        "correction_level": 2,
+        "shear_regime": "finite_shear"
+      },
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "exact_per_step",
+      "resolved_solver_jacobian_refresh_stride": 1,
+      "resolved_solver_jacobian_refresh_stride_phase1": 1,
+      "resolved_solver_jacobian_refresh_stride_phase2": 1,
+      "auto_resolution_contract": "auto_exact_fallback_outside_locked_scope",
+      "in_locked_policy_scope": false,
+      "recording_output_stem": "auto_policy_smoke_finite_shear",
+      "recommended_execution_order_reason": "Exact fallback first, then single-stride dependency cadence, then phase-wise dependency cadence, so partial recording progress can be preserved honestly in constrained environments."
+    },
+    {
+      "order": 2,
+      "label": "small_shear",
+      "common": {
+        "N_q": 6,
+        "n_ell": 2,
+        "thermo_tier": 2,
+        "use_live_weak_monopoles": true,
+        "correction_level": 2,
+        "shear_regime": "small_shear"
+      },
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride": 3,
+      "resolved_solver_jacobian_refresh_stride_phase1": 3,
+      "resolved_solver_jacobian_refresh_stride_phase2": 3,
+      "auto_resolution_contract": "auto_locked_dependency_cadence",
+      "in_locked_policy_scope": true,
+      "recording_output_stem": "auto_policy_smoke_small_shear",
+      "recommended_execution_order_reason": "Exact fallback first, then single-stride dependency cadence, then phase-wise dependency cadence, so partial recording progress can be preserved honestly in constrained environments."
+    },
+    {
+      "order": 3,
+      "label": "FLRW",
+      "common": {
+        "N_q": 6,
+        "n_ell": 2,
+        "thermo_tier": 2,
+        "use_live_weak_monopoles": true,
+        "correction_level": 2,
+        "shear_regime": "flrw"
+      },
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride": 3,
+      "resolved_solver_jacobian_refresh_stride_phase1": 4,
+      "resolved_solver_jacobian_refresh_stride_phase2": 2,
+      "auto_resolution_contract": "auto_locked_phasewise_cadence",
+      "in_locked_policy_scope": true,
+      "recording_output_stem": "auto_policy_smoke_flrw",
+      "recommended_execution_order_reason": "Exact fallback first, then single-stride dependency cadence, then phase-wise dependency cadence, so partial recording progress can be preserved honestly in constrained environments."
+    }
+  ],
+  "aggregation_contract": {
+    "partial_case_json_allowed": true,
+    "final_summary_requires_all_cases": true,
+    "resume_from_existing_case_json": true
+  },
+  "note": "This is a recording/operations helper only. It does not imply that a fresh numerical smoke artifact already exists."
+}

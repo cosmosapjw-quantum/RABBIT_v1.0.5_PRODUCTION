@@ -1,0 +1,21 @@
+{
+  "_comment": "v3.0 Phase K: NUDEC_BSM drift baseline. Recorded at the v2.0 release commit 3ac6994. Cross-code drift watcher compares live NUDEC_BSM output to this fixture and hard-fails if upstream drift exceeds the documented budget (5e-4 Y_p, 1e-3 N_eff).",
+  "version": "v2.0.0-baseline",
+  "recorded_at_commit": "3ac6994",
+  "input": {
+    "eta": 6.104e-10,
+    "tau_n": 878.4,
+    "n_eff_target": 3.044
+  },
+  "output_reference": {
+    "_source": "v2_0_REMAINING_GAPS.md section 1: 'NUDEC_BSM: N_eff = 3.0446 (within 6e-4 of Mangano 3.044)'",
+    "N_eff": 3.0446,
+    "expected_T_gamma_final_MeV_band_low": 0.005,
+    "expected_T_gamma_final_MeV_band_high": 0.012
+  },
+  "drift_budget": {
+    "_comment": "Plan §3.3: hard-fail if drift exceeds these in a live NUDEC_BSM rerun.",
+    "max_neff_drift": 1.0e-3,
+    "max_neff_to_mangano_drift": 5.0e-3
+  }
+}

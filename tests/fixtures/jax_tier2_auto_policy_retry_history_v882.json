@@ -1,0 +1,31 @@
+{
+  "label": "finite_shear",
+  "recording_status": "timed_out",
+  "resolved_solver_jacobian_mode": "exact_per_step",
+  "auto_resolution_contract": "auto_exact_fallback_outside_locked_scope",
+  "solver_jacobian_refresh_stride_phase1": 1,
+  "solver_jacobian_refresh_stride_phase2": 1,
+  "shear_regime": "finite_shear",
+  "in_locked_policy_scope": false,
+  "timeout_seconds": 15.0,
+  "attempt_history": [
+    {
+      "recording_status": "timed_out",
+      "timeout_seconds": 5.0,
+      "resolved_solver_jacobian_mode": "exact_per_step",
+      "auto_resolution_contract": "auto_exact_fallback_outside_locked_scope",
+      "solver_jacobian_refresh_stride_phase1": 1,
+      "solver_jacobian_refresh_stride_phase2": 1
+    },
+    {
+      "recording_status": "timed_out",
+      "timeout_seconds": 15.0,
+      "resolved_solver_jacobian_mode": "exact_per_step",
+      "auto_resolution_contract": "auto_exact_fallback_outside_locked_scope",
+      "solver_jacobian_refresh_stride_phase1": 1,
+      "solver_jacobian_refresh_stride_phase2": 1
+    }
+  ],
+  "attempt_count": 2,
+  "latest_timeout_seconds": 15.0
+}

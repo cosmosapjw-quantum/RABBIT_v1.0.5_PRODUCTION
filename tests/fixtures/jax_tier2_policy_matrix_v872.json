@@ -1,0 +1,56 @@
+{
+  "config": {
+    "N_q": 6,
+    "thermo_tier": 2,
+    "use_live_weak_monopoles": true,
+    "correction_level": 2,
+    "exact_mode": "exact_per_step",
+    "dependency_mode": "experimental_dependency_cadence",
+    "dependency_stride": 3,
+    "phasewise_mode": "experimental_dependency_cadence",
+    "global_stride": 3,
+    "phase1_stride": 4,
+    "phase2_stride": 2
+  },
+  "cases": [
+    {
+      "label": "FLRW",
+      "exact_per_step": {
+        "delta_Yp": 0.0,
+        "delta_Neff": 0.0
+      },
+      "dependency_cadence": {
+        "delta_Yp": 3.259378185682671e-06,
+        "delta_Neff": 2.7454664919712712e-05,
+        "bound_Yp": 1e-05,
+        "bound_Neff": 6e-05
+      },
+      "phasewise_cadence": {
+        "delta_Yp": 3.0768985026519147e-06,
+        "delta_Neff": 2.685398340052103e-05,
+        "bound_Yp": 2e-05,
+        "bound_Neff": 6e-05
+      }
+    },
+    {
+      "label": "small_shear",
+      "exact_per_step": {
+        "delta_Yp": 0.0,
+        "delta_Neff": 0.0
+      },
+      "dependency_cadence": {
+        "delta_Yp": 4.514052608151076e-06,
+        "delta_Neff": 4.913390791738692e-05,
+        "bound_Yp": 1e-05,
+        "bound_Neff": 6e-05
+      },
+      "phasewise_cadence": {
+        "delta_Yp": 1.5918334518028043e-05,
+        "delta_Neff": 5.433784873920544e-05,
+        "bound_Yp": 2e-05,
+        "bound_Neff": 6e-05
+      }
+    }
+  ],
+  "note": "PR-M comparative matrix fixture: exact-per-step baseline plus the currently locked dependency-cadence and phase-wise dependency-cadence envelopes for tier-2 live-weak CL2. This is a comparative summary fixture, not a validated default dispatch path."
+}

@@ -1,0 +1,1864 @@
+{
+  "generated": "2026-04-10",
+  "code_version": "1.0.0",
+  "description": "FLRW baseline gold table. Sigma=0, N_q=20, rtol=1e-8, transport_mode=characteristic (production default). Relocked from v8.6.1 linearized to v1.0.0 characteristic. SELF-CONSISTENCY REGRESSION LOCK (BD598 E-R3): these values are RABBIT's own outputs and detect drift only — they are NOT externally validated. External anchoring is provided separately by the public AP-unified CL3 FLRW Y_p/D-H gate (test_flrw_external_parity_public.py). N_eff NOTE (BD599 W2-R5): the locked N_eff=3.0107 is the entropy-ratio diagnostic of the parametric Tier-1 T_nu with T_DEC_DEFAULT=2.0 MeV (g_s(T_dec)=5.485, ~0.27% below the canonical 5.5), not the SM N_eff (3.044); see docs/audit/BD598_PR-B2_neff_convention_resolution_2026-06-28.md. The g_s=5.5 fix (PR-B3) would shift Yp by ~3.8e-5 (~100x below observational precision) and is deferred.",
+  "transport_mode": "characteristic",
+  "tolerances": {
+    "Yp_abs": 1e-06,
+    "DH_rel": 0.005,
+    "Li7H_rel": 0.05,
+    "N_eff_abs": 0.02
+  },
+  "entries": [
+    {
+      "n_rxn": 12,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 0,
+      "Yp": 0.2423493992,
+      "DH": 2.48878227e-05,
+      "Li7H": 5.2349e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    },
+    {
+      "n_rxn": 12,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 1,
+      "Yp": 0.2463348007,
+      "DH": 2.51092982e-05,
+      "Li7H": 5.2899e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    },
+    {
+      "n_rxn": 12,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 2,
+      "Yp": 0.2480311203,
+      "DH": 2.5204471e-05,
+      "Li7H": 5.3129e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    },
+    {
+      "n_rxn": 31,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 0,
+      "Yp": 0.2423493992,
+      "DH": 2.48886e-05,
+      "Li7H": 5.1865e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    },
+    {
+      "n_rxn": 31,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 1,
+      "Yp": 0.2463348007,
+      "DH": 2.51101e-05,
+      "Li7H": 5.2415e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    },
+    {
+      "n_rxn": 31,
+      "N_q": 20,
+      "rtol": 1e-08,
+      "CL": 2,
+      "Yp": 0.2480311203,
+      "DH": 2.52053e-05,
+      "Li7H": 5.2645e-10,
+      "Li6H": 0.0,
+      "N_eff": 3.0107
+    }
+  ],
+  "f06_matched_standard_anchors": {
+    "schema_version": "f06_matched_standard_anchors_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "captured_date": "2026-07-15",
+    "evidence_mode": "stored_results_from_live_runs",
+    "scope": "Matched minimal FLRW BBN only: zero QED, Born weak rates, the named 12-reaction network, and the serialized numerical profiles below.",
+    "stored_replay_contract": {
+      "executes_external_code": false,
+      "may_be_reported_as_a_live_run": false,
+      "description": "These records were produced by live runs on 2026-07-15. Reading this fixture later is a stored-anchor replay, not a new PRIMAT, LINX, or Rust execution."
+    },
+    "matched_configuration": {
+      "geometry": "FLRW",
+      "eta_late": 6.1e-10,
+      "omega_b_h2": 0.022283237289625883,
+      "neutron_lifetime_seconds": 878.4,
+      "temperature_start_mev": 10.0,
+      "temperature_end_mev": 0.005,
+      "reaction_count": 12,
+      "reaction_order": "PRIMAT official small 12 network order",
+      "reaction_identities": [
+        "n + p > d + g",
+        "d + p > He3 + g",
+        "d + d > He3 + n",
+        "d + d > t + p",
+        "t + p > a + g",
+        "t + d > a + n",
+        "t + a > Li7 + g",
+        "He3 + n > t + p",
+        "He3 + d > a + p",
+        "He3 + a > Be7 + g",
+        "Be7 + n > Li7 + p",
+        "Li7 + p > a + a"
+      ],
+      "rate_version": "PRIMAT AC2024 first 12 reactions",
+      "canonical_31_row_table_sha256": "8dacb12bece202a798bae67f2ca89d1fad62f9f02bad38da0f59c19147960b85",
+      "standalone_12_row_table_sha256": "702339cf1dd5833bcadadecf578573f7c0cdc4d75dc6304b2baa8cb3b947893b",
+      "mev_to_t9": 11.604518121550082,
+      "physics_switches": {
+        "incomplete_decoupling": false,
+        "qed": false,
+        "spectral": false,
+        "weak_corrections": false,
+        "nuclear_qed": false
+      },
+      "observable_definitions": {
+        "Yp": "primordial He-4 mass fraction",
+        "DH": "deuterium-to-hydrogen number ratio",
+        "He3H": "(T + He-3)-to-hydrogen number ratio after tritium decay",
+        "Li7H": "(Li-7 + Be-7)-to-hydrogen number ratio after Be-7 decay/electron-capture convention"
+      }
+    },
+    "primat": {
+      "version": "0.3.2",
+      "commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "execution_status": "VALIDATED",
+      "configuration": {
+        "network": "official small 12 network",
+        "eta": 6.1e-10,
+        "omega_b_h2": 0.022283237289625883,
+        "neutron_lifetime_seconds": 878.4,
+        "temperature_start_mev": 10.0,
+        "temperature_end_mev": 0.005,
+        "incomplete_decoupling": false,
+        "qed": false,
+        "spectral": false,
+        "weak_corrections": false,
+        "nuclear_qed": false,
+        "numerical_precision": 5e-08,
+        "caches": false
+      },
+      "stock_official_small_12": {
+        "authority_scope": "Stock PRIMAT v0.3.2 official-small-network output under the serialized configuration.",
+        "c": {
+          "Yp": 0.24241213258199046,
+          "DH": 2.4273782866160607e-05,
+          "He3H": 1.0369530918646108e-05,
+          "Li7H": 5.439024273830836e-10
+        },
+        "python": {
+          "Yp": 0.24241234784967788,
+          "DH": 2.427368979389438e-05,
+          "He3H": 1.0369521854563226e-05,
+          "Li7H": 5.439041024883049e-10
+        }
+      },
+      "matched_rabbit_60_node_piecewise_loglinear_custom_table": {
+        "authority_scope": "PRIMAT v0.3.2 executed with the exact 60-node piecewise-loglinear RABBIT rate table. This is a matched custom-table comparison and MUST NOT be relabeled as stock PRIMAT output.",
+        "table_kind": "RABBIT 60-node piecewise-loglinear custom table",
+        "is_stock_primat": false,
+        "c": {
+          "Yp": 0.2424109964894047,
+          "DH": 2.4298801246344033e-05,
+          "He3H": 1.0394633758133543e-05,
+          "Li7H": 5.43138654225688e-10
+        },
+        "python": {
+          "Yp": 0.24241097227649583,
+          "DH": 2.4298714548377638e-05,
+          "He3H": 1.0394620145016383e-05,
+          "Li7H": 5.431407721237259e-10
+        }
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "provenance": {
+        "baseline_head": "0b2339c",
+        "branch": "bd612-remediation",
+        "source_path": "native/rabbit_cpu/src/minimal_bbn.rs",
+        "source_state": "uncommitted working tree",
+        "committed_rust_blob": false,
+        "statement": "The matched Rust runs used the uncommitted working-tree source at baseline HEAD 0b2339c; no committed Rust revision is claimed."
+      },
+      "profile": {
+        "weak_temperature_start_mev": 10.0,
+        "network_activation_temperature_mev": 0.86164715286738,
+        "network_initial_abundances": "Saha seeds",
+        "temperature_end_mev": 0.005,
+        "neutrino_treatment": "ideal high-temperature instantaneous decoupling",
+        "failure_semantics": "raw failure propagation with no clipping",
+        "rate_table": "PRIMAT AC2024 first 12 reactions, exact RABBIT table",
+        "weak_mode": "Born",
+        "weak_corrections": false,
+        "qed": false,
+        "relative_tolerance": 1e-09,
+        "terminal_baryon_residual_abs_limit": 5e-08,
+        "mev_to_t9": 11.604518121550082
+      },
+      "bdf_rtol_1e_9": {
+        "solver": "BDF",
+        "rtol": 1e-09,
+        "Xn_handoff": 0.2383068368184996,
+        "Yp": 0.2424118898167283,
+        "DH": 2.429829551078614e-05,
+        "He3H": 1.0394582361191677e-05,
+        "Li7H": 5.431514140275494e-10
+      },
+      "rodas5p_rtol_1e_9": {
+        "solver": "Rodas5P",
+        "rtol": 1e-09,
+        "Xn_handoff": 0.2383068372315118,
+        "Yp": 0.2424119070631264,
+        "DH": 2.429829855058169e-05,
+        "He3H": 1.0394582738500974e-05,
+        "Li7H": 5.431513644880789e-10
+      }
+    },
+    "linx": {
+      "version": "0.1.2",
+      "commit": "ec2e9d2ca455e8204137e884da29f5dd13a638fa",
+      "execution_status": "VALIDATED",
+      "solver": {
+        "method": "Kvaerno3",
+        "jax_x64": true
+      },
+      "matched_inputs": {
+        "rate_laws": "exact same 12 rate-law rows as the Rust matched profile",
+        "initial_abundances": "exact Rust Saha Y_i",
+        "background_source": "shared PRIMAT background",
+        "shared_background_arrays": [
+          "a",
+          "t",
+          "rho"
+        ],
+        "background_point_count": 5282,
+        "background_temperature_start_mev": 10.0,
+        "background_temperature_end_mev": 0.005,
+        "background_time_start_seconds": 0.0073824,
+        "background_time_end_seconds": 52796.2033
+      },
+      "independence_scope": {
+        "rhs_and_integrator_independent": true,
+        "background_independent": false,
+        "nuclear_input_independent": false,
+        "statement": "LINX independently cross-checks the network RHS/integrator only. It shares PRIMAT background arrays, the same 12 rate-law rows, and Rust Saha initial abundances, so it is NOT an independent background or nuclear-input anchor."
+      },
+      "tolerance_ladder": {
+        "rtol_3e_7": {
+          "rtol": 3e-07,
+          "Yp": 0.2424064261500686,
+          "DH": 2.4298289610368686e-05,
+          "He3H": 1.0394563170096827e-05,
+          "Li7H": 5.431375196196139e-10
+        },
+        "rtol_1e_7": {
+          "rtol": 1e-07,
+          "Yp": 0.2424068231316766,
+          "DH": 2.4298314525580226e-05,
+          "He3H": 1.0394566279729977e-05,
+          "Li7H": 5.431380791800159e-10
+        },
+        "rtol_3e_8": {
+          "rtol": 3e-08,
+          "Yp": 0.24240650068002598,
+          "DH": 2.4298295453361514e-05,
+          "He3H": 1.0394564587022681e-05,
+          "Li7H": 5.431374529316609e-10
+        }
+      }
+    },
+    "claim_limitations": [
+      "The PRIMAT custom-table profile is not a stock PRIMAT prediction.",
+      "The LINX profile is independent only in its RHS and Kvaerno3 integration; its background, rate-law rows, and initial abundances are shared inputs.",
+      "The Rust source was an uncommitted working tree at baseline HEAD 0b2339c; no committed Rust blob or revision is claimed by this fixture.",
+      "Stored-anchor replay is not a new live execution.",
+      "Validation applies only to this matched minimal zero-QED Born FLRW configuration and does not grant public-production authority."
+    ]
+  },
+  "f07_finite_temperature_qed": {
+    "schema_version": "f07_finite_temperature_qed_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "captured_date": "2026-07-15",
+    "evidence_mode": "stored_results_from_live_runs_and_independent_component_integrals",
+    "scope": "The scalar zero-chemical-potential finite-temperature QED EOS, the externally checked dPa+dPe3 leading endpoint delta, and the independently checked dPb pressure derivatives. The complete dPa+dPb+dPe3 endpoint is IMPLEMENTED and dual-solver checked but has no external endpoint oracle.",
+    "stored_replay_contract": {
+      "executes_external_code": false,
+      "may_be_reported_as_a_live_run": false,
+      "description": "The PRIMAT and Rust endpoint records were produced by live runs on 2026-07-15. Reading this fixture later is a stored-anchor replay, not a new external or Rust execution."
+    },
+    "convention": {
+      "fine_structure_alpha": 0.0072973525692838015,
+      "electron_mass_mev": 0.51099895,
+      "chemical_potential": 0.0,
+      "pressure_terms": {
+        "dPa": {
+          "order": "O(e^2)=O(alpha)",
+          "sign": "negative",
+          "description": "PRIMAT log-independent pressure term"
+        },
+        "dPb": {
+          "order": "O(e^2)=O(alpha)",
+          "sign": "positive",
+          "description": "PRIMAT log-dependent exchange pressure term"
+        },
+        "dPe3": {
+          "order": "O(e^3)=O(alpha^(3/2))",
+          "sign": "positive",
+          "description": "PRIMAT ring pressure term"
+        }
+      },
+      "leading_model": "dPa+dPe3",
+      "complete_model": "dPa+dPb+dPe3",
+      "thermodynamic_closure": {
+        "energy_density": "delta_rho = T*d(delta_P)/dT - delta_P",
+        "entropy_density": "delta_s = d(delta_P)/dT",
+        "energy_derivative": "d(delta_rho)/dT = T*d2(delta_P)/dT2"
+      },
+      "sources": {
+        "primat_version": "0.3.2",
+        "primat_commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+        "primat_mathematica_source": "generate_rates/PRIMAT-Main.m lines 920-953",
+        "precision_bbn_review": "Pitrou, Coc, Uzan and Vangioni, Physics Reports 2018, arXiv:1801.08023",
+        "qed_order_reference": "Bennett et al., arXiv:1911.04504, Eq. 4.7"
+      }
+    },
+    "independent_scipy_dpb": {
+      "execution_status": "VALIDATED",
+      "method": "scipy.integrate.dblquad on the public PRIMAT dPb integrand with five-point temperature stencils; it shares neither the Rust triangular transform nor the Rust analytic x derivatives",
+      "relative_tolerance": 1e-06,
+      "anchors": [
+        {
+          "temperature_mev": 0.2,
+          "pressure_mev4": 2.0164225631123743e-08,
+          "dpressure_dt_mev3": 6.93141296213e-07,
+          "d2pressure_dt2_mev2": 1.76408155e-05
+        },
+        {
+          "temperature_mev": 1.0,
+          "pressure_mev4": 1.7720550384245374e-05,
+          "dpressure_dt_mev3": 4.83052038428e-05,
+          "d2pressure_dt2_mev2": 6.75348561e-05
+        },
+        {
+          "temperature_mev": 10.0,
+          "pressure_mev4": 0.0030354132857968335,
+          "dpressure_dt_mev3": 0.000617147460721,
+          "d2pressure_dt2_mev2": 6.22827791e-05
+        }
+      ]
+    },
+    "primat_leading_endpoint": {
+      "execution_status": "VALIDATED",
+      "version": "0.3.2",
+      "commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "configuration": {
+        "network": "official small 12 network with all forward rows replaced by a 10000-node dense representation of the exact RABBIT piecewise-loglinear laws",
+        "eta": 6.1e-10,
+        "omega_b_h2": 0.022283237289625883,
+        "neutron_lifetime_seconds": 878.4,
+        "temperature_start_mev": 10.0,
+        "temperature_end_mev": 0.005,
+        "incomplete_decoupling": false,
+        "spectral_distortions": false,
+        "radiative_corrections": false,
+        "finite_mass_corrections": false,
+        "thermal_corrections": false,
+        "nuclear_qed_corrections": false,
+        "numerical_precision": 5e-08,
+        "weak_rate_cache": false
+      },
+      "qed_off_python": {
+        "Yp": 0.24241097227649583,
+        "DH": 2.4298714548377638e-05,
+        "He3H": 1.0394620145016383e-05,
+        "Li7H": 5.431407721237259e-10,
+        "Neff": 3.0000000000000044
+      },
+      "qed_leading_python": {
+        "Yp": 0.24240826096918933,
+        "DH": 2.4324175351206648e-05,
+        "He3H": 1.0398334393771487e-05,
+        "Li7H": 5.424418461753546e-10,
+        "Neff": 3.009645190024071
+      },
+      "qed_leading_minus_off_python": {
+        "Yp": -2.711307306502153e-06,
+        "DH": 2.5460802829010536e-08,
+        "He3H": 3.7142487551041197e-09,
+        "Li7H": -6.989259483713365e-13,
+        "Neff": 0.009645190024066608
+      },
+      "qed_off_c": {
+        "Yp": 0.2424109964894047,
+        "DH": 2.4298801246344033e-05,
+        "He3H": 1.0394633758133543e-05,
+        "Li7H": 5.43138654225688e-10,
+        "Neff": 3.0000000000000044
+      },
+      "qed_leading_c": {
+        "Yp": 0.2424082675998213,
+        "DH": 2.4324277429906386e-05,
+        "He3H": 1.0398348068671849e-05,
+        "Li7H": 5.424397567882284e-10,
+        "Neff": 3.009645190024071
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "provenance": {
+        "baseline_head": "0b2339c",
+        "branch": "bd612-remediation",
+        "source_paths": [
+          "native/rabbit_cpu/src/qed_eos.rs",
+          "native/rabbit_cpu/src/flrw.rs",
+          "native/rabbit_cpu/src/born_freezeout.rs",
+          "native/rabbit_cpu/src/minimal_bbn.rs"
+        ],
+        "source_state": "uncommitted working tree",
+        "committed_rust_blob": false
+      },
+      "profile": {
+        "qed_single_integral_panels": 256,
+        "qed_exchange_gauss_legendre_order": 48,
+        "qed_tail_e_folds": 48.0,
+        "relative_tolerance": 1e-09,
+        "weak_mode": "Born",
+        "reaction_count": 12,
+        "neutrino_treatment": "ideal high-temperature instantaneous decoupling"
+      },
+      "off_bdf": {
+        "solver": "BDF",
+        "qed_model": "Off",
+        "Xn_handoff": 0.2383068368184996,
+        "Yp": 0.2424118898167283,
+        "DH": 2.429829551078614e-05,
+        "He3H": 1.0394582361191677e-05,
+        "Li7H": 5.431514140275494e-10
+      },
+      "leading_bdf": {
+        "solver": "BDF",
+        "qed_model": "PrimatLeadingE2E3",
+        "Xn_handoff": 0.23829460773914851,
+        "Yp": 0.24240922859576117,
+        "DH": 2.43237340921458e-05,
+        "He3H": 1.0398288837823238e-05,
+        "Li7H": 5.424538340363366e-10
+      },
+      "complete_bdf": {
+        "solver": "BDF",
+        "qed_model": "PrimatCompleteE2E3",
+        "endpoint_claim_status": "IMPLEMENTED",
+        "Xn_handoff": 0.2382953845838999,
+        "Yp": 0.2424107431490362,
+        "DH": 2.432381666355107e-05,
+        "He3H": 1.0398301047865582e-05,
+        "Li7H": 5.42456058373719e-10
+      },
+      "complete_rodas5p": {
+        "solver": "Rodas5P",
+        "qed_model": "PrimatCompleteE2E3",
+        "endpoint_claim_status": "IMPLEMENTED",
+        "Xn_handoff": 0.23829538497905611,
+        "Yp": 0.24241075702214393,
+        "DH": 2.4323817657396513e-05,
+        "He3H": 1.0398301075576955e-05,
+        "Li7H": 5.424560548774084e-10
+      },
+      "release_endpoint_timing": {
+        "test_contents": "Off BDF + leading BDF + complete BDF + complete Rodas5P",
+        "test_wall_seconds": 10.0,
+        "comparison_off_bdf_repeat_seconds": [
+          0.773,
+          0.769
+        ],
+        "status": "measured complete-QED repeated-run cost blocker remains"
+      }
+    },
+    "claim_limitations": [
+      "The PRIMAT custom-table profile is not a stock PRIMAT prediction.",
+      "PRIMAT v0.3.2 Python and C endpoint thermodynamics use dPa+dPe3 and do not consume dPb.",
+      "The dPb pressure, first derivative, and second derivative are independently validated, but the complete dPa+dPb+dPe3 endpoint has no external endpoint oracle and remains IMPLEMENTED only.",
+      "Direct exchange quadrature has a material repeated-endpoint cost; F-07 closes ACCEPT_WITH_LIMITS rather than claiming the performance blocker resolved.",
+      "Weak radiative, finite-mass, thermal weak, nuclear-QED, spectral-distortion, collision, shear, and public-production claims remain absent or forbidden."
+    ]
+  },
+  "f08a_zero_temperature_ccr": {
+    "schema_version": "f08a_zero_temperature_ccr_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "captured_date": "2026-07-15",
+    "scope": "PRIMAT v0.3.2 zero-temperature relativistic Coulomb plus resummed radiative correction (CCR) on the six lifetime-normalized n-p channels, with the leading F07 QED background and exact F06 12-row matched nuclear table.",
+    "convention": {
+      "model": "Coulomb and resummed zero-temperature radiative factors are one inseparable endpoint mode",
+      "lifetime_normalization": "Each weak model is divided by tau_n times its own neutron-decay phase-space integral Fn",
+      "coulomb_channels": [
+        "nu_e + n -> p + e-",
+        "p + e- -> n + nu_e",
+        "n -> p + e- + anti-nu_e",
+        "p + e- + anti-nu_e -> n"
+      ],
+      "radiative_channels": "all six Born channels",
+      "positron_coulomb_factor": "none; no heuristic repulsive F(Z=-1)",
+      "threshold_beta_times_fermi": 0.0458798106425366,
+      "sources": {
+        "primat_version": "0.3.2",
+        "primat_commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+        "primat_source": "primat/weak_rates/corrections.py FermiCoulomb, RadCorrResum, ComputeFn, and _L_CCR",
+        "precision_bbn_review": "Pitrou, Coc, Uzan and Vangioni, Physics Reports 2018, arXiv:1801.08023, equations 99-106 and B32-B36"
+      }
+    },
+    "component_anchors": {
+      "execution_status": "VALIDATED",
+      "method": "Independent scipy.integrate.quad physical-channel decomposition using public PRIMAT correction factors, checked against PRIMAT fixed-grid aggregates",
+      "born_fn": 1.6360979560086601,
+      "ccr_fn": 1.7583843867571942,
+      "equal_temperature_rates": [
+        {
+          "temperature_mev": 0.3,
+          "neutron_to_proton_per_second": 0.00953717734475375,
+          "proton_to_neutron_per_second": 0.0001279762856228424
+        },
+        {
+          "temperature_mev": 1.0,
+          "neutron_to_proton_per_second": 1.556808330768431,
+          "proton_to_neutron_per_second": 0.4271181627209999,
+          "channels_per_second": {
+            "nu_e_n_to_p_electron": 0.7877447548869099,
+            "electron_p_to_n_nu_e": 0.2161217188723076,
+            "positron_n_to_p_anti_nu_e": 0.7685791431616803,
+            "anti_nu_e_p_to_n_positron": 0.21086353730575377,
+            "free_neutron_decay": 0.00048443271984080895,
+            "inverse_neutron_decay": 0.00013290654293853478
+          }
+        }
+      ],
+      "equal_temperature_detailed_balance_max_absolute_residual": 2.22e-16
+    },
+    "primat_matched_endpoint": {
+      "execution_status": "VALIDATED",
+      "configuration": {
+        "network": "official small network with all 12 forward rows replaced by a 10000-node dense representation of the exact RABBIT piecewise-loglinear laws",
+        "eta": 6.1e-10,
+        "omega_b_h2": 0.022283237289625883,
+        "neutron_lifetime_seconds": 878.4,
+        "temperature_start_mev": 10.0,
+        "temperature_end_mev": 0.005,
+        "qed_corrections": true,
+        "incomplete_decoupling": false,
+        "spectral_distortions": false,
+        "finite_mass_corrections": false,
+        "thermal_corrections": false,
+        "nuclear_qed_corrections": false,
+        "numerical_precision": 5e-08,
+        "weak_rate_cache": false
+      },
+      "born_python": {
+        "Yp": 0.24240826096918933,
+        "DH": 2.4324175351206648e-05,
+        "He3H": 1.0398334393771487e-05,
+        "Li7H": 5.424418461753546e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_python": {
+        "Yp": 0.24555829679435634,
+        "DH": 2.4495160175689093e-05,
+        "He3H": 1.0424117029619265e-05,
+        "Li7H": 5.47022984399739e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_minus_born_python": {
+        "Yp": 0.0031500358251670135,
+        "DH": 1.7098482448244513e-07,
+        "He3H": 2.57826358477788e-08,
+        "Li7H": 4.581138224384447e-12,
+        "Neff": 0.0
+      },
+      "born_c": {
+        "Yp": 0.2424082675998213,
+        "DH": 2.4324277429906386e-05,
+        "He3H": 1.0398348068671849e-05,
+        "Li7H": 5.424397567882284e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_c": {
+        "Yp": 0.2455585484196588,
+        "DH": 2.449526095870361e-05,
+        "He3H": 1.0424131263586655e-05,
+        "Li7H": 5.470215014461408e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_minus_born_c": {
+        "Yp": 0.0031502808198375087,
+        "DH": 1.7098352879722328e-07,
+        "He3H": 2.5783194914806226e-08,
+        "Li7H": 4.581744657912444e-12,
+        "Neff": 0.0
+      },
+      "repeat_determinism": "Born and CCR are float-exact across two repeats in both C and Python backends"
+    },
+    "independent_temperature_variable_freezeout": {
+      "schema_version": "f08a_temperature_variable_freezeout_oracle_v1",
+      "execution_status": "VALIDATED",
+      "claim_scope": "Standalone exact-matched weak freeze-out leg only; no nuclear-abundance, precision-standard, collision, anisotropy, QKE, or public-production claim.",
+      "method": {
+        "independent_variable": "Tgamma [MeV], decreasing 10 -> 0.05",
+        "integrator": "SciPy DOP853",
+        "electron_eos": "adaptive quad_vec in y=p/T, not Rust theta/Simpson quadrature",
+        "weak_rates": "adaptive infinite/bounded physical-channel quadrature, not Rust fixed Gauss-Legendre nodes",
+        "qed_background": "public PRIMAT dPa+dPe3 formulas on nested log-T splines",
+        "initial_neutron_fraction": "model-specific lambda_pn/(lambda_np+lambda_pn) at 10 MeV"
+      },
+      "configuration": {
+        "temperature_start_mev": 10.0,
+        "activation_temperature_mev": 0.86164715286738,
+        "temperature_end_mev": 0.05,
+        "neutron_lifetime_seconds": 878.4,
+        "baseline_rtol": 1e-09,
+        "baseline_atol": 1e-12,
+        "rust_standalone_rtol": 2e-08,
+        "rust_standalone_atol": [
+          1e-10,
+          1e-11
+        ],
+        "qed_grid_points": 2401
+      },
+      "born_baseline": {
+        "Fn": 1.6360979560089386,
+        "activation": {
+          "N": 2.459321902663612,
+          "Xn": 0.23829460810899786
+        },
+        "final": {
+          "N": 5.63289952673424,
+          "Xn": 0.08768318367517208
+        }
+      },
+      "ccr_baseline": {
+        "Fn": 1.758384386780441,
+        "activation": {
+          "N": 2.459321945993766,
+          "Xn": 0.23933997648530858
+        },
+        "final": {
+          "N": 5.632899620982856,
+          "Xn": 0.08881808322344643
+        }
+      },
+      "numerical_stability": {
+        "tolerance_ladder_max_absolute_N_delta": 1.515651693040354e-07,
+        "tolerance_ladder_max_absolute_Xn_delta": 4.069031417364144e-09,
+        "tolerance_ladder_note": "The N ladder is bounded but non-monotone; this is stability evidence, not a claim of monotone asymptotic convergence.",
+        "same_process_repeat_bitwise_equal": true,
+        "fresh_process_repeat_bitwise_equal": true,
+        "nested_qed_grid_points": [
+          601,
+          1201,
+          2401
+        ],
+        "nested_qed_grid_max_N_spread": 7.213827979413168e-08,
+        "nested_qed_grid_max_Xn_spread": 4.621399957160932e-09,
+        "max_absolute_N_minus_entropy_identity": 9.418207636002762e-08
+      },
+      "rust_acceptance": {
+        "max_absolute_N_difference": 3e-07,
+        "max_absolute_Xn_difference": 2e-08,
+        "basis": "Conservative envelope above the independently measured tolerance, entropy-identity, and QED-grid spreads; not used to calibrate physics constants."
+      },
+      "provenance": {
+        "result_path": "/tmp/rabbit_f08a_freezeout_oracle_20260715/f08a_temperature_oracle_result.json",
+        "result_sha256": "0b5f42b0f5a2dfc3f97c8b00d4c30809c73b8faf507c9ef70469408419ea539e",
+        "raw_path": "/tmp/rabbit_f08a_freezeout_oracle_20260715/f08a_temperature_oracle_raw.jsonl",
+        "raw_sha256": "906e4050ec3ab930b008241a1f0d9bab8d21af4e5a03df7e5901e078bd572799",
+        "validation_path": "/tmp/rabbit_f08a_freezeout_oracle_20260715/f08a_temperature_oracle_validation.json",
+        "validation_sha256": "298c77e21b5a194d5de869f97b97213c42a81d931eaf09fce5fbcf4177723fce",
+        "runner_sha256": "f61a301a1dac4db30807a150b63d739a674e5206895d4c387357a0db3e10ca1f",
+        "qed_grid_augmenter_sha256": "7d54b27371bb3b205380be31bc41f53aa02827cfa732c1541e889d820f6661ad",
+        "cold_repeat_augmenter_sha256": "9dcba5574539d6455b9ba9b5a5419d7d898b7cb3433d51b1e3ecd0cc5392c183",
+        "validator_sha256": "648b75a208957a542211bf8e6d2d129c6b57cc2dad84e442bcfce27707e9678d",
+        "validation_checks_passed": 11,
+        "validation_checks_total": 11
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "provenance": {
+        "baseline_head": "0b2339c",
+        "branch": "bd612-remediation",
+        "source_paths": [
+          "native/rabbit_cpu/src/born_weak.rs",
+          "native/rabbit_cpu/src/born_freezeout.rs",
+          "native/rabbit_cpu/src/minimal_bbn.rs"
+        ],
+        "source_state": "uncommitted working tree",
+        "committed_rust_blob": false
+      },
+      "profile": {
+        "qed_model": "PrimatLeadingE2E3",
+        "weak_model": "PrimatZeroTemperatureCcr",
+        "weak_quadrature_order": 64,
+        "weak_leg_relative_tolerance": 2e-08,
+        "coupled_relative_tolerance": 1e-09,
+        "reaction_count": 12,
+        "neutrino_treatment": "ideal high-temperature instantaneous decoupling"
+      },
+      "bdf": {
+        "solver": "BDF",
+        "Xn_handoff": 0.23933997784918984,
+        "Yp": 0.24555944587510375,
+        "DH": 2.449470389399336e-05,
+        "He3H": 1.042407102739187e-05,
+        "Li7H": 5.470358224075774e-10
+      },
+      "rodas5p": {
+        "solver": "Rodas5P",
+        "Xn_handoff": 0.23933997825914843,
+        "Yp": 0.24555946656470976,
+        "DH": 2.449470639494554e-05,
+        "He3H": 1.0424071307204379e-05,
+        "Li7H": 5.4703579359022e-10
+      },
+      "debug_endpoint_timing_seconds": {
+        "BDF": 5.129192,
+        "Rodas5P": 14.419672,
+        "status": "single diagnostic run; release repeated-run timing is the cost authority"
+      },
+      "release_endpoint_timing_seconds": {
+        "BDF_first": 1.339234,
+        "BDF_repeat": 1.341599,
+        "Rodas5P": 3.969026,
+        "full_test_including_leading_qed_born_comparator": 7.54,
+        "BDF_repeat_bitwise_equal": true,
+        "status": "measured opt-in correction cost; no claim that the pre-existing complete-QED repeated-run blocker is resolved"
+      }
+    },
+    "provenance": {
+      "result_path": "/tmp/rabbit_f08a_external_20260715/f08a_primat_ccr_result.json",
+      "result_sha256": "2a7f20cd8ff1f243444a61a0c4824001ec4ed2f3ea0ed650a269b8c05a86774f",
+      "raw_path": "/tmp/rabbit_f08a_external_20260715/f08a_primat_ccr_raw.jsonl",
+      "raw_sha256": "8350bc33c04a89d51605c2dc4d14465718e082064fd74d1cbca62e8f951dbfbe",
+      "validation_sha256": "ec78a2694393e132a24035d89b0b9763914b42cef77a4d0578536c6f5d88cdf5",
+      "runner_sha256": "712afb3cdbe75a67b517080029307539ae0c733510d4ec8a69a9bf6e3148f5bc",
+      "validator_sha256": "a36f4cdddf98a10983cd6411f4b4543238d562ca84446ab92f6f4c0caeb337a5",
+      "primat_c_backend_sha256": "89f31173d311445472aa6f930b0d341d42fe19ff6dfbd75dd3c8ef0232f90d1a",
+      "rabbit_rate_source_sha256": "8dacb12bece202a798bae67f2ca89d1fad62f9f02bad38da0f59c19147960b85",
+      "dense_custom_network_sha256": "fb30603a1e564fe5cbc22d7610a0ce4f65c3c3faa9653c8b43f2ddb491c4b4e2",
+      "f07_electron_thermo_cache_sha256": "235459a6c1259530a7ce2d3a349db8e48373879b975172665061b9e35a7138cb"
+    },
+    "claim_limitations": [
+      "The custom-table endpoint is a matched comparison, not a stock PRIMAT prediction.",
+      "Coulomb-only and radiative-only values are diagnostics, not supported endpoint modes.",
+      "Finite-nucleon-mass, weak-magnetism, finite-temperature radiative, spectral-distortion, incomplete-decoupling, and nuclear-QED corrections remain disabled.",
+      "This evidence does not validate collision, anisotropy, QKE, public-production, or precision-standard abundance claims."
+    ]
+  },
+  "f08b_finite_nucleon_mass_no_weak_magnetism": {
+    "schema_version": "f08b_finite_nucleon_mass_no_weak_magnetism_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "captured_date": "2026-07-15",
+    "evidence_mode": "stored_results_from_live_runs_and_independent_component_integrals",
+    "scope": "PRIMAT v0.3.2 zero-temperature Coulomb plus resummed radiative correction and first-order finite-nucleon-mass Fokker-Planck weak correction, with weak magnetism forced off by delta_kappa=0, leading QED, instantaneous decoupling, tau_n=878.4 s, eta=6.1e-10, and the exact F06 matched 12-reaction table.",
+    "stored_replay_contract": {
+      "executes_external_code": false,
+      "may_be_reported_as_a_live_run": false
+    },
+    "convention": {
+      "finite_mass_order": "first order in inverse nucleon mass",
+      "weak_magnetism_delta_kappa": 0.0,
+      "weak_magnetism_status": "FORCED_OFF",
+      "external_endpoint_backend": "PRIMAT v0.3.2 Python"
+    },
+    "component_anchors": {
+      "execution_status": "VALIDATED",
+      "fn": {
+        "ccr_fn": 1.7583843867571942,
+        "primat_finite_mass_delta_fn": -0.003620163564107326,
+        "f08b_total_fn": 1.754764223193087,
+        "independent_compact_finite_mass_delta_fn": -0.003620163815600761,
+        "compact_minus_primat_delta_fn": -2.5149343501826293e-10
+      },
+      "compact_vs_expanded_point_grid": {
+        "row_count": 252,
+        "max_absolute_difference": 4.468647674116255e-15,
+        "max_scale_relative_difference": 5.5221370874884094e-12
+      },
+      "equal_temperature_rates": [
+        {
+          "photon_temperature_mev": 0.3,
+          "neutrino_temperature_mev": 0.3,
+          "neutron_to_proton_per_second": 0.009514094338920922,
+          "proton_to_neutron_per_second": 0.0001279321204459813
+        },
+        {
+          "photon_temperature_mev": 1.0,
+          "neutrino_temperature_mev": 1.0,
+          "neutron_to_proton_per_second": 1.5416115359460572,
+          "proton_to_neutron_per_second": 0.4238395237090423
+        },
+        {
+          "photon_temperature_mev": 3.0,
+          "neutrino_temperature_mev": 3.0,
+          "neutron_to_proton_per_second": 253.82135089970424,
+          "proton_to_neutron_per_second": 165.2895556114052
+        }
+      ],
+      "unequal_temperature_six_channel_anchor": {
+        "photon_temperature_mev": 1.0,
+        "neutrino_temperature_mev": 0.9941462369183305,
+        "channels_per_second": {
+          "nu_e_n_to_p_electron": 0.7633248834883735,
+          "electron_p_to_n_nu_e": 0.21561095542202527,
+          "positron_n_to_p_anti_nu_e": 0.7574551437777503,
+          "anti_nu_e_p_to_n_positron": 0.20114867177712353,
+          "free_neutron_decay": 0.00048438690324023717,
+          "inverse_neutron_decay": 0.00013279064662980757
+        },
+        "totals_per_second": {
+          "neutron_to_proton": 1.5212644141693639,
+          "proton_to_neutron": 0.41689241784577863
+        }
+      },
+      "modified_detailed_balance": {
+        "temperature_mev": 1.0,
+        "target_name": "(mn/mp)^(3/2)*exp(-Q/T)",
+        "target_ratio": 0.27492246823324173,
+        "observed_total_ratio": 0.27493276602197986,
+        "relative_residual": 0.00003745706491106527,
+        "recorded_grid_max_absolute_relative_residual": 0.00011272952822240266
+      }
+    },
+    "standalone_temperature_variable_freezeout": {
+      "schema_version": "f08b_temperature_variable_freezeout_v1",
+      "execution_status": "VALIDATED",
+      "claim_scope": "Standalone weak-only freeze-out diagnostic; no nuclear-abundance, precision-standard, collision, anisotropy, QKE, or public-production claim.",
+      "method": {
+        "independent_variable": "T_gamma [MeV], integrated from 10 to 0.05; cosmic time is a co-evolved dependent state via dt/dT_gamma, not the ODE coordinate.",
+        "solver": "scipy.solve_ivp DOP853, rtol=2e-10"
+      },
+      "configuration": {
+        "temperature_start_mev": 10.0,
+        "activation_temperature_mev": 0.86164715286738,
+        "temperature_end_mev": 0.05,
+        "neutron_lifetime_seconds": 878.4,
+        "rate_grid_points": 321,
+        "gauss_legendre_nodes_per_panel": [
+          80,
+          160
+        ],
+        "qed_model": "PrimatLeadingE2E3",
+        "weak_magnetism_delta_kappa": 0.0
+      },
+      "ccr_gl160": {
+        "success": true,
+        "activation": {
+          "N": 2.4593217700143666,
+          "Xn": 0.23933994568055028
+        },
+        "final": {
+          "N": 5.63289932832902,
+          "Xn": 0.08881804653238037
+        }
+      },
+      "f08b_gl160": {
+        "success": true,
+        "activation": {
+          "N": 2.4593217700143666,
+          "Xn": 0.24009429081160605
+        },
+        "final": {
+          "N": 5.63289932832902,
+          "Xn": 0.08922598415183582
+        }
+      },
+      "numerical_stability": {
+        "gauss_legendre_nodes_per_panel": [
+          80,
+          160
+        ],
+        "ccr_max_absolute_Xn_gl160_minus_gl80": 4.041962542444821e-09,
+        "f08b_max_absolute_Xn_gl160_minus_gl80": 1.463481097419006e-08
+      },
+      "rust_acceptance": {
+        "max_absolute_N_difference": 3e-07,
+        "max_absolute_Xn_difference": 6e-08,
+        "basis": "N retains F08A independent entropy/QED envelope; Xn bounds measured F08B GL80/160 spread plus the validated F08A adaptive-oracle crosscheck, without constant tuning."
+      },
+      "f08a_ccr_crosscheck": {
+        "ccr_gl160_minus_f08a_activation": {
+          "N": -1.7597939949709485e-07,
+          "Xn": -3.080475829975171e-08
+        },
+        "ccr_gl160_minus_f08a_final": {
+          "N": -2.926538362757469e-07,
+          "Xn": -3.66910660604125e-08
+        }
+      }
+    },
+    "primat_matched_endpoint": {
+      "execution_status": "VALIDATED",
+      "version": "0.3.2",
+      "commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "backend": "python",
+      "c_backend": {
+        "status": "SKIPPED",
+        "reason": "PRIMAT's C backend hardcodes the physical delta_kappa and cannot represent the F08B no-weak-magnetism slice. No C run was made."
+      },
+      "born_python": {
+        "Yp": 0.24240826096918933,
+        "DH": 2.4324175351206648e-05,
+        "He3H": 1.0398334393771487e-05,
+        "Li7H": 5.424418461753546e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_python": {
+        "Yp": 0.24555829679435634,
+        "DH": 2.4495160175689093e-05,
+        "He3H": 1.0424117029619265e-05,
+        "Li7H": 5.47022984399739e-10,
+        "Neff": 3.009645190024071
+      },
+      "f08b_python": {
+        "Yp": 0.2466842688457449,
+        "DH": 2.455665403302237e-05,
+        "He3H": 1.0433375736211641e-05,
+        "Li7H": 5.486433620053931e-10,
+        "Neff": 3.009645190024071
+      },
+      "ccr_minus_born_python": {
+        "Yp": 0.0031500358251670135,
+        "DH": 1.7098482448244513e-07,
+        "He3H": 2.57826358477788e-08,
+        "Li7H": 4.581138224384447e-12,
+        "Neff": 0.0
+      },
+      "f08b_minus_born_python": {
+        "Yp": 0.0042760078765555765,
+        "DH": 2.3247868181572318e-07,
+        "He3H": 3.504134244015466e-08,
+        "Li7H": 6.201515830038487e-12,
+        "Neff": 0.0
+      },
+      "f08b_minus_ccr_python": {
+        "Yp": 0.001125972051388563,
+        "DH": 6.149385733327805e-08,
+        "He3H": 9.258706592375863e-09,
+        "Li7H": 1.6203776056540394e-12,
+        "Neff": 0.0
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "provenance": {
+        "baseline_head": "0b2339c",
+        "branch": "bd612-remediation",
+        "source_paths": [
+          "native/rabbit_cpu/src/born_weak.rs",
+          "native/rabbit_cpu/src/born_freezeout.rs",
+          "native/rabbit_cpu/src/minimal_bbn.rs"
+        ],
+        "source_state": "uncommitted working tree",
+        "committed_rust_blob": false
+      },
+      "profile": {
+        "qed_model": "PrimatLeadingE2E3",
+        "weak_model": "PrimatZeroTemperatureCcrFiniteMassNoWeakMagnetism",
+        "finite_mass_order": "first order in inverse nucleon mass",
+        "weak_magnetism_delta_kappa": 0.0,
+        "weak_quadrature_order": 64,
+        "weak_leg_relative_tolerance": 2e-08,
+        "coupled_relative_tolerance": 1e-09,
+        "reaction_count": 12,
+        "neutrino_treatment": "ideal high-temperature instantaneous decoupling"
+      },
+      "bdf": {
+        "solver": "BDF",
+        "Xn_handoff": 0.24009432294275196,
+        "Yp": 0.24668541343980116,
+        "DH": 2.4556267578584473e-05,
+        "He3H": 1.0433336797768224e-05,
+        "Li7H": 5.48654585726901e-10
+      },
+      "rodas5p": {
+        "solver": "Rodas5P",
+        "Xn_handoff": 0.24009432335028977,
+        "Yp": 0.24668542688179274,
+        "DH": 2.4556271300872044e-05,
+        "He3H": 1.0433337361479505e-05,
+        "Li7H": 5.486545085568795e-10
+      }
+    },
+    "provenance": {
+      "result_path": "/tmp/rabbit_f08b_external_20260715/f08b_primat_no_wm_result.json",
+      "result_sha256": "c3e4536c3051e0cf416ec1942276b4f1873ca60154302bf2bb2d50e9a5705bd2",
+      "raw_path": "/tmp/rabbit_f08b_external_20260715/f08b_primat_no_wm_raw.jsonl",
+      "raw_sha256": "7b06905712d50f2cc9f89f3f59ea1919aca760393c9f3408334b4f3f6b8fd551",
+      "validation_path": "/tmp/rabbit_f08b_external_20260715/f08b_primat_no_wm_validation.json",
+      "validation_sha256": "651672bbf5cad60ff69aa60f1621e599e431a8c0149fa3b96e69df1bf19e0b14",
+      "runner_sha256": "ce5ccc70083dc5933d5f1105853cf549e4759552ef0600a889a2dde23b35fdfa",
+      "validator_sha256": "b47950710887ca424edaccbf89f39a02baaa0eaa94dc16107b39015400f37cee",
+      "primat_version": "0.3.2",
+      "primat_tag": "v0.3.2",
+      "primat_commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "forced_delta_kappa": 0.0,
+      "corrections_source_sha256": "191e95ae91b903c26e63d9b476f8b5b684b7dcd9c88348d66ae1d16f01a265f6",
+      "integrands_source_sha256": "17f033778065868b3c7461628d0c96b7dd69f2dd3a3c0bd09577e1db08702685",
+      "primat_module_sha256": "b1d015b32736cb78b2eebd33b08244b15e5bf6ac69028462a7dd72335881493d",
+      "rabbit_rate_source_sha256": "8dacb12bece202a798bae67f2ca89d1fad62f9f02bad38da0f59c19147960b85",
+      "dense_custom_network_sha256": "fb30603a1e564fe5cbc22d7610a0ce4f65c3c3faa9653c8b43f2ddb491c4b4e2",
+      "f07_electron_thermo_cache_sha256": "235459a6c1259530a7ce2d3a349db8e48373879b975172665061b9e35a7138cb",
+      "validation_checks_passed": 17,
+      "validation_checks_total": 17
+    },
+    "claim_limitations": [
+      "The PRIMAT C backend was not run because it hardcodes physical weak magnetism and cannot represent delta_kappa=0.",
+      "This no-weak-magnetism slice is not stock PRIMAT physics and is not a precision-standard prediction.",
+      "The custom-table endpoints are matched comparisons, not stock PRIMAT predictions.",
+      "The compact implementation shares PRIMAT formula authority, constants, and zero-temperature Coulomb/radiative factors.",
+      "Finite-temperature radiative, thermal weak, spectral-distortion, incomplete-decoupling, nuclear-QED, and physical weak-magnetism corrections remain disabled.",
+      "The Fokker-Planck correction is truncated at first order in inverse nucleon mass, so its modified detailed-balance residual is exposed rather than tuned to zero.",
+      "The standalone freezeout is weak-only and is not a nuclear-abundance or endpoint authority.",
+      "No QKE, anisotropic collision, public-production, or precision-abundance claim follows from this evidence."
+    ]
+  },
+  "f08c_physical_weak_magnetism": {
+    "schema_version": "f08c_physical_weak_magnetism_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "captured_date": "2026-07-15",
+    "evidence_mode": "stored_results_from_live_python_c_runs_and_independent_component_integrals",
+    "scope": "PRIMAT v0.3.2 physical anomalous weak magnetism activated through the first-order inverse-nucleon-mass finite-mass coupling algebra, with zero-temperature CCR, leading scalar QED, instantaneous decoupling, tau_n=878.4 s, eta=6.1e-10, and the exact F06 matched 12-reaction table.",
+    "stored_replay_contract": {
+      "executes_external_code": false,
+      "may_be_reported_as_a_live_run": false
+    },
+    "convention": {
+      "finite_mass_order": "first order in inverse nucleon mass",
+      "weak_magnetism_delta_kappa": 3.70589007463,
+      "weak_magnetism_status": "PHYSICAL_PRIMAT_V0_3_2",
+      "external_endpoint_backend": "PRIMAT v0.3.2 Python and C"
+    },
+    "component_anchors": {
+      "execution_status": "VALIDATED",
+      "coefficients": {
+        "gA": 1.2756,
+        "s_plus": {
+          "f1": 2.487954860124953,
+          "f2": -1.5945873479212611,
+          "f3": 0.1066324877963081,
+          "mass_over_me": 1836.1526734252586,
+          "sum": 0.9999999999999998
+        },
+        "s_minus": {
+          "f1": -1.5945873479212611,
+          "f2": 2.487954860124953,
+          "f3": 0.1066324877963081,
+          "mass_over_me": 1838.683661717896,
+          "sum": 0.9999999999999998
+        }
+      },
+      "fn": {
+        "ccr_fn": 1.7583843867571942,
+        "f08b_no_weak_magnetism_primat_total_fn": 1.754764223193087,
+        "primat_physical_finite_mass_delta_fn": -0.0036333405331918645,
+        "f08c_physical_primat_total_fn": 1.7547510462240024,
+        "independent_compact_physical_finite_mass_delta_fn": -0.003633340905019523,
+        "independent_compact_physical_total_fn": 1.7547510458521747,
+        "compact_minus_primat_physical_delta_fn": -3.718276585067126e-10,
+        "isolated_weak_magnetism_delta_fn": -1.3177089418761959e-05,
+        "no_ccr_negative_control": {
+          "no_weak_magnetism_finite_mass_delta_fn": -0.0033828435120336585,
+          "physical_weak_magnetism_finite_mass_delta_fn": -0.0033828435120336585,
+          "isolated_weak_magnetism_delta_fn": 0.0,
+          "required_max_absolute_shift": 2e-15
+        }
+      },
+      "compact_vs_expanded_point_grid": {
+        "row_count": 252,
+        "max_absolute_difference": 1.0769163338864018e-14,
+        "max_scale_relative_difference": 1.7001870954891971e-12
+      },
+      "equal_temperature_rates": [
+        {
+          "photon_temperature_mev": 0.3,
+          "neutrino_temperature_mev": 0.3,
+          "neutron_to_proton_per_second": 0.009519719396921386,
+          "proton_to_neutron_per_second": 0.0001280075006855248
+        },
+        {
+          "photon_temperature_mev": 1.0,
+          "neutrino_temperature_mev": 1.0,
+          "neutron_to_proton_per_second": 1.5419344851097214,
+          "proton_to_neutron_per_second": 0.42392801552626175
+        },
+        {
+          "photon_temperature_mev": 3.0,
+          "neutrino_temperature_mev": 3.0,
+          "neutron_to_proton_per_second": 253.95798518629175,
+          "proton_to_neutron_per_second": 165.3782209778814
+        }
+      ],
+      "unequal_temperature_six_channel_anchor": {
+        "photon_temperature_mev": 1.0,
+        "neutrino_temperature_mev": 0.8,
+        "channels_per_second": {
+          "nu_e_n_to_p_electron": 0.29248953906930353,
+          "electron_p_to_n_nu_e": 0.22293503132863313,
+          "positron_n_to_p_anti_nu_e": 0.748250761627631,
+          "anti_nu_e_p_to_n_positron": 0.05361888257945413,
+          "free_neutron_decay": 0.0005050673142472589,
+          "inverse_neutron_decay": 0.00012307519823550762
+        },
+        "totals_per_second": {
+          "neutron_to_proton": 1.0412453680111817,
+          "proton_to_neutron": 0.27667698910632277
+        }
+      },
+      "modified_detailed_balance": {
+        "temperature_mev": 1.0,
+        "target_name": "(mn/mp)^(3/2)*exp(-Q/T)",
+        "target_ratio": 0.27492246823324173,
+        "observed_total_ratio": 0.27493257308924884,
+        "relative_residual": 3.6755293490786656e-05,
+        "recorded_grid_max_absolute_total_relative_residual": 0.00011084594732979625,
+        "recorded_grid_max_absolute_pair_relative_residual": 0.00037789555986433854
+      },
+      "numerical_controls": {
+        "max_gl160_minus_gl320_relative": 5.276245651549528e-08,
+        "required_max_gl160_minus_gl320_relative": 1e-06,
+        "max_adaptive_2e10_minus_2e12_relative": 2.0851767116981855e-13,
+        "required_max_adaptive_2e10_minus_2e12_relative": 1e-09
+      }
+    },
+    "standalone_temperature_variable_freezeout": {
+      "schema_version": "f08c_temperature_variable_freezeout_v1",
+      "execution_status": "VALIDATED",
+      "claim_scope": "Standalone weak-only freeze-out diagnostic; no nuclear-abundance, precision-standard, collision, anisotropy, QKE, or public-production claim.",
+      "method": {
+        "independent_variable": "T_gamma [MeV], integrated from 10 to 0.05; cosmic time is a co-evolved dependent state via dt/dT_gamma, not the ODE coordinate.",
+        "solver": "scipy.solve_ivp DOP853, rtol=2e-10"
+      },
+      "configuration": {
+        "temperature_start_mev": 10.0,
+        "activation_temperature_mev": 0.86164715286738,
+        "temperature_end_mev": 0.05,
+        "neutron_lifetime_seconds": 878.4,
+        "rate_grid_points": 321,
+        "gauss_legendre_nodes_per_panel": [80, 160, 320],
+        "reference_order": 320,
+        "qed_model": "PrimatLeadingE2E3",
+        "weak_magnetism_delta_kappa": 3.70589007463
+      },
+      "f08b_no_weak_magnetism_gl320": {
+        "success": true,
+        "activation": {
+          "N": 2.4593217700143666,
+          "Xn": 0.24009429546635033
+        },
+        "final": {
+          "N": 5.63289932832902,
+          "Xn": 0.0892259942459267
+        }
+      },
+      "f08c_physical_weak_magnetism_gl320": {
+        "success": true,
+        "activation": {
+          "N": 2.4593217700143666,
+          "Xn": 0.24019626189219623
+        },
+        "final": {
+          "N": 5.63289932832902,
+          "Xn": 0.08928032696742821
+        }
+      },
+      "f08c_minus_f08b_gl320": {
+        "activation_Xn": 0.00010196642584589521,
+        "final_Xn": 5.433272150151547e-05
+      },
+      "repeat_determinism": {
+        "f08b_gl320_exact_float_equality": true,
+        "f08c_gl320_exact_float_equality": true
+      },
+      "numerical_stability": {
+        "gauss_legendre_nodes_per_panel": [80, 160, 320],
+        "f08b_max_absolute_Xn_gl320_minus_gl160": 7.920615829881683e-09,
+        "f08c_max_absolute_Xn_gl320_minus_gl160": 9.259088912250135e-09,
+        "required_max_absolute_Xn_gl320_minus_gl160": 2e-08
+      },
+      "rust_acceptance": {
+        "reference": "f08c_physical_weak_magnetism_gl320",
+        "max_absolute_N_difference": 3e-07,
+        "max_absolute_Xn_difference": 6e-08,
+        "frozen_before_any_rust_value_was_read": true,
+        "basis": "N inherits the independently validated leading-QED entropy envelope; Xn was fixed at 6e-8 before Rust F08C output and requires external GL160/320 refinement below 2e-8."
+      }
+    },
+    "primat_matched_endpoint": {
+      "execution_status": "VALIDATED",
+      "version": "0.3.2",
+      "commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "backend": "python_and_c",
+      "f08b_python_reference": {
+        "Yp": 0.2466842688457449,
+        "DH": 2.455665403302237e-05,
+        "He3H": 1.0433375736211641e-05,
+        "Li7H": 5.486433620053931e-10,
+        "Neff": 3.009645190024071
+      },
+      "f08c_python": {
+        "Yp": 0.24683601806557295,
+        "DH": 2.4565015281772263e-05,
+        "He3H": 1.0434637936584758e-05,
+        "Li7H": 5.488592195819055e-10,
+        "Neff": 3.009645190024071
+      },
+      "f08c_c": {
+        "Yp": 0.24683586374148064,
+        "DH": 2.4565071974942807e-05,
+        "He3H": 1.0434644927261921e-05,
+        "Li7H": 5.488576741277125e-10,
+        "Neff": 3.009645190024071
+      },
+      "f08c_python_minus_f08b_python": {
+        "Yp": 0.00015174921982805123,
+        "DH": 8.36124874989164e-09,
+        "He3H": 1.2622003731167287e-09,
+        "Li7H": 2.15857576512478e-13,
+        "Neff": 0.0
+      },
+      "f08c_c_minus_python": {
+        "Yp": -1.5432409231075361e-07,
+        "DH": 5.6693170543873316e-11,
+        "He3H": 6.990677163187732e-12,
+        "Li7H": -1.5454541930418634e-15,
+        "Neff": 0.0
+      },
+      "repeat_determinism": {
+        "python": {
+          "repeat_count": 2,
+          "exact_float_equality": true
+        },
+        "c": {
+          "repeat_count": 2,
+          "exact_float_equality": true
+        }
+      },
+      "rust_acceptance": {
+        "direct_endpoint_budgets": {
+          "Yp_absolute": 2e-05,
+          "DH_relative": 0.001,
+          "He3H_relative": 0.002,
+          "Li7H_relative": 0.004
+        },
+        "isolated_f08c_minus_f08b_relative_ceilings": {
+          "Yp": 0.0025,
+          "DH": 0.015,
+          "He3H": 0.015,
+          "Li7H": 0.015
+        },
+        "frozen_before_any_rust_value_was_read": true
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "provenance": {
+        "baseline_head": "0b2339c",
+        "branch": "bd612-remediation",
+        "source_paths": [
+          "native/rabbit_cpu/src/born_weak.rs",
+          "native/rabbit_cpu/src/born_freezeout.rs",
+          "native/rabbit_cpu/src/minimal_bbn.rs"
+        ],
+        "source_state": "uncommitted working tree",
+        "committed_rust_blob": false
+      },
+      "profile": {
+        "qed_model": "PrimatLeadingE2E3",
+        "weak_model": "PrimatZeroTemperatureCcrFiniteMassPhysicalWeakMagnetism",
+        "finite_mass_order": "first order in inverse nucleon mass",
+        "weak_magnetism_delta_kappa": 3.70589007463,
+        "weak_quadrature_order": 64,
+        "weak_leg_relative_tolerance": 2e-08,
+        "coupled_relative_tolerance": 1e-09,
+        "reaction_count": 12,
+        "neutrino_treatment": "ideal high-temperature instantaneous decoupling"
+      },
+      "bdf": {
+        "solver": "BDF",
+        "Xn_handoff": 0.24019629115929314,
+        "Yp": 0.2468369814321261,
+        "DH": 2.4564568596661556e-05,
+        "He3H": 1.0434585907028622e-05,
+        "Li7H": 5.488720109289649e-10
+      },
+      "rodas5p": {
+        "solver": "Rodas5P",
+        "Xn_handoff": 0.24019629154783906,
+        "Yp": 0.24683701452683648,
+        "DH": 2.45645716039475e-05,
+        "He3H": 1.0434586301065364e-05,
+        "Li7H": 5.488719893518859e-10
+      }
+    },
+    "provenance": {
+      "result_path": "/tmp/rabbit_f08c_external_20260715/f08c_physical_weak_magnetism_result.json",
+      "result_sha256": "9f876046e8d882be8a9fe66d39152e41f0d55723974f0af06559b618b25f9785",
+      "raw_path": "/tmp/rabbit_f08c_external_20260715/f08c_physical_weak_magnetism_raw.jsonl",
+      "raw_sha256": "5a0eeb0abb0b7fd986171265ef59dc1b85beb5bd918de2f65f2db72dd85eff5d",
+      "validation_path": "/tmp/rabbit_f08c_external_20260715/f08c_physical_weak_magnetism_validation.json",
+      "validation_sha256": "e6df83142c412f2f56892f200af6cd74a9692ccce06d55a1c9c115ec13a3f22b",
+      "artifact_manifest_path": "/tmp/rabbit_f08c_external_20260715/f08c_final_artifact_hashes.json",
+      "artifact_manifest_sha256": "4ec5b95c4ef55024ffd2f009c3d889e509e1ee69e3016b2b9b7c19c1da949920",
+      "runner_sha256": "0fa77514cdd9fa64b94f7d80fa5cfee9f2d187c8b3363f4e750968fc2a557b0a",
+      "validator_sha256": "92fd6f77b58668699e49da888ecb56b1bbc27f9132621f9a08b586c020e2bbc2",
+      "primat_version": "0.3.2",
+      "primat_tag": "v0.3.2",
+      "primat_commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "python": "3.12.3",
+      "numpy": "2.5.1",
+      "scipy": "1.18.0",
+      "physical_delta_kappa": 3.70589007463,
+      "primat_c_backend_sha256": "5151345bb815936c56eb63afdc1660c16d750098b11fa7ca4e149893f2d6238e",
+      "corrections_source_sha256": "191e95ae91b903c26e63d9b476f8b5b684b7dcd9c88348d66ae1d16f01a265f6",
+      "integrands_source_sha256": "17f033778065868b3c7461628d0c96b7dd69f2dd3a3c0bd09577e1db08702685",
+      "primat_module_sha256": "b1d015b32736cb78b2eebd33b08244b15e5bf6ac69028462a7dd72335881493d",
+      "rabbit_rate_source_sha256": "8dacb12bece202a798bae67f2ca89d1fad62f9f02bad38da0f59c19147960b85",
+      "dense_custom_network_sha256": "fb30603a1e564fe5cbc22d7610a0ce4f65c3c3faa9653c8b43f2ddb491c4b4e2",
+      "f07_electron_thermo_cache_sha256": "235459a6c1259530a7ce2d3a349db8e48373879b975172665061b9e35a7138cb",
+      "f08b_immutable_result_sha256": "c3e4536c3051e0cf416ec1942276b4f1873ca60154302bf2bb2d50e9a5705bd2",
+      "mutation_probe_result_sha256": "1490804a6b8cd172a5dd68877f9a34a2092c08e5bc1e5fb9d5550c62eeb4f134",
+      "mutation_probe_script_sha256": "80fcf0f201c3df872f44056f6b399d348658aa01a4852ff26d5189719d2a8fb9",
+      "validation_checks_passed": 23,
+      "validation_checks_total": 23,
+      "mutation_probes_passed": 5,
+      "mutation_probes_total": 5
+    },
+    "claim_limitations": [
+      "Matched custom-table endpoints are not stock PRIMAT predictions.",
+      "The physical finite-mass block is first order in inverse nucleon mass; its modified-detailed-balance residual is nonzero and is not tuned away.",
+      "The standalone solve is weak-only and is not a nuclear-abundance authority.",
+      "The compact and adaptive checks share PRIMAT constants and published CCR functions even though their integration and decomposition are independent.",
+      "Finite-temperature balance-restoring radiative corrections, expanded network, incomplete neutrino decoupling, collisions, anisotropy, QKE, and public production are absent.",
+      "Tolerance ceilings are external-evidence envelopes frozen without reading any Rust F08C value; they are not precision-standard promotion gates.",
+      "No QKE, anisotropic collision, public-production, or precision-abundance claim follows from this evidence."
+    ]
+  },
+  "f08d_complete_thermal_radiative": {
+    "schema_version": "f08d_complete_thermal_radiative_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "validation_scope": "Conditional complete-four-subterm F08D component, private-table, dual-solver, and matched 12-reaction endpoint validation only; strict standalone parity and precision promotion remain blocked.",
+    "promotion_status": "BLOCKED",
+    "captured_date": "2026-07-15",
+    "scope": "PRIMAT v0.3.2 L_CCRTh true-photon, differential-bremsstrahlung, L1, and L2+3 terms added as one signed directional correction over the F08C physical finite-mass/weak-magnetism model, leading scalar QED, instantaneous decoupling, xi=0, tau_n=878.4 s, eta=6.1e-10, and the F06 matched 12-reaction network.",
+    "convention": {
+      "radiative_order": "O(alpha) at infinite nucleon mass, additive to the first-order inverse-nucleon-mass F08C model; mixed alpha*T/M terms absent",
+      "normalization": "unchanged F08C physical-WM Fn*tau_n",
+      "fn_with_thermal_off": 1.7547510462240024,
+      "fn_with_thermal_on": 1.7547510462240024,
+      "directional_storage": "separate complete n_to_p and p_to_n corrections; not assigned to any of the six Born channels",
+      "chitilde_negative_tail": "physical FD saturation to one; PRIMAT's symmetric zeroing beyond |argument|=300 is retained only as an external numerical comparator",
+      "second_soft_subtraction": "F_plus preserved as authorized by Phys. Rep. B48-B49"
+    },
+    "direct_component_validation": {
+      "execution_status": "VALIDATED",
+      "external_evidence_claim_status": "VALIDATED_WITH_LIMITS",
+      "frozen_before_any_rust_f08d_value_was_read": true,
+      "profile": "flat Tnu/Tgamma=0.7138 diagnostic only",
+      "rust_quadrature": {
+        "electron_log_panels": 8,
+        "electron_q_boundary": true,
+        "photon_boundaries_per_electron": [
+          "k=|E-s*q|",
+          "k=|E+s*q|"
+        ],
+        "orders_compared": [
+          64,
+          128
+        ]
+      },
+      "complete_sum_anchors": [
+        {
+          "temperature_K": 200000000.0,
+          "direction": "n_to_p",
+          "external_reference": 5.993377680674609e-07,
+          "criterion": "relative <= 0.15",
+          "rust_order_64": 6.00384962069158e-07,
+          "rust_order_128": 5.989797076187989e-07
+        },
+        {
+          "temperature_K": 200000000.0,
+          "direction": "p_to_n",
+          "external_reference": 1.1714204083071363e-37,
+          "criterion": "absolute < 1e-35",
+          "rust_order_64": 1.0968755339590862e-37,
+          "rust_order_128": 1.096809855547756e-37
+        },
+        {
+          "temperature_K": 1000000000.0,
+          "direction": "n_to_p",
+          "external_reference": 0.0001854915,
+          "criterion": "relative <= 0.03",
+          "rust_order_64": 0.00018581569907234868,
+          "rust_order_128": 0.00018591814454086805
+        },
+        {
+          "temperature_K": 1000000000.0,
+          "direction": "p_to_n",
+          "external_reference": 2.822955660681275e-10,
+          "criterion": "factor in [0.2,5]",
+          "rust_order_64": 2.809324270680531e-10,
+          "rust_order_128": 2.8093256779332847e-10
+        },
+        {
+          "temperature_K": 10000000000.0,
+          "direction": "n_to_p",
+          "external_reference": -1.6784941,
+          "criterion": "relative to signed reference <= 0.01",
+          "rust_order_64": -1.6772381250859494,
+          "rust_order_128": -1.677764350577508
+        },
+        {
+          "temperature_K": 10000000000.0,
+          "direction": "p_to_n",
+          "external_reference": 0.48664922,
+          "criterion": "relative <= 0.01",
+          "rust_order_64": 0.4867800349552119,
+          "rust_order_128": 0.48672261467967265
+        }
+      ],
+      "resolved_independent_subterm_anchor": {
+        "temperature_K": 200000000.0,
+        "direction": "n_to_p",
+        "external_dblquad": {
+          "true_photon": 2.2079759941277295e-05,
+          "differential_bremsstrahlung": 3.8311930715818396e-07,
+          "L1": -2.1863541480364965e-05,
+          "L2_plus_3": -3.0531270769295694e-18
+        },
+        "rust_order_128": {
+          "true_photon": 2.208027568768772e-05,
+          "differential_bremsstrahlung": 3.8315126077354416e-07,
+          "L1": -2.1864447241008618e-05,
+          "L2_plus_3": 1.6615312272499778e-16
+        },
+        "acceptance": "true/L1 relative 1e-3; differential-bremsstrahlung relative 0.15; L2+3 absolute max(1e-12,0.2*|reference|)"
+      },
+      "tiny_p_to_n_subterm_limit": "The two sampled p_to_n decompositions lie below scipy.dblquad's default absolute error scale; only their frozen complete-sum absolute/factor contracts are authoritative.",
+      "chitilde_saturation_max_complete_raw_delta": 1.326535849585929e-08,
+      "chitilde_saturation_frozen_ceiling": 1.5e-08
+    },
+    "private_table": {
+      "execution_status": "VALIDATED",
+      "authority": "Rust direct four-subterm evaluator; no on-disk cache and no deterministic C-knot consumption",
+      "point_count": 57,
+      "temperature_spacing": "logarithmic",
+      "floor_K": 158489319.2461111,
+      "maximum_MeV": 10.0,
+      "direct_order": 64,
+      "n_to_p_interpolation": "four-point local cubic in signed value versus linear T",
+      "p_to_n_interpolation": "four-point local cubic in log(value) versus log(T), after fail-closed positivity verification of every profile knot",
+      "all_interval_midpoint_check": {
+        "interval_count": 56,
+        "directions_per_interval": 2,
+        "reference_order": 128,
+        "ceiling": "max(1e-9,0.01*|direct|) raw phase-space units",
+        "maximum_difference_over_ceiling": 0.8787904334047045,
+        "execution_status": "VALIDATED"
+      },
+      "below_floor_required_exact_zero": true,
+      "profile_mismatch_required_failure": true,
+      "above_10_MeV_required_failure": true
+    },
+    "standalone_temperature_variable_freezeout": {
+      "execution_status": "VALIDATED",
+      "strict_external_parity_status": "BLOCKED",
+      "external_comparator": "Python global-quadratic interpolation over deterministic C VEGAS knots",
+      "external": {
+        "activation": {
+          "N": 2.4593217700143666,
+          "Xn": 0.24020400609043143
+        },
+        "final": {
+          "N": 5.63289932832902,
+          "Xn": 0.08927883084016204
+        }
+      },
+      "frozen_strict_acceptance": {
+        "max_absolute_N_difference": 3e-07,
+        "max_absolute_Xn_difference": 8e-08
+      },
+      "rust": {
+        "bdf": {
+          "activation_N": 2.459321829553052,
+          "activation_Xn": 0.24020238686934622,
+          "final_N": 5.632899444145241,
+          "final_Xn": 0.0892782265389786
+        },
+        "rodas5p": {
+          "activation_N": 2.459321912340535,
+          "activation_Xn": 0.24020238770812863,
+          "final_N": 5.632899526728057,
+          "final_Xn": 0.08927822674484534
+        }
+      },
+      "strict_Xn_differences": {
+        "bdf_activation": -1.619221085213951e-06,
+        "bdf_final": -6.043011834405698e-07,
+        "rodas5p_activation": -1.618382302809307e-06,
+        "rodas5p_final": -6.040953167002483e-07
+      },
+      "blocker": "The active Rust direct-evaluator table and the temporary noisy C-knot/global-quadratic comparator do not meet the frozen 8e-8 Xn budget; no precision promotion follows."
+    },
+    "matched_endpoint": {
+      "execution_status": "VALIDATED",
+      "claim_scope": "Conditional 12-reaction endpoint consistency and broad external envelope only",
+      "external_deterministic_c_table": {
+        "python": {
+          "Yp": 0.24683372920057065,
+          "DH": 2.4564842279090492e-05,
+          "He3H": 1.043460922609712e-05,
+          "Li7H": 5.48857613026354e-10
+        },
+        "c": {
+          "Yp": 0.24683473135514053,
+          "DH": 2.456498904962319e-05,
+          "He3H": 1.0434625862058256e-05,
+          "Li7H": 5.488570894042898e-10
+        },
+        "python_minus_c_Yp": -1.0021545698846168e-06
+      },
+      "frozen_acceptance": {
+        "direct_endpoint_budgets": {
+          "Yp_absolute": 2e-05,
+          "DH_relative": 0.001,
+          "He3H_relative": 0.002,
+          "Li7H_relative": 0.004
+        },
+        "isolated_f08d_minus_f08c_sign": "negative for Yp,DH,He3H,Li7H",
+        "isolated_absolute_magnitude_envelopes": {
+          "Yp": [8e-07, 4.5e-06],
+          "DH": [5e-11, 2.8e-10],
+          "He3H": [1e-11, 4.5e-11],
+          "Li7H": [3e-16, 6e-15]
+        }
+      },
+      "rust": {
+        "bdf": {
+          "Xn_handoff": 0.24020238686934622,
+          "Yp": 0.24683356615720803,
+          "DH": 2.4564374518213406e-05,
+          "He3H": 1.0434556632413961e-05,
+          "Li7H": 5.488674122424027e-10,
+          "f08d_minus_f08c": {
+            "Yp": -3.415274918067146e-06,
+            "DH": -1.940784481502299e-10,
+            "He3H": -2.927461466056998e-11,
+            "Li7H": -4.598686562213718e-15
+          }
+        },
+        "rodas5p": {
+          "Xn_handoff": 0.24020238770812863,
+          "Yp": 0.24683358495050578,
+          "DH": 2.4564376830218522e-05,
+          "He3H": 1.043455690926778e-05,
+          "Li7H": 5.488673896701071e-10,
+          "f08d_minus_f08c": {
+            "Yp": -3.42957633070462e-06,
+            "DH": -1.9477372897858374e-10,
+            "He3H": -2.939179758442974e-11,
+            "Li7H": -4.5996817787774465e-15
+          }
+        },
+        "repeat_determinism": {
+          "bdf_exact_float_equality": true
+        },
+        "measured_wall_seconds": {
+          "cold_bdf": 11.420426,
+          "warm_repeat_bdf": 3.637269,
+          "rodas5p_after_table_build": 10.33968
+        }
+      }
+    },
+    "provenance": {
+      "baseline_head": "0b2339c",
+      "branch": "bd612-remediation",
+      "source_state": "uncommitted working tree",
+      "rust_source_paths": [
+        "native/rabbit_cpu/src/thermal_weak.rs",
+        "native/rabbit_cpu/src/born_weak.rs",
+        "native/rabbit_cpu/src/born_freezeout.rs",
+        "native/rabbit_cpu/src/minimal_bbn.rs"
+      ],
+      "external_result_path": "/tmp/rabbit_f08d_external_20260715/f08d_complete_ccrth_result.json",
+      "external_result_sha256": "0c61344d37cea69455e2e638995eaa5e86c2ada25747824bbf33c94294887d68",
+      "external_raw_sha256": "ade38d0fbc0e45594dfc22144ebd7ac3422d2b0e5e241f92a601e996cb8c16f8",
+      "external_validation_sha256": "a4cfd9edf438f146b6c7ac21dd50f4b55dc37ba249bb53f921733001593e9f6f",
+      "external_manifest_sha256": "8428cf1ea280d6984841968c85238bd07f9b2f29c937a5322d105d358f6dcaae",
+      "external_validator_sha256": "31efffefc67adad632a682a7910a30b9742086a8b7124812332c7f891bfacb40",
+      "external_c_table_sha256": "2f6374227deec8740c2bb4dfef7c31a1530a0b62f59c2ca737dadda7632502ec",
+      "external_validation_checks": "25/25 PASSED_WITH_LIMITS",
+      "external_mutation_probes": "5/5 rejected",
+      "exact_token_counter": "UNAVAILABLE: harness does not expose an exact per-task counter"
+    },
+    "claim_limitations": [
+      "Strict standalone Xn parity against the temporary C-knot/global-quadratic comparator fails the frozen 8e-8 budget.",
+      "The deterministic C-knot Python-global versus C-local Yp spread is 1.0021545698846168e-6, comparable to the isolated thermal effect; table/interpolation authority remains unresolved.",
+      "The shipped Python table fingerprints T_start_cosmo_MeV=40 while its numerical grid ends at 10 MeV and is diagnostic only.",
+      "Tiny p_to_n scipy.dblquad subterms are below its absolute error scale and are not precision anchors.",
+      "The low-temperature clamp below 10^8.2 K is an exposed physical/numerical implementation limit.",
+      "No expanded network, incomplete neutrino decoupling, collision transport, anisotropy, QKE, precision-standard, or public-production claim follows."
+    ]
+  },
+  "f08n_selected_31_network": {
+    "schema_version": "f08n_selected_ac2024_31_rust_endpoint_v1",
+    "implementation_status": "IMPLEMENTED",
+    "claim_status": "VALIDATED",
+    "promotion_status": "BLOCKED",
+    "authority_state": "CONDITIONAL",
+    "captured_date": "2026-07-15",
+    "scope": "Rust AOT selected 31-reaction AC2024 network over the F08D complete-thermal, leading-QED, physical finite-mass/weak-magnetism, instantaneous-decoupling FLRW endpoint, nested against the unchanged first 12 reactions.",
+    "network_contract": {
+      "selected_table_sha256": "8dacb12bece202a798bae67f2ca89d1fad62f9f02bad38da0f59c19147960b85",
+      "reaction_count": 31,
+      "first12_prefix_preserved": true,
+      "selected_is_named_stock_primat_topology": false,
+      "reverse_coefficients_consumed_verbatim": true,
+      "raw_q_is_not_reverse_rate_authority": true,
+      "source_species_order": ["n", "p", "d", "t", "He3", "a", "Li7", "Be7", "Li6"],
+      "rust_species_order": ["n", "p", "D", "T", "He3", "He4", "Li6", "Li7", "Be7"],
+      "primat_reaction_order": [
+        "n_p__d_g",
+        "d_p__He3_g",
+        "d_d__He3_n",
+        "d_d__t_p",
+        "t_p__a_g",
+        "t_d__a_n",
+        "t_a__Li7_g",
+        "He3_n__t_p",
+        "He3_d__a_p",
+        "He3_a__Be7_g",
+        "Be7_n__Li7_p",
+        "Li7_p__a_a",
+        "Li7_p__a_a_g",
+        "Be7_n__a_a",
+        "Be7_d__a_a_p",
+        "d_a__Li6_g",
+        "Li6_p__Be7_g",
+        "Li6_p__He3_a",
+        "Li6_He3__a_a_p",
+        "Li6_t__a_a_n",
+        "Li7_He3__Li6_a",
+        "Be7_t__Li6_a",
+        "Li6_t__Li7_d",
+        "Li6_He3__Be7_d",
+        "Li7_He3__a_a_d",
+        "Be7_t__a_a_d",
+        "Be7_t__Li7_He3",
+        "Be7_He3__p_p_a_a",
+        "d_d__a_g",
+        "He3_He3__a_p_p",
+        "Li7_d__a_a_n"
+      ],
+      "reaction_order": [
+        "n + p > d + g",
+        "d + p > He3 + g",
+        "d + d > He3 + n",
+        "d + d > t + p",
+        "t + p > a + g",
+        "t + d > a + n",
+        "t + a > Li7 + g",
+        "He3 + n > t + p",
+        "He3 + d > a + p",
+        "He3 + a > Be7 + g",
+        "Be7 + n > Li7 + p",
+        "Li7 + p > a + a",
+        "Li7 + p > a + a + g",
+        "Be7 + n > a + a",
+        "Be7 + d > 2a + p",
+        "d + a > Li6 + g",
+        "Li6 + p > Be7 + g",
+        "Li6 + p > He3 + a",
+        "Li6 + He3 > a + a  + p",
+        "Li6 + t > a + a  + n",
+        "Li7 + He3 > Li6 + a",
+        "Be7 + t > Li6 + a",
+        "Li6 + t > Li7 + d",
+        "Li6 + He3 > Be7 + d",
+        "Li7 + He3 > a + a + d",
+        "Be7 + t > a + a + d",
+        "Be7 + t > Li7 + He3",
+        "Be7 + He3 > p + p + 2a",
+        "d + d > a + g",
+        "He3 + He3 > a + p + p",
+        "Li7 + d > a + a + n"
+      ]
+    },
+    "external": {
+      "execution_status": "VALIDATED",
+      "primat_version": "0.3.2",
+      "primat_commit": "21ff8f39fa18e3937e9fdf386cfa982361bfdfce",
+      "exact_reverse_authority": "PRIMAT Python with explicit private injection of the selected JSON reverse coefficients",
+      "exact_c_counterpart_available": false,
+      "exact_12": {
+        "Yp": 0.2468339757668937,
+        "DH": 2.4564951285432863e-05,
+        "He3H": 1.0434628229940604e-05,
+        "Li7H": 5.488544912800621e-10,
+        "Li6H": 0.0
+      },
+      "exact_selected_31": {
+        "Yp": 0.24683389951424803,
+        "DH": 2.456571050928129e-05,
+        "He3H": 1.0433783687263961e-05,
+        "Li7H": 5.437134223492424e-10,
+        "Li6H": 7.819032381929294e-15
+      },
+      "exact_selected_31_minus_12": {
+        "Yp": -7.62526456699053e-08,
+        "DH": 7.592238484255243e-10,
+        "He3H": -8.445426766421699e-10,
+        "Li7H": -5.141068930819691e-12,
+        "Li6H": 7.819032381929294e-15
+      },
+      "all31_from_tweak_diagnostic": {
+        "Yp": 0.24683390421324497,
+        "DH": 2.4565583781652233e-05,
+        "He3H": 1.0433764588510948e-05,
+        "Li7H": 5.43716567362588e-10,
+        "Li6H": 7.818990090809015e-15
+      },
+      "repeat_determinism": {
+        "exact_selected_31_float_equality": true
+      },
+      "baryon_sum_abs_residual": 1.6426859872353816e-12,
+      "frozen_acceptance": {
+        "frozen_before_any_rust_f08n_value_was_read": true,
+        "direct_selected31_endpoint_budgets": {
+          "Yp_absolute": 2e-05,
+          "DH_relative": 0.001,
+          "He3H_relative": 0.002,
+          "Li7H_relative": 0.004,
+          "Li6H_absolute_range": [2e-15, 2e-14],
+          "baryon_sum_abs_residual": 5e-09
+        },
+        "nested_31_minus_12_contract": {
+          "Yp_absolute_effect_max": 2e-06,
+          "Yp_sign_required": null,
+          "DH_absolute_effect_range": [2e-10, 2e-09],
+          "He3H_absolute_effect_range": [-1.6e-09, -3e-10],
+          "Li7H_relative_effect_range": [-0.02, -0.004],
+          "Li6H_absolute_range": [2e-15, 2e-14]
+        },
+        "primat_default_staging": {
+          "MT_reactions": 17,
+          "LT_reactions": 31
+        },
+        "rust_all31_from_existing_f06_handoff_is_diagnostic": true
+      }
+    },
+    "rust": {
+      "execution_status": "VALIDATED",
+      "activation_temperature_mev": 0.86164715286738,
+      "activation_contract": "All 31 selected reactions are active from the existing F06 0.86164715286738 MeV Saha handoff; this is a staging diagnostic, not stock PRIMAT staging.",
+      "bdf": {
+        "rtol": 1e-10,
+        "Xn_handoff": 0.24020238686934622,
+        "Yp": 0.24683358124527852,
+        "DH": 2.456516625200859e-05,
+        "He3H": 1.0433716330832902e-05,
+        "Li7H": 5.437257176155468e-10,
+        "Li6H": 7.818856581771896e-15,
+        "selected31_minus_backbone12": {
+          "Yp": 1.508807048744565e-08,
+          "DH": 7.917337951831313e-10,
+          "He3H": -8.403015810591288e-10,
+          "Li7H_relative": -0.009367826386065481
+        }
+      },
+      "rodas5p": {
+        "rtol": 1e-10,
+        "Xn_handoff": 0.24020238770812863,
+        "Yp": 0.24683358304487701,
+        "DH": 2.4565166617141467e-05,
+        "He3H": 1.0433716373987523e-05,
+        "Li7H": 5.437257132026343e-10,
+        "Li6H": 7.818856790219118e-15,
+        "selected31_minus_backbone12": {
+          "Yp": -1.9056287658969495e-09,
+          "DH": 7.897869229441066e-10,
+          "He3H": -8.405352802563434e-10,
+          "Li7H_relative": -0.009367793686127168
+        }
+      },
+      "refined_bdf_rtol_3e_11": {
+        "rtol": 3e-11,
+        "Yp": 0.24683358128054264,
+        "DH": 2.4565166601201154e-05,
+        "He3H": 1.0433716372463938e-05,
+        "Li7H": 5.437257096810452e-10,
+        "Li6H": 7.818856690501073e-15
+      },
+      "repeat_determinism": {
+        "bdf_exact_float_equality": true
+      },
+      "raw_red_attempts": [
+        {
+          "rtol": 1e-09,
+          "solver": "bdf",
+          "baryon_sum_abs_residual": 2.3085050204763036e-08,
+          "frozen_ceiling": 5e-09,
+          "status": "RED"
+        },
+        {
+          "rtol": 3e-10,
+          "solver": "bdf tolerance-ladder candidate",
+          "baryon_sum_abs_residual": 7.518909717063593e-09,
+          "frozen_ceiling": 5e-09,
+          "status": "RED"
+        }
+      ],
+      "measured_wall_seconds": {
+        "cold_bdf": 8.779494,
+        "warm_repeat_bdf": 4.617595,
+        "rodas5p": 18.080271,
+        "refined_bdf_rtol_3e_11": 4.973685
+      }
+    },
+    "provenance": {
+      "baseline_head": "0b2339c",
+      "branch": "bd612-remediation",
+      "source_state": "uncommitted working tree",
+      "external_result_path": "/tmp/rabbit_f08n_external_20260715/f08n_selected31_result.json",
+      "external_result_sha256": "c8b54a40fd6c7d4bc15d5bce9a5c0324d96ec0cc3a6e06e62e62dc668594d56a",
+      "external_raw_sha256": "bc51a3903a449a6ec20db42fa5924d380f3a643f8cba4fa9be8eeaa9735a2d22",
+      "external_validation_sha256": "205a399470b76f66f3dcf5cc052cd1f1dd23dfe4fa60cf7e910dadd556faeb45",
+      "external_manifest_sha256": "3ed8754c507d486336a948cc388277d44ecc7cb0eeb59b34e28136ffcc6d74f6",
+      "external_validator_sha256": "a72cf8da629fe8119cc3a828ff9e4b1a4a2d4ce8eb847630c281f6a957c51ba7",
+      "external_mutation_probes_sha256": "e66ac00e00cac2ca6d8c1dc37e3d944b256d60bbf07a6b3aae265e59c790e15d",
+      "external_validation_checks": "46/46 passed",
+      "external_mutation_probes": "5/5 rejected",
+      "exact_token_counter": "UNAVAILABLE: harness does not expose an exact per-task counter"
+    },
+    "claim_limitations": [
+      "The selected 31 reactions are Rabbit's accepted AC2024 subset, not a named stock PRIMAT network and not the broader PRIMAT large network.",
+      "The external exact-reverse authority uses a private PRIMAT Python injection because the public custom API recomputes reverse coefficients; there is no exact C counterpart.",
+      "Nuclear rate data are shared with Rust, so this validates solver, topology, staging consumption, and invariants rather than the underlying measurements.",
+      "Rust activates all 31 reactions at the existing F06 handoff while PRIMAT stages 17 then 31; agreement is conditional on the frozen nested budgets.",
+      "The inherited F08D strict standalone Xn authority remains BLOCKED at an 8e-8 external ceiling versus an O(1e-6) discrepancy.",
+      "No incomplete decoupling, neutrino transport/collisions, anisotropy, QKE, precision-standard abundance, or public-production claim follows."
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "contract": "auto_experimental_locked_scope_v1",
+  "cases": [
+    {
+      "label": "FLRW",
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride": 3,
+      "resolved_solver_jacobian_refresh_stride_phase1": 4,
+      "resolved_solver_jacobian_refresh_stride_phase2": 2,
+      "experimental_recommendation": "phasewise_cadence",
+      "in_locked_policy_scope": true,
+      "auto_resolution_contract": "auto_locked_phasewise_cadence"
+    },
+    {
+      "label": "small_shear",
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "experimental_dependency_cadence",
+      "resolved_solver_jacobian_refresh_stride": 3,
+      "resolved_solver_jacobian_refresh_stride_phase1": null,
+      "resolved_solver_jacobian_refresh_stride_phase2": null,
+      "experimental_recommendation": "dependency_cadence",
+      "in_locked_policy_scope": true,
+      "auto_resolution_contract": "auto_locked_dependency_cadence"
+    },
+    {
+      "label": "finite_shear",
+      "requested_solver_jacobian_mode": "auto_experimental_locked_scope",
+      "resolved_solver_jacobian_mode": "exact_per_step",
+      "resolved_solver_jacobian_refresh_stride": 1,
+      "resolved_solver_jacobian_refresh_stride_phase1": null,
+      "resolved_solver_jacobian_refresh_stride_phase2": null,
+      "experimental_recommendation": "exact_per_step",
+      "in_locked_policy_scope": false,
+      "auto_resolution_contract": "auto_exact_fallback_outside_locked_scope"
+    }
+  ],
+  "note": "Auto mode is advisory and locked-scope-limited; outside the locked scope it resolves to exact-per-step."
+}

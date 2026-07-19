@@ -1,0 +1,21 @@
+{
+  "description": "Current envelope for JAX tier2 experimental live-weak CL2 FLRW parity against SciPy tier2 reference. This is an honesty lock, not a canonical gold table.",
+  "config": {
+    "N_q": 6,
+    "Sigma_H_plus": 0.0,
+    "Sigma_H_minus": 0.0,
+    "thermo_tier": 2,
+    "use_live_weak_monopoles": true,
+    "correction_level": 2,
+    "enable_teff": false
+  },
+  "bounds": {
+    "abs_delta_Yp_lt": 0.0004,
+    "abs_delta_Neff_lt": 0.00025
+  },
+  "required_metadata": {
+    "backend": "jax_typeI_tier3_weak_budget",
+    "weak_mode": "live_f0_cl0_cl3",
+    "weak_temperature_source": "T_nu_e"
+  }
+}
