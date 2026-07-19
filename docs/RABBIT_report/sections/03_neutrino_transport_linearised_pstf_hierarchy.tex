@@ -1,0 +1,47 @@
+\section{Neutrino Transport: Linearised PSTF Hierarchy}\label{sec:transport}
+%======================================================================
+
+\subsection{The Boltzmann Equation in Bianchi Type~I}
+
+The Boltzmann equation for massless neutrinos in a Bianchi Type~I background takes the form
+\begin{equation}
+\frac{\partial f}{\partial t} + \frac{p^i}{p^0}\frac{\partial f}{\partial x^i} - \Gamma^i_{jk}\frac{p^j p^k}{p^0}\frac{\partial f}{\partial p^i} = \frac{C[f]}{p^0}\,,\label{eq:boltzmann_general}
+\end{equation}
+where $f(x^i, p^j, t)$ is the one-particle distribution function, $\Gamma^i_{jk}$ are Christoffel symbols of the spatially homogeneous metric, and $C[f]$ is the collision integral.  For spatially homogeneous distributions, the $\partial f/\partial x^i$ term vanishes.
+
+In the fixed dimensionless momentum label $u \equiv ap/T_{\nu,\ast}$ (where $T_{\nu,\ast}$ is a fixed reference neutrino temperature used only to nondimensionalise the momentum), the distribution depends on $u$, the direction cosine $\mu$ with respect to the anisotropy axis, and the e-fold time $N$.  The symbol $u$ is reserved in this report for the transport bookkeeping variable, whereas physical thermal ratios are written as $y \equiv p/T_\nu$ and the neutron--proton mass gap is denoted by $\Delta_{np} \equiv (m_n-m_p)/m_e$.  The collisionless ($C = 0$) Boltzmann equation becomes
+\begin{equation}
+\frac{\partial f}{\partial N} + \frac{\dd \ln u}{\dd N}\,u\frac{\partial f}{\partial u} + \frac{\dd\mu}{\dd N}\frac{\partial f}{\partial \mu} = 0\,.\label{eq:boltzmann_N}
+\end{equation}
+
+\subsection{The PSTF Multipole Expansion}
+
+The Projected Symmetric Trace-Free (PSTF) formalism expands the distribution function perturbation in Legendre multipoles:
+\begin{equation}
+f(u, \mu, N) = f_0(u)\bigl[1 + \sum_{\ell=0}^{\infty} \Psi_\ell(u, N)\,P_\ell(\mu)\bigr]\,
+\end{equation}
+where $f_0(u) = [e^u + 1]^{-1}$ is the equilibrium Fermi--Dirac distribution.
+
+In Bianchi Type~I, the collisionless hierarchy for even multipoles (odd multipoles vanish by symmetry) is
+\begin{align}
+\frac{d\Psi_0}{dN} &= 0\,,\label{eq:psi0}\\
+\frac{d\Psi_2}{dN} &= -\frac{8}{15}\,\Sig_+ - D\,\Psi_2\,,\label{eq:psi2}
+\end{align}
+where $D = 4$ is a reduced-model damping coefficient used in the regression PSTF surrogate.  It encapsulates an effective drain from the quadrupole sector and should not be confused with the exact collisionless characteristic dynamics.  In pure geometric Type~I free streaming there is no direct $\ell=4$ source from the background itself, so the statement that $\Psi_4 = \Psi_6 = \cdots = 0$ is a consistent geometric-source-free truncation should be read separately from the present damped surrogate closure.  In this report, the PSTF system is retained as a reference model, while the production transport results come from the characteristic method.
+
+The monopole perturbation $\Psi_0 = 0$ in the collisionless regime ($T \lesssim 2\;\mathrm{MeV}$), meaning the angle-averaged distribution remains Fermi--Dirac at the zeroth order in the PSTF expansion.  This statement is \emph{only} true for the momentum-independent $\Psi_0$; the exact monopole $\tilde{f}_0(u)$ acquires $u$-dependent corrections, as we show in \S\ref{sec:characteristic}.
+
+\subsection{Anisotropic Stress Extraction}
+
+The neutrino anisotropic stress feeds back into the geometry through
+\begin{equation}
+\tilde\pi_s = \frac{\int_0^\infty \dd u\,u^3\,f_0(u)\,\Psi_{s,2}(u)}{\int_0^\infty \dd u\,u^3\,f_0(u)} \,\qquad \Pi_+ = 6\,f_\nu\,\bar{\tilde\pi}\,,\label{eq:stress}
+\end{equation}
+where $s$ indexes the six neutrino species ($\nu_e, \bar\nu_e, \nu_\mu, \bar\nu_\mu, \nu_\tau, \bar\nu_\tau$), $\bar{\tilde\pi}$ is the species-averaged anisotropic stress, and $f_\nu \approx 0.4052$ is the neutrino energy fraction:
+\begin{equation}
+f_\nu = \frac{\rho_\nu}{\rho_{\rm rad}} = \frac{N_\nu \cdot \frac{7}{8}\left(\frac{4}{11}\right)^{4/3}}{1 + N_\nu \cdot \frac{7}{8}\left(\frac{4}{11}\right)^{4/3}}\,.
+\end{equation}
+
+In the linearised PSTF framework, $\Psi_2$ is momentum-independent, so $\tilde\pi = \Psi_2$ and the total DOF count is $6 \times 2 \times N_q = 960$ at $N_q = 80$ momentum grid points (factor 2 for $\Psi_0$ and $\Psi_2$ per species per momentum node, though in practice $\Psi_0 = 0$ reduces this).
+
+%======================================================================

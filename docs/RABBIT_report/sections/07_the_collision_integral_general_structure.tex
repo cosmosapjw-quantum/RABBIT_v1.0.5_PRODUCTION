@@ -1,0 +1,43 @@
+\section{The Collision Integral: General Structure}\label{sec:collision_integral}
+%======================================================================
+
+The full Boltzmann equation including collisions is
+\begin{equation}
+\bx{\frac{\partial f}{\partial N} + \frac{\dd\ln q}{\dd N}\,q\,\frac{\partial f}{\partial q} + \frac{\dd\mu}{\dd N}\,\frac{\partial f}{\partial \mu} = \frac{C[f]}{H}\,,}\label{eq:boltzmann_full}
+\end{equation}
+where the left-hand side describes free-streaming transport (gravitational redshift and ray bending), and $C[f]/H$ is the collision integral normalised by the Hubble rate.
+
+For neutrinos in the early universe, the relevant collision processes are:
+
+\begin{enumerate}
+\item \textbf{Elastic scattering}: $\nu_\alpha + e^\pm \to \nu_\alpha + e^\pm$ (all flavours).
+\item \textbf{Pair annihilation/creation}: $\nu_\alpha + \bar\nu_\alpha \leftrightarrow e^+ + e^-$ (all flavours).
+\item \textbf{Neutrino--neutrino scattering}: $\nu_\alpha + \nu_\beta \to \nu_\alpha + \nu_\beta$ (all flavour combinations).
+\end{enumerate}
+
+The general structure of the $2 \to 2$ collision integral for species $\alpha$ with momentum $\mathbf{p}_1$ is
+\begin{equation}
+C[f_\alpha](\mathbf{p}_1) = \frac{1}{2E_1}\sum_{\beta,\gamma,\delta}\int \frac{\dd^3\mathbf{p}_2}{(2\pi)^3 2E_2}\frac{\dd^3\mathbf{p}_3}{(2\pi)^3 2E_3}\frac{\dd^3\mathbf{p}_4}{(2\pi)^3 2E_4}\,(2\pi)^4\,\delta^{(4)}(p_1+p_2-p_3-p_4)\,|\mathcal{M}|^2\,\mathcal{S}\,,\label{eq:coll_general}
+\end{equation}
+where $|\mathcal{M}|^2$ is the squared matrix element summed over spins, and the statistical factor is
+\begin{equation}
+\mathcal{S} = f_3\,f_4\,(1-f_1)(1-f_2) - f_1\,f_2\,(1-f_3)(1-f_4)\,.
+\end{equation}
+
+The statistical factor $\mathcal{S}$ vanishes identically at equilibrium (detailed balance): when all distributions are Fermi--Dirac at the same temperature, $\mathcal{S} = 0$.
+
+\subsection{Scaling with Temperature}
+
+The weak interaction rate scales as
+\begin{equation}
+\Gamma \sim \GF^2\,T^5\,,
+\end{equation}
+while the Hubble rate in the radiation era scales as
+\begin{equation}
+H \sim \sqrt{G_N}\,T^2\,.
+\end{equation}
+The ratio $\Gamma/H \propto T^3$ decreases with temperature, so neutrinos decouple when $\Gamma/H \sim 1$ at $T_{\rm dec} \approx 1.5\;\mathrm{MeV}$ (for $\nu_e$) or $T_{\rm dec} \approx 3.5\;\mathrm{MeV}$ (for $\nu_\mu, \nu_\tau$).
+
+The decoupling is \emph{not} instantaneous: the collision rate varies by a factor $\sim 5$ across the neutrino momentum distribution ($\Gamma \propto E_\nu^2$), so high-energy neutrinos decouple later than low-energy ones.  This momentum dependence is the origin of \emph{spectral distortion} during incomplete decoupling.
+
+%======================================================================

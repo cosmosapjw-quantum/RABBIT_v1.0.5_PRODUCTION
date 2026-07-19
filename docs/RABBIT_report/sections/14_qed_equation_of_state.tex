@@ -1,0 +1,18 @@
+\section{QED Equation of State}\label{sec:qed}
+%======================================================================
+
+The electromagnetic plasma at $T \lesssim 1\;\mathrm{MeV}$ receives QED corrections from $e^+e^-$ loop effects.  RABBIT uses the Bennett exact result at $\order(e^2) + \order(e^3)$ \cite{Bennett2020}:
+\begin{equation}
+\delta\rho_{\rm QED}/\rho_\gamma \approx -0.6\%\quad\text{(negative: reduces energy density at freeze-out).}
+\end{equation}
+
+The QED corrections affect BBN primarily through the photon--electron--positron equation of state: they modify $\rho(T)$, $p(T)$, and $s(T)$, which enter the Hubble rate and the $T_\gamma$ evolution.  The effect on $\Yp$ is $\delta\Yp \approx +3 \times 10^{-4}$.
+
+The photon + $e^\pm$ plasma energy density, pressure, and entropy density are computed from the exact 1-loop effective potential, including:
+\begin{itemize}
+\item The free electron mass shift $\delta m_e^2 = (e^2/4\pi)\,T^2/3$ (thermal mass).
+\item The photon self-energy (Debye screening).
+\item The $\order(e^3)$ ring-diagram resummation (non-perturbative at $T \sim m_e$).
+\end{itemize}
+
+%======================================================================

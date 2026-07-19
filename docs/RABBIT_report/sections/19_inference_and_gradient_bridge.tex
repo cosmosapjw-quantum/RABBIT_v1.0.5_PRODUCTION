@@ -1,0 +1,30 @@
+\section{Inference and Gradient Bridge}\label{sec:inference}
+%======================================================================
+
+For the historical Type~I diagnostic grid we used the abundance-level chi-squared
+\begin{equation}
+\chi^2(\eta_{10},\SigH)=\sum_a \frac{\bigl(\mathcal O_a^{\rm th}(\eta_{10},\SigH)-\mathcal O_a^{\rm obs}\bigr)^2}{\sigma_a^2}\,,
+\end{equation}
+with $a\in\{\Yp,\mathrm{D/H}\}$ for the present grid illustrations, i.e. $\mathcal O_a$ denotes the abundance observables rather than a species mass-fraction label.  The displayed contour figure uses the shifted quantity
+\begin{equation}
+\Delta\chi^2(\eta_{10},\SigH)=\chi^2(\eta_{10},\SigH)-\chi^2_{\min}
+\end{equation}
+and the corresponding one-dimensional diagnostic is the profile statistic
+\begin{equation}
+\Delta\chi^2_{\rm prof}(\SigH)=\min_{\eta_{10}}\Delta\chi^2(\eta_{10},\SigH)\,.
+\end{equation}
+These definitions explain Fig.~\ref{fig:chi2}.  The following stored finite-difference numbers are historical diagnostics only; the retired host-solver custom-VJP is fail-closed and no BBN-specific JAX sampler is publication-authoritative before B-05.  At the old fiducial point:
+\begin{align}
+\frac{\partial\log\mathcal{L}}{\partial\eta_{10}} &= -44.09\,,\\
+\frac{\partial\log\mathcal{L}}{\partial\tau_n} &= +0.114\,.
+\end{align}
+
+The old sensitivity ratio and grid morphology may guide future test design, but they do not validate a likelihood surface or a shear constraint.  Figure~\ref{fig:chi2} is therefore a historical diagnostic visualisation only.  The $\SigH=0.75$ line is a legacy runtime guard rather than a validated physical boundary, and B-03/B-05 must establish both the domain and the canonical full-solver likelihood.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig21.png}
+\caption{Historical diagnostic likelihood grid in the $(\eta_{10},\SigH)$ plane.  The contour thresholds and profile curve are retained for provenance, not as a current confidence construction.  The $\SigH=0.75$ line is a legacy runtime guard; the finite-shear publication domain and inference result remain NOT VALIDATED pending B-03/B-05.}\label{fig:chi2_inference}
+\end{figure}
+
+%======================================================================

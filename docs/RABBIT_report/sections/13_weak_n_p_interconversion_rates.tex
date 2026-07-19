@@ -1,0 +1,81 @@
+\section{\texorpdfstring{Weak $n \leftrightarrow p$ Interconversion Rates}{Weak n<->p Interconversion Rates}}\label{sec:weak}
+%======================================================================
+
+\subsection{The Six Channels}
+
+The six weak processes governing the neutron-to-proton ratio are:
+\begin{align}
+\text{(a)}\quad &\nu_e + n \to p + e^- && (\text{neutrino capture})\,,\\
+\text{(b)}\quad &e^+ + n \to p + \bar\nu_e && (\text{positron capture})\,,\\
+\text{(c)}\quad &n \to p + e^- + \bar\nu_e && (\text{neutron decay})\,,\\
+\text{(d)}\quad &\bar\nu_e + p \to n + e^+ && (\text{anti-neutrino capture})\,,\\
+\text{(e)}\quad &e^- + p \to n + \nu_e && (\text{electron capture})\,,\\
+\text{(f)}\quad &p + e^- + \bar\nu_e \to n && (\text{inverse neutron decay})\,.
+\end{align}
+
+Channels (a)--(c) convert neutrons to protons ($\lambda_{n\to p}$), while (d)--(f) convert protons to neutrons ($\lambda_{p\to n}$).  In chemical equilibrium, detailed balance gives $\lambda_{p\to n}/\lambda_{n\to p} = e^{-Q/T}$ where $Q = m_n - m_p = 1.2933\;\mathrm{MeV}$, yielding the equilibrium neutron fraction $X_n^{\rm eq} = 1/(1 + e^{Q/T})$.
+
+\subsection{Matrix Element and Phase Space}
+
+The tree-level matrix element for neutron $\beta$-decay (channel~c) in the $V$--$A$ theory is
+\begin{equation}
+|\mathcal{M}|^2 = 2\,\GF^2\,(1 + 3g_A^2)\,,
+\end{equation}
+where $g_A = 1.2764$ is the axial coupling constant (PDG 2024).  For channel~(a), $\nu_e + n \to p + e^-$, the rate per neutron is:
+\begin{equation}
+\lambda^{(a)} = \frac{(1 + 3g_A^2)\,\GF^2}{2\pi^3}\int_{m_e}^\infty \dd\epsilon_e\;\epsilon_e\,p_e\,\epsilon_\nu^2\;\tilde{f}_{\nu_e}(\epsilon_\nu)\,[1 - f_e(\epsilon_e)]\,,\label{eq:lambda_a}
+\end{equation}
+where $\epsilon_\nu = \epsilon_e + Q$ (energy conservation, neglecting recoil), $p_e = \sqrt{\epsilon_e^2 - m_e^2}$, $\tilde{f}_{\nu_e}$ is the electron neutrino monopole distribution, and $f_e = [e^{\epsilon_e/T_\gamma} + 1]^{-1}$ is the electron Fermi--Dirac distribution.
+
+The normalization constant $K = (1+3g_A^2)\,\GF^2/(2\pi^3)$ is fixed by requiring that the total decay rate equals $1/\tau_n$ when integrated over the free-neutron phase space:
+\begin{equation}
+\frac{1}{\tau_n} = K\int_{m_e}^{Q} \dd\epsilon_e\;\epsilon_e\,p_e\,(Q-\epsilon_e)^2\,,
+\end{equation}
+where the upper limit $Q$ reflects the maximum electron energy in neutron decay.  This integral gives $I_0 = 1.636$ (at Born level), fixing $K$.
+
+\subsection{Live Rates as Distribution Functionals}
+
+The critical feature of RABBIT's weak-rate implementation is that the rates are computed as \emph{live functionals} of the actual neutrino distribution $\tilde{f}_0(q)$, not of an assumed equilibrium Fermi--Dirac.  In the integrand \eqref{eq:lambda_a}, $\tilde{f}_{\nu_e}(\epsilon_\nu)$ is the momentum-dependent monopole from either the characteristic transport (capturing spectral distortion from anisotropy) or from the collision-evolved distribution (capturing incomplete decoupling).
+
+This is essential for two reasons:
+\begin{enumerate}
+\item \textbf{Anisotropic Channel~2}: the spectral distortion $\tilde{f}_0(q) \neq f_{\rm FD}(q)$ from the anisotropic energy shift modifies the weak-rate integrands, producing the $\sim$1.4\% spectral contribution to $\Delta\Yp$.
+\item \textbf{Incomplete decoupling}: the non-equilibrium neutrino spectrum from $e^\pm$ annihilation heating modifies the weak rates, contributing to the $\Neff = 3.044$ correction.
+\end{enumerate}
+
+\subsection{Correction Level Hierarchy}
+
+Four correction levels are implemented in the current code base, though the historical reference figures in this report stop at CL2:
+
+\begin{description}
+\item[CL0 (Born):] Tree-level matrix element $|\mathcal{M}|^2 \propto (1 + 3g_A^2)\,\GF^2$.  The normalization integral is $I_0 = 1.636$.
+
+\item[CL1 (+Coulomb):] The Sommerfeld Fermi function accounts for the Coulomb interaction between the outgoing proton/electron:
+\begin{equation}
+F(Z, \epsilon) = \frac{2\pi\eta}{e^{2\pi\eta} - 1}\,,\qquad \eta = \alpha Z/\beta\,,
+\end{equation}
+where $\beta = p_e/\epsilon_e$ and $Z = \pm 1$ for proton/electron final states.  This raises $I_0$ by $+3.40\%$.
+
+\item[CL2 (+Sirlin radiative):] $\order(\alpha)$ virtual and real photon corrections via the Sirlin $g$-function:
+\begin{equation}
+1 + \frac{\alpha}{2\pi}\,g(\epsilon_e, Q)\,,
+\end{equation}
+applied multiplicatively to each channel.  Combined with Coulomb: $+4.95\%$.
+
+\item[CL3 (+finite-mass / recoil / weak magnetism):] the current canonical code also supports the next weak-kernel layer beyond the historical CL2 presentation of this report.  In repository language this is the ``finite-mass'' or weak-budget layer: recoil, weak-magnetism, and related finite-mass corrections are carried as an additional multiplicative refinement on top of CL2.  The present report retains CL0--CL2 as its main figure language because the historical constraint plots were generated on that reference surface.
+\end{description}
+
+The historical FLRW baseline helium fractions quoted in this report at the CL0--CL2 levels are:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+CL & $\Yp^{\rm FLRW}$ & D/H $\times 10^5$ & $\Neff$ \\
+\midrule
+0 (Born) & 0.24235 & 2.489 & 3.011 \\
+1 (+Coulomb) & 0.24633 & 2.511 & 3.011 \\
+2 (+Sirlin) & 0.24803 & 2.520 & 3.011 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%======================================================================

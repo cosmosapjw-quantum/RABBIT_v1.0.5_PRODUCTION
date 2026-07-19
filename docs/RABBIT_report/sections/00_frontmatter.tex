@@ -1,0 +1,19 @@
+\maketitle
+
+\begin{abstract}
+\noindent
+This report is a technical pedagogical guide to the current Type~I canonical core of RABBIT (\textbf{R}osenbrock \textbf{A}daptive \textbf{BB}N with \textbf{B}ianchi-type \textbf{I}ntegration \textbf{T}oolkit).  The current \texttt{backend="auto"} authority is the SciPy Type~I reference.  JAX tier-1, exact-characteristic, and no-Teff tier-3 surfaces remain explicit bounded backends and are not publication authority.  The historical figures and likelihood tables remain tied to the exact-characteristic reference chain rather than to every public backend equally.
+
+Within that scope, incomplete decoupling is treated in a tiered way rather than by a full anisotropic collision-coupled Boltzmann/QKE solver.  Tier~1 remains the baseline behind the historical exact-characteristic results quoted here.  Current code scope is broader: tier~2 characteristic three-temperature thermodynamics and a bounded no-Teff tier~3 weak-budget ladder are both implemented as canonical JAX surfaces on declared envelopes.  None of these should be confused with a full species-, momentum-, and angle-resolved anisotropic collision closure.
+
+The exact-characteristic reference architecture is mixed rather than fully exact in every neutrino channel: anisotropic stress and weak-rate monopoles are extracted from characteristic transport, while the neutrino energy-density entry in the Hubble sector is closed through the tiered thermodynamic helper.  The stored shear envelope, nonlinear yield response, legacy $\SigH\simeq0.66$ profile crossing, and FLRW PRIMAT comparison are historical diagnostic outputs.  They have not passed the publication programme's B-02--B-05 matched-physics, domain, convergence, and inference gates and therefore are not current science claims.  Current JAX exact-characteristic comparisons are likewise runtime regressions, not independent validation.
+
+The purpose of this document is therefore narrower than a universal ``full collision'' manual and broader than a short methods note: it explains the exact-characteristic reference results that anchor the report, records how those results sit inside the broader current Type~I canonical core, and provides appendices that help a specialist reader or code user trace the underlying physics and software architecture without overstating deferred or candidate extensions.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%======================================================================
+%  PART I: FOUNDATIONS
+%======================================================================

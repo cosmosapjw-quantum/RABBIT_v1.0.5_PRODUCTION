@@ -1,0 +1,40 @@
+\section{Effective-Temperature Framework}\label{sec:teff}
+%======================================================================
+
+\subsection{Angular Deformation of the Distribution}
+
+In the linearised PSTF framework, the anisotropy can be characterised by an angle-dependent effective temperature:
+\begin{equation}
+\Theta(\mu) = 1 + T_2\,P_2(\mu)\,,\qquad T_2 = \tilde\pi/4\,,\label{eq:theta_def}
+\end{equation}
+so that the distribution function takes the form $f(u, \mu) \approx f_{\rm FD}(u/\Theta(\mu))$.  The angle-averaged (monopole) spectrum is then the spectrally hardened integral
+\begin{equation}
+\tilde{f}_0(u) = \frac{1}{2}\int_{-1}^{1}\dd\mu\;\frac{1}{e^{u/\Theta(\mu)} + 1}\,,\label{eq:teff_mono}
+\end{equation}
+which is evaluated with $N_\mu = 16$ Gauss--Legendre nodes.
+
+The spectral hardening arises from Jensen\'s inequality: the Fermi--Dirac function is convex, so the average of $f_{\rm FD}(u/\Theta(\mu))$ over $\mu$ differs from $f_{\rm FD}(u)$ at $\order(T_2^2)$.  At leading order, the perturbation is
+\begin{equation}
+\frac{\delta f}{f_0} = \frac{q\,e^q}{(e^q + 1)}\left(\frac{T_2^2}{5}\cdot\frac{q\,e^q - e^q + 1}{(e^q + 1)}\right) + \order(T_2^3)\,.
+\end{equation}
+This produces a soft deficit ($\delta f < 0$) at $q \lesssim 2$ and a hard excess ($\delta f > 0$) at $q \gtrsim 2$, shifting the mean neutrino energy upward.
+
+\subsection{Historical limitations of the effective-temperature closure}
+
+The $\Teff$ framework has two fundamental limitations:
+
+\begin{enumerate}
+\item \textbf{$q$-independence}: the angular deformation $\Theta(\mu)$ is independent of momentum $q$.  In reality, the energy shift along each direction is momentum-dependent (see \S\ref{sec:characteristic}), producing spectral distortions beyond the $\Teff$ parametrisation.
+
+\item \textbf{Coordinate singularity}: when $T_2 \to -1/2$ (i.e.\ $c_2 = -1$), $\Theta(\mu = 0) \to 0$, causing a singularity in the Fermi--Dirac function.  This is reached for $\SigH \gtrsim 0.25$ and limits the valid parameter range.
+\end{enumerate}
+
+Both limitations are resolved by the characteristic method (\S\ref{sec:characteristic}), which replaces the $\Teff$ parametrisation with exact solutions along geodesic rays.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig02.png}
+\caption{Spectral distortion mechanisms.  (a)~$\Teff$ angular profiles $\Theta(\mu)$ for three values of $\tilde\pi$.  (b)~Perturbative spectral hardening $\delta f/f_0$.  (c)~Exact characteristic monopole shift.}\label{fig:teff}
+\end{figure}
+
+%======================================================================

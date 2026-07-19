@@ -1,0 +1,142 @@
+\section{Eigenvalue Structure}\label{sec:eigenvalues}
+%======================================================================
+
+\subsection{\texorpdfstring{The Coupled $(\Sig, \tilde\pi)$ Reduced System}{The Coupled (Sigma, pi-tilde) Reduced System}}
+
+In the linearised regime, Eqs.~\eqref{eq:dSp} and \eqref{eq:psi2} (with $\tilde\pi = \Psi_2$) couple to form a $2 \times 2$ autonomous system:
+\begin{equation}
+\frac{d}{dN}\begin{pmatrix} \Sig_+ \\ \tilde\pi \end{pmatrix} = \underbrace{\begin{pmatrix} -1 & C_{\rm fb}\,f_\nu \\ C_{\rm src} & -C_{\rm drain} \end{pmatrix}}_{\mathbf{M}} \begin{pmatrix} \Sig_+ \\ \tilde\pi \end{pmatrix},\label{eq:matrix}
+\end{equation}
+where the coupling constants are:
+\begin{align}
+C_{\rm fb} &= \frac{24}{5} = 4.8 && \text{(feedback: } \Pi_+ = 6f_\nu\tilde\pi \text{ into geometry)}\,,\\
+C_{\rm src} &= \frac{8}{15} \approx 0.533 && \text{(source: shear drives quadrupole)}\,,\\
+C_{\rm drain} &= D = 4 && \text{(damping of quadrupole by free-streaming)}\,.
+\end{align}
+
+\begin{proposition}[Canonical eigenvalues]\label{prop:eigenvalues}
+For $f_\nu = 0.4052$ (three active neutrino species with standard thermal history):
+\begin{equation}
+\bx{\lambda_{\rm slow} = -0.687\,,\qquad \lambda_{\rm fast} = -4.313\,,\qquad \mathrm{tr}(\mathbf{M}) = -5\;\text{(universal).}}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The trace is $\mathrm{tr}(\mathbf{M}) = -1 + (-4) = -5$, independent of $f_\nu$.  The determinant is
+\begin{equation}
+\det(\mathbf{M}) = (-1)(-4) - C_{\rm fb}\,f_\nu \cdot C_{\rm src} = 4 - \frac{24}{5}\cdot\frac{8}{15}\cdot f_\nu = 4 - \frac{192}{75}\,f_\nu\,.
+\end{equation}
+For $f_\nu = 0.4052$:
+\begin{equation}
+\det(\mathbf{M}) = 4 - 2.560 \times 0.4052 = 4 - 1.037 = 2.963\,.
+\end{equation}
+The discriminant is
+\begin{equation}
+\Delta = \mathrm{tr}^2 - 4\det = 25 - 4(2.963) = 25 - 11.852 = 13.148 > 0\,,
+\end{equation}
+so both eigenvalues are real:
+\begin{equation}
+\lambda = \frac{-5 \pm \sqrt{13.148}}{2} = \frac{-5 \pm 3.626}{2}\,.
+\end{equation}
+This gives $\lambda_{\rm slow} = (-5 + 3.626)/2 = -0.687$ and $\lambda_{\rm fast} = (-5 - 3.626)/2 = -4.313$.
+\end{proof}
+
+\begin{remark}[The $-0.617$ error]
+An earlier version of this report stated $\lambda_{\rm slow} = -0.617$.  That value requires $f_\nu = 0.506$, which is not physically realised in the Standard Model with three active neutrino species.  The correct value is $\lambda_{\rm slow} = -0.687$ with $f_\nu = 0.4052$.  The value $-0.617$ is \textbf{retired} and should not be used.
+\end{remark}
+
+\subsection{The Transport Eigenvalues: Complex Oscillatory Decay}
+
+The reduced $(\Sig, \tilde\pi)$ system of \eqref{eq:matrix} uses a renormalised anisotropic stress variable $\tilde\pi$.  To expose the oscillatory structure, we return to the original $(\Sig, \Psi_2)$ variables.  The collisionless PSTF hierarchy closes at $\ell = 2$ for Type~I, giving two equations without quadrupole damping:
+\begin{align}
+\frac{\dd\Sig}{\dd N} &= -\Sig + \Pi\,,\qquad \Pi = 6\,f_\nu\,\Psi_2\,,\label{eq:dSig_tr}\\
+\frac{\dd\Psi_2}{\dd N} &= -\frac{8}{15}\,\Sig\,.\label{eq:dPsi2_tr}
+\end{align}
+Note the critical sign: shear \emph{sources} a \emph{negative} quadrupole perturbation (an opposing anisotropic stress), and the positive-definite feedback coefficient $6f_\nu$ converts this to a \emph{negative} $\Pi$.  The $2\times 2$ matrix in the $(\Sig, \Psi_2)$ basis is
+\begin{equation}
+\mathbf{M}_{\rm tr} = \begin{pmatrix} -1 & 6\,f_\nu \\ -8/15 & 0 \end{pmatrix}\,.\label{eq:Mtr}
+\end{equation}
+This differs from the reduced system \eqref{eq:matrix} in two ways: (i)~the off-diagonal entries have \emph{opposite} signs (negative feedback loop), and (ii)~there is no quadrupole damping ($M_{22} = 0$).  The trace is $\mathrm{tr}(\mathbf{M}_{\rm tr}) = -1$ and the determinant is
+\begin{equation}
+\det(\mathbf{M}_{\rm tr}) = 0 - (6f_\nu)\!\left(-\frac{8}{15}\right) = \frac{16\,f_\nu}{5}\,.
+\end{equation}
+The discriminant is $\Delta = 1 - 4 \times 16f_\nu/5 = 1 - 64f_\nu/5$.  For $f_\nu > 5/64 \approx 0.078$ (always satisfied for $N_\nu \geq 1$), $\Delta < 0$ and the eigenvalues are complex:
+\begin{equation}
+\bx{\lambda = -\frac{1}{2} \pm i\omega\,,\qquad \omega = \frac{1}{2}\sqrt{\frac{64 f_\nu}{5} - 1} \approx 1.023\;\text{rad/e-fold}\,.}
+\end{equation}
+
+\begin{corollary}[Self-consistent decay law]
+The real part $\mathrm{Re}(\lambda) = -\mathrm{tr}/2 = -1/2$ is exact and $f_\nu$-independent.  The physical shear decays as
+\begin{equation}
+\bx{|\Sig(N)| \sim e^{-N/2}\,,\qquad \sigma \propto a^{-5/2}\,,}
+\end{equation}
+with damped oscillations of frequency $\omega \approx 1.023\;\mathrm{rad/e\text{-}fold}$.
+\end{corollary}
+
+\begin{remark}[Relationship between the two eigenvalue systems]
+The reduced system \eqref{eq:matrix} and the transport system \eqref{eq:Mtr} describe the same physics at different levels of approximation.  The transport system uses the bare PSTF variables $(\Sig, \Psi_2)$ without damping and exhibits the physically observed oscillatory decay ($\sigma \propto a^{-5/2}$).  The reduced system uses the energy-weighted stress variable $\tilde\pi$ with a Markovian quadrupole damping $D = 4$ that models the decorrelation from free-streaming.  This damping converts the oscillatory dynamics into overdamped decay ($\lambda_{\rm slow} = -0.687$, $\lambda_{\rm fast} = -4.313$, both real).  The two systems are \emph{not} related by a simple variable rescaling: the $D = 4$ closure adds qualitatively new dissipation.  Both descriptions are useful: the transport eigenvalues give the correct oscillation envelope ($\sigma \propto a^{-5/2}$), while the reduced eigenvalues characterise the effective decay rate of the slow mode after the fast transient has died away.
+\end{remark}
+
+This is significantly slower than the free decay $\sigma \propto a^{-3}$ (eigenvalue $-1$), which obtains when neutrino free-streaming is neglected.  The physical origin: free-streaming neutrinos store shear energy in their quadrupole moment $\Psi_2$, creating a viscous reservoir that releases energy back to the geometry on the timescale $|\lambda_{\rm slow}|^{-1} \approx 1.46$ e-folds.
+
+As a historical scale illustration only, extrapolating the deprecated diagnostic crossing near $\SigH=0.66$ with $a^{-3}$ or $a^{-5/2}$ changes the resulting present-day order of magnitude by roughly four decades.  Because the starting crossing is not a validated BBN constraint, neither extrapolated number is a current science result.
+
+\subsection{Eigenvector Structure and Mode Mixing}
+
+The eigenvectors of $\mathbf{M}$ reveal the physical content of each mode.  For the slow mode ($\lambda_{\rm slow} = -0.687$), the eigenvector is
+\begin{equation}
+\mathbf{v}_{\rm slow} = \begin{pmatrix} 1 \\ C_{\rm src}/(\lambda_{\rm slow} + C_{\rm drain}) \end{pmatrix} = \begin{pmatrix} 1 \\ (8/15)/(4 - 0.687) \end{pmatrix} = \begin{pmatrix} 1 \\ 0.161 \end{pmatrix}\,,
+\end{equation}
+indicating that the slow mode is predominantly shear with a small quadrupole component ($\tilde\pi/\Sig \approx 0.16$).  The fast mode ($\lambda_{\rm fast} = -4.313$) has eigenvector
+\begin{equation}
+\mathbf{v}_{\rm fast} = \begin{pmatrix} 1 \\ C_{\rm src}/(\lambda_{\rm fast} + C_{\rm drain}) \end{pmatrix} = \begin{pmatrix} 1 \\ (8/15)/(4 - 4.313) \end{pmatrix} = \begin{pmatrix} 1 \\ -1.70 \end{pmatrix}\,.
+\end{equation}
+The fast mode has $|\tilde\pi| > |\Sig|$: it is a quadrupole-dominated oscillation that decays within $\sim$1 e-fold.
+
+Given generic initial conditions $\Sig(0) = \Sig_0$, $\tilde\pi(0) = 0$ (no initial anisotropic stress), the decomposition is:
+\begin{equation}
+\begin{pmatrix} \Sig(N) \\ \tilde\pi(N) \end{pmatrix} = A_{\rm s}\,\mathbf{v}_{\rm slow}\,e^{\lambda_{\rm slow} N} + A_{\rm f}\,\mathbf{v}_{\rm fast}\,e^{\lambda_{\rm fast} N}\,,
+\end{equation}
+where $A_{\rm s}$ and $A_{\rm f}$ are determined by the initial conditions.  For $\tilde\pi(0) = 0$:
+\begin{equation}
+A_{\rm s} = \frac{v_{2,\rm fast}}{v_{2,\rm fast} - v_{2,\rm slow}}\,\Sig_0 \approx 0.914\,\Sig_0\,,\qquad A_{\rm f} = \frac{-v_{2,\rm slow}}{v_{2,\rm fast} - v_{2,\rm slow}}\,\Sig_0 \approx 0.086\,\Sig_0\,.
+\end{equation}
+Thus $\sim$91.4\% of the initial shear enters the slow mode and only $\sim$8.6\% enters the fast mode.  After $N \sim 2$ e-folds, the fast mode has decayed by $e^{-4.313 \times 2} \approx 2 \times 10^{-4}$ and only the slow mode survives.
+
+\subsection{Physical Interpretation: The Neutrino Viscous Reservoir}
+
+The slow decay can be understood as an energy storage mechanism.  Free-streaming neutrinos develop an anisotropic stress $\Pi_\nu$ in response to the geometric shear $\Sig$.  This stress acts as a sink for shear kinetic energy, converting it to internal energy of the neutrino distribution (encoded in $\Psi_2$).  However, the stored energy leaks back: the feedback term $C_{\rm fb}\,f_\nu\,\tilde\pi$ in the shear equation \eqref{eq:dSp} returns anisotropic stress to the geometry, slowing the net decay.
+
+The total energy budget satisfies
+\begin{equation}
+\frac{\dd}{\dd N}(\rho_\sigma + \rho_{\pi}) = -(5 + \text{interaction})\,(\rho_\sigma + \rho_{\pi})\,,
+\end{equation}
+where $\rho_\sigma \propto \Sig^2$ is the shear energy and $\rho_\pi \propto \tilde\pi^2$ is the quadrupole energy.  The universal trace $\mathrm{tr}(\mathbf{M}) = -5$ sets the total dissipation rate, but the \emph{partition} between shear and quadrupole determines the effective decay constant for each component individually.
+
+\subsection{Sensitivity to the neutrino energy fraction}
+
+The eigenvalues depend on the neutrino energy fraction $f_\nu$, which in turn depends on the number of neutrino species and their thermal history.  The discriminant $\Delta = 25 - 4\det$ vanishes at
+\begin{equation}
+f_{\nu,\rm crit} = \frac{75}{4 \times 192}\,(25 - 16) = \frac{75 \times 9}{768} = 0.879\,,
+\end{equation}
+above which the eigenvalues become complex (oscillatory shear decay even in the reduced system).  Since $f_\nu = 0.4052 < 0.879$, the physical case has real eigenvalues.
+
+For hypothetical scenarios with additional light species (e.g.\ sterile neutrinos), $f_\nu$ increases, and the eigenvalue splitting $|\lambda_{\rm slow} - \lambda_{\rm fast}|$ decreases.  At $f_\nu \to 0$ (no neutrinos), $\lambda_{\rm slow} \to -1$ and $\lambda_{\rm fast} \to -4$, recovering the free-decay shear rate and the independent quadrupole damping.
+
+\subsection{Quasi-Static Attractor}
+
+After $\sim$2 e-folds, the stress-to-shear ratio converges to the quasi-static attractor:
+\begin{equation}
+\frac{|\tilde\pi|}{|\Sig|} \to \frac{C_{\rm src}}{C_{\rm drain}} = \frac{8/15}{4} \approx 0.133\,.
+\end{equation}
+This attractor ratio determines the effective feedback strength and is insensitive to initial conditions.  Its physical meaning is simple: the quadrupole reaches a quasi-static balance between the source from geometric shear ($C_{\rm src}\,\Sig$) and the damping from free-streaming ($C_{\rm drain}\,\tilde\pi$).
+
+The attractor timescale can be estimated from the fast eigenvalue: $\tau_{\rm att} \sim |\lambda_{\rm fast}|^{-1} \approx 0.23$ e-folds.  After $\sim 5\tau_{\rm att} \approx 1.2$ e-folds, the system is within 1\% of the attractor.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_ped01_eigenvalue_sensitivity.png}
+\caption{Eigenvalue structure.  (a)~$\lambda_{\rm slow}$ and $\lambda_{\rm fast}$ as functions of $f_\nu$; the vertical dashed line marks $f_\nu = 0.4052$ (three SM neutrinos), giving $\lambda_{\rm slow} = -0.687$.  (b)~Oscillation frequency $\omega$ of the transport eigenvalues; at $f_\nu = 0.4052$, $\omega = 1.023\;\mathrm{rad/e\text{-}fold}$.  (c)~Shear decay envelopes: self-consistent $a^{-5/2}$ vs free decay $a^{-3}$ vs the slow eigenmode $e^{-0.687 N}$, with the BBN epoch highlighted.}\label{fig:eigenvalues}
+\end{figure}
+
+%======================================================================

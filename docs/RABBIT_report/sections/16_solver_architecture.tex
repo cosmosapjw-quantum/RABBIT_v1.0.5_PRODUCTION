@@ -1,0 +1,66 @@
+\section{Solver Architecture}\label{sec:solver}
+%======================================================================
+
+\subsection{Two stiff-solver families}
+
+The current code base maintains two stiff-solver families with different roles.
+\begin{enumerate}
+\item \textbf{SciPy reference family:} the Type~I reference path uses \texttt{scipy.integrate.solve\_ivp} with Radau as the primary validation oracle and BDF as a stiffness comparison path.  This is the conservative reference / fallback backend in the current repository.
+\item \textbf{JAX canonical family:} the bounded JAX Type~I surfaces use a native 8-stage Rodas5P implementation based on the Steinebach tableau \cite{Steinebach2023},
+\begin{equation}
+\left(\frac{\mathbf{I}}{\gamma h} - \mathbf{J}\right)\mathbf{k}_i
+= \mathbf{f}\!\left(\mathbf{y}_n + \sum_{j<i} a_{ij}\,\mathbf{k}_j\right)
+ \sum_{j<i} c_{ij}\frac{\mathbf{k}_j}{h},
+\qquad \gamma = 0.21194\,,
+\end{equation}
+with runtime policy and Jacobian strategy chosen by the JAX driver metadata contracts.
+\end{enumerate}
+
+Fixed-step Rosenbrock is now retained only as a test-local native-AD smoke helper, not as a package-level runtime solver module or authority for the current canonical Type~I surfaces.
+
+\subsection{Backend interpretation and current authority}
+
+The old ``SciPy only'' hierarchy is no longer the right repository-level summary.  The current code distinguishes:
+\begin{itemize}
+\item \textbf{default reference surface:} \texttt{backend="auto"} / \texttt{"scipy"};
+\item \textbf{explicit bounded JAX surface:} \texttt{backend="jax"};
+\item \textbf{explicit exact-characteristic surfaces:} \texttt{backend="jax\_characteristic"} and \texttt{"jax\_characteristic\_tier2"};
+\item \textbf{explicit higher-tier bounded surface:} \texttt{backend="jax\_advanced"} without Teff.
+\end{itemize}
+
+The report's historical figures remain attached to the exact-characteristic reference chain.  Any timing or backend statement should therefore be read together with its \emph{physics surface}: matched-physics parity statements are meaningful, mixed-surface timing comparisons are not.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig10.png}
+\caption{Illustrative solver comparison.  The figure should now be read as a qualitative architecture sketch for the current solver families: SciPy implicit reference solves and JAX-native Rodas5P canonical surfaces.  The former fixed-step diagnostic AD probe is test-local only, not a runtime solver family.  This is not a current matched-physics benchmark table.}
+\label{fig:solver}
+\end{figure}
+
+\subsection{Representative state vectors}
+
+No single state vector now describes the entire canonical Type~I code scope.  The most important surfaces are:
+\begin{enumerate}
+\item \textbf{SciPy exact-characteristic reference layout:}
+\begin{equation}
+\mathbf{y}_{\rm SciPy,char}
+= \bigl(\Sigma_+,\Sigma_-,I_{1\ldots12},J_{1\ldots12},S,T_\gamma,X_{0\ldots8}\bigr),
+\end{equation}
+which gives 37 total DOF at tier~1.
+\item \textbf{JAX exact-characteristic compact layout:}
+\begin{equation}
+\mathbf{y}_{\rm JAX,char}
+= \bigl(\Sigma_+,\Sigma_-,S,T_\gamma,X_{0\ldots8}\bigr)
+\end{equation}
+at tier~1, i.e.\ 13 total DOF; tier~2 adds $(T_{\nu_e},T_{\nu_x})$ for 15 total DOF.  The passive ray variables $I_j$ and $J_j$ are reconstructed analytically.
+\item \textbf{JAX bounded default live-weak layout:}
+\begin{equation}
+\mathbf{y}_{\rm JAX,main}
+= \bigl(\Sigma_+,\Sigma_-,\Psi_{\rm flat},T_\gamma,X_i\bigr),
+\end{equation}
+which is a large linearised PSTF state (972 total DOF at phase~2, tier~1, $N_q=80$).
+\end{enumerate}
+
+These are different numerical realisations with different scope contracts; they should not be conflated into a single ``production state vector'' statement.
+
+%======================================================================

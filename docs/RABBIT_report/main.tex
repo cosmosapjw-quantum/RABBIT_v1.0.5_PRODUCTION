@@ -1,0 +1,136 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{booktabs,longtable,array,multirow,tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{appendix}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=green!50!black,urlcolor=blue!70!black}
+\setlength{\headheight}{14.5pt}
+\setlength{\emergencystretch}{2em}
+\pdfstringdefDisableCommands{%
+  \def\SigH{Sigma_H}%
+  \def\Sig{Sigma}%
+  \def\Yp{Y_p}%
+  \def\Neff{N_eff}%
+  \def\Teff{T_eff}%
+  \def\dd{d}%
+  \def\GF{G_F}%
+  \def\GL{G_L}%
+  \def\GR{G_R}%
+  \def\sw{sin^2 theta_W}%
+}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small RABBIT Pedagogical Report v2.0}
+\fancyhead[R]{\small J.\ Park}
+\fancyfoot[C]{\thepage}
+\graphicspath{{figures/}}
+\setlength{\parskip}{4pt plus 1pt}
+
+\newcommand{\Sig}{\Sigma}
+\newcommand{\SigH}{\Sigma_H}
+\newcommand{\Yp}{Y_p}
+\newcommand{\Neff}{N_{\rm eff}}
+\newcommand{\Teff}{T_{\rm eff}}
+\newcommand{\FLRW}{\mathrm{FLRW}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\order}{\mathcal{O}}
+\newcommand{\bx}[1]{\boxed{#1}}
+\newcommand{\GF}{G_{\rm F}}
+\newcommand{\GL}{G_{\rm L}}
+\newcommand{\GR}{G_{\rm R}}
+\newcommand{\sw}{\sin^2\!\theta_{\rm W}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{\vspace{-1cm}\textbf{RABBIT: Precision Big Bang Nucleosynthesis\\
+with Bianchi Type~I Cosmology}\\[10pt]
+\large Pedagogical Report: Canonical Type~I Core and Exact-Characteristic Reference Results\\[6pt]
+\normalsize Department of Physics \& OMEG Institute, Soongsil University}
+\author{Jiwon Park\\\small\texttt{cosmosapjw@soongsil.ac.kr}}
+\date{April 2026 --- v2.0}
+
+\begin{document}
+\input{sections/00_frontmatter}
+
+
+\part{Foundations}
+\input{sections/01_introduction}
+
+\input{sections/02_bianchi_type_i_geometry}
+
+\input{sections/03_neutrino_transport_linearised_pstf_hierarchy}
+
+\input{sections/04_eigenvalue_structure}
+
+\input{sections/05_effective_temperature_framework}
+
+\input{sections/06_exact_characteristic_ray_transport}
+
+
+\part{Collision Physics}
+\input{sections/07_the_collision_integral_general_structure}
+
+\input{sections/08_the_hannestad_madsen_collision_kernel}
+
+\input{sections/09_pair_annihilation_and_creation}
+
+\input{sections/10_relaxation_time_approximation}
+
+\input{sections/11_incomplete_decoupling_and}
+
+
+\part{Production Pipeline}
+\input{sections/13_weak_n_p_interconversion_rates}
+
+\input{sections/14_qed_equation_of_state}
+
+\input{sections/15_nuclear_network}
+
+\input{sections/16_solver_architecture}
+
+\input{sections/17_the_full_coupled_system}
+
+\input{sections/18_results}
+
+\input{sections/19_inference_and_gradient_bridge}
+
+\input{sections/20_validation}
+
+\input{sections/21_discussion}
+
+\input{sections/22_conclusions}
+
+
+\begin{appendices}
+\input{sections/A01_physical_constants}
+
+\input{sections/A02_canonical_eigenvalue_values}
+
+\input{sections/A03_weak_coupling_constants}
+
+\input{sections/A04_code_architecture_developer_reference}
+
+\input{sections/A05_full_phase_space_ray_boltzmann_equation}
+
+
+\end{appendices}
+\input{sections/99_bibliography}
+
+\end{document}

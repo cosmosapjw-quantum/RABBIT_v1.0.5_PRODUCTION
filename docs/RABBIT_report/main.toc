@@ -1,0 +1,109 @@
+\contentsline {part}{I\hspace {1em}Foundations}{6}{part.1}%
+\contentsline {section}{\numberline {1}Introduction}{6}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Production-core declaration}{6}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Notation and scope guide}{7}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Outline}{7}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Bianchi Type~I Geometry}{8}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Wainwright--Hsu Variables}{8}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}The Friedmann Constraint}{9}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Background geometry as the production backbone}{9}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Neutrino Transport: Linearised PSTF Hierarchy}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Boltzmann Equation in Bianchi Type~I}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The PSTF Multipole Expansion}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Anisotropic Stress Extraction}{11}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Eigenvalue Structure}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The Coupled $(\Sigma , \tilde \pi )$ Reduced System}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The Transport Eigenvalues: Complex Oscillatory Decay}{12}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Eigenvector Structure and Mode Mixing}{13}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Physical Interpretation: The Neutrino Viscous Reservoir}{14}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Sensitivity to the neutrino energy fraction}{14}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Quasi-Static Attractor}{14}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Effective-Temperature Framework}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Angular Deformation of the Distribution}{14}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Historical limitations of the effective-temperature closure}{15}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Exact Characteristic Ray Transport}{16}{section.6}%
+\contentsline {subsection}{\numberline {6.1}The Method of Characteristics}{16}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Geodesic Equations in Bianchi Type~I}{16}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Analytic Integration of the Direction Equation}{17}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}The Method of Characteristics}{17}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}ODEs for the Ray State}{18}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Observables from Characteristic Rays}{18}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}DOF Comparison and Convergence}{19}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}The Nonlinear Transport Correction}{19}{subsection.6.8}%
+\contentsline {part}{II\hspace {1em}Collision Physics}{20}{part.2}%
+\contentsline {section}{\numberline {7}The Collision Integral: General Structure}{20}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Scaling with Temperature}{20}{subsection.7.1}%
+\contentsline {section}{\numberline {8}The Hannestad--Madsen Collision Kernel}{21}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Angular Integration for $\nu + e^\pm $ Scattering}{21}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Standard Model Couplings}{21}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}The Reduced Collision Integral}{21}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Properties of the Collision Integral}{22}{subsection.8.4}%
+\contentsline {section}{\numberline {9}Pair Annihilation and Creation}{22}{section.9}%
+\contentsline {section}{\numberline {10}Relaxation-Time Approximation}{23}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Motivation}{23}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}The RTA Model}{23}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Limitations of the RTA}{23}{subsection.10.3}%
+\contentsline {section}{\numberline {11}Incomplete Decoupling and Neff}{24}{section.11}%
+\contentsline {subsection}{\numberline {11.1}The Physical Problem}{24}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Tiered Treatment in RABBIT}{24}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Entropy Conservation with Collision Source Term}{24}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Momentum-Dependent Decoupling}{26}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Connection to Anisotropic BBN}{27}{subsection.11.5}%
+\contentsline {subsection}{\numberline {11.6}$N_{\rm eff}$ in the tiered hierarchy}{28}{subsection.11.6}%
+\contentsline {subsection}{\numberline {11.7}The Full Boltzmann Equation for Incomplete Decoupling}{28}{subsection.11.7}%
+\contentsline {subsection}{\numberline {11.8}The State Vector for Full Boltzmann}{29}{subsection.11.8}%
+\contentsline {part}{III\hspace {1em}Production Pipeline}{29}{part.3}%
+\contentsline {section}{\numberline {12}Weak $n \leftrightarrow p$ Interconversion Rates}{30}{section.12}%
+\contentsline {subsection}{\numberline {12.1}The Six Channels}{30}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Matrix Element and Phase Space}{30}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Live Rates as Distribution Functionals}{30}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Correction Level Hierarchy}{31}{subsection.12.4}%
+\contentsline {section}{\numberline {13}QED Equation of State}{32}{section.13}%
+\contentsline {section}{\numberline {14}Nuclear Network}{32}{section.14}%
+\contentsline {section}{\numberline {15}Solver Architecture}{32}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Two stiff-solver families}{32}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Backend interpretation and current authority}{33}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Representative state vectors}{33}{subsection.15.3}%
+\contentsline {section}{\numberline {16}The Full Coupled System}{34}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Current scope declaration}{34}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Two production coupling channels}{34}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}RHS evaluation order}{34}{subsection.16.3}%
+\contentsline {section}{\numberline {17}Results}{35}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Geometry-to-transport backbone}{35}{subsection.17.1}%
+\contentsline {subsection}{\numberline {17.2}Direct BBN yield response}{36}{subsection.17.2}%
+\contentsline {subsection}{\numberline {17.3}Constraint from the profile likelihood}{37}{subsection.17.3}%
+\contentsline {section}{\numberline {18}Inference and Gradient Bridge}{38}{section.18}%
+\contentsline {section}{\numberline {19}Validation}{39}{section.19}%
+\contentsline {subsection}{\numberline {19.1}FLRW recovery}{39}{subsection.19.1}%
+\contentsline {subsection}{\numberline {19.2}PRIMAT cross-validation}{39}{subsection.19.2}%
+\contentsline {subsection}{\numberline {19.3}SciPy--JAX parity on the current canonical Type~I surfaces}{40}{subsection.19.3}%
+\contentsline {subsection}{\numberline {19.4}Convergence and discretisation checks}{40}{subsection.19.4}%
+\contentsline {subsection}{\numberline {19.5}What is and is not validated here}{40}{subsection.19.5}%
+\contentsline {section}{\numberline {20}Discussion}{41}{section.20}%
+\contentsline {subsection}{\numberline {20.1}What the characteristic correction is really telling us}{41}{subsection.20.1}%
+\contentsline {subsection}{\numberline {20.2}Limitations and outlook}{41}{subsection.20.2}%
+\contentsline {section}{\numberline {21}Conclusions}{42}{section.21}%
+\contentsline {section}{\numberline {A}Physical Constants}{43}{appendix.1.A}%
+\contentsline {section}{\numberline {B}Canonical Eigenvalue Values}{43}{appendix.1.B}%
+\contentsline {section}{\numberline {C}Weak Coupling Constants}{43}{appendix.1.C}%
+\contentsline {section}{\numberline {D}Code Architecture: Developer Reference}{43}{appendix.1.D}%
+\contentsline {subsection}{\numberline {D.1}Package Layout}{44}{subsection.1.D.1}%
+\contentsline {subsection}{\numberline {D.2}Canonical Type~I Surfaces}{44}{subsection.1.D.2}%
+\contentsline {subsection}{\numberline {D.3}Current Transport Surfaces}{45}{subsection.1.D.3}%
+\contentsline {paragraph}{SciPy Type~I reference path (\texttt {drivers/full\_coupled\_typeI.py}).}{45}{section*.26}%
+\contentsline {paragraph}{JAX main Type~I path (\texttt {jax/driver\_typeI.py}).}{45}{section*.27}%
+\contentsline {paragraph}{JAX exact-characteristic path (\texttt {jax/driver\_typeI\_char.py}).}{45}{section*.28}%
+\contentsline {paragraph}{Characteristic kernels (\texttt {transport/characteristic\_rays.py}, \texttt {jax/characteristic\_rays\_jax.py}).}{45}{section*.29}%
+\contentsline {subsection}{\numberline {D.4}Representative State Contracts}{46}{subsection.1.D.4}%
+\contentsline {subsection}{\numberline {D.5}Solver and Runtime Policy}{46}{subsection.1.D.5}%
+\contentsline {paragraph}{SciPy reference family.}{46}{section*.30}%
+\contentsline {paragraph}{JAX canonical family.}{46}{section*.31}%
+\contentsline {paragraph}{Auto dispatch.}{46}{section*.32}%
+\contentsline {subsection}{\numberline {D.6}What This Appendix Does and Does Not Claim}{47}{subsection.1.D.6}%
+\contentsline {section}{\numberline {E}Full Phase-Space Ray Boltzmann Equation}{47}{appendix.1.E}%
+\contentsline {subsection}{\numberline {E.1}State Representation}{47}{subsection.1.E.1}%
+\contentsline {subsection}{\numberline {E.2}Evolution Equation}{47}{subsection.1.E.2}%
+\contentsline {subsection}{\numberline {E.3}Collision Coupling Between Rays}{48}{subsection.1.E.3}%
+\contentsline {subsection}{\numberline {E.4}Advantages and Costs}{48}{subsection.1.E.4}%
+\contentsline {subsection}{\numberline {E.5}Initial Conditions}{49}{subsection.1.E.5}%
+\contentsline {subsection}{\numberline {E.6}Implementation Status}{49}{subsection.1.E.6}%

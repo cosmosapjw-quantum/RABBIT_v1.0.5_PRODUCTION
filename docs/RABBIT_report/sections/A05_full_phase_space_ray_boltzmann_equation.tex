@@ -1,0 +1,88 @@
+\section{Full Phase-Space Ray Boltzmann Equation}\label{app:full_ray}
+%======================================================================
+
+This appendix derives the full Boltzmann equation along characteristic rays when the state per ray is the complete distribution $f_j(q_k)$ rather than the single scalar $I_j$.  This is the deferred full phase-space formulation that eliminates reduced temperature-projection closures entirely.
+
+\subsection{State Representation}
+
+In the full phase-space approach, each of the $N_\mu$ rays carries $N_q$ distribution values:
+\begin{equation}
+\text{State per ray:}\quad f_j(q_1), f_j(q_2), \ldots, f_j(q_{N_q})\,,\qquad j = 1, \ldots, N_\mu\,.
+\end{equation}
+
+The total transport DOF is $N_\mu \times N_q$.  With $N_\mu = 12$ and $N_q = 20$: 240 DOF, compared to $2N_\mu + 1 = 25$ in the collisionless characteristic approach.
+
+\subsection{Evolution Equation}
+
+The Boltzmann equation along ray $j$ is:
+\begin{equation}
+\frac{\partial f_j(q)}{\partial N} = -\left(\frac{\dd\ln q}{\dd N}\right)_{\!j}\,q\,\frac{\partial f_j}{\partial q} + \frac{C[f](q, \mu_j)}{H}\,.\label{eq:full_ray_boltzmann}
+\end{equation}
+
+The gravitational redshift term $(\dd\ln q/\dd N)_j = -\Sig_+\,P_2(\mu_j)$ is the same as in the collisionless case.  The new ingredient is the collision term $C[f](q, \mu_j)/H$, which is evaluated directly at each momentum node and direction.
+
+\subsection{Collision Coupling Between Rays}
+
+The collision integral at direction $\mu_j$ requires knowledge of the distribution at \emph{all} directions (through the angular part of the matrix element).  In the full phase-space approach, this is handled by a direct angular gather, collision, and per-ray application cycle at each timestep, without reduced temperature compression:
+
+\begin{enumerate}
+\item \textbf{Gather}: construct the angle-averaged monopole and quadrupole from all rays:
+\begin{align}
+\tilde{f}_0(q) &= \frac{1}{2}\sum_j w_j\,J_j\,f_j(q)\,,\\
+\tilde{f}_2(q) &= \frac{5}{2}\sum_j w_j\,J_j\,P_2(\mu_j)\,f_j(q)\,.
+\end{align}
+
+\item \textbf{Collide}: compute $C[f](q, \mu_j)$ using the monopole (and optionally quadrupole) projections:
+\begin{equation}
+C[f](q, \mu_j) = C_0[\tilde{f}_0](q) + C_2[\tilde{f}_0, \tilde{f}_2](q)\,P_2(\mu_j) + \order(\Sig^2)\,.
+\end{equation}
+
+\item \textbf{Apply}: add $C[f](q, \mu_j)/(H\,\Delta N)$ directly to each ray's distribution at each momentum node:
+\begin{equation}
+f_j(q_k) \to f_j(q_k) + \frac{C[f](q_k, \mu_j)}{H}\,\Delta N\,.
+\end{equation}
+\end{enumerate}
+
+No temperature-projection step is needed: the collision effect is applied per-momentum, per-ray.  The spectral distortion from collisions is captured exactly (to the order of the multipole truncation of $C$).
+\subsection{Advantages and Costs}
+
+The full phase-space approach has several advantages over reduced temperature-projection closures:
+\begin{itemize}
+\item No scalar scatter approximation: the collision integral is applied directly at each $q$.
+\item Spectral distortions from collisions (momentum-dependent rates) are captured exactly.
+\item The state $f_j(q)$ can represent arbitrary distributions, not just boosted Fermi--Dirac.
+\item Self-consistent incomplete decoupling: the evolved $f_j(q)$ naturally captures the $\Neff = 3.044$ correction.
+\end{itemize}
+
+The costs are:
+\begin{itemize}
+\item DOF increase: 25 $\to$ 240 (for $N_\mu = 12$, $N_q = 20$).
+\item Jacobian size: $37^2 = 1{,}369 \to 264^2 \approx 70{,}000$ (still tractable for Rodas5P).
+\item Memory: $\sim$3 KB $\to$ $\sim$20 KB per evaluation (negligible).
+\item The $q$-derivative $q\,\partial f/\partial q$ requires careful numerical treatment (upwind schemes or spectral methods) to avoid Gibbs oscillations.
+\end{itemize}
+
+\subsection{Initial Conditions}
+
+At $N = 0$ ($T = T_{\rm start} = 10\;\mathrm{MeV}$), all rays start with the equilibrium Fermi--Dirac distribution:
+\begin{equation}
+f_j(q_k, N=0) = f_{\rm FD}(q_k) = \frac{1}{e^{q_k} + 1}\,,\qquad \forall\,j\,.
+\end{equation}
+
+During the coupled phase ($T > T_{\rm dec}$), collisions maintain $f_j \approx f_{\rm FD}$ with small corrections.  After decoupling ($T < T_{\rm dec}$), collisions switch off and the evolution reduces to the characteristic solution $f_j(u, N) = f_{\rm FD}(u\,e^{2I_j})$.
+
+This demonstrates that the collisionless characteristic approach is the correct \emph{asymptotic} solution after decoupling, and the full phase-space approach is needed only during the decoupling epoch itself.
+
+\subsection{Implementation Status}
+
+The full phase-space ray formulation is designed but not yet implemented in RABBIT.  The implementation requires:
+\begin{enumerate}
+\item Upgrading the driver state vector from $\{I_j\}$ to $\{f_j(q_k)\}$.
+\item Implementing a stable $q$-advection scheme for the gravitational redshift term.
+\item Wiring the collision operator to act per-ray, per-momentum.
+\item Validating against known results (LASAGNA, FortEPiaNO) in the FLRW limit.
+\end{enumerate}
+
+This is the primary scope of Paper~II.
+
+%======================================================================

@@ -1,0 +1,254 @@
+\section{The Hannestad--Madsen Collision Kernel}\label{sec:hannestad_madsen}
+%======================================================================
+
+\subsection{\texorpdfstring{Angular Integration for $\nu + e^\pm$ Scattering}{Angular Integration for nu + e scattering}}
+
+The six-dimensional phase-space integral \eqref{eq:coll_general} for $\nu(y_1) + e^\pm(y_2) \to \nu(y_3) + e^\pm(y_4)$ can be reduced to a two-dimensional integral over the outgoing neutrino momentum $y_3$ and the incoming electron momentum $y_2$ after the Hannestad--Madsen angular integration \cite{HannestadMadsen1995}.  Here $y_i = p_i/T$ are dimensionless momenta.
+
+In the ultra-relativistic massless limit (appropriate for $T \gg m_e$ during neutrino decoupling), the angular-averaged squared matrix element factorises as
+\begin{equation}
+|\mathcal{M}|^2 \propto (\GL^2 + \GR^2)\bigl[(y_1 y_2)^2 + (y_3 y_4)^2\bigr] + (\GL^2 - \GR^2)\bigl[(y_1 y_4)^2 + (y_2 y_3)^2\bigr]\,,\label{eq:M2_scat}
+\end{equation}
+where $y_4 = y_1 + y_2 - y_3$ (4-momentum conservation) and the couplings depend on the neutrino flavour.
+
+\subsection{Standard Model Couplings}
+
+The left- and right-handed couplings for $\nu$--$e$ scattering in the Standard Model are:
+\begin{align}
+\text{$\nu_e + e$:}\quad &\GL = \frac{1}{2} + \sw\,,\quad \GR = \sw && \text{(CC + NC)}\,,\\
+\text{$\nu_x + e$:}\quad &\GL = -\frac{1}{2} + \sw\,,\quad \GR = \sw && \text{(NC only)}\,,
+\end{align}
+where $\sw = 0.23122$ (PDG 2024, $\overline{\rm MS}$ scheme at $M_Z$).  The coupling combinations relevant for the total scattering rate are:
+\begin{align}
+\GL^2 + \GR^2\big|_{\nu_e} &= 0.588\,,\qquad \GL^2 + \GR^2\big|_{\nu_x} = 0.126\,.
+\end{align}
+
+For the total rate including both scattering and annihilation, the combined coefficients (N\"otzold \& Raffelt 1988 \cite{NotzoldRaffelt1988}) are:
+\begin{align}
+a_e &= 1 + 4\sw + 8\sin^4\!\theta_{\rm W} \approx 2.353\,,\\
+a_x &= 1 - 4\sw + 8\sin^4\!\theta_{\rm W} \approx 0.503\,,
+\end{align}
+giving a coupling ratio $a_e/a_x \approx 4.68$.  This asymmetry means $\nu_e$ remains coupled roughly five times longer than $\nu_\mu$ and $\nu_\tau$, which is the physical origin of the flavour-dependent spectral distortion.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_ped08_coupling_constants.png}
+\caption{Standard Model weak couplings for $\nu$--$e$ interactions.  (a)~Left- and right-handed couplings $\GL$, $\GR$ for $\nu_e$ (CC+NC) and $\nu_x$ (NC only); note $\GL^{\nu_x} < 0$.  (b)~Total coupling coefficients $a_\alpha$: the ratio $a_e/a_x \approx 4.68$ drives flavour-dependent spectral distortion during incomplete decoupling.}\label{fig:couplings}
+\end{figure}
+
+\subsection{The Reduced Collision Integral}
+
+After angular integration, the collision integral for each neutrino momentum node $y_1$ takes the form
+\begin{equation}
+\bx{C_{\rm scat}[f](y_1) = \frac{\GF^2\,T^5}{4\pi^3}\int_0^\infty \dd y_2\int_0^\infty \dd y_3\;\Theta(y_4)\;|\mathcal{M}|^2(y_1,y_2,y_3,y_4)\;\mathcal{S}(f_1,f_2,f_3,f_4)\,,}\label{eq:C_scat}
+\end{equation}
+where $\Theta(y_4)$ enforces 4-momentum conservation $y_4 = y_1 + y_2 - y_3 > 0$, and $\mathcal{S}$ is the statistical factor.  With dimensionless $y_i$ and the dimensionless reduced kernel convention used here, the prefactor scales as $\GF^2T^5$: in natural units $C_{\rm scat}$ has dimensions of a rate, while $C_{\rm scat}/H$ is dimensionless in an e-fold evolution equation.
+
+The historical spectral surface evaluated a reduced double integral on fixed
+momentum grids and interpolated $f_\nu$ between nodes.  That implementation is
+not current runtime authority.  The Rust F09B slice instead integrates only the
+thermal energy moment described below; it does not yet evolve a spectral
+distribution.
+\subsection{Properties of the Collision Integral}
+
+The collision terms satisfy the following exact reaction-level properties:
+
+\begin{enumerate}
+\item \textbf{Detailed balance}: $C[f_{\rm eq}] = 0$ when all species are at the same temperature.  This is guaranteed by the statistical factor $\mathcal{S}$, which vanishes identically for equilibrium distributions.
+
+\item \textbf{Elastic-scattering number conservation}: for $\nu+e^\pm\leftrightarrow\nu+e^\pm$, the neutrino number moment vanishes, $\int_0^\infty y^2 C_{\nu,\rm scat}[f](y)\,\dd y=0$.  Its neutrino energy moment, $\int y^3 C_{\nu,\rm scat}\,\dd y$, is generally nonzero when the neutrino and electromagnetic distributions differ.  The electron-sector energy moment has the opposite value, so it is the combined $\nu+e^\pm$ energy that is conserved.
+
+\item \textbf{Pair-process conservation}: $e^+e^-\leftrightarrow\nu\bar\nu$ does not conserve neutrino plus antineutrino number separately, but it creates or destroys the pair symmetrically and therefore conserves neutrino lepton number $n_\nu-n_{\bar\nu}$.  Its neutrino-sector energy moment is likewise generally nonzero; the conserved quantity is the combined $\nu+\bar\nu+e^-+e^+$ energy.
+\end{enumerate}
+
+Thus the neutrino-sector energy-transfer rate can be nonzero during transients (when $T_\gamma \neq T_\nu$) without violating total energy conservation.
+
+\subsection{Current Rust F09B Thermal-Moment Slice}
+
+The crate-private F09B source evaluates the invariant two-body phase space in
+plasma-frame incoming coordinates and constructs the final state in the
+centre-of-momentum frame.  It retains the vacuum electron mass, zero-chemical-
+potential Fermi--Dirac occupations, Pauli blocking, and the tree-level
+Hannestad--Madsen coupling convention.  The endpoint rule uses six-point
+Gauss--Laguerre quadrature for each incoming radial momentum, four-point
+Gauss--Legendre quadrature for the incoming and final polar angles, and eight
+midpoint azimuths.  No fitted suppression factor, lookup table, or calibrated
+$\Neff$ target enters.
+
+An independently written NumPy/SciPy plasma-frame/CM integral reproduces every
+production elastic and pair component at $T_\gamma=1.2\,\mathrm{MeV}$ and
+$T_\nu=1.0\,\mathrm{MeV}$.  The production totals are $1.0473763830$ and
+$0.2201082055$ for the electron and heavy flavours.  Raising the independent rule through
+$(N_r,N_\mu,N_\phi)=(8,8,12),(12,10,16),(16,12,20),(24,16,24)$ changes the
+electron- and heavy-flavour totals toward $1.0471753248$ and $0.2200659307$,
+respectively, in units of $G_F^2$ factored out.  Thus the fixed endpoint rule carries a measured relative quadrature
+remainder of about $1.9\times10^{-4}$ at this anchor; it is not continuum
+truth.  A structurally different direct Hannestad--Madsen support/root
+construction approaches the same finite-mass FD totals to about $0.3\%$ at
+order 32 and recovers the analytic massless Maxwell--Boltzmann limit to about
+$0.38\%$.
+
+The four-point polar reduction is separately checked against the former
+six-point rule at six temperature pairs from $10/9.99$ down to
+$0.05/0.04\,\mathrm{MeV}$ and both flavour couplings; every total differs by
+less than $2\times10^{-5}$ relatively.  A three-point rule was rejected
+because its independent envelope errors reached $4.69\times10^{-5}$ and
+$7.63\times10^{-5}$.  The accepted reduction changes the independent thermal
+$\Neff$ anchor by about $9.1\times10^{-9}$ while reducing the measured Rust
+BDF and Rodas5P cold-endpoint walls by factors $2.28$ and $2.16$ in the
+most recent like-for-like runs.  This is a repeated-run prerequisite, not a
+spectral-collision result or runtime promotion.
+
+The executable checks also cover the exact common-temperature null,
+temperature-ordering sign, nonnegative thermal entropy production, event-level
+energy conservation, elastic neutrino-number and pair lepton-number topology,
+one-electron-pair plus two-heavy-pair multiplicity, low-temperature electron
+suppression, and the equal-and-opposite FLRW first law.  A separate adaptive-
+EOS SciPy endpoint with DOP853 and Radau agrees before comparison with the Rust
+BDF and Rodas5P endpoints.
+
+This evidence validates only the isotropic thermal $\ell=0$ moment inside its
+declared tree-level model.  Collision thermal masses, radiative collision
+corrections, neutrino--neutrino reactions, spectral distortions, lepton
+asymmetry, oscillations, QKE, precision $\Neff$/abundances, and public runtime
+authority remain outside the claim.
+
+\subsection{Current Rust F10B2 Resolution-Selected Spectral Substrate}
+
+F10B1 first reused the same finite-mass HM support density to construct a collision
+action at every node of the comoving $q=ap$ grid.  One occupation vector
+represents the zero-lepton-asymmetry $\nu_e+\bar\nu_e$ pair and a second the
+degenerate heavy pair; the FLRW energy readout applies the latter to both muon
+and tau flavours.  No relaxation-time calibration enters.  The discrete
+elastic event flux is antisymmetrised between incoming and outgoing neutrino
+nodes, so its quadrature number moment vanishes by construction.  The pair
+event flux is symmetrised between neutrino and antineutrino nodes, so their
+number changes are equal and the lepton-number difference is conserved.  Both
+identities pass at a $5\times10^{-12}$ relative roundoff ceiling even for
+unequal test occupations.
+
+The Pauli gain/loss algebra supplies the occupation Jacobian analytically.  An
+exact common-temperature FD reference branch enforces the analytic detailed-
+balance null, while non-equilibrium values and derivatives retain the direct
+event evaluation.  The action's energy moment is transferred with the opposite
+sign to the electromagnetic bath.  Focused finite differences check the
+folded action and FLRW Jacobians, and the combined first law closes to
+$3\times10^{-15}$ relatively.
+
+F10B2 addresses the numerical-coordinate and resolution blockers without
+changing this action.  A direct-occupation 12-node Rodas5P run failed raw when
+a far-tail occupation approached floating-point zero.  The evolved variable
+is therefore now the exact logit $u=\ln[f/(1-f)]$; a stable logistic map and
+chain-rule Jacobian preserve $0<f<1$, while unrepresentable underflow still
+fails rather than being clipped.  Event order four/three is rejected.  At
+$T_\gamma/T_{\rm cm}=1.2/1.0$, the retained 16-node/event-six/four energy
+moments are $0.99078$ and $0.99087$ of the independent F09B thermal totals for
+electron and heavy flavours.  The high-order $32/32/24$ component check gives
+$1.00162$ and $1.00170$.
+
+With the retained rule, the private cold-event regressions are
+\begin{align*}
+(N,t,\Neff)_{\rm BDF}
+  &= (7.9367312298,52681.0360\,\mathrm{s},3.0330775769),\\
+(N,t,\Neff)_{\rm Rodas5P}
+  &= (7.9367453070,52681.5412\,\mathrm{s},3.0329326538).
+\end{align*}
+A same-code BDF ladder at 12, 16, and 20 nodes gives
+$\Neff=3.0326021077$, $3.0330775769$, and $3.0331966346$; the final change is
+$1.19\times10^{-4}$.  The grid-20 Rodas leg and a structurally independent
+full spectral solve were not run.  A five-point explicit-$N$ step ladder bounds
+the direct-support sensitivity in the executable tests.  Consequently this is
+a resolution-selected conservation/coupling substrate, not a precision
+distortion or $\Neff$ prediction.  Neutrino--neutrino reactions, collision
+thermal/radiative corrections, lepton asymmetry, oscillations, QKE, and public
+runtime authority remain outside the claim.
+
+\subsection{Rust F10C0 Component and F10C1 Radial Selection}
+
+F10C0 adds one deliberately restricted classical neutrino--neutrino channel
+to the isotropic Rust action: massless diagonal
+$\nu_\alpha+\nu_\alpha\leftrightarrow\nu_\alpha+\nu_\alpha$ and the identical
+antineutrino reaction, with zero lepton asymmetry.  It acts separately on the
+electron and degenerate-heavy occupation blocks; it does not couple flavours
+or neutrinos to antineutrinos.  This completes row 1 and implements the
+same-flavour-identical subset of row 3 in the nine-row folded zero-lepton
+catalogue motivated by the standard
+decoupling collision treatments
+\cite{HannestadMadsen1995,Dolgov1997,Froustey2020}, not an implementation of
+the complete catalogue.
+
+In the natural-unit convention of the Rust kernel, define
+$K_s=(p_1\!\cdot p_2)(p_3\!\cdot p_4)$.  The directed physical event carries
+$32\,\GF^2K_s$.  The global four-leg weak form includes the elastic
+time-orientation factor $\eta=1/2$ and therefore carries
+$16\,\GF^2K_s$; the four tagged-leg appearances recover the corrected
+$64\,\GF^2K_s$ target-row coefficient.  The implementation integrates each
+event in centre-of-momentum coordinates.  Both off-grid outgoing logits are
+evaluated with the same nonnegative linear basis used to deposit the two
+outgoing legs, and an event is omitted as a whole if either outgoing leg lies
+outside the finite radial domain.  This shared partition-of-unity basis
+preserves the discrete number and energy moments event by event, while the
+stable Pauli gain--loss form supplies nonnegative entropy production and an
+analytic Jacobian with respect to the evolved logits.
+
+Within this restricted channel, the component claims are
+\textbf{VALIDATED}: the executable checks recover the analytic tagged
+massless Maxwell--Boltzmann loss with the corrected coefficient, give the
+common affine Fermi--Dirac null, preserve nonthermal number and energy, recover
+the $\GF^2T^5$ scaling, and compare the analytic logit Jacobian with a
+five-point stencil.  A production-versus-tagged nonthermal weak-action oracle
+on compact quadratic radial rules reaches a relative residual of
+$2.07348\%$ at radial order 64.  At the historical F10C0 boundary this did
+\emph{not} validate its endpoint grid: the 16-node Gauss--Laguerre linear
+radial representation was approximately $7.54\%$ below the high-resolution
+tagged weak-action oracle.
+
+F10C1 keeps the same nonnegative linear interpolation and deposition algebra
+but replaces that historical grid with a fixed positive 48-node rule,
+$y=-3\ln(1-t)$ for Gauss--Legendre $t\in(0,1)$.  There is no user-imposed
+integration cutoff, although the finite extreme nodes still bound the
+interpolation support and whole outgoing events outside it remain rejected.
+The direct weak-action residuals at N32, N40, N48, and N64 are
+$1.873525\%$, $1.227393\%$, $0.852441\%$, and $0.489704\%$.  This scalar
+ladder is necessary but not sufficient.  Selection is controlled by five
+smooth nonthermal profiles integrated on both compact and exponential N128
+auxiliary rules.  Their worst state-basis residual is
+$1.9771546\%<2.1\%$; the exact auxiliary references agree within
+$1.93\times10^{-8}$ relatively, while number and energy close below
+$1.8\times10^{-14}$.  Composite N32 and exponential N32/N40 are rejected by
+the auxiliary or electron-anchor gates despite favourable lower-dimensional
+comparisons.  Thus the N48 representation is \textbf{VALIDATED} only for this
+declared profile envelope, not for arbitrary distributions, continuum truth,
+or precision decoupling.
+
+The distinct-heavy part of row 3 remains absent, as do all channels in rows 2
+and 4--9---including cross-flavour elastic, $\nu\bar{\nu}$ elastic, and
+pair-conversion structures.  These catalogue parts remain \textbf{SPECIFIED}.
+QKE remains
+\textbf{FORBIDDEN} on this programme.  The radial-grid choice is no longer the
+active task.  A prepared self-event-geometry candidate reduced the matched N48
+cold wall from $2181.07$ to $1980.52\,\mathrm{s}$ ($9.195\%$), below the
+programme's approximately $10\%$ partial-blocker threshold, while maximum RSS
+rose by $3.277\%$; its 112 Rust lines and cache-only test were therefore
+removed.  The remaining cold-endpoint cost must be attacked at its measured
+dominant consumer without a new readiness or table surface before row 3 is
+completed and the seven wholly absent rows are added from the frozen
+catalogue.
+
+On the retained no-cache tree, both BDF and Rodas5P then reproduced their
+pre-cache endpoint states bitwise.  The matched run took
+$2191.66\,\mathrm{s}$ with maximum RSS $50{,}440\,\mathrm{KB}$, corresponding
+to a $0.486\%$ wall increase and a $1.137\%$ RSS decrease relative to the
+initial no-cache record.  The retained electron values-only allocation
+cleanup is therefore an arithmetic-neutral simplification with no claimed
+endpoint acceleration.  The approximately 36-minute cold wall, the partial
+row 3, the seven absent rows, and a structurally independent full-spectral
+FLRW comparison all remain open F10 gates.
+
+The current owner-authorized programme ends after those F10 gates close and a
+collision-coupled isotropic FLRW handoff is validated.  LRS and non-LRS
+Type-I/Bianchi extensions are owner-paused; QKE and public-production claims
+remain \textbf{FORBIDDEN}.  None of those later structures is opened by the
+component or radial evidence reported here.
+
+%======================================================================

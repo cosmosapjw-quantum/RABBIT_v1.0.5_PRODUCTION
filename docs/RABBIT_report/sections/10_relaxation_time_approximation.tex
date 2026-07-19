@@ -1,0 +1,40 @@
+\section{Relaxation-Time Approximation}\label{sec:rta}
+%======================================================================
+
+\subsection{Motivation}
+
+The full 2D integral \eqref{eq:C_scat} is computationally expensive ($\order(N_q^3)$ per timestep).  Historically, the PSTF hierarchy used a calibrated relaxation-time approximation (RTA) as an inexpensive damping surrogate when only the multipole moments $\Psi_0$ and $\Psi_2$ were tracked.
+
+\paragraph{Current status.} This RTA, including the fitted value $C_{\rm rate}=210$ and the electron-suppression profile below, is \textbf{DEPRECATED}.  It is retained only to document the historical calibration; it is neither the F09 collision-source authority nor evidence for a current Rust endpoint or precision-$\Neff$ result.
+
+\subsection{The RTA Model}
+
+The RTA replaces the full collision integral with a linear damping term:
+\begin{equation}
+\bx{C_\ell[\Psi_\ell](q) = -\kappa_\ell\,\frac{\Gamma_s}{H}\,\Psi_\ell(q)\,,}\label{eq:rta}
+\end{equation}
+where $\Gamma_s$ is the scattering rate and $\kappa_\ell$ is a multipole-dependent damping coefficient:
+\begin{align}
+\kappa_0 &= 1\,,\\
+\kappa_2 &= \frac{5}{3}\,.
+\end{align}
+
+The historical quadrupole damping coefficient $\kappa_2 = 5/3$ was chosen to model faster isotropisation of higher multipoles, and the overall calibration targeted $\Neff\approx3.044$.  That target-matching construction is not an independent derivation or validation of the collision physics.
+
+The scattering rate per e-fold is
+\begin{equation}
+\frac{\Gamma_s}{H} = \frac{C_{\rm rate}}{\pi^5}\,\GF^2\,a_s\,F(m_e/T_\gamma)\,T_\gamma^4\,T_\nu\,\frac{1}{H}\,,
+\end{equation}
+where the deprecated value $C_{\rm rate} = 210$ is a historical calibration constant, $a_s$ is the species-dependent coupling ($a_e$ or $a_x$), and $F(m_e/T_\gamma)$ is a fitted electron mass suppression factor:
+\begin{equation}
+F(x) = \frac{1}{1 + e^{2.5(x - 2.3)}}\,,
+\end{equation}
+which smoothly turns off the collision rate when $T_\gamma \lesssim m_e/2.3 \approx 0.22\;\mathrm{MeV}$ and $e^\pm$ pairs are Boltzmann-suppressed.
+
+\subsection{Limitations of the RTA}
+
+The RTA has a fundamental limitation: \textbf{it has no source term}.  When $\Psi_\ell = 0$, $C_\ell = 0$ regardless of whether $T_\gamma \neq T_\nu$.  This means the RTA \emph{cannot generate} the spectral distortion from incomplete decoupling; it can only \emph{damp} existing perturbations toward equilibrium.
+
+Any current source-bearing treatment must instead specify and validate its energy-transfer or phase-space collision operator, including its approximation limits and conservation checks.  The historical RTA cannot serve as that authority.
+
+%======================================================================

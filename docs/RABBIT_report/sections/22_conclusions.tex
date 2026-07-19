@@ -1,0 +1,22 @@
+\section{Conclusions}\label{sec:conclusions}
+%======================================================================
+
+RABBIT v1.0.0, as documented here in its current Type~I code scope, delivers:
+
+\begin{enumerate}
+\item A current canonical Type~I core that spans a SciPy reference / fallback path, a bounded JAX-first tier~1 default surface, explicit exact-characteristic JAX tier~1 and tier~2 surfaces, and a bounded no-Teff JAX tier~3 weak-budget surface.
+
+\item Historical exact-characteristic diagnostic outputs---the shear envelope, nonlinear yield response, and legacy profile crossing---retained for provenance and future falsification, not promoted as current science results.
+
+\item A clarified distinction between \emph{physics representation} and \emph{numerical state contract}: the SciPy characteristic reference path keeps explicit $(I_j,J_j,S)$ ray variables, while the compact JAX characteristic path reconstructs $I_j$ and $J_j$ analytically from $S$.
+
+\item A tiered incomplete-decoupling hierarchy in which tier~1 anchors the historical figures, tier~2 characteristic three-temperature thermo is a bounded canonical extension, and the no-Teff tier~3 weak-budget ladder is implemented as a bounded canonical JAX surface, without claiming a full anisotropic collision-coupled Boltzmann/QKE closure.
+
+\item A runtime-regression posture covering FLRW recovery cells, stored PRIMAT comparisons, characteristic convergence, and bounded SciPy--JAX parity, without treating self-consistency as publication validation.
+
+\item A code-to-formula account of the exact-characteristic reference chain together with an honest description of the broader current code scope and its boundaries.
+\end{enumerate}
+
+Everything beyond that scope---including a finite-shear science result, candidate perimeter geometries, Bayes-factor experimentation, and full anisotropic collision-coupled decoupling---is unvalidated or deferred future work.
+
+%======================================================================

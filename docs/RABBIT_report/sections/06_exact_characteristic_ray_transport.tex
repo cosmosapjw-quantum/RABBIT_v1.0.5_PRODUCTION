@@ -1,0 +1,123 @@
+\section{Exact Characteristic Ray Transport}\label{sec:characteristic}
+%======================================================================
+
+\subsection{The Method of Characteristics}
+
+The collisionless Boltzmann equation for massless neutrinos in LRS Bianchi Type~I admits an \emph{exact} solution by the method of characteristics.  Each characteristic curve (``ray'') follows a geodesic of the anisotropic spacetime.
+
+The ray direction $\mu$ (cosine of the angle with respect to the anisotropy axis) evolves according to
+\begin{equation}
+\frac{d\mu}{dN} = 3\Sig_+\,\mu(1 - \mu^2)\,,
+\end{equation}
+which integrates to the analytic form
+\begin{equation}
+X(\mu) \equiv \frac{\mu^2}{1 - \mu^2} = X_0\,e^{6S}\,,\qquad S = \int_0^N \Sig_+(N')\,\dd N'\,.\label{eq:X_evolution}
+\end{equation}
+
+The energy of a neutrino along ray $j$ shifts by the accumulated integral
+\begin{equation}
+\frac{dI_j}{dN} = \Sig_+\,P_2(\mu_j)\,,\label{eq:dI}
+\end{equation}
+so the distribution function is
+\begin{equation}
+\bx{f(u, \mu_j, N) = f_0\!\left(u\,e^{2I_j(N)}\right) = f_{\rm FD}\!\left(\frac{u}{\Theta_j}\right)\,,\qquad \Theta_j = e^{-2I_j}\,.}\label{eq:char_sol}
+\end{equation}
+
+This is an \emph{exact} solution of the collisionless Boltzmann equation: no approximation, no truncation.  Each ray is a Fermi--Dirac distribution with a direction-dependent effective temperature $\Theta_j$.  In code, the same exact physics appears in two numerically different representations: the SciPy reference path stores the explicit ray variables $(I_j, J_j)$ together with the shared accumulated shear $S$, whereas the compact JAX characteristic surface evolves only $S$ and reconstructs $I_j(S)$ and $J_j(S)$ analytically.
+
+\subsection{Geodesic Equations in Bianchi Type~I}
+
+To derive the characteristic solution, we begin from the geodesic equation for massless particles in the LRS Bianchi Type~I metric.  Writing the metric as $\dd s^2 = -\dd t^2 + a_\perp^2(t)(\dd x^2 + \dd y^2) + a_\parallel^2(t)\,\dd z^2$, the Hubble rates in the perpendicular and parallel directions are
+\begin{equation}
+H_\perp = \frac{\dot{a}_\perp}{a_\perp} = H(1 - \Sig_+)\,,\qquad H_\parallel = \frac{\dot{a}_\parallel}{a_\parallel} = H(1 + 2\Sig_+)\,.
+\end{equation}
+
+A massless neutrino with 4-momentum $p^\alpha = (E, p_x, p_y, p_z)$ has $E^2 = p_\perp^2/a_\perp^2 + p_z^2/a_\parallel^2$ (using physical momenta).  Defining the direction cosine $\mu = p_\parallel/(a_\parallel E)$ with respect to the symmetry axis, the geodesic equation gives:
+\begin{equation}
+\frac{\dd E}{E\,\dd t} = -H - \sigma_+ P_2(\mu)\,,\qquad \frac{\dd\mu}{\dd t} = 3H\sigma_+\,\mu(1-\mu^2)/H = 3\Sig_+\,H\,\mu(1-\mu^2)\,.
+\end{equation}
+
+Switching to e-fold time $N = \ln a$:
+\begin{align}
+\frac{\dd\ln E}{\dd N} &= -1 - \Sig_+\,P_2(\mu)\,,\label{eq:dE_dN}\\
+\frac{\dd\mu}{\dd N} &= 3\Sig_+\,\mu(1-\mu^2)\,.\label{eq:dmu_dN}
+\end{align}
+
+The fixed transport label $u = Ea/T_0$ then satisfies $\dd\ln u/\dd N = \dd\ln E/\dd N + 1 = -\Sig_+\,P_2(\mu)$.  Defining the energy-shift integral $I(N) = \int_0^N \Sig_+(N')\,P_2(\mu(N'))\,\dd N'$, we have $u_{\rm eff} = u\,e^{2I}$ (the factor 2 arises from the standard normalisation convention for the PSTF quadrupole).
+
+\subsection{Analytic Integration of the Direction Equation}
+
+The direction equation \eqref{eq:dmu_dN} can be integrated analytically.  Define $X = \mu^2/(1-\mu^2)$, so that $\dd X/X = 2\dd\mu/[\mu(1-\mu^2)] = 6\Sig_+\,\dd N$.  Therefore:
+\begin{equation}
+X(N) = X_0\,e^{6S(N)}\,,\qquad S(N) = \int_0^N \Sig_+(N')\,\dd N'\,,
+\end{equation}
+and
+\begin{equation}
+\mu(N) = \frac{\sqrt{X_0\,e^{6S}}}{\sqrt{1 + X_0\,e^{6S}}}\,.
+\end{equation}
+
+The angular Jacobian $J_j = \dd\mu_j(0)/\dd\mu_j(N)$ is needed for proper quadrature weighting.  From $X = X_0\,e^{6S}$, we compute:
+\begin{equation}
+J_j = \frac{\dd\mu_{j,0}}{\dd\mu_j} = \frac{\mu_j(1-\mu_j^2)}{\mu_{j,0}(1-\mu_{j,0}^2)} = \frac{(1-\mu_{j,0}^2)^2}{(1-\mu_j^2)^2}\,e^{-6S}\,.
+\end{equation}
+
+This Jacobian accounts for the compression/expansion of solid angle elements as the anisotropic expansion stretches the angular distribution.
+
+\subsection{The Method of Characteristics}
+
+The collisionless Boltzmann equation \eqref{eq:boltzmann_N} is a first-order linear PDE in $(u, \mu, N)$.  By the method of characteristics, the solution along each characteristic curve (ray) is simply that $f$ is constant along the ray when expressed in terms of the initial conditions:
+\begin{equation}
+f(u, \mu_j, N) = f(u_{\rm init}, \mu_{j,0}, 0) = f_0(u_{\rm init})\,,
+\end{equation}
+where $u_{\rm init} = u\,e^{2I_j}$ is the fixed transport label at $N = 0$ that maps to label $u$ at time $N$ along ray $j$.  Since the initial distribution is Fermi--Dirac:
+\begin{equation}
+f(u, \mu_j, N) = f_{\rm FD}(u\,e^{2I_j}) = \frac{1}{e^{u\,e^{2I_j}} + 1} = f_{\rm FD}\!\left(\frac{u}{\Theta_j}\right)\,,
+\end{equation}
+with $\Theta_j = e^{-2I_j}$.  This completes the derivation of \eqref{eq:char_sol}.
+
+\subsection{ODEs for the Ray State}
+
+In the explicit reference representation, each ray is represented by $(I_j, J_j)$ together with the shared accumulated shear $S$.  The evolution equations are:
+\begin{align}
+\frac{\dd I_j}{\dd N} &= \Sig_+\,P_2(\mu_j)\,,\\
+\frac{\dd J_j}{\dd N} &= 3\Sig_+\,(1-3\mu_j^2)\,J_j\,,\\
+\frac{\dd S}{\dd N} &= \Sig_+\,.
+\end{align}
+
+The $\mu_j$ values are reconstructed from $X_0$ and $S$ via the analytic formula, not evolved as a differential equation.  This avoids error accumulation in the direction variables.  The current compact JAX characteristic surface goes one step further and reconstructs the passive ray variables analytically:
+\begin{align}
+I_j(S) &= \frac{1}{4}\ln\!\left[\frac{1 + X_{0,j}e^{6S}}{1 + X_{0,j}}\right] - \frac{S}{2}\,,\\
+J_j(S) &= \frac{(1-\mu_{0,j}^2)^2}{(1-\mu_j^2)^2}\,e^{-6S}\,.
+\end{align}
+The exact characteristic physics is therefore unchanged, but the ODE state can be made much smaller than the original explicit $(I_j,J_j,S)$ representation.
+
+\subsection{Observables from Characteristic Rays}
+
+The observables are computed by angular integration (quadrature) over rays, without $\ell$-truncation:
+\begin{align}
+\Pi_+ &= f_\nu \sum_j w_j J_j\,P_2(\mu_j)\,e^{-8I_j}\,,\label{eq:Pi_char}\\
+\tilde{f}_0(u) &= \frac{1}{2}\sum_j w_j J_j\,f_{\rm FD}\!\left(\frac{u}{\Theta_j}\right)\,.\label{eq:f_char}
+\end{align}
+
+The monopole \eqref{eq:f_char} is manifestly $u$-dependent: each ray contributes $f_{\rm FD}(u/\Theta_j)$ with a different $\Theta_j$, so the sum is \emph{not} a Fermi--Dirac function at any single temperature.  This momentum-dependent spectral distortion modifies weak-rate integrands beyond what the momentum-independent $\Psi_2$ captures.
+
+\subsection{DOF Comparison and Convergence}
+
+The explicit reference characteristic representation has $2N_\mu + 1 = 25$ transport DOF at $N_\mu = 12$ Gauss--Legendre rays, compared to $6 \times 2 \times N_q = 960$ for the linearised PSTF hierarchy.  Including geometry, temperature, and nuclear abundances, that explicit reference layout has 37 total DOF at tier~1.  The compact JAX characteristic representation carries the same exact collisionless transport with a much smaller ODE state: 13 total DOF at tier~1 and 15 at tier~2, because $I_j$ and $J_j$ are reconstructed analytically from $S$ rather than stored explicitly.
+
+Figure~\ref{fig:convergence} should be read as a baseline-relative discretisation diagnostic rather than as a fitted asymptotic scaling law.  The angular sector shows a rapid suppression of the helium-yield difference as $N_\mu$ increases, while the momentum sector is visibly more irregular at coarse quadrature and only approaches the baseline at the higher sampled resolutions.  FLRW parity remains excellent: $|\Delta\Yp^{\rm char} - \Delta\Yp^{\rm lin}| < 7 \times 10^{-10}$ at $\Sig = 0$.
+
+\subsection{The Nonlinear Transport Correction}
+
+The exact characteristic solution reveals a 27--36\% nonlinear correction to the linearised yields at $\SigH = 0.2$--$0.5$.  The physical origin is the momentum-dependent energy shift $u \to u\,e^{2\mathcal{I}}$: high-$u$ neutrinos undergo larger shifts than low-$u$ ones, producing spectral distortion that modifies weak-rate integrands.  This constitutes \textbf{Channel~2} of the Bianchi--BBN coupling.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig04.png}
+\caption{Characteristic vs linearised transport (CL0).  (a)~$\Yp$ vs $\SigH$.  (b)~Nonlinear correction $\Delta\Yp^{\rm NL}$.  (c)~Correction as fraction of total anisotropic shift: 70--80\%.}\label{fig:charvslin}
+\end{figure}
+
+%======================================================================
+%  PART II: COLLISION PHYSICS
+%======================================================================
+\newpage

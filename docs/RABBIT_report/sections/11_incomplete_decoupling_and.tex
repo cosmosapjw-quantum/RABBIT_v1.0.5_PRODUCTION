@@ -1,0 +1,293 @@
+\section{Incomplete Decoupling and Neff}\label{sec:incomplete_decoupling}
+%======================================================================
+
+\subsection{The Physical Problem}
+
+In the standard FLRW picture, neutrino decoupling at $T \sim 1$--$3\;\mathrm{MeV}$ is \emph{incomplete}: during $e^+e^-$ annihilation ($T \lesssim m_e$), residual weak interactions transfer part of the electromagnetic entropy to neutrinos.  This raises the total neutrino energy density above the instantaneous-decoupling value, giving the Standard-Model benchmark $\Neff = 3.044$ instead of $3.000$ \cite{Mangano2005, deSalas2016, Froustey2020, Bennett2020}.  Physically, the correction combines an overall reheating effect with a momentum-dependent spectral distortion, since high-energy neutrinos continue to scatter longer than low-energy ones.
+
+For the present report, however, the key scope statement is different from the textbook one: \emph{the historical exact-characteristic Type~I figures do not rely on a full quantum-kinetic or fully collision-coupled anisotropic Boltzmann treatment of incomplete decoupling}.  Instead, the reference figures rest on a collisionless characteristic-transport core, while incomplete-decoupling effects enter through a tiered approximation hierarchy.  The repository retains historical tier~2 and no-Teff tier~3 JAX surfaces, but these do not amount to a full anisotropic collision-coupled scattering closure.
+
+\paragraph{Current backend authority.} Rust AOT is the active implementation and repeated-run target.  SciPy/BDF remains the temporary number-of-record until the Rust endpoint authority gate passes.  JAX is frozen as a historical component-level parity/automatic-differentiation/Jacobian oracle; it is not an active forward-development, endpoint, runtime-promotion, or production authority.
+
+\paragraph{Current F09B Rust slice.} A crate-private Rust endpoint now evolves
+three thermal temperatures with a finite-vacuum-electron-mass, FD/Pauli,
+tree-level electron/positron energy-transfer moment.  The same source is
+consumed by the corrected weak leg and selected 31-reaction network.  At the
+QED-off FLRW anchor $T_\gamma=0.005\,\mathrm{MeV}$, an independently written
+adaptive-EOS/CM-integral solve gives
+$N=7.93669848685$, $T_{\nu_e}=0.00358318527739\,\mathrm{MeV}$,
+$T_{\nu_x}=0.00357679030100\,\mathrm{MeV}$, and the thermal readout
+$N_{\rm eff}=3.03409326175$.  DOP853 and Radau agree to
+$5.4\times10^{-12}$ in $N$ and below $3.0\times10^{-13}\,\mathrm{MeV}$ in
+the neutrino temperatures before the Rust comparison.  This number is a
+regression result for the declared thermal tree-level model, not a precision
+Standard-Model prediction: spectral transport, neutrino--neutrino reactions,
+oscillations, collision QED corrections, and an independently validated
+QED-on nuclear endpoint are absent.
+
+\subsection{Tiered Treatment in RABBIT}
+
+The safest description of the current implementation is therefore not ``full treatment'' but \emph{tiered treatment of incomplete decoupling}.  The code contains several levels of thermodynamic and collision-aware sophistication, and the current repository surface is broader than the historical exact-characteristic figures alone.  Table~\ref{tab:decoupling_scope} summarises the intended interpretation.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Historical scope of the incomplete-decoupling hierarchy. ``Used for the quoted report figures?'' refers specifically to the historical exact-characteristic reference results discussed in this report; implementation inventory does not imply current backend authority.}\label{tab:decoupling_scope}
+\begin{tabularx}{\textwidth}{p{1.35cm}X>{\centering\arraybackslash}p{1.35cm}>{\centering\arraybackslash}p{1.8cm}p{3.0cm}}
+\toprule
+Level & Description & Impl.? & Used in quoted figures? & Claim scope \\
+\midrule
+Tier~1 & Parametric / effective thermodynamic closure; instantaneous-decoupling baseline plus production helper thermodynamics. & Yes & Yes & Historical reference baseline; the retained JAX implementation is a frozen component oracle only. \\
+Tier~2 & Coupled three-temperature incomplete-decoupling extension with momentum-averaged $\nu$--$e$ energy transfer and QED-plasma feedback. & Yes & No & Historical JAX component surface; not the F09 collision or endpoint authority. \\
+Tier~3 & No-Teff three-temperature weak-budget ladder with CL0--CL3 support. & Yes & No & Historical JAX component surface; not a full anisotropic collision-coupled Boltzmann solver. \\
+Tier~4 & Tier~3 plus flavour oscillations and the full SM target. & Deferred & No & Explicitly out of scope. \\
+\bottomrule
+\end{tabularx}
+\normalsize
+\end{table}
+
+This hierarchy should be read with three distinct labels in mind.
+\begin{enumerate}
+\item \textbf{Reference-result claim}: the historical exact-characteristic figures and CL2 profile constraint quoted elsewhere in this report.
+\item \textbf{Frozen component-oracle claim}: the retained JAX tier~1--3 surfaces may support local parity, AD, and Jacobian checks only; they do not establish forward-solver or runtime authority.  SciPy/BDF is the temporary number-of-record, not a Rust promotion result.
+\item \textbf{Out-of-scope claim}: full QKE, full anisotropic collision integrals, species-resolved end-to-end scatter on exact rays, and complete $\nu$--$\nu$ plus $\nu$--$e$ angular closure.
+\end{enumerate}
+
+With that distinction in place, the phrase ``incomplete decoupling'' in the remainder of this document should always be read as a \emph{controlled approximation hierarchy} rather than as a claim that the full anisotropic scattering problem has already been solved end to end.
+
+\subsection{Entropy Conservation with Collision Source Term}
+
+The fundamental thermodynamic equation governing photon-temperature evolution is entropy conservation of the $\gamma+e^\pm$ plasma, augmented by a source term describing neutrino--electron energy exchange.  Let $\mathcal S = s_{\rm plasma}a^3$ be the comoving electromagnetic entropy, with $s_{\rm plasma}=(\rho_{\rm plasma}+p_{\rm plasma})/T_\gamma$.  Then
+\begin{equation}
+\frac{\dd}{\dd t}(s_{\rm plasma}a^3) = -\frac{1}{T_\gamma}\,\frac{\dd Q_{\nu\to{\rm plasma}}}{\dd t}\,a^3\,,\label{eq:entropy_full}
+\end{equation}
+where $\dd Q_{\nu\to{\rm plasma}}/\dd t$ is positive when neutrinos lose energy to the plasma.
+
+Writing $s_{\rm plasma}=S(T_\gamma)T_\gamma^3$ and differentiating with respect to $N=\ln a$ gives
+\begin{equation}
+\frac{\dd}{\dd N}\bigl[S(T_\gamma)T_\gamma^3\bigr] = \bigl(3S+T_\gamma S'\bigr)T_\gamma^2\frac{\dd T_\gamma}{\dd N}+3ST_\gamma^3\,.
+\end{equation}
+Solving for the temperature derivative yields the thermodynamic master equation
+\begin{equation}
+\bx{\frac{\dd T_\gamma}{\dd N} = -\frac{T_\gamma}{1 + T_\gamma S'/(3S)}\left(1 - \frac{\dd Q}{T_\gamma^4\,(\dd\rho/\dd T)_\gamma}\right)\,.}\label{eq:dTgamma_dN}
+\end{equation}
+In the historical hierarchy, Tier~1 supplied the source term through an effective closure, while Tier~2 used a partially live collision-aware module.  This describes the approximation structure only; it does not promote either historical JAX surface to current collision or endpoint authority.
+
+At Tier~2+, the energy-transfer functional is obtained from the collision operator:
+\begin{equation}
+\frac{\dd Q_{\nu\to\rm plasma}}{\dd t} = -\sum_\alpha \int \frac{\dd^3\mathbf p}{(2\pi)^3}\,E\,C_\alpha[f_\alpha] \, ,
+\end{equation}
+and, using the momentum variable $y=p/T_\nu$,
+\begin{equation}
+\frac{\dd Q}{\dd N} = -\frac{T_\nu^4}{2\pi^2 H}\sum_\alpha\int_0^\infty \dd y\; y^3 C_\alpha[f_\alpha](y)\,.
+\end{equation}
+These expressions are kept because they are the natural bridge between the thermodynamic equation and the Tier~2 extension, even though the fully anisotropic evaluation of $C_\alpha$ remains outside current endpoint authority.
+
+\subsection{Momentum-Dependent Decoupling}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_ped02_collision_rate_profile.png}
+\caption{Neutrino collision rates.  (a)~$\Gamma/H$ vs photon temperature for $\nu_e$ (blue, CC+NC coupling) and $\nu_x$ (red, NC only).  The decoupling condition $\Gamma/H = 1$ is reached at $T \approx 1.5\;\mathrm{MeV}$ for $\nu_e$ and $T \approx 3.5\;\mathrm{MeV}$ for $\nu_x$.  (b)~Momentum-dependent decoupling temperature $T_{\rm dec}(y) \propto y^{-1/3}$: high-momentum neutrinos decouple later and receive more heating from $e^+e^-$ annihilation.}\label{fig:collision_rate}
+\end{figure}
+
+The collision rate for a neutrino with dimensionless momentum label $y$ scales approximately as $\Gamma(y) \propto G_F^2T^5 y$, so high-momentum neutrinos remain coupled longer than low-momentum neutrinos.  A useful estimate of the decoupling temperature is
+\begin{equation}
+T_{\rm dec}(y) \approx T_{{\rm dec},0}\left(\frac{y}{3.15}\right)^{-1/3},
+\end{equation}
+with $T_{{\rm dec},0}\approx 1.5\;\mathrm{MeV}$ for $\nu_e$ near the thermal peak.  The consequence is a momentum-dependent reheating pattern: low-$y$ modes decouple early and miss most of the $e^+e^-$ entropy release, while high-$y$ modes remain coupled longer and are heated more strongly.
+
+To display this effect without confusing the dimensionless transport label $y=p/T_\nu$ with a physical temperature, it is safer to define a \emph{diagnostic effective temperature at fixed physical momentum} $p$ by
+\begin{equation}
+T_{\rm eff}(p) \equiv \frac{p}{\ln\!\bigl(1/f(p)-1\bigr)}\,.
+\end{equation}
+For a perfect Fermi--Dirac spectrum, $T_{\rm eff}(p)=T_\nu$ is independent of $p$; after incomplete decoupling, $T_{\rm eff}(p)$ rises at high $p$, signalling spectral hardening.  In the present report this quantity is used only as a diagnostic descriptor of the Tier~2 extension, not as a separate production dynamical variable.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_ped03_spectral_distortion.png}
+\caption{Neutrino spectral distortion from incomplete decoupling (schematic, based on Mangano et~al.\ 2005).  (a)~Distribution functions: the distorted $f_{\nu_e}$ (dashed) shows excess at high $y$ relative to equilibrium (solid).  (b)~Fractional distortion $\delta f/f_{\rm eq}$: positive at $y > 3$ and negative at $y < 3$.  (c)~A diagnostic effective-temperature representation showing the corresponding hardening trend.}\label{fig:spectral_dist}
+\end{figure}
+
+\subsection{Connection to Anisotropic BBN}
+
+In anisotropic Bianchi cosmologies, incomplete decoupling acquires two distinct layers of relevance.  First, even at the level of the production baseline, the decoupling condition $\Gamma/H$ is altered by the shear-enhanced Hubble rate
+\begin{equation}
+H=H_{\rm FLRW}/\sqrt{1-\Sig^2}
+\end{equation}
+so decoupling occurs earlier when $\Sig>0$.  This is the leading anisotropic effect relevant for the present BBN forward model.
+
+Second, once one goes beyond the production baseline, the neutrino distribution ceases to be both isotropic and exactly thermal.  A fully faithful treatment would then require species-, momentum-, and angle-resolved scattering on top of exact ray transport.  That problem is \emph{not} solved here end to end.  The historical Tier~2 modules remain available for bounded component checks, without establishing a complete anisotropic scattering closure or a validated BBN correction.
+
+The report retains Tier~2 for provenance and bounded component comparison.  It is not a production headline, an active runtime path, or validation of the deferred anisotropic collision-coupled problem.
+
+\subsection{\texorpdfstring{$N_{\rm eff}$}{Neff} in the tiered hierarchy}
+
+The effective number of neutrino species is defined operationally by
+\begin{equation}
+\Neff \equiv \frac{8}{7}\left(\frac{11}{4}\right)^{4/3}\frac{\rho_\nu}{\rho_\gamma}\,.
+\end{equation}
+What changes across tiers is not this definition but the approximation used for $\rho_\nu$.
+
+At the instantaneous-decoupling level one has
+\begin{equation}
+\rho_\nu^{\rm inst} = N_\nu\,\frac{7\pi^2}{120}T_\nu^4,
+\qquad T_\nu/T_\gamma=(4/11)^{1/3},
+\end{equation}
+which gives $\Neff=3.000$ before any reheating correction is added.  A purely parametric helper can then impose the Standard-Model benchmark $\Neff=3.044$ by hand.
+
+In the intended historical Tier~2 formulation, the neutrino energy density would instead be computed from the evolved non-equilibrium spectrum,
+\begin{equation}
+\rho_\nu = \sum_\alpha \frac{T_\nu^4}{2\pi^2}\int_0^\infty \dd y\; y^3 f_\alpha(y)
+\end{equation}
+but this expression alone does not validate a numerical $\Neff$ prediction.  Missing $\nu$--$\nu$ scattering, flavour oscillations, and full collision closure prevent a Standard-Model precision claim.  The frozen no-Teff tier~3 JAX surface likewise remains a component oracle rather than a full species- and angle-resolved collision solver.
+
+\subsection{The Full Boltzmann Equation for Incomplete Decoupling}
+
+At Tier~2, the evolution equation for each neutrino species $\alpha$ in the thermal momentum variable $y \equiv p/T_\nu$ is
+\begin{equation}
+\bx{\frac{\partial f_\alpha(y)}{\partial N} = -\frac{\dd\ln y}{\dd N}\,y\,\frac{\partial f_\alpha}{\partial y} + \frac{C_\alpha[f_\alpha, f_e](y)}{H}\,,}\label{eq:boltzmann_tier2}
+\end{equation}
+where $C_\alpha$ includes both scattering and pair processes.  In the FLRW limit, there is no angular dependence ($\dd\mu/\dd N = 0$), and the problem reduces to solving $N_q$ coupled ODEs per neutrino species for the distribution values $f_\alpha(y_i)$ at each momentum node.
+
+\paragraph{Current F10A collisionless substrate.} The first Rust spectral
+slice fixes the comoving coordinate $q=ap$, with $a=1$ at the initial state,
+instead of using a moving physical-momentum grid.  For massless collisionless
+neutrinos the Liouville equation is therefore represented exactly as
+\begin{equation}
+\left.\frac{\dd f(q_i)}{\dd N}\right|_{C=0}=0,
+\qquad
+n_{\nu\bar\nu}=\frac{e^{-3N}}{\pi^2}\sum_iw_iq_i^2f_i,
+\qquad
+\rho_{\nu\bar\nu}=\frac{e^{-4N}}{\pi^2}\sum_iw_iq_i^3f_i .
+\end{equation}
+The distribution energy density enters the Friedmann rate and hence an
+evolved cosmic-time state in the photon-temperature endpoint; it is not a
+detached moment check.  With 24 Gauss--Laguerre nodes, Rust BDF/Rodas5P reach
+$N=7.93804264043/7.93804264041$ and elapsed time
+$52796.0351546/52796.0351521\,\mathrm{s}$ at
+$T_\gamma=0.005\,\mathrm{MeV}$.  A separately written adaptive-EOS continuum-
+FD SciPy solve gives $N=7.93804264044$ and
+$52796.0351521\,\mathrm{s}$; DOP853 and Radau agree before the Rust comparison.
+Orders 12, 24, and 36 converge to the analytic FD number and energy moments,
+and arbitrary occupations preserve $n_\nu a^3$ and $\rho_\nu a^4$.
+
+At the F10A boundary this closed only collisionless isotropic classical
+redshifting and the energy-grid state convention; it supplied no collision or
+distortion claim.
+
+\paragraph{Current F10B2 electron action.} F10B1 first evaluated the
+finite-mass HM electron/positron event action on the same grid for separate
+electron and degenerate-heavy flavour-pair occupations.  Conservative
+antisymmetric elastic fluxes preserve the quadrature number moment, symmetric
+pair fluxes preserve neutrino-minus-antineutrino number, and the analytic
+Pauli response supplies the occupation Jacobian.  The collision energy moment
+is debited equal-and-opposite from the electromagnetic bath.  The exact common
+FD reference is an analytic action null; five-point action/FLRW derivatives and
+the combined first law pass.  F10B2 stores the evolved occupations as exact
+logits, after a direct-occupation 12-node Rodas run failed raw in the
+floating-point tail.  Stable logistic reconstruction and the chain-rule
+Jacobian preserve strict open occupations without clipping; unrepresentable
+underflow still fails raw.
+
+A separated momentum/event ladder rejects event order four/three and retains
+16 momentum nodes with event order six/four.  Its electron/heavy thermal energy
+moments are $0.99078/0.99087$ of the independent thermal anchors.  BDF and
+Rodas5P reach
+$(N,t,\Neff)=(7.9367312298,52681.0360\,\mathrm{s},3.0330775769)$ and
+$(7.9367453070,52681.5412\,\mathrm{s},3.0329326538)$ at
+$T_\gamma=0.005\,\mathrm{MeV}$.  A same-code grid-20 BDF refinement gives
+$\Neff=3.0331966346$, while an explicit-$N$ step ladder bounds direct-support
+sensitivity.  Grid-20 Rodas and an independent full spectral solve were not
+run.  These remain test-only regression readouts: no precision distortion or
+$\Neff$ claim, neutrino--neutrino collision, lepton asymmetry, flavour
+coherence, anisotropy, QKE, or public runtime claim follows.
+
+\paragraph{Historical F10C0 GL16 and current F10C1 N48 endpoint.} The FLRW
+right-hand side consumes the restricted same-flavour
+$\nu_\alpha\nu_\alpha\leftrightarrow\nu_\alpha\nu_\alpha$ action and the
+identical antineutrino channel.  Because this elastic self-action conserves
+its discrete neutrino energy moment event by event, it introduces no
+electromagnetic energy-transfer source.  At the historical F10C0 boundary,
+with the 16-node Gauss--Laguerre momentum grid, electron event order six/four,
+and self-scattering angular order 12, the private cold-event regressions were
+\begin{align*}
+(N,t,\Neff)_{\rm BDF}
+  &= (7.9367292791,52680.9384\,\mathrm{s},3.0331059589),\\
+(N,t,\Neff)_{\rm Rodas5P}
+  &= (7.9367451102,52681.5251\,\mathrm{s},3.0329371816).
+\end{align*}
+The selected linear action was approximately $7.54\%$ below the high-
+resolution tagged oracle, so these values remain historical
+\textbf{IMPLEMENTED} regressions rather than radial or precision authority.
+
+F10C1 retains the same coefficient, Pauli algebra, and conservative linear
+deposition but selects the positive exponential N48 rule
+$y=-3\ln(1-t)$.  The initial no-cache N48 run gives
+\begin{align*}
+(N,t,\Neff)_{\rm BDF}
+  &= (7.9367214190,52680.2048\,\mathrm{s},3.0333103242),\\
+(N,t,\Neff)_{\rm Rodas5P}
+  &= (7.9367373740,52680.8451\,\mathrm{s},3.0331291370).
+\end{align*}
+The direct N32--N64 ladder decreases from $1.873525\%$ to $0.489704\%$,
+and two independent N128 auxiliary integrations bound five declared smooth
+nonthermal profiles by $1.9771546\%<2.1\%$.  This is
+\textbf{VALIDATED} only as a profile-bounded radial representation; it is not
+arbitrary-distribution, continuum, complete-catalogue, precision-$\Neff$, or
+independent full-spectral authority.
+
+The initial matched no-cache endpoint took $2181.07\,\mathrm{s}$ with maximum
+RSS $51020\,\mathrm{KB}$.  A prepared self-event-geometry candidate took
+$1980.52\,\mathrm{s}$, only $9.195\%$ faster and below the programme's
+approximately $10\%$ partial-blocker threshold, while RSS rose by $3.277\%$.
+Its 112 Rust lines and cache-only test were removed; this negative result is
+\textbf{DEPRECATED} evidence, not endpoint promotion.
+The retained no-cache tree repeats both solver outputs bitwise in
+$2191.66\,\mathrm{s}$ with maximum RSS $50440\,\mathrm{KB}$, respectively
+$+0.486\%$ and $-1.137\%$ relative to the initial no-cache run.  The cold
+wall is therefore unchanged.
+
+Catalogue row 1 is complete and the same-flavour-identical subset of row 3
+executes.  The distinct-heavy remainder of row 3 and every channel in rows 2
+and 4--9 remain \textbf{SPECIFIED} but absent, so row 3 is partial and seven
+rows are wholly absent.  Anisotropic collision closure, oscillations, QKE,
+and public runtime authority do not follow; the measured N48 cold wall remains
+the active task before catalogue expansion.  By owner decision the present
+programme stops after this collision-coupled isotropic FLRW milestone is
+completed and validated; Bianchi/LRS/non-LRS work requires a separate future
+instruction.
+
+When anisotropy is present, the full Boltzmann equation along a characteristic ray $j$ becomes
+\begin{equation}
+\bx{\frac{\partial f_j(y)}{\partial N} = -\left(\frac{\dd\ln y}{\dd N}\right)_{\!j}\,y\,\frac{\partial f_j}{\partial y} + \frac{C[f](y, \mu_j)}{H}\,,}\label{eq:boltzmann_char_coll}
+\end{equation}
+where $(\dd\ln y/\dd N)_j$ is the gravitational redshift along ray $j$ (determined by the anisotropic geometry), and $C[f](y, \mu_j)$ is the collision integral evaluated at the direction $\mu_j$ of ray $j$.
+
+This equation poses a fundamental challenge: the collision integral $C[f](y, \mu_j)$ requires knowledge of $f$ at \emph{all} directions $\mu$ (through the angular integration in the matrix element), but each characteristic ray only carries information about its own direction $\mu_j$.  The current production report therefore treats the fully anisotropic collision-coupled problem as deferred full phase-space scope rather than as an active reduced bridge.
+
+\subsection{The State Vector for Full Boltzmann}
+
+In the full phase-space ray approach (Paper~II scope), the state per ray becomes $f_j(y_k)$ at $N_q$ momentum nodes, rather than the reduced characteristic variables.  The DOF comparison is:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Approach & State representation & Indicative size \\
+\midrule
+Characteristic reference (explicit) & $(I_j, J_j)$ + shared $S$ & $2N_\mu + 1 = 25$ transport DOF \\
+Characteristic JAX compact & shared $S$ with analytic $I_j(S), J_j(S)$ & 13 total DOF (tier~1), 15 total DOF (tier~2) at $N_\mu=12$ \\
+Full phase-space ray & $f_j(y_k)$ ($N_q$ values per ray) & $N_\mu \times N_q = 240$ transport DOF \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The old 37-DOF count refers only to the explicit characteristic reference layout.  The frozen compact JAX characteristic oracle is smaller still, while the hypothetical full phase-space ray path would replace the reduced ray variables by $12 \times 20 = 240$ distribution values $\{f_j(y_k)\}$ and increase the total system size to the few-hundred-DOF range.  This count is an indicative design estimate, not evidence that the full solver is implemented or tractable at endpoint.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_ped07_phase_space_comparison.png}
+\caption{Degrees of freedom comparison across transport methods.  (a)~Transport DOF: the linearised PSTF hierarchy requires 960 DOF, while characteristic rays need only 25.  The proposed full phase-space layout uses 240.  (b)~Indicative total system DOF including geometry and network.  (c)~Dense Jacobian entry count scales quadratically; the $\sim70{,}000$-entry estimate does not by itself establish Rosenbrock endpoint tractability.}\label{fig:dof_comparison}
+\end{figure}
+
+%======================================================================

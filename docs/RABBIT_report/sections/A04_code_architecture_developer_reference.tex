@@ -1,0 +1,120 @@
+\section{Code Architecture: Developer Reference}\label{app:code}
+
+This appendix is a current-scope guide to the repository as it exists now.  It is \emph{not} a line-accurate record of every historical implementation path.  The single sources of truth for backend maturity and dispatch are \path{src/rabbit/config/backend_capabilities.py} and \path{src/rabbit/inference/forward_likelihood.py}; whenever this appendix and the code disagree, the code wins.
+
+\subsection{Package Layout}
+
+\begin{verbatim}
+src/rabbit/
+|-- config/        backend registry, transport/solver conventions, grids
+|-- drivers/       SciPy Type-I reference + perimeter drivers
+|-- geometry/      Bianchi geometry kernels and constraints
+|-- inference/     canonical_forward_solver and likelihood wrappers
+|-- jax/           JAX Type-I main, characteristic, advanced, Class A/B
+|-- network/       PRIMAT AC2024 reaction tables + abundance RHS
+|-- solver/        SciPy-side Rosenbrock utilities and solve_ivp helpers
+|-- thermo/        tiered neutrino-decoupling / plasma EOS infrastructure
+|-- transport/     characteristic rays, PSTF hierarchies, phase-space extension helpers
+|-- validation/    parity, truncation, and production-fence utilities
+`-- weak/          live weak-rate quadratures and correction layers
+\end{verbatim}
+
+\subsection{Canonical Type~I Surfaces}
+
+The repository's current Type~I core is broader than the original SciPy-only framing of the report.  The current public surfaces are:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{0.97\textwidth}{@{}p{0.20\textwidth}p{0.18\textwidth}p{0.16\textwidth}X@{}}
+\toprule
+Public backend & Transport & Thermo & Current role \\
+\midrule
+\texttt{auto} / \texttt{scipy} & exact characteristic & tier~1 reference (tier~2/3 candidates exist separately) & default SciPy Type~I reference \\
+\texttt{jax} & linearised PSTF + live weak & tier~1 & explicit bounded JAX Type~I surface \\
+\texttt{jax\_characteristic} & exact characteristic & tier~1 & explicit canonical exact-characteristic JAX surface \\
+\texttt{jax\_characteristic\_tier2} & exact characteristic & tier~2 3T & explicit canonical characteristic 3T surface \\
+\texttt{jax\_advanced} & linearised PSTF + live weak & tier~3 weak-budget, no Teff & bounded canonical higher-tier JAX surface \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Candidate perimeters such as Class~A, Class~B, tilted models, and full anisotropic collision-coupled transport remain outside the headline Type~I claims of this report.
+
+\subsection{Current Transport Surfaces}
+
+\paragraph{SciPy Type~I reference path (\texttt{drivers/full\_coupled\_typeI.py}).}
+This is the conservative Type~I reference / fallback backend.  It still carries the explicit characteristic-ray state $(I_j,J_j,S)$ when \texttt{transport\_mode=CHARACTERISTIC}, and it also houses the transitional tier~2 / tier~3 SciPy candidate paths.
+
+\paragraph{JAX main Type~I path (\texttt{jax/driver\_typeI.py}).}
+This explicit JAX surface is selected by \texttt{backend="jax"} or a recorded runtime opt-in.  It is not the \texttt{auto} default or publication authority.  Physically it is \emph{not} identical to the exact-characteristic reference chain: it uses the linearised Type~I transport surface and is tracked through metadata contracts.
+
+\paragraph{JAX exact-characteristic path (\texttt{jax/driver\_typeI\_char.py}).}
+This is the explicit JAX realization of the exact characteristic transport chain.  It mirrors the SciPy characteristic reference path on matched cells and carries two important current-scope contracts:
+\begin{itemize}
+\item \texttt{characteristic\_state\_contract="analytic\_intensity\_from\_shear\_map\_v1"}
+\item CPU-first runtime execution with retry-on-CPU fallback metadata when GPU runtime instability is detected
+\end{itemize}
+
+\paragraph{Characteristic kernels (\texttt{transport/characteristic\_rays.py}, \texttt{jax/characteristic\_rays\_jax.py}).}
+These modules carry the exact LRS ray formulas:
+\begin{equation}
+\mu_j(S)=\mathrm{sign}(\mu_{0,j})\sqrt{\frac{X_{0,j}e^{6S}}{1+X_{0,j}e^{6S}}},
+\qquad
+I_j(S)=\frac{1}{4}\ln\!\left[\frac{1+X_{0,j}e^{6S}}{1+X_{0,j}}\right]-\frac{S}{2},
+\end{equation}
+together with the analytic forward Jacobian $J_j(S)=\dd\mu_j/\dd\mu_{0,j}$ and the ray-to-monopole / ray-to-stress quadratures.
+
+\subsection{Representative State Contracts}
+
+The current repository no longer has a single canonical Type~I state layout.  The most important contracts are:
+\begin{enumerate}
+\item \textbf{SciPy exact-characteristic reference layout:}
+\begin{equation}
+\mathbf y_{\rm SciPy,char}
+= \bigl(\Sigma_+,\Sigma_-,I_{1\ldots12},J_{1\ldots12},S,T_\gamma,X_{0\ldots8}\bigr),
+\end{equation}
+which is the old 37-DOF tier~1 reference layout.
+\item \textbf{JAX exact-characteristic compact layout:}
+\begin{equation}
+\mathbf y_{\rm JAX,char}
+= \bigl(\Sigma_+,\Sigma_-,S,T_\gamma,X_{0\ldots8}\bigr)
+\end{equation}
+at tier~1 (13 total DOF), or with $(T_{\nu_e},T_{\nu_x})$ inserted at tier~2 (15 total DOF).  The passive ray variables are reconstructed analytically.
+\item \textbf{JAX bounded default live-weak layout:}
+\begin{equation}
+\mathbf y_{\rm JAX,main}
+= \bigl(\Sigma_+,\Sigma_-,\Psi_{\rm flat},T_\gamma,X_i\bigr),
+\end{equation}
+which is a large linearised-PSTF state (972 total DOF at phase~2, tier~1, $N_q=80$).
+\end{enumerate}
+
+These state contracts correspond to different public surfaces and must not be collapsed into a single ``RABBIT state vector'' statement.
+
+\subsection{Solver and Runtime Policy}
+
+\paragraph{SciPy reference family.}
+The SciPy reference path uses \texttt{solve\_ivp} with Radau as the primary validation oracle and BDF as a stiffness comparison path.  This is the conservative reference / fallback authority for Type~I.
+
+\paragraph{JAX canonical family.}
+The JAX Type~I surfaces use the native Rodas5P implementation in \path{jax/solver_jax_rodas5p.py}.  Runtime policy is CPU-first by default, and both the main JAX driver and the exact-characteristic JAX driver report runtime-device metadata such as:
+\begin{itemize}
+\item \texttt{runtime\_device\_policy}
+\item \texttt{runtime\_device\_contract}
+\item \texttt{runtime\_device\_fallback\_applied}
+\end{itemize}
+
+\paragraph{Auto dispatch.}
+\texttt{canonical\_forward\_solver(..., backend="auto")} resolves to the SciPy Type~I reference.  JAX selection is explicit or requires a recorded opt-in; it is not publication authority.
+
+\subsection{What This Appendix Does and Does Not Claim}
+
+This appendix documents the current architecture honestly.
+\begin{enumerate}
+\item It \textbf{does} describe the current canonical Type~I surfaces and their numerical state contracts.
+\item It \textbf{does} distinguish the historical exact-characteristic report figures from the broader current repository surface.
+\item It \textbf{does not} claim that every canonical backend regenerates the historical figures in exactly the same way.
+\item It \textbf{does not} claim a full anisotropic collision-coupled Boltzmann/QKE closure.
+\item It \textbf{does not} upgrade Teff, Class~A / Class~B / tilted, or full phase-space ray ideas into headline production claims.
+\end{enumerate}
+
+The practical rule for a hostile audit is therefore simple: read the figures in the main text as exact-characteristic reference results, read \path{backend_capabilities.py} as the maturity registry for current code scope, and read metadata contracts on individual runs to determine which bounded surface actually produced a given prediction.

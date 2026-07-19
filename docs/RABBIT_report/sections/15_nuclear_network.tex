@@ -1,0 +1,12 @@
+\section{Nuclear Network}\label{sec:network}
+%======================================================================
+
+RABBIT tracks 9 nuclear species: n, p, D, T, $^3$He, $^4$He, $^7$Li, $^7$Be, $^6$Li.  The backbone network consists of 12 reactions from the PRIMAT AC2024 compilation, with an optional extension to 31 reactions including $^6$Li production channels.
+
+Integration proceeds in two phases:
+\begin{enumerate}
+\item \textbf{Weak freeze-out} ($T: 10 \to 0.08\;\mathrm{MeV}$): only $n \leftrightarrow p$ interconversion is active.  The nuclear network is inactive, and abundances are set by NSE.
+\item \textbf{Nuclear burning} ($T: 0.08 \to 0.005\;\mathrm{MeV}$): the full network is activated with NSE handoff initial conditions.
+\end{enumerate}
+
+%======================================================================

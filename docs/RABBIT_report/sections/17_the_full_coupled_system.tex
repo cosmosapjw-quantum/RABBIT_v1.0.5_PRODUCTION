@@ -1,0 +1,55 @@
+\section{The Full Coupled System}\label{sec:coupled}
+%======================================================================
+
+\subsection{Current scope declaration}
+
+The historical figures in this report trace the mixed-closure exact-characteristic reference chain
+\begin{equation}
+(\Sigma,\Pi_\nu)\ \longrightarrow\ (\text{exact characteristic rays})\ \longrightarrow\ \tilde f_0(q)\ \longrightarrow\ (\lambda_{n\to p},\lambda_{p\to n})\ \longrightarrow\ X_i\,.
+\end{equation}
+In current code this exact-characteristic chain appears in two numerical forms: an explicit SciPy reference representation storing $(I_j,J_j,S)$, and a compact JAX characteristic representation evolving only $S$ and reconstructing $I_j$, $J_j$, and $\mu_j$ analytically.  The repository also ships bounded linearised live-weak JAX surfaces and a no-Teff tier~3 weak-budget surface; those are part of current code scope, but they are not identical to the exact-characteristic figures quoted later.  None of these paths constitutes a full anisotropic collision-coupled Boltzmann/QKE closure.
+
+\subsection{Two production coupling channels}
+
+The anisotropy affects BBN through two distinct but coupled channels:
+
+\textbf{Channel 1 (expansion-rate enhancement):}
+\begin{equation}
+H = \frac{H_\FLRW}{\sqrt{1 - \Sigma^2}}\,.
+\end{equation}
+This accelerates the expansion, shifts weak freeze-out earlier, and raises $\Yp$.
+
+\textbf{Channel 2 (monopole distortion):}
+The exact characteristic monopole $\tilde f_0(q) \neq f_{\rm FD}(q)$ modifies the weak-rate integrands.  This effect is numerically subdominant to Channel~1, but it is not negligible at the precision level relevant for the historical reference constraint reported in this document.
+
+\subsection{RHS evaluation order}
+
+The right-hand side evaluation in the exact-characteristic reference chain proceeds in the following order:
+\begin{enumerate}
+\item unpack the current state vector;
+\item reconstruct the current ray bundle, either from explicit $(I_j,J_j,S)$ variables or from the compact $S$-only state;
+\item compute the characteristic stress tensor from the reconstructed rays;
+\item evaluate the geometry RHS, including $\dd\Sigma_+/\dd N$;
+\item advance the characteristic transport state: explicit $(I_j,J_j,S)$ on the SciPy reference path, or $S$ alone with analytic $I_j(S)$ and $J_j(S)$ reconstruction on the compact JAX characteristic path;
+\item construct the reference-path thermodynamic closure for the Hubble sector (tier~1 baseline for the historical figures, with optional tier~2 extension hooks on the broader current-code surfaces);
+\item extract the weak-rate monopole $\tilde f_0(q)$ from the rays;
+\item evaluate the live weak rates $\lambda_{n\to p}[\tilde f_0]$ and $\lambda_{p\to n}[\tilde f_0]$;
+\item compute the Hubble rate and plasma thermodynamics;
+\item evaluate the nuclear-network RHS and repack the derivative.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig09.png}
+\caption{Reference exact-characteristic code architecture.  The figure is a software-facing schematic of the mixed geometry--transport--weak--network solve that underlies the report's main figures.  Current code scope is broader than this single chain, but optional Teff or broader collision infrastructure should still be read as provenance or extension scaffolding rather than as part of the same maturity class as the historical exact-characteristic results.}
+\label{fig:architecture}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig07.png}
+\caption{Channel decomposition.  Panel~(a) separates the expansion-driven and distribution-driven contributions to $\Delta\Yp$; panel~(b) shows their fractions as a function of $\Sigma_H$.  The figure is intended as a decomposition diagnostic for the production path rather than as an additional independent constraint figure.}
+\label{fig:channels}
+\end{figure}
+
+%======================================================================

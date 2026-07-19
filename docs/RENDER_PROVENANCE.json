@@ -1,0 +1,56 @@
+{
+  "documents_rendered": 5,
+  "generated_target_sha256": {
+    "PROMOTION_GATES.md#NEXT_QUEUE": "51668f7287b348038dc195d134b0dc0b478b76b5f707536f59de5e0eba5f9972",
+    "PROMOTION_GATES.md#PG_BODY": "7902f72e2144ea721ffe425282c1968f5b7a41ebdd3428acf6ea959c173bd666",
+    "PROMOTION_GATES.md#PG_FOOTER": "6c42ed57a35a11f39ba63b485767a56c2fcf9fee98029492622e6ce608723f95",
+    "PROMOTION_GATES.md#PG_HEADER": "f47283711bfaff9ddac4acb7407116b0c8c55d42f9c1f0f63d2de39751b2d829",
+    "PROMOTION_GATES.md#PROMOTION_STATUS": "d52a28b9463e485f508c78b36e1063d0a9ce20a04086919458a0ff77f8052390",
+    "README.md#BACKEND_TABLE": "44066627b111c47c84d476aeab81b17c07ba545de15b458de42c4e00fc308fbf",
+    "README.md#CORE_SUMMARY": "f6fea9900b360215045bdc99beee6d90914ae5e94ec7aa60d543ca5eb3d167cb",
+    "README.md#IDENTITY": "d3642ebb5ab27470eb234a1db78e35dcb99cfadd5e4c3f571f46c1451f48e060",
+    "README.md#README_BACKENDS_HEADER": "9c22b874ac99c4e71834cd7306c9395640d6525cfb24c437cb22255d006c325d",
+    "README.md#README_FOOTER": "a277f5b3ec39037cf4a728b860bd9eb9a524a747252538d924118e4e4b13ee6f",
+    "README.md#README_HEADER": "257cb494cdf727a4f1b0ae0dabe526e406d23b875dc5f485df9f876456d5237f",
+    "README.md#README_QUICKSTART": "900cdb4032e349fb3cd945af59602a72caa0a1af0b38e7af73cee014b6fef687",
+    "STATUS.md#STATUS_BACKENDS": "cf96e10d39b19243e3a883547ad37c05989fa275be8884e18f1a9a8d9e5253e3",
+    "STATUS.md#STATUS_DETAIL": "7810be782acd5eee1a17d655671d946deefeca8067106dc96d8250b8f7b0b719",
+    "STATUS.md#STATUS_HEADER": "a2c8457067f054d80e3d73c8cf81df33b8acf561f2353b1f629598fd294fc1d0",
+    "STATUS.md#TIER_SUMMARY": "7725ef61e04bf474ce8901dcf8896069bae5dcf305cb9bfa168625b405ce83b2",
+    "SUPPORTED_CAPABILITIES.md#BACKEND_TABLE": "6a9452b5041563574c4c849062dc67890ffbb75b5291b7f0d76010d711e209dd",
+    "SUPPORTED_CAPABILITIES.md#CLAIMS": "d191c910909fc296ec0c09a76b8e755c8e29d866690df13044a84d74ae456774",
+    "SUPPORTED_CAPABILITIES.md#CLASSB_LAYERS": "4616390280ce30c8356c10d84080a44bc7890d17ccd1061d1cf8bdf1c8dc00fd",
+    "SUPPORTED_CAPABILITIES.md#FEATURE_TABLE": "4bad796774a16ff60ce835d8d9d310ca3c9907a8eb73370dd4c7210c43252103",
+    "SUPPORTED_CAPABILITIES.md#SC_CANONICAL_CORE": "04a160be67fc917d8fb27a8fc763130a5da071317059ae1780e0c5c1199a82b6",
+    "SUPPORTED_CAPABILITIES.md#SC_HEADER": "117708444c722ddac991522363bef8aa3d8eb8f865ac77a7a70992a31a521d75",
+    "docs/BACKEND_CAPABILITY_MATRIX.md": "b84e9c8dd0c0d7abd5bf3187fa748db00a9b388b8fc80804d7c11e8484a8339f"
+  },
+  "n_backends": 15,
+  "n_canonical_backends": 1,
+  "n_canonical_features": 4,
+  "n_features": 12,
+  "provenance_schema": "content-addressed-v2",
+  "render_fingerprint": "a1d50ea5b596c6102e1400e5591478f96fa492e29622233f4ef073b73952cda4",
+  "render_script": "scripts/render_capability_tables.py",
+  "source_sha256": {
+    "scripts/render_capability_tables.py": "f182fc28ce17e048595a85066bb5af8f7f3053e7e32661c73a8227c8483407a9",
+    "scripts/sync_test_counts.py": "29a7ecf9cb813aed99eee0be58bbc98db975491af168926f2006b70487778a3a",
+    "src/rabbit/config/backend_capabilities.py": "3b5f35ae94436f7fa2dddb4e1277a11680f4cdaf381e2a949e727610be021f20",
+    "src/rabbit/config/claim_gates.py": "577eaf06c17aa5b460764378f874b0b48f7a65fe0d46db6ad5d4a0b0a35167db",
+    "src/rabbit/config/feature_capabilities.py": "7344aaedc222dabdd7d71ae50aff8e1b26901fb950ae529b270299fd73fb0625"
+  },
+  "surface_classes_backend": [
+    "candidate",
+    "canonical",
+    "diagnostic",
+    "substrate"
+  ],
+  "surface_classes_feature": [
+    "candidate_layered",
+    "candidate_strong",
+    "canonical",
+    "diagnostic",
+    "exploratory"
+  ],
+  "targets_rendered": 23
+}
