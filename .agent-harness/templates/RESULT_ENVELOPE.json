@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "run_id": "REPLACE_ME",
+  "assignment_id": "A-001",
+  "context_version": "UNBUILT",
+  "agent_type": "REPLACE_ME",
+  "status": "inconclusive",
+  "started_at": "REPLACE_ME",
+  "completed_at": "REPLACE_ME",
+  "tool_versions": {},
+  "commands": [],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "claim_id": "C-001",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Replace with a precise finding.",
+      "assumptions_used": [],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:REPLACE_ME",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.5,
+      "unresolved": []
+    }
+  ],
+  "errors": []
+}

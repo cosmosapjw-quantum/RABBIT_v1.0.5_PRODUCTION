@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "run_id": "REPLACE_ME",
+  "assignment_id": "A-001",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "context_mapper",
+  "context_version": "UNBUILT",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": ["C-001"],
+  "task": "Replace with one bounded task.",
+  "required_inputs": [],
+  "allowed_sibling_results": [],
+  "allowed_tools": [],
+  "required_outputs": [],
+  "result_path": ".agent-harness/runs/REPLACE_ME/results/A-001.json",
+  "status": "registered"
+}

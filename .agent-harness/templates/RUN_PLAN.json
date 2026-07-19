@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "REPLACE_ME",
+  "created_at": "REPLACE_ME",
+  "spec_ref": "SPEC.md",
+  "base_ref": "main",
+  "head_ref": "HEAD",
+  "context_version": "UNBUILT",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

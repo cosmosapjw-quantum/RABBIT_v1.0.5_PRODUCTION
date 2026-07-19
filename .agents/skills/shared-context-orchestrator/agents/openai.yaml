@@ -1,0 +1,6 @@
+interface:
+  display_name: "Shared-context orchestrator"
+  short_description: "Versioned context and bounded subagent audit harness"
+  default_prompt: "Initialize and run a shared-context multi-agent workflow for this repository."
+policy:
+  allow_implicit_invocation: false

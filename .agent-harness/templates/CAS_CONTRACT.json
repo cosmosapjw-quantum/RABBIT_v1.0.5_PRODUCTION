@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "problem_id": "CAS-001",
+  "claim_ids": ["C-001"],
+  "statement": "Exact mathematical statement to verify.",
+  "conventions_ref": ".agent-harness/context/SHARED_CONTEXT.md",
+  "symbols_ref": ".agent-harness/context/SYMBOLS.md",
+  "domains": {},
+  "assumptions": [],
+  "branch_choices": [],
+  "boundary_or_initial_conditions": [],
+  "approximation_order": "exact",
+  "order_of_limits": [],
+  "target_canonical_form": "Describe without giving another solver's result.",
+  "invariants": [],
+  "exact_test_obligations": [],
+  "numeric_test_vectors": [],
+  "numeric_precision_digits": 80,
+  "absolute_tolerance": "1e-50",
+  "relative_tolerance": "1e-40",
+  "forbidden_shortcuts": [
+    "Do not assume the target identity in an intermediate rewrite.",
+    "Do not import sibling solver results before adjudication."
+  ]
+}

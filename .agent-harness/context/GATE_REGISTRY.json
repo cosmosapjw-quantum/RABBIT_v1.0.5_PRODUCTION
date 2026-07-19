@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "gates": [
+    {
+      "gate_id": "G-F10C1-RADIAL",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "statement": "The selected N48 representation must pass the frozen direct ladder, five-profile two-auxiliary envelope, FD moment, anchor, conservation, entropy, and constructor checks without tolerance widening.",
+      "required_evidence": ["E-F10C1-VALIDATION", "E-F10C1-AUX", "E-F10C1-GRID"],
+      "pass_condition": "Worst declared profile residual < 2.1%, auxiliary references agree < 3e-8, conservation <= 1.79e-14, domain loss <= 7.61e-5, and focused current-tree tests pass.",
+      "fail_condition": "Any threshold is missed, the selected rule changes, or a required focused test fails.",
+      "owner": "main",
+      "status": "pass"
+    },
+    {
+      "gate_id": "G-F10C1-REGRESSION",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "statement": "The retained no-cache tree must pass formatting, release check, strict all-target Clippy, the full release Rust suite, and report build/inspection.",
+      "required_evidence": ["E-F10C1-VALIDATION", "E-F10C1-REPORT"],
+      "pass_condition": "All listed commands execute successfully on the retained tree; no undefined report references/citations or fatal LaTeX errors; edited pages visually clean.",
+      "fail_condition": "Any required command fails or is skipped at final F-10C1 closeout.",
+      "owner": "main",
+      "status": "pass"
+    },
+    {
+      "gate_id": "G-F10-PERFORMANCE",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md", "bbn_codex_anti_drift_cost_effective_policy.md"],
+      "statement": "Repeated-run Rust design requires a material whole-endpoint reduction at the measured N48 cold wall without unacceptable RSS, solver-envelope, or correctness regression.",
+      "required_evidence": ["E-F10C1-VALIDATION", "E-F10-PERF-PROFILE"],
+      "pass_condition": "A retained change meets the controlling whole-endpoint threshold and preserves the frozen physics/solver gates.",
+      "fail_condition": "Only segment speedup is shown, whole-endpoint movement is sub-threshold, or correctness/memory regressions make the candidate unacceptable.",
+      "owner": "main",
+      "status": "pass"
+    },
+    {
+      "gate_id": "G-F10-CATALOGUE",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "statement": "All frozen zero-lepton massless diagonal nine-row classical collision families must execute with checked multiplicities, kernels, coefficients, and rowwise physical invariants.",
+      "required_evidence": ["E-F10C1-SPEC", "E-F10-CATALOGUE-TESTS"],
+      "pass_condition": "Rows 1-9 and every folded subfamily execute and pass normalization, equilibrium/null, conservation, entropy, scaling, response, and coupled first-law tests.",
+      "fail_condition": "Any row or folded subfamily is absent or any required rowwise test fails.",
+      "owner": "main",
+      "status": "pass"
+    },
+    {
+      "gate_id": "G-F10-INDEPENDENT-FLRW",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "statement": "The completed full-spectral collision-coupled FLRW endpoint must be checked by a structurally independent formulation/integrator under frozen inputs.",
+      "required_evidence": ["E-F10-INDEPENDENT-ENDPOINT"],
+      "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
+      "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, and the three-node maximum-relative-entropy route is rejected before implementation because its derivation and executable selector do not define one coherent continuous/covariant collision method.",
+      "owner": "main",
+      "status": "fail"
+    },
+    {
+      "gate_id": "G-F10-SCOPE",
+      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#15-f-11---lrs-then-non-lrs-type-i"],
+      "statement": "Current work must stop at F-10 and must not implement, validate, or schedule F-11 Type-I, QKE, or public production.",
+      "required_evidence": ["E-F10C1-SPEC", "E-F10C1-CLAIMS"],
+      "pass_condition": "Assignments and retained changes remain within F-10; F-11 stays OWNER-PAUSED and forbidden claims remain explicit.",
+      "fail_condition": "Any current assignment or retained change opens F-11/QKE/public-production work without new owner authority.",
+      "owner": "main",
+      "status": "pass"
+    },
+    {
+      "gate_id": "G-HARNESS-INTEGRITY",
+      "spec_refs": ["AGENTS.md#mandatory-shared-context-protocol-for-subagent-workflows"],
+      "statement": "The context index/pack, active run, assignments, unique result paths, hashes, trusted-session hook activation, and single-writer enforcement must satisfy the uploaded harness contract.",
+      "required_evidence": ["E-HARNESS-VALIDATE", "E-HARNESS-AUDIT"],
+      "pass_condition": "The explicit validator exits zero, trusted-session SubagentStart/SubagentStop activation is evidenced, registered result handoffs are automatically enforced, and no unauthorized shared or production write is attributable to a subagent.",
+      "fail_condition": "The validator reports a stale/invalid contract, hook activation is unproved, automatic result enforcement is bypassed, or exclusive write ownership cannot be evidenced.",
+      "owner": "main",
+      "status": "fail"
+    }
+  ]
+}
