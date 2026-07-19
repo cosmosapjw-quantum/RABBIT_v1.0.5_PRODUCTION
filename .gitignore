@@ -1,0 +1,128 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local publication backup and quarantine root
+/.publish-local/
+/out_of_scope/
+
+# Packaging artifacts
+build/
+dist/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test, coverage, and type-checker caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+
+# Local environment files
+.env
+.env.*
+.python-version
+
+# Editors and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Claude/Codex runtime state (durable project configuration remains tracked)
+**/.claude/scheduled_tasks.lock
+**/.claude/scheduled_tasks.json
+**/.claude/routines/.state/
+**/.claude/worktrees/
+**/.claude/checkpoints/
+**/.claude/mailbox/
+**/.claude/agent-registry.json
+**/.claude/agent-memory-local
+**/.claude/first-run
+**/.claude/assistant-daemon-state.json
+/.agent-harness/ACTIVE_RUN
+/.agent-harness/runs/
+/.superpowers/
+/.benchmarks/
+
+# Repository-level Codex harness policy is versioned under .codex/.
+# Do not place credentials or provider secrets there.
+
+# Logs and temporary backups
+logs/
+*.log
+*.bak
+*.bak_*
+*.bak.*
+*.fdb_latexmk
+*.fls
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.toc
+
+# Project-generated outputs
+/ablation_outputs/
+/audit_outputs/
+/audit_packets/
+/auditfix_cache/
+/diagnostic_outputs/
+/figures/
+/production_report_cache/
+
+# Native compiler, profiler, and build products
+**/target/
+*.mod
+*.o
+*.obj
+*.profdata
+*.profraw
+*.perf.data
+
+# Binary blobs kept local but not tracked (PR-CLEAN-1): audit zips, report and
+# reference PDFs. Keep provenance in git history; do not re-add to the tree.
+*.zip
+*.pdf
+*.sha256
+
+# Accidental local scratch file seen in this repo
+/q_gl
+
+# Local audit drops and scratch material belong in docs/audit/ or quarantine.
+/audit/
+/docs/superpowers/plans/stage-a-task-1-report.md
+/AGENTS.md.fragment
+/BD*_external*.md
+/BD*_external*/
+/DOSSIER_*/
+/Journal-Grade Hostile Audit*.txt
+/compass_artifact_*
+/deep-research-report.md
+/integrated_phys_math_code_audit_*.md
+/JAX_BACKEND_RECOMMENDATION_*.md
+/NEUTRINO_IDE_METHOD_RESEARCH_*.md
+/neutrino_*_ko.md
+/neutrino_solver_methods_evaluation_*.md
+/boltzmann_solver.md
+/scratchpad_*.py
