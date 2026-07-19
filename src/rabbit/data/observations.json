@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "_provenance": "RABBIT v2.0 foundation F12. Single source of truth for observational constraints used by inference/likelihood layers. Replaces the three inline copies in forward_likelihood.py, bbn_inference.py, sampler.py. Versioned so future updates (e.g. PDG re-evaluation, new D/H measurements) carry an explicit version tag.",
+  "observations": {
+    "Yp": {
+      "value": 0.2449,
+      "sigma": 0.0040,
+      "ref": "Aver, Olive & Skillman 2021, JCAP 03:027",
+      "_notes": "Helium-4 mass fraction from low-metallicity HII region regression."
+    },
+    "DH": {
+      "value": 2.547e-5,
+      "sigma": 0.029e-5,
+      "ref": "Cooke, Pettini & Steidel 2018, ApJ 855:102",
+      "_notes": "Deuterium-to-hydrogen ratio from precision QSO absorber sample."
+    },
+    "tau_n": {
+      "value": 878.4,
+      "sigma": 0.5,
+      "ref": "Particle Data Group 2024 review",
+      "_notes": "Neutron lifetime; UCN-tau bottle average."
+    },
+    "eta": {
+      "value": 6.104e-10,
+      "sigma": 0.058e-10,
+      "ref": "Planck 2018 TT,TE,EE+lowE+lensing (PDG 2024 conversion)",
+      "_notes": "Baryon-to-photon ratio. eta_10 = 100*omega_b * 273.49."
+    },
+    "Li7H": {
+      "value": 1.6e-10,
+      "sigma": 0.3e-10,
+      "ref": "Sbordone et al. 2010, A&A 522:A26",
+      "_notes": "Spite plateau lithium; the cosmological lithium problem leaves this discrepant with BBN by ~3x. Use with caution; gated off by default in BBNLikelihood."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+[package]
+name = "rabbit_cpu"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94.1"
+publish = false
+
+[lib]
+name = "_rabbit_cpu"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+diffsol = { version = "=0.16.0", default-features = false, features = ["faer", "nalgebra"] }
+nalgebra = "=0.35.0"
+numpy = "=0.28.0"
+pyo3 = { version = "=0.28.3", features = ["extension-module"] }
+serde_json = "=1.0.150"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"

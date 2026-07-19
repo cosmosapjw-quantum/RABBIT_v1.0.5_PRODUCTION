@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rabbit-bbn"
+version = "1.0.0"
+description = "Radiative And Bianchi BBN Integrated Toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Park et al."},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+jax = [
+    "jax>=0.4.20",
+    "jaxlib>=0.4.20",
+    "blackjax>=1.0",
+]
+diffrax = [
+    "jax>=0.4.20",
+    "jaxlib>=0.4.20",
+    "diffrax>=0.6",
+]
+inference = [
+    "dynesty>=2.1",
+    "jax>=0.4.20",
+    "jaxlib>=0.4.20",
+    "blackjax>=1.0",
+    "diffrax>=0.6",
+]
+plotting = [
+    "matplotlib>=3.7",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-xdist>=3.0",  # dev-loop parallelism: `pytest -n auto` (do NOT add to addopts — keep promotion_check serial/deterministic)
+    "matplotlib>=3.7",
+    "jax>=0.4.20",
+    "jaxlib>=0.4.20",
+    "blackjax>=1.0",
+    "dynesty>=2.1",
+    "diffrax>=0.6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"rabbit.network" = ["data/*.json"]
+"rabbit.data" = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests that take >30s (deselect with '-m \"not slow\"')",
+    "jax: marks tests requiring JAX",
+    "production: mandatory production readiness gates (run with '-m production')",
+    "gold: BBN observable gold lock tests — the real promotion gates (subset of production)",
+    "release_smoke: dispatch/import/docs smoke tests (subset of production, not physics gates)",
+    "build_env_only: packaging-local tests that depend on build environment (not portable across envs)",
+    "expensive: opt-in tests that take minutes to hours (run with '-m expensive'); excluded by default — used for v3.0 NUTS-3D recovery and 36-point synthetic-truth sweeps",
+    "cross_code: live external BBN code parity tests (NUDEC_BSM, AlterBBN); skip if backend unavailable",
+    "external_anchor: fail-closed external finite-shear Bianchi-I anchor gate (B8). It is RED BY DESIGN until an independent external benchmark is supplied: absent one it FAILS (does NOT skip — a skip would be mis-counted as a pass by scripts/promotion_check.py, falsely promoting the 'anisotropic BBN validated' claim). It runs in any unfiltered suite; lanes that must stay green exclude it with '-m \"not external_anchor\"', target it with '-m external_anchor', and promotion_check evaluates it by node id. Do NOT add an addopts marker filter to hide it — that would also deselect it from promotion_check's collection.",
+]
