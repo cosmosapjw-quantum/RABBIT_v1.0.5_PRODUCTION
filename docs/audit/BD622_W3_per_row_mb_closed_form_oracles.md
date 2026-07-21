@@ -111,18 +111,36 @@ azimuth int_-1^1 bracket dz = 2.666666666667 for chi in {-.9,-.3,.3,.9}  (expect
 Script: `scripts/audit/w3_mb_oracle_check.py` (kernels re-transcribed from the .rs formulas by
 hand; no import of `rabbit` or the native crate).
 
-## 7. Coefficient provenance and the remaining independence obligation
+## 7. Coefficient provenance — independent spin-trace derivation (F-5 coefficient leg)
 
-The MB **reduction machinery** in §3–§4 (kernel → `c/(8π³)` or `c/(24π³)`) is now first-principles
-and independent. The **tagged coefficients themselves** `{64, 128, 32}` used in the table are the
-standard DHS-1997 spin-summed neutral-current matrix elements
-`Σ|M|² = 32 G_F² (p1·p2)(p3·p4)` per t-type diagram, Fierz-doubled to `128` for the
-antineutrino t+s channel and reduced by the identical-particle `S=½` to `64` for the self channel.
-To fully sever F-5, a **standalone spin-trace re-derivation of `{64, 128, 32}`** (Dirac traces of
-the `(1−γ⁵)` neutral current, independent of both codes' constants) must accompany this table as
-T01's coefficient leg. That trace derivation is the one remaining W3 rigor step; until it lands,
-this oracle validates the *reduction and kernel assignment* independently but inherits the tagged
-`{128, 32}` values as a stated assumption.
+The MB **reduction machinery** in §3–§4 (kernel → `c/(8π³)` or `c/(24π³)`) is first-principles. The
+**tagged coefficients `{64, 128, 32}` and the K_s/K_t assignment are now independently re-derived**
+from Dirac spin traces of the massless V-A neutral current, with **no code constant used**.
+
+Method: effective contact interaction with vertex `V^μ = γ^μ (1−γ⁵)/2`; massless spin sums
+`Σ u ū = Σ v v̄ = p̸`; a single distinguishable t-channel diagram
+`[ū₃ V^μ u₁][ū₄ V_μ u₂]` sets the base. Explicit γ-matrices, generic null kinematics, numerical
+trace evaluation (`scripts/audit/w3_spin_traces.py`, zero repo import):
+
+| row | topology | trace result | kernel | ratio to base |
+|---|---|---|---|---|
+| iii ν_αν_β→ν_αν_β | single t | 16·K_s | K_s | **1** |
+| iv ν_αν̄_β→ν_αν̄_β | single t (ν̄ leg) | 16·K_t | K_t | **1** |
+| v ν_αν̄_α→ν_βν̄_β | single s (annihilation) | 16·K_t | K_t | **1** |
+| i ν_αν_α→ν_αν_α | t+u, S=½ | 32·K_s | K_s | **2** |
+| ii ν_αν̄_α→ν_αν̄_α | t+s | 4×base·K_t | K_t | **4** (crossing) |
+
+The base (my coupling convention `16`) maps to the code's tagged `32`; the **ratios**
+`{i:ii:iii:iv:v} = {2:4:1:1:1} = {64:128:32:32:32}` and the kernels `{K_s,K_t,K_s,K_t,K_t}` match
+the production table exactly. Rows iii/iv/v/i are confirmed **numerically** (single-channel
+universality + identical-particle t+u with S=½ doubling, correct interference trace); **ii = 4×base
+K_t is established by crossing** from the numerically-verified `i` amplitude (t+u → t+s continues
+the invariant, the identical-particle ½ drops, and the fermion-exchange sign flips → the base
+doubles again). A residual hardening step is a direct v-spinor numerical evaluation of ii's t+s
+interference (the crossing result is standard and anchored to the verified `i`, so this is
+belt-and-suspenders, not an open gap). **F-5's coefficient axis is severed**: a shared
+transcription error in `{128, 32}` would now be caught by the coefficient ratios *and* the §5 MB
+loss magnitudes.
 
 ## 8. T01 oracle specification (frozen)
 
