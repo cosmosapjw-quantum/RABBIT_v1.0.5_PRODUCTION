@@ -6,10 +6,11 @@
 //! to the Friedmann density and therefore to an endpoint-consumed cosmic-time
 //! state; it is not a detached diagnostic.  F10B adds the finite-mass
 //! electron/positron action in bounded logit occupation coordinates.  F10C
-//! adds the first classical diagonal neutrino self-collision slice: identical
-//! same-flavour neutrino--neutrino and antineutrino--antineutrino scattering.
-//! Cross-flavour and neutrino--antineutrino channels, flavour coherence,
-//! anisotropy, and QKE remain absent.
+//! completes the classical diagonal neutrino self-collision catalogue: the nine
+//! frozen zero-lepton rows (same-flavour, cross-flavour, and
+//! neutrino--antineutrino channels) evaluated through four topology-equivalent
+//! production contractions, alongside the finite-mass electron/positron
+//! exchange.  Flavour coherence, anisotropy, and QKE remain absent.
 
 #![cfg_attr(not(test), allow(dead_code))]
 

@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `d9515008ac63edd39547b354b2a80f5f56df244e840c179b81e75fd1655a46a8`
-Built at: `2026-07-19T06:47:47+00:00`
+Context version: `e7f249ed6d84f8bc8d74b83376e176a5e4d6adb021936614056600129c9ea199`
+Built at: `2026-07-21T15:48:36+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,7 +9,7 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `3b212ee8cf5dcd5c9530d6da457743a552384d49a116b42b06a461349163d2b4`
+SHA-256: `92e6bb799f5a740d31f35b1910743452e9d9ae343516df56dd3ad02d5955eff5`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
@@ -71,7 +71,7 @@ SHA-256: `3b212ee8cf5dcd5c9530d6da457743a552384d49a116b42b06a461349163d2b4`
 - Explicit non-goals: F-11 Bianchi/LRS/non-LRS Type-I implementation or scheduling, QKE/coherence/oscillations, public dispatch, public production, precision Standard-Model or publication claims.
 - F-10C2 catalogue boundary: all nine frozen rows execute. Rowwise tagged normalization, explicit six-species multiplicity, equilibrium/null, number/energy conservation, entropy, scaling, response, and five-point Jacobian tests pass; full production aggregation is checked against the explicit seven folded channel sum.
 - The retained exact-point BDF Jacobian cache improves the same F-10C1 endpoint by 55.815% with bitwise-identical solver outputs. On the completed catalogue, four-topology aggregation reduces the measured endpoint from 1520.92 s to 1184.77 s (22.102%, 1.284x) and RSS by 0.195%.
-- Final Rust release regression is 230/230 plus 0 doctests. BDF gives `(N,t,N_eff)=(7.936693339485084,52677.63448707955 s,3.034035983584400)`; Rodas5P gives `(7.936706017467941,52678.09666722039 s,3.033904967773792)`.
+- Final Rust release regression was 230/230 plus 0 doctests (historical, predating later current-tree edits; the current crate has 240 tests with 2 ignored, and no authorized current-tree full-suite rerun exists, so 230/230 must not be cited as a current-tree pass — see VALIDATION_LEDGER 2026-07-18). BDF gives `(N,t,N_eff)=(7.936693339485084,52677.63448707955 s,3.034035983584400)`; Rodas5P gives `(7.936706017467941,52678.09666722039 s,3.033904967773792)`.
 - N48 validation is limited to the declared five smooth profiles and two N128 auxiliary rules. Same-code endpoint `N_eff` is only a regression readout.
 - Do not silently strengthen `IMPLEMENTED` into `VALIDATED`, internal parity into independent validation, or a segment/profile speedup into endpoint progress.
 

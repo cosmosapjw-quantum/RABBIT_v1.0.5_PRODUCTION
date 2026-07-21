@@ -94,8 +94,11 @@ started without a new explicit instruction.
   execute. Primary-tagged normalization, explicit six-species multiplicity,
   separate `K_s/K_t` topology, equilibrium/null, number/energy conservation,
   entropy, `T^5` scaling, analytic response/Jacobian, and the explicit seven-
-  folded-channel sum pass. The final Rust release gate is `230/230` plus zero
-  doctests.
+  folded-channel sum pass. The final Rust release gate was `230/230` plus zero
+  doctests (historical, predating later current-tree edits; the current crate
+  has 240 tests with 2 ignored, and no authorized current-tree full-suite rerun
+  exists, so `230/230` is not a current-tree pass — see VALIDATION_LEDGER
+  2026-07-18).
 - **VALIDATED:** the exact solver-local BDF Jacobian cache changes the matched
   dual-solver endpoint wall `2191.66 -> 968.38 s` (`55.815%`, `2.263x`) with
   bitwise-identical outputs/steps and `+1.229%` RSS. Four-topology production
