@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `e7f249ed6d84f8bc8d74b83376e176a5e4d6adb021936614056600129c9ea199`
-Built at: `2026-07-21T15:48:36+00:00`
+Context version: `66c493402296819ee444fd2301449214aa86c22758d6aa2055e47d9721c29ab6`
+Built at: `2026-07-21T16:27:22+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -152,7 +152,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `3c78c051001c465a5d6b90493a35b1007436f1ef4ff203e2849958d923720ac8`
+SHA-256: `a381036a98dcb2b06b638a3f5c27567d8eee647e734423a5e524bd7d8a55848a`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -187,6 +187,7 @@ SHA-256: `3c78c051001c465a5d6b90493a35b1007436f1ef4ff203e2849958d923720ac8`
 | D-027 | Preserve the exact direct target-leg pointwise r2 source and failed M1 artifact as immutable evidence: the reported common-FD total null passes, but resolved S1 self number/energy conservation and independently reduced electron exchange miss their unchanged caps. The pointwise non-deposition action is rejected as an evolving RHS and receives no trajectory authority. The next slice is design-only for one discrete-event conservative M1 replacement inside the same private source/test surface; post-hoc projection, cap/state/order tuning from output, Rust/Fort/JAX executable reuse, and new public/wrapper surfaces remain forbidden. | r2 primary derivation `62dcdfb9`, exact source `b90d757a`, failed artifact `cab73790`, and adjudication `7e9b16d1`; measured residuals are `1.9782e-10`, `2.3350e-10`, and `1.0684e-7` against `1e-10`, `1e-10`, and `1e-8`. | F-10 independent full-spectral M1 recovery | registered blind derivations agree on the invariant event measure, target/global leg multiplicities, conservative off-grid deposition, detailed balance, support/tail semantics, and structural independence; adjudication may then authorize replacement implementation but still not a trajectory |
 | D-028 | Preserve the exact private Galerkin-Petrov source/test and `GL48_STATIC_R1` as immutable **IMPLEMENTED** and **VALIDATED failure** evidence. The candidate passes the common-FD null and every recorded S1 invariant, exchange, first-law, CP, entropy, family, wall, and memory discriminator except the prospectively coded native mu-tau relative-L-infinity covariance: `4.666064056497196e-10 > 1e-10`. Static M1 therefore **FAILS**. Do not change the norm/cap, symmetrize outputs, average event orientations, retry reductions, run GL64, construct Radau, or produce a trajectory/endpoint. | source `535370c1`, test `abdc4e01`, artifact `4726c40e`, method adjudication `ab8b2bc7`, covariance adjudication `3002ad87`. The favourable modal residual is localization only; the selected native mass inversion and its `1/y^2` conditioning are binding. Cost is `+406/-326`, net `+80`, token use `UNAVAILABLE`, blocker movement `0.25`, verdict `FAILURE_MODE_RELOCATION`. | F-10 independent full-spectral validation boundary | only materially new, prospectively registered, owner-authorized numerical evidence and a fresh blind design may reopen a different norm or method; ordinary wrapper, metric, cap, chart, reduction, telemetry, Fort, or same-code work does not qualify |
 | D-029 | Reject the current three-node maximum-relative-entropy route at blind design review before implementation. Preserve the fixed-triple derivation, standalone binary64 audit, embedded program, exploratory failures, and terminal adjudication as immutable design evidence. The fixed-triple negative-KL theorem is sound, but the executable's local GL-weight prior, nearest-exterior target-dependent support selector, and exact-node one-hot branch are not derived as one continuous/covariant semidiscrete collision method. Do not implement it or execute collision, GL48/64 comparator, Jacobian/Radau, trajectory, endpoint, or RABBIT output. | derivation `c336130b`, binary64 audit `6f774456`, embedded program `ad1144f3`, adjudication `614999cd`. Support-switch continuity/Lipschitz/Jacobian and tie covariance are unproved; the frozen 24-self/15-electron binary64 conservation/detailed-balance/entropy ledger and unchanged native mu-tau `1e-10` co-gate are absent. Production change `+0/-0/net 0`; token use `UNAVAILABLE`; blocker movement `0.25`; verdict `FAILURE_MODE_LOCALIZED_REJECT_IMPLEMENTATION`. | F-10 independent full-spectral validation boundary | only an explicit owner decision may authorize a new prospectively frozen design that supplies one coherent prior/selector/exact-node contract plus continuity, Jacobian, covariance, collision-specific binary64, native/weak co-gate, cost, and structural-independence evidence before implementation |
+| D-030 | Register the prospective dual-norm flavour-covariance metrology co-gate `G-F10-COVARIANCE-METROLOGY`: the independent comparator's mu-tau covariance and self number/energy conservation bind on the weak/measure-weighted content (`m_j*A_j`, modal coefficients); the native pointwise observable is retained only as a conditioning-capped diagnostic (cap `C*eps*G_alg ~ 1.2e-8` at GL48, with mandatory argmax-node/subgrid-ladder/BLAS-threading provenance reporting); and `1e-10`-class caps are reserved for structurally-exact identities. Additive and prospective: it does not reclassify D-028 (which stays a VALIDATED FAIL) and does not change `G-F10-INDEPENDENT-FLRW` (which stays fail). | BD622 F-2 recurrence-engine meta-finding (the native `1/y^2` co-gate's binary64 floor band `[~3e-11, ~4e-9]` straddles its `1e-10` cap); W5 executed discriminator on the frozen GL48-Y24 S1 bytes gives native mu-tau `4.78e-10` vs weak-metric `5.3e-13` on identical data with argmax at the smallest node (`docs/audit/BD622_W5_d028_discriminator_result.md`); follows the D-025 derivation-backed gate-domain-restriction precedent and converts no recorded failure into a pass. Context/registry change only; no numerics, physics, tolerance, or claim status changed; token use `UNAVAILABLE`. | F-10 independent comparator covariance metrology | a G2a weak-metric failure at `1e-10` (a genuine covariance defect, reopening INDEPENDENT_DISCRETIZATION_SUSPECT), or an explicit owner revision of the native conditioning-derived cap before any comparator output exists |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 
@@ -194,7 +195,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `6895b6d0b4e0ca7eb8fe86dcc1bf86a75aa2fd0252176c619d0d21e9d3b07248`
+SHA-256: `ea1200cd89072145fd5d40fe8f1a781e13b20ffcdfc952357613a93183a9ad88`
 
 {
   "schema_version": 1,
@@ -246,6 +247,16 @@ SHA-256: `6895b6d0b4e0ca7eb8fe86dcc1bf86a75aa2fd0252176c619d0d21e9d3b07248`
       "required_evidence": ["E-F10-INDEPENDENT-ENDPOINT"],
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, and the three-node maximum-relative-entropy route is rejected before implementation because its derivation and executable selector do not define one coherent continuous/covariant collision method.",
+      "owner": "main",
+      "status": "fail"
+    },
+    {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "spec_refs": ["docs/audit/BD622_external_f10_independent_validation_blocker_audit_report_20260720.md#4-discrete-proof-audit", "docs/audit/BD622_W5_d028_discriminator_result.md"],
+      "statement": "The independent comparator's flavour-covariance and self conservation identities are gated on the well-conditioned weak content; the native pointwise observable is retained only as a conditioning-capped diagnostic. 1e-10-class caps are reserved for structurally-exact identities; denominators are frozen before output by an agent blind to outputs.",
+      "required_evidence": ["E-F10-COMPARATOR-COVARIANCE-DUAL"],
+      "pass_condition": "G2a (binding): mu-tau covariance and self number/energy on the measure-weighted/modal content (m_j*A_j) <= 1e-10 (binary64 floor ~1e-13). G2b (binding-diagnostic): native pointwise mu-tau relative-L-infinity <= a conditioning-derived cap C*eps*G_alg frozen from pre-registered grid-only metrology (~1.2e-8 at GL48), with argmax-node, subgrid-ladder, and BLAS/threading provenance reported.",
+      "fail_condition": "The weak-metric residual exceeds 1e-10 (a genuine semidiscrete covariance/conservation defect), or the native diagnostic exceeds its conditioning-derived cap, or the required localization/provenance diagnostics are absent, or any 1e-10-class cap is applied to a non-structural observable.",
       "owner": "main",
       "status": "fail"
     },

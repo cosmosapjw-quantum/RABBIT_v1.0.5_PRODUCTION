@@ -52,6 +52,16 @@
       "status": "fail"
     },
     {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "spec_refs": ["docs/audit/BD622_external_f10_independent_validation_blocker_audit_report_20260720.md#4-discrete-proof-audit", "docs/audit/BD622_W5_d028_discriminator_result.md"],
+      "statement": "The independent comparator's flavour-covariance and self conservation identities are gated on the well-conditioned weak content; the native pointwise observable is retained only as a conditioning-capped diagnostic. 1e-10-class caps are reserved for structurally-exact identities; denominators are frozen before output by an agent blind to outputs.",
+      "required_evidence": ["E-F10-COMPARATOR-COVARIANCE-DUAL"],
+      "pass_condition": "G2a (binding): mu-tau covariance and self number/energy on the measure-weighted/modal content (m_j*A_j) <= 1e-10 (binary64 floor ~1e-13). G2b (binding-diagnostic): native pointwise mu-tau relative-L-infinity <= a conditioning-derived cap C*eps*G_alg frozen from pre-registered grid-only metrology (~1.2e-8 at GL48), with argmax-node, subgrid-ladder, and BLAS/threading provenance reported.",
+      "fail_condition": "The weak-metric residual exceeds 1e-10 (a genuine semidiscrete covariance/conservation defect), or the native diagnostic exceeds its conditioning-derived cap, or the required localization/provenance diagnostics are absent, or any 1e-10-class cap is applied to a non-structural observable.",
+      "owner": "main",
+      "status": "fail"
+    },
+    {
       "gate_id": "G-F10-SCOPE",
       "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#15-f-11---lrs-then-non-lrs-type-i"],
       "statement": "Current work must stop at F-10 and must not implement, validate, or schedule F-11 Type-I, QKE, or public production.",
