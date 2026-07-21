@@ -395,6 +395,22 @@ fn evaluate_isotropic_electron_spectral_action_impl(
     let mut heavy_pair_mev = (0..nq)
         .map(|node| folded_row(&explicit_action, nq, 2, node))
         .collect::<Vec<_>>();
+    // Exact-FD reference contract (BD622 F-6, W4).  At the bitwise
+    // common-temperature FD state, continuum detailed balance forces the
+    // electron collision action to zero, so the value is pinned to exact 0.
+    // This is a declared, bounded exception, not a continuum identity at the
+    // discrete level:
+    //   * the raw pre-overwrite action it replaces is a genuine detailed-balance
+    //     null, measured at ~5e-39 (see the `exact_reference_overwrite_hides_a_
+    //     bounded_action_jump` test), i.e. the overwrite hides no numerically
+    //     meaningful residual;
+    //   * the Jacobian below is deliberately NOT overwritten -- it differentiates
+    //     the raw (non-overwritten) event stream, so the linearization is exact
+    //     for states leaving this single bitwise-trigger point (the trajectory's
+    //     initial state);
+    //   * consequently a Rust common-FD null evaluated AT this state measures the
+    //     branch, not the event stream, and must not be cited as event-stream
+    //     evidence in any independent comparison contract.
     if exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, electron_pair)
         && exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, heavy_pair)
     {
@@ -538,6 +554,76 @@ mod tests {
         assert!(action.electron_pair_mev.iter().all(|value| *value == 0.0));
         assert!(action.heavy_pair_mev.iter().all(|value| *value == 0.0));
         assert!(action.jacobian_mev.iter().any(|value| *value != 0.0));
+    }
+
+    #[test]
+    fn exact_reference_overwrite_hides_a_bounded_action_jump() {
+        // BD622 W4 / F-6.  At the bitwise exact-FD reference state the electron
+        // action VALUE is overwritten to zero (the continuum detailed-balance
+        // identity C == 0), while the returned Jacobian differentiates the raw
+        // (non-overwritten) event stream.  The overwrite therefore makes the
+        // Rust common-FD electron null vacuous at exactly that point (the
+        // trajectory's initial state) and introduces a bounded state-space
+        // jump.  This test measures and caps that hidden jump by evaluating one
+        // ULP off the `T_gamma == T_cm` bitwise trigger, where the overwrite
+        // does not fire and the raw action is returned unchanged.
+        let (y, w) = grid(4);
+        let occupation = y.iter().copied().map(fd).collect::<Vec<_>>();
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 4,
+        };
+        let at_reference = evaluate_isotropic_electron_spectral_action(spectral_input(
+            1.0,
+            1.0,
+            &y,
+            &w,
+            &occupation,
+            &occupation,
+            rule,
+        ))
+        .unwrap();
+        // Overwrite confirmed: the returned value is exactly zero.
+        assert!(at_reference.electron_pair_mev.iter().all(|v| *v == 0.0));
+        assert!(at_reference.heavy_pair_mev.iter().all(|v| *v == 0.0));
+        // One ULP off the T_gamma == T_cm bitwise trigger -> the raw
+        // event-stream action (the overwrite does not fire).
+        let raw = evaluate_isotropic_electron_spectral_action(spectral_input(
+            1.0_f64.next_up(),
+            1.0,
+            &y,
+            &w,
+            &occupation,
+            &occupation,
+            rule,
+        ))
+        .unwrap();
+        let jump = raw
+            .electron_pair_mev
+            .iter()
+            .chain(&raw.heavy_pair_mev)
+            .fold(0.0_f64, |m, v| m.max(v.abs()));
+        eprintln!(
+            "W4 exact-FD overwrite hidden jump (raw action one ULP off trigger) = {jump:.6e}"
+        );
+        // The raw action is not identically zero: the null at the reference
+        // state is a branch, not a measured event-stream zero (F-6).
+        assert!(
+            raw.electron_pair_mev
+                .iter()
+                .chain(&raw.heavy_pair_mev)
+                .any(|v| *v != 0.0)
+        );
+        // Declared cap (frozen): the measured hidden jump is ~5e-39 here, i.e.
+        // the exact-FD electron action already cancels to detailed balance and
+        // the overwrite hides no numerically meaningful residual.  The cap sits
+        // ~19 orders above the measured value and ~7 below the self-action
+        // roundoff null (~2e-13), so it catches any regression that reintroduces
+        // a real residual while never being flaky.
+        assert!(
+            jump < 1.0e-20,
+            "hidden exact-FD jump {jump:.6e} exceeds declared cap 1e-20"
+        );
     }
 
     #[test]
