@@ -1,5 +1,76 @@
 # Next Session Prompt
 
+## 2026-07-23 D-042 controlling overlay
+
+The owner-requested external executable-breakthrough prompt is ready for
+verbatim issuance:
+`docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`,
+SHA-256 `6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873`.
+Its replacement adjudication is `9607e9cf`; 21 raw findings deduplicate to 20
+exact keys. The earlier cross-review FAILs apply to superseded draft
+`bab03230`, not the issued bytes.
+
+This prompt authorizes an external 6--10-family paper screen and at most one
+prospectively sealed, repository-free, nonphysical microprototype. It does not
+authorize a repository change or physical RABBIT output. The current repository
+PR queue is empty. Until a returned candidate independently passes every gate,
+`G-EXT-FEASIBILITY=FAIL` and its PR DAG is `UNREACHABLE`; even one PASS may
+only request a separate owner intake decision.
+
+Preserve STOP/PRESERVE, the dirty tree, `.singularhistory` (`5abbc842`), the
+user-owned branch review (`a1742101`), and all D-042 raw failures. Do not start
+W7/B3 output, T01--T12, Rust/JAX work, Radau, trajectory, endpoint, unblinding,
+F-11/Bianchi, QKE, or public-runtime work. The D-041 overlay below remains
+provenance.
+
+## 2026-07-23 D-041 controlling overlay
+
+The authorized EXT-01 pre-output feasibility tournament is closed as **FAIL**.
+Run `run-20260723-f10-ext01-feasibility-tournament` contains the shared contract
+`9a965f3b`, literature matrix `1780a7d4`, five blind formal/CAS results, two
+cross-steelman results, and adjudication `18d6449d`. Its 33 raw findings
+deduplicate to 30 exact keys.
+
+The same-space PCR-DG wording is `FAIL-AS-WRITTEN`. This is not a universal
+no-go for a distinct Petrov test space, analytic enrichment, or every
+moving-remap DVM. Those three current candidates nevertheless close zero
+complete gates, so `G-EXT-FEASIBILITY=FAIL`; archive them without ranking.
+OWNER-1 and PR-01 are not reached.
+
+Preserve STOP/PRESERVE, the dirty tree, all raw failures, `.singularhistory`
+(`5abbc842`), and the user-owned branch review (`a1742101`). Do not start PR-01,
+W7/B3 output, T01--T12, Rust/JAX development, Radau, trajectory, endpoint,
+unblinding, F-11/Bianchi, QKE, or public-runtime work. Reopen candidate review
+only for a materially new external construction and a new explicit owner
+decision. The D-040 overlay below remains provenance.
+
+## 2026-07-23 D-040 controlling overlay
+
+The read-only current/legacy JAX, Bianchi, DSMC, and primary-literature survey
+is complete. Its registered run is
+`run-20260723-f10-d040-legacy-jax-readonly-survey`; the final adjudication is
+`d7d34e412bd3b8d94f382748f58b53c6102a1f806aa64f443c656a29203d481c`.
+It normalized 37 raw findings to 34 exact keys. The durable report is
+`docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md`.
+
+The no-stress Type-I shear norm is `DERIVED` to damp monotonically on the
+physical branch. A coupled highly oscillatory shear/expansion mode is therefore
+`SPECULATIVE` until the future PSTF/stress response is frozen and linearized.
+Conventional DSMC is excluded from primary, precision, covariance/derivative,
+and endpoint-authority lanes. At most a separately authorized frozen-background
+or large-signal qualitative cross-check remains `PROPOSED`. Legacy JAX may
+inform only independent semantic rederivation of the characteristic map,
+angular-moment bookkeeping, selective AD, and exact block/factor patterns; do
+not restore its retired forward/runtime authority.
+
+D-039 **STOP/PRESERVE** remains binding. Do not execute or promote JAX, implement
+F-11/Bianchi, execute DSMC, run collision/W7/B3/Rust/Radau/trajectory/endpoint
+output, unblind RABBIT, or start QKE/public-runtime work. The ranked R1 premise
+discriminator, R2 exact physics contract, and R3 bounded deterministic
+Rust-target prototype remain `PROPOSED` until a later explicit owner decision
+and prospective validation contract. The D-039 overlay below remains
+controlling provenance.
+
 ## 2026-07-23 D-039 controlling overlay
 
 The owner has selected **STOP/PRESERVE** after D-038. Preserve the dirty tree,

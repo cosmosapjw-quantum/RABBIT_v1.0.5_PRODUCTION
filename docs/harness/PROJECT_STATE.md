@@ -170,6 +170,35 @@ started without a new explicit instruction.
   the corrected exact request passed targeted R3 `a424e9c9` with 30 hash checks.
   It may return at most three ranked proposals or a no-go; neither it nor its answer grants repository,
   design-cycle, W7, B3, numerical, implementation, or endpoint authority.
+- D-040's read-only current/legacy JAX, primary-literature, Bianchi, and DSMC
+  survey is complete under
+  `run-20260723-f10-d040-legacy-jax-readonly-survey`. Five registered audit
+  axes and adjudication `d7d34e41` normalized 37 raw findings to 34 exact keys.
+  The no-stress Type-I shear norm is `DERIVED` monotone; coupled highly
+  oscillatory shear remains `SPECULATIVE`. Conventional DSMC is excluded from
+  future Bianchi primary, precision, covariance/derivative, and endpoint lanes;
+  only a separately authorized bounded qualitative cross-check remains
+  `PROPOSED`. Legacy JAX is formula/mechanism evidence only and does not reopen
+  JAX development, F-11 implementation, scientific execution, or any D-039
+  authority ladder.
+- D-041/EXT-01 completed the authorized one-shot, pre-output feasibility
+  tournament. Five blind formal/CAS axes, two cross-steelman reviews, and
+  adjudication `18d6449d` reduce 33 raw findings to 30 exact keys. The
+  same-space PCR-DG wording fails its endpoint theorem, while the distinct
+  Petrov, analytic-enriched, and moving-remap families remain unproved rather
+  than universally impossible. Zero current candidates close the conjunctive
+  gate, so `G-EXT-FEASIBILITY=FAIL`; all three are archived and OWNER-1/PR-01
+  are not reached. STOP/PRESERVE and every downstream prohibition remain
+  binding.
+- D-042 produces a newly bounded external executable-breakthrough request
+  (`6b5545bd`) and no scientific candidate. Four blind design inputs and two
+  hostile reviews forced one-finalist/one-authority-path deflation, prospective
+  operation-graph/domain/norm/arithmetic definitions, semantic rather than
+  hash/import mutation kills, and separation of mathematical feasibility from
+  future repository deletion. Replacement adjudication `9607e9cf` marks the
+  prompt ready for verbatim issuance. The current PR queue is empty,
+  `G-EXT-FEASIBILITY=FAIL`, and any returned PASS may only request a new owner
+  intake decision.
 
 ## 2026-07-18 independent-static fail-closed overlay
 
@@ -1275,12 +1304,16 @@ execution, B3 implementation, and independent-FLRW closure are **FAIL**.
 Preserve every exact failure, bounded pass, unfinished D-037 axis, legacy
 bundle, user-owned review, and raw `.singularhistory` evidence.
 
-The only open activity is a read-only external breakthrough/remedy design
-audit. Its response may be `PROPOSED`, `SPECULATIVE`, or a no-go finding; it
-cannot reopen the route. Only a later explicit owner decision based on
-materially new evidence may authorize a fresh design-only review. Even a
-unanimous future design PASS would grant only eligibility for a separate W7
-decision; it would not authorize W7, B3, trajectory, or endpoint output.
+The remaining open activity is the read-only external breakthrough/remedy
+design audit. D-040's local survey is complete and preserved in
+`docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md`.
+Its R1 premise discriminator, R2 exact physics contract, and R3 bounded
+deterministic Rust-target prototype are `PROPOSED` advice only; conventional
+DSMC is excluded from primary and precision authority. Only a later explicit
+owner decision based on materially new evidence may authorize a fresh
+design-only review. Even a unanimous future design PASS would grant only
+eligibility for a separate W7 decision; it would not authorize W7, B3,
+trajectory, or endpoint output.
 
 F-11 Bianchi/Type-I remains owner-paused. QKE/coherence, public dispatch, and
 public production remain `FORBIDDEN`.
