@@ -1,5 +1,82 @@
 # Next Session Prompt
 
+## 2026-07-23 D-039 controlling overlay
+
+The owner has selected **STOP/PRESERVE** after D-038. Preserve the dirty tree,
+all exact failures and bounded passes, unfinished D-037 axes, legacy evidence,
+user-owned `RABBIT_f10_independent_validation_branch_review.md` (`a1742101`),
+and raw `.singularhistory` (`5abbc842`).
+
+D-038's optional one-final-design-cycle path is frozen. Initial audit R2
+`898fcf02` rejected authority/provenance/completeness ambiguity; the corrected request in
+`docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md`
+passed targeted R3 `a424e9c9`. It may be handed to an auditor for at most three
+`PROPOSED`/`SPECULATIVE` remedies or a no-go. The request and response grant
+no repository edit, design-cycle, W7, B3, numerical,
+implementation, trajectory, endpoint, or public authority.
+
+Do not remediate or execute. Only a later explicit owner decision based on
+materially new evidence may reopen a fresh design-only review. The D-038
+overlay below remains provenance and is superseded where this overlay is
+stricter.
+
+## 2026-07-23 D-038 controlling overlay
+
+Repository/branch remains `RABBIT_v1.0.5_PRODUCTION` on
+`f10-independent-validation-b3v2`. Preserve the complete dirty tree, user-owned
+`RABBIT_f10_independent_validation_branch_review.md` (`a1742101`), and raw
+`.singularhistory` (`5abbc842`).
+
+D-038 run `run-20260723-f10-d038-historical-adversarial-audit` completed the
+legacy/current-Git map, two blind audits, mutual steelman, six-round debate,
+and adjudication `c145f298`. It found 32/32 exact-unique findings consolidated
+into seven causal families. Current D-035/W6 executable-contract debt is the
+sealed-candidate root cause; history-wide architecture-first is a recurrence
+amplifier, not a universal root over Fort/D-027/D-028/D-029. Harness and reroot
+defects affected trust/dating but did not cause the admitted scientific FAILs.
+
+Default to STOP/PRESERVE. Exact-byte remediation readiness, W7 execution, B3
+implementation, and independent-FLRW closure remain FAIL. Do not edit the
+failed bytes or run W7, B3, T01--T12, Rust collision work, Radau, trajectory,
+endpoint, unblinding, F-11, QKE, or public runtime work.
+
+Only a new explicit owner decision may authorize one final design-only cycle
+under D-038's finite obligation matrix, existing-surface-only, one-review,
+terminal-on-any-non-PASS rule. Even a unanimous design PASS would require a
+separate owner decision before W7. The D-037 overlay below remains provenance
+and is superseded where this overlay is stricter.
+
+## 2026-07-23 D-037 controlling overlay
+
+Current repository/branch is
+`/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION` on
+`f10-independent-validation-b3v2`, based on
+`main@ca3a0138d496732edfc13559fd8f7ceec7ef4d6e`. Preserve every dirty-tree
+change, the user-owned untracked
+`RABBIT_f10_independent_validation_branch_review.md` (`a1742101`), and raw
+`.singularhistory` (`5abbc842`). Do not stage, clean, reset, or overwrite them.
+
+D-036 validates only the schema-v2 parent/Start/Stop harness boundary. D-037
+then reviewed the sealed D-035 exact bytes under shared CAS contract
+`d2780e2c`. B3 result `bead9788` and W7 result `f785c2d2` are admitted FAIL
+envelopes with 11/11 unique findings. Nullspace, entropy, direct row-ii trace,
+and absolute normalization pass as bounded subclaims; per-leg shell checks,
+the single coefficient-Horner basis path, directed tail enclosures, canonical
+event/trace completeness, A0--A4 rigor, and the whole designs fail. The binding
+non-PASS stop interrupted Wolfram/Sage without results; Lean/SymPy were not
+spawned; merge/adjudication did not run. Do not describe D-037 as a completed
+four-axis adjudication.
+
+No W7 numerical execution/static implementation, B3 implementation/output,
+T01--T12, Rust collision edit, Radau, trajectory, endpoint, RABBIT unblinding,
+F-11, QKE, or public runtime work is authorized. Do not remediate the failed
+bytes or resume the unfinished CAS axes without a new explicit owner decision.
+The next session may perform read-only audit/packaging only, then report this
+decision boundary.
+
+The older material below is retained as provenance and is superseded wherever
+it conflicts with this overlay.
+
 Resume RABBIT only after reading this fail-closed handoff in
 `/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION`, branch `main`.
 The repository was re-rooted as a curated public history on 2026-07-19.

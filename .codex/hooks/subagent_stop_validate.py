@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 
 from _common import load_json, read_stdin_json, repo_root
+
+HARNESS_SCRIPTS = Path(__file__).resolve().parents[2] / ".agent-harness" / "scripts"
+sys.path.insert(0, str(HARNESS_SCRIPTS))
+
+from _harness import (  # noqa: E402
+    assignment_runtime_agent_type,
+    validate_assignment_contract,
+    validate_assignment_resource_hashes,
+    validate_result_contract,
+)
 
 MARKER_RE = re.compile(r"(?:^|\n)HARNESS_RESULT:\s*(\{[^\n]+\})\s*\Z")
 ASSIGNMENT_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
@@ -24,9 +36,6 @@ def main() -> None:
 
     # Outside an explicitly active harness run, do not impose the result envelope.
     if not active_path.exists() or not active_path.read_text(encoding="utf-8").strip():
-        return
-
-    if bool(event.get("stop_hook_active")):
         return
 
     message = str(event.get("last_assistant_message") or "")
@@ -66,9 +75,38 @@ def main() -> None:
     if str(assignment.get("run_id")) != active_run:
         block("Registered assignment run_id does not match ACTIVE_RUN.")
         return
+    event_agent_type = str(event.get("agent_type") or "")
+    expected_runtime_type = assignment_runtime_agent_type(assignment)
+    if event_agent_type != expected_runtime_type:
+        block(
+            "SubagentStop runtime agent_type does not match the registered "
+            "runtime_agent_type."
+        )
+        return
+    event_agent_id = str(event.get("agent_id") or "")
+    if not event_agent_id:
+        block("SubagentStop event omitted agent_id; result identity cannot be verified.")
+        return
 
     index = load_json(harness / "context" / "CONTEXT_INDEX.json", {}) or {}
     current_version = str(index.get("context_version", "UNBUILT"))
+    assignment_errors = validate_assignment_contract(
+        assignment,
+        expected_run_id=active_run,
+        expected_context_version=current_version,
+        role_files=index.get("role_files", {}),
+    )
+    if assignment_errors:
+        block("Registered assignment contract is invalid: " + "; ".join(assignment_errors))
+        return
+    resource_errors = validate_assignment_resource_hashes(
+        root,
+        assignment,
+        role_files=index.get("role_files", {}),
+    )
+    if resource_errors:
+        block("Registered assignment resources are stale: " + "; ".join(resource_errors))
+        return
     if str(envelope["context_version"]) != current_version:
         block(
             f"Stale result context version {envelope['context_version']!r}; current version is "
@@ -115,21 +153,31 @@ def main() -> None:
     if not isinstance(result, dict):
         block("Declared result artifact is not a JSON object.")
         return
-    expected_fields = {
-        "run_id": active_run,
-        "assignment_id": assignment_id,
-        "context_version": current_version,
-        "status": str(envelope["status"]),
-        "result_path": declared_result_path,
-        "agent_type": str(assignment.get("agent_type")),
-    }
-    mismatches = [
-        f"{key}: expected {expected!r}, got {result.get(key)!r}"
-        for key, expected in expected_fields.items()
-        if str(result.get(key)) != expected
-    ]
-    if mismatches:
-        block("Result artifact does not match its assignment/envelope: " + "; ".join(mismatches))
+    contract_errors = validate_result_contract(
+        result,
+        assignment,
+        expected_run_id=active_run,
+        expected_context_version=current_version,
+        expected_agent_id=event_agent_id,
+        expected_assignment_sha256=(
+            "sha256:" + hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+        ),
+    )
+    if str(result.get("status")) != str(envelope["status"]):
+        contract_errors.append(
+            "status mismatch between result artifact and HARNESS_RESULT envelope"
+        )
+    if contract_errors:
+        retry_note = (
+            " This is a retry after an earlier blocked stop; validation remains fail-closed."
+            if bool(event.get("stop_hook_active"))
+            else ""
+        )
+        block(
+            "Result artifact violates RESULT_ENVELOPE: "
+            + "; ".join(contract_errors)
+            + retry_note
+        )
         return
 
 

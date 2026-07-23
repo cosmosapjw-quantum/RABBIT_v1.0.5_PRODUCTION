@@ -1,13 +1,17 @@
 # Design Spec — Dual-Number AD in the Production BBN Collision Kernel
 
 **Date:** 2026-07-21
-**Status:** Design approved; implementation deferred (this document + adversarial audit only)
+**Status:** **PROPOSED / PARKED**; implementation **FORBIDDEN** while F-11 remains owner-paused
 **Scope owner:** RABBIT solver / `native/rabbit_cpu`
 **Related memory:** `project-rodas5p-ad-experiment`, `project-rodas5p-external-lab-analysis`, `project-rodas5p-bdf-cost-structure`
 
 ---
 
 ## 1. Goal
+
+This document is retained as a future design record only. It is not current execution authority,
+does not schedule an F-10 task, and must not be used to justify Bianchi, Type-I, AD-kernel, JVP,
+or solver-comparison implementation until the owner explicitly reopens F-11 in a new decision.
 
 Port forward-mode dual-number automatic differentiation into the production RABBIT BBN
 collision kernel so that Rodas5P can build an **exact** Jacobian and time-derivative (`dfdt`),

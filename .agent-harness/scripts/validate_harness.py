@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 
-from _harness import active_run_id, hash_files, load_json, root
-
-VALID_STATUS = {"pass", "fail", "inconclusive", "error"}
+from _harness import (
+    active_run_id,
+    hash_files,
+    load_json,
+    root,
+    validate_assignment_contract,
+    validate_assignment_resource_hashes,
+    validate_result_contract,
+)
 
 
 def main() -> None:
@@ -44,6 +51,25 @@ def main() -> None:
         declared_results: dict[str, str] = {}
         for path in assignments:
             value = load_json(path)
+            assignment_errors = validate_assignment_contract(
+                value,
+                expected_run_id=active,
+                expected_context_version=str(index.get("context_version")),
+                role_files=index.get("role_files", {}),
+            )
+            errors.extend(
+                f"Assignment contract violation ({path.name}): {error}"
+                for error in assignment_errors
+            )
+            resource_errors = validate_assignment_resource_hashes(
+                repo,
+                value,
+                role_files=index.get("role_files", {}),
+            )
+            errors.extend(
+                f"Assignment resource violation ({path.name}): {error}"
+                for error in resource_errors
+            )
             aid = value.get("assignment_id")
             if aid in ids:
                 errors.append(f"Duplicate assignment_id: {aid}")
@@ -71,21 +97,19 @@ def main() -> None:
                 continue
             assignment = load_json(assignment_path)
             result = load_json(result_path)
-            if not isinstance(result, dict):
-                errors.append(f"Result is not a JSON object: {result_path.name}")
-                continue
-            expected = {
-                "run_id": active,
-                "assignment_id": assignment.get("assignment_id"),
-                "context_version": index.get("context_version"),
-                "agent_type": assignment.get("agent_type"),
-                "result_path": assignment.get("result_path"),
-            }
-            for key, expected_value in expected.items():
-                if str(result.get(key)) != str(expected_value):
-                    errors.append(f"Result {key} mismatch: {result_path.name}")
-            if str(result.get("status")) not in VALID_STATUS:
-                errors.append(f"Result status is invalid: {result_path.name}")
+            result_errors = validate_result_contract(
+                result,
+                assignment,
+                expected_run_id=active,
+                expected_context_version=str(index.get("context_version")),
+                expected_assignment_sha256=(
+                    "sha256:" + hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+                ),
+            )
+            errors.extend(
+                f"Result contract violation ({result_path.name}): {error}"
+                for error in result_errors
+            )
 
     if errors:
         print(json.dumps({"ok": False, "errors": errors}, indent=2))

@@ -113,6 +113,11 @@ This repository uses spec-driven development and evidence-bearing subagent audit
   1. `.agent-harness/generated/CONTEXT_PACK.md`
   2. `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json`
   3. only the role-specific and evidence files named by that assignment.
+- Assignment schema v2 separates the live Codex `runtime_agent_type` from the
+  logical `review_role`. The compatibility field `agent_type` MUST equal the
+  runtime event type. A supported `default` runtime may carry a CAS or adjudicator
+  `review_role` only when `new_assignment.py` seals the exact role files and result
+  template; neither the assignment nor result may impersonate a dedicated runtime.
 - The `SubagentStart` hook injects the shared context contract automatically. A subagent MUST NOT begin repo-wide exploration before validating that its assignment context version matches the current context index.
 - If the spawn header or assignment file is missing, stale, or inconsistent, the subagent MUST stop substantive work and report the contract violation.
 

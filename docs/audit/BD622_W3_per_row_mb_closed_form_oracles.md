@@ -1,9 +1,10 @@
 # BD622 W3 — Per-row Maxwell–Boltzmann closed-form collision-loss oracles
 
-Status: **DERIVED + numerically self-verified** (rel. err ≤ 4e-14). Prospective T01 falsifier
+Status: **DERIVED + internally cross-checked** (rel. err ≤ 4e-14). Prospective T01 falsifier
 foundation. Read-only derivation; no repository collision kernel, comparator, GL48/64, trajectory,
 or endpoint was executed. The only computation is standalone NumPy quadrature of the analytic
-formulas below (zero repo import), reproduced in §6.
+formulas below (zero repo import), reproduced in §6. This checks the MB reduction and coefficient
+ratios; it is not an independent absolute phase-space-normalization validation.
 
 ## 1. Purpose
 
@@ -14,8 +15,9 @@ comparator (`_independent_noqke.py`). The only in-repo primary anchor is the row
 (`8/π³`, `neutrino_self_spectral.rs:1073-1074`) and the K_t azimuth identity. A shared
 transcription error in the **K_t rows {128, 32}** would scale out of every current gate (nulls,
 conservation, CP, μτ covariance) and be invisible. This document derives and freezes an
-**independent closed-form loss-rate oracle for every massless neutrino self row**, severing the
-shared-coefficient axis before any run.
+**independent closed-form loss-rate ratio/reduction oracle for every massless neutrino self row**.
+The absolute invariant phase-space normalization, a direct row-ii v-spinor trace, and the
+finite-electron-mass rows remain assigned to W7.
 
 ## 2. Setup
 
@@ -111,11 +113,12 @@ azimuth int_-1^1 bracket dz = 2.666666666667 for chi in {-.9,-.3,.3,.9}  (expect
 Script: `scripts/audit/w3_mb_oracle_check.py` (kernels re-transcribed from the .rs formulas by
 hand; no import of `rabbit` or the native crate).
 
-## 7. Coefficient provenance — independent spin-trace derivation (F-5 coefficient leg)
+## 7. Coefficient provenance — partial independent spin-trace derivation (F-5 coefficient leg)
 
 The MB **reduction machinery** in §3–§4 (kernel → `c/(8π³)` or `c/(24π³)`) is first-principles. The
-**tagged coefficients `{64, 128, 32}` and the K_s/K_t assignment are now independently re-derived**
-from Dirac spin traces of the massless V-A neutral current, with **no code constant used**.
+**ratios of the tagged coefficients `{64, 128, 32}` and the K_s/K_t assignment are independently
+checked** from Dirac spin traces of the massless V-A neutral current, with **no code constant
+used**. The overall normalization is not fixed by this calculation.
 
 Method: effective contact interaction with vertex `V^μ = γ^μ (1−γ⁵)/2`; massless spin sums
 `Σ u ū = Σ v v̄ = p̸`; a single distinguishable t-channel diagram
@@ -134,13 +137,11 @@ The base (my coupling convention `16`) maps to the code's tagged `32`; the **rat
 `{i:ii:iii:iv:v} = {2:4:1:1:1} = {64:128:32:32:32}` and the kernels `{K_s,K_t,K_s,K_t,K_t}` match
 the production table exactly. Rows iii/iv/v/i are confirmed **numerically** (single-channel
 universality + identical-particle t+u with S=½ doubling, correct interference trace); **ii = 4×base
-K_t is established by crossing** from the numerically-verified `i` amplitude (t+u → t+s continues
+K_t is inferred by crossing** from the numerically-verified `i` amplitude (t+u → t+s continues
 the invariant, the identical-particle ½ drops, and the fermion-exchange sign flips → the base
-doubles again). A residual hardening step is a direct v-spinor numerical evaluation of ii's t+s
-interference (the crossing result is standard and anchored to the verified `i`, so this is
-belt-and-suspenders, not an open gap). **F-5's coefficient axis is severed**: a shared
-transcription error in `{128, 32}` would now be caught by the coefficient ratios *and* the §5 MB
-loss magnitudes.
+doubles again). A direct v-spinor evaluation of row ii is still required. Consequently F-5 is
+only narrowed: ratio or kernel-assignment errors would be caught, while a shared overall
+normalization or row-ii crossing/interference error could still survive. W7 owns those gaps.
 
 ## 8. T01 oracle specification (frozen)
 

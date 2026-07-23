@@ -19,7 +19,7 @@
       "pass_condition": "All listed commands execute successfully on the retained tree; no undefined report references/citations or fatal LaTeX errors; edited pages visually clean.",
       "fail_condition": "Any required command fails or is skipped at final F-10C1 closeout.",
       "owner": "main",
-      "status": "pass"
+      "status": "fail"
     },
     {
       "gate_id": "G-F10-PERFORMANCE",
@@ -43,11 +43,28 @@
     },
     {
       "gate_id": "G-F10-INDEPENDENT-FLRW",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md"
+      ],
       "statement": "The completed full-spectral collision-coupled FLRW endpoint must be checked by a structurally independent formulation/integrator under frozen inputs.",
-      "required_evidence": ["E-F10-INDEPENDENT-ENDPOINT"],
+      "required_evidence": ["E-F10-INDEPENDENT-ENDPOINT", "E-F10-B3V2-D037-BLIND-FAIL"],
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
-      "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, and the three-node maximum-relative-entropy route is rejected before implementation because its derivation and executable selector do not define one coherent continuous/covariant collision method.",
+      "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
+      "owner": "main",
+      "status": "fail"
+    },
+    {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "spec_refs": [
+        "BD622_external_f10_independent_validation_blocker_audit_report_20260720.md",
+        "docs/audit/BD622_W5_d028_discriminator_result.md",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#10-w7-oracle-and-d-030-arithmeticmetrology-graph"
+      ],
+      "statement": "A structurally conservative comparator must satisfy the weak and mass-weighted covariance identity and must separately report a prospectively frozen, method-specific native conditioning bound.",
+      "required_evidence": ["E-F10-B3V2-STATIC", "E-F10-W7-ARITHMETIC", "E-F10-B3V2-D037-BLIND-FAIL"],
+      "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
+      "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
       "status": "fail"
     },
@@ -65,11 +82,11 @@
       "gate_id": "G-HARNESS-INTEGRITY",
       "spec_refs": ["AGENTS.md#mandatory-shared-context-protocol-for-subagent-workflows"],
       "statement": "The context index/pack, active run, assignments, unique result paths, hashes, trusted-session hook activation, and single-writer enforcement must satisfy the uploaded harness contract.",
-      "required_evidence": ["E-HARNESS-VALIDATE", "E-HARNESS-AUDIT"],
-      "pass_condition": "The explicit validator exits zero, trusted-session SubagentStart/SubagentStop activation is evidenced, registered result handoffs are automatically enforced, and no unauthorized shared or production write is attributable to a subagent.",
-      "fail_condition": "The validator reports a stale/invalid contract, hook activation is unproved, automatic result enforcement is bypassed, or exclusive write ownership cannot be evidenced.",
+      "required_evidence": ["E-HARNESS-WORKAROUND-STATIC", "E-HARNESS-CANARY-R4", "E-HARNESS-D034-UNAUTHORIZED-WRITE", "E-HARNESS-D035-RUNTIME-ROLE-FAILURE", "E-HARNESS-D036-CANARY", "E-HARNESS-D037-RESULT-ONLY"],
+      "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, exact four-line prompt, and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
+      "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     }
   ]
 }

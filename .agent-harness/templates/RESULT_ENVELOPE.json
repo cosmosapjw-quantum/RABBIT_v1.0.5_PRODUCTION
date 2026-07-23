@@ -1,10 +1,30 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "run_id": "REPLACE_ME",
   "assignment_id": "A-001",
   "context_version": "UNBUILT",
+  "agent_id": "REPLACE_ME_FROM_SUBAGENTSTART",
   "agent_type": "REPLACE_ME",
+  "runtime_agent_type": "REPLACE_ME_FROM_SUBAGENTSTART",
+  "review_role": "REPLACE_ME_FROM_ASSIGNMENT",
+  "spawn_contract": {
+    "run_id": "REPLACE_ME",
+    "assignment_id": "A-001",
+    "context_version": "UNBUILT",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:REPLACE_ME",
+    "runtime_agent_type": "REPLACE_ME_FROM_SUBAGENTSTART",
+    "review_role": "REPLACE_ME_FROM_ASSIGNMENT",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:REPLACE_ME_FROM_ASSIGNMENT",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:REPLACE_ME_FROM_ASSIGNMENT"
+  },
   "status": "inconclusive",
+  "result_path": ".agent-harness/runs/REPLACE_ME/results/A-001.json",
   "started_at": "REPLACE_ME",
   "completed_at": "REPLACE_ME",
   "tool_versions": {},
@@ -26,5 +46,8 @@
       "unresolved": []
     }
   ],
-  "errors": []
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/REPLACE_ME/results/A-001.json"
+  ]
 }

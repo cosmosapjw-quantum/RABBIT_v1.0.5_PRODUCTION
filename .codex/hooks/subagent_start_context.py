@@ -2,15 +2,10 @@
 from __future__ import annotations
 
 import hashlib
-import re
 from pathlib import Path
 from typing import Any
 
 from _common import emit_additional_context, load_json, read_stdin_json, repo_root
-
-HEADER_FIELDS = ("RUN_ID", "ASSIGNMENT_ID", "CONTEXT_VERSION", "INDEPENDENCE_MODE")
-ASSIGNMENT_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
-
 
 def read_bounded(path: Path, max_chars: int) -> str:
     try:
@@ -20,16 +15,6 @@ def read_bounded(path: Path, max_chars: int) -> str:
     if len(text) <= max_chars:
         return text
     return text[:max_chars] + f"\n...[truncated at {max_chars} characters; read the file directly for the rest]"
-
-
-def scalar_texts(value: Any) -> list[str]:
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, dict):
-        return [text for item in value.values() for text in scalar_texts(item)]
-    if isinstance(value, list):
-        return [text for item in value for text in scalar_texts(item)]
-    return []
 
 
 def context_integrity(root: Path, index: dict[str, Any], pack_path: Path) -> list[str]:
@@ -63,14 +48,17 @@ def context_integrity(root: Path, index: dict[str, Any], pack_path: Path) -> lis
     return errors
 
 
-def main() -> None:
-    event = read_stdin_json()
-    agent_type = str(event.get("agent_type") or "unknown")
-    root = repo_root()
+def active_run_id(harness: Path) -> str:
+    active_path = harness / "ACTIVE_RUN"
+    if not active_path.is_file():
+        return ""
+    return active_path.read_text(encoding="utf-8").strip()
+
+
+def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
     harness = root / ".agent-harness"
     index_path = harness / "context" / "CONTEXT_INDEX.json"
     pack_path = harness / "generated" / "CONTEXT_PACK.md"
-    active_path = harness / "ACTIVE_RUN"
     index = load_json(index_path, {}) or {}
 
     if not index or not pack_path.exists():
@@ -95,62 +83,21 @@ def main() -> None:
 
     max_chars = int(index.get("max_injected_chars", 24000))
     version = str(index.get("context_version", "UNBUILT"))
-    active_run = active_path.read_text(encoding="utf-8").strip() if active_path.exists() else "none"
-    event_text = "\n".join(scalar_texts(event))
-    header = {
-        field: match.group(1)
-        for field in HEADER_FIELDS
-        if (match := re.search(rf"(?m)^{field}=([^\s]+)\s*$", event_text))
-    }
-    header_errors: list[str] = []
-    assignment: dict[str, Any] | None = None
-    if header:
-        missing = [field for field in HEADER_FIELDS if field not in header]
-        if missing:
-            header_errors.append("spawn header is missing " + ", ".join(missing))
-        elif header["RUN_ID"] != active_run:
-            header_errors.append("spawn RUN_ID does not match ACTIVE_RUN")
-        elif not ASSIGNMENT_ID_RE.fullmatch(header["ASSIGNMENT_ID"]):
-            header_errors.append("spawn ASSIGNMENT_ID has an invalid form")
-        else:
-            assignment_path = (
-                harness
-                / "runs"
-                / active_run
-                / "assignments"
-                / f"{header['ASSIGNMENT_ID']}.json"
-            )
-            value = load_json(assignment_path, None)
-            if not isinstance(value, dict):
-                header_errors.append("spawn assignment is not registered")
-            else:
-                assignment = value
-                expected = {
-                    "run_id": header["RUN_ID"],
-                    "assignment_id": header["ASSIGNMENT_ID"],
-                    "context_version": header["CONTEXT_VERSION"],
-                    "independence_mode": header["INDEPENDENCE_MODE"],
-                }
-                for key, expected_value in expected.items():
-                    if str(assignment.get(key)) != expected_value:
-                        header_errors.append(f"assignment {key} does not match the spawn header")
-                if header["CONTEXT_VERSION"] != version:
-                    header_errors.append("spawn CONTEXT_VERSION is stale")
-    else:
-        header_errors.append(
-            "hook event did not expose the spawn header; the subagent must verify all four "
-            "fields manually before substantive work"
+    active_run = active_run_id(harness) or "none"
+    agent_id = str(event.get("agent_id") or "")
+    runtime_agent_type = str(event.get("agent_type") or "unknown")
+    start_errors: list[str] = []
+    if not agent_id:
+        start_errors.append("SubagentStart event omitted agent_id")
+    if runtime_agent_type not in index.get("role_files", {}):
+        start_errors.append(
+            f"no registered runtime context for agent_type={runtime_agent_type!r}"
         )
-
-    if assignment is not None:
-        agent_type = str(assignment.get("agent_type") or agent_type)
-    if agent_type not in index.get("role_files", {}):
-        header_errors.append(f"no registered role context for agent_type={agent_type!r}")
 
     pieces = [read_bounded(pack_path, max_chars)]
     used = len(pieces[0])
 
-    role_files = index.get("role_files", {}).get(agent_type, [])
+    role_files = index.get("role_files", {}).get(runtime_agent_type, [])
     for rel in role_files:
         path = root / rel
         remaining = max_chars - used
@@ -161,28 +108,47 @@ def main() -> None:
         used += len(role_text)
 
     contract = f"""[MANDATORY SUBAGENT BOOTSTRAP]
-Agent type: {agent_type}
+Runtime agent type: {runtime_agent_type}
+Agent ID: {agent_id or "MISSING"}
 Active run: {active_run}
 Canonical context version: {version}
 
-Your spawn prompt MUST contain RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, and INDEPENDENCE_MODE.
+VS Code collaboration does not expose `spawn_agent` to project PreToolUse hooks.
+The main agent therefore owns registered launch admission and pre/post write hashing.
 Before any broad search or analysis:
-1. Verify the prompt CONTEXT_VERSION equals `{version}`.
-2. Read `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json`.
-3. Read only files listed by the assignment, plus targeted evidence needed to verify a cited claim.
-4. Do not read sibling result files unless INDEPENDENCE_MODE is `adjudication` or the assignment explicitly allows them.
-5. Write only to the unique result path in the assignment.
-6. End with the required one-line HARNESS_RESULT JSON envelope.
+1. Verify that the first four prompt lines are exactly RUN_ID, ASSIGNMENT_ID,
+   CONTEXT_VERSION, and INDEPENDENCE_MODE and that CONTEXT_VERSION equals `{version}`.
+2. Read `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json` and compute its SHA-256.
+3. Verify that assignment `runtime_agent_type` equals `{runtime_agent_type}` and that
+   its compatibility `agent_type` has the same value.
+4. Read the assignment's canonical result template and every `review_role_files`
+   entry. Verify `review_role_sha256` and `result_template_sha256` before analysis.
+5. Read only files listed by the assignment, plus targeted evidence needed to verify a cited claim.
+6. Do not read sibling result files unless INDEPENDENCE_MODE is `adjudication` or the assignment explicitly allows them.
+7. Write only to the unique result path in the assignment.
+8. Copy Agent ID `{agent_id or "MISSING"}`, runtime type `{runtime_agent_type}`, and
+   the assignment `review_role` into the result artifact.
+9. Populate top-level `spawn_contract` with the four verified prompt values,
+   `prompt_header_verified=true`, `subagent_start_injected=true`,
+   `subagent_start_preflight="PASS"`, the assignment SHA-256, runtime type,
+   review-role verification/hash, and result-template verification/hash.
+10. End with the required one-line HARNESS_RESULT JSON envelope.
 If any required field or file is missing, stop substantive work and return status `error`.
 
-Hook preflight: {"PASS" if not header_errors else "ADVISORY/FAIL — " + "; ".join(header_errors)}
+Hook preflight: {"PASS — canonical context and runtime identity verified; assignment role verification required" if not start_errors else "FAIL — " + "; ".join(start_errors)}
 
 """ + "\n".join(pieces)
     emit_additional_context(
         "SubagentStart",
         contract,
-        warning="Subagent header/role preflight requires manual reconciliation" if header_errors else None,
+        warning="SubagentStart preflight failed; do not perform substantive work" if start_errors else None,
     )
+
+
+def main() -> None:
+    event = read_stdin_json()
+    root = repo_root()
+    inject_subagent_context(event, root)
 
 
 if __name__ == "__main__":

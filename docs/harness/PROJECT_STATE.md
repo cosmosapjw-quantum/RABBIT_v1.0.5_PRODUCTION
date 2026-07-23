@@ -1,10 +1,11 @@
 # Project State
 
-Date: 2026-07-19
+Date: 2026-07-23
 
 ## Current status
 
-The active repository is a curated fresh-history public baseline on `main`.
+The active remediation branch is `f10-independent-validation-b3v2`, based on the
+curated fresh-history public baseline `main@ca3a0138d496732edfc13559fd8f7ceec7ef4d6e`.
 The pre-publication Git database and local evidence were preserved rather than
 deleted under ignored `.publish-local/20260719T052443Z/`; they are not part of
 the publishable tree. `out_of_scope/`, raw harness runs, generated outputs,
@@ -43,6 +44,132 @@ public production are FORBIDDEN. By the 2026-07-16 owner decision, the current
 programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
+
+## 2026-07-22 B3-v2 successor entry-gate overlay
+
+- The rejected branch is preserved. The successor branch starts from
+  `main@ca3a013`; `.claude/settings.json` was not carried forward. The
+  pre-existing AD/Bianchi design is retained only as `PROPOSED/PARKED`, with
+  implementation `FORBIDDEN` while F-11 is owner-paused.
+- W3 is limited to `DERIVED` coefficient-ratio/kernel-assignment and MB-reduction
+  evidence. W5 is `VALIDATED` localization evidence, not an exclusive root-cause
+  proof. The corrected W6 B3-v2/W7 contract is `PROPOSED / DESIGN ONLY`.
+- The successor method evolves six explicit species, separates finite-`m_e`
+  electron shells from massless self kinematics, uses reaction-specific weak
+  invariants and Cholesky `M^-1q`, and requires W7 absolute-normalization plus
+  method-specific MPFR metrology before any B3 collision output.
+- Preserved run `run-20260722-f10-b3v2-blocker-remediation` contains two failed
+  canaries. R2 observed `SubagentStart`, but its preflight incorrectly searched a
+  payload that cannot contain the spawn prompt; after the controlled negative stop,
+  `stop_hook_active=true` bypassed validation of the incomplete retry artifact.
+- Reloaded-session R3 proved that `SubagentStart` injection, retry-safe
+  `SubagentStop` blocking, final envelope validation, and result-only writes work.
+  It also proved that VS Code collaboration `spawn_agent` bypasses project
+  `PreToolUse`: both allow-rewrite attestation and a reserved-field block probe
+  failed at launch. Those raw failures are preserved and D-031 is superseded.
+- The executable workaround is **VALIDATED** for the registered R4 chain: main owns registered
+  launch admission plus pre/post hashing; `SubagentStart` injects context/identity;
+  each result carries a prompt/Start `spawn_contract` and assignment-file SHA-256;
+  `SubagentStop` validates that contract and the final envelope on every attempt.
+  Four isolated fixtures pass. R4 result `5a979857` records Start preflight PASS,
+  the blocked invalid first stop, and accepted corrected result; identical pre/post
+  non-run diff `828cd996` and status `7ad89840` prove result-only writes.
+- R4 validated only the supported parent/Start/Stop lifecycle. The later D-034
+  Sage/Singular axis created undeclared repository-root `.singularhistory`
+  (`5abbc842`) while the tracked non-run diff remained `eb4e436c`. Effective
+  `G-HARNESS-INTEGRITY` is therefore **FAIL** until D-035 confines that tool to an
+  assignment-specific temporary cwd and a fresh run preserves every non-run hash.
+  VS Code collaboration `PreToolUse` remains unavailable and is not an authority
+  boundary.
+- The registered review `run-20260722-f10-b3v2-w6w7-blind-review` is complete.
+  B3 design `fc283d4f` and W7 metrology `8d490da0` failed; Wolfram `4d81d99c`,
+  Sage `722dfa8a`, Lean `b5c61f02`, and SymPy `21abb162` are overall
+  inconclusive under the four-axis contract. The normalized merge is
+  `1c28dcfb`; adjudication `e5b21e26` is **FAIL**.
+- The bounded exact reaction-nullspace subclaim passes all four engines, and
+  three engines agree on the direct row-ii trace and entropy affinity. Those
+  algebraic results do not repair missing all-channel normalization, exact
+  reaction/sign/multiplicity records, finite-`m_e` implementation roots and
+  Jacobians, deterministic basis/QR and ladder definitions, or MPFR/`B_native`
+  numeric bytes.
+- Dedicated CAS/adjudicator collaboration types could not start because their
+  forced model is unsupported for this ChatGPT Codex account. Registered
+  default-agent fallbacks used the actual Wolfram, Sage/Singular, Lean, and
+  SymPy tools plus the exact role files. This retains evidence but not a claim
+  of canonical dedicated-agent completion.
+- W7 numerical execution and static implementation still require explicit
+  owner authority, but owner authority is not sufficient now. Remediation and
+  a fresh blind PASS on exact bytes must occur first. No forbidden execution or
+  production edit occurred.
+- The owner approved D-033 remediation and a fresh blind review only. D-034 now
+  freezes candidate W6 `e0103e29`, unexecuted W7 contract source `5e8842d9`, and
+  exact vectors `5a16c903`. A source-only structural check passes the 24+15 graph
+  and source/vector identity. This is `SPECIFIED_NOT_EXECUTED`, not validation.
+- The fresh D-034 run `run-20260722-f10-b3v2-d034-blind-review` is terminal
+  **FAIL**. CAS contract `04e0960b`, B3 `39e9394a`, W7 `98a73fce`, Wolfram
+  `91c45257`, Sage `d8e4b2c8`, Lean `f19f64a9`, SymPy `c9f65215`, merged
+  `a172b68f`, and adjudication `95870216` retain 31 submitted/31 unique findings.
+  The exact reaction-nullspace passes all four axes; row-ii and entropy retain
+  bounded three-axis passes with a Lean tool ceiling; physical-interior finite-
+  `m_e` shell formulas are derived. Those subclaims do not repair global/tagged
+  orientation normalization, the Tier-0 `G_F` drift, finite-mass source branches,
+  arbitrary-`y` basis/ladder definitions, or A0--A4/`B_native` completeness.
+- On 2026-07-23 the owner approved D-035 only: correct those exact bytes, isolate
+  Sage/Singular outside the repository, and perform one fresh registered blind
+  review. The approval does not authorize W7 numerical output, B3 collision or
+  static implementation, T01--T12, Rust edits, Radau, trajectory, endpoint,
+  unblinding, F-11, QKE, or public runtime.
+- The sealed D-035 bytes remain W6 `9caaa445`, unexecuted contract source
+  `60fc9668`, exact vectors `e991d415`, and Sage/Singular role `812bce01`.
+  Source-only checks reproduce global-to-tagged 64/32, the three threshold
+  outcomes, 24+15 reactions, 20 ladder rows, and source/vector object equality.
+  D-037 proves that these consistency checks do not close the executable shell,
+  single-basis, directed-tail, event-trace, or A0--A4 contracts.
+- The D-035 fresh run stopped before merge/adjudication. B3 `4cb9132c` and W7
+  `a998edb4` are admitted FAIL envelopes. Wolfram `4d768662` is preserved but not
+  admitted because live Stop rejected the fallback `default` runtime against a
+  falsely registered dedicated role. Sage `ff1620c1` is not admitted because its
+  uppercase finding verdicts violate the canonical enum; Lean and SymPy were
+  interrupted without results. The run establishes no fresh design verdict.
+- The owner then authorized D-036 harness repair only. Assignment schema v2 keeps
+  `agent_type` and `runtime_agent_type` equal to the actual Start/Stop event and
+  independently binds `review_role`, its exact role files, and the canonical
+  result template by SHA-256. Static fixtures pass `6/6`, including Stop-side
+  rejection of an unregistered logical role. Final live R3 result `1b2f2e23`,
+  assignment `7b62b201`, and context `a364e7b4` verify the supported
+  `default` runtime with sealed `cas_sage_singular` review role, exact role and
+  template hashes, Start preflight PASS, blocked invalid first Stop, accepted
+  corrected envelope, `/tmp` Sage/Singular confinement, unchanged `.singularhistory`
+  `5abbc842`, and identical pre/post non-run diff/status hashes `a66f19fc`/
+  `b1d0bc24`. `G-HARNESS-INTEGRITY` is therefore **PASS** only within this
+  supported schema-v2 parent/Start/Stop boundary.
+- D-037 used shared CAS contract `d2780e2c` and admitted two schema-v2 results:
+  B3 `bead9788` and W7 `f785c2d2`, both **FAIL**. Their 11/11 unique findings
+  retain four bounded passes—reaction nullspace, entropy affinity, direct row-ii
+  trace, and absolute normalization—but identify seven binding failures in
+  per-leg/threshold shell enforcement, coefficient-Horner basis authority,
+  directed tail enclosures, canonical event/trace completeness, A0--A4 rigor,
+  and the whole B3/W7 designs. D-035's non-PASS rule stopped the run before
+  four-axis completion: Wolfram/Sage were interrupted without results,
+  Lean/SymPy were registered but never spawned, and no merge/adjudicator ran.
+  Parent pre/post diff/status stayed `cea5aa70`/`b1d0bc24`; `.singularhistory`
+  stayed `5abbc842`. The effective design verdict is **FAIL at the hard stop**,
+  not a completed adjudicator verdict.
+- No staged authority opened. W7 execution/static implementation and any B3
+  implementation/T01--T12 remain forbidden. A new explicit owner decision is
+  required before exact-byte remediation or another review may begin.
+- D-038 completed a read-only current/legacy historical audit, two blind audit
+  axes, mutual steelman, six-round debate, and final adjudication `c145f298`.
+  Its 32/32 exact-unique findings consolidate to seven causal families. Current
+  D-035/W6 executable-contract debt is the sealed-candidate root cause;
+  history-wide architecture-first is a recurrence amplifier rather than a
+  universal root over Fort/D-027/D-028/D-029. Default remains STOP/PRESERVE;
+  all four route-readiness verdicts remain **FAIL**.
+- D-039 records the owner's final choice of **STOP/PRESERVE**. D-038's optional
+  one-final-design-cycle path is frozen. R2 `898fcf02` rejected the first prompt;
+  the corrected exact request passed targeted R3 `a424e9c9` with 30 hash checks.
+  It may return at most three ranked proposals or a no-go; neither it nor its answer grants repository,
+  design-cycle, W7, B3, numerical, implementation, or endpoint authority.
 
 ## 2026-07-18 independent-static fail-closed overlay
 
@@ -1143,19 +1270,17 @@ F-10C.
 
 ## Next action
 
-Stop the independent F-10 path at D-029. Preserve the completed Rust N48
-representation, nine-row catalogue, exact solver-local BDF cache, four-topology
-production aggregation, both failed private independent candidates, the
-rejected three-node design, and all raw evidence. Do not implement that design
-or run a collision call, GL64, Radau, a trajectory, an independent endpoint,
-FortEPiaNO endpoint work, or RABBIT unblinding.
+The owner has selected **STOP/PRESERVE** at D-039. Exact-byte remediation readiness, W7
+execution, B3 implementation, and independent-FLRW closure are **FAIL**.
+Preserve every exact failure, bounded pass, unfinished D-037 axis, legacy
+bundle, user-owned review, and raw `.singularhistory` evidence.
 
-`G-F10-INDEPENDENT-FLRW` remains **FAIL**. Reopening requires an explicit owner
-decision backed by a materially new, prospectively registered coherent
-numerical design and fresh blind review. It must close support-switch
-continuity/Jacobian/covariance and collision-specific conservation,
-detailed-balance, entropy, and native mu-tau evidence before implementation;
-wrapper, telemetry, cap/norm adjustment, symmetry repair, or renewed
-whole-program FortEPiaNO work does not qualify. F-11
-Bianchi/Type-I remains owner-paused; QKE/coherence, public dispatch, and public
-production remain `FORBIDDEN`.
+The only open activity is a read-only external breakthrough/remedy design
+audit. Its response may be `PROPOSED`, `SPECULATIVE`, or a no-go finding; it
+cannot reopen the route. Only a later explicit owner decision based on
+materially new evidence may authorize a fresh design-only review. Even a
+unanimous future design PASS would grant only eligibility for a separate W7
+decision; it would not authorize W7, B3, trajectory, or endpoint output.
+
+F-11 Bianchi/Type-I remains owner-paused. QKE/coherence, public dispatch, and
+public production remain `FORBIDDEN`.

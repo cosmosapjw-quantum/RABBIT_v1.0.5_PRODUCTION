@@ -37,7 +37,12 @@ def main() -> None:
             groups[canonical_key(finding)].append(
                 {
                     "assignment_id": result.get("assignment_id"),
-                    "agent_type": result.get("agent_type"),
+                    "runtime_agent_type": result.get(
+                        "runtime_agent_type", result.get("agent_type")
+                    ),
+                    "review_role": result.get(
+                        "review_role", result.get("agent_type")
+                    ),
                     "finding": finding,
                 }
             )
@@ -46,7 +51,15 @@ def main() -> None:
     for key, items in groups.items():
         representative = dict(items[0]["finding"])
         representative["supporting_assignments"] = [item["assignment_id"] for item in items]
-        representative["supporting_agent_types"] = [item["agent_type"] for item in items]
+        representative["supporting_runtime_agent_types"] = [
+            item["runtime_agent_type"] for item in items
+        ]
+        representative["supporting_review_roles"] = [
+            item["review_role"] for item in items
+        ]
+        representative["supporting_agent_types"] = list(
+            representative["supporting_review_roles"]
+        )
         representative["duplicate_count"] = len(items)
         merged.append(representative)
 
