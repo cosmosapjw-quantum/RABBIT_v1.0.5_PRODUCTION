@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-LEAN",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_lean",
+  "review_role_files": [
+    ".agent-harness/context/roles/cas_common.md",
+    ".agent-harness/context/roles/cas_lean.md"
+  ],
+  "review_role_sha256": "sha256:366030c5731a8ceabb215e2ab6ea076292ea1401d2b0d6bd8597083135cf3fb4",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-EXT01-SAME-SPACE-NOGO",
+    "C-EXT01-PETROV-FEASIBILITY",
+    "C-EXT01-ANALYTIC-FEASIBILITY",
+    "C-EXT01-ENTROPY"
+  ],
+  "task": "Blind Lean formal axis. Produce a kernel-checked finite-sum endpoint theorem with no sorry/admit/unchecked axioms, then formalize as far as possible the logical dependencies required for Petrov and analytic candidates; missing analytic stability theorems must be INCONCLUSIVE, not assumed. Use only /tmp proof files and write only the result artifact. Execute no collision code/output. Perform the mandatory seven-stage adversarial loop and steelman both admission and rejection.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-LEAN.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/cas_common.md",
+    ".agent-harness/context/roles/cas_lean.md",
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "BD622_D039_second_external_audit_report.md",
+    "BD622_D039_second_audit_bundle.zip",
+    "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+  "status": "registered"
+}

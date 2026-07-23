@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "created_at": "2026-07-23T12:40:09+00:00",
+  "spec_ref": "BD622_D039_second_external_audit_report.md",
+  "base_ref": "ca3a0138d496732edfc13559fd8f7ceec7ef4d6e",
+  "head_ref": "bede5a965267ef2dbfc628b56835a3563edf7396",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

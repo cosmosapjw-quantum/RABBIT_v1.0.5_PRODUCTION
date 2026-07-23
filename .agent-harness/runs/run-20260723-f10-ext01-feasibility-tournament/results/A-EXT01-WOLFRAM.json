@@ -1,0 +1,294 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-WOLFRAM",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f01-5a23-7e62-87ef-d398ec9e7d12",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_wolfram_xact",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-WOLFRAM",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ec44a5cb41d6c2903064d1041f6be306385d67a5fbedf77a311fefe1df2e02de",
+    "runtime_agent_type": "default",
+    "review_role": "cas_wolfram_xact",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:8c52bb3a42c6216a21ddf0b8a49f83f26301e641e7e85388c555bc9c033684e5",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+  "started_at": "2026-07-23T12:38:30Z",
+  "completed_at": "2026-07-23T12:57:21Z",
+  "tool_versions": {
+    "WolframKernel": "15.0.0 for Linux x86 (64-bit) (May 26, 2026)",
+    "Wolfram_SystemID": "Linux-x86-64",
+    "xAct_xTensor": "1.3.0 (2025-12-29)",
+    "xAct_xPerm": "1.2.4 (2025-12-29); external executable LinkOpen failed, so no xPerm-dependent theorem is claimed",
+    "Python": "3.12.3; used only for the external synthetic safe-test bundle",
+    "result_template_sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-WOLFRAM.json",
+    "sha256sum BD622_D039_second_external_audit_report.md BD622_D039_second_audit_bundle.zip docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "unzip -q BD622_D039_second_audit_bundle.zip -d /tmp/A-EXT01-WOLFRAM.YURUbWIZ",
+    "sha256sum -c MANIFEST.sha256",
+    "WolframKernel -script /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+    "python3 scripts/run_safe_tests.py",
+    "sha256sum /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log /tmp/A-EXT01-WOLFRAM.YURUbWIZ/BD622_D039_second_audit_test_package/MANIFEST.sha256"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+      "sha256": "d2db53c36ee25e4eece388323fa5ad49f65442f9df5d3eb934b49a4ca435154c",
+      "purpose": "Executable Wolfram Language plus xAct proof script; reproduces the CAS contract statement before calculation."
+    },
+    {
+      "path": "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log",
+      "sha256": "a79ed418690dcb317325c335aa01880e59c249418ea38045ef4b3525b7c11655",
+      "purpose": "Stable InputForm results for endpoint limits, ideal/module remainders, local and Petrov determinants, tail integrals, conditioning counterfamily, entropy vector, and finite-m_e component checks."
+    },
+    {
+      "path": "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/BD622_D039_second_audit_test_package/MANIFEST.sha256",
+      "sha256": "c448bc5a1fd0849bd7b225f02b6b17391e5bd74ee1004750876003bcdca80866",
+      "purpose": "External bundle manifest; every listed entry verified before inspection."
+    }
+  ],
+  "source_lock_verified": {
+    "CAS_CONTRACT.json": "sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+    "BD622_D039_second_external_audit_report.md": "sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+    "BD622_D039_second_audit_bundle.zip": "sha256:7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b",
+    "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md": "sha256:509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+  },
+  "contract_statement_reproduced": "Let V=span{phi_1,...,phi_n} over finite real coefficients. If every phi_i has limit zero as xi approaches 1 from below, then every v in V has limit zero. Hence V cannot contain the constant function 1 on a terminal interval and cannot contain p_star*xi/(1-xi).",
+  "candidate_verdicts": {
+    "same_trial_test_space_reading": "fail-as-written",
+    "C-PETROV": "inconclusive; local algebraic invertibility is possible, but the required uniform inf-sup and nonsymmetric entropy theorems are absent",
+    "C-ANALYTIC": "inconclusive; enrichment can evade the endpoint no-go, but no complete representation, coefficient map, operation graph, or non-isomorphism theorem is supplied",
+    "axis_admission_recommendation": "reject current admission; this is not a universal impossibility theorem for either materially new candidate"
+  },
+  "findings": [
+    {
+      "finding_id": "F-EXT01-WOLFRAM-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The finite-span endpoint no-go is proved. For finite n and finite xi-independent coefficients, limit(v)=sum_i c_i limit(phi_i)=0. Equality to 1 on a terminal interval would instead give limit 1, and equality to p_star*xi/(1-xi), p_star>0, would give +Infinity. For the supplied terminal basis all limits are exactly 0; 1 has nonzero remainder 1 modulo (1-xi), while membership of p in (1-xi)R[xi] would require quotient p_star*xi/(1-xi)^2 and leaves nonzero cleared remainder p_star*xi modulo (1-xi)^2. Thus the external PCR-DG wording cannot use one finite terminal-vanishing space both as trial space and as an exact test space containing 1 and p.",
+      "assumptions_used": [
+        "n is finite.",
+        "Expansion coefficients are finite real constants independent of xi.",
+        "Every basis function has a left endpoint limit 0.",
+        "Exact representation means pointwise equality on a nonempty terminal interval.",
+        "p_star>0 and xi approaches 1 from below."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#negative_control",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#ENDPOINT_BASIS_LIMITS",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#VANISHING_IDEAL_CONSTANT_REMAINDER",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#VANISHING_MODULE_MOMENTUM_CLEARED_REMAINDER",
+        "BD622_D039_second_external_audit_report.md#8.4-semidiscrete-state-and-operation-graph"
+      ],
+      "evidence_fingerprint": "sha256:a79ed418690dcb317325c335aa01880e59c249418ea38045ef4b3525b7c11655",
+      "counterevidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#PETROV_TWO_NODE_DETERMINANT",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe"
+      ],
+      "reproduction": [
+        "WolframKernel -script /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+        "Inspect ENDPOINT_*, VANISHING_IDEAL_*, and VANISHING_MODULE_* entries in the hashed proof log."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The theorem does not apply to a genuinely distinct Petrov test space or to a trial space enriched by nonvanishing analytic invariant components."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-WOLFRAM-002",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The same-space no-go does not refute C-PETROV. A steelman two-node pairing with tests (1,p) and terminal trials (1-xi),(1-xi)(1+xi) has exact determinant a1*a2*p_star*(xi1-xi2)^2, which is positive for positive weights, p_star>0, and distinct nodes. However this is only local algebraic nonsingularity. The candidate supplies no complete trial/test dimensions, norms, state/cell domain, uniform inf-sup lower bound, or discrete fermionic entropy proof for the nonsymmetric pairing. In the standard entropy-contraction route the test space must represent the arbitrary entropy-variable perturbation as well as exact invariant tests; because 1 and p are independent of a terminal-vanishing trial space, an equal-dimensional square pairing cannot obtain that closure merely by reusing the Galerkin proof. A different saddle-point, discrete-gradient, or overdetermined theorem is possible in principle but absent.",
+      "assumptions_used": [
+        "The local steelman uses a1>0, a2>0, p_star>0, and 0<=xi1<xi2<1.",
+        "Trial functions are (1-xi) and (1-xi)(1+xi); tests are 1 and p_star*xi/(1-xi).",
+        "The entropy observation concerns the standard exact contraction proof for arbitrary finite trial coefficients, not every conceivable Petrov construction."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#PETROV_TWO_NODE_DETERMINANT",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV",
+        "BD622_D039_second_external_audit_report.md#8.5-conservation-detailed-balance-entropy-covariance-and-positivity",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#6-deterministic-entropy-variable-basis-and-solve"
+      ],
+      "evidence_fingerprint": "sha256:a79ed418690dcb317325c335aa01880e59c249418ea38045ef4b3525b7c11655",
+      "counterevidence_refs": [
+        "The exact positive Petrov determinant is constructive counterevidence to any claim that endpoint vanishing alone makes every distinct-space mass map singular.",
+        "A prospectively frozen mixed or discrete-gradient formulation could in principle prove entropy without a symmetric Galerkin mass matrix."
+      ],
+      "reproduction": [
+        "WolframKernel -script /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+        "Inspect PETROV_TWO_NODE_MATRIX and PETROV_TWO_NODE_DETERMINANT in the hashed proof log."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Fully specified trial/test spaces and local mass map.",
+        "Norms and a uniform inf-sup lower bound over a prospectively declared state and cell domain.",
+        "Exact fermionic entropy inequality for the nonsymmetric or mixed pairing.",
+        "Process-total finite-m_e shell, deterministic threshold derivative, permutation covariance, full-domain tail, binary64 bound, and non-isomorphism to B3-v2."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-WOLFRAM-003",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "An analytic invariant/equilibrium enrichment can evade the same-space endpoint theorem because the total trial representation is then not terminal-vanishing. That is a real admission steelman, not a contradiction. The current C-ANALYTIC entry is nevertheless only a description in CAS_CONTRACT.json: it does not define whether the single component is scalar or vector-valued, the direct-sum coefficient domain, the unique differentiable coefficient map, the exact invariant and entropy contractions, the sole canonical tail consumer, or an operation graph proving non-isomorphism to B3-v2. The external report and bundle contain no executable or theorem-level C-ANALYTIC contract. Its feasibility therefore remains a binding theorem gap, not a pass and not a universal no-go.",
+      "assumptions_used": [
+        "A materially new analytic enrichment may contain nonvanishing invariant directions outside the terminal-vanishing local perturbation space.",
+        "Uniqueness requires a direct-sum or equivalent injectivity/transversality theorem on a declared coefficient domain.",
+        "Candidate novelty is judged against the complete sealed B3 basis, finite-domain-plus-tail, solve, event-trace, and A0-A4 graph."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC",
+        "BD622_D039_second_external_audit_report.md#7.1-contrast-table",
+        "BD622_D039_second_external_audit_report.md#13.3-cross-examination",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#6-deterministic-entropy-variable-basis-and-solve",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#8-fully-preregistered-basis-grid-event-ladder",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#10-w7-oracle-and-d-030-arithmetic-metrology-graph"
+      ],
+      "evidence_fingerprint": "sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+      "counterevidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#TAIL_DELTA_MINUS4_INTEGRAL",
+        "A fixed analytic eta_0=-p/T plus bounded terminal-vanishing perturbations gives a mathematically viable scalar thermal-tail envelope."
+      ],
+      "reproduction": [
+        "Read only the C-ANALYTIC object and binding obligations in the source-locked CAS_CONTRACT.json.",
+        "Compare the absent C-ANALYTIC operation graph with the named B3 basis/tail/trace surfaces in the source-locked W6 pack."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Exact analytic component and coefficient count.",
+        "Direct-sum uniqueness, differentiability, and uniform Jacobian lower bound.",
+        "Exact conservation and entropy before quadrature.",
+        "One non-bypassable half-line tail representation and process-total finite-m_e shell.",
+        "Exact operation-graph non-isomorphism to B3-v2.",
+        "Prospective condition, binary64, LOC, and same-change deletion bounds."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-WOLFRAM-004",
+      "claim_id": "C-EXT01-TAIL",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The scalar compactified endpoint is conditionally integrable, but the candidate-level collision tail is not proved. With delta=1-xi, p=p_star*xi/delta, a=p_star/T>0, and eta=-p/T+B(xi) for B bounded on the terminal cell, f<=C exp(-a/delta). The number- and energy-type endpoint bounds reduce to finite integrals integral_0^eps delta^-4 exp(-a/delta) ddelta=a^-3 Gamma(3,a/eps) and integral_0^eps delta^-5 exp(-a/delta) ddelta=a^-4 Gamma(4,a/eps). Wolfram reproduces both exactly. Without the exponential state-tail assumption, delta^-4 and delta^-5 diverge; endpoint-vanishing trial functions alone are insufficient. The p test multiplied by a (1-xi) trial is bounded, but a full proof still needs an event-level forward/reverse decay bound, every finite-m_e process branch, physical-right threshold derivatives, and one directed non-bypassable full-half-line consumer.",
+      "assumptions_used": [
+        "p_star>0, T>0, xi approaches 1 from below, and B is bounded on the terminal cell.",
+        "The tail powers are finite and the principal positive real incomplete-Gamma branch is used.",
+        "The scalar bound does not assume or establish a collision-event partition.",
+        "The exact finite-m_e component vectors use g_phys=diag(-1,+1,+1,+1), future-directed legs, and principal nonnegative energies."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#TAIL_DELTA_MINUS4_INTEGRAL",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#TAIL_DELTA_MINUS5_INTEGRAL",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#TAIL_WITHOUT_DECAY_DELTA_MINUS4",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#COMPACTIFIED_P_TEST_TIMES_VANISHING_TRIAL_LIMIT",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#FINITE_ME_ELASTIC_SHELLS",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#5-unique-finite-me-coordinate-map-shell-and-jacobian"
+      ],
+      "evidence_fingerprint": "sha256:a79ed418690dcb317325c335aa01880e59c249418ea38045ef4b3525b7c11655",
+      "counterevidence_refs": [
+        "The exact scalar incomplete-Gamma bounds show that the compactification and p test are not intrinsically divergent once a uniform thermal-tail envelope is part of the state contract.",
+        "The exact elastic and pair component vectors satisfy their shells, conservation, and s+t+u=2, but they are test vectors rather than a process-total shell theorem."
+      ],
+      "reproduction": [
+        "WolframKernel -script /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+        "Inspect TAIL_*, COMPACTIFIED_*, and FINITE_ME_* entries in the hashed proof log."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "A uniform bound on B over the declared evolving state domain.",
+        "A channel-complete event-level integrable majorant for both F and R.",
+        "A process-total finite-m_e shell/threshold/event-cell partition with physical-right derivative semantics.",
+        "A directed numerical enclosure and proof that no second tail consumer can bypass the canonical representation."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-WOLFRAM-005",
+      "claim_id": "C-EXT01-CONDITIONING",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The supplied local determinant fact is exact but cannot discharge the required uniform conditioning or inf-sup obligation. For basis (1,p), det(M)=w1*w2*r1*r2*(p1-p2)^2; the exact vector gives M={{8/35,1/7},{1/7,1/10}}, det=3/1225, eigenvalues (23+/-sqrt(481))/140, and cond_2=(505+23 sqrt(481))/24. Yet the positive two-node family M(h)={{2,h},{h,h^2}} (weights/densities one, p1=0,p2=h>0) has cond_2=(2+h^2+sqrt(4+h^4))/(2+h^2-sqrt(4+h^4)), tends to Infinity, and h^2 cond_2 tends to 4. Thus positivity, distinct nodes, and one favorable sample do not yield a uniform <=1e6 theorem. Neither candidate currently freezes and proves the lower node-separation/density, norm scaling, coefficient envelope, and branch-uniform bounds needed to exclude this degeneration, so the binding prospective conditioning obligation is not met.",
+      "assumptions_used": [
+        "w_i>0, r_i>0, and p1!=p2 for the exact determinant.",
+        "The counterfamily uses h>0 and is symmetric positive definite for every h>0.",
+        "The failure is of the current unconditional evidence; a later prospectively restricted domain could change it."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#LOCAL_MASS_DETERMINANT",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#LOCAL_MASS_NUMERIC_CONDITION2",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#CONDITIONING_COUNTEREXAMPLE_LIMIT",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#CONDITIONING_COUNTEREXAMPLE_SCALED_LIMIT",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#precision",
+        "BD622_D039_second_external_audit_report.md#8.9-explicit-falsifiers-and-stop-loss"
+      ],
+      "evidence_fingerprint": "sha256:a79ed418690dcb317325c335aa01880e59c249418ea38045ef4b3525b7c11655",
+      "counterevidence_refs": [
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.log#PETROV_TWO_NODE_DETERMINANT",
+        "A fixed separated quadrature, a positive lower density bound on a prospectively finite state envelope, and explicitly scaled trial/test norms could in principle produce a finite candidate-specific bound."
+      ],
+      "reproduction": [
+        "WolframKernel -script /tmp/A-EXT01-WOLFRAM.YURUbWIZ/A-EXT01-WOLFRAM-proof.wl",
+        "Inspect LOCAL_MASS_* and CONDITIONING_COUNTEREXAMPLE_* entries in the hashed proof log."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No candidate-specific uniform inf-sup/condition certificate on a complete declared state, cell, threshold, and permutation domain exists.",
+        "No prospective binary64 upper bound <=2.5e-11 follows from the local determinant."
+      ]
+    }
+  ],
+  "debate_protocol": {
+    "executed_order": [
+      "self-discover",
+      "step-back",
+      "metacognitive self-ask",
+      "CoVe",
+      "adversarial self-ask",
+      "CCoT",
+      "PDR"
+    ],
+    "strongest_case_for_rejection": "The exact same-space theorem contradicts the external wording that one finite terminal-vanishing cell space exactly contains both 1 and p. The only supplied conditioning evidence is local, while an exact positive family has unbounded condition number. Neither alternative candidate supplies the binding entropy, shell, full-tail, uniform bound, operation-graph, or non-isomorphism theorem.",
+    "strongest_steelman_for_admission": "The no-go is not a no-go for distinct spaces or analytic enrichment. A concrete two-node Petrov pairing is exactly nonsingular, and a bounded perturbation around eta_0=-p/T gives finite compactified number/energy endpoint integrals despite the divergent Jacobian and p test. A prospectively frozen mixed/discrete-gradient Petrov method or direct-sum analytic representation is therefore mathematically possible.",
+    "decisive_falsifier": "Admission would require one exact candidate artifact that defines every space, norm, coefficient domain, finite-m_e branch, tail consumer, permutation/Jacobian operation, and binary64 interface; proves a uniform inf-sup or coefficient-map lower bound <=1e6 conditioning, proves the fermionic entropy sign and exact invariants without correction, and proves non-isomorphism to the complete B3 graph. The current inputs contain no such artifact.",
+    "conditions_that_would_change_the_verdict": [
+      "For C-PETROV: a complete mixed or square pairing plus a branch-uniform inf-sup proof and an exact entropy derivation not relying on an unavailable symmetric Galerkin contraction.",
+      "For C-ANALYTIC: a typed direct-sum representation with unique differentiable coefficient map, one canonical half-line consumer, exact conservation/entropy, and operation-graph non-isomorphism to B3-v2.",
+      "For either: a process-total finite-m_e shell/threshold proof, uniform directed tail enclosure, prospective binary64 <=2.5e-11, permanent <=800 LOC, and same-change net deletion <=-1000 LOC."
+    ],
+    "cove_checks": [
+      "Recomputed source locks and verified every external bundle manifest entry.",
+      "Reproduced the contract statement before any calculation.",
+      "Checked concrete endpoint limits and ideal/module remainders independently of the prose proof.",
+      "Derived both the same-basis and distinct-space two-node determinants exactly.",
+      "Separated one-point SPD from a uniform condition theorem using an exact divergent family.",
+      "Verified scalar thermal-tail integrals and the no-decay divergences separately.",
+      "Checked exact entropy and finite-m_e component vectors but did not promote them to a full collision theorem.",
+      "Ran 22/22 external synthetic safe tests; no repository collision implementation was imported or executed."
+    ],
+    "ccot": "Claim-consequence chain: SAME-SPACE-NOGO pass removes only the same-space reading; PETROV and ANALYTIC remain logically possible but theorem-incomplete; scalar TAIL is conditionally finite but not channel-complete; CONDITIONING evidence fails uniformly; therefore this axis supplies no candidate admission and preserves the source STOP/PRESERVE boundary.",
+    "pdr": "Reject admission on the current bytes while retaining the two precise escape hatches as unproved mathematical possibilities. No physical output, implementation authority, cap change, or gate promotion follows."
+  },
+  "errors": [
+    "xAct xPerm 1.2.4 reported an external MathLink LinkOpen failure during package load. xTensor 1.3.0 loaded, declared a 4D Lorentz-signature metric, and completed the only tensor canonicalization used here. No xPerm-dependent permutation theorem is claimed."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json"
+  ]
+}

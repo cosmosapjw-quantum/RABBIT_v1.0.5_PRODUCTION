@@ -1,0 +1,237 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-LEAN",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f01-a71f-7610-aee9-c19ba150740d",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_lean",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-LEAN",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:c687b642cb83da9a9f2b7832535fe12196bf1776171ef5340e5832952d5797eb",
+    "runtime_agent_type": "default",
+    "review_role": "cas_lean",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:366030c5731a8ceabb215e2ab6ea076292ea1401d2b0d6bd8597083135cf3fb4",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+  "started_at": "2026-07-23T12:46:33Z",
+  "completed_at": "2026-07-23T13:13:24Z",
+  "tool_versions": {
+    "lean": "4.32.0 x86_64-unknown-linux-gnu commit 8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "lake": "5.0.0-src+8c9756b",
+    "mathlib": "v4.32.0 commit 81a5d257c8e410db227a6665ed08f64fea08e997",
+    "kernel": "Linux 6.17.0-35-generic x86_64",
+    "glibc": "2.39",
+    "imports": "Mathlib.Analysis.SpecialFunctions.Log.Basic; Mathlib.Topology.Algebra.Polynomial; Mathlib.Topology.Algebra.Ring.Real; Mathlib.Topology.Order.DenselyOrdered; FieldSimp; NormNum; Ring",
+    "resource_limits": "24 logical CPUs visible; no explicit memory or heartbeat override; Lake defaults; proof and build confined to /tmp/A-EXT01-LEAN.xxxrsE"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-LEAN.json",
+    "python3 -c '<ordered path-NUL-bytes-NUL review-role aggregate SHA-256>'",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json BD622_D039_second_external_audit_report.md BD622_D039_second_audit_bundle.zip docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "unzip -q BD622_D039_second_audit_bundle.zip -d /tmp/A-EXT01-LEAN.xxxrsE/external_bundle",
+    "sha256sum -c MANIFEST.sha256",
+    "lake new leanproof math  # initial Reservoir lookup failed with curl code 6 after creating the isolated project",
+    "lake update  # pinned sources checked out; broad cache fetch intentionally interrupted after 14 percent",
+    "lake build Mathlib.Topology.Algebra.Module.Basic",
+    "lake build Mathlib.Topology.Order.DenselyOrdered",
+    "lake build Mathlib.Topology.Algebra.Ring.Real",
+    "lake build Mathlib.Topology.Algebra.Polynomial",
+    "lake build Mathlib.Analysis.SpecialFunctions.Log.Basic",
+    "lake build",
+    "printf '<eight #print axioms commands>' | lake env lean /dev/stdin",
+    "rg -n '(^|[^A-Za-z])(sorry|admit|axiom)([^A-Za-z]|$)' Leanproof/Basic.lean",
+    "sha256sum Leanproof/Basic.lean .lake/build/lib/lean/Leanproof/Basic.olean lake-manifest.json lean-toolchain"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean",
+      "sha256": "sha256:701f2690a4757aa8f765740b360f610e0c7562de11cf61f740c498bad2986bbc",
+      "kind": "Lean source",
+      "status": "compiled",
+      "notes": "Contains the finite-sum left-endpoint theorem, terminal constant and compactified-momentum exclusions, polynomial vanishing-factor theorem, two-node determinant, rational entropy vector, and dependency-only Petrov/analytic ledgers. The mandatory loop was self-discover, step-back, metacognitive assumption audit, CoVe by independent corollaries/exact vectors, adversarial distinct-space steelman, claim-keyed dependency audit, and PDR."
+    },
+    {
+      "path": "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/.lake/build/lib/lean/Leanproof/Basic.olean",
+      "sha256": "sha256:0179a0cc7e566a836b475a570adb562671613e5790fbdaa9875d8de3363be5bb",
+      "kind": "Lean kernel object",
+      "status": "compiled"
+    },
+    {
+      "path": "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/lake-manifest.json",
+      "sha256": "sha256:818ebdc54b2294109a5ce96f135f4b7acc9ef2dfa12d0da5fb3d632afd8cfa82",
+      "kind": "dependency lock",
+      "status": "verified"
+    },
+    {
+      "path": "BD622_D039_second_audit_bundle.zip",
+      "sha256": "sha256:7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b",
+      "kind": "named sealed input",
+      "status": "all manifest entries verified"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-EXT01-LEAN-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PASS for NC-SAME-SPACE under its exact assumptions. Lean proves that every finite real linear combination of basis functions tending to zero as xi approaches 1 from below also tends to zero, and therefore cannot equal either 1 or p_star*xi/(1-xi) on any nonempty terminal interval when p_star>0. It also proves lim_(xi->1-) (1-xi)q(xi)=0 for every real polynomial q. Strongest opposing steelman: a distinct conservative test space containing 1 and p, or an analytic invariant component, is outside the same-space theorem and is not rejected by it. The decisive falsifier would have to violate a stated hypothesis: finiteness, xi-independent finite coefficients, terminal vanishing of every trial basis function, or pointwise terminal-interval equality.",
+      "assumptions_used": [
+        "The index set used in the expansion is finite.",
+        "Coefficients are finite real constants independent of xi.",
+        "Each trial basis function tends to zero along nhdsWithin 1 (Iio 1).",
+        "Exact representation means pointwise equality on Ioo a 1 for some a<1.",
+        "For the momentum exclusion p_star>0, hence p_star is nonzero, and 1-xi is nonzero on Ioo a 1.",
+        "Real topology is Hausdorff and the left-neighborhood filter at 1 is nontrivial."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L36-L115",
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/.lake/build/lib/lean/Leanproof/Basic.olean#sha256:0179a0cc7e566a836b475a570adb562671613e5790fbdaa9875d8de3363be5bb",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#negative_control",
+        "lake build: Build completed successfully (2034 jobs)"
+      ],
+      "evidence_fingerprint": "sha256:d78e7d32077cc82bb49a21bd8ae7f85658bb08e849939360331239c3e893e69b",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC",
+        "BD622_D039_second_external_audit_report.md#8.4-8.9"
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-LEAN.xxxrsE/leanproof",
+        "lake build",
+        "printf 'import Leanproof.Basic\\n#print axioms finite_sum_left_endpoint_zero\\n#print axioms finite_sum_not_one_on_terminal_interval\\n#print axioms finite_sum_not_momentum_on_terminal_interval\\n#print axioms polynomial_vanishing_factor_left_endpoint\\n' | lake env lean /dev/stdin"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No theorem here establishes that every basis function of a future concrete candidate actually has the required terminal limit.",
+        "The theorem does not refute a genuinely distinct test space or a separately integrated analytic component.",
+        "#print axioms reports only Mathlib/Lean foundational axioms propext, Classical.choice, and Quot.sound; the source declares no custom axiom and contains no sorry or admit."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-LEAN-002",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "INCONCLUSIVE. The strongest admission case is that a distinct Petrov test space avoids NC-SAME-SPACE, while the exact two-node (1,p) mass determinant is w1*w2*r1*r2*(p1-p2)^2 and is positive for positive weights/densities and distinct nodes; the frozen rational vector gives 3/1225. The strongest rejection case is decisive at candidate level: this local result is not a uniform inf-sup theorem, and no supplied input proves the nonsymmetric fermionic entropy inequality, full-domain integrability with the p test, unique finite-m_e shell/tail semantics, deterministic differentiability/permutation, B3 non-isomorphism, binary64 cap, or net-deflation budget. The typed ledger proves any missing uniform inf-sup or entropy obligation blocks admission, but it deliberately constructs no admissible instance.",
+      "assumptions_used": [
+        "The local determinant uses the two-node basis (1,p).",
+        "Positive local weights and densities and distinct nodes imply positive determinant.",
+        "A local positive determinant at one state does not imply a uniform lower bound over the declared state and cell domain.",
+        "Candidate admission requires every binding CAS_CONTRACT obligation, not merely avoidance of the same-space no-go."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L117-L139",
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L164-L198",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV",
+        "BD622_D039_second_external_audit_report.md#8.4-8.9"
+      ],
+      "evidence_fingerprint": "sha256:c7e4728e8041363c053b6292afa51a0c9b31249bcc9b306b4df984f7d83cfd94",
+      "counterevidence_refs": [
+        "BD622_D039_second_audit_bundle.zip#tests/test_compactified_dg.py",
+        "BD622_D039_second_external_audit_report.md#13.2"
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-LEAN.xxxrsE/leanproof",
+        "lake build",
+        "printf 'import Leanproof.Basic\\n#print axioms two_node_mass_determinant\\n#print axioms petrov_missing_uniform_infSup_is_binding\\n' | lake env lean /dev/stdin"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Uniform inf-sup lower bound over the exact state and cell domain.",
+        "Discrete fermionic entropy theorem for the nonsymmetric Petrov pairing.",
+        "Proof that the p test gives a finite compactified weak pairing.",
+        "Full-domain tail and process-total finite-m_e shell theorem.",
+        "Deterministic Jacobian/permutation theorem and exact non-isomorphism to B3-v2.",
+        "Prospective condition, binary64, permanent-LOC, and net-deletion certificates."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-LEAN-003",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "INCONCLUSIVE. The strongest admission case is that an analytic equilibrium/invariant component can evade the terminal-vanishing finite-span obstruction, and the polynomial vanishing-factor theorem is compatible with local perturbations. The strongest rejection case is that none of the named inputs supplies a unique differentiable coefficient map, a stability/conditioning theorem, exact pre-quadrature conservation and entropy for the combined representation, one non-bypassable half-line tail, a process-total finite-m_e shell, B3 non-isomorphism, or the binary64/cost certificates. The typed dependency theorem proves that absence of the unique map or full-tail obligation blocks admission; it does not assume or prove either obligation. A complete formal construction satisfying all fields would change this verdict.",
+      "assumptions_used": [
+        "The analytic component is materially distinct only if it is part of one canonical representation rather than a second tail oracle or correction surface.",
+        "Local terminal decay of perturbations does not by itself prove uniqueness, differentiability, conservation, entropy, or stability of the combined coefficient map.",
+        "Every binding gate obligation must be supplied before candidate feasibility can pass."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L99-L115",
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L200-L236",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC",
+        "BD622_D039_second_external_audit_report.md#13.3-14"
+      ],
+      "evidence_fingerprint": "sha256:37fcf8870c247642cc72be4ae0524820b22341b57eb009ec77da7c5dc986d317",
+      "counterevidence_refs": [
+        "BD622_D039_second_external_audit_report.md#8.4",
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#Ranked-deterministic-mitigation-programme"
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-LEAN.xxxrsE/leanproof",
+        "lake build",
+        "printf 'import Leanproof.Basic\\n#print axioms polynomial_vanishing_factor_left_endpoint\\n#print axioms analytic_missing_unique_map_is_binding\\n' | lake env lean /dev/stdin"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Concrete one-representation definition and proof that no consumer can bypass it.",
+        "Unique differentiable coefficient map with uniform condition bound no worse than 1e6.",
+        "Exact conservation and fermionic entropy before numerical quadrature.",
+        "One full half-line tail and process-total finite-m_e shell/threshold theorem.",
+        "Deterministic permutation/Jacobian semantics and exact non-isomorphism to B3-v2.",
+        "Prospective binary64, permanent-LOC, and net-deletion certificates."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-LEAN-004",
+      "claim_id": "C-EXT01-ENTROPY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "PASS for the exact rational test vector only. Lean proves F=4/625, R=144/625, J=-28/125 and J*log(1/36)>0 using exact rational normalization plus the real-log sign theorem. Strongest opposing steelman: this one event vector and the scalar inequality do not prove that a Petrov or analytic semidiscretization has a globally nonnegative event measure, preserves the affinity pairing, or supplies a discrete fermionic H-theorem. The candidate-level entropy obligation therefore remains unresolved even though the frozen scalar vector passes.",
+      "assumptions_used": [
+        "Occupations are exactly (1/5,2/5,3/5,4/5).",
+        "F=f1*f2*(1-f3)*(1-f4), R=f3*f4*(1-f1)*(1-f2), J=F-R.",
+        "A=log(F/R)=log(1/36) uses the real natural logarithm on a positive argument.",
+        "0<1/36<1, so log(1/36)<0."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-LEAN.xxxrsE/leanproof/Leanproof/Basic.lean#L141-L159",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#numeric_test_vectors.V-ENTROPY",
+        "lake build: Build completed successfully (2034 jobs)"
+      ],
+      "evidence_fingerprint": "sha256:a36c15ddc8199c2b01fbf83b63554ed100ea124155ac324c007c9ab7324e5774",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV.required_exact_properties",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC.required_exact_properties"
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-LEAN.xxxrsE/leanproof",
+        "lake build",
+        "printf 'import Leanproof.Basic\\n#print axioms entropy_vector_exact\\n#print axioms entropy_rational_affinity_positive\\n' | lake env lean /dev/stdin"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Candidate-wide discrete entropy theorem for the nonsymmetric Petrov pairing.",
+        "Candidate-wide exact entropy theorem for the combined analytic representation.",
+        "Nonnegative process-total event measure and consumer-complete affinity preservation."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json"
+  ]
+}

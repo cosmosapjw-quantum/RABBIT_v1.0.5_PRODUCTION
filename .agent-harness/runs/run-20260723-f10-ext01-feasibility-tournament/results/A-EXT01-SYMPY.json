@@ -1,0 +1,264 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-SYMPY",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f11-696f-7ea1-bc5c-d1a7dca57282",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_sympy",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-SYMPY",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ad6c9225f1da44f394b8c29ebdf85af436b005a2ccd6f50a564761459e51be9e",
+    "runtime_agent_type": "default",
+    "review_role": "cas_sympy",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:2feb4c045077ab008b3ba7f45c33722b1b343d6280b26fe6acaf1e35d6176f91",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+  "started_at": "2026-07-23T12:43:08Z",
+  "completed_at": "2026-07-23T13:12:11Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "python_implementation": "CPython",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0",
+    "os": "Linux 6.17.0-35-generic x86_64",
+    "glibc": "2.39"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-SYMPY.json",
+    "python3 -c '<hash_files-compatible ordered role digest>'",
+    "unzip -q BD622_D039_second_audit_bundle.zip -d /tmp/run-20260723-f10-ext01-sympy.vYyaFA",
+    "cd /tmp/run-20260723-f10-ext01-sympy.vYyaFA/BD622_D039_second_audit_test_package && sha256sum -c MANIFEST.sha256",
+    "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py | tee /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out",
+    "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py | sha256sum",
+    "sha256sum /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out /tmp/run-20260723-f10-ext01-sympy.vYyaFA/adversarial_loop.md",
+    "PYTHONPATH=.agent-harness/scripts python3 -c '<validate_result_contract for A-EXT01-SYMPY only>'"
+  ],
+  "artifacts": [
+    "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py#sha256:abe02b46db50ec4e1e918f3fdd78235c9464491e652b5e440f5394cdf9f63b3c",
+    "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out#sha256:e2aef4cbf97642bedda11286c9b7b99e70775fe991446e1603b00449e13a91b2",
+    "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/adversarial_loop.md#sha256:b1b8254c910cea80f30ab0ee3e1a96699fcbbbad167b5ca4245b27c9392e251b",
+    "BD622_D039_second_audit_bundle.zip#sha256:7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b; internal MANIFEST.sha256 verified all entries"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-EXT01-SYMPY-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "THEOREM-LEVEL PASS for NC-SAME-SPACE. For finite fixed coefficients c_i, limit(linear_sum c_i phi_i)=linear_sum c_i limit(phi_i)=0. Exact equality on a terminal interval to 1 contradicts its left endpoint limit 1, and equality to p_star*xi/(1-xi) with p_star>0 contradicts its left limit +infinity. The three V-ENDPOINT basis limits are exactly zero. In the quotient by <1-xi>, the constant remainder is 1; after clearing the simple pole, the momentum numerator remainder is p_star=3/2. Thus the external PCR-DG sentence that the same terminal-vanishing space also contains exact 1 and p is fail-as-written. This does not reject a materially distinct Petrov test space or analytic direct-sum component.",
+      "assumptions_used": [
+        "n is finite",
+        "coefficients are finite real constants independent of xi",
+        "each terminal basis function has left limit zero at xi=1",
+        "exact representation means pointwise equality on a nonempty terminal interval",
+        "p_star=3/2>0 and xi approaches 1 through 0<=xi<1"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#negative_control; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out#endpoint; sha256:e2aef4cbf97642bedda11286c9b7b99e70775fe991446e1603b00449e13a91b2",
+        "BD622_D039_second_external_audit_report.md#8.4; sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7"
+      ],
+      "evidence_fingerprint": "sha256:90a0fb5dbc1ea3618097a2436120f9e2baeb04e59c5208c2a42be43055ee8ddd",
+      "counterevidence_refs": [
+        "A distinct conservative test space containing 1 and p is not subject to this same-space limit theorem.",
+        "An analytic nonvanishing component can change the representation space and must be audited separately."
+      ],
+      "reproduction": [
+        "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py",
+        "Inspect endpoint.basis_limits, endpoint.constant_limit, endpoint.momentum_limit, endpoint.constant_ideal_remainder, and endpoint.cleared_pole_ideal_remainder."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-EXT01-SYMPY-002",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "CANDIDATE-WIDE INCONCLUSIVE. Strongest admission steelman: a terminal-vanishing trial space can control the compactified perturbation tail while a distinct conservative test space contains exact 1 and p, so the same-space no-go does not forbid Petrov salvage. Strongest rejection steelman: the supplied PCR-DG equations do not specify that pairing, its local mass map, the compactified physical measure seen by p, or a closed state/cell domain, and they provide neither a uniform inf-sup lower bound nor a discrete fermionic entropy derivation for the nonsymmetric pairing. Exact local SPD and the scalar event entropy sign do not fill those gaps. The current same-space wording is false; the distinct-space alternative is a materially new, unproved outline and cannot pass G-EXT-FEASIBILITY.",
+      "assumptions_used": [
+        "trial and test spaces may be distinct only for the salvage analysis",
+        "no post-hoc conservation projection is allowed",
+        "the binding feasibility rule treats a missing uniform theorem as non-PASS",
+        "candidate properties must hold over the declared full state and cell domain"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV and #binding_gate; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "BD622_D039_second_external_audit_report.md#8.4-8.9; sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/adversarial_loop.md#5-7; sha256:b1b8254c910cea80f30ab0ee3e1a96699fcbbbad167b5ca4245b27c9392e251b"
+      ],
+      "evidence_fingerprint": "sha256:c442d3c87f2ea57b49e7d2b2cd5c495d209602ae5ce774ef0c02478089e79d8b",
+      "counterevidence_refs": [
+        "The exact determinant and entropy subclaims show that a well-chosen local construction is not ruled out.",
+        "The external report proposes fixed cells, a local block mass, exact invariant tests, and generated derivatives, but these remain specifications rather than uniform proofs."
+      ],
+      "reproduction": [
+        "Read the exact no-go proof in F-EXT01-SYMPY-001.",
+        "Compare CAS_CONTRACT candidate C-PETROV required_exact_properties against BD622_D039_second_external_audit_report.md sections 8.4-8.9.",
+        "Check the explicit unbounded condition families in sympy_mpmath_axis.out#conditioning_falsifiers."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "fully specified trial/test pairing and local mass map",
+        "uniform inf-sup lower bound over a closed state/cell domain",
+        "discrete fermionic entropy inequality for the nonsymmetric pairing",
+        "integrability of the exact p test under the full compactified weak measure",
+        "process-total finite-m_e shell, full-half-line semantics, differentiability, and permutation covariance",
+        "prospective binary64 and cost/deflation certificates"
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SYMPY-003",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "CANDIDATE-WIDE INCONCLUSIVE. Strongest admission steelman: eta_0=-p/T plus terminal-vanishing finite perturbations gives the correct qualitative endpoint ownership and evades the finite vanishing-span theorem because the analytic component is outside that span. Strongest rejection steelman: the report does not define one total representation that simultaneously owns equilibrium, exact invariant tests, the compactified endpoint, process-total finite-m_e support, and every tail consumer; nor does it prove a unique differentiable coefficient map, pre-quadrature conservation/entropy, consumer non-bypass, or non-isomorphism to the sealed B3 global-basis/tail/mass/event/A0-A4 graph. Endpoint plausibility alone is not an analytic-candidate theorem.",
+      "assumptions_used": [
+        "the analytic component is permitted to be outside the terminal-vanishing perturbation span",
+        "eta_0=-p/T uses T>0 and the real strict-open logistic map",
+        "a second tail oracle or correction surface is forbidden",
+        "candidate non-isomorphism is assessed against B3 as a whole"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "BD622_D039_second_external_audit_report.md#8.4 and #8.7-8.9; sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#6-10; sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/adversarial_loop.md#5-7; sha256:b1b8254c910cea80f30ab0ee3e1a96699fcbbbad167b5ca4245b27c9392e251b"
+      ],
+      "evidence_fingerprint": "sha256:ccf587d8e4f1bce03add03975215b7f28f1bfeee9d5a05778270dc17c17ee338",
+      "counterevidence_refs": [
+        "The analytic equilibrium component is a genuine mechanism change relative to a purely terminal-vanishing finite span.",
+        "The external proposal's one-compiler and full compactification intent could eliminate duplicate authority if it were formally sealed and replacement-only."
+      ],
+      "reproduction": [
+        "Compare C-ANALYTIC required_exact_properties and terminal_falsifiers with the PCR-DG state/tail/compiler text.",
+        "Use F-EXT01-SYMPY-001 only to reject the same-space reading; do not apply it to the analytic direct sum."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "unique differentiable coefficient map and gauge/ownership convention",
+        "exact conservation and entropy before numerical quadrature",
+        "single non-bypassable full-half-line and finite-mass shell consumer",
+        "deterministic Jacobian/permutation semantics",
+        "exact non-isomorphism to B3-v2 as a complete operation graph",
+        "prospective uniform conditioning, binary64, LOC, and net-deletion bounds"
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SYMPY-004",
+      "claim_id": "C-EXT01-ENTROPY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "BOUNDED EXACT PASS. For strict-interior occupations F,R>0. Writing x=F/R gives J*A=R(x-1)log(x)>=0 because log is strictly increasing and x-1 has the same sign as log(x), with equality only at x=1. For (1/5,2/5,3/5,4/5), SymPy gives F=4/625, R=144/625, J=-28/125, A=log(1/36)=-log(36), and J*A=(28/125)log(36)=56 log(6)/125>0. Independent 180-dps mpmath evaluation agrees with 170-digit SymPy evaluation to below 6e-171. This passes only the eventwise scalar entropy subclaim; it does not prove the Petrov or analytic semidiscrete H-theorem.",
+      "assumptions_used": [
+        "0<f_i<1 so F,R are strictly positive",
+        "real natural logarithm on the positive axis",
+        "event orientation F-R and affinity log(F/R) match the CAS contract",
+        "integrated entropy inherits the sign only with nonnegative event measure/conductance"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#common_conventions.entropy_affinity and #numeric_test_vectors.V-ENTROPY; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out#entropy; sha256:e2aef4cbf97642bedda11286c9b7b99e70775fe991446e1603b00449e13a91b2"
+      ],
+      "evidence_fingerprint": "sha256:73aa50d969578532f77bf08fb4a8d016632efdeefeca838d8f86fd31aa7b6031",
+      "counterevidence_refs": [
+        "A nonsymmetric Petrov mass/pairing need not convert the eventwise sign into a discrete entropy inequality.",
+        "The analytic equilibrium component and bath term require a separately stated total entropy functional."
+      ],
+      "reproduction": [
+        "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py",
+        "Inspect entropy.F, entropy.R, entropy.J, entropy.A, entropy.J_times_A, and the two SymPy/mpmath absolute differences."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "candidate-wide discrete fermionic entropy theorem for the distinct Petrov pairing",
+        "total neutrino-plus-bath entropy proof for the analytic candidate"
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SYMPY-005",
+      "claim_id": "C-EXT01-CONDITIONING",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "LOCAL EXACT PASS BUT UNIFORM CLAIM INCONCLUSIVE. For basis (1,p) at two nodes, all simplify/cancel/factor/together paths reproduce det(M)=w1*w2*r1*r2*(p1-p2)^2. The frozen vector gives M=[[8/35,1/7],[1/7,1/10]], det=3/1225, kappa_2=(505+23 sqrt(481))/24 approximately 42.05955752448, and kappa_infinity=169/3. This proves local SPD only when weights/densities are positive and p1!=p2. Two admissible positive families expose the theorem gap: coalescing nodes give det=delta^2 and kappa_2->infinity; vanishing density gives det=t and kappa_2->infinity. Without prospective node-separation and density lower bounds on a closed state/cell domain, samples cannot be promoted to the required uniform condition or inf-sup bound.",
+      "assumptions_used": [
+        "w_i>0, r_i>0, p_i finite",
+        "strict determinant positivity additionally requires p1!=p2",
+        "the condition norm and state/cell domain must be frozen prospectively",
+        "no sampled condition value is treated as a uniform theorem"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#exact_test_obligations and #precision.conditioning_cap; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out#local_mass and #conditioning_falsifiers; sha256:e2aef4cbf97642bedda11286c9b7b99e70775fe991446e1603b00449e13a91b2",
+        "BD622_D039_second_external_audit_report.md#8.4 and #8.9; sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7"
+      ],
+      "evidence_fingerprint": "sha256:22d98095b6495859d58e3f2847abbd233bba4dd68dd9e463a52f44216b038ca1",
+      "counterevidence_refs": [
+        "The frozen two-node vector is comfortably below 1e6 in both 2-norm and infinity norm.",
+        "A future fixed mesh plus a proved strict state envelope could exclude the explicit degenerating families."
+      ],
+      "reproduction": [
+        "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py",
+        "Inspect local_mass.target_identity, local_mass.determinant_exact, local_mass.condition_2_exact, and conditioning_falsifiers."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "closed state/cell domain",
+        "minimum node separation and positive density lower bound",
+        "uniform inf-sup/condition theorem for the actual Petrov or analytic mass map",
+        "candidate-specific norm and directed interval certificate"
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SYMPY-006",
+      "claim_id": "C-EXT01-BINARY64",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "HIGH-PRECISION VECTORS PASS; BINARY64 CANDIDATE CERTIFICATE IS INCONCLUSIVE. The output records 140-significant-digit endpoint probes, det=3/1225, kappa_2, A, and J*A. SymPy/mpmath entropy differences are below 6e-171, exceeding the requested 120 digits and 1e-80/1e-70 tolerances. As a falsifier-only gamma_n*kappa screen with the toy kappa_infinity=169/3, n=1000 gives about 6.254e-12 and passes 2.5e-11, while n=1,000,000 gives about 6.254e-9 and fails; even one operation at the separate condition cap 1e6 exceeds 2.5e-11 under this crude bound. Therefore a local sample cannot certify binary64. No candidate operation count, branch/shell graph, quadrature/tail term, solve/reconstruction graph, rounding interfaces, or directed interval ledger is supplied, so the required prospective upper bound is absent.",
+      "assumptions_used": [
+        "binary64 unit roundoff is 2^-53 for the toy gamma_n screen",
+        "gamma_n=n*epsilon/(1-n*epsilon) applies only as a coarse forward-error screen",
+        "the frozen binary64 candidate cap is 2.5e-11",
+        "high-precision agreement is not itself a binary64 certificate"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#precision and #forbidden_shortcuts; sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "/tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.out#endpoint,#local_mass,#entropy,#binary64_toy_screens; sha256:e2aef4cbf97642bedda11286c9b7b99e70775fe991446e1603b00449e13a91b2",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#10; sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+      ],
+      "evidence_fingerprint": "sha256:99ab4a20aebd5b179a7da7505e86ea9d600896417af02303fddcadb0a004ffdc",
+      "counterevidence_refs": [
+        "The toy n=1000 screen passes at the frozen local matrix.",
+        "A future structure-aware error proof can be substantially sharper than gamma_n*kappa."
+      ],
+      "reproduction": [
+        "python3 /tmp/run-20260723-f10-ext01-sympy.vYyaFA/sympy_mpmath_axis.py",
+        "Inspect endpoint.*_140_digits, local_mass.*_140_digits, entropy.*_140_digits, entropy.numeric_tolerance_pass, and binary64_toy_screens."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "complete prospective candidate operation graph and operation count",
+        "branch, shell, tail, quadrature, mass-solve, and interval error terms",
+        "declared binary64 rounding interfaces and deterministic reduction order",
+        "uniform state/domain denominator and permutation certificate",
+        "candidate-wide proof that the total bound is <=2.5e-11"
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json"
+  ]
+}

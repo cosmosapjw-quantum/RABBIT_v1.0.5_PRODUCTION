@@ -1,0 +1,314 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-STEELMAN-ADMIT",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f21-91c0-7592-bf87-f752c2a89530",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-STEELMAN-ADMIT",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:591109dc608c10dc801aa5f81c55dedbdd454027f4840ef339149f2ad8438ae2",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-ADMIT.json",
+  "started_at": "2026-07-23T13:21:12Z",
+  "completed_at": "2026-07-23T13:24:08Z",
+  "tool_versions": {
+    "python3": "3.12.3; used only for ordered path-NUL-bytes-NUL SHA-256 aggregation",
+    "sha256sum": "version not queried",
+    "sed": "version not queried"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-STEELMAN-ADMIT.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-STEELMAN-ADMIT.json",
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,100p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '101,200p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '201,317p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,240p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,320p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "python3 -c '<ordered path-NUL-bytes-NUL review-role aggregate SHA-256>'",
+    "sha256sum .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "wc -l .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "sed -n '1,140p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "sed -n '141,230p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "sed -n '1,150p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+    "sed -n '151,294p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+    "sed -n '1,130p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+    "sed -n '131,237p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+    "sed -n '1,145p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "sed -n '146,264p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "python3 -c '<ordered path-NUL-bytes-NUL CAS-contract-plus-three-results aggregate SHA-256>'",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-ADMIT.json",
+    "python3 .agent-harness/scripts/validate_harness.py --help",
+    "python3 .agent-harness/scripts/validate_harness.py",
+    "date -u +%Y-%m-%dT%H:%M:%SZ"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-STEELMAN-ADMIT.json",
+      "sha256": "591109dc608c10dc801aa5f81c55dedbdd454027f4840ef339149f2ad8438ae2"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "raw_file_sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "ordered_role_bundle_sha256": "9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+      "sha256": "9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+      "sha256": "d0cd486f2df33396713c893fbfa9754962968362c8e573b46201e072a0e6fc12"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+      "sha256": "83260763e11e414765a7153906963a366c28bae57232d0679565ca4f6c637c10"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+      "sha256": "610256b5478d05b49422bbb8cb9107cbe3c0c758bff5cc0472654fd56778e65e"
+    },
+    {
+      "purpose": "Ordered CAS contract plus three allowed sibling-result evidence bundle",
+      "sha256": "28c1d92e641e259404c336bbd46d2a8b5745551ba6c46e8529b4be4ad45360b6"
+    }
+  ],
+  "candidate_verdicts": {
+    "C-PETROV": "inconclusive and not admitted; strongest current steelman, but no complete candidate theorem",
+    "C-ANALYTIC": "inconclusive and not admitted; genuine escape from the endpoint no-go, but less completely specified than the local Petrov construction",
+    "formal_ranking": "not applicable because the frozen ranking applies only after all hard gates pass",
+    "G-EXT-FEASIBILITY": "fail on the current bytes because no candidate satisfies every binding obligation; retain STOP/PRESERVE"
+  },
+  "result_conflicts": [
+    {
+      "topic": "C-EXT01-CONDITIONING verdict label",
+      "wolfram": "fail",
+      "sympy": "inconclusive",
+      "lean": "treats the absent uniform inf-sup theorem as a binding unresolved obligation",
+      "resolution": "INCONCLUSIVE at the candidate-claim level under the CAS contract's explicit theorem-gap rule. The exact counterfamilies refute promotion of local positivity or one favorable sample to a uniform theorem, but they do not prove that every prospectively restricted Petrov or analytic domain violates the 1e6 cap. This label conflict does not affect the non-admission result.",
+      "substantive_evidence_conflict": false
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-EXT01-STEELMAN-ADMIT-001",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The strongest evidence-respecting admission case is C-PETROV, but it cannot satisfy G-EXT-FEASIBILITY on the current bytes. The exact same-space no-go does not apply to a genuinely distinct conservative test space. The allowed results give a constructive two-node pairing whose determinant a1*a2*p_star*(xi1-xi2)^2 is positive for positive weights, p_star>0, and distinct nodes; they also show that a p test times a terminal-vanishing trial can remain bounded and that a uniform thermal occupation envelope can make the compactified scalar endpoint moments finite. These facts defeat an overbroad universal Petrov rejection. They remain local or conditional facts, not the required complete candidate: no supplied artifact fixes all trial/test spaces, norms, state/cell domain, mass map, process branches, or operation order; proves a uniform inf-sup lower bound; derives the nonsymmetric discrete fermionic entropy inequality; closes the process-total finite-m_e shell and one full-half-line tail; proves deterministic Jacobian/permutation covariance and B3-v2 non-isomorphism; or supplies the binary64 and cost/deflation certificates.",
+      "assumptions_used": [
+        "The Petrov salvage uses genuinely distinct trial and conservative test spaces.",
+        "Positive local determinant establishes only local algebraic nonsingularity.",
+        "The thermal-tail integrability result assumes eta=-p/T+B with T>0 and B uniformly bounded on the terminal cell.",
+        "A theorem gap is INCONCLUSIVE and cannot be promoted to gate PASS."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-PETROV",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-002",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-004",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json#F-EXT01-LEAN-002",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-002"
+      ],
+      "evidence_fingerprint": "sha256:28c1d92e641e259404c336bbd46d2a8b5745551ba6c46e8529b4be4ad45360b6",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-006"
+      ],
+      "reproduction": [
+        "Read the frozen C-PETROV obligations and terminal falsifiers in CAS_CONTRACT.json.",
+        "Compare the three allowed sibling findings named above; do not promote their local determinant, scalar tail, or scalar entropy subclaims to a candidate-wide theorem."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Complete trial/test pairing, norms, local mass map, and closed state/cell domain.",
+        "Uniform inf-sup or condition certificate no worse than 1e6.",
+        "Candidate-wide discrete fermionic entropy inequality without post-hoc correction.",
+        "Process-total finite-m_e shell, threshold, and one non-bypassable full-half-line tail semantics.",
+        "Deterministic differentiability, Jacobian, and permutation covariance.",
+        "Exact operation-graph non-isomorphism to B3-v2.",
+        "Prospective binary64 bound no worse than 2.5e-11.",
+        "Permanent implementation estimate no greater than 800 LOC and same-change deletion plan yielding net at most -1000 LOC."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-ADMIT-002",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "C-ANALYTIC is a genuine second escape hatch but is not admitted now. An analytic equilibrium component such as eta_0=-p/T lies outside the terminal-vanishing finite span, so the exact same-space theorem cannot reject the combined representation. With bounded terminal perturbations it also supplies a plausible single-representation thermal-tail envelope. The overbroad contrary claim that every enrichment is merely B3 or a duplicate tail oracle is unsupported. Nevertheless no allowed result supplies the required typed direct sum or other one-owner representation, unique differentiable coefficient map, exact pre-quadrature invariants and entropy, process-total finite-m_e shell, non-bypassable half-line consumer, deterministic Jacobian/permutation semantics, or complete-operation-graph non-isomorphism to B3-v2. Conditioning, binary64, LOC, and net-deletion certificates are also absent.",
+      "assumptions_used": [
+        "The analytic component is part of one canonical representation, not a separate correction or tail oracle.",
+        "T>0 and strict-open occupations are retained.",
+        "Novelty is judged against the complete B3-v2 graph, not one basis formula.",
+        "Endpoint plausibility is not a coefficient-map, conservation, entropy, or implementation theorem."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe.C-ANALYTIC",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-003",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-004",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json#F-EXT01-LEAN-003",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-003"
+      ],
+      "evidence_fingerprint": "sha256:28c1d92e641e259404c336bbd46d2a8b5745551ba6c46e8529b4be4ad45360b6",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-006"
+      ],
+      "reproduction": [
+        "Read the frozen C-ANALYTIC obligations and terminal falsifiers in CAS_CONTRACT.json.",
+        "Compare the three allowed sibling findings named above; distinguish evasion of NC-SAME-SPACE from satisfaction of the binding candidate obligations."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "One typed total representation and proof that no consumer can bypass it.",
+        "Unique differentiable coefficient map with a uniform lower-bound or condition theorem.",
+        "Exact conservation and fermionic entropy before numerical quadrature.",
+        "Process-total finite-m_e shell, threshold, and one full-half-line tail.",
+        "Deterministic Jacobian and permutation semantics.",
+        "Exact complete-graph non-isomorphism to B3-v2.",
+        "Prospective conditioning, binary64, permanent-LOC, and net-deletion certificates."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-ADMIT-003",
+      "claim_id": "C-EXT01-CONDITIONING",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The local conditioning evidence is exact but cannot certify either candidate uniformly. The frozen two-node matrix is well inside the 1e6 cap, while exact coalescing-node and vanishing-density families make the condition number diverge. Those families decisively falsify the inference that positive weights, positive densities, distinct nodes, or one favorable matrix imply a uniform bound. They do not prove a universal no-go for a future prospectively closed domain with minimum node separation, density lower bounds, scaled norms, and all branch constraints. Wolfram's claim-level fail and SymPy's inconclusive label therefore reflect different treatment of missing evidence; the contract says a theorem gap is INCONCLUSIVE, so this adjudication adopts INCONCLUSIVE while retaining conditioning as a binding non-admission reason.",
+      "assumptions_used": [
+        "The exact counterfamilies are admissible under the currently unspecified unrestricted local assumptions.",
+        "No candidate-specific closed domain or lower bounds are supplied.",
+        "A later prospective restriction may not be inferred from one favorable sample.",
+        "The contract's theorem-gap rule governs verdict classification."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#precision",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json#F-EXT01-LEAN-002"
+      ],
+      "evidence_fingerprint": "sha256:28c1d92e641e259404c336bbd46d2a8b5745551ba6c46e8529b4be4ad45360b6",
+      "counterevidence_refs": [
+        "The frozen two-node vector has kappa_2 approximately 42.06 and kappa_infinity 169/3.",
+        "A future fixed separated mesh, positive density envelope, and explicitly scaled norms could exclude the exhibited degeneracies."
+      ],
+      "reproduction": [
+        "Compare F-EXT01-WOLFRAM-005 and F-EXT01-SYMPY-005 against CAS_CONTRACT.json#binding_gate.",
+        "Do not reinterpret the exact degenerating families as a theorem about a not-yet-specified restricted candidate domain."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Candidate-specific closed state, cell, threshold, and permutation domain.",
+        "Prospective minimum node separation and positive density lower bound.",
+        "Candidate-specific norm scaling and uniform inf-sup or condition certificate no worse than 1e6."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-ADMIT-004",
+      "claim_id": "C-EXT01-BINARY64",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The exact and high-precision test vectors do not provide the required prospective candidate-wide binary64 upper bound. SymPy's toy screen shows why no monotone conclusion follows from the favorable local matrix: one bounded operation-count example can lie below 2.5e-11, while a larger graph or the separate 1e6 condition cap can exceed it under a coarse gamma_n*kappa estimate. Neither candidate supplies its complete deterministic operation graph, operation count, branch/shell/tail/quadrature/mass-solve/reconstruction error terms, rounding interfaces, reduction order, denominator envelope, or directed interval ledger. No allowed result conflicts on this point.",
+      "assumptions_used": [
+        "High-precision agreement is distinct from a binary64 forward-error certificate.",
+        "The toy gamma_n*kappa calculation is a falsifier screen, not the candidate's final bound.",
+        "The frozen candidate cap is 2.5e-11.",
+        "The complete operation graph must be prospective and deterministic."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#precision",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-006",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json#F-EXT01-WOLFRAM-005"
+      ],
+      "evidence_fingerprint": "sha256:28c1d92e641e259404c336bbd46d2a8b5745551ba6c46e8529b4be4ad45360b6",
+      "counterevidence_refs": [
+        "The exact test vector and 120-plus-digit independent values pass.",
+        "A structure-aware future proof could be much sharper than the toy gamma_n*kappa screen."
+      ],
+      "reproduction": [
+        "Read F-EXT01-SYMPY-006 and compare its explicit missing graph terms to CAS_CONTRACT.json#binding_gate.",
+        "Do not promote exact or high-precision vector agreement to the binary64 cap."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Complete candidate operation graph and deterministic operation count.",
+        "Every branch, shell, tail, quadrature, solve, reconstruction, rounding, and interval error term.",
+        "Uniform denominator/state envelope and permutation certificate.",
+        "Candidate-wide proof that the total binary64 upper bound is no worse than 2.5e-11."
+      ]
+    }
+  ],
+  "debate_protocol": {
+    "executed_order": [
+      "self-discover",
+      "step-back",
+      "metacognitive self-ask",
+      "CoVe",
+      "adversarial self-ask",
+      "CCoT",
+      "PDR"
+    ],
+    "self_discover": "Extracted only the frozen candidate obligations and the claim-keyed evidence in the three assignment-authorized sibling results. No other result, repository evidence, or scientific computation was used.",
+    "step_back": "Separated three levels that the raw labels can conflate: exact rejection of the same-space wording, logical possibility of a materially new Petrov or analytic construction, and present satisfaction of every G-EXT-FEASIBILITY obligation.",
+    "metacognitive_self_ask": [
+      "Am I applying NC-SAME-SPACE outside its finite terminal-vanishing same-space hypotheses?",
+      "Am I promoting a positive local determinant, one entropy vector, or scalar tail bound to a uniform candidate theorem?",
+      "Am I treating an absent theorem as a universal impossibility rather than INCONCLUSIVE?",
+      "Am I ranking non-passing candidates despite the frozen ranking rule?"
+    ],
+    "CoVe": [
+      "All three allowed results agree that NC-SAME-SPACE does not reject a genuinely distinct Petrov space or analytic enrichment.",
+      "Wolfram, Lean, and SymPy agree that the exact local determinant is constructive but not a uniform inf-sup theorem.",
+      "Lean and SymPy pass only the scalar entropy subclaim; Wolfram and both other results leave the candidate-wide entropy theorem absent.",
+      "Wolfram and SymPy agree that compactified tail plausibility is conditional and not a channel-complete one-consumer tail theorem.",
+      "The only verdict-label conflict is conditioning fail versus inconclusive; the underlying facts agree and the contract's theorem-gap rule resolves it to INCONCLUSIVE."
+    ],
+    "adversarial_self_ask": "Could the strongest candidate be admitted now if every exact positive subclaim were combined? No. Combining local nonsingularity, scalar entropy sign, and conditional tail integrability still leaves the candidate spaces/domain, uniform stability, process-total shell, candidate entropy, one tail consumer, deterministic derivatives/permutations, B3 non-isomorphism, binary64 bound, and both cost obligations undefined or unproved.",
+    "CCoT": "NC-SAME-SPACE PASS removes only the same-space PCR-DG wording. C-PETROV is the strongest current steelman because it has an exact constructive local mass pairing; C-ANALYTIC remains a genuine but less specified escape. For each, at least one binding theorem and several structural and numerical preconditions are absent. Under the frozen pass rule no candidate passes, so G-EXT-FEASIBILITY fails on the current bytes without proving either candidate universally impossible.",
+    "PDR": "Reject current admission, preserve both candidates only as theorem-incomplete possibilities, preserve STOP/PRESERVE, and do not create PR-01 or claim implementation authority.",
+    "strongest_case_for_admission": "C-PETROV: distinct spaces evade the no-go; an exact positive two-node determinant demonstrates local algebraic viability; the p-test/trial product and thermal occupation envelope show compactified integrability is not intrinsically impossible. This is the strongest available construction, but it is not a complete gate artifact.",
+    "strongest_case_against_admission": "The gate is conjunctive and candidate-wide. Neither candidate has a fully specified representation/domain, candidate entropy and conservation theorem, process-total shell, single full-tail ownership, deterministic Jacobian/permutation contract, exact B3 non-isomorphism, uniform conditioning proof, binary64 certificate, or cost/deflation plan. Local exact subclaims cannot substitute for those obligations.",
+    "decisive_falsifier": {
+      "C-PETROV": "A declared-domain point where the inf-sup bound vanishes, a divergent p weak pairing, entropy requiring an unavailable symmetric mass structure, or any conservation correction outside the weak form terminates the candidate.",
+      "C-ANALYTIC": "A singular or discontinuous coefficient map, a bypassable second tail consumer, failure of exact pre-quadrature invariants/entropy, or complete-operation-graph isomorphism to B3-v2 terminates the candidate.",
+      "current_admission_claim": "The current inputs contain no exact candidate artifact discharging all conjunctive obligations; this absence is sufficient to falsify a claim of present G-EXT-FEASIBILITY PASS."
+    },
+    "conditions_that_would_change_the_verdict": [
+      "Supply one prospectively frozen candidate artifact defining every space/component, norm, coefficient/state/cell domain, shell branch, tail consumer, deterministic operation, and ownership rule.",
+      "Prove exact invariants, forward/reverse detailed balance, and the candidate-wide fermionic entropy sign without post-hoc correction.",
+      "Prove the process-total finite-m_e shell/threshold contract and a single non-bypassable full-half-line tail enclosure.",
+      "Prove deterministic permutation/Jacobian semantics and exact complete-graph non-isomorphism to B3-v2.",
+      "Prove a uniform condition or inf-sup bound no worse than 1e6 and a prospective binary64 upper bound no worse than 2.5e-11.",
+      "Bind permanent implementation to no more than 800 LOC and a same-change deletion plan to at least net -1000 LOC.",
+      "Only after all hard gates pass may the frozen ranking rule compare candidates; a separate explicit OWNER-1 decision remains required for any next authority."
+    ]
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-ADMIT.json"
+  ]
+}

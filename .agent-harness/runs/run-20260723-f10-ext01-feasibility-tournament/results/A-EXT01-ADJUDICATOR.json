@@ -1,0 +1,567 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-ADJUDICATOR",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f2b-4f6b-7c33-a899-40b70a0f8dda",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-ADJUDICATOR",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:68b7f6c7f419d4ed9d70482573546037ac0d3b79151371764bf2f1e5dc646fdf",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+  "started_at": "2026-07-23T13:30:52Z",
+  "completed_at": "2026-07-23T13:36:22Z",
+  "tool_versions": {
+    "jq": "1.7",
+    "python": "3.12.3",
+    "sha256": "GNU sha256sum; version not queried",
+    "scientific_or_cas_execution": "none",
+    "web_discovery": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "sha256sum the assignment, context pack, adjudicator role file, result template, CAS contract, literature matrix, and seven allowed result envelopes",
+    "compute the registered ordered path-NUL-bytes-NUL adjudicator role digest",
+    "read .agent-harness/generated/CONTEXT_PACK.md, the assignment, result template, adjudicator role, CAS_CONTRACT.json, EXT01_PRIMARY_LITERATURE_MATRIX.json, and exactly the seven allowed result envelopes",
+    "jq -r '.findings[] | [.claim_id,.evidence_fingerprint,.verdict] | @tsv' over the seven allowed envelopes, then sort and uniq -c",
+    "compute the ordered CAS-contract-plus-literature-matrix-plus-seven-results evidence-bundle SHA-256",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+    "python3 .agent-harness/scripts/validate_harness.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-ADJUDICATOR.json",
+      "sha256": "68b7f6c7f419d4ed9d70482573546037ac0d3b79151371764bf2f1e5dc646fdf"
+    },
+    {
+      "path": ".agent-harness/context/roles/adjudicator.md",
+      "raw_file_sha256": "267fd3ac8b462eb9b13f2722f6c53ff5813351593c4d45a8ae8e75295b039305",
+      "ordered_role_bundle_sha256": "bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+      "sha256": "9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/artifacts/EXT01_PRIMARY_LITERATURE_MATRIX.json",
+      "sha256": "1780a7d40279dfc599e8fef94bc5cb73a264a5c4e63f8d25b3e85f51eb3cf3cc"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+      "sha256": "d0cd486f2df33396713c893fbfa9754962968362c8e573b46201e072a0e6fc12"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json",
+      "sha256": "f97e0a8f91051d5356378973cabc73d531059d69fd5ff66512975dd2d1dfd449"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-LEAN.json",
+      "sha256": "83260763e11e414765a7153906963a366c28bae57232d0679565ca4f6c637c10"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+      "sha256": "610256b5478d05b49422bbb8cb9107cbe3c0c758bff5cc0472654fd56778e65e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json",
+      "sha256": "34340cd1b9561a5b1716a2fef01b463f7841fcce3e964b3adc4a4476c84ead2d"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-ADMIT.json",
+      "sha256": "16601f44b1d07101f69fadca55bf23c292da81ad964f30b9dc291d361c3e38ea"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-REJECT.json",
+      "sha256": "fe94d6875893220beb792622cadb6850f1ea4bd370d0d1cb923f0c9b2871af15"
+    },
+    {
+      "purpose": "Ordered CAS contract, literature matrix, and seven allowed result envelopes",
+      "sha256": "326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a"
+    },
+    {
+      "purpose": "Ordered complete required-input bundle",
+      "sha256": "5bd42189cfbf4cfc18919ec31023b335ddfc39563db5e042ac1ddf945b9d4e9d"
+    }
+  ],
+  "deduplication": {
+    "key": [
+      "claim_id",
+      "evidence_fingerprint",
+      "verdict"
+    ],
+    "raw_findings": 33,
+    "unique_findings": 30,
+    "duplicate_instances_removed": 3,
+    "unique_verdict_counts": {
+      "pass": 8,
+      "fail": 3,
+      "inconclusive": 19
+    },
+    "duplicates": [
+      {
+        "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+        "evidence_fingerprint": "sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d",
+        "verdict": "inconclusive",
+        "source_findings": [
+          "A-EXT01-SAGE/F-EXT01-SAGE-003",
+          "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-001"
+        ]
+      },
+      {
+        "claim_id": "C-EXT01-NOVELTY",
+        "evidence_fingerprint": "sha256:483f94a75728be187872e4d82e85e418736b574a00b2007e306807ab0e69c2a3",
+        "verdict": "inconclusive",
+        "source_findings": [
+          "A-EXT01-ROCQ/F-ROCQ-005",
+          "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-002"
+        ]
+      },
+      {
+        "claim_id": "C-EXT01-COST",
+        "evidence_fingerprint": "sha256:7ce5398ab514e90c3bf1aa972ff826c6bc6e4778deb4feb5c83028173f7bbde0",
+        "verdict": "fail",
+        "source_findings": [
+          "A-EXT01-SAGE/F-EXT01-SAGE-005",
+          "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-003"
+        ]
+      }
+    ]
+  },
+  "conflict_resolution": {
+    "substantive_conflicts": [],
+    "scope_and_label_resolutions": [
+      {
+        "topic": "C-EXT01-CONDITIONING",
+        "raw_labels": [
+          "fail",
+          "inconclusive"
+        ],
+        "resolution": "Candidate-wide INCONCLUSIVE under the frozen theorem-gap rule. The exact coalescing-node and vanishing-density families do prove that local SPD or one favorable sample cannot establish a uniform bound, but they do not prove that every prospectively restricted candidate domain violates the 1e6 cap. The uniform obligation remains binding and non-PASS."
+      },
+      {
+        "topic": "C-EXT01-MEDVM-FEASIBILITY",
+        "raw_labels": [
+          "pass",
+          "inconclusive"
+        ],
+        "resolution": "No conflict. PASS is the fixed-dimensionless-lattice obstruction; INCONCLUSIVE is the broader moving-lattice/remap feasibility claim. The fixed subroute is rejected, while a universal moving-remap no-go is unproved."
+      },
+      {
+        "topic": "run-level fail versus candidate-level inconclusive",
+        "raw_labels": [
+          "fail",
+          "inconclusive"
+        ],
+        "resolution": "No conflict. Every candidate remains scientifically theorem-incomplete, while G-EXT-FEASIBILITY is FAIL because zero candidates satisfy every conjunctive obligation."
+      }
+    ]
+  },
+  "candidate_decisions": {
+    "C-PETROV": {
+      "scientific_feasibility": "inconclusive",
+      "current_gate_admission": "fail",
+      "universal_no_go_proved": false,
+      "rank": "not applicable",
+      "reason": "Distinct spaces evade NC-SAME-SPACE and the exact local determinant is constructive, but uniform inf-sup, semidiscrete entropy, process-total shell/tail, deterministic derivative/permutation, novelty, binary64, and cost/deflation obligations are absent."
+    },
+    "C-ANALYTIC": {
+      "scientific_feasibility": "inconclusive",
+      "current_gate_admission": "fail",
+      "universal_no_go_proved": false,
+      "rank": "not applicable",
+      "reason": "An analytic invariant component genuinely evades the finite terminal-vanishing span theorem, but no complete one-owner representation, unique differentiable coefficient map, exact conservation/entropy, shell/tail authority, non-isomorphism, numerical certificate, or cost plan exists."
+    },
+    "C-MEDVM": {
+      "scientific_feasibility": "inconclusive",
+      "current_gate_admission": "fail",
+      "fixed_lattice_subroute": "fail",
+      "moving_remap_universal_no_go_proved": false,
+      "rank": "not applicable",
+      "reason": "The fixed dimensionless lattice is obstructed on a continuous temperature interval; a moving-spacing witness evades that obstruction, but the remap theorem, complete deterministic edge graph, tail, binary64, and cost/deflation obligations are absent, and the registered cost screen fails."
+    }
+  },
+  "gate_decision": {
+    "gate_id": "G-EXT-FEASIBILITY",
+    "verdict": "fail",
+    "passing_candidates": [],
+    "exactly_one_candidate_passes": false,
+    "ranking_applied": false,
+    "disposition": "STOP/PRESERVE; archive all three candidates and request a new external breakthrough",
+    "owner_1_reachable_now": false,
+    "pr_01_reachable_now": false,
+    "authority_statement": "OWNER-1 is not triggered by the current evidence, and PR-01 must not be created. Even a future G-EXT-FEASIBILITY PASS would still require a separate explicit OWNER-1 decision."
+  },
+  "steelmen": {
+    "strongest_admission_case": "C-PETROV is the strongest current mechanism: a genuinely distinct test space is outside NC-SAME-SPACE, its two-node local mass determinant is exactly positive under positive weights and separated nodes, and conditional thermal-tail bounds show compactification with an exact p test is not intrinsically divergent. C-ANALYTIC and moving-remap MEDVM remain real escape hatches, so no universal no-go is justified.",
+    "strongest_rejection_case": "The gate is conjunctive and candidate-wide. No candidate supplies a complete operator and consumer graph, process-total finite-m_e shell, exact candidate-wide entropy and invariants, one directed half-line tail, deterministic Jacobian/permutation semantics, exact B3-v2 non-isomorphism, a uniform condition certificate, a prospective binary64 certificate, and both cost thresholds. The registered cost screen itself fails.",
+    "decisive_future_reversal": "One prospectively sealed candidate artifact must discharge every candidate-specific and common obligation with no deferred branch, consumer, theorem, or implementation choice. Only then could G-EXT-FEASIBILITY pass, after which a separate explicit OWNER-1 decision would still be required."
+  },
+  "findings": [
+    {
+      "finding_id": "F-EXT01-ADJ-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "NC-SAME-SPACE is proved on all five independent axes under aligned assumptions. A finite constant-coefficient span of terminal-vanishing functions also vanishes at the endpoint, so it cannot exactly contain 1 or p_star*xi/(1-xi) on a terminal interval. This rejects only the same trial/test-space PCR-DG wording; it does not reject a genuinely distinct Petrov test space or an analytic nonvanishing component.",
+      "assumptions_used": [
+        "The span is finite.",
+        "Coefficients are finite constants independent of xi.",
+        "Every terminal basis function has left endpoint limit zero.",
+        "Exact representation is pointwise equality on a nonempty terminal interval.",
+        "p_star>0 and xi approaches 1 from below."
+      ],
+      "evidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-001",
+        "A-EXT01-SAGE/F-EXT01-SAGE-001",
+        "A-EXT01-LEAN/F-EXT01-LEAN-001",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-001",
+        "A-EXT01-ROCQ/F-ROCQ-001"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-001",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-002"
+      ],
+      "reproduction": [
+        "Read the five independent SAME-SPACE-NOGO findings and verify assumption alignment against CAS_CONTRACT.json#negative_control."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No broader impossibility theorem for distinct-space Petrov or analytic-enriched representations follows."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-002",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "C-PETROV is not universally ruled out but is not admitted. The exact distinct-space two-node determinant and conditional compactified-tail bounds are constructive local evidence. They do not supply the required fully specified pairing/domain, uniform inf-sup theorem, nonsymmetric semidiscrete fermionic entropy proof, process-total finite-m_e shell, single tail authority, deterministic derivative/permutation contract, B3-v2 non-isomorphism, binary64 certificate, or cost/deflation plan.",
+      "assumptions_used": [
+        "Trial and conservative test spaces are genuinely distinct.",
+        "Local nonsingularity is not a uniform inf-sup theorem.",
+        "Every gate obligation is conjunctive and must be proved prospectively."
+      ],
+      "evidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-002",
+        "A-EXT01-LEAN/F-EXT01-LEAN-002",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-002",
+        "A-EXT01-ROCQ/F-ROCQ-002",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-001"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-005",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-006",
+        "A-EXT01-SAGE/F-EXT01-SAGE-005"
+      ],
+      "reproduction": [
+        "Compare all C-PETROV findings with the six candidate-specific properties and eleven common obligations in CAS_CONTRACT.json."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Every candidate-specific theorem and numerical/cost certificate listed in the statement remains absent."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-003",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "C-ANALYTIC is a genuine escape from NC-SAME-SPACE but is not admitted. An analytic equilibrium/invariant component can lie outside the terminal-vanishing perturbation span and can plausibly own the thermal tail. No registered artifact defines a complete one-owner representation and unique differentiable coefficient map or proves exact pre-quadrature invariants/entropy, process-total shell/tail authority, deterministic derivatives, non-isomorphism, conditioning, binary64, and cost/deflation.",
+      "assumptions_used": [
+        "The analytic component is part of one canonical representation rather than a second tail oracle or correction.",
+        "T>0 and strict-open occupations are retained.",
+        "Novelty is judged against the complete sealed B3-v2 graph."
+      ],
+      "evidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-003",
+        "A-EXT01-LEAN/F-EXT01-LEAN-003",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-003",
+        "A-EXT01-ROCQ/F-ROCQ-003",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-002"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-004",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-006",
+        "A-EXT01-SAGE/F-EXT01-SAGE-005"
+      ],
+      "reproduction": [
+        "Compare all C-ANALYTIC findings with its required properties and terminal falsifiers in CAS_CONTRACT.json."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The complete representation, theorem, operation-graph, numerical, and cost certificates remain absent."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-004",
+      "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The fixed-dimensionless-lattice ME-DVM subroute fails, while the broader moving-lattice/remap feasibility claim remains INCONCLUSIVE. Exact temperature dependence prevents a fixed positive spacing from keeping the mass index integral on a nondegenerate continuous interval; the witness delta_y(T)=m_e/(64T) shows why that obstruction is not a universal moving-remap no-go. No structure-preserving differentiable remap theorem or complete deterministic on-shell edge/tail/binary64/cost construction is supplied, and the registered cost screen fails.",
+      "assumptions_used": [
+        "Temperature varies continuously on a nondegenerate interval.",
+        "The fixed-lattice integrality condition is necessary for the tested subroute.",
+        "A moving spacing is a scope witness, not an admitted method.",
+        "Stochastic angular sampling cannot satisfy the deterministic gate."
+      ],
+      "evidence_refs": [
+        "A-EXT01-SAGE/F-EXT01-SAGE-002",
+        "A-EXT01-SAGE/F-EXT01-SAGE-003",
+        "A-EXT01-ROCQ/F-ROCQ-004",
+        "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-001"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "The moving-spacing witness defeats a universal inference from the fixed-lattice obstruction.",
+        "A future sparse reversible edge graph and exact remap theorem could change the feasibility verdict."
+      ],
+      "reproduction": [
+        "Read SAGE findings 002 and 003 together and compare their fixed-lattice and moving-remap scopes with Rocq finding 004."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A remap theorem preserving occupations, invariants, reversibility, positivity, entropy, differentiability, covariance, and tail closure.",
+        "A deterministic sparse edge-count, binary64, permanent-LOC, and same-change deletion certificate."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-005",
+      "claim_id": "C-EXT01-NOVELTY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "No candidate proves exact operation-graph non-isomorphism to sealed B3-v2. Compactification, local Petrov pairing or analytic ownership, and a single generated DAG are plausible mechanism changes; a complete moving-edge/remap graph would also be structurally distinct. The complete candidate operators and bidirectional DAG comparisons do not exist, so neither isomorphism nor non-isomorphism is established.",
+      "assumptions_used": [
+        "Novelty is judged against the full B3 basis, finite-domain/tail ledger, mass solve, event trace, and A0-A4 graph.",
+        "Coordinate, basis, language, or compiler changes alone are insufficient."
+      ],
+      "evidence_refs": [
+        "A-EXT01-SAGE/F-EXT01-SAGE-004",
+        "A-EXT01-ROCQ/F-ROCQ-005",
+        "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-002",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/artifacts/EXT01_PRIMARY_LITERATURE_MATRIX.json#search_conclusion"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "The proposed mechanism changes could be genuinely non-isomorphic once a complete operator and consumer graph exists."
+      ],
+      "reproduction": [
+        "Compare the deduplicated novelty findings with CAS_CONTRACT.json#common_conventions.b3_comparison."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Complete candidate operator/consumer graph and exact bidirectional isomorphism or non-isomorphism certificate."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-006",
+      "claim_id": "C-EXT01-TAIL",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The compactified scalar endpoint is conditionally integrable under a uniform thermal-tail envelope, and the exact p-test times a terminal-vanishing trial need not diverge. This does not prove a candidate-wide, process-total collision tail: every finite-m_e branch, forward/reverse event decay, threshold derivative, directed enclosure, and non-bypassable single consumer remains unproved.",
+      "assumptions_used": [
+        "p_star>0, T>0, and the terminal perturbation is uniformly bounded.",
+        "The scalar incomplete-Gamma bounds do not establish an event partition or process-total shell."
+      ],
+      "evidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-004",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-001",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-002"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "The exact scalar incomplete-Gamma bounds show that compactification is not intrinsically divergent under the stated envelope."
+      ],
+      "reproduction": [
+        "Read Wolfram finding 004 and retain its scalar-versus-process-total scope."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Channel-complete event majorant, process-total shell/threshold partition, directed enclosure, and single-consumer proof."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-007",
+      "claim_id": "C-EXT01-ENTROPY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The exact eventwise fermionic entropy-affinity claim passes: for strict-interior occupations, J*A=(F-R)log(F/R)>=0, and the frozen rational vector gives F=4/625, R=144/625, J=-28/125, A=log(1/36), and J*A>0. This bounded PASS does not prove a Petrov or analytic semidiscrete H-theorem, because the nonnegative event measure and discrete contraction through the candidate mass/pairing remain absent.",
+      "assumptions_used": [
+        "All occupations lie strictly in (0,1).",
+        "F and R use the frozen orientation and are positive.",
+        "The real natural logarithm is used.",
+        "Candidate-wide entropy additionally requires a nonnegative event measure and compatible discrete pairing."
+      ],
+      "evidence_refs": [
+        "A-EXT01-LEAN/F-EXT01-LEAN-004",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-004",
+        "A-EXT01-SAGE/F-EXT01-SAGE-001"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "A nonsymmetric Petrov pairing need not inherit the scalar eventwise sign.",
+        "An analytic component requires a separately defined total discrete entropy functional."
+      ],
+      "reproduction": [
+        "Compare the independent exact rational entropy findings and preserve their bounded scope."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Candidate-wide semidiscrete fermionic entropy theorem for every candidate."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-008",
+      "claim_id": "C-EXT01-CONDITIONING",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The local determinant and frozen matrix condition values pass, but no uniform candidate certificate exists. Exact coalescing-node and vanishing-density families make the condition number diverge and therefore falsify promotion of local SPD or one favorable sample to a uniform theorem. Because no prospectively restricted closed domain, node-separation bound, density floor, norm scaling, or complete candidate mass map is supplied, the candidate-wide claim is INCONCLUSIVE rather than a universal no-go; the <=1e6 obligation remains non-PASS.",
+      "assumptions_used": [
+        "The counterfamilies are admissible under the currently unspecified local assumptions.",
+        "No candidate-specific restricted domain may be inferred after the fact.",
+        "The frozen theorem-gap rule controls the candidate-wide verdict."
+      ],
+      "evidence_refs": [
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-005",
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-005",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-003"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "The frozen two-node matrix has kappa_2 approximately 42.06 and kappa_infinity 169/3.",
+        "A future prospectively closed domain could exclude the exhibited degeneracies."
+      ],
+      "reproduction": [
+        "Resolve the Wolfram fail and SymPy inconclusive labels under CAS_CONTRACT.json#binding_gate: the local-to-uniform inference fails, while the unrestricted future-candidate claim remains a theorem gap."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Candidate-specific closed domain, separation/density bounds, norms, and uniform <=1e6 certificate."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-009",
+      "claim_id": "C-EXT01-BINARY64",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "Exact rational and 120-plus-digit checks pass, but no candidate-wide binary64 upper bound <=2.5e-11 is established. The toy gamma_n*kappa screen demonstrates that a favorable local matrix and high-precision agreement do not determine the bound. Every candidate lacks a complete operation count, shell/tail/quadrature/solve/reconstruction graph, rounding interfaces, deterministic reduction order, denominator envelope, and directed interval ledger.",
+      "assumptions_used": [
+        "High-precision agreement is not a binary64 forward-error certificate.",
+        "The toy gamma_n*kappa calculation is a falsifier screen only.",
+        "The complete numerical operation graph must be frozen prospectively."
+      ],
+      "evidence_refs": [
+        "A-EXT01-SYMPY/F-EXT01-SYMPY-006",
+        "A-EXT01-STEELMAN-ADMIT/F-EXT01-STEELMAN-ADMIT-004",
+        "A-EXT01-WOLFRAM/F-EXT01-WOLFRAM-005"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "The exact and high-precision test vectors pass.",
+        "A future structure-aware bound could be sharper than the toy screen."
+      ],
+      "reproduction": [
+        "Read the deduplicated BINARY64 findings and compare every absent term with CAS_CONTRACT.json#binding_gate."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Complete prospective operation graph and proof that the total binary64 bound is <=2.5e-11."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-010",
+      "claim_id": "C-EXT01-COST",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The registered cost obligation fails. ME-DVM's dense proxy is 34,504,704 edges at R=39,N_E=96,N_angle=1 and 621,084,672 at R=39,N_E=48,N_angle=12; its design estimate reaches 500-1000 LOC before evaluator code and has no credible same-change deletion plan. The compactified range of 800-1500 LOC and possible net deletion of 600-1700 straddles both hard thresholds and cannot be credited at favorable endpoints. No candidate proves permanent LOC<=800 and same-change net deletion<=-1000. This is a failure of the registered cost claims, not a universal complexity lower bound.",
+      "assumptions_used": [
+        "Permanent implementation estimate must be <=800 LOC.",
+        "The same change must yield net deletion of at least 1000 LOC.",
+        "Only registered exact estimates and plans count.",
+        "Dense proxies are candidate screens rather than universal lower bounds."
+      ],
+      "evidence_refs": [
+        "A-EXT01-SAGE/F-EXT01-SAGE-005",
+        "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-003"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "A future sparse/factorized edge construction or exact replacement diff could change the cost screen.",
+        "The favorable ends of compactified ranges would satisfy the literals but are not proved plans."
+      ],
+      "reproduction": [
+        "Apply the two literal cost thresholds to the exact SAGE and reject-steelman cost findings."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact file-specific permanent-LOC estimate and same-change deletion plan.",
+        "Deterministic sparse ME-DVM edge and operation-count theorem."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-ADJ-011",
+      "claim_id": "G-EXT-FEASIBILITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "G-EXT-FEASIBILITY FAILS. Zero candidates satisfy every binding obligation, so the exactly-one pass rule is false and the ranking rule is not reached. NC-SAME-SPACE and the fixed-lattice obstruction are bounded passes; eventwise entropy and local determinant facts are bounded passes; none substitutes for a complete candidate. Preserve STOP/PRESERVE, archive C-PETROV, C-ANALYTIC, and C-MEDVM, request a new external breakthrough, and do not create PR-01. OWNER-1 is not reachable from the current evidence. This is current non-admission, not a universal impossibility theorem for distinct-space Petrov, analytic enrichment, or every moving-remap DVM.",
+      "assumptions_used": [
+        "The frozen conjunctive gate and failure rule are authoritative.",
+        "A theorem gap is non-PASS and cannot be promoted by vote count or adjacent literature.",
+        "A bounded subclaim PASS cannot substitute for a candidate-wide obligation.",
+        "No implementation authority follows from this read-only adjudication."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        "A-EXT01-STEELMAN-ADMIT#candidate_verdicts",
+        "A-EXT01-STEELMAN-REJECT/F-EXT01-STEELMAN-REJECT-004",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/artifacts/EXT01_PRIMARY_LITERATURE_MATRIX.json#search_conclusion",
+        "F-EXT01-ADJ-001 through F-EXT01-ADJ-010"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        "C-PETROV has constructive local algebra and conditional tail evidence.",
+        "C-ANALYTIC genuinely evades the same-space theorem.",
+        "The moving-spacing witness evades the fixed-lattice obstruction."
+      ],
+      "reproduction": [
+        "Deduplicate the 33 raw findings by (claim_id,evidence_fingerprint,verdict) to 30 unique findings.",
+        "Verify that no candidate has PASS evidence for every one of the eleven binding obligations.",
+        "Apply CAS_CONTRACT.json#binding_gate and #failure_rule without ranking non-passing candidates."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No universal no-go exists for all materially new candidate families.",
+        "A future gate PASS would still require a separate explicit OWNER-1 decision before any PR-01 authority."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json"
+  ]
+}

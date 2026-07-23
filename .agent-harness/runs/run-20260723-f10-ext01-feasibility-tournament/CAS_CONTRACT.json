@@ -1,0 +1,230 @@
+{
+  "schema_version": 2,
+  "problem_id": "BD622-EXT01-PREOUTPUT-FEASIBILITY",
+  "scope": "Repository-code-free, collision-output-free feasibility and no-go review. This contract does not authorize PR-01, a collision evaluator, T01-T12, Radau, trajectory, endpoint, Rust, JAX development, F-11, QKE, unblinding, or public runtime work.",
+  "status_boundary": {
+    "external_report_verdict": "STOP_CONFIRMED",
+    "external_owner_recommendation": "DO_NOT_REOPEN",
+    "pcr_dg": "SPECULATIVE",
+    "me_dvm": "SPECULATIVE_LIKELY_NO_GO",
+    "dsmc_primary_authority": "FORBIDDEN",
+    "implementation_authority": "ABSENT",
+    "next_authority_if_pass": "A separate explicit OWNER-1 decision is required."
+  },
+  "source_lock": {
+    "external_report": "BD622_D039_second_external_audit_report.md#sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+    "external_bundle": "BD622_D039_second_audit_bundle.zip#sha256:7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b",
+    "d040_survey": "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#sha256:509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e",
+    "w6_b3_reference": "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+    "w3_scope_reference": "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#sha256:a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a",
+    "w5_scope_reference": "docs/audit/BD622_W5_d028_discriminator_result.md#sha256:83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0"
+  },
+  "baseline_evidence": {
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "harness_validation": "ok=true",
+    "hook_fixtures": "6 passed",
+    "external_manifest": "all entries verified",
+    "external_safe_tests": "22 passed",
+    "external_test_scope": "Synthetic mechanism and kill tests only; no RABBIT import or physical collision output.",
+    "pre_run_diff_sha256": "71fd5f17b09b1fbca565dd442a4b6695d3e59b9ba678163a1cb5ab92c52f751c",
+    "pre_run_status_sha256": "c8271d55e68e5052e376d3e745b76e76694a338f8e1eae9e308dd6ce756ff784",
+    "preserved_singularhistory_sha256": "5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1",
+    "preserved_branch_review_sha256": "a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575"
+  },
+  "claims": [
+    "C-EXT01-SAME-SPACE-NOGO",
+    "C-EXT01-PETROV-FEASIBILITY",
+    "C-EXT01-ANALYTIC-FEASIBILITY",
+    "C-EXT01-MEDVM-FEASIBILITY",
+    "C-EXT01-NOVELTY",
+    "C-EXT01-TAIL",
+    "C-EXT01-ENTROPY",
+    "C-EXT01-CONDITIONING",
+    "C-EXT01-BINARY64",
+    "C-EXT01-COST",
+    "G-EXT-FEASIBILITY"
+  ],
+  "common_conventions": {
+    "units": "Natural units c=hbar=k_B=1; energy, momentum, mass, and temperature are MeV.",
+    "physical_metric": "g_phys=diag(-1,+1,+1,+1); future-directed on-shell p has p0>0 and p.p=-m^2.",
+    "compactification": "xi=p/(p+p_star), p=p_star*xi/(1-xi), dp/dxi=p_star/(1-xi)^2, p_star>0, 0<=xi<1.",
+    "occupation": "eta=log(f/(1-f)); f=1/(1+exp(-eta)); strict interior 0<f<1. No clipping.",
+    "weak_orientation": "1+2<->3+4; F=f1 f2(1-f3)(1-f4); R=f3 f4(1-f1)(1-f2); J=F-R.",
+    "entropy_affinity": "A=log(F/R)=eta1+eta2-eta3-eta4; J*A>=0 for strict interior occupations.",
+    "finite_me_shell": "Use the process-total finite-m_e COM shell and physical-right threshold convention frozen in W6; generic cleared-root substitution is forbidden.",
+    "b3_comparison": "Novelty is assessed against the sealed global B3 polynomial basis, finite Y_max plus tail ledger, mass solve, event trace, and A0-A4 arithmetic graph as a whole."
+  },
+  "negative_control": {
+    "id": "NC-SAME-SPACE",
+    "statement": "Let V=span{phi_1,...,phi_n} over finite real coefficients. If every phi_i has limit zero as xi approaches 1 from below, then every v in V has limit zero. Hence V cannot contain the constant function 1 on a terminal interval and cannot contain p_star*xi/(1-xi).",
+    "assumptions": [
+      "n is finite.",
+      "Expansion coefficients are finite constants independent of xi.",
+      "Every terminal-cell basis function has a finite endpoint limit equal to zero.",
+      "Exact representation means pointwise equality on a nonempty terminal interval."
+    ],
+    "required_outcome": "pass means the no-go theorem is proved. Failure to prove it is INCONCLUSIVE, not evidence that the same-space design works.",
+    "corollary": "The external PCR-DG wording is FAIL-AS-WRITTEN under a same trial/test-space reading. A distinct test space or analytic invariant component is a materially new candidate and must close its own stability and authority obligations."
+  },
+  "candidate_universe": [
+    {
+      "candidate_id": "C-PETROV",
+      "description": "A terminal-vanishing trial space and a distinct conservative test space containing exact 1 and p.",
+      "required_exact_properties": [
+        "A fully specified trial/test pairing and local mass map.",
+        "A uniform inf-sup lower bound over the declared state and cell domain.",
+        "A discrete fermionic entropy inequality derived for the nonsymmetric pairing.",
+        "Exact conservative tests without a post-hoc projection.",
+        "One full-domain tail semantics and process-total finite-m_e shell.",
+        "Deterministic differentiability and permutation covariance."
+      ],
+      "terminal_falsifiers": [
+        "The inf-sup bound can vanish inside the declared domain.",
+        "Entropy requires a symmetric positive mass matrix that the Petrov pairing does not supply.",
+        "Conservation uses a correction or projection outside the weak form.",
+        "The test function p makes the compactified weak pairing divergent.",
+        "Any required property is deferred to implementation choice."
+      ]
+    },
+    {
+      "candidate_id": "C-ANALYTIC",
+      "description": "A single analytic equilibrium/invariant component plus terminal-vanishing local perturbations.",
+      "required_exact_properties": [
+        "One total representation owns equilibrium, invariant tests, compactified endpoint, and tail.",
+        "The analytic component and local perturbations have a unique differentiable coefficient map.",
+        "Exact conservation and entropy follow before numerical quadrature.",
+        "No finite Y_max, zero extension, lost-event ledger, or second tail consumer exists.",
+        "The generated operation graph is not isomorphic to B3-v2."
+      ],
+      "terminal_falsifiers": [
+        "The analytic component is a separate tail oracle or correction surface.",
+        "A consumer can bypass the canonical representation.",
+        "The coefficient map is singular or discontinuous.",
+        "The design reproduces B3 under a basis/domain change.",
+        "Any required property is deferred to implementation choice."
+      ]
+    },
+    {
+      "candidate_id": "C-MEDVM",
+      "description": "A moving-lattice/remap microreversible finite-state energy DVM.",
+      "required_exact_properties": [
+        "Exact on-shell forward/reverse edges across the continuous frozen temperature domain.",
+        "Nonnegative symmetric conductances and a finite-state fermionic H-theorem.",
+        "A remap theorem preserving occupations, invariants, reversibility, and differentiability.",
+        "A pre-output tail enclosure.",
+        "A deterministic angular-extension and edge-count bound.",
+        "A net-deflation implementation plan."
+      ],
+      "terminal_falsifiers": [
+        "Two-temperature finite-mass closure fails without an unproved remap.",
+        "Any remap loses exact reversibility, invariants, positivity, or differentiability.",
+        "A required coefficient is negative.",
+        "The edge graph exceeds the frozen cost budget.",
+        "Angular extension requires stochastic sampling.",
+        "Any required property is deferred to implementation choice."
+      ]
+    }
+  ],
+  "binding_gate": {
+    "gate_id": "G-EXT-FEASIBILITY",
+    "pass_rule": "Exactly one candidate must satisfy every obligation below with no missing theorem, branch, consumer, or numerical precondition. A theorem gap is INCONCLUSIVE. A failed binding obligation is FAIL. Multiple passing candidates are ranked only by the frozen lexicographic rule.",
+    "obligations": [
+      "Exact invariant representation.",
+      "Process-total finite-m_e shell and threshold contract.",
+      "Forward/reverse detailed balance.",
+      "Fermionic entropy sign.",
+      "One full half-line tail semantics.",
+      "Deterministic permutation and Jacobian semantics.",
+      "Exact non-isomorphism to B3-v2.",
+      "A prospective local condition or inf-sup bound no worse than 1e6.",
+      "A pre-output binary64 upper bound no worse than 2.5e-11.",
+      "Permanent implementation estimate no greater than 800 LOC.",
+      "A same-change deletion plan yielding at least net -1000 LOC."
+    ],
+    "ranking": [
+      "all hard gates",
+      "smaller certified binary64 upper bound",
+      "smaller permanent LOC estimate",
+      "smaller deterministic operation count"
+    ],
+    "tie_rule": "A complete tie is INCONCLUSIVE.",
+    "failure_rule": "If no candidate passes, preserve all raw results, archive all three candidates, retain STOP/PRESERVE, and request a new external breakthrough. Do not create PR-01."
+  },
+  "exact_test_obligations": [
+    "Prove NC-SAME-SPACE without assuming the conclusion.",
+    "Show lim_(xi->1-) (1-xi)q(xi)=0 for every fixed polynomial q and show the remainders of 1 and p_star*xi/(1-xi) are nonzero with respect to the vanishing ideal/module.",
+    "Derive det(M)=w1*w2*r1*r2*(p1-p2)^2 for the two-node basis (1,p) and state why this local fact is not a uniform candidate proof.",
+    "Prove the rational entropy vector F=4/625, R=144/625, J=-28/125, A=log(1/36), J*A>0.",
+    "Test the simplest fixed dimensionless lattice at two distinct exact temperatures and distinguish a fixed-lattice no-go from a proved moving-remap no-go.",
+    "Identify every theorem or bound absent from each candidate; absence is binding."
+  ],
+  "numeric_test_vectors": [
+    {
+      "id": "V-ENDPOINT",
+      "p_star": "3/2",
+      "basis": ["1-xi", "(1-xi)*(1+xi)", "(1-xi)*(1-2xi+3xi^2)"],
+      "expected": "Every finite linear combination has endpoint limit zero; 1 has limit one; p has positive infinity."
+    },
+    {
+      "id": "V-LOCAL-MASS",
+      "nodes": ["1/4", "3/4"],
+      "weights": ["2/5", "3/5"],
+      "densities": ["1/7", "2/7"],
+      "expected_determinant": "w1*w2*r1*r2*(p1-p2)^2>0"
+    },
+    {
+      "id": "V-ENTROPY",
+      "occupations": ["1/5", "2/5", "3/5", "4/5"],
+      "expected": ["F=4/625", "R=144/625", "J=-28/125", "A=log(1/36)", "J*A>0"]
+    }
+  ],
+  "precision": {
+    "symbolic": "Exact rational/algebraic forms wherever applicable.",
+    "numeric_digits": 120,
+    "absolute_tolerance": "1e-80",
+    "relative_tolerance": "1e-70",
+    "binary64_candidate_cap": "2.5e-11",
+    "conditioning_cap": "1e6"
+  },
+  "axis_obligations": {
+    "wolfram_xact": "Prove the endpoint theorem and limits, audit compactified measure/integrability, derive the local mass determinant, and identify tensor/finite-m_e assumptions without reading sibling results.",
+    "sage_singular": "Prove the ideal/module and exact-rank forms, test fixed-lattice exact closure, and separate fixed-lattice no-go from moving-remap theorem gaps.",
+    "lean": "Provide a kernel-checked finite-span endpoint theorem and candidate-level logical dependency audit with no sorry/admit.",
+    "sympy_mpmath": "Independently reproduce symbolic limits, determinant, entropy, and 120-digit vectors; probe conditioning but do not promote samples to a uniform theorem.",
+    "rocq": "Provide an independent finite-sum endpoint theorem and a typed candidate-obligation dependency proof with no Admitted/axioms."
+  },
+  "debate_protocol": {
+    "required_loop": "self-discover -> step-back -> metacognitive self-ask -> CoVe -> adversarial self-ask -> CCoT -> PDR",
+    "required_sections": [
+      "Strongest case for the assigned conclusion.",
+      "Strongest steelman of the opposing conclusion.",
+      "Decisive falsifier.",
+      "Conditions that would change the verdict.",
+      "Claim-keyed findings with evidence fingerprints."
+    ],
+    "decision_rule": "Evidence and exact contradictions control; vote counts do not."
+  },
+  "tool_boundary": {
+    "all_axes": "Write only the registered result artifact. Proof scripts and caches must live under a new assignment-specific /tmp directory and be referenced by command and hash.",
+    "wolfram": "Use local WolframKernel and local xAct when needed. Remote Wolfram may be used only as a blind independent scalar check.",
+    "sage_singular": "Use assignment-specific /tmp cwd and DOT_SAGE. Never write repository .singularhistory.",
+    "lean": "Use assignment-specific /tmp build/output paths.",
+    "rocq": "Use assignment-specific /tmp paths and opam exec -- coqc or rocq compile.",
+    "sympy_mpmath": "Use exact SymPy objects and at least 120-digit mpmath checks; no repository imports."
+  },
+  "forbidden_shortcuts": [
+    "Read sibling or prior-run result artifacts before adjudication.",
+    "Explore the repository beyond the registered inputs.",
+    "Import or execute a RABBIT collision implementation.",
+    "Produce a collision observable, T01-T12 result, Radau segment, trajectory, endpoint, or unblinded RABBIT result.",
+    "Modify _independent_noqke.py, historical D-027/D-028/D-029 evidence, JAX, Rust, production, shared specification, gate, or SSOT files.",
+    "Treat the external 22 synthetic tests as physical validation.",
+    "Assume that local SPD at one two-node state proves a uniform mass or inf-sup bound.",
+    "Assume that a fixed-lattice two-temperature failure proves every moving-lattice design impossible.",
+    "Use DSMC or stochastic sampling to satisfy a deterministic precision obligation.",
+    "Relax a cap, norm, domain, candidate, or obligation after observing output.",
+    "Promote a CAS subclaim PASS to G-EXT-FEASIBILITY PASS.",
+    "Create PR-01 without both G-EXT-FEASIBILITY PASS and a separate explicit OWNER-1 decision."
+  ],
+  "result_contract": "Each axis writes exactly one schema-v2 RESULT_ENVELOPE-compatible result at its registered path, with tool versions, exact commands, assumptions, proof status, candidate-by-candidate verdicts, evidence fingerprints, limitations, and final HARNESS_RESULT."
+}

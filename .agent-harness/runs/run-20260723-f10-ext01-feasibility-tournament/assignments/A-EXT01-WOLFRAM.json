@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-WOLFRAM",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_wolfram_xact",
+  "review_role_files": [
+    ".agent-harness/context/roles/cas_common.md",
+    ".agent-harness/context/roles/cas_wolfram_xact.md"
+  ],
+  "review_role_sha256": "sha256:8c52bb3a42c6216a21ddf0b8a49f83f26301e641e7e85388c555bc9c033684e5",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-EXT01-SAME-SPACE-NOGO",
+    "C-EXT01-PETROV-FEASIBILITY",
+    "C-EXT01-ANALYTIC-FEASIBILITY",
+    "C-EXT01-TAIL",
+    "C-EXT01-CONDITIONING"
+  ],
+  "task": "Blind Wolfram Language plus local xAct feasibility axis. Prove or refute the exact same-space endpoint theorem, audit compactified endpoint integrability and the two-node mass determinant, and identify binding theorem gaps for C-PETROV and C-ANALYTIC. Execute no collision code or output. Use an assignment-specific /tmp directory. Perform self-discover -> step-back -> metacognitive self-ask -> CoVe -> adversarial self-ask -> CCoT -> PDR; steelman both admission and rejection. Write only the registered result.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-WOLFRAM.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/cas_common.md",
+    ".agent-harness/context/roles/cas_wolfram_xact.md",
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "BD622_D039_second_external_audit_report.md",
+    "BD622_D039_second_audit_bundle.zip",
+    "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-WOLFRAM.json",
+  "status": "registered"
+}

@@ -1,0 +1,221 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-SAGE",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f01-89f2-7022-ab11-36473044fd7c",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_sage_singular",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-SAGE",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:4535e88832115aa6b397d9fc9d5afcb8f55c353307f2919c79fee85805db0225",
+    "runtime_agent_type": "default",
+    "review_role": "cas_sage_singular",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:62e29504e21168d2f68c1903ccac747454f047c71e2d9c85dd79c97cb59194ca",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json",
+  "started_at": "2026-07-23T12:46:42Z",
+  "completed_at": "2026-07-23T12:58:16Z",
+  "tool_versions": {
+    "SageMath": "10.9",
+    "Singular": "4.3.2",
+    "GMP_via_Singular": "6.3.0",
+    "NTL_via_Singular": "11.5.1",
+    "FLINT_via_Singular": "3.0.1",
+    "coefficient_domain": "QQ",
+    "polynomial_orders": "Sage lex/degrevlex; Singular lp/dp",
+    "extension_fields": "none",
+    "numeric_precision": "Sage RealField(512), greater than 120 decimal digits"
+  },
+  "commands": [
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/cas; env DOT_SAGE=/tmp/A-EXT01-SAGE.tKYIVH/dot_sage sage --version",
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/cas; Singular --version",
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/cas; env DOT_SAGE=/tmp/A-EXT01-SAGE.tKYIVH/dot_sage sage ext01_exact_checks.sage",
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/cas; Singular -q ext01_ideal_module.sing",
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/bundle/BD622_D039_second_audit_test_package; python3 scripts/run_safe_tests.py",
+    "cwd=/tmp/A-EXT01-SAGE.tKYIVH/bundle/BD622_D039_second_audit_test_package; sha256sum -c MANIFEST.sha256",
+    "sha256sum and stat on repository-root .singularhistory before and after CAS execution"
+  ],
+  "artifacts": [
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/ephemeral_manifest.sha256#sha256:0f4b90a5c87fe3ab16d856b5924024f598eba553c08ae16bce801d6db6f3b63e",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.sage#sha256:516f05cdb54ce0d37d1a270e0ea275f29ff862d3650424212782951cdac7890e",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.out#sha256:381751e3214f0b73ff272bc1e54f04265145ab255585e3b23681b3f538d71fda",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_ideal_module.sing#sha256:d24f79b0d85562707d0955e69f48c529338772418508353d882f857ea8a6ae4c",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_ideal_module.out#sha256:57cac19732e904be5bf09e4de44357747ed346fadb8ed019ecfa139ce31fd34e",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/adversarial_loop.md#sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d",
+    "/tmp/A-EXT01-SAGE.tKYIVH/cas/bundle_safe_tests.out#sha256:f3d182940b6c4e8c8825bbad6025abd1bccd70c04eaf99b099aa8f7bc4d4357d",
+    "preserved initial script failures and generated Sage/DOT_SAGE files are individually hashed in ephemeral_manifest.sha256",
+    "temporary Singular history artifacts: none created",
+    "/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/.singularhistory#sha256:5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1; size=903; mtime_ns-equivalent epoch=1784728629; unchanged"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-EXT01-SAGE-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The same-space no-go is proved. For I=<1-xi>, every finite constant-coefficient polynomial combination of the supplied terminal-vanishing basis lies in I, while rem_I(1)=1. If p_star*xi/(1-xi) equalled v in I on a nonempty terminal interval, denominator clearing would require p_star*xi in I^2, but its remainder is nonzero. Thus the external PCR-DG wording is FAIL-AS-WRITTEN when the terminal-vanishing trial basis is also the invariant test space. Independently, the required local determinant and rational entropy vectors pass exactly: det(M)=w1*w2*r1*r2*(p1-p2)^2, the frozen determinant is 3/1225, and J*A=(28/125)log(36)>0. These bounded passes do not supply a uniform candidate theorem.",
+      "assumptions_used": [
+        "Finite basis and finite coefficients independent of xi.",
+        "Every terminal-cell basis function has endpoint limit zero.",
+        "Exact equality means pointwise equality on a nonempty terminal interval.",
+        "p_star>0 and xi approaches 1 from below.",
+        "Polynomial certificate over QQ[xi], with no saturation or localization.",
+        "For the mass lemma, weights and densities are positive and nodes are distinct.",
+        "For entropy, occupations lie strictly in (0,1) and the real logarithm is used."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.out#sha256:381751e3214f0b73ff272bc1e54f04265145ab255585e3b23681b3f538d71fda",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_ideal_module.out#sha256:57cac19732e904be5bf09e4de44357747ed346fadb8ed019ecfa139ce31fd34e",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "BD622_D039_second_external_audit_report.md#sections-8.4-8.9"
+      ],
+      "evidence_fingerprint": "sha256:f777fbe5c7376a98ec5ca37cf196d1af88a25a5b6c9e244d13fc66557bfda43c",
+      "counterevidence_refs": [
+        "CAS_CONTRACT.json candidate C-PETROV permits a distinct conservative test space.",
+        "CAS_CONTRACT.json candidate C-ANALYTIC permits a separate analytic invariant component."
+      ],
+      "reproduction": [
+        "env DOT_SAGE=/tmp/A-EXT01-SAGE.tKYIVH/dot_sage sage /tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.sage",
+        "Singular -q /tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_ideal_module.sing"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The theorem does not reject a fully specified Petrov test space or analytic invariant component.",
+        "The local two-node SPD identity is not a uniform inf-sup or condition-number bound."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SAGE-002",
+      "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The bounded fixed-lattice obstruction passes. With exact m_e=10219979/20000000 and delta_y=1/64, the mass indices at T=1 and T=6/5 are 10219979/312500 and 10219979/375000, both nonintegral. More generally, for any fixed positive delta_y, m_e/(T delta_y) is continuous and strictly decreasing, so it cannot be integer-valued on a nondegenerate continuous temperature interval. This is a necessary-condition no-go for fixed dimensionless lattices, not a sufficient four-momentum closure theorem.",
+      "assumptions_used": [
+        "Exact positive m_e, temperature, and fixed delta_y.",
+        "Exact fixed-lattice closure requires m_e/(T delta_y) to be integral.",
+        "The FLRW temperature domain contains a nondegenerate continuous interval."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.out#sha256:381751e3214f0b73ff272bc1e54f04265145ab255585e3b23681b3f538d71fda",
+        "BD622_D039_second_audit_bundle.zip#sha256:7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b",
+        "BD622_D039_second_external_audit_report.md#section-9.4"
+      ],
+      "evidence_fingerprint": "sha256:381751e3214f0b73ff272bc1e54f04265145ab255585e3b23681b3f538d71fda",
+      "counterevidence_refs": [
+        "The same exact output supplies delta_y=m_e/6 with indices 6 and 5 at the two rational temperatures, proving that the two-temperature sample alone does not kill every fixed spacing."
+      ],
+      "reproduction": [
+        "env DOT_SAGE=/tmp/A-EXT01-SAGE.tKYIVH/dot_sage sage /tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.sage"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "On-shell momentum closure, nonnegative conductances, tail closure, and angular sparsity require separate proofs."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SAGE-003",
+      "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "No moving-lattice/remap no-go is proved. The exact witness delta_y(T)=m_e/(64T) keeps the mass index 64 and therefore evades the fixed-spacing integrality obstruction. The registered inputs provide no theorem that such a remap preserves occupations, exact invariants, forward/reverse microreversibility, Pauli bounds, entropy, differentiability, covariance, and tail closure. ME-DVM admission is therefore INCONCLUSIVE rather than universally impossible, while its frozen fixed-lattice form is rejected.",
+      "assumptions_used": [
+        "A temperature-dependent lattice spacing is allowed only for the scope test, not admitted as a design.",
+        "Every binding remap property must be proved before candidate admission."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/ext01_exact_checks.out#sha256:381751e3214f0b73ff272bc1e54f04265145ab255585e3b23681b3f538d71fda",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/adversarial_loop.md#sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate-C-MEDVM"
+      ],
+      "evidence_fingerprint": "sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d",
+      "counterevidence_refs": [
+        "BD622_D039_second_external_audit_report.md states that remapping defeats the clean finite-state mechanism, but supplies no universal remap impossibility theorem."
+      ],
+      "reproduction": [
+        "Inspect MOVING_SPACING_T1, MOVING_SPACING_T2, MOVING_INDEX_BOTH, and MOVING_SCOPE_CEILING in ext01_exact_checks.out."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A structure-preserving differentiable remap theorem.",
+        "A finite deterministic on-shell edge construction and tail enclosure."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SAGE-004",
+      "claim_id": "C-EXT01-NOVELTY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "PCR-DG novelty is not established. The registered proposal changes three plausible mechanisms relative to W6/B3-v2: half-line compactification instead of finite Y_max plus tail ledger, local cells/block masses instead of a global weighted-QR/Horner basis, and a generated single DAG instead of separate W6/W7/vector surfaces. But no complete PCR-DG operator or exact DAG comparison exists, so neither an isomorphism nor a non-isomorphism to B3-v2 is proved. A basis/domain description alone cannot satisfy the binding novelty obligation.",
+      "assumptions_used": [
+        "Novelty is assessed against the sealed B3 basis, finite domain plus tail, mass solve, event trace, and A0-A4 graph as a whole.",
+        "A second language or a basis renaming is not structural novelty."
+      ],
+      "evidence_refs": [
+        "BD622_D039_second_external_audit_report.md#sections-8.6-8.9#sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#sections-6-10#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/adversarial_loop.md#sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d"
+      ],
+      "evidence_fingerprint": "sha256:29320988bde3344fa1384eaf912c7f19264f199d4ed2d117dfecf7cc1b831547",
+      "counterevidence_refs": [
+        "The three proposed mechanism changes could be genuinely non-isomorphic if a complete operator DAG and consumer graph were supplied."
+      ],
+      "reproduction": [
+        "Compare external report sections 8.4, 8.6, 8.7 with W6 sections 6, 8, and 10 under the CAS_CONTRACT novelty definition."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Exact operator-DAG isomorphism or non-isomorphism certificate.",
+        "Consumer-complete generated graph for PCR-DG."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-SAGE-005",
+      "claim_id": "C-EXT01-COST",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The binding cost obligation is not met by any registered candidate. ME-DVM has an exact proxy count of 34,504,704 edges at R=39,N_E=96,N_angle=1 and 621,084,672 at R=39,N_E=48,N_angle=12, an estimated 500-1000 design lines before evaluator code, and no credible deletion plan; it fails the registered cost screen. PCR-DG remains INCONCLUSIVE on cost because its 800-1500 evaluator/test estimate and possible net -600 to -1700 range cross both binding thresholds, and no exact same-change deletion plan proves permanent LOC<=800 plus net deletion>=1000. These are candidate-screen conclusions, not universal lower bounds on all sparse algorithms.",
+      "assumptions_used": [
+        "Binding permanent implementation estimate must be no greater than 800 LOC.",
+        "Binding same-change deletion plan must yield net deletion of at least 1000 LOC.",
+        "The registered dense-edge proxy is R*N_E^3*N_angle^2.",
+        "Only registered-input estimates count; no speculative factorization is credited."
+      ],
+      "evidence_refs": [
+        "BD622_D039_second_external_audit_report.md#sections-8.11-9.6-9.11-16#sha256:1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding-gate#sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/bundle_safe_tests.out#sha256:f3d182940b6c4e8c8825bbad6025abd1bccd70c04eaf99b099aa8f7bc4d4357d",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/adversarial_loop.md#sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d"
+      ],
+      "evidence_fingerprint": "sha256:7ce5398ab514e90c3bf1aa972ff826c6bc6e4778deb4feb5c83028173f7bbde0",
+      "counterevidence_refs": [
+        "A future sparse/factorized ME-DVM could beat the dense proxy, but no such registered derivation exists.",
+        "PCR-DG could satisfy cost at the favorable ends of its ranges, but no exact plan selects those ends."
+      ],
+      "reproduction": [
+        "python3 -c 'print(39*96**3); print(39*48**3*12**2)'",
+        "python3 scripts/run_safe_tests.py from the extracted registered bundle"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "A deterministic sparse edge-count theorem for ME-DVM.",
+        "An exact PCR-DG permanent-LOC estimate and same-change deletion diff."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json"
+  ]
+}
