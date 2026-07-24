@@ -1,14 +1,42 @@
 # Next Session Prompt
 
+## 2026-07-24 D-043 controlling overlay
+
+Use the corrected in-place request at
+`docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`.
+The first returned `PROVENANCE_FAIL` remains preserved, but its
+non-distributable prerequisites are superseded. At dispatch, give the external
+auditor a fixed GitHub commit containing the corrected prompt.
+
+The external auditor must bind code snapshot `bede5a9`, evidence floor
+`204d3fa`, and the prompt commit. Do not request or reconstruct the orphan-only
+`4f4da8f0` snapshot, historical `f7ab1890` context digest, missing
+`e3ea99a9` context pack, or old `/tmp` proof/stdout/stderr as Phase-0
+requirements. Their absence limits reuse of D-041 claims; any premise needed
+by a new finalist must be rederived after its prospective seal.
+
+This correction authorizes only the prompt's external 6--10-family screen and
+at most one repository-free nonphysical microprototype. New binding inputs and
+every new contract/code/test/raw/manifest byte remain strictly fail-closed.
+Preserve STOP/PRESERVE inside the repository, the dirty tree, and old failures.
+If `.singularhistory` (`5abbc842`) or the user-owned branch review
+(`a1742101`) is present, preserve it; if absent, do not reconstruct, add, or
+promote it. Do not start W7/B3 output, T01--T12, Rust/JAX work, Radau,
+trajectory, endpoint, unblinding, F-11/Bianchi, QKE, or public-runtime work.
+
 ## 2026-07-23 D-042 controlling overlay
 
-The owner-requested external executable-breakthrough prompt is ready for
-verbatim issuance:
+Historical record only: the original owner-requested
+external executable-breakthrough prompt was issued as:
 `docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`,
 SHA-256 `6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873`.
 Its replacement adjudication is `9607e9cf`; 21 raw findings deduplicate to 20
 exact keys. The earlier cross-review FAILs apply to superseded draft
 `bab03230`, not the issued bytes.
+
+The first external execution returned `PROVENANCE_FAIL`; do not reissue hash
+`6b5545bd`. The D-043 overlay and the corrected bytes at the prompt commit now
+control.
 
 This prompt authorizes an external 6--10-family paper screen and at most one
 prospectively sealed, repository-free, nonphysical microprototype. It does not

@@ -1,4 +1,10 @@
-# BD622 D-042 External Executable Breakthrough Candidate Request
+# BD622 D-042R External Executable Breakthrough Candidate Request
+
+> **D-043 provenance correction (2026-07-24).** This in-place revision
+> supersedes the earlier D-042 input-provenance and return-package clauses.
+> It does not erase the preserved `PROVENANCE_FAIL`; it removes
+> non-distributable historical bytes from the prerequisites for a wholly new,
+> prospectively sealed experiment.
 
 Copy this request verbatim to the external auditor. Return one report and, only
 for the single finalist defined below, one minimal executable lab bundle.
@@ -9,20 +15,40 @@ directly from the owner is the authority to author and run only that bounded
 external lab. It does not authorize a RABBIT repository change, collision
 observable, trajectory, endpoint, unblinding, or production claim.
 
+The owner instruction dated 2026-07-24 authorizes reissuing this corrected
+request after the first external attempt stopped at `XG-00-PROVENANCE`. That
+procedural correction does not change any scientific gate or downstream owner
+gate.
+
 ## 0. Binding state and authority
 
-The current decision is **STOP/PRESERVE**.
+The current decision is **STOP/PRESERVE** inside the repository. The new
+external screen is a bounded exception already authorized by the owner.
 
-- Repository: `/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION`
+- Public repository:
+  `https://github.com/cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION`
 - Branch: `f10-independent-validation-b3v2`
-- HEAD: `bede5a965267ef2dbfc628b56835a3563edf7396`
+- Binding code snapshot (`CODE_HEAD`):
+  `bede5a965267ef2dbfc628b56835a3563edf7396`
+- Published evidence floor (`EVIDENCE_BASE`):
+  `204d3fa41cedb9b3102b27cc7bde7ded51df85f7`
 - Preserved base: `main@ca3a0138d496732edfc13559fd8f7ceec7ef4d6e`
-- Current context:
-  `f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3`
+- Corrected prompt path:
+  `docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`
+- Dispatch snapshot (`PROMPT_COMMIT`): the exact commit named in the owner's
+  GitHub link or, when working directly from the branch, the commit returned by
+  `git log -1 --format=%H -- <corrected-prompt-path>`. The received request
+  must be byte-identical to that committed path.
 - Terminal EXT-01 run:
   `run-20260723-f10-ext01-feasibility-tournament`
 - EXT-01 adjudication:
   `18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6`
+
+Use a full clone, not a source ZIP or shallow history. Before reading any
+scientific result, verify that `CODE_HEAD`, `EVIDENCE_BASE`, and
+`PROMPT_COMMIT` are commits, that each is an ancestor of the next, and that the
+prompt bytes come from `PROMPT_COMMIT`. A later branch tip is not a substitute
+for these three roles.
 
 The current gates remain:
 
@@ -57,31 +83,95 @@ endpoint work. The current repository PR queue is empty.
 
 ## 1. Immutable evidence and provenance
 
-Recompute every hash before analysis. A mismatch is `PROVENANCE_FAIL`; preserve
-the mismatch and stop without repairing or substituting bytes.
+### 1.1 Binding, distributable inputs
 
-| Evidence | SHA-256 |
+Recompute the hashes below from the named commit and path, not from the
+working tree. A missing commit/path, ancestry failure, byte mismatch, or
+received-prompt mismatch is `PROVENANCE_FAIL`; preserve it and stop without
+repairing or substituting bytes.
+
+Start with:
+
+```bash
+CODE_HEAD=bede5a965267ef2dbfc628b56835a3563edf7396
+EVIDENCE_BASE=204d3fa41cedb9b3102b27cc7bde7ded51df85f7
+PROMPT_PATH=docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md
+PROMPT_COMMIT="$(git log -1 --format=%H -- "$PROMPT_PATH")"
+git cat-file -e "$CODE_HEAD^{commit}"
+git cat-file -e "$EVIDENCE_BASE^{commit}"
+git cat-file -e "$PROMPT_COMMIT^{commit}"
+git merge-base --is-ancestor "$CODE_HEAD" "$EVIDENCE_BASE"
+git merge-base --is-ancestor "$EVIDENCE_BASE" "$PROMPT_COMMIT"
+git fsck --strict
+```
+
+Then use `git show "$SOURCE_COMMIT:$PATH" | sha256sum` for every row. Record
+the exact commands, exit codes, and full hashes in one provenance log.
+
+| Source commit and path | SHA-256 |
 |---|---|
-| `AGENTS.md` | `3a8ab086fdac4c841b0f7cdb68d8167ee5daa2dbec29efe17481a64464e2ce43` |
-| anti-drift guardrails | `d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f` |
-| cost policy | `9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149` |
-| D-039 request | `2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a` |
-| external report | `1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7` |
-| external ZIP | `7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b` |
-| D-040 JAX/Bianchi/DSMC survey | `509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e` |
-| EXT-01 contract | `9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2` |
-| EXT-01 literature matrix | `1780a7d40279dfc599e8fef94bc5cb73a264a5c4e63f8d25b3e85f51eb3cf3cc` |
-| EXT-01 adjudication | `18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6` |
-| W3 | `a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a` |
-| W5 | `83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0` |
-| W6 | `9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94` |
-| W7 source | `60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe` |
-| W7 exact vectors | `e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd` |
-| frozen decisions | `4f4da8f0d5c2d6768affa28254c4cdb2145e65079bb251df9b4621c10606e43b` |
-| gate registry | `ed10fd9cb00efb4b48a709ef7a9f3e0188e2a397b65b3c717a7791c1c3eda3b1` |
-| claim registry | `53b445c6bc7eae8ee5dea3f3037c4dbd4b96d2243329bf1c15ed79d6e9ea49ee` |
+| `CODE_HEAD:AGENTS.md` | `3a8ab086fdac4c841b0f7cdb68d8167ee5daa2dbec29efe17481a64464e2ce43` |
+| `CODE_HEAD:docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md` | `d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f` |
+| `CODE_HEAD:bbn_codex_anti_drift_cost_effective_policy.md` | `9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149` |
+| `CODE_HEAD:docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md` | `2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a` |
+| `CODE_HEAD:docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md` | `a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a` |
+| `CODE_HEAD:docs/audit/BD622_W5_d028_discriminator_result.md` | `83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0` |
+| `CODE_HEAD:docs/audit/BD622_W6_comparator_design_proof_pack.md` | `9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94` |
+| `CODE_HEAD:scripts/audit/w7_b3v2_contract_source.py` | `60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe` |
+| `CODE_HEAD:docs/audit/BD622_W7_exact_test_vectors.json` | `e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd` |
+| `CODE_HEAD:.agent-harness/context/FROZEN_DECISIONS.md` | `6723d1093c9679ffce058e044a3288b80507afbe64fdec6decad11909498b0ee` |
+| `CODE_HEAD:.agent-harness/context/GATE_REGISTRY.json` | `ed10fd9cb00efb4b48a709ef7a9f3e0188e2a397b65b3c717a7791c1c3eda3b1` |
+| `CODE_HEAD:.agent-harness/context/CLAIM_REGISTRY.jsonl` | `53b445c6bc7eae8ee5dea3f3037c4dbd4b96d2243329bf1c15ed79d6e9ea49ee` |
+| `EVIDENCE_BASE:docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md` | `509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e` |
+| `EVIDENCE_BASE:.agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json` | `9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2` |
+| `EVIDENCE_BASE:.agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/artifacts/EXT01_PRIMARY_LITERATURE_MATRIX.json` | `1780a7d40279dfc599e8fef94bc5cb73a264a5c4e63f8d25b3e85f51eb3cf3cc` |
+| `EVIDENCE_BASE:.agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json` | `18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6` |
 
-Preserve without editing, adding, deleting, or promoting:
+Also read the current frozen decisions, project state, decision/claim/validation
+ledgers, gate/claim registries, and next-session prompt from
+`PROMPT_COMMIT`. Their Git commit is the seal; compute and report their
+SHA-256 values rather than expecting self-referential hashes inside this
+request.
+
+### 1.2 Historical evidence ceiling; absence is not a global stop
+
+The first D-042 audit correctly found that the earlier request depended on
+bytes that a GitHub auditor did not receive. Preserve that
+`PROVENANCE_FAIL`, but do not repeat it as a prerequisite for a new,
+independently derived candidate:
+
+- `4f4da8f0...` exists only as local unreachable blob
+  `5d583891c9401439ec2a49cd6a572cf71194c5fd` and orphan trees. It is not in
+  any branch, tag, remote-tracking ref, reflog commit, or published snapshot.
+  Do not request, reconstruct, or promote it. The binding code-snapshot
+  frozen-decision hash is the `6723d109...` entry above.
+- `f7ab1890...` was a historical harness context digest, not a required source
+  artifact. `e3ea99a9...`, reported as that run's generated context-pack
+  SHA-256, is absent from the distributable Git history. Neither is an input
+  to this external lab.
+- Historical `/tmp` Wolfram, Sage/Singular, Lean, Rocq, SymPy, stdout, and
+  stderr files were not supplied to the first external auditor. They cannot
+  replay or promote D-041. If a decisive old negative control matters to the
+  new candidate, rederive it after the new contract is sealed and preserve
+  the new raw bytes.
+- The D-039 external report and ZIP are optional contextual prior art. If
+  separately supplied, verify hashes `1362c932...` and `7a5bb450...`; if
+  absent, record `NOT_SUPPLIED` and continue. Do not use an absent item to
+  close any candidate gate.
+- The remaining tracked EXT-01 assignment/result JSON files may explain the
+  old bounded verdict, but they do not replace raw proof artifacts. Treat
+  their scientific claims as historical context unless independently
+  reproduced for the finalist.
+
+Missing or mismatched **contextual** evidence narrows the claims that may be
+reused; it does not trigger package-wide `PROVENANCE_FAIL`. Missing or
+mismatched **binding inputs above**, or any missing/mismatched prospective
+contract, source, test, raw output, stderr, or manifest created for the new
+lab, remains a hard `XG-00-PROVENANCE` failure.
+
+The following local ignored files are not distributable inputs. If separately
+present, verify and preserve them without editing, adding, deleting, or
+promoting; if absent, record `NOT_SUPPLIED` and do not reconstruct them:
 
 - `.singularhistory`
   (`5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1`);
@@ -94,12 +184,15 @@ Preserve without editing, adding, deleting, or promoting:
 Read in this order:
 
 1. `AGENTS.md`, anti-drift guardrails, and cost policy;
-2. current context pack, frozen decisions, gate/claim registries, project
-   state, decision/claim/validation ledgers, and next-session prompt;
-3. D-038, D-039, D-040, and D-041/EXT-01 evidence;
+2. the corrected prompt and current SSOT at `PROMPT_COMMIT`, then the
+   code-snapshot frozen decisions and registries at `CODE_HEAD`;
+3. D-038, D-039, D-040, and the bounded tracked D-041/EXT-01 evidence;
 4. W3, W5, W6, W7 source and exact vectors;
 5. only then the code consumers and historical evidence needed to test a
    specific novelty claim.
+
+Do not require or regenerate a historical `.agent-harness/generated/CONTEXT_PACK.md`.
+That mutable runtime cache is not an external archival authority.
 
 Use this authority order:
 
@@ -156,6 +249,12 @@ Return exactly one route verdict:
 - `ONE_EXTERNAL_CANDIDATE_FOR_INTAKE_REVIEW`;
 - `INCONCLUSIVE_EVIDENCE_OR_TIE`;
 - `PROVENANCE_FAIL`.
+
+`PROVENANCE_FAIL` is reserved for a binding published input or the new
+prospective lab chain defined in Section 1. An absent historical contextual
+artifact is reported as `NOT_SUPPLIED`; it cannot support a gate, but it does
+not prevent a clean-room candidate from being derived and tested from the
+binding inputs.
 
 No report/editorial score may be used as a scientific gate.
 
@@ -240,6 +339,10 @@ feasibility verdict is separate from later repository adoption/deletion.
 Before Phase B, write and hash one `EXPERIMENT_CONTRACT.json`. A blind
 pre-execution reviewer must accept it before any mechanism output. It freezes:
 
+- every consumed input as `CURRENT_BINDING`, `HISTORICAL_SEMANTIC`,
+  `HISTORICAL_REPLAY_ONLY`, or `HISTORICAL_OPTIONAL`, plus its consuming gate;
+  any replay-only/optional byte actually consumed is promoted by content hash
+  to `CURRENT_BINDING` before the seal;
 - the candidate, exact conventions, assumptions, branches and manufactured
   vectors;
 - a typed operation graph whose node classes are state representation,
@@ -266,7 +369,7 @@ afterward.
 
 | Gate | PASS | FAIL |
 |---|---|---|
-| `XG-00-PROVENANCE` | all binding hashes, preseal chronology and tool versions reproduce | mismatch, substituted bytes or output preceding the seal |
+| `XG-00-PROVENANCE` | the Section 1.1 commit-addressed inputs and every new prospective contract/source/test/raw-output/manifest byte reproduce with valid preseal chronology and tool versions | a binding input mismatch, substituted prospective byte, missing new raw artifact, or output preceding the seal |
 | `XG-01-NOVELTY` | the frozen typed-graph comparison proves the required non-isomorphism | rename, wrapper, compiler-only change or incomplete bidirectional map |
 | `XG-02-PHYSICS` | conventions, units, six-species semantics, absolute factors and finite-`m_e` branches close exactly | fitted, massless, incomplete or unresolved branch |
 | `XG-03-INVARIANTS` | nullspace, first law, detailed balance and permutation identities hold before floating point | projection, repair or consumer-specific convention |
@@ -283,6 +386,13 @@ Exactly one prospectively selected finalist must PASS all gates to request
 intake. Failure archives only that candidate. Provenance/isolation failure
 stops the whole package. Zero survivors is `NO_ADMISSIBLE_CANDIDATE`; an
 unresolved Phase-A tie is `INCONCLUSIVE_EVIDENCE_OR_TIE`.
+
+Apply `XG-00` twice: first to the published-input contract before Phase A, and
+again to the prospectively sealed lab before Phase B output. Do not apply it
+to an explicitly contextual historical artifact. If a new proof or result
+depends on an old claim whose raw evidence is unavailable, independently
+rederive that premise inside the new seal or mark the dependent gate
+`INCONCLUSIVE`.
 
 ## 6. Required executable lab bundle
 
@@ -551,12 +661,17 @@ adoption or public claims.
 
 ## 11. Required output package
 
-Return exactly:
+The return set is conditional and must not invent a finalist:
 
-1. one self-contained report;
-2. one ZIP containing the minimal lab package;
-3. one SHA-256 manifest covering every returned file;
-4. exact stdout/stderr and raw failures from the frozen commands.
+- If Phase B runs for one prospectively selected finalist, return exactly one
+  self-contained report, one ZIP containing the minimal lab package, one
+  SHA-256 manifest covering every returned file, and exact stdout/stderr plus
+  raw failures from the frozen commands.
+- If Phase A ends with no admissible candidate, a tie, or a binding-input
+  provenance failure before a finalist exists, return one self-contained
+  report, one SHA-256 manifest covering the report and returned raw
+  provenance/kill logs, and those raw logs. Do **not** create an empty or
+  fictional lab ZIP.
 
 The report must contain:
 
@@ -565,8 +680,9 @@ The report must contain:
 - a 6--10-row candidate pool and operation-level novelty matrix;
 - cheap kill-test results and reasons for every elimination;
 - complete paper contracts for no more than three alternatives;
-- the presealed contract, exact code inventory and raw results for at most one
-  microprototype;
+- only if Phase B is reached, the presealed contract, exact code inventory and
+  raw results for at most one microprototype; otherwise state
+  `PHASE_B_NOT_REACHED`;
 - independent-review, steelman, CRAG and formal/CAS adjudication;
 - deduplicated findings and candidate/gate verdicts;
 - `PR_DAG=UNREACHABLE` or the conditional five-PR intake proposal and DAG;

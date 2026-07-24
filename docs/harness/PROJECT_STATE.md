@@ -1,6 +1,6 @@
 # Project State
 
-Date: 2026-07-23
+Date: 2026-07-24
 
 ## Current status
 
@@ -44,6 +44,26 @@ public production are FORBIDDEN. By the 2026-07-16 owner decision, the current
 programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
+
+## 2026-07-24 D-043 provenance-contract correction overlay
+
+- The first external D-042 attempt is preserved as `PROVENANCE_FAIL` at
+  `XG-00`. It correctly refused to reconstruct a requested frozen-decision
+  snapshot or accept missing historical context-pack and `/tmp` artifacts.
+- A full local search of branches, tags, remote refs, reflogs, reachable and
+  dangling objects found `4f4da8f0` only as unreachable blob `5d583891` in
+  orphan trees; it was never a distributable commit. `e3ea99a9` is absent from
+  the Git object corpus. Neither byte is promoted or reconstructed.
+- The owner authorized an in-place prompt correction. The external input
+  contract now uses immutable code snapshot `bede5a9`, published evidence
+  floor `204d3fa`, and the future commit containing the corrected prompt.
+  Missing old contextual evidence prevents reuse of the affected old claim but
+  does not block an independently derived, prospectively sealed candidate.
+- `XG-00` remains strict for every binding published input and all new
+  contract/source/test/raw-output/manifest bytes. The correction opens only the
+  already bounded external 6--10-family screen and at most one repository-free,
+  nonphysical microprototype. `G-EXT-FEASIBILITY` and every scientific gate
+  remain FAIL; the repository PR queue remains empty.
 
 ## 2026-07-22 B3-v2 successor entry-gate overlay
 
@@ -190,13 +210,15 @@ started without a new explicit instruction.
   gate, so `G-EXT-FEASIBILITY=FAIL`; all three are archived and OWNER-1/PR-01
   are not reached. STOP/PRESERVE and every downstream prohibition remain
   binding.
-- D-042 produces a newly bounded external executable-breakthrough request
+- D-042 produced the original bounded external executable-breakthrough request
   (`6b5545bd`) and no scientific candidate. Four blind design inputs and two
   hostile reviews forced one-finalist/one-authority-path deflation, prospective
   operation-graph/domain/norm/arithmetic definitions, semantic rather than
   hash/import mutation kills, and separation of mathematical feasibility from
   future repository deletion. Replacement adjudication `9607e9cf` marks the
-  prompt ready for verbatim issuance. The current PR queue is empty,
+  original prompt contract internally coherent, but the first external attempt
+  returned `PROVENANCE_FAIL` on non-distributable historical prerequisites.
+  D-043 supersedes those input/output clauses. The current PR queue is empty,
   `G-EXT-FEASIBILITY=FAIL`, and any returned PASS may only request a new owner
   intake decision.
 
