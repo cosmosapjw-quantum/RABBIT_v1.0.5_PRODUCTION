@@ -1,0 +1,66 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+ "assignment_id": "A-REPLAY-VERIFICATION",
+ "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+ "agent_id": "a0cc2edb9fec5dbc9",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+  "assignment_id": "A-REPLAY-VERIFICATION",
+  "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:53fd935d5230bb478d9acaa1233ce9d4db98b10af5b322228a105a2484cdc886",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-VERIFICATION.json",
+ "started_at": "2026-07-27T13:53:00+00:00",
+ "completed_at": "2026-07-27T13:55:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "hash/git verification of frozen bytes vs 9c99ecf",
+  "independent threshold recomputation from replay_report.json",
+  "raw log inspection; no re-execution"
+ ],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-REPLAY-VERIFY-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Independent verification, all items VERIFIED: every gated value recomputed against the frozen thresholds with matching ok flags and consistent PASS verdict; script, contract, and _independent_noqke.py byte-identical to freeze commit 9c99ecf with the module at its recorded sha256 535370c1...; stdout byte-identical to the report; stderr empty; wall 18.88 s. Anchor flag for the record: T-A reproduces the quarantined GL48_STATIC_R1 value digit-for-digit on the current environment, so the W5 drift explanation belongs to the W5 run environment, and this replay's parity chain to the original artifact is exact rather than bounded. Sanity: T-E slightly below T-F because the closed row-6 contribution is P-symmetric and enlarges the relative-metric denominator without adding antisymmetric numerator.",
+   "assumptions_used": [
+    "Verification restricted to hashing, git inspection, and JSON parsing."
+   ],
+   "evidence_refs": [
+    "replay_report.json sha256 89938c3c...",
+    "freeze commit 9c99ecf"
+   ],
+   "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Re-run the listed hash and JSON checks."
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-VERIFICATION.json"
+ ]
+}

@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+  "generated_at": "2026-07-27T14:28:12+00:00",
+  "result_count": 5,
+  "unique_finding_count": 6,
+  "findings": [
+    {
+      "finding_id": "F-REPLAY-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS. All nine gated checks pass their frozen thresholds on adjudicator recomputation and the freeze chronology held (contract/script/module byte-identical to 9c99ecf through execution; stdout byte-identical to the report; wall 18.88 s). Scientific finding, internal to this repository at the two frozen states: the D-028 native mu-tau covariance residual 4.666064056497196e-10 is the row-6 single-ordered-member orientation artifact amplified by the 1/y^2 native map -- the single-member artifact is order one (T-H 1.0000172), deleting row 6 alone lands at 4.1812242095923674e-11 under the cap (T-F), the D-046 derived-quotient closure takes the closed total to 3.8807636157303184e-11 (T-E, 12x under cap) with exact closed antisymmetry (T-D 0.0), the live-code identity modal_M-(f) == P.modal_M+(Pf) is bitwise on both states (T-C/T-C2 0.0), and conservation holds at 2e-16/3e-16 (T-G). Claim upgrade per the frozen decision rule: D046-r6-orbit-chart-rabbit-applicability PROPOSED -> VALIDATED, bounded to that mechanism statement only. NOT established: any B_native metrology bound, any general-state proof, any trajectory/endpoint claim; the D-028 recorded FAIL for its bytes stands unchanged; G-F10-COVARIANCE-METROLOGY criteria are untouched; no gate moves. Terminal: REQUEST_OWNER_C_CONSIDERATION -- request only.",
+      "assumptions_used": [
+        "Adjudication limited to hashing, git inspection, JSON parsing, and envelope reads."
+      ],
+      "evidence_refs": [
+        "replay_report.json sha256 89938c3c...",
+        "freeze commit 9c99ecf",
+        "four sibling envelopes"
+      ],
+      "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Recompute the nine threshold comparisons from the report."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-REPLAY-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-REPLAY-ADJ-002",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Limitations of record: same-model blind review and verification (procedural independence only); single deterministic execution without a fresh-process replay pair; T-B bitwise false at 1.01e-14 rel-Linf (BLAS shape dispatch, predicted pre-freeze); the sub-cap residual floor 4.18e-11 is not decomposed beyond row 6; T-A reproduced the recorded value digit-for-digit under numpy 2.4.2/scipy 1.17.0 although the record was made under 2.4.4/1.17.1, so the W5 drift to 4.78428e-10 is attributable to the W5 run environment but remains uncharacterized; the asymmetric identity state is a 10 MeV adaptation of the 3 MeV W6 S-split profile and gates only the identity check.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "A-REPLAY-VERIFICATION envelope",
+        "replay_report.json informative block"
+      ],
+      "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.9,
+      "unresolved": [
+        "OWNER-C consideration is the owner's next checkpoint."
+      ],
+      "supporting_assignments": [
+        "A-REPLAY-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-REPLAY-REVIEW-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Blind pre-freeze review found no blockers: the external mirror is faithful to _assemble_self operation-for-operation (batch, domain, measure, native/interpolated leg sourcing, rate product order, leg_modes, (+,+,-,-) deposits, per-node accumulation); self_rows[6] confirmed as _native_action(grid, row_modal[5], temperature_cm); P operators correct; closed-total modal arithmetic exact under the linear native map; pair_residual token-identical to the module's mu_tau_residual; T-C/T-C2/T-D expected bitwise zero via the bitwise-equal mu/tau state rows; T-G has ~4 orders margin (whole-reaction domain rejection preserves nulls; e3+e4=p1+p2 exact); structural walk of all non-row-6 events predicts the no-row6 floor well under the cap with row 6 the unique orientation-asymmetric event. Three minors: BLAS shape dispatch may break bitwise (not gates) on T-B; an --out argument edge case (fixed pre-freeze); PYTHONPATH/thread pins are runner obligations.",
+      "assumptions_used": [
+        "Static review only; no numerical output existed before the freeze commit."
+      ],
+      "evidence_refs": [
+        "scripts/audit/d047_ownerb_r6_target_replay.py",
+        "src/rabbit/decoupling/_independent_noqke.py L1039-1122"
+      ],
+      "evidence_fingerprint": "sha256:c90a7e4d642cf1a86979b349bf3e3af72e187c81dd897a5dcf6d10809a491a52",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Re-walk member_modal against _assemble_self."
+      ],
+      "confidence": 0.9,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-REPLAY-BLIND-REVIEW"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-REPLAY-CONTRACT-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The OWNER-B replay contract was prospectively frozen at commit 9c99ecf before any replay output: frozen cell (GL48-Y24, default config, T=10 MeV, D-028 e-split state plus W6 S-split identity state), external mirror construction with caller-built reverse member, derived one-half closure, nine gated checks T-A..T-H with thresholds, decision rule, and explicit D-028 non-reopen scoping (the recorded D-028 FAIL and bytes stand; the owner grant authorizes a new experiment, answering the D-044 constructional-covariance objection via derived quotient, bitwise live-code identity, localization, and negative control). Contract sha256 8f29a2b0..., script sha256 c90a7e4d....",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "freeze commit 9c99ecf"
+      ],
+      "evidence_fingerprint": "sha256:8f29a2b09c96f307e4f01ae130bfca1120730c4532e9c2b0540573bfd433ad1c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git show 9c99ecf --stat"
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-REPLAY-CONTRACT"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-REPLAY-EXEC-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Single frozen execution, exit 0, wall 18.88 s, RSS 132 MB, all nine gated checks PASS: T-A reproduces the recorded D-028 residual to the exact digit 4.666064056497196e-10 on the current environment; T-B external-vs-live row-6 parity 1.012e-14; T-C and T-C2 live-code identity modal_M-(f) == P.modal_M+(Pf) bitwise 0.0 on both the D-028 and the asymmetric state; T-D closed row-6 pair antisymmetry exactly 0.0; T-E closed-total native mu-tau residual 3.8807636157303184e-11 <= 1e-10 (12x under the recorded FAIL); T-F no-row6 residual 4.1812242095923674e-11 <= 1e-10 (internal row-6 dominance); T-G closed self-sector conservation 1.97e-16 number / 2.86e-16 energy; T-H single-member row-6 pair residual 1.0000171560718123 (order-one artifact). Informative: member entropy productions nonnegative on both states, CP residual unchanged 3.49e-11, 8830128 domain rejections matching the recorded artifact.",
+      "assumptions_used": [
+        "Frozen bytes verified unchanged around execution; _independent_noqke.py untouched at sha256 535370c1...."
+      ],
+      "evidence_refs": [
+        "replay_report.json sha256 89938c3c...",
+        "replay_time.txt sha256 ee384805..."
+      ],
+      "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Re-run the frozen command; report is deterministic under the pinned environment."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-REPLAY-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-REPLAY-VERIFY-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Independent verification, all items VERIFIED: every gated value recomputed against the frozen thresholds with matching ok flags and consistent PASS verdict; script, contract, and _independent_noqke.py byte-identical to freeze commit 9c99ecf with the module at its recorded sha256 535370c1...; stdout byte-identical to the report; stderr empty; wall 18.88 s. Anchor flag for the record: T-A reproduces the quarantined GL48_STATIC_R1 value digit-for-digit on the current environment, so the W5 drift explanation belongs to the W5 run environment, and this replay's parity chain to the original artifact is exact rather than bounded. Sanity: T-E slightly below T-F because the closed row-6 contribution is P-symmetric and enlarges the relative-metric denominator without adding antisymmetric numerator.",
+      "assumptions_used": [
+        "Verification restricted to hashing, git inspection, and JSON parsing."
+      ],
+      "evidence_refs": [
+        "replay_report.json sha256 89938c3c...",
+        "freeze commit 9c99ecf"
+      ],
+      "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Re-run the listed hash and JSON checks."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-REPLAY-VERIFICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

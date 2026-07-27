@@ -1,6 +1,37 @@
 # Next Session Prompt
 
-## 2026-07-27 D-046 controlling overlay
+## 2026-07-27 D-048 controlling overlay
+
+D-047 granted OWNER-B and froze the target replay (commit `9c99ecf`);
+D-048 closed it as an adjudicated PASS on all nine gated checks. The
+D-028 native mu-tau covariance residual (`4.666064056497196e-10`,
+reproduced digit-for-digit) is now internally established as the row-6
+single-ordered-member orientation artifact amplified by the `1/y^2`
+native map; the D-046 derived-quotient closure removes it to
+`3.8807636157303184e-11`, under the `1e-10` cap.
+`D046-r6-orbit-chart-rabbit-applicability = VALIDATED` (bounded to the
+two frozen states). The D-028 recorded FAIL for its exact bytes stands
+unreopened; `G-F10-COVARIANCE-METROLOGY` does not move on this evidence.
+
+The next session has exactly two possible owner decision points and
+otherwise preserves STOP/PRESERVE:
+
+1. Owner may grant a validation-only lint-fix authority (`gk_recurse`,
+   `src/isotropic_boltzmann.rs:2513`) followed by a full regression bundle
+   re-run; only an all-command PASS may flip `G-F10C1-REGRESSION`.
+2. Owner may grant **OWNER-C**: modifying `_independent_noqke.py` (or an
+   equivalent implementation route) to carry the validated two-member
+   closure, followed by the weak/mass-weighted identity and prospectively
+   frozen `B_native` metrology work that `G-F10-COVARIANCE-METROLOGY`
+   requires. The D-048 terminal line requests this consideration; it
+   grants nothing.
+
+Do not modify `_independent_noqke.py` without OWNER-C, run W7/B3 output,
+T01--T12, GL64/Radau/trajectory/endpoint, unblind RABBIT, restart
+Rust/JAX forward work, or open F-11/QKE/public claims. Do not re-dispatch
+any external prompt.
+
+## 2026-07-27 D-046 controlling overlay (superseded by D-048 above)
 
 D-046 closed the OWNER-A discriminator as an adjudicated PASS:
 `C-R6-ORBIT-CHART-MICROCASE=VALIDATED` on manufactured nonphysical objects

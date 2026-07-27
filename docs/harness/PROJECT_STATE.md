@@ -45,6 +45,34 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-27 D-047/D-048 OWNER-B target replay overlay
+
+- D-047 recorded the OWNER-B grant and prospectively froze the read-only
+  target replay (contract + script at commit `9c99ecf`): external mirror of
+  the row-6 event loop, caller-built reverse ordered member, D-046 derived
+  one-half closure, gated checks T-A..T-H, explicit D-028 non-reopen
+  scoping. `_independent_noqke.py` imported unmodified.
+- D-048 closed the replay as an adjudicated PASS on all nine gated checks
+  (single frozen execution, wall 18.88 s). T-A reproduced the recorded
+  D-028 residual digit-for-digit (`4.666064056497196e-10`); the live-code
+  identity `modal_M-(f) == P.modal_M+(Pf)` is bitwise zero on both frozen
+  states; the closed-total native mu-tau residual is
+  `3.8807636157303184e-11 <= 1e-10`; deleting row 6 alone gives
+  `4.1812242095923674e-11` (internal localization); the single-member
+  artifact is order one; conservation holds at `2e-16`.
+- Scientific status: the D-028 residual mechanism is internally established
+  as the row-6 single-ordered-member orientation artifact under `1/y^2`
+  amplification, removed by the derived-quotient closure.
+  `D046-r6-orbit-chart-rabbit-applicability = VALIDATED` (bounded to the
+  two frozen states; no metrology bound, general-state proof, or
+  trajectory/endpoint claim). The D-028 recorded FAIL for its exact bytes
+  stands unreopened; `G-F10-COVARIANCE-METROLOGY` does not move.
+- Terminal line `REQUEST_OWNER_C_CONSIDERATION` is a request only;
+  `OWNER-C=REQUIRED_NOT_GRANTED` for any `_independent_noqke.py`
+  modification. Recorded limitations: same-model reviews, single
+  deterministic execution, T-B bitwise-false at `1.01e-14`, undecomposed
+  `4.18e-11` sub-cap floor, W5 drift provenance, adapted identity state.
+
 ## 2026-07-27 D-045/D-046 owner-grant and OWNER-A discriminator overlay
 
 - D-045 recorded the 2026-07-27 owner grants: handoff durability, one
@@ -1401,12 +1429,17 @@ OWNER-A discriminator passed adjudication:
 `C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured nonphysical microcase
 only) and the sealed run's terminal line requests OWNER-B authorization.
 
-The two open owner decisions are now: (1) whether to grant a small
-validation-only lint-fix authority so the regression bundle can pass on a
-fixed tree; (2) whether to grant OWNER-B for a target replay of the
-validated closure construction against the live `_independent_noqke.py`
-row-6 evaluator (read-only; OWNER-C would still be required for any source
-modification). Absent those grants, STOP/PRESERVE controls. Exact-byte
+OWNER-B was granted and executed: the D-048 replay passed all gated checks
+and validated the bounded applicability claim (the D-028 covariance
+residual is the row-6 orientation artifact, removed by the derived-quotient
+closure). The two open owner decisions are now: (1) whether to grant a
+small validation-only lint-fix authority so the regression bundle can pass
+on a fixed tree; (2) whether to grant **OWNER-C** — modifying
+`_independent_noqke.py` (or an equivalent implementation route) to carry
+the two-member closure, which would then feed the still-unbuilt
+weak/mass-weighted identity and `B_native` metrology work that
+`G-F10-COVARIANCE-METROLOGY` requires. Absent those grants, STOP/PRESERVE
+controls. Exact-byte
 remediation readiness, W7 execution, B3 implementation, and
 independent-FLRW closure remain **FAIL**; preserve every exact failure,
 bounded pass, unfinished D-037 axis, legacy bundle, user-owned review, and

@@ -1,0 +1,64 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+ "assignment_id": "A-REPLAY-BLIND-REVIEW",
+ "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+ "agent_id": "a8813fb53901ce404",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+  "assignment_id": "A-REPLAY-BLIND-REVIEW",
+  "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:8dd5ab60f4cb7721f7dd513abcc8710fa5c323f67f2c5faf6311abd647f3a04e",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-BLIND-REVIEW.json",
+ "started_at": "2026-07-27T13:36:00+00:00",
+ "completed_at": "2026-07-27T13:47:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "read-only line-by-line comparison of member_modal vs _assemble_self L1055-1122; no execution before freeze"
+ ],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-REPLAY-REVIEW-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Blind pre-freeze review found no blockers: the external mirror is faithful to _assemble_self operation-for-operation (batch, domain, measure, native/interpolated leg sourcing, rate product order, leg_modes, (+,+,-,-) deposits, per-node accumulation); self_rows[6] confirmed as _native_action(grid, row_modal[5], temperature_cm); P operators correct; closed-total modal arithmetic exact under the linear native map; pair_residual token-identical to the module's mu_tau_residual; T-C/T-C2/T-D expected bitwise zero via the bitwise-equal mu/tau state rows; T-G has ~4 orders margin (whole-reaction domain rejection preserves nulls; e3+e4=p1+p2 exact); structural walk of all non-row-6 events predicts the no-row6 floor well under the cap with row 6 the unique orientation-asymmetric event. Three minors: BLAS shape dispatch may break bitwise (not gates) on T-B; an --out argument edge case (fixed pre-freeze); PYTHONPATH/thread pins are runner obligations.",
+   "assumptions_used": [
+    "Static review only; no numerical output existed before the freeze commit."
+   ],
+   "evidence_refs": [
+    "scripts/audit/d047_ownerb_r6_target_replay.py",
+    "src/rabbit/decoupling/_independent_noqke.py L1039-1122"
+   ],
+   "evidence_fingerprint": "sha256:c90a7e4d642cf1a86979b349bf3e3af72e187c81dd897a5dcf6d10809a491a52",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Re-walk member_modal against _assemble_self."
+   ],
+   "confidence": 0.9,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-BLIND-REVIEW.json"
+ ]
+}

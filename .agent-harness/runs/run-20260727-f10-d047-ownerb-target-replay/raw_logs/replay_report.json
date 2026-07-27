@@ -1,0 +1,58 @@
+{
+ "checks": {
+  "T-A_reproduction": {
+   "ok": true,
+   "value": 4.666064056497196e-10
+  },
+  "T-B_parity": {
+   "bitwise": false,
+   "ok": true,
+   "value": 1.0122040631628722e-14
+  },
+  "T-C2_identity_asym_state": {
+   "bitwise": true,
+   "ok": true,
+   "value": 0.0
+  },
+  "T-C_identity_d028_state": {
+   "bitwise": true,
+   "ok": true,
+   "value": 0.0
+  },
+  "T-D_closed_row6_antisym": {
+   "ok": true,
+   "value": 0.0
+  },
+  "T-E_closed_total_residual": {
+   "ok": true,
+   "value": 3.8807636157303184e-11
+  },
+  "T-F_no_row6_residual": {
+   "ok": true,
+   "value": 4.1812242095923674e-11
+  },
+  "T-G_closed_self_conservation": {
+   "energy_ratio": 2.855727538351831e-16,
+   "number_ratio": 1.9682158660092625e-16,
+   "ok": true
+  },
+  "T-H_negative_control": {
+   "ok": true,
+   "value": 1.0000171560718123
+  }
+ },
+ "contract": "BD622_D047_ownerb_target_replay_contract_2026-07-27",
+ "informative": {
+  "asym_closed_energy_ratio": 2.13837525879857e-16,
+  "asym_closed_number_ratio": 1.7019455381510183e-16,
+  "asym_entropy_production_member_minus": 6.080748542827746e-19,
+  "asym_entropy_production_member_plus": 6.080748570834314e-19,
+  "charge_conjugation_residual": 3.489663845779716e-11,
+  "d028_entropy_production_member_minus": 3.1483038712313333e-43,
+  "d028_entropy_production_member_plus": 3.1483038712313333e-43,
+  "recorded_d028_residual": 4.666064056497196e-10,
+  "w5_replay_residual": 4.78428e-10,
+  "whole_reaction_domain_rejections": 8830128.0
+ },
+ "verdict": "PASS"
+}

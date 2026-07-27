@@ -1,0 +1,70 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+ "assignment_id": "A-REPLAY-EXECUTION",
+ "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+ "agent_id": "fable-main-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+  "assignment_id": "A-REPLAY-EXECUTION",
+  "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:5dcb22a38d93beb0bdadc7a59ed3a7c2e939c6eab80cfac434c625ff7c0bc61c",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-EXECUTION.json",
+ "started_at": "2026-07-27T13:50:00+00:00",
+ "completed_at": "2026-07-27T13:52:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0"
+ },
+ "commands": [
+  "env PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /usr/bin/time -v python3 scripts/audit/d047_ownerb_r6_target_replay.py --out raw_logs/replay_report.json"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/raw_logs/replay_report.json",
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/raw_logs/replay_stdout.log",
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/raw_logs/replay_time.txt"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-REPLAY-EXEC-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Single frozen execution, exit 0, wall 18.88 s, RSS 132 MB, all nine gated checks PASS: T-A reproduces the recorded D-028 residual to the exact digit 4.666064056497196e-10 on the current environment; T-B external-vs-live row-6 parity 1.012e-14; T-C and T-C2 live-code identity modal_M-(f) == P.modal_M+(Pf) bitwise 0.0 on both the D-028 and the asymmetric state; T-D closed row-6 pair antisymmetry exactly 0.0; T-E closed-total native mu-tau residual 3.8807636157303184e-11 <= 1e-10 (12x under the recorded FAIL); T-F no-row6 residual 4.1812242095923674e-11 <= 1e-10 (internal row-6 dominance); T-G closed self-sector conservation 1.97e-16 number / 2.86e-16 energy; T-H single-member row-6 pair residual 1.0000171560718123 (order-one artifact). Informative: member entropy productions nonnegative on both states, CP residual unchanged 3.49e-11, 8830128 domain rejections matching the recorded artifact.",
+   "assumptions_used": [
+    "Frozen bytes verified unchanged around execution; _independent_noqke.py untouched at sha256 535370c1...."
+   ],
+   "evidence_refs": [
+    "replay_report.json sha256 89938c3c...",
+    "replay_time.txt sha256 ee384805..."
+   ],
+   "evidence_fingerprint": "sha256:89938c3c7d5cc160b091c8643334bedd95285fc65d35327f537b79ea5d672209",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Re-run the frozen command; report is deterministic under the pinned environment."
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-EXECUTION.json"
+ ]
+}
