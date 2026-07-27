@@ -45,6 +45,26 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-28 D-052--D-056 gate-matrix completion overlay
+
+- Under the D-052 omnibus grant (row-9 closure, covariance-metrology,
+  trajectory/endpoint, sequenced), all three stages closed in one session:
+  D-053 accepted the final static catalogue `760a7c04` (all pair
+  conversions orientation-closed); D-054's first metrology contract FAILED
+  on two adjudicated design defects (preserved) and the corrected D-055 r2
+  PASSED, flipping `G-F10-COVARIANCE-METROLOGY`; D-056's structurally
+  independent SciPy-BDF trajectory reached the 0.005 MeV cold endpoint
+  with `N_eff = 3.034054` (delta `+7.4e-4` vs the Rust N48 anchor, band
+  `3e-3`), `t_end` delta `-1.47 s`, clean blockwise hierarchy and first
+  law, flipping `G-F10-INDEPENDENT-FLRW`.
+- **All eight F-10 gates are PASS.** The independent-validation gate
+  matrix is complete on catalogue bytes `760a7c04`.
+- Boundaries unchanged: matched-resolution N48-class endpoint agreement on
+  the frozen 10 MeV -> 5 keV cell only; no continuum claim. Unblinding,
+  public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward
+  work, F-11/Bianchi, and QKE remain closed and are separate owner
+  decisions under `G-F10-SCOPE`.
+
 ## 2026-07-27 D-049/D-050/D-051 lint-fix and OWNER-C closure overlay
 
 - D-049: the sole regression-bundle failure (test-only clippy lint on the

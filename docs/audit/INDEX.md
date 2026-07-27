@@ -16,6 +16,12 @@ linked from canonical docs. Start from these anchors:
   [BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md](BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md)
 - D-045/D-046 owner grants + OWNER-A orbit-chart discriminator closeout:
   [BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md](BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md)
+- D-052/D-056 gate-matrix completion (row-9 closure, metrology, independent trajectory):
+  [BD622_D056_gate_matrix_completion_2026-07-28.md](BD622_D056_gate_matrix_completion_2026-07-28.md)
+  (contracts: [BD622_D053_row9_closure_contract_2026-07-28.md](BD622_D053_row9_closure_contract_2026-07-28.md),
+  [BD622_D054_covariance_metrology_contract_2026-07-28.md](BD622_D054_covariance_metrology_contract_2026-07-28.md),
+  [BD622_D055_covariance_metrology_contract_r2_2026-07-28.md](BD622_D055_covariance_metrology_contract_r2_2026-07-28.md),
+  [BD622_D056_independent_trajectory_contract_2026-07-28.md](BD622_D056_independent_trajectory_contract_2026-07-28.md))
 - D-049/D-051 lint fix, regression gate PASS, OWNER-C closure acceptance:
   [BD622_D051_ownerc_closure_acceptance_2026-07-27.md](BD622_D051_ownerc_closure_acceptance_2026-07-27.md)
   (contract: [BD622_D050_ownerc_row6_closure_contract_2026-07-27.md](BD622_D050_ownerc_row6_closure_contract_2026-07-27.md))

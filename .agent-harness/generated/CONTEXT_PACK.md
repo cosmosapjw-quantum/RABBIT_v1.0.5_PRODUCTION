@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3`
-Built at: `2026-07-27T16:35:31+00:00`
+Context version: `92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6`
+Built at: `2026-07-27T19:42:58+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -168,7 +168,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `1bdddd7021d6054817c4f17b8c4931aaba43f5f4ec2dd5d951ad6bb53b14fb44`
+SHA-256: `05241b9f84cb6565e3a5d12988f305055551a50ae706125caaa36914dd1997e5`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -229,6 +229,7 @@ SHA-256: `1bdddd7021d6054817c4f17b8c4931aaba43f5f4ec2dd5d951ad6bb53b14fb44`
 | D-053 | Close the row-9 closure (D-052 stage 1) as an adjudicated **PASS** and accept `_independent_noqke.py` sha256 `760a7c04...` at commit `94d0f00` as the **final static catalogue** for stages 2--3: 27 events, fingerprint `(2,1,6,2,2,2,4,4,4)`, all six pair-conversion members in three mutually-reverse ordered pairs at `K_t`/`16.0`. All frozen checks pass: e/mu self-sector residual closed to `3.525406360939371e-11` (order-one single-member control); mu/tau regression `2.447560236182917e-11`; CP improved to `3.138183248343415e-11`; conservation, first law, entropy, and equilibrium null in their recorded classes. | Run `run-20260728-f10-d053-row9-closure`: five envelopes 5/5 unique, adjudication verified freeze chronology at second resolution and byte identity; blind review's assertion tightening confirmed present in the sealed harness. | Acceptance of the final static bytes only; no gate movement | Limitations recorded: same-model reviews, single execution, liveness-only negative control, undecomposed sub-cap floors (deferred to the stage-2 metrology program by design). The D-052 stage-2 metrology bound and stage-3 trajectory must bind exactly these bytes. |
 | D-054 | Record the first covariance-metrology contract (`BD622_D054`, freeze `46ef477`) as an adjudicated **FAIL, preserved**: `G-F10-COVARIANCE-METROLOGY` stays FAIL and no term or threshold of that contract may be refitted. Both failure causes are contract-design defects, not physics: M3 froze bitwise-zero electron mu/tau equality (realized gaps `2.9e-34`/`1.9e-34`/`2.2e-47` absolute, `~1e-14` relative), and the equilibrium state S-B is degenerate for relative metrics (`D_native 3.4e-29`; its residuals are noise/noise). The meaningful states passed every physics check: S-A `R_weak 1.144e-15`, `R_mass 2.965e-15`, `R_native 2.448e-11 <= B_native 7.788e-2` and `<= 1e-10` (reproducing the D-053 anchor exactly); S-C `R_weak 7.355e-16`, `R_native 5.936e-12`. | Run `run-20260728-f10-d054-covariance-metrology`, report `f456f3dd`, adjudication confirmed the freeze chain and recomputed every gate. | FAIL record only; no gate movement; no refitting | Supersession PERMITTED per the D-052 stage-2 program grant and the D-042/D-043 preserve-first-FAIL precedent: D-055 may change exactly the two adjudicated defects and nothing else. |
 | D-055 | Issue the corrected covariance-metrology contract (`BD622_D055` r2) changing exactly: (1) degenerate S-B replaced by the nondegenerate P-closed split state S-D scales `(1.0, 0.98, 0.98)`; (2) M3 demoted from bitwise zero to a measured relative electron-row bound `<= 1e-10` with the absolute gap recorded. Every other term, threshold, formula, and state is byte-identical to BD622_D054 (delta verified by mechanical diff). | D-054 adjudication scoped the permitted correction; the r2 oracle is a two-change derivative of the frozen d054 oracle. | One corrected metrology attempt deciding `G-F10-COVARIANCE-METROLOGY` | All-pass flips the gate by single-writer update; any failure preserves FAIL with no further reissue under this grant absent a new owner decision. |
+| D-056 | Close the D-052 stage-3 independent trajectory as an adjudicated **PASS** and flip `G-F10-INDEPENDENT-FLRW` fail -> pass: the structurally independent comparator (affine GL48-Y24, cloglog state, SciPy BDF, independent EOS and constants) integrated the collision-coupled FLRW system from 10 MeV equilibrium to the 0.005 MeV cold endpoint on bytes `760a7c04` in 2:45:28 (3694 evaluations) and met every predeclared band against the Rust N48 anchors: `N_eff = 3.034054308076679` (delta `+7.44e-4`, band `3e-3`, also in band of the Rodas5P partner), `N_end` delta `-2.26e-5`, `t_end` delta `-1.47 s` (band `15 s`), blockwise e/mu/tau enhancements `9.37e-3 > 3.85e-3 > 0` with heavy gap `4.69e-10`, first law `<= 8.31e-15` throughout. **All eight F-10 gates are now PASS.** | Run `run-20260728-f10-d056-independent-trajectory`, report `8ea58a3a`, freeze `5d9f521` with the pre-freeze quadrature discriminator (`3.94e-5` net-transfer agreement vs the `3e-3` band); adjudication recomputed every band and verified the closed historical routes (D-027/D-028/D-029/D-037) are not implicated. | Matched-resolution N48-class endpoint agreement on the frozen 10 MeV -> 5 keV cell only | Limitations recorded: 4/4/24 trajectory angular order (bounded pre-freeze), single execution/platform, `rtol 1e-6`, same-model reviews, no continuum claim. The flip authorizes nothing further: unblinding, public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed and are separate owner decisions under `G-F10-SCOPE`. |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 
@@ -236,7 +237,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `9d3ee27f3a3831fe0d2e11dc629f80f1155bc3762c625380403bf86b7623047d`
+SHA-256: `34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897`
 
 {
   "schema_version": 1,
@@ -312,12 +313,13 @@ SHA-256: `9d3ee27f3a3831fe0d2e11dc629f80f1155bc3762c625380403bf86b7623047d`
       "statement": "The completed full-spectral collision-coupled FLRW endpoint must be checked by a structurally independent formulation/integrator under frozen inputs.",
       "required_evidence": [
         "E-F10-INDEPENDENT-ENDPOINT",
-        "E-F10-B3V2-D037-BLIND-FAIL"
+        "E-F10-B3V2-D037-BLIND-FAIL",
+        "E-F10-D056-INDEPENDENT-TRAJECTORY"
       ],
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",

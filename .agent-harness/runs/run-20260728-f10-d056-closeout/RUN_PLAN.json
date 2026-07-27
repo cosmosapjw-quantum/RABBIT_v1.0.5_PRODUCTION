@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d056-closeout",
+  "created_at": "2026-07-27T19:42:58+00:00",
+  "spec_ref": "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+  "base_ref": "main",
+  "head_ref": "f10-independent-validation-b3v2",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

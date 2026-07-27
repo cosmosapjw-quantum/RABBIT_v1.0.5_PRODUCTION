@@ -1,6 +1,33 @@
 # Next Session Prompt
 
-## 2026-07-27 D-049/D-051 controlling overlay
+## 2026-07-28 D-056 controlling overlay — gate matrix complete
+
+**All eight F-10 gates are PASS** on catalogue bytes `760a7c04`
+(D-052--D-056: row-9 closure; metrology r2 after a preserved D-054 FAIL;
+independent trajectory endpoint `N_eff = 3.034054`, delta `+7.4e-4` vs
+the Rust N48 anchor). The F-10 independent-validation programme's gate
+matrix is complete.
+
+The next session preserves this state and has NO open technical task.
+The remaining decisions are owner-level programme decisions under
+`G-F10-SCOPE` and the standing hard stops:
+
+1. Whether to unblind / hand off F-10 (the original 2026-07-16 owner
+   instruction: the programme stops after F-10 closes a collision-coupled
+   isotropic FLRW endpoint — that condition is now met at the
+   matched-resolution class).
+2. Whether to open any public/production claim (currently FORBIDDEN).
+3. Whether to un-pause F-11 Bianchi/Type-I (owner-paused; requires a new
+   explicit instruction).
+4. QKE/coherence remains FORBIDDEN.
+
+Do not modify `_independent_noqke.py` or the Rust tree, re-run frozen
+historical scripts against new bytes, or re-dispatch any external prompt.
+Recorded limitations of the endpoint evidence: matched-resolution
+N48-class agreement, 4/4/24 trajectory angular order (bounded pre-freeze
+at `3.9e-5`), single execution/platform, `rtol 1e-6`, same-model reviews.
+
+## 2026-07-27 D-049/D-051 controlling overlay (superseded by D-056 above)
 
 D-049 fixed the `gk_recurse` lint and the full bundle passed:
 **`G-F10C1-REGRESSION` is PASS** (run

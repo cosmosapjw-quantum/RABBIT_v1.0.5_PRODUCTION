@@ -1,0 +1,60 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d056-independent-trajectory",
+ "assignment_id": "A-TRAJ-EXECUTION",
+ "context_version": "7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3",
+ "agent_id": "fable-main-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d056-independent-trajectory",
+  "assignment_id": "A-TRAJ-EXECUTION",
+  "context_version": "7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:ccbff8ddf55d02b2d2e6a5bbcec9b2b2485cc3819dcf7d8b4d32d7b47053afc4",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-EXECUTION.json",
+ "started_at": "2026-07-28T04:49:00+00:00",
+ "completed_at": "2026-07-28T04:51:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-TRAJ-EXEC-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "The frozen trajectory completed in 2:45:28 wall (3694 RHS evaluations, solver status 1, stderr empty, RSS 87 MB) with verdict PASS on all six checks: N_eff 3.034054308076679 (delta +7.4398e-4, band 3e-3); N_end 7.936698865363719 (delta -2.2554e-5); t_end 52678.7319166 s (delta -1.4729 s, band 15 s); blockwise e/mu/tau enhancements 9.3678e-3 > 3.84828e-3 > 0 with heavy relative gap 4.6944e-10; first-law residual <= 8.306e-15 at every evaluation; occupations in bounds throughout. Endpoint heating ratio 1.3990542, correctly below the instantaneous-decoupling 1.40102.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "traj_report.json",
+    "freeze 5d9f521"
+   ],
+   "evidence_fingerprint": "sha256:8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-EXECUTION.json"
+ ]
+}

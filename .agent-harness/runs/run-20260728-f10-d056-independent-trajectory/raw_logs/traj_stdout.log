@@ -1,0 +1,130 @@
+eval 1: N=0.0000 T_cm=10.00000 T_gamma=10.00000 ratio=1.000000
+eval 51: N=0.0000 T_cm=10.00000 T_gamma=10.00000 ratio=1.000000
+eval 101: N=0.0000 T_cm=10.00000 T_gamma=10.00000 ratio=1.000000
+eval 151: N=0.0000 T_cm=10.00000 T_gamma=10.00000 ratio=1.000000
+eval 201: N=0.0000 T_cm=10.00000 T_gamma=10.00000 ratio=1.000000
+eval 251: N=0.0000 T_cm=9.99994 T_gamma=9.99994 ratio=1.000000
+eval 301: N=0.1001 T_cm=9.04760 T_gamma=9.04767 ratio=1.000007
+eval 351: N=0.1001 T_cm=9.04760 T_gamma=9.04767 ratio=1.000007
+eval 401: N=0.1001 T_cm=9.04760 T_gamma=9.04767 ratio=1.000007
+eval 451: N=0.2289 T_cm=7.95441 T_gamma=7.95456 ratio=1.000019
+eval 501: N=0.2289 T_cm=7.95441 T_gamma=7.95456 ratio=1.000019
+eval 551: N=0.2289 T_cm=7.95441 T_gamma=7.95456 ratio=1.000019
+eval 601: N=0.2289 T_cm=7.95441 T_gamma=7.95456 ratio=1.000019
+eval 651: N=0.4091 T_cm=6.64256 T_gamma=6.64284 ratio=1.000041
+eval 701: N=0.4091 T_cm=6.64256 T_gamma=6.64284 ratio=1.000041
+eval 751: N=0.4091 T_cm=6.64256 T_gamma=6.64284 ratio=1.000041
+eval 801: N=0.6408 T_cm=5.26874 T_gamma=5.26920 ratio=1.000087
+eval 851: N=0.6408 T_cm=5.26874 T_gamma=5.26920 ratio=1.000087
+eval 901: N=0.6408 T_cm=5.26874 T_gamma=5.26920 ratio=1.000087
+eval 951: N=0.8746 T_cm=4.17047 T_gamma=4.17115 ratio=1.000163
+eval 1001: N=0.8746 T_cm=4.17047 T_gamma=4.17115 ratio=1.000163
+eval 1051: N=0.8746 T_cm=4.17047 T_gamma=4.17115 ratio=1.000163
+eval 1101: N=1.1957 T_cm=3.02491 T_gamma=3.02603 ratio=1.000369
+eval 1151: N=1.1957 T_cm=3.02491 T_gamma=3.02603 ratio=1.000369
+eval 1201: N=1.1957 T_cm=3.02491 T_gamma=3.02603 ratio=1.000369
+eval 1251: N=1.3705 T_cm=2.53988 T_gamma=2.54132 ratio=1.000568
+eval 1301: N=1.3705 T_cm=2.53988 T_gamma=2.54132 ratio=1.000568
+eval 1351: N=1.3705 T_cm=2.53988 T_gamma=2.54132 ratio=1.000568
+eval 1401: N=1.4579 T_cm=2.32736 T_gamma=2.32900 ratio=1.000704
+eval 1451: N=1.9023 T_cm=1.49221 T_gamma=1.49524 ratio=1.002034
+eval 1501: N=1.9023 T_cm=1.49221 T_gamma=1.49524 ratio=1.002034
+eval 1551: N=1.9023 T_cm=1.49221 T_gamma=1.49524 ratio=1.002034
+eval 1601: N=2.0821 T_cm=1.24664 T_gamma=1.25047 ratio=1.003076
+eval 1651: N=2.0821 T_cm=1.24664 T_gamma=1.25047 ratio=1.003076
+eval 1701: N=2.0821 T_cm=1.24664 T_gamma=1.25047 ratio=1.003076
+eval 1751: N=2.0810 T_cm=1.24803 T_gamma=1.25186 ratio=1.003069
+eval 1801: N=2.0810 T_cm=1.24803 T_gamma=1.25186 ratio=1.003069
+eval 1851: N=2.0810 T_cm=1.24803 T_gamma=1.25186 ratio=1.003069
+eval 1901: N=2.2489 T_cm=1.05516 T_gamma=1.05988 ratio=1.004471
+eval 1951: N=2.4611 T_cm=0.85345 T_gamma=0.85951 ratio=1.007094
+eval 2001: N=2.4611 T_cm=0.85345 T_gamma=0.85951 ratio=1.007094
+eval 2051: N=2.4611 T_cm=0.85345 T_gamma=0.85951 ratio=1.007094
+eval 2101: N=2.8482 T_cm=0.57948 T_gamma=0.58865 ratio=1.015829
+eval 2151: N=2.8482 T_cm=0.57948 T_gamma=0.58865 ratio=1.015829
+eval 2201: N=2.8482 T_cm=0.57948 T_gamma=0.58865 ratio=1.015829
+eval 2251: N=3.0590 T_cm=0.46934 T_gamma=0.48059 ratio=1.023956
+eval 2301: N=3.0590 T_cm=0.46934 T_gamma=0.48059 ratio=1.023956
+eval 2351: N=3.0590 T_cm=0.46934 T_gamma=0.48059 ratio=1.023956
+eval 2401: N=3.1995 T_cm=0.40781 T_gamma=0.42056 ratio=1.031277
+eval 2451: N=3.1790 T_cm=0.41628 T_gamma=0.42881 ratio=1.030096
+eval 2501: N=3.1790 T_cm=0.41628 T_gamma=0.42881 ratio=1.030096
+eval 2551: N=3.1790 T_cm=0.41628 T_gamma=0.42881 ratio=1.030096
+eval 2601: N=3.4276 T_cm=0.32466 T_gamma=0.34003 ratio=1.047343
+eval 2651: N=3.4276 T_cm=0.32466 T_gamma=0.34003 ratio=1.047343
+eval 2701: N=3.4276 T_cm=0.32466 T_gamma=0.34003 ratio=1.047343
+eval 2751: N=3.4524 T_cm=0.31668 T_gamma=0.33234 ratio=1.049460
+eval 2801: N=3.4524 T_cm=0.31668 T_gamma=0.33234 ratio=1.049460
+eval 2851: N=3.4524 T_cm=0.31668 T_gamma=0.33234 ratio=1.049460
+eval 2901: N=3.4549 T_cm=0.31591 T_gamma=0.33160 ratio=1.049672
+eval 2951: N=3.4549 T_cm=0.31591 T_gamma=0.33160 ratio=1.049672
+eval 3001: N=3.4549 T_cm=0.31591 T_gamma=0.33160 ratio=1.049672
+eval 3051: N=3.5177 T_cm=0.29667 T_gamma=0.31310 ratio=1.055394
+eval 3101: N=3.9189 T_cm=0.19862 T_gamma=0.21958 ratio=1.105485
+eval 3151: N=3.9189 T_cm=0.19862 T_gamma=0.21958 ratio=1.105485
+eval 3201: N=3.9189 T_cm=0.19862 T_gamma=0.21958 ratio=1.105485
+eval 3251: N=4.0020 T_cm=0.18279 T_gamma=0.20455 ratio=1.119043
+eval 3301: N=4.0020 T_cm=0.18279 T_gamma=0.20455 ratio=1.119043
+eval 3351: N=4.0020 T_cm=0.18279 T_gamma=0.20455 ratio=1.119043
+eval 3401: N=4.0483 T_cm=0.17452 T_gamma=0.19670 ratio=1.127084
+eval 3451: N=4.5326 T_cm=0.10753 T_gamma=0.13216 ratio=1.229071
+eval 3501: N=4.5326 T_cm=0.10753 T_gamma=0.13216 ratio=1.229071
+eval 3551: N=4.5326 T_cm=0.10753 T_gamma=0.13216 ratio=1.229071
+eval 3601: N=4.9858 T_cm=0.06835 T_gamma=0.09101 ratio=1.331571
+eval 3651: N=6.2145 T_cm=0.02000 T_gamma=0.02798 ratio=1.399053
+solver status=1 message=A termination event occurred. evals=3694
+{
+ "checks": {
+  "T1_solver": {
+   "evals": 3694,
+   "occupations_in_bounds": true,
+   "ok": true,
+   "status": 1
+  },
+  "T2_neff": {
+   "N_eff": 3.034054308076679,
+   "delta": 0.0007439838766791773,
+   "ok": true
+  },
+  "T3_n_end": {
+   "N_end": 7.936698865363719,
+   "delta": -2.2553636281230638e-05,
+   "ok": true
+  },
+  "T4_t_end": {
+   "delta_s": -1.4728833955450682,
+   "ok": true,
+   "t_end_s": 52678.731916604454
+  },
+  "T5_blockwise": {
+   "e_enhancement": 0.009367803021176346,
+   "heavy_relative_gap": 4.694449080781416e-10,
+   "mu_enhancement": 0.0038482788386520195,
+   "ok": true,
+   "tau_enhancement": 0.0038482788368454646
+  },
+  "T6_first_law": {
+   "max_first_law_residual": 8.30560163851363e-15,
+   "ok": true
+  }
+ },
+ "config": {
+  "atol": 1e-09,
+  "electron_radial_order": 24,
+  "final_azimuth_order": 4,
+  "final_polar_order": 4,
+  "incoming_polar_order": 4,
+  "rtol": 1e-06
+ },
+ "contract": "BD622_D056_independent_trajectory_contract_2026-07-28",
+ "endpoint": {
+  "N_eff": 3.034054308076679,
+  "N_end": 7.936698865363719,
+  "T_cm_end": 0.003573843068659525,
+  "T_gamma_end": 0.004999999999999998,
+  "gamma_heating_ratio": 1.3990541565316676,
+  "t_end_s": 52678.731916604454
+ },
+ "module_sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+ "verdict": "PASS"
+}
