@@ -1,0 +1,58 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d055-metrology-r2",
+ "assignment_id": "A-METRO2-EXECUTION",
+ "context_version": "d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f",
+ "agent_id": "fable-main-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d055-metrology-r2",
+  "assignment_id": "A-METRO2-EXECUTION",
+  "context_version": "d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:1c362dfccd1a5309bda86df24257dd04c0de7b6e58125dc3761c9ef60b59a637",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-EXECUTION.json",
+ "started_at": "2026-07-28T02:31:00+00:00",
+ "completed_at": "2026-07-28T02:33:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-METRO2-EXEC-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "The frozen r2 oracle returned PASS in 78.8 s: M1 R_weak {1.144e-15, 7.355e-16, 5.516e-16}; M2 R_mass {2.965e-15, 1.460e-15, 1.172e-15}; M3 relative electron gaps {4.727e-16, 1.603e-16, 3.320e-16} with absolutes recorded; M4 R_native {2.448e-11, 5.936e-12, 1.575e-11} within B_native {7.788e-2, 7.863e-2, 5.841e-2}; M5 all <= 1e-10. Module sha 760a7c04 verified in-run; longdouble 2^-63 guard passed; all seven bound terms recorded per state plus family maxima.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "m2_oracle_report.json",
+    "freeze 904acb2"
+   ],
+   "evidence_fingerprint": "sha256:4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-EXECUTION.json"
+ ]
+}

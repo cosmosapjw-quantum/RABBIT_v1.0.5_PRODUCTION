@@ -1,0 +1,58 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d055-metrology-r2",
+ "assignment_id": "A-METRO2-ADJUDICATION",
+ "context_version": "d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f",
+ "agent_id": "a7f2ec4a9daaf8a77",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d055-metrology-r2",
+  "assignment_id": "A-METRO2-ADJUDICATION",
+  "context_version": "d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:a72dc25f36f7dfe4501f70d50f693542e459796defc8ee2abf353eb2af1f52cc",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-ADJUDICATION.json",
+ "started_at": "2026-07-28T02:34:00+00:00",
+ "completed_at": "2026-07-28T02:38:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-METRO2-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "VERDICT PASS; GATE FLIP DUE. Every M1..M5 comparison and the full B_native formula recomputed bit-exact from the recorded terms; freeze chronology verified (+93 s); the two-change supersession scope honored exactly; the gate pass_condition is satisfied (weak/mass-weighted ~1e-15 <= 1e-10; native diagnostics within the pre-output bound; measured summation, basis, transform, conditioning, interval, denominator, and state-envelope terms all recorded); no fail_condition clause triggered - the r2 reissue is not post-output fitting (no term or threshold changed; the corrected items were adjudicated design defects with supersession explicitly permitted) and the D-028 1/y^2 model and ~1.2e-8 cap were never consulted. G-F10-COVARIANCE-METROLOGY flips fail->pass citing run-20260728-f10-d055-metrology-r2. Limitations: single run, single platform (x86 80-bit longdouble), M5 margin ~4x at S-A, adjudication recomputed from the report without re-execution.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "m2_oracle_report.json",
+    "freeze 904acb2"
+   ],
+   "evidence_fingerprint": "sha256:4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-ADJUDICATION.json"
+ ]
+}

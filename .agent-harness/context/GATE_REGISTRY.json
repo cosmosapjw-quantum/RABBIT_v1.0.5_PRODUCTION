@@ -90,12 +90,13 @@
       "required_evidence": [
         "E-F10-B3V2-STATIC",
         "E-F10-W7-ARITHMETIC",
-        "E-F10-B3V2-D037-BLIND-FAIL"
+        "E-F10-B3V2-D037-BLIND-FAIL",
+        "E-F10-D055-METROLOGY-R2"
       ],
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     },
     {
       "gate_id": "G-F10-SCOPE",

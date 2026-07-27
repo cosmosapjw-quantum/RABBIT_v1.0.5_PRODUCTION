@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f`
-Built at: `2026-07-27T16:29:43+00:00`
+Context version: `7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3`
+Built at: `2026-07-27T16:35:31+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -236,7 +236,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `3b145e05a61ac0349da945680308b325cb0ded873101f4e8fb0746b2fbf2b4f9`
+SHA-256: `9d3ee27f3a3831fe0d2e11dc629f80f1155bc3762c625380403bf86b7623047d`
 
 {
   "schema_version": 1,
@@ -330,12 +330,13 @@ SHA-256: `3b145e05a61ac0349da945680308b325cb0ded873101f4e8fb0746b2fbf2b4f9`
       "required_evidence": [
         "E-F10-B3V2-STATIC",
         "E-F10-W7-ARITHMETIC",
-        "E-F10-B3V2-D037-BLIND-FAIL"
+        "E-F10-B3V2-D037-BLIND-FAIL",
+        "E-F10-D055-METROLOGY-R2"
       ],
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     },
     {
       "gate_id": "G-F10-SCOPE",
