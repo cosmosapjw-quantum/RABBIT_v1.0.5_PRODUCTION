@@ -28,15 +28,16 @@ def test_modal_basis_and_unique_catalogues_reconstruct_target_views():
     for row in ind.independent_self_reactions():
         key = (row.category, row.target)
         target[key] = target.get(key, 0.0) + row.coefficient
-    assert len(events) == 25
+    assert len(events) == 27
     assert reconstructed == target
-    assert ind.independent_pair_row_fingerprint() == (2, 1, 6, 2, 2, 2, 4, 4, 2)
-    closure = [event for event in events if event.category == "pair_conversion"
-               and "nu_mu" in event.legs and "nu_tau" in event.legs]
-    assert [event.legs for event in closure] == [
-        ("nu_mu", "antinu_mu", "nu_tau", "antinu_tau"),
-        ("nu_tau", "antinu_tau", "nu_mu", "antinu_mu"),
-    ]
+    assert ind.independent_pair_row_fingerprint() == (2, 1, 6, 2, 2, 2, 4, 4, 4)
+    closure = [event for event in events if event.category == "pair_conversion"]
+    expected = set()
+    for x, y in (("e", "mu"), ("e", "tau"), ("mu", "tau")):
+        expected.add((f"nu_{x}", f"antinu_{x}", f"nu_{y}", f"antinu_{y}"))
+        expected.add((f"nu_{y}", f"antinu_{y}", f"nu_{x}", f"antinu_{x}"))
+    assert len(closure) == 6
+    assert {event.legs for event in closure} == expected
     assert all(event.kernel == "K_t" and event.coefficient == 16.0 for event in closure)
 
     electron = []

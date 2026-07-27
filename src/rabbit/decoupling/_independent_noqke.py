@@ -540,11 +540,12 @@ def independent_electron_reactions() -> tuple[IndependentElectronReaction, ...]:
 def independent_pair_row_fingerprint() -> tuple[int, ...]:
     """The independently enumerated physical-family grouping R1--R9.
 
-    Row 6 counts two ordered orientation members since the D-050 closure;
-    the physical reversible-reaction multiset is unchanged.
+    Rows 6 and 9 count two ordered orientation members per flavour pair
+    since the D-050/D-053 closures; the physical reversible-reaction
+    multiset is unchanged.
     """
 
-    return (2, 1, 6, 2, 2, 2, 4, 4, 2)
+    return (2, 1, 6, 2, 2, 2, 4, 4, 4)
 
 
 @dataclass(frozen=True)
@@ -556,14 +557,14 @@ class IndependentSelfEvent:
 
 
 def independent_self_events() -> tuple[IndependentSelfEvent, ...]:
-    """Enumerate the 25 ordered catalogue members of the 24 reversible events.
+    """Enumerate the 27 ordered catalogue members of the 24 reversible events.
 
-    The mu/tau pair conversion carries both ordered orientation members at
-    half the frozen absolute factor (the derived Reynolds one-half quotient,
-    D-046/D-048): the single-ordered-member chart is covariant only up to a
-    discretization orientation artifact because legs 1,2 are native and legs
-    3,4 are interpolated. The e-mu and e-tau pair conversions remain single
-    ordered members pending their own validation.
+    Every pair conversion carries both ordered orientation members at half
+    the frozen absolute factor (the derived Reynolds one-half quotient,
+    D-046/D-048 for the mechanism and row 6; D-053 for rows 9): the
+    single-ordered-member chart is covariant only up to a discretization
+    orientation artifact because legs 1,2 are native and legs 3,4 are
+    interpolated.
     """
 
     events = [
@@ -585,20 +586,14 @@ def independent_self_events() -> tuple[IndependentSelfEvent, ...]:
             for anti in (False, True):
                 sa, sb = _species(a, anti), _species(b, not anti)
                 events.append(IndependentSelfEvent((sa, sb, sa, sb), "distinct_opposite_sign_elastic", "K_t", 16.0))
-            if {a, b} == {"mu", "tau"}:
-                for first, second in ((a, b), (b, a)):
-                    events.append(IndependentSelfEvent(
-                        (_species(first, False), _species(first, True),
-                         _species(second, False), _species(second, True)),
-                        "pair_conversion", "K_t", 16.0,
-                    ))
-            else:
+            for first, second in ((a, b), (b, a)):
                 events.append(IndependentSelfEvent(
-                    (_species(a, False), _species(a, True), _species(b, False), _species(b, True)),
-                    "pair_conversion", "K_t", 32.0,
+                    (_species(first, False), _species(first, True),
+                     _species(second, False), _species(second, True)),
+                    "pair_conversion", "K_t", 16.0,
                 ))
-    if len(events) != 25:
-        raise AssertionError("global self catalogue must contain 25 events")
+    if len(events) != 27:
+        raise AssertionError("global self catalogue must contain 27 events")
     return tuple(events)
 
 
