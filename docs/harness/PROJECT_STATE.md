@@ -1350,21 +1350,26 @@ F-10C.
 
 ## Next action
 
-The owner has selected **STOP/PRESERVE** at D-039. Exact-byte remediation readiness, W7
-execution, B3 implementation, and independent-FLRW closure are **FAIL**.
-Preserve every exact failure, bounded pass, unfinished D-037 axis, legacy
-bundle, user-owned review, and raw `.singularhistory` evidence.
+D-044 closed the external open-breakthrough intake as `PROVENANCE_FAIL`
+(`DO_NOT_REOPEN` for those exact bytes); the external prompt chain is
+consumed and must not be re-dispatched. D-045 records the 2026-07-27 owner
+grants: handoff durability (executed), one validation-only
+`G-F10C1-REGRESSION` bundle re-run, and **OWNER-A** for exactly one
+prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+discriminator with local sealed execution. OWNER-B (target replay) and
+OWNER-C (`_independent_noqke.py` modification) are defined in D-045 and are
+not granted.
 
-The remaining open activity is the read-only external breakthrough/remedy
-design audit. D-040's local survey is complete and preserved in
-`docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md`.
-Its R1 premise discriminator, R2 exact physics contract, and R3 bounded
-deterministic Rust-target prototype are `PROPOSED` advice only; conventional
-DSMC is excluded from primary and precision authority. Only a later explicit
-owner decision based on materially new evidence may authorize a fresh
-design-only review. Even a unanimous future design PASS would grant only
-eligibility for a separate W7 decision; it would not authorize W7, B3,
-trajectory, or endpoint output.
+Immediate actions, in order: (1) execute the full regression bundle on the
+current tree under `run-20260727-f10-d045-regression-rerun`, flipping
+`G-F10C1-REGRESSION` only on an all-command PASS; (2) design, seal, and run
+the OWNER-A discriminator lab per the D-044 obligations and the D-042R gates
+adapted for local sealed execution; (3) stop at the terminal owner line — a
+discriminator PASS may only request OWNER-B authorization. Exact-byte
+remediation readiness, W7 execution, B3 implementation, and
+independent-FLRW closure remain **FAIL**; preserve every exact failure,
+bounded pass, unfinished D-037 axis, legacy bundle, user-owned review, and
+raw `.singularhistory` evidence.
 
 F-11 Bianchi/Type-I remains owner-paused. QKE/coherence, public dispatch, and
 public production remain `FORBIDDEN`.

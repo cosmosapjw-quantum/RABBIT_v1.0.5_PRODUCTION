@@ -1,6 +1,40 @@
 # Next Session Prompt
 
+## 2026-07-27 D-044/D-045 controlling overlay
+
+D-044 closed the external open-breakthrough intake: the returned
+`F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` is `PROVENANCE_FAIL` at
+`XG-00-PROVENANCE` with `PR_DAG=UNREACHABLE` and `DO_NOT_REOPEN` for those
+exact bytes. The D-042/D-043 external prompt chain is consumed — **do not
+re-dispatch it**. Row-6 localization is bounded external evidence only,
+label-only OCAR is rejected, and `C-R6-ORBIT-CHART` is the sole live
+candidate claim.
+
+D-045 records the 2026-07-27 owner grants: handoff durability (executed as
+commit `5ae1a03` plus this overlay), one validation-only
+`G-F10C1-REGRESSION` bundle re-run under
+`run-20260727-f10-d045-regression-rerun`, and **OWNER-A** for exactly one
+prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+discriminator with local sealed execution. OWNER-B (target replay against
+the live `_independent_noqke.py` row-6 evaluator) and OWNER-C
+(`_independent_noqke.py` modification) are defined in D-045 and are NOT
+granted.
+
+Controlling next steps, in order: (1) finish the regression bundle evidence
+and gate adjudication if unfinished; (2) design, seal, and execute the
+OWNER-A discriminator lab per the D-044 sign/chart/quotient/JVP/mutant/
+replay obligations and the applicable D-042R gates adapted for local sealed
+execution; (3) stop at the terminal owner line — a discriminator PASS may
+only request OWNER-B authorization. Do not touch `_independent_noqke.py`,
+W7/B3 output, T01--T12, Rust/JAX forward work, Radau, trajectory, endpoint,
+unblinding, F-11/Bianchi, QKE, or public work.
+
 ## 2026-07-24 D-043 controlling overlay
+
+Historical record only: the corrected request below was dispatched and its
+response was consumed by D-044 as `PROVENANCE_FAIL` (`DO_NOT_REOPEN` for
+those exact bytes). Do not re-dispatch. The D-044/D-045 overlay above now
+controls.
 
 Use the corrected in-place request at
 `docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`.
@@ -275,6 +309,15 @@ implement or physically execute this design.
 
 ## Binding evidence
 
+- D-044 intake evidence map
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json`
+  SHA-256 `a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb`
+- D-044 final adjudication
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-ADJUDICATOR.json`
+  SHA-256 `7beccc8844265af1c91fb00c47c0f44516794c2c54e925dceaedabee8edbc5a4`
+- D-044 merged results
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/MERGED_RESULTS.json`
+  SHA-256 `f69bbec38e3f5d5d13e62f0445783f1ae160c0edc9c2fc3cb06bc846722455d6`
 - `.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json`
   SHA-256 `4726c40e403aad42d15503b0ed11760558f98de06a8e6f54259ab219887c73db`
 - method adjudication
