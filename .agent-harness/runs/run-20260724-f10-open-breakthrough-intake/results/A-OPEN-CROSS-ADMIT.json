@@ -1,0 +1,207 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-CROSS-ADMIT",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9357-0b1b-73d2-a0cf-278b46a348d2",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-CROSS-ADMIT",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ed582acdbc74ff81afb0de24e3f162adce285cf328fc8ab9723a3cd16a9dffec",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-ADMIT.json",
+  "started_at": "2026-07-24T09:13:05.579571+00:00",
+  "completed_at": "2026-07-24T09:13:44.189936+00:00",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "sed": "GNU sed 4.9",
+    "rg": "ripgrep 14.1.0",
+    "collision_or_scientific_execution": "NOT_RUN"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-CROSS-ADMIT.json",
+    "sed -n '1,20p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,260p' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-CROSS-ADMIT.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "python3 -c <compute schema-v2 role aggregate SHA256(path || NUL || bytes || NUL)>",
+    "jq . .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "sha256sum over the four allowed Wave-1 result envelopes",
+    "jq . over each of the four allowed Wave-1 result envelopes",
+    "sha256sum over the four corresponding registered assignment JSON files",
+    "jq '{assignment_id,claim_ids,task,result_path,context_version,independence_mode,runtime_agent_type,review_role}' over the four registered assignments",
+    "jq -r '[.assignment_id,.status] as $h | .findings[] | [$h[0],$h[1],.finding_id,.claim_id,.verdict,.evidence_fingerprint] | @tsv' over the four allowed result envelopes",
+    "python3 -c <count exact duplicate (claim_id,evidence_fingerprint,verdict) triples and ambiguous finding_id reuse>"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md sha256:18320b574c9e8370c75b7122aaa77a229b1307385b6ed9d87d7cc673b5958061",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-CROSS-ADMIT.json sha256:ed582acdbc74ff81afb0de24e3f162adce285cf328fc8ab9723a3cd16a9dffec",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json sha256:8108f3372545400860c80bb6bbaf46b428cf7a6204b17e91cdc2867d8dd55732",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json sha256:35bd47044c9ae2bb77fd399731101710ddd57d7edfdfe382bff2d7533ee2ce98",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json sha256:3197ee7afe29e2c97b7a762a6d8daaf0fb60eae5266995799fff473dbb1241e5",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json sha256:7de7f8c9213feb1985dda64a4f7af2eaa2009ee2611aa2984459f59611c73040"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-CROSS-ADMIT-001",
+      "claim_id": "C-OPEN-CROSS-ADMIT",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The admitted Wave-1 evidence set is internally attributable for cross-review. All four result envelopes match their registered assignment SHA-256, run ID, context version, runtime type, review role, claim ID, and unique result path. Across 31 findings there are four registered claim IDs and zero duplicate (claim_id,evidence_fingerprint,verdict) triples. The bare finding IDs F-OPEN-ROW6-001 through F-OPEN-ROW6-005 are reused once in each row-6 envelope, so adjudication must qualify them by assignment or claim ID; that naming ambiguity does not merge their distinct evidence. Semantically, the 31 raw findings cluster into archive integrity, prospective-package failure, row-6 localization, sign convention, orientation-chart closure, native amplification/arithmetic, and authority.",
+      "assumptions_used": [
+        "Deduplication follows the governing (claim_id,evidence_fingerprint,verdict) key, not prose similarity or bare finding_id.",
+        "Assignment SHA-256 values in each result spawn_contract are checked against the current registered assignment bytes.",
+        "No sibling beyond the four allowed Wave-1 envelopes was read."
+      ],
+      "evidence_refs": [
+        "A-OPEN-INTAKE-PROVENANCE.json sha256:8108f3372545400860c80bb6bbaf46b428cf7a6204b17e91cdc2867d8dd55732",
+        "A-OPEN-INTAKE-CONTRACT.json sha256:35bd47044c9ae2bb77fd399731101710ddd57d7edfdfe382bff2d7533ee2ce98",
+        "A-OPEN-ROW6-PHYSICS.json sha256:3197ee7afe29e2c97b7a762a6d8daaf0fb60eae5266995799fff473dbb1241e5",
+        "A-OPEN-ROW6-NUMERICS.json sha256:7de7f8c9213feb1985dda64a4f7af2eaa2009ee2611aa2984459f59611c73040",
+        "Registered assignment SHA-256 values 63883818..., 7a0f7c83..., 7aa0f472..., and 4de27d1e..."
+      ],
+      "evidence_fingerprint": "sha256:a7a46fe04a2e1622c65cbca447fef6b89f76521a6d55c35b9eb48298a8f2ab82",
+      "counterevidence_refs": [
+        "STRONGEST OPPOSING STEELMAN: zero exact-key duplicates does not imply 31 independent scientific facts; several findings are semantic restatements of the same package-provenance or OCAR-closure family.",
+        "Resolution: preserve the exact keys for traceability, but synthesize semantic families rather than treating count or vote as evidence."
+      ],
+      "reproduction": [
+        "sha256sum the four registered assignments and compare each digest with the corresponding result spawn_contract.assignment_sha256",
+        "jq -r '[.assignment_id,.status] as $h | .findings[] | [$h[0],$h[1],.finding_id,.claim_id,.verdict,.evidence_fingerprint] | @tsv' over the four allowed results",
+        "python3 -c <count exact duplicate triples>; observed findings=31 and exact_duplicate_triples=0"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Future result writers should make finding_id unique across assignments or require assignment-qualified references."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-ADMIT-002",
+      "claim_id": "C-OPEN-CROSS-ADMIT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Label-only OCAR is not sufficient as the next discriminator. The physics envelope correctly derives the sign and entropy algebra inside one fixed oriented event, but its statement D_live(Pf)=-D_live(f) silently requires exchanging incoming and outgoing momentum/leg roles as well as flavour labels. At the discrete one-chart operation graph, P changes mu/tau labels while leg 1 remains a native incoming node, leg 2 an incoming quadrature node, and legs 3/4 interpolated outgoing depositions. The numerics envelope therefore closes the apparent contradiction: the reverse ordered member is absent, and canonical labels, event-key sorting, or an exact final accumulator can reorder or round the existing addends but cannot synthesize that second chart. If the term OCAR is defined to generate both ordered members, it is no longer label-only and belongs to F-OPEN-CROSS-ADMIT-003.",
+      "assumptions_used": [
+        "Flavour permutation P does not itself exchange momentum arguments or incoming/outgoing quadrature charts.",
+        "The exact fixed-event Pauli-drive identity and the integrated continuum orientation-reversal identity are distinct statements.",
+        "A label-only operation preserves the event/addend multiset."
+      ],
+      "evidence_refs": [
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-001 sha256:e0d0be1c9c850a56bd2df79f45140c42894349e859348fc084876d58ff18845f",
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-002 sha256:4123c36751c76b767b988df2635258aa551dee3d212dbc599ae5fe402386580e",
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-004 sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-002 sha256:ce5c17d723b4603dee773f2aabb75aebd30738d7e307c2856e0bd97ac1a734f8",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-004 sha256:1bc9bb9dcd8ec45730e1eacaae0ee19362b704f07196904532f7ab1256b59d61"
+      ],
+      "evidence_fingerprint": "sha256:e67255b5120479970bd27a113a4ecbe1c5a0b4f346be116579552e60f52fd51a",
+      "counterevidence_refs": [
+        "STRONGEST LABEL-ONLY STEELMAN: exact mu/tau degeneracy, sharply localized external row-6 residuals, shared massless shell geometry, and a bitwise-covariant Reynolds reference make it plausible that inconsistent labels or reduction order dominate and that a canonical key plus exact accumulation could fix the observed bytes cheaply.",
+        "Why it does not prevail: that mechanism can address only secondary reduction differences unless it also generates and evaluates the reverse incoming/outgoing chart; the Wave-1 operation-graph audit identifies a modal defect before native reconstruction."
+      ],
+      "reproduction": [
+        "Read A-OPEN-ROW6-PHYSICS findings 001, 002, and 004 together rather than treating the fixed-event sign identity as a discrete chart identity.",
+        "Read A-OPEN-ROW6-NUMERICS findings 002 and 004 for the one-chart versus two-chart operation graph.",
+        "DECISIVE FALSIFIER: on prospectively fixed asymmetric manufactured states, compare pre-native row-6 modal actions from (L) the unchanged one-chart addend multiset with label-only canonicalization and (O) an explicit sign-frozen two-orientation reference. Require a dropped-reverse-member mutant. If L equals O under a frozen absolute bound and the mutant remains distinguishable, this finding changes; otherwise label-only is killed."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "The external values are not internally replayed, so the magnitude attributable to chart closure versus later arithmetic remains unvalidated.",
+        "STANCE_CHANGE_CONDITION: a prospective exact addend-bijection proof or sealed nonphysical test showing that the reverse chart is already represented without hidden averaging would overturn the structural objection."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-ADMIT-003",
+      "claim_id": "C-OPEN-CROSS-ADMIT",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "An exactly sign-frozen, explicitly two-orientation flavour orbit is a viable future OWNER-A discriminator request, and nothing more. Its prospective contract must name both ordered chart members; evaluate each member's own native-incoming and interpolated-outgoing drive/deposition; freeze either (+,+,-,-)*gain-minus-loss or the exactly equivalent (-,-,+,+)*loss-minus-gain product; derive rather than fit the orientation/stabilizer quotient, using the row-6 Reynolds one-half construction only as the nonphysical reference; compare pre-native modal action before the 1/y^2 native map; retain a nonzero antisymmetric response; and kill dropped-member, reversed-drive, wrong-quotient, wrong-multiplicity, input-order, and reduction-order mutants. This can discriminate whether orientation-chart closure is the dominant row-6 mechanism while reusing shared massless geometry. It cannot validate collision physics, absolute normalization, a production implementation, or any F-10 gate.",
+      "assumptions_used": [
+        "The future experiment is separately owner-authorized, prospectively sealed, repository-free, nonphysical, and manufactured.",
+        "Both orientation members are evaluated as distinct discrete charts even if they share shell geometry and matrix factors.",
+        "The quotient and absolute factor are fixed before output and are not tuned to covariance.",
+        "The sign contract is the product of lane vector and Pauli-drive convention, not either object in isolation."
+      ],
+      "evidence_refs": [
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-001 sha256:e0d0be1c9c850a56bd2df79f45140c42894349e859348fc084876d58ff18845f",
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-002 sha256:4123c36751c76b767b988df2635258aa551dee3d212dbc599ae5fe402386580e",
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-004 sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-001 sha256:f8a73c5667eeb1a188625e1f8f1a53d5d407238e32cc479973cd87a493409510",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-002 sha256:ce5c17d723b4603dee773f2aabb75aebd30738d7e307c2856e0bd97ac1a734f8",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-004 sha256:1bc9bb9dcd8ec45730e1eacaae0ee19362b704f07196904532f7ab1256b59d61",
+        "INTAKE_EVIDENCE_MAP.json claim ceiling: row6_localization=external evidence only and ocar=PROPOSED"
+      ],
+      "evidence_fingerprint": "sha256:3bf2484f1686dc3214a721e22f61a3a891fe8ca913acbdc7eaed63fdb34a9f8a",
+      "counterevidence_refs": [
+        "STRONGEST ORIENTATION-CLOSURE OBJECTION: a two-chart Reynolds average is covariant for any wrong or zero base map, may double-count one physical reversible event unless the quotient is independently derived, resembles the post-hoc event-chart averaging already forbidden for repository adoption, and can hide rather than repair shell, normalization, entropy, derivative, or arithmetic defects.",
+        "Bounded answer: use the two-chart object only as a prospective nonphysical discriminator/reference. Require an independent primitive-orbit hypothesis, absolute-factor preservation, pre-native observables, nonzero antisymmetric response, and semantic mutants. A constructional covariance PASS alone is deliberately insufficient."
+      ],
+      "reproduction": [
+        "SELF-DISCOVER: normalize the row-6 physics and numerics claims by assignment-qualified finding ID and evidence fingerprint.",
+        "STEP-BACK: separate fixed-event sign algebra, discrete orientation-chart closure, native reconstruction, and package authority.",
+        "CoVe: verify that the sign-equivalence and reverse-chart findings use distinct claim IDs/fingerprints and aligned assumptions only after introducing the leg-role reversal.",
+        "ADVERSARIAL/CCoT: require observable pre-native modal equality, Reynolds-reference agreement, antisymmetric response, invariant/entropy checks, and six named semantic mutants; do not use vote counts.",
+        "PDR DECISIVE FALSIFIER: kill the orbit if it misses modal equivariance/reference agreement, needs post-output factor or norm tuning, erases antisymmetric response, violates number/energy/entropy, or lets any sign/member/quotient mutant pass."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "OWNER-A is not granted by this result; this PASS means only that the bounded request is scientifically discriminating enough to place before the owner.",
+        "STANCE_CHANGE_CONDITION: one prospectively sealed non-PASS or a proof that the two chart members are not the same invariant-measure event with a derived quotient changes the recommendation to do not pursue."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-ADMIT-004",
+      "claim_id": "C-OPEN-CROSS-ADMIT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "No current admission or implementation authority follows. The exact returned package remains PROVENANCE_FAIL with PR_DAG=UNREACHABLE and DO_NOT_REOPEN for these bytes: the prospective contract/chronology, repository-free boundary, one-finalist rule, semantic mutants, replay/isolation, all-file manifest, accounting, and terminal-line obligations fail. The external row-6 localization remains external evidence only and OCAR remains PROPOSED. F-OPEN-CROSS-ADMIT-003 may support a future owner decision for one new nonphysical discriminator; even a future discriminator PASS would not admit this archive, authorize a repository patch, lift D-028, run W7/B3/T01-T12/Radau/trajectory/endpoint, unblind RABBIT, or change any global gate.",
+      "assumptions_used": [
+        "Prospective provenance failures cannot be repaired retrospectively.",
+        "A useful discriminator hypothesis is separate from package admission, method adoption, implementation authority, and scientific validation.",
+        "STOP/PRESERVE and the frozen F-10 authority ladder remain controlling."
+      ],
+      "evidence_refs": [
+        "A-OPEN-INTAKE-PROVENANCE/F-OPEN-INTAKE-PROVENANCE-004 sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+        "A-OPEN-INTAKE-PROVENANCE/F-OPEN-INTAKE-PROVENANCE-005 sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b",
+        "A-OPEN-INTAKE-CONTRACT/F-OPEN-INTAKE-XG00 sha256:ad8bfa893aa685b0259973e9272a87a4dca3c232a75b7c393c63300af642702b",
+        "A-OPEN-INTAKE-CONTRACT/F-OPEN-INTAKE-ROUTE sha256:5c799f8ed7a811a86992da9c2b40ba16c72064e32128f7bb6595a99212e6625d",
+        "A-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-006 sha256:81f461f8f68b0a018041e56d8362a147e76749cb6a372a4b0bc29d6982aa1dd8",
+        "A-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-005 sha256:6101ede0ec8876e3226449191c4f3001427b04a11055bf72366baab297443495",
+        "INTAKE_EVIDENCE_MAP.json observed_contract_gaps and claim_ceiling"
+      ],
+      "evidence_fingerprint": "sha256:d1e689bb6f24d305918930a18a81fb3061eb6d6bc0682a439db685766f9fc36c",
+      "counterevidence_refs": [
+        "STRONGEST ADMISSION STEELMAN: the ZIP is transport-valid, its listed lab hashes reproduce, repository comparator bytes are identified, the external localization is sharp, and the report itself keeps global gates FAIL. Those facts make the archive worth preserving as contextual evidence.",
+        "They do not reconstruct missing prospective authority or structural independence."
+      ],
+      "reproduction": [
+        "Read the assignment-qualified prospective-package findings from the provenance and contract envelopes.",
+        "Confirm the parent evidence map records package_admission=non-PASS, row6_localization=external evidence only, ocar=PROPOSED, and global_gate_change=none.",
+        "DECISIVE FALSIFIER FOR CURRENT ADMISSION: none can be supplied retrospectively because outputs exist while the required preseal contract does not.",
+        "STANCE_CHANGE CONDITION: only a separate owner-authorized new package with pre-output seal and all required evidence can receive a new verdict; it does not repair this package."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-ADMIT.json"
+  ]
+}

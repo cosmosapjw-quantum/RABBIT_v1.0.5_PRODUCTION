@@ -45,6 +45,35 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-24 D-044 open-breakthrough intake closeout overlay
+
+- The external response `F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` to the D-043
+  corrected request was intook read-only in registered run
+  `run-20260724-f10-open-breakthrough-intake` (closeout run
+  `run-20260724-f10-open-breakthrough-intake-closeout`, context `815eb4b9`).
+- ZIP transport and the 15-file manifest verify, but package admission is
+  `PROVENANCE_FAIL` at `XG-00-PROVENANCE` with `PR_DAG=UNREACHABLE` and
+  `DO_NOT_REOPEN` for these exact bytes. The package has no prospective
+  `EXPERIMENT_CONTRACT.json`, pre-output chronology, single no-argument
+  runner, one-finalist execution, raw stdout/stderr, complete manifest,
+  pinned network-off isolation, semantic mutants, clean replays, or
+  accounting/terminal route, and it imports the live RABBIT comparator while
+  emitting physical collision actions.
+- Six pre-adjudication envelopes contain 40/40 exact-unique findings; the
+  final adjudication `7beccc88` resolves the sole substantive conflict by
+  separating flavour permutation from incoming/outgoing slot reversal. Two
+  invalid Stops (provenance direct-file role-hash, cross-admit
+  aggregate-status) were blocked before corrected envelopes were accepted.
+- Row-6 localization is retained as bounded external evidence only.
+  Label-only OCAR is rejected: with `P` acting on mu/tau labels the correct
+  slot identity is `D(Pf;z)=-D(f;Rz)`, so flavour canonicalization alone
+  cannot produce a reverse orientation chart. The narrower, explicitly
+  orientation-closed `C-R6-ORBIT-CHART` remains `PROPOSED` with
+  `OWNER-A=REQUIRED_NOT_GRANTED`.
+- No collision runner, target replay, code/spec/gate edit, W7/B3, T01--T12,
+  Rust/JAX, Radau, trajectory, endpoint, or unblinding ran. Every scientific
+  gate state is unchanged.
+
 ## 2026-07-24 D-043 provenance-contract correction overlay
 
 - The first external D-042 attempt is preserved as `PROVENANCE_FAIL` at

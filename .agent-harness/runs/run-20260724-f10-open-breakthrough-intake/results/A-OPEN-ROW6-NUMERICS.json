@@ -1,0 +1,250 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-ROW6-NUMERICS",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9357-868d-7c82-bef6-c14c0b26a726",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-ROW6-NUMERICS",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:4de27d1ed48bb49e7159bfa56b7c5f3d9640bb396a875fc3f82851dd9bdfd57e",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json",
+  "started_at": "2026-07-24T08:53:35Z",
+  "completed_at": "2026-07-24T09:05:58Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "unzip": "Info-ZIP 6.00",
+    "ripgrep": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-ROW6-NUMERICS.json",
+    "python3 -c \"import hashlib,pathlib; p='.agent-harness/context/roles/independent_auditor.md'; b=pathlib.Path(p).read_bytes(); print(hashlib.sha256(p.encode()+b'\\\\0'+b+b'\\\\0').hexdigest())\"",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum src/rabbit/decoupling/_independent_noqke.py docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -Z1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md | sha256sum",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md | sha256sum",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json | sha256sum",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json | sha256sum",
+    "sed -n '380,590p;599,690p;690,947p;1000,1125p;1224,1300p' src/rabbit/decoupling/_independent_noqke.py",
+    "sed -n '246,525p;640,735p' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "python3 -c \"print(4.931213907676041e-10/5.253329410912928e-13, 0.006848801576392971/1.1782854570740505e-06, 0.012269357289894643/2.1190878380904503e-06, 26.588122477995057/13.269702017001691)\""
+  ],
+  "artifacts": [
+    "sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777 zip member f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md",
+    "sha256:1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e zip member f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md",
+    "sha256:34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba zip member f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json",
+    "sha256:bd1fb1b5efa11a98909c83818b6674a867cd721d1bbf86698403f767420b2103 zip member f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json",
+    "sha256:535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3 src/rabbit/decoupling/_independent_noqke.py",
+    "sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5 docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-ROW6-001",
+      "claim_id": "C-OPEN-ROW6-NUMERICS",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The two authoritative returned raw files support a bounded same-code localization: for the asymmetric state the electron component is exactly covariant, while self row 6 has relative swap residuals 9.658925424296108e-1 at GL8-Y8, 9.184206698740635e-1 at GL12-Y12, and 4.776282979460778e-2 at GL48-Y24; every other GL48 self row is zero or at most 2.0804780718494358e-11. This is a PASS only for locating the returned D-028 evaluator's dominant asymmetric covariance component. It is external, not internally replayed, and does not prove a unique source line or continuum error.",
+      "assumptions_used": [
+        "Only archive members ending in _FINAL.json are treated as authoritative returned numerical records.",
+        "The raw member hashes match the intake evidence map.",
+        "No archived Python, collision evaluator, or sibling result was executed or inspected."
+      ],
+      "evidence_refs": [
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json#/candidate_REYNOLDS_full_operator/base_covariance_by_component",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json#/candidate_REYNOLDS_full_operator/base_self_row_covariance",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json#/rows",
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#/claim_ceiling/row6_localization"
+      ],
+      "evidence_fingerprint": "sha256:f8a73c5667eeb1a188625e1f8f1a53d5d407238e32cc479973cd87a493409510",
+      "counterevidence_refs": [
+        "The GL8-Y8, GL12-Y12, and GL48-Y24 rows change both quadrature order and y_max, so they are not a one-parameter convergence ladder.",
+        "No absolute row-6 covariance numerator or independently constructed collision value is returned."
+      ],
+      "reproduction": [
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json | sed -n '151,230p'",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json | sed -n '1,120p'"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Independent replay and an absolute, prospectively normalized row-6 metric remain absent.",
+        "The returned data do not distinguish orientation-chart incompleteness from every possible row-6 implementation defect."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-002",
+      "claim_id": "C-OPEN-ROW6-NUMERICS",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Label-only canonicalization, event-key sorting, or exact accumulation cannot make the live asymmetric row-6 event graph equivariant. The live catalogue contains one ordered mu/tau pair-conversion event (nu_mu, antinu_mu -> nu_tau, antinu_tau); the mu-tau permutation maps it to the absent reverse ordered member. The quadrature graph gives legs 1 and 2 native incoming roles but legs 3 and 4 interpolated/deposited outgoing roles, so the mapped event is not a mere lane rename. A viable OCAR must explicitly close the two-member orientation orbit, derive and freeze the quotient equivalent to the Reynolds one-half average, evaluate the distinct swapped Pauli drive/deposition contribution, and only then canonicalize and accumulate.",
+      "assumptions_used": [
+        "P exchanges mu and tau particle and antiparticle labels and leaves momentum coordinates unchanged.",
+        "The source event tuple, signs, outer-node chart, interpolation, and modal depositions are the operation graph under audit.",
+        "A canonical key may reorder existing addends but cannot synthesize an absent ordered event contribution."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:554",
+        "src/rabbit/decoupling/_independent_noqke.py:571",
+        "src/rabbit/decoupling/_independent_noqke.py:1055",
+        "src/rabbit/decoupling/_independent_noqke.py:1070",
+        "src/rabbit/decoupling/_independent_noqke.py:1083",
+        "src/rabbit/decoupling/_independent_noqke.py:1100",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md#Required graph"
+      ],
+      "evidence_fingerprint": "sha256:ce5c17d723b4603dee773f2aabb75aebd30738d7e307c2856e0bd97ac1a734f8",
+      "counterevidence_refs": [
+        "Strongest opposing steelman: the blueprint's instruction to form the full C2 orbit can be read as generating the reverse ordered member, and massless mu/tau equality permits both members to share shell geometry and matrix factors; that chart-closed interpretation may be cheaper than two complete base calls.",
+        "The returned full Reynolds reference is exactly covariant and retains a nonzero antisymmetric response, so a correctly normalized internal orbit implementation is plausible."
+      ],
+      "reproduction": [
+        "sed -n '554,583p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1055,1118p' src/rabbit/decoupling/_independent_noqke.py",
+        "Decisive falsifier for a future sealed lab: compare the pre-native row-6 modal action of a label-only one-chart implementation with an explicit two-chart Reynolds-equivalent reference on asymmetric states, then require the drop-reverse-member mutant to fail."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Stance-change condition: a prospective repository-free OCAR contract that includes both ordered orbit members, a derived quotient, separate drives/depositions, and passes modal equivariance, reference agreement, reverse-orientation mutants, and smooth JVP tests would remove this finding.",
+        "The current blueprint does not state whether canonical-key deduplication retains both orientation contributions or collapses them."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-003",
+      "claim_id": "C-OPEN-ROW6-NUMERICS",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The returned metrics separate native reconstruction amplification from the underlying modal defect but do not provide an absolute arithmetic proof. The live native map divides by y^2; the first GL48 node has 1/y_min^2=4.597681342469004e3. Returned asymmetric native/modal covariance ratios are about 5.8125e3 for total and 5.7899e3 for self, while fixed-state native/modal mu-tau residuals differ by about 9.3868e2. Nevertheless the modal asymmetric residual is already 2.1190878380904503e-6 and low-order row-6 native residuals are order one, so small-y division and reduction roundoff amplify but cannot solely cause the general defect. Relative L-infinity values use a global action maximum and the archive does not return the corresponding absolute numerator; therefore they cannot establish XG-08's normalized <=2.5e-11 bound or physical error size.",
+      "assumptions_used": [
+        "The live _relative_max_difference denominator is the maximum absolute entry across the compared arrays.",
+        "Reported modal and native residuals use comparable swap tests but not necessarily identical normalization details.",
+        "The arithmetic ratios are computed only from literals in the authoritative returned JSON."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:1019",
+        "src/rabbit/decoupling/_independent_noqke.py:1029",
+        "src/rabbit/decoupling/_independent_noqke.py:1231",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json#/baseline",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json#/candidate_REYNOLDS_full_operator",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:380"
+      ],
+      "evidence_fingerprint": "sha256:71bf7f37d98b5604e9b42013d3605f28af67300447699797e8d6efe2ae8ef05a",
+      "counterevidence_refs": [
+        "The native argmax is the first node and the weighted/modal residuals are much smaller, which strongly supports a small-y amplification layer.",
+        "Other GL48 self rows are near 1e-11 or below, so deterministic reduction improvements may still remove secondary row-order effects."
+      ],
+      "reproduction": [
+        "sed -n '1019,1040p;1231,1283p' src/rabbit/decoupling/_independent_noqke.py",
+        "python3 -c \"print(0.006848801576392971/1.1782854570740505e-06, 0.012269357289894643/2.1190878380904503e-06, 4.931213907676041e-10/5.253329410912928e-13)\""
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A frozen absolute numerator, denominator floor, operation trace, and same-y_max order ladder are required.",
+        "No returned metric isolates basis evaluation, native reconstruction, chart closure, and accumulation one factor at a time."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-004",
+      "claim_id": "C-OPEN-ROW6-NUMERICS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The OCAR recommendation does not close deterministic accumulation, derivative, or cost obligations. The live path uses binary64 np.sum, BLAS matrix products, blockwise result +=, and event-order modal +=; single-thread controls make one run ordered but do not prove input-order or platform-independent reproducibility. A reproducible accumulator can stabilize the final sum only after the missing reverse-chart addends and all earlier rounding interfaces are frozen. For a smooth two-member orbit the required derivative is the two-term group derivative, not the one-chart JVP. No OCAR code, analytic/generated JVP, reverse-orientation/reduction-order semantic mutants, fresh-process byte replay, permanent-code estimate, wall time, or memory result was returned. The only measured reference cost is full Reynolds at 2.003671404522065 base calls; OCAR cost remains unknown.",
+      "assumptions_used": [
+        "Fixed canonical keys are state-independent; any state-dependent representative selection would introduce tie discontinuities.",
+        "The JVP obligation applies before final binary64 rounding and must include both orbit contributions.",
+        "Full Reynolds timing is contextual and does not predict OCAR geometry-sharing savings."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:1019",
+        "src/rabbit/decoupling/_independent_noqke.py:1092",
+        "src/rabbit/decoupling/_independent_noqke.py:1100",
+        "src/rabbit/decoupling/_independent_noqke.py:1110",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json#/candidate_REYNOLDS_full_operator/relative_cost_vs_one_baseline",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md#Acceptance ladder",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:378",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:380",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:381",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:382",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:488"
+      ],
+      "evidence_fingerprint": "sha256:1bc9bb9dcd8ec45730e1eacaae0ee19362b704f07196904532f7ab1256b59d61",
+      "counterevidence_refs": [
+        "Shared massless shell geometry and matrix caches make a two-orientation row-6 implementation plausibly much cheaper than two whole base evaluations.",
+        "A fixed event-key order plus an exact superaccumulator could make the final lane reductions reproducible once the correct addend multiset exists."
+      ],
+      "reproduction": [
+        "sed -n '1019,1027p;1083,1118p' src/rabbit/decoupling/_independent_noqke.py",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json | sed -n '151,245p'",
+        "Future falsifier: require analytic/group JVP against complex-step or dense finite differences for both ordered members and require input-order, drop-member, wrong-quotient, and reduction-order mutants to fail."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "OCAR's operation count, scratch memory, permanent LOC, and reproducibility interface are not specified.",
+        "A correct two-orientation implementation may retain geometry reuse, but that benefit is not evidence until measured prospectively."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-005",
+      "claim_id": "C-OPEN-ROW6-NUMERICS",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The returned package cannot pass D-042R intake. It has no prospectively sealed EXPERIMENT_CONTRACT.json or single run_lab.sh authority path, evaluates multiple mechanisms instead of one preselected finalist, imports the live comparator and emits physical collision actions, and lacks the required semantic mutants, two clean byte-identical replays, digest-pinned network-off execution record, raw stdout/stderr set, exact accounting, and terminal owner-choice line. OCAR itself is only PROPOSED and was not the implemented finalist. Therefore XG-00, XG-01, XG-06, XG-08, XG-09, and XG-10 are non-PASS; no external candidate intake request is reachable, and the only admissible present disposition is DO_NOT_REOPEN with all global gates unchanged.",
+      "assumptions_used": [
+        "D-042R is conjunctive: one non-PASS gate prevents intake.",
+        "The intake evidence map is the parent-owned inventory of package contents and observed contract gaps.",
+        "Useful failure localization may be preserved without promoting the package or OCAR."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#/observed_contract_gaps",
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#/claim_ceiling",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:263",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:329",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:339",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:372",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:385",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:396",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:432",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:478",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:664",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:696",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:704"
+      ],
+      "evidence_fingerprint": "sha256:6101ede0ec8876e3226449191c4f3001427b04a11055bf72366baab297443495",
+      "counterevidence_refs": [
+        "Strongest opposing steelman: the row-6 localization is unusually sharp across three grids, full Reynolds supplies a useful executable oracle, and a chart-closed OCAR could be a small, high-information future mechanism slice.",
+        "The archive is structurally safe to inspect and its named final-member hashes match the intake map."
+      ],
+      "reproduction": [
+        "sed -n '263,390p;396,505p;664,720p' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+        "sed -n '1,220p' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+        "unzip -Z1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Decisive falsifier and stance-change condition: only a newly owner-authorized, prospectively sealed, repository-free OCAR microprototype with explicit two-orientation closure, derived normalization, absolute/native metrology, smooth JVP, semantic mutants, two clean replays, and complete cost accounting could support a later request for one intake review.",
+        "Even that future PASS would request owner intake review only and would not authorize repository implementation, W7, B3, trajectory, endpoint, or unblinding."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json"
+  ]
+}

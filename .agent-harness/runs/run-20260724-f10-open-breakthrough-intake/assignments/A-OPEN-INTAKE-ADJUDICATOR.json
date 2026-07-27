@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-INTAKE-ADJUDICATOR",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-OPEN-INTAKE-ADJUDICATION"
+  ],
+  "task": "Perform the final bounded intake adjudication after all six prior results exist. Read only the six allowed result envelopes, the parent evidence map, D-042R prompt, and your registered assignment. Deduplicate by exact (claim_id,evidence_fingerprint,verdict), then normalize semantic families without using vote count as evidence. Resolve archive integrity versus package admission; live (+,+,-,-) versus blueprint (-,-,+,+) Pauli-drive sign; label-only OCAR versus mandatory incoming/outgoing orientation-chart closure; bounded row-6 claim ceiling; metric-convention mismatch; external-only numerics; and every authority/gate consequence. Return explicit terminal values for package verdict, blocking gate, PR_DAG, terminal choice for these bytes, future C-R6-ORBIT-CHART status, whether OWNER-A is required/not granted, G-EXT-FEASIBILITY and all F-10 gates. Include strongest opposing steelman, decisive falsifier, stance-change condition, and apply self-discover -> step-back -> metacognitive self-ask -> CoVe -> adversarial self-ask -> CCoT -> PDR without exposing hidden chain-of-thought. Do not rerun science, inspect ZIP/source beyond allowed references, edit shared files, or write outside the result path. End with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-INTAKE-ADJUDICATOR.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-ADMIT.json",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-REJECT.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "sha256sum",
+    "jq",
+    "sed",
+    "rg",
+    "python3"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-ADJUDICATOR.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-ADJUDICATOR.json",
+  "status": "registered"
+}

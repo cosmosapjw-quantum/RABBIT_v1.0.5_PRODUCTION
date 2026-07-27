@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "created_at": "2026-07-24T08:53:35Z",
+  "scope": "Read-only external ZIP intake. No external Python unit test, collision evaluator, W7, B3, T01-T12, Radau, trajectory, endpoint, Rust, JAX development, unblinding, F-11, QKE, or public-runtime execution is authorized.",
+  "repository": {
+    "head": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+    "branch": "f10-independent-validation-b3v2",
+    "prompt_path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "prompt_sha256": "2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+    "live_comparator_path": "src/rabbit/decoupling/_independent_noqke.py",
+    "live_comparator_sha256": "535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3",
+    "focused_test_path": "tests/test_independent_noqke_comparator.py",
+    "focused_test_sha256": "abdc4e0195c4ccb6146c29c615063a556adf68e89c64c90ea39c9eea200aa748",
+    "code_head_comparator_byte_identity": {
+      "code_head": "bede5a965267ef2dbfc628b56835a3563edf7396",
+      "code_head_sha256": "535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3",
+      "current_head_sha256": "535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3",
+      "status": "pass"
+    }
+  },
+  "archive": {
+    "path": "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "sha256": "81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5",
+    "entry_count": 39,
+    "uncompressed_bytes": 399438,
+    "compressed_payload_bytes": 130074,
+    "unzip_test": "pass",
+    "path_traversal": false,
+    "absolute_paths": false,
+    "duplicate_names": false,
+    "symlinks": false,
+    "encrypted_entries": false,
+    "nested_archives": false,
+    "lab_manifest_path": "f10_open_breakthrough_lab/MANIFEST.sha256",
+    "lab_manifest_sha256": "ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c",
+    "lab_manifest_entry_count": 15,
+    "lab_manifest_mismatch_count": 0,
+    "unmanifested_harness_file_count": 14,
+    "key_hashes": {
+      "report": "af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+      "implementation_blueprint": "1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e",
+      "full_experiment_final": "34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba",
+      "low_order_discriminator_final": "bd1fb1b5efa11a98909c83818b6674a867cd721d1bbf86698403f767420b2103",
+      "merged_results": "6c51de661a18322632a2f3efa5aab8c06b34b649fafb7ae1c01c61671251a56a",
+      "final_adjudication": "d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b"
+    }
+  },
+  "observed_contract_gaps": [
+    "No prospectively sealed EXPERIMENT_CONTRACT.json is returned.",
+    "No single run_lab.sh entry point is returned.",
+    "The runner implements or evaluates full Reynolds, WF-OR, and ORAFS rather than exactly one prospectively selected finalist.",
+    "The lab imports the live RABBIT comparator and emits actual static collision-action values despite the corrected D-042R repository-free nonphysical boundary.",
+    "No semantic constant/fixture or targeted physics-mutation evidence is returned.",
+    "No two fresh-process byte-identical replay artifact is returned.",
+    "No returned raw stdout/stderr log set or digest-pinned network-off OCI execution record is returned.",
+    "The package lacks the mandatory accounting block and exact terminal owner-choice line.",
+    "The external RUN_PLAN remains status=initialized after six result envelopes exist.",
+    "The requirements file names numpy and scipy without version or image pinning."
+  ],
+  "claim_ceiling": {
+    "zip_integrity": "VALIDATED",
+    "external_full_reynolds_code": "IMPLEMENTED externally; not internally replayed and not a production remedy",
+    "row6_localization": "external evidence only; internal status remains unverified",
+    "ocar": "PROPOSED",
+    "wf_or_general_operator": "FAIL in the returned external experiment",
+    "orafs_general_operator": "FAIL in the returned external experiment",
+    "rcheb_evp12": "PROPOSED for RABBIT; bounded nonphysical screen only",
+    "tfc_de": "PROPOSED for RABBIT; bounded manufactured scalar screen only",
+    "package_admission": "non-PASS pending registered adjudication",
+    "global_gate_change": "none"
+  },
+  "pre_spawn_parent_state": {
+    "git_diff_sha256": "c02181821c6b67c8f547f7d10030e2b6ab62e76383004a5a115697a1a038ae3e",
+    "git_status_sha256": "064de4505a2d79915850a2c69f6e5c65a8530797f8c421b8dd01db6fbc209309",
+    "expected_tracked_changes": [
+      ".agent-harness/context/CONTEXT_INDEX.json",
+      ".agent-harness/generated/CONTEXT_PACK.md"
+    ]
+  }
+}

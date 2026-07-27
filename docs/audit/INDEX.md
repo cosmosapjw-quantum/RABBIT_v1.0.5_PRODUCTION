@@ -12,6 +12,8 @@ linked from canonical docs. Start from these anchors:
   [BD593_lrs_runtime_mass_scale_negative_result_2026-06-26.md](BD593_lrs_runtime_mass_scale_negative_result_2026-06-26.md)
 - Latest code-precision audit:
   [BD594_external_code_precision_audit_report_2026-06-27.md](BD594_external_code_precision_audit_report_2026-06-27.md)
+- D-044 external breakthrough intake closeout:
+  [BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md](BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md)
 - Anti-drift rules: `../TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md`,
   `../../bbn_codex_anti_drift_cost_effective_policy.md`
 

@@ -1,0 +1,520 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-INTAKE-CONTRACT",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f8f74-7aa9-77b1-80af-5cb41fe29f6f",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-INTAKE-CONTRACT",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:7a0f7c83c2ba851c7c1aad7237233812dcefe8fb1f398b8f356a1c501c8e6522",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json",
+  "started_at": "2026-07-24T08:54:00Z",
+  "completed_at": "2026-07-24T09:07:41.660838Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "jq": "1.7",
+    "unzip_zipinfo": "Info-ZIP 6.00",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sed -n in bounded chunks over .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum and sed -n over the registered assignment, RESULT_ENVELOPE template, and independent-auditor role",
+    "python3 -c '<compute ordered path-NUL-bytes-NUL review-role aggregate>'",
+    "sha256sum over INTAKE_EVIDENCE_MAP.json, F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip, and the corrected D-042R prompt",
+    "sed -n in four bounded chunks over docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "zipinfo -1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "zipinfo -l F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -t F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -p over only the report, manifest, README, environment, requirements, candidate matrix, implementation blueprint, run plan, core, tests, two runners, final raw JSON files, and final-adjudication envelope",
+    "unzip -p ... | jq '<bounded schema and adjudication queries>'",
+    "unzip -p ... | rg -n 'mutant|mutation|fixture|constant|run_lab|EXPERIMENT_CONTRACT|REQUEST_OWNER|DO_NOT_REOPEN|added_lines|blocker_movement_ratio|PR_DAG|OCI|network|digest'",
+    "python3 -c '<verify all 15 lab-manifest member hashes and enumerate 14 unmanifested returned harness files>'",
+    "python3 -c '<count returned authored files and Python LOC without extraction>'",
+    "python3 --version",
+    "jq --version",
+    "unzip -v",
+    "sha256sum --version"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json (sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb)",
+    "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip (sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5)",
+    "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md (sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5)",
+    "ZIP:f10_open_breakthrough_lab/MANIFEST.sha256 (sha256:ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c)",
+    "ZIP:f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md (sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777)",
+    "ZIP:f10_open_breakthrough_lab/f10_lab/core.py (sha256:74e6882c7540698d314b42c3619727d4cbf9efcbfb71b3ad3088729dbe0396a9)",
+    "ZIP:f10_open_breakthrough_lab/run_experiment.py (sha256:74add2deebf77066eba71cad2b59af30c9d104203d03092bf8d2c6ff2ff225bd)",
+    "ZIP:f10_open_breakthrough_lab/run_low_order_component_discriminator.py (sha256:8b0db493dbe89822315176febd2bd26989364ef22c34d6b5e69edd9757faa9ea)",
+    "ZIP:f10_open_breakthrough_lab/tests/test_core.py (sha256:bcc81a30d921d1a9525276b9faf5e12879b482d708c5d694f1a80e00d0fa86f7)",
+    "ZIP:f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json (sha256:34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba)",
+    "ZIP:f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json (sha256:bd1fb1b5efa11a98909c83818b6674a867cd721d1bbf86698403f767420b2103)",
+    "ZIP:repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/results/A-OPEN-FINAL-ADJUDICATION.json (sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b)"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-INTAKE-SECTIONS-00-12",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "D-042R section matrix: S0 FAIL (the bounded external exception is exceeded by a live RABBIT import and physical collision-action evaluation); S1 FAIL (no binding-input provenance log, no prospective contract, and incomplete return manifest); S2 FAIL (the report gives a useful bounded Reynolds caveat but not the required full failure-route reflection, recurring-mistake audit, and reversal evidence); S3 FAIL (the returned route `STATIC_BLOCKER_MOVED / GLOBAL_GATES_UNCHANGED` is not one of the four allowed verdicts); S4 FAIL (18 listed families exceed the 6--10 pool and three mechanisms are executed without one prospectively selected finalist); S5 FAIL (no finalist passes the conjunctive XG gates); S6 FAIL (wrong bundle shape, no no-argument run_lab.sh, repository dependency, file/LOC cap failure, and no pinned isolation); S7 FAIL (no E0--E6 chain, semantic mutants, 4096-case property generator, or two clean byte-identical replays); S8 FAIL (six envelopes are returned, but raw_logs is empty, RUN_PLAN remains initialized, and the required structured CRAG/adversarial evidence is not reconstructible from a sealed lab); S9 FAIL (the mandatory exploration/authority DAG is absent); S10 FAIL (neither the unconditional authority skeleton nor `PR_DAG=UNREACHABLE` is returned); S11 FAIL (stdout/stderr and raw failure set are absent and 14 returned harness files are outside the manifest); S12 FAIL (the mandatory accounting block is absent).",
+      "assumptions_used": [
+        "Sections 0--12 are conjunctive return-package requirements, not optional report suggestions.",
+        "A later branch tip and byte-identical comparator do not substitute for the distinct CODE_HEAD, EVIDENCE_BASE, and PROMPT_COMMIT roles.",
+        "No scientific code was executed in this audit; returned numerical claims remain external evidence."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 0--12, sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+        "INTAKE_EVIDENCE_MAP.json sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb",
+        "ZIP report sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+        "ZIP member inventory from zipinfo -1 and zipinfo -l",
+        "ZIP RUN_PLAN.json status=initialized"
+      ],
+      "evidence_fingerprint": "sha256:fa7edb29004351d47b5bf456afcdc5fd2162973259de42484df15648bc31d5fa",
+      "counterevidence_refs": [
+        "The report explicitly keeps both F10 scientific gates FAIL and distinguishes its Reynolds result from collision-fidelity validation.",
+        "The archive contains a broad candidate matrix and six external review envelopes.",
+        "All compressed members pass unzip integrity."
+      ],
+      "reproduction": [
+        "Read D-042R Sections 0--12 from the exact prompt hash.",
+        "Run `zipinfo -1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` and compare the member set with Sections 6 and 11.",
+        "Stream the report, README, candidate matrix, manifest, run plan, runners, and final raw JSON; do not execute them.",
+        "Search the streamed report for the allowed route verdicts, PR_DAG marker, terminal owner lines, and mandatory accounting fields."
+      ],
+      "confidence": 0.999,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG00",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-00-PROVENANCE FAIL on the new prospective chain, independently of historical-context availability. No EXPERIMENT_CONTRACT.json or preseal chronology exists; the report and raw outputs name ab95ff52 rather than the binding CODE_HEAD bede5a96; no Section-1.1 provenance log is returned; run_experiment.py and the discriminator import rabbit.decoupling._independent_noqke from a repository checkout and emit physical collision actions; raw stdout/stderr and an isolation record are absent; and MANIFEST.sha256 covers 15 lab files but omits 14 returned harness files. These are binding/new-byte failures. Missing historical /tmp, orphan, or optional D-039 bytes are correctly irrelevant and are not used as a failure reason.",
+      "assumptions_used": [
+        "D-043 makes absent historical contextual bytes nonbinding but leaves every new prospective contract/source/test/output/manifest byte binding.",
+        "The comparator-byte-identity note cannot repair the required commit-role chronology or the repository-free rule.",
+        "A contract absent from the returned archive cannot have prospectively frozen outputs already present in that archive."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 1.1, 1.2, 5, 6, and 11",
+        "ZIP run_experiment.py sha256:74add2deebf77066eba71cad2b59af30c9d104203d03092bf8d2c6ff2ff225bd",
+        "ZIP run_low_order_component_discriminator.py sha256:8b0db493dbe89822315176febd2bd26989364ef22c34d6b5e69edd9757faa9ea",
+        "ZIP manifest sha256:ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c",
+        "ZIP final raw sha256:34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba",
+        "INTAKE_EVIDENCE_MAP.json observed_contract_gaps and code_head_comparator_byte_identity"
+      ],
+      "evidence_fingerprint": "sha256:ad8bfa893aa685b0259973e9272a87a4dca3c232a75b7c393c63300af642702b",
+      "counterevidence_refs": [
+        "The current-head comparator hash equals the binding CODE_HEAD comparator hash.",
+        "The ZIP itself is structurally sound and all 15 hashes listed in its lab manifest reproduce.",
+        "The external final adjudication records current source and final-raw hashes."
+      ],
+      "reproduction": [
+        "Run `zipinfo -1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` and confirm EXPERIMENT_CONTRACT.json, run_lab.sh, provenance log, stdout, stderr, and isolation record are absent.",
+        "Stream both runners and locate `from rabbit.decoupling import _independent_noqke as ind` plus calls to evaluate_independent_collision_action.",
+        "Parse MANIFEST.sha256 and compare its 15 paths with all 29 returned non-manifest files; 14 harness files remain uncovered.",
+        "Parse FULL_EXPERIMENT_FINAL.json and confirm code_head=ab95ff52ebee55a90634ae62e6ad97e975e5af26."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG01",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-01-NOVELTY FAIL. There is no frozen typed operation graph or bidirectional equivalence comparison. The implemented full Reynolds and WF-OR paths are post-hoc group/output averages around the existing D-028 evaluator, ORAFS reprocesses that evaluator's modal action, and OCAR is only PROPOSED. Language/file layout and group averaging do not establish the required two-node-class non-isomorphism with a changed shell/measure or state-to-collision map.",
+      "assumptions_used": [
+        "Novelty is judged against the sealed operation graph, not mathematical interest or a renamed output transformation.",
+        "A proposal that was not implemented cannot serve as the Phase-B finalist."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 4 and 5, XG-01",
+        "ZIP core.py sha256:74e6882c7540698d314b42c3619727d4cbf9efcbfb71b3ad3088729dbe0396a9",
+        "ZIP run_experiment.py sha256:74add2deebf77066eba71cad2b59af30c9d104203d03092bf8d2c6ff2ff225bd",
+        "ZIP IMPLEMENTATION_BLUEPRINT.md sha256:1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e"
+      ],
+      "evidence_fingerprint": "sha256:830db69042f286c5245e8b44c39a432c91f0d13ac38036aff72bb8780cb3b38d",
+      "counterevidence_refs": [
+        "Full C2 Reynolds averaging is an exact equivariance construction.",
+        "OCAR, if prospectively made primitive, could change the event-assembly and reduction graph."
+      ],
+      "reproduction": [
+        "Stream run_experiment.py and trace each candidate to baseline.modal_total, action_f, or action_pf returned by the existing comparator.",
+        "Search the returned archive for EXPERIMENT_CONTRACT.json or any sealed typed-graph equivalence artifact; none exists."
+      ],
+      "confidence": 0.995,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG02",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-02-PHYSICS FAIL. The package reuses the existing evaluator and does not close the six-species catalogue, absolute factors, stabilizers, multiplicities, or all finite-m_e shell branches. Its own report lists process-complete 24+15 shells and normalization among the remaining blockers. A bounded mu/tau symmetry identity cannot substitute for exact target physics.",
+      "assumptions_used": [
+        "Reusing an unadmitted collision evaluator does not independently validate its physical conventions or factors.",
+        "The gate is conjunctive across the complete candidate, not a single self-row localization."
+      ],
+      "evidence_refs": [
+        "D-042R XG-02",
+        "ZIP report sections `What remains blocked` and `Candidate 1`",
+        "ZIP final-adjudication findings F-OPEN-ADJ-001 and F-OPEN-ADJ-005"
+      ],
+      "evidence_fingerprint": "sha256:a5e49f1e76cbe3310335a127b3c2d24370113c9e687eb160cef57cee9de88ccc",
+      "counterevidence_refs": [
+        "The exact mu/tau permutation is physically justified on the frozen diagonal no-QKE slice.",
+        "Returned static outputs report several conservation and CP residuals."
+      ],
+      "reproduction": [
+        "Stream the report's `What remains blocked` list.",
+        "Confirm neither runner constructs an independent six-species finite-m_e reaction catalogue."
+      ],
+      "confidence": 0.995,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG03",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-03-INVARIANTS FAIL. Returned evidence consists of floating-point residuals after evaluating or averaging the old consumer; it does not prove candidate nullspace, first law, detailed balance, and permutation identities before floating point. WF-OR and full Reynolds are corrective projections/averages, while ORAFS operates on already-produced modal actions. No exact reaction-level invariant certificate is sealed.",
+      "assumptions_used": [
+        "Small residuals are not an exact pre-floating-point invariant proof.",
+        "An average can preserve or hide a shared base defect and therefore is not an independent invariant authority."
+      ],
+      "evidence_refs": [
+        "D-042R XG-03",
+        "ZIP report `Candidate 1` and `Candidate 2`",
+        "ZIP run_experiment.py candidate assembly"
+      ],
+      "evidence_fingerprint": "sha256:4f5148ab163ad1525e57a2d834233984637bc01bb7728ebb0c8608e00100f2cc",
+      "counterevidence_refs": [
+        "The external raw result reports very small self number/energy residuals and zero averaged first-law residual.",
+        "The report correctly notes that group averaging cannot manufacture invariants absent from the base evaluations."
+      ],
+      "reproduction": [
+        "Stream run_experiment.py and observe that invariant values are computed after native floating-point actions and group averaging.",
+        "Search the archive for an exact nullspace/detailed-balance proof artifact tied to a sealed finalist; none exists."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG04",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-04-ENTROPY-POSITIVITY FAIL. The package reports a positive entropy-production number for selected states and an entropy-variable reconstruction, but supplies no candidate-wide fermionic entropy inequality, strict-open invariant-domain proof, or no-clipping boundary test. This is the gate's explicit local-sign-only failure case.",
+      "assumptions_used": [
+        "One positive contraction sample cannot establish a global semidiscrete entropy inequality.",
+        "Using expit to construct selected valid states is not a strict-open dynamics proof."
+      ],
+      "evidence_refs": [
+        "D-042R XG-04 and experiment matrix item 7",
+        "ZIP core.py entropy_galerkin_reconstruct",
+        "ZIP report `What remains blocked`"
+      ],
+      "evidence_fingerprint": "sha256:242dd676f13bfa4377232ff63580cba20533f628fc7508e4bea2ee489063ff21",
+      "counterevidence_refs": [
+        "The external final result reports direct entropy production greater than zero for the asymmetric Reynolds state.",
+        "The core reconstruction uses logistic occupations and finite-state checks."
+      ],
+      "reproduction": [
+        "Stream tests/test_core.py and confirm there is no entropy, invalid-state, or clipping test.",
+        "Search the archive for a candidate-wide entropy proof tied to a prospective contract; none exists."
+      ],
+      "confidence": 0.995,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG05",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-05-TAIL-SUPPORT FAIL. The executable uses affine GL48 on the finite interval [0,24] and provides no one-owner, process-total full-half-line directed enclosure. RCHEB-EVP12 and TFC-DE are only bounded screens and are not the implemented operator.",
+      "assumptions_used": [
+        "A finite cutoff with no directed remainder certificate is not a full-half-line authority.",
+        "A proposed or separately screened representation cannot close the implemented candidate's tail gate."
+      ],
+      "evidence_refs": [
+        "D-042R XG-05",
+        "ZIP FULL_EXPERIMENT_FINAL.json conventions.grid",
+        "ZIP report `Candidate search result` and `What remains blocked`"
+      ],
+      "evidence_fingerprint": "sha256:77e76dddd1be3d24067a679719abc17486139235da1915784e75ad19b9efd40c",
+      "counterevidence_refs": [
+        "The candidate matrix includes half-line representation and threshold quadrature research leads.",
+        "Those leads are explicitly downclaimed as nonphysical or manufactured screens."
+      ],
+      "reproduction": [
+        "Parse FULL_EXPERIMENT_FINAL.json and confirm grid=`affine GL48 on [0,24]`.",
+        "Search the returned code for a directed process-total tail enclosure; none exists."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG06",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-06-DERIVATIVES FAIL. No finalist JVP/Jacobian contract, threshold branch semantics, generated-versus-independent derivative test, or consumer-path no-bypass proof is returned. Constructional swap covariance is not derivative covariance.",
+      "assumptions_used": [
+        "A static permutation identity does not imply smooth or correct state derivatives.",
+        "Missing mandatory derivative semantics are non-PASS under the independent-auditor role."
+      ],
+      "evidence_refs": [
+        "D-042R XG-06 and experiment matrix item 8",
+        "ZIP report `What remains blocked`",
+        "ZIP tests/test_core.py"
+      ],
+      "evidence_fingerprint": "sha256:9768ce603219ceca735eda58a48306fef5dc56e4b7584fd33da6928783f91ee3",
+      "counterevidence_refs": [
+        "The candidate matrix reports one manufactured scalar TFC-DE value/JVP screen.",
+        "That screen is not integrated into the executed finalist and does not cover complete finite-m_e collision semantics."
+      ],
+      "reproduction": [
+        "Stream the returned Python sources and tests; confirm no JVP or Jacobian implementation/test exists.",
+        "Stream the report and confirm JVP remains blocked."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG07",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-07-STABILITY FAIL. ORAFS reports near-unit local mass-matrix condition numbers only on selected states, but the package freezes no quotient, scaling, denominator floor, full operator norm, common domain, or uniform bound. The report itself states that the local condition number excludes basis construction, projection, discarded modes, and full-operator conditioning.",
+      "assumptions_used": [
+        "Local sample conditioning is not the uniform quotient-defined stability enclosure required by XG-07.",
+        "The kappa cap applies only after the complete relevant operator and quotient are frozen."
+      ],
+      "evidence_refs": [
+        "D-042R XG-07",
+        "ZIP report `Candidate 3`",
+        "ZIP core.py _weighted_mgs_basis and entropy_galerkin_reconstruct"
+      ],
+      "evidence_fingerprint": "sha256:7f03192d89f698983a5e6a68f26cfc0f664d79df6840eaef773f6314ad433bd1",
+      "counterevidence_refs": [
+        "ORAFS local mass matrices have reported condition numbers below 1.267.",
+        "This is useful localization evidence for the selected reconstruction."
+      ],
+      "reproduction": [
+        "Stream the report's ORAFS discussion and identify the explicitly excluded conditioning stages.",
+        "Search for a sealed quotient/uniform-enclosure definition; none exists."
+      ],
+      "confidence": 0.995,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG08",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-08-NATIVE-ARITHMETIC FAIL. The package supplies ordinary NumPy summation, linear solve, and averaging with no sealed rounding-interface graph, deterministic reduction proof, denominator floor, exact/high-precision trace, or total normalized <=2.5e-11 enclosure. Reproducible/superaccumulator reduction appears only as a future OCAR recommendation.",
+      "assumptions_used": [
+        "High-level deterministic execution and bitwise group equality do not bound total native arithmetic error.",
+        "A future recommended accumulator is not evidence for the current executable."
+      ],
+      "evidence_refs": [
+        "D-042R XG-08",
+        "ZIP core.py floating-point reductions",
+        "ZIP IMPLEMENTATION_BLUEPRINT.md step 7",
+        "ZIP report `What remains blocked`"
+      ],
+      "evidence_fingerprint": "sha256:bd6a84575ea9f5a1586e353e5ef9ac79ba1d4f2cb70c10bb1c6c517cfdfc7d60",
+      "counterevidence_refs": [
+        "The group-average covariance arrays are reported bitwise equal because both sides share the same finite operands.",
+        "One-thread controls reduce one source of nondeterminism."
+      ],
+      "reproduction": [
+        "Stream core.py and run_experiment.py and enumerate np.sum, matrix products, solve, averaging, and normalization sites.",
+        "Search the archive for a <=2.5e-11 operation-trace certificate; none exists."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG09",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-09-EXECUTABLE FAIL. Real external Python exists, but there is no single no-argument ./run_lab.sh authority, the README requires three host commands and a repository path, three candidate mechanisms are evaluated, no constant/fixture or targeted semantic mutation is implemented, no E0--E6 result rows exist, and no two fresh-process byte-identical raw replay artifacts are returned. The runner embeds wall_seconds in JSON, so complete raw JSON cannot be byte-identical across ordinary fresh runs. raw_logs/ is empty and the final raw schemas omit the required command/hash/tool/assumption/tolerance/seed/resource/failure fields.",
+      "assumptions_used": [
+        "The XG-09 runner, mutation, and replay clauses are conjunctive.",
+        "A prose plan for future row-6 mutants is not an executed semantic mutant.",
+        "Timing fields are part of the emitted JSON bytes unless the sealed contract explicitly separates them."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 6 and 7, XG-09",
+        "ZIP README.md reproduction commands",
+        "ZIP run_experiment.py sha256:74add2deebf77066eba71cad2b59af30c9d104203d03092bf8d2c6ff2ff225bd",
+        "ZIP tests/test_core.py sha256:bcc81a30d921d1a9525276b9faf5e12879b482d708c5d694f1a80e00d0fa86f7",
+        "ZIP FULL_EXPERIMENT_FINAL.json top-level schema"
+      ],
+      "evidence_fingerprint": "sha256:2de48c9b110a62ca2c187349b3019d8ecf94dcc8c9a1d25e68c75da1bdb547c3",
+      "counterevidence_refs": [
+        "The package contains executable code and four fast unit tests.",
+        "The external final adjudicator reports one independent rerun of selected deterministic fields.",
+        "The report recommends future row-6 semantic mutants."
+      ],
+      "reproduction": [
+        "Run `zipinfo -1` and confirm run_lab.sh and semantic-mutant artifacts are absent.",
+        "Stream README.md and observe the three commands and `--repo` argument.",
+        "Parse FULL_EXPERIMENT_FINAL.json keys and confirm three candidate objects and no required result-row array.",
+        "Search code/tests for mutant, fixture, or constant-replacement logic; none is present."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG10",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "XG-10-EXTERNAL-COST FAIL. The lab has 12 authored non-raw files when MANIFEST.sha256 is included (11 excluding it), versus the <=6 authority-path cap. Even the favourable executable/test-only count is five Python files totaling 839 physical lines, exceeding the <=800 executable/test/proof LOC cap. It depends on hidden repository collision code, reports only approximate call cost, omits a file-specific permanent-code estimate, leaves NumPy/SciPy unpinned, has no digest-pinned OCI image/resource record, and omits all mandatory Section-12 accounting fields.",
+      "assumptions_used": [
+        "Physical line count is the most favourable available count because no sealed LOC convention exists.",
+        "Repository code imported at runtime is hidden authority and cannot be excluded from completeness/cost reasoning.",
+        "Documentation volume cannot earn blocker-movement credit."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 6 and 12, XG-10",
+        "ZIP non-raw member inventory",
+        "ZIP requirements.txt contents `numpy` and `scipy`",
+        "ZIP ENVIRONMENT.md",
+        "ZIP report missing mandatory accounting block"
+      ],
+      "evidence_fingerprint": "sha256:ce182d8843d07435dc5d339ea70f3cc783ceed3e9e38fe270b97b35b8282b763",
+      "counterevidence_refs": [
+        "The main GL48 script reports roughly two base evaluations for full Reynolds.",
+        "The package is small in absolute archive size.",
+        "The report does not falsely claim a full production implementation."
+      ],
+      "reproduction": [
+        "Using Python zipfile without extraction, count non-raw authored members under f10_open_breakthrough_lab/.",
+        "Count splitlines for the five Python members: 66+97+17+220+439=839.",
+        "Stream requirements.txt and ENVIRONMENT.md and confirm no version/image digest or resource-enforcement record.",
+        "Search the report for added_lines, deleted_lines, net_lines, files_touched, token_use_exact, blocker_movement_ratio, and cost_effectiveness_verdict; none exists."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-XG11",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "XG-11-TRANSFER INCONCLUSIVE. The report cites primary sources and repeatedly limits transfer claims, which is materially better than silent promotion. However, the return lacks the required per-source CRAG records containing the exact borrowed equation/algorithm, uncovered assumption, nearest counterexample, transfer risk, and affected gate. The archive also lacks sealed raw CRAG logs, and this audit did not browse or re-review the cited literature. Therefore no source-to-finalist transfer gate can be admitted.",
+      "assumptions_used": [
+        "Source titles/URLs plus a broad transfer-gap paragraph are not the structured claim-level CRAG contract.",
+        "No web verification is authorized or needed for the decisive prospective-chain failure."
+      ],
+      "evidence_refs": [
+        "D-042R Section 8 and XG-11",
+        "ZIP report `Primary sources`",
+        "ZIP CANDIDATE_MATRIX.md"
+      ],
+      "evidence_fingerprint": "sha256:e199d1a9a534a1e9bfbf5abf3127117a7ccc4cb9a41c6d81808997e0e272d408",
+      "counterevidence_refs": [
+        "The report explicitly states that the sources establish transferable mechanisms, not target completion.",
+        "The candidate matrix gives several concise transfer limitations."
+      ],
+      "reproduction": [
+        "Stream the report and candidate matrix and compare each source entry with the six required CRAG fields.",
+        "Run `zipinfo -1` and confirm no raw CRAG artifact is returned."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Whether any cited primary source supports a narrower claim under a future prospectively sealed candidate.",
+        "Whether independent source review would identify additional transfer failures."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-ROUTE",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Required route verdict: PROVENANCE_FAIL. Required downstream markers for these exact bytes: PR_DAG=UNREACHABLE; blocking gate=XG-00-PROVENANCE; owner terminal line=DO_NOT_REOPEN. The report instead uses an unauthorized route label, supplies no PR authority skeleton or unreachable marker, and has no exact owner terminal line. The decisive falsifier is prospective chronology: outputs and executable source exist, but EXPERIMENT_CONTRACT.json does not exist at all, while the runners also cross the repository-free/physical-output boundary. Neither defect can be repaired retroactively without a new external run. This conclusion was reached through inventory self-discovery, authority step-back, independent hash/schema CoVe, the strongest bounded-admission steelman, and a decisive-falsifier/PDR pass.",
+      "assumptions_used": [
+        "DO_NOT_REOPEN applies to this returned package and does not assert a universal impossibility theorem.",
+        "A post-output contract or repackaged manifest would be retrospective repair and cannot cure XG-00.",
+        "Scientific gate failures remain unchanged regardless of the route-label defect."
+      ],
+      "evidence_refs": [
+        "D-042R Sections 3, 5, 10, and 11",
+        "ZIP report first and last lines",
+        "ZIP inventory lacking EXPERIMENT_CONTRACT.json and run_lab.sh",
+        "F-OPEN-INTAKE-XG00 through F-OPEN-INTAKE-XG11"
+      ],
+      "evidence_fingerprint": "sha256:5c799f8ed7a811a86992da9c2b40ba16c72064e32128f7bb6595a99212e6625d",
+      "counterevidence_refs": [
+        "The package deliberately keeps global F10 gates unchanged.",
+        "Its bounded static evidence may still help frame a different future candidate."
+      ],
+      "reproduction": [
+        "Search the report for the four allowed route verdicts; none appears as its route verdict.",
+        "Search for `PR_DAG=UNREACHABLE`, `DO_NOT_REOPEN`, and `REQUEST_OWNER_AUTHORIZATION_FOR_ONE_EXTERNAL_CANDIDATE_INTAKE_REVIEW`; none appears.",
+        "Confirm final raw outputs exist while EXPERIMENT_CONTRACT.json is absent."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-STEELMAN",
+      "claim_id": "C-OPEN-INTAKE-CONTRACT",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Strongest admission steelman, bounded only: ZIP integrity and the 15 hashes actually listed in the lab manifest are VALIDATED by this static audit. The returned Python mechanisms are IMPLEMENTED externally but were not executed here. Algebraically, full C2 Reynolds averaging is a credible exact mu/tau-equivariance reference, and the returned external evidence reports nonzero antisymmetric response plus useful row-6 localization while explicitly keeping both F10 gates FAIL. OCAR remains PROPOSED. These facts can inform a fresh clean-room search, but they cannot admit this package because archive integrity and a useful diagnostic are not substitutes for prospective provenance, structural independence, all-gate closure, or owner authority.",
+      "assumptions_used": [
+        "The external numerical values are treated as returned claims, not internally replayed validation.",
+        "The algebraic group-average identity is scoped to equivariance, not collision accuracy.",
+        "Bounded subclaim PASS must not override any whole-package FAIL."
+      ],
+      "evidence_refs": [
+        "unzip -t: no compressed-data errors",
+        "Manifest verification: 15 listed entries, zero hash mismatches",
+        "ZIP report Candidate 1 and Independent adjudication",
+        "ZIP final-adjudication findings F-OPEN-ADJ-001, F-OPEN-ADJ-003, and F-OPEN-ADJ-005"
+      ],
+      "evidence_fingerprint": "sha256:aa47701243f0a0f39a37e3aa4454408e784e2cacc793746620c4b17553a9ecfd",
+      "counterevidence_refs": [
+        "The same Reynolds construction gives exact covariance for an arbitrary wrong or zero base map.",
+        "The returned runner imports the failed/current comparator, so the evidence is not structurally independent.",
+        "No prospective OCAR implementation exists."
+      ],
+      "reproduction": [
+        "Run `unzip -t F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip`.",
+        "Hash each member named by MANIFEST.sha256 directly from the ZIP and compare all 15 entries.",
+        "Read, but do not execute, the Reynolds construction and the final adjudication's bounded claims."
+      ],
+      "confidence": 0.995,
+      "unresolved": [
+        "The returned scientific values were not independently rerun in this contract-only assignment.",
+        "A fresh package could change the verdict only by prospectively sealing exactly one operation-level distinct finalist; using the binding CODE_HEAD/EVIDENCE_BASE/PROMPT_COMMIT chain; importing no RABBIT implementation; running solely through no-argument run_lab.sh in a digest-pinned network-off constrained image; returning complete raw logs, semantic mutants, two clean byte-identical replays, all-file manifest, accounting, and the exact terminal line; and passing every XG-00 through XG-11 gate. That would be a new package, not a repair of this one."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json"
+  ]
+}

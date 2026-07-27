@@ -1,0 +1,275 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-ROW6-PHYSICS",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9357-0b1b-73d2-a0cf-278b46a348d2",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-ROW6-PHYSICS",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:7aa0f47208f2899be2137469286f49cedbdb73a9214f73701968a2c500766f0f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json",
+  "started_at": "2026-07-24T09:01:27.053528+00:00",
+  "completed_at": "2026-07-24T09:02:32.957593+00:00",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "unzip": "Info-ZIP 6.00",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "sed": "GNU sed 4.9",
+    "rg": "ripgrep 14.1.0",
+    "collision_or_scientific_execution": "NOT_RUN"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-ROW6-PHYSICS.json",
+    "sed -n '1,320p' .agent-harness/generated/CONTEXT_PACK.md (executed in bounded chunks)",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "python3 -c <compute schema-v2 role aggregate SHA256(path || NUL || bytes || NUL)>",
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md src/rabbit/decoupling/_independent_noqke.py",
+    "jq . .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "unzip -l F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md | sha256sum",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md | sha256sum",
+    "rg -n 'pair|conversion|Pauli|pauli|gain|loss|deposit|assemble|self' src/rabbit/decoupling/_independent_noqke.py",
+    "sed -n '400,595p;630,710p;735,825p;850,1010p;1010,1125p;1240,1305p' src/rabbit/decoupling/_independent_noqke.py (executed as targeted ranges)",
+    "sed -n '1,727p' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md (executed in bounded chunks)"
+  ],
+  "artifacts": [
+    "sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777 f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md",
+    "sha256:1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md",
+    "sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5 docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "sha256:535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3 src/rabbit/decoupling/_independent_noqke.py"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-ROW6-001",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The blueprint is not yet an executable sign contract. For legs 1+2<->3+4 the live helper defines A=u3+u4-u1-u2 and D_live=(1-f1)(1-f2)f3f4-f1f2(1-f3)(1-f4), then deposits (+,+,-,-)D_live. The blueprint's (-,-,+,+) lanes are convention-equivalent only if it freezes D_blueprint=f1f2(1-f3)(1-f4)-(1-f1)(1-f2)f3f4=-D_live. Reusing the live gain-minus-loss helper unchanged with the blueprint lanes reverses the collision and makes fermionic entropy production nonpositive away from equilibrium.",
+      "assumptions_used": [
+        "All four occupations are strict-open, so u=log(f/(1-f)) is finite.",
+        "Legs 1 and 2 are the named forward reactants and legs 3 and 4 are the named forward products.",
+        "The event measure and squared matrix element are nonnegative on support."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:671 (_stable_pauli_gain_minus_loss)",
+        "src/rabbit/decoupling/_independent_noqke.py:684 (A and forward-loss factor)",
+        "src/rabbit/decoupling/_independent_noqke.py:1093 (live rate)",
+        "src/rabbit/decoupling/_independent_noqke.py:1112 (live (+,+,-,-) deposition)",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md#Required-graph sha256:1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e"
+      ],
+      "evidence_fingerprint": "sha256:e0d0be1c9c850a56bd2df79f45140c42894349e859348fc084876d58ff18845f",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: Reactant-negative/product-positive lanes are a standard stoichiometric convention, so the blueprint may have intended forward-minus-reverse and can be made exactly equivalent by one explicit definition; no change to the physical operator is then required."
+      ],
+      "reproduction": [
+        "sed -n '671,701p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1055,1116p' src/rabbit/decoupling/_independent_noqke.py",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md",
+        "Exact falsifier: choose f1=f2=1/2 and f3=f4=2/3. Then A=2 ln(2), D_live=1/12. Live lanes give Sdot=ln(2)/6>0; blueprint lanes applied to D_live give Sdot=-ln(2)/6<0."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: a prospective sign mutant must apply both lane conventions to the exact rational state above and reject the entropy-negative orientation.",
+        "STANCE_CHANGE_CONDITION: freeze the Pauli drive formula, forward/reverse slot names, and the exact product of drive and lane vector before any implementation or output."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-002",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Bounded live-event algebra is DERIVED. Writing L=f1f2(1-f3)(1-f4), the helper returns D_live=L(exp(A)-1). Thus detailed balance is D_live=0 at A=0; orientation reversal negates D_live; the (+,+,-,-) stoichiometry has exact total-number null; the on-shell energy contraction is E1+E2-E3-E4=0; and physical fermionic entropy production is -sum_i u_i C_i=D_live*A>=0. The source's intermediate 'neutrino_entropy_rate' is H-dot=sum u_i C_i<=0, and the public diagnostic correctly negates it when forming entropy_production.",
+      "assumptions_used": [
+        "Strict-open occupations.",
+        "Exact real arithmetic for the algebraic identities.",
+        "Massless on-shell self event with four-momentum conservation.",
+        "Positive event prefactor."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:554 (24 reversible self events)",
+        "src/rabbit/decoupling/_independent_noqke.py:571 (pair-conversion event)",
+        "src/rabbit/decoupling/_independent_noqke.py:671 (_stable_pauli_gain_minus_loss)",
+        "src/rabbit/decoupling/_independent_noqke.py:1098 (H-dot affinity contraction)",
+        "src/rabbit/decoupling/_independent_noqke.py:1099 (event energy contraction)",
+        "src/rabbit/decoupling/_independent_noqke.py:1277 (entropy_production sign)"
+      ],
+      "evidence_fingerprint": "sha256:4123c36751c76b767b988df2635258aa551dee3d212dbc599ae5fe402386580e",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: exact event algebra does not prove that interpolation, finite-domain rejection, modal deposition, or binary64 reduction preserves the same identities; D-028 is already a validated discrete covariance failure."
+      ],
+      "reproduction": [
+        "sed -n '554,580p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '671,701p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1084,1116p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1260,1280p' src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: an exact event trace with D(reverse) != -D(forward), nonzero number/energy contraction, or negative -sum(u*C).",
+        "STANCE_CHANGE_CONDITION: this PASS remains limited to reconstructible event algebra; it does not validate OCAR or a binary64 consumer."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-003",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The archive report's stated metric convention is contradicted by the exact live source. The report declares (-,+,+,+), while _minkowski_dot implements E_a E_b-p_a dot p_b, i.e. (+,-,-,-). A global signature reversal leaves the row-6 K_t=(p1.p4)(p2.p3) product unchanged because both factors flip, so this mismatch does not overturn the bounded row-6 sign derivation. It is nevertheless a forbidden silent convention change and prevents transfer of the report's convention claim to odd-dot finite-mass interference formulas without an explicit formula-level mapping.",
+      "assumptions_used": [
+        "The source expression is read literally.",
+        "Metric-sign reversal changes every four-vector dot product by one minus sign.",
+        "Row-6 uses a product of two dot products."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:747 (_minkowski_dot)",
+        "src/rabbit/decoupling/_independent_noqke.py:931 (_self_matrix K_t)",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md#Scope-and-conventions sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777"
+      ],
+      "evidence_fingerprint": "sha256:909d36fef79e5374d9c3817e37e0e03da89bf109cdbfc4f3ada75aa20abffd6a",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: for the massless row-6 self kernel only, the two-dot product is signature invariant and the numerical implementation may be physically unchanged despite the prose error."
+      ],
+      "reproduction": [
+        "sed -n '747,752p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '926,945p' src/rabbit/decoupling/_independent_noqke.py",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: none is needed for the textual mismatch; the exact bytes disagree.",
+        "STANCE_CHANGE_CONDITION: correct the declared signature or provide an explicit term-by-term convention map, especially for finite-mass interference."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-004",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Flavour-permutation structure is promising but not closed. For the canonical mu/tau pair-conversion event, P sends the live stoichiometric vector to its negative and D_live(Pf)=-D_live(f), so C(Pf)=P C(f) is DERIVED in real arithmetic. Likewise the stated full C2 Reynolds formula is algebraically P-equivariant. The reported dominance of row 6, bitwise Reynolds covariance, nonzero antisymmetric response, and approximately two-call cost are EXTERNAL EVIDENCE ONLY. OCAR remains PROPOSED: the blueprint names but does not freeze the concrete stabilizer value, orientation quotient, absolute multiplicity, canonical key, one-rounding reduction graph, or their relation to the live factor 32.",
+      "assumptions_used": [
+        "mu and tau are exactly mass/coupling degenerate in the frozen no-QKE model.",
+        "P exchanges both particle and antiparticle mu/tau lanes.",
+        "The Pauli drive uses the live orientation defined in F-OPEN-ROW6-001."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:571 (single heavy-heavy pair-conversion event)",
+        "src/rabbit/decoupling/_independent_noqke.py:578 (pair-conversion coefficient 32)",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md#What-the-baseline-says",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md#Candidate-1-full-C2-Reynolds-reference",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md#Required-graph",
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#claim_ceiling"
+      ],
+      "evidence_fingerprint": "sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: the external localization is unusually sharp: electron covariance is reported bitwise, every other self row is zero or tiny, row 6 is large, and full Reynolds supplies an executable same-evaluator oracle. That makes OCAR a plausible smallest structural remedy even though it is not independent physics validation."
+      ],
+      "reproduction": [
+        "sed -n '554,580p' src/rabbit/decoupling/_independent_noqke.py",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md",
+        "Algebraic permutation check: P*s_live=-s_live and D_live(Pf)=-D_live(f), hence s_live*D_live(Pf)=P*(s_live*D_live(f))."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: a prospectively sealed row-6 implementation must fail if an orbit member is dropped, a lane is reversed, or stabilizer/multiplicity is changed, and must agree with the frozen Reynolds reference on both fixed and asymmetric states within a predeclared arithmetic bound.",
+        "STANCE_CHANGE_CONDITION: promote OCAR beyond PROPOSED only after the exact orientation/stabilizer/multiplicity/reduction graph and semantic mutants are sealed and independently executed."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-005",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The narrow natural-unit and finite-m_e scope is DERIVED and dimensionally consistent. With [G_F]=MeV^-2 and [K_t]=MeV^4, the squared-matrix factor is dimensionless; the event measure is MeV^4; modal weak action is MeV^4; division by T_cm^3/(2 pi^2) yields native df/dt in MeV. The heavy-heavy row-6 self assembly passes mass2=mass3=mass4=0 and does not consume electron_mass, so changing only the mu/tau flavour orbit cannot alter finite-electron-mass shells. This does not close any finite-m_e electron reaction, CP extension, half-line, JVP, or candidate-wide XG-02 obligation.",
+      "assumptions_used": [
+        "Natural units c=hbar=k_B=1.",
+        "Momentum and temperature are measured in MeV.",
+        "The audit remains on the frozen massless-neutrino row-6 self event."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:26 (MeV constants)",
+        "src/rabbit/decoupling/_independent_noqke.py:926 (_self_matrix dimensions)",
+        "src/rabbit/decoupling/_independent_noqke.py:1026 (_native_action)",
+        "src/rabbit/decoupling/_independent_noqke.py:1038 (_event_measure)",
+        "src/rabbit/decoupling/_independent_noqke.py:1074 (massless self kinematics)",
+        "src/rabbit/decoupling/_independent_noqke.py:1253 (electron_mass enters only electron assembly)",
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip::f10_open_breakthrough_lab/IMPLEMENTATION_BLUEPRINT.md#Required-graph"
+      ],
+      "evidence_fingerprint": "sha256:8870b991e0f9d704c1c7cf28bf5c9e1aed0301bc0804e94b2b0997a37e65c15d",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: the report's metric mismatch and the unclosed electron interference formulas mean this bounded dimensional PASS cannot support any whole-catalogue finite-m_e claim."
+      ],
+      "reproduction": [
+        "sed -n '20,35p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '926,945p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1026,1080p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1240,1260p' src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: any proposed row-6 orbit path that reads electron_mass or changes a shell/Jacobian rather than only flavour labels.",
+        "STANCE_CHANGE_CONDITION: extension beyond row 6 requires a separate process-complete finite-m_e derivation and execution."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-ROW6-006",
+      "claim_id": "C-OPEN-ROW6-PHYSICS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The returned archive cannot elevate its row-6 numerics or OCAR recommendation to repository evidence or intake authority. The D-042R contract permits one prospectively sealed repository-free nonphysical finalist and forbids RABBIT collision output. The registered evidence map records no EXPERIMENT_CONTRACT.json, no single run_lab.sh path, multiple evaluated candidates, import of the live comparator, emitted static collision actions, missing semantic physics mutants, missing clean replay evidence, and missing accounting/owner-choice closure. Therefore the correct classification is: live sign/null/entropy and Reynolds group identities DERIVED; reported row-6 localization and bitwise/cost numbers EXTERNAL EVIDENCE ONLY; OCAR and its reproducible orbit assembly PROPOSED; the report's (-+++) source-convention claim and any use of blueprint lanes with the live drive CONTRADICTED. Package admission and both F-10 scientific gates remain non-PASS.",
+      "assumptions_used": [
+        "The registered intake evidence map is the parent-owned read-only archive inspection.",
+        "D-042R Sections 0, 5, 6, 7, 11, and 12 are the governing return contract.",
+        "No scientific or collision code was run in this assignment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#observed_contract_gaps",
+        ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json#claim_ceiling",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#0-binding-state-and-authority",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#5-conjunctive-candidate-gates",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#6-required-executable-lab-bundle",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#11-required-output-package"
+      ],
+      "evidence_fingerprint": "sha256:81f461f8f68b0a018041e56d8362a147e76749cb6a372a4b0bc29d6982aa1dd8",
+      "counterevidence_refs": [
+        "STRONGEST_OPPOSING_STEELMAN: contract-noncompliant same-evaluator output can still be useful hypothesis-forming localization evidence, and the exact Reynolds identity independently supports using the group average as a diagnostic oracle. That value justifies preserving the idea, not promoting it."
+      ],
+      "reproduction": [
+        "jq '.observed_contract_gaps,.claim_ceiling' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+        "sed -n '1,727p' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+        "sha256sum F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "DECISIVE_FALSIFIER: a fresh, prospectively sealed, repository-free, nonphysical, single-finalist row-6 microprototype with exact sign/stabilizer/multiplicity bytes, semantic mutants, and two clean byte-identical replays.",
+        "STANCE_CHANGE_CONDITION: only a conforming all-gate external PASS followed by a separate owner intake decision can reopen a repository design review; this audit grants no implementation or execution authority."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json"
+  ]
+}

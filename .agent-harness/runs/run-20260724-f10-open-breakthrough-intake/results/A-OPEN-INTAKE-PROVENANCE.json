@@ -1,0 +1,250 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-INTAKE-PROVENANCE",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9356-e5ac-7fa0-b5de-36361ed6ebae",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-INTAKE-PROVENANCE",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:638838186443ac60a58e1286ea43049a2882551f5bca6a844bd72143e6f7eb50",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json",
+  "started_at": "2026-07-24T08:57:42Z",
+  "completed_at": "2026-07-24T09:03:52Z",
+  "tool_versions": {
+    "sha256sum": "GNU coreutils 9.4",
+    "unzip": "UnZip 6.00",
+    "zipinfo": "ZipInfo 3.00",
+    "jq": "jq-1.7",
+    "git": "git version 2.43.0",
+    "sed": "GNU sed 4.9",
+    "rg": "ripgrep 14.1.0"
+  },
+  "commands": [
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-INTAKE-PROVENANCE.json",
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-INTAKE-PROVENANCE.json",
+    "sed -n '1,120p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '121,180p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '181,240p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '241,300p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '301,360p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,260p' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-INTAKE-PROVENANCE.json",
+    "sha256sum .agent-harness/context/roles/context_mapper.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,240p' .agent-harness/context/roles/context_mapper.md",
+    "sed -n '1,300p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "jq . .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "sha256sum F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md src/rabbit/decoupling/_independent_noqke.py .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "zipinfo -1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -t F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/MANIFEST.sha256",
+    "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/MANIFEST.sha256 | sha256sum",
+    "For each of the 15 MANIFEST.sha256 rows: unzip -p the named member, sha256sum the stream, and compare exact hashes",
+    "zipinfo -l F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "Check zipinfo -1 for traversal, absolute paths, duplicate names, symlinks, and nested archives; check zipinfo -v encryption status",
+    "Compare the 15 manifest names with all 15 regular f10_open_breakthrough_lab files excluding MANIFEST.sha256",
+    "git rev-parse HEAD",
+    "git rev-parse --abbrev-ref HEAD",
+    "git log -1 --format=%H -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "git cat-file -e bede5a965267ef2dbfc628b56835a3563edf7396^{commit}",
+    "git cat-file -e 204d3fa41cedb9b3102b27cc7bde7ded51df85f7^{commit}",
+    "git cat-file -e ab95ff52ebee55a90634ae62e6ad97e975e5af26^{commit}",
+    "git merge-base --is-ancestor bede5a965267ef2dbfc628b56835a3563edf7396 204d3fa41cedb9b3102b27cc7bde7ded51df85f7",
+    "git merge-base --is-ancestor 204d3fa41cedb9b3102b27cc7bde7ded51df85f7 ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+    "git show bede5a965267ef2dbfc628b56835a3563edf7396:src/rabbit/decoupling/_independent_noqke.py | sha256sum",
+    "git show ab95ff52ebee55a90634ae62e6ad97e975e5af26:src/rabbit/decoupling/_independent_noqke.py | sha256sum",
+    "git show ab95ff52ebee55a90634ae62e6ad97e975e5af26:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | sha256sum",
+    "Read the corrected 727-line D-042R request with sed in three bounded chunks",
+    "Stream and inspect the returned report, README, environment, candidate matrix, implementation blueprint, requirements, runners, tests, four raw JSON files, RUN_PLAN, MERGED_RESULTS, six assignments, and six results without extraction",
+    "Hash RUN_PLAN.json, MERGED_RESULTS.json, A-OPEN-FINAL-ADJUDICATION.json, and all 14 returned harness JSON files from ZIP member streams",
+    "For each assignment/result pair: compare assignment hash, run_id, context_version, independence_mode, runtime_agent_type, and review_role",
+    "Count missing EXPERIMENT_CONTRACT.json, run_lab.sh, raw log files, artifact files, and stdout/stderr files from zipinfo -1",
+    "Search returned report and runners for route verdicts, terminal owner choice, accounting, RABBIT imports, comparator execution, candidate scope, mutations, manifests, and replay evidence",
+    "date -u +%Y-%m-%dT%H:%M:%SZ",
+    "jq -e validate schema-v2 identity, spawn contract, status, five finding envelopes, errors, and unique files_written path",
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json"
+  ],
+  "artifacts": [
+    "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5",
+    "f10_open_breakthrough_lab/MANIFEST.sha256 sha256:ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c",
+    "f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json sha256:34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba",
+    "f10_open_breakthrough_lab/raw/LOW_ORDER_COMPONENT_DISCRIMINATOR_FINAL.json sha256:bd1fb1b5efa11a98909c83818b6674a867cd721d1bbf86698403f767420b2103",
+    "repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/MERGED_RESULTS.json sha256:6c51de661a18322632a2f3efa5aab8c06b34b649fafb7ae1c01c61671251a56a",
+    "repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/results/A-OPEN-FINAL-ADJUDICATION.json sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-INTAKE-PROVENANCE-001",
+      "claim_id": "C-OPEN-INTAKE-PROVENANCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Archive/container integrity is VALIDATED within a narrow transport boundary. The ZIP SHA-256 is 81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5; unzip tests all 39 entries; the archive reports 399438 uncompressed bytes and 130074 compressed payload bytes; no traversal, absolute path, duplicate name, symlink, encryption, or nested-archive signature was found. The embedded lab manifest hashes to ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c, and all 15 listed lab-file digests reproduce with an exact 15-of-15 name-coverage match when MANIFEST.sha256 itself is excluded.",
+      "assumptions_used": [
+        "ZIP member streams were inspected without extracting into the repository.",
+        "Archive integrity means the returned bytes are internally readable and stable; it does not imply scientific validity or D-042R admission."
+      ],
+      "evidence_refs": [
+        "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5",
+        "f10_open_breakthrough_lab/MANIFEST.sha256 sha256:ce0af776fcd1b5d27078016324c8d520bb6f6016dbfa4a7866daee451baaff8c",
+        "zipinfo reports 39 entries, 399438 bytes uncompressed, and 130074 bytes compressed",
+        "All 15 embedded manifest rows independently returned PASS"
+      ],
+      "evidence_fingerprint": "sha256:81201b99dd08e45b06337b098a2b1de84d5f656e1e79ec588c1eb85ae340eba5",
+      "counterevidence_refs": [
+        "The manifest covers only the 15 lab files, not the 14 returned harness JSON files; that package-level defect is evaluated separately and does not negate the byte-level ZIP test."
+      ],
+      "reproduction": [
+        "sha256sum F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+        "unzip -t F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+        "zipinfo -l F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/MANIFEST.sha256"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-PROVENANCE-002",
+      "claim_id": "C-OPEN-INTAKE-PROVENANCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The bounded repository byte-identity claims reproduce. Current HEAD and prompt commit are ab95ff52ebee55a90634ae62e6ad97e975e5af26 on f10-independent-validation-b3v2; CODE_HEAD bede5a965267ef2dbfc628b56835a3563edf7396, EVIDENCE_BASE 204d3fa41cedb9b3102b27cc7bde7ded51df85f7, and ab95ff52 are valid commits with the required ancestry. The corrected prompt hashes to 2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5 both at ab95ff52 and in the working tree. The live comparator hashes to 535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3 at CODE_HEAD, at ab95ff52, and in the working tree.",
+      "assumptions_used": [
+        "Successful git cat-file and merge-base exit codes are required evidence even though they emit no stdout.",
+        "Byte identity across commits does not authorize substituting a later branch tip for the D-042R CODE_HEAD role."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+        "src/rabbit/decoupling/_independent_noqke.py sha256:535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3",
+        "INTAKE_EVIDENCE_MAP.json repository.head ab95ff52ebee55a90634ae62e6ad97e975e5af26"
+      ],
+      "evidence_fingerprint": "sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+      "counterevidence_refs": [
+        "The returned raw JSON declares ab95ff52 rather than the binding CODE_HEAD and contains no prospective input-classification/provenance log; identical comparator bytes do not repair that missing chain."
+      ],
+      "reproduction": [
+        "git rev-parse HEAD",
+        "git log -1 --format=%H -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+        "git show bede5a965267ef2dbfc628b56835a3563edf7396:src/rabbit/decoupling/_independent_noqke.py | sha256sum",
+        "git show ab95ff52ebee55a90634ae62e6ad97e975e5af26:src/rabbit/decoupling/_independent_noqke.py | sha256sum",
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-PROVENANCE-003",
+      "claim_id": "C-OPEN-INTAKE-PROVENANCE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The returned harness evidence is pairwise envelope-consistent but not a closed run/package inventory. All six assignment/result pairs match their sealed assignment hashes, run ID, context version, independence mode, runtime type, and review role; MERGED_RESULTS reports six results, 42 unique findings, and no merge errors; the result statuses are one pass, two fail, and three inconclusive, with final adjudication status fail. However RUN_PLAN remains status=initialized after all six results and merge exist, its digest is de993f2d1eb0bfc51fe214cba565a3f22af51d00618160af0198454bd6cc2ed2, all 14 harness JSON files are omitted from MANIFEST.sha256, and both raw_logs and artifacts directories contain zero files.",
+      "assumptions_used": [
+        "Pairwise schema-v2 consistency is narrower than completed lifecycle state and returned-package provenance.",
+        "A stale initialized plan and unmanifested evidence cannot be silently interpreted as completed prospective chronology."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json sha256:6c51de661a18322632a2f3efa5aab8c06b34b649fafb7ae1c01c61671251a56a",
+        "RUN_PLAN.json sha256:de993f2d1eb0bfc51fe214cba565a3f22af51d00618160af0198454bd6cc2ed2",
+        "A-OPEN-FINAL-ADJUDICATION.json sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b",
+        "Archive inventory: 14 repo_ab95 harness JSON files, zero raw_logs files, zero artifacts files"
+      ],
+      "evidence_fingerprint": "sha256:6c51de661a18322632a2f3efa5aab8c06b34b649fafb7ae1c01c61671251a56a",
+      "counterevidence_refs": [
+        "Each of the six individual result envelopes is internally bound to its archived assignment and unique result path.",
+        "The merge count and finding count are internally self-consistent."
+      ],
+      "reproduction": [
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/RUN_PLAN.json | jq .",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/MERGED_RESULTS.json | jq '{result_count,unique_finding_count,errors,actual_findings:(.findings|length)}'",
+        "For each archived assignment/result pair, recompute the assignment member hash and compare the spawn_contract plus run/context/runtime/role fields",
+        "Compare MANIFEST.sha256 names against the 14 repo_ab95 harness JSON members"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No returned append-only chronology explains why RUN_PLAN stayed initialized or binds the harness JSON files into the package manifest."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-PROVENANCE-004",
+      "claim_id": "C-OPEN-INTAKE-PROVENANCE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "D-042R prospective-chain admission fails at XG-00-PROVENANCE/ISOLATION, independently of the numerical claims. The archive contains zero EXPERIMENT_CONTRACT.json files, zero run_lab.sh files, zero stdout/stderr/log files, and no digest-pinned network-off OCI record. The only manifest excludes every harness JSON. requirements.txt contains unpinned numpy and scipy. run_experiment.py accepts --repo, inserts repo/src into sys.path, imports rabbit.decoupling._independent_noqke, and executes the live collision evaluator; the low-order runner does the same. The package evaluates full Reynolds, WF-OR, and ORAFS rather than one finalist selected under a prospective contract, and the final raw JSON lacks the mandatory exact_command, input_hashes, output_hashes, tool_versions, assumptions, tolerance/exact form, seed, peak RSS, finding IDs, and raw failure path. These are hard missing prospective bytes and isolation violations, so the strongest supported D-042R route verdict is PROVENANCE_FAIL; the current outputs cannot be retrospectively sealed.",
+      "assumptions_used": [
+        "D-042R Sections 1, 5, 6, 7, and 11 are binding for prospective admission.",
+        "Missing contract/chronology/raw bytes and a forbidden live production import are structural failures not curable by favorable numerical output.",
+        "No scientific Python, collision evaluator, or external runner was executed during this intake."
+      ],
+      "evidence_refs": [
+        "Corrected D-042R prompt sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+        "run_experiment.py sha256:74add2deebf77066eba71cad2b59af30c9d104203d03092bf8d2c6ff2ff225bd, lines 21-30 and 72-92 in the streamed member",
+        "run_low_order_component_discriminator.py sha256:8b0db493dbe89822315176febd2bd26989364ef22c34d6b5e69edd9757faa9ea, lines 15-48 in the streamed member",
+        "requirements.txt sha256:1978c5330a34a48fac00c1107de3949b8c8da3bd11517f59ca9b4510363c6c8a",
+        "FULL_EXPERIMENT_FINAL.json sha256:34b65cd4c13ea45b72b75eba3b3005b85f166e12912d92cf0397d54a371516ba"
+      ],
+      "evidence_fingerprint": "sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+      "counterevidence_refs": [
+        "Strongest admission steelman: the ZIP is readable and hash-stable, the lab-file manifest is internally exact, binding repository hashes reproduce, six assignment/result pairs are internally consistent, final outputs are preserved, and the external adjudicator explicitly retained both F10 gates as FAIL.",
+        "That steelman supports only a retrospective exploratory archive and bounded external clues; it cannot supply pre-output chronology, repository-free independence, one-finalist selection, replay, mutation, or complete return-manifest evidence."
+      ],
+      "reproduction": [
+        "zipinfo -1 F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip | rg 'EXPERIMENT_CONTRACT|run_lab\\.sh|stdout|stderr|\\.log$'",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/run_experiment.py | sed -n '1,115p'",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/run_low_order_component_discriminator.py | sed -n '1,105p'",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/raw/FULL_EXPERIMENT_FINAL.json | jq 'keys'"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Decisive falsifier for admission: produce the prospectively sealed contract and pre-output acceptance chronology for these already-existing outputs. Because neither byte exists, this historical package is falsified and cannot be repaired retrospectively.",
+        "Stance-change condition: a fresh owner-authorized external screen must preseal one unique finalist, use no RABBIT implementation, run only ./run_lab.sh in a digest-pinned network-off container, preserve raw stdout/stderr and two clean byte-identical replays, exercise semantic mutants, and manifest every returned file before a new intake verdict."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-INTAKE-PROVENANCE-005",
+      "claim_id": "C-OPEN-INTAKE-PROVENANCE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The returned report itself is nonconforming and cannot request intake. It uses STATIC_BLOCKER_MOVED / GLOBAL_GATES_UNCHANGED instead of one of the four allowed route verdicts, recommends a next implementation despite no all-gate finalist, omits PR_DAG=UNREACHABLE, omits the mandatory accounting block, and ends without exactly DO_NOT_REOPEN or REQUEST_OWNER_AUTHORIZATION_FOR_ONE_EXTERNAL_CANDIDATE_INTAKE_REVIEW. The defensible claim ceiling is: ZIP integrity VALIDATED; external lab code IMPLEMENTED externally but not internally replayed and not a production remedy; row-6 localization external evidence only and internally unverified; OCAR, RCHEB-EVP12, and TFC-DE remain PROPOSED; package admission PROVENANCE_FAIL; no global gate changes. STOP/PRESERVE remains binding and any candidate-specific PR DAG is UNREACHABLE.",
+      "assumptions_used": [
+        "Report-form defects cannot be cured by interpreting prose as one of the exact required verdicts or terminal owner choices.",
+        "A final external adjudication status fail and missing all-gate candidate prohibit an intake request."
+      ],
+      "evidence_refs": [
+        "F10_OPEN_BREAKTHROUGH_REPORT.md sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+        "IMPLEMENTATION_BLUEPRINT.md sha256:1b3898108114da921b98bcf1dbfef662f72437d569d83e446b79bbd08cfbc80e",
+        "A-OPEN-FINAL-ADJUDICATION.json sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b and status=fail",
+        "INTAKE_EVIDENCE_MAP.json claim_ceiling and observed_contract_gaps independently reproduced"
+      ],
+      "evidence_fingerprint": "sha256:d7bf60dbe5e7bf976e03e3dd18cb39f6d499d0af8818c63418f2eaba3651b52b",
+      "counterevidence_refs": [
+        "The report explicitly states that both governing F10 gates remain FAIL and warns that Reynolds covariance is constructional rather than independent physics validation.",
+        "Those anti-overclaim statements are useful contextual evidence but do not satisfy the exact D-042R return contract."
+      ],
+      "reproduction": [
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip f10_open_breakthrough_lab/F10_OPEN_BREAKTHROUGH_REPORT.md | rg -n 'NO_ADMISSIBLE_CANDIDATE|ONE_EXTERNAL_CANDIDATE_FOR_INTAKE_REVIEW|INCONCLUSIVE_EVIDENCE_OR_TIE|PROVENANCE_FAIL|PR_DAG=UNREACHABLE|added_lines:|DO_NOT_REOPEN|REQUEST_OWNER_AUTHORIZATION_FOR_ONE_EXTERNAL_CANDIDATE_INTAKE_REVIEW'",
+        "unzip -p F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip repo_ab95/.agent-harness/runs/run-20260724-f10-open-breakthrough-lab/results/A-OPEN-FINAL-ADJUDICATION.json | jq '{status,findings}'"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json"
+  ]
+}

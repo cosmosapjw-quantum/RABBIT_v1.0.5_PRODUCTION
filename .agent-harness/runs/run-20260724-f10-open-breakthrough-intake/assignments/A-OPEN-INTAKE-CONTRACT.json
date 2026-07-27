@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-INTAKE-CONTRACT",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-OPEN-INTAKE-CONTRACT"
+  ],
+  "task": "Hostile-audit the returned package against the exact current D-042R Sections 0-12 and XG-00 through XG-11. Use the evidence map and stream only necessary ZIP members. Verify prospective contract chronology, one-finalist rule, repository-free nonphysical boundary, authored-file and LOC caps, single entry point, semantic mutants, clean replays, raw stdout/stderr, manifest coverage, isolation/tool pins, mandatory accounting, route verdict, and owner terminal line. Separate a prospective-chain contract failure from the corrected treatment of absent historical contextual bytes. Produce a gate-by-gate PASS/FAIL/INCONCLUSIVE table, strongest admission steelman, decisive falsifier, and stance-change condition using the adversarial review loop. Do not run scientific code, inspect siblings, explore broadly, edit shared files, or write outside the result. End with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-INTAKE-CONTRACT.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip",
+    "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "sha256sum",
+    "unzip",
+    "zipinfo",
+    "jq",
+    "sed",
+    "rg",
+    "python3"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json",
+  "status": "registered"
+}
