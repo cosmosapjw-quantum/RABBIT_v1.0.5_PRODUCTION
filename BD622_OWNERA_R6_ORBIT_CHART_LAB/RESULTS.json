@@ -1,0 +1,53 @@
+{
+ "checks": {
+  "A1": {
+   "-D(f;Rz)": "5/144",
+   "D(Pf;z)": "5/144",
+   "D(f;z)": "1/12"
+  },
+  "A10-scramble": {
+   "scramble_bitwise": true
+  },
+  "A10-sweep": {
+   "sweep_cases": 4096,
+   "sweep_pass": true
+  },
+  "A2": {
+   "max_abs_residual_rat": "-3254999227/17179869184",
+   "residual_nonzero": true
+  },
+  "A3": {
+   "gl8_bitwise": true,
+   "mirror_bitwise": true,
+   "rational_exact": true
+  },
+  "A4": {
+   "idempotent": true,
+   "quotient": "1/2"
+  },
+  "A5": {
+   "s_anti_gl8": "7.264887185935607",
+   "s_anti_mirror": "8.174083571881056",
+   "s_anti_rat": "2194213851/268435456"
+  },
+  "A6": {
+   "energy_null": "exact",
+   "entropy_strict": true,
+   "events_traced": 84,
+   "gl8_energy": "-8.881784197001252e-16",
+   "gl8_number": "0.0",
+   "number_null": "exact"
+  },
+  "A7": {
+   "jvp_sample_tau0": "470698029/1073741824",
+   "jvp_two_contribution": true
+  },
+  "A9": {
+   "equivalent_form_bitwise": true
+  },
+  "ANCHOR": {
+   "anchors": "all hand-derived anchors hold"
+  }
+ },
+ "contract_id": "EC-OWNERA-R6-ORBIT-CHART-2026-07-27"
+}

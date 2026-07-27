@@ -1,0 +1,9 @@
+{
+ "contract_sha256": "41bfb8ba4dec7ae26611250903fdf15cc5f221e6c5b3c430e3e287656b9c38de",
+ "git_head": "4c05ce2fcf6ed396d8872e286dc74146b18b30f5",
+ "utc_time": "2026-07-27T12:41:31Z",
+ "uid": 1000,
+ "python": "3.12.3",
+ "numpy": "2.4.2",
+ "scipy": "1.17.0"
+}

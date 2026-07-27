@@ -1,0 +1,8 @@
+authored_files=6
+authored_loc=1072
+wall_seconds=353
+exit_code=0
+token_use_exact=UNAVAILABLE - no reliable stage-scoped counter
+runtime_behavior_changed=false
+physics_behavior_changed=false
+scientific_blocker_movement_ratio=0.00

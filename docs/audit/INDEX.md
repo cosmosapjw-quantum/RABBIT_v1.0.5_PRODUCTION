@@ -14,6 +14,8 @@ linked from canonical docs. Start from these anchors:
   [BD594_external_code_precision_audit_report_2026-06-27.md](BD594_external_code_precision_audit_report_2026-06-27.md)
 - D-044 external breakthrough intake closeout:
   [BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md](BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md)
+- D-045/D-046 owner grants + OWNER-A orbit-chart discriminator closeout:
+  [BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md](BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md)
 - Anti-drift rules: `../TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md`,
   `../../bbn_codex_anti_drift_cost_effective_policy.md`
 

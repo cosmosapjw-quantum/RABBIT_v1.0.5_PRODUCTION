@@ -1,0 +1,90 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-BLIND-PHYSICS",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "acf85f5d9e6870ce0",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-BLIND-PHYSICS",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:ef1f9286b8423bbae604ff260bac44dbdae282c5ba5d3e409f86450461a6c787",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-BLIND-PHYSICS.json",
+ "started_at": "2026-07-27T12:41:00+00:00",
+ "completed_at": "2026-07-27T13:05:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "read-only file review; hand derivation; no lab code executed"
+ ],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-PHYS-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "PRE-SEAL BLOCKER FOUND AND VERIFIED RESOLVED BEFORE SEAL: the MUT-6 substitution string NATIVE_ROUNDTRIP_ENABLED = False occurred twice in mechanism.py (assignment line and verbatim in the native_roundtrip docstring), so the mutant battery would deterministically return substitution-site ERROR and exit 20 on every sealed execution. The docstring was reworded before sealing; post-fix count is exactly one.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "mechanism.py native_roundtrip docstring (pre-fix)",
+    "mutants.py run_mutant count check"
+   ],
+   "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "grep -c 'NATIVE_ROUNDTRIP_ENABLED = False' mechanism.py == 1 post-fix"
+   ],
+   "confidence": 0.98,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-ORBIT-PHYS-002",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "All physics/algebra content verified by hand: index algebra gives C(Pf;M+) == P.C(f;M-) entrywise with identical operation sequences (basis of bitwise A3); sigma(M+)=M- and Reynolds idempotence holds exactly for q=1/2 and fails for q=1 and q=1/4; the entropy certificate lane0*drive*(gain-loss) equals +(G-L)^2 for the frozen code and -(G-L)^2 for MUT-2/MUT-8; all hand-derived anchors (kernel 27/256 and 1/4; fixtures 15/32, 29/64, 21/64, 39/128; b2(3)=-1/8, b3(1)=7/16; G witnesses 1/12, 5/144, 5/144) recompute correctly; BASIS_POLY matches LegendreP_k(y/2-1) for all four modes; exact number and energy nulls hold per member and closed (2b0+2b1=y identically); F_ASYM and sweep fixtures stay strictly inside (0,1); all ten mutants are semantically killed by their preregistered checks, including MUT-6 whose lossy 3-point 1/y^2 round trip provably breaks the exact number null (hand integral L(b2-row)_0 = 645568/27000 != 0); S_anti is exactly zero on the symmetric fixture by equivariance + P-invariance and genuinely nonzero on the asymmetric fixture (sampled events all give d_minus - d_plus > 0 with positive weight).",
+   "assumptions_used": [
+    "No lab code executed before seal; verification is hand derivation only."
+   ],
+   "evidence_refs": [
+    "mechanism.py",
+    "fixtures.py",
+    "test_mechanism.py",
+    "mutants.py",
+    "EXPERIMENT_CONTRACT.json"
+   ],
+   "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+   "counterevidence_refs": [
+    "MUT-5 kill is probabilistic (float reorder) rather than algebraic; rational half of A10-scramble cannot kill it."
+   ],
+   "reproduction": [
+    "Hand recomputation steps recorded in the review transcript."
+   ],
+   "confidence": 0.9,
+   "unresolved": [
+    "Scientific verdict awaits the sealed execution."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-BLIND-PHYSICS.json"
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-IMPLEMENTATION",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "fable-main-implementation",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-IMPLEMENTATION",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:b1b7a82006edbdf097e486f2117db9e4d6be56aec1c95765d7fcc20542c7a5cd",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-IMPLEMENTATION.json",
+ "started_at": "2026-07-27T12:20:00+00:00",
+ "completed_at": "2026-07-27T12:40:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0"
+ },
+ "commands": [
+  "bash -n run_lab.sh",
+  "python3 -m py_compile mechanism.py fixtures.py mutants.py test_mechanism.py",
+  "grep -nE 'import rabbit|from rabbit' *.py *.sh",
+  "sha256sum <authored files> > MANIFEST_AUTHORED.sha256"
+ ],
+ "artifacts": [
+  "BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST_AUTHORED.sha256"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-IMPL-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Six authored files implement the contract finalist exactly: two ordered members (0,1,2,3)/(2,3,0,1) through one shared generic evaluator with native-incoming legs 1,2 and Lagrange-interpolated outgoing legs 3,4; frozen (+,+,-,-) x gain-minus-loss product; derived Reynolds quotient 1/2 with executable idempotence witness; exact-Fraction, float-mirror, and GL8 engines; dual-number JVP; ten-mutant battery; three-process replay protocol under unshare -rn. Static checks pass: bash -n, py_compile, forbidden-import scan (no rabbit.* anywhere), 1072 authored lines. One pre-seal defect from blind review was fixed before sealing (MUT-6 substitution-site ambiguity in a docstring), plus robustness minors (scipy version assert, exit-code normalization, LC_ALL=C manifest sort, subprocess timeout handling).",
+   "assumptions_used": [
+    "Static checks only before seal; no lab output produced pre-seal."
+   ],
+   "evidence_refs": [
+    "BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST_AUTHORED.sha256",
+    "seal commit 4c05ce2"
+   ],
+   "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "sha256sum -c BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST_AUTHORED.sha256"
+   ],
+   "confidence": 0.9,
+   "unresolved": [
+    "Scientific verdict awaits the sealed execution."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-IMPLEMENTATION.json"
+ ]
+}

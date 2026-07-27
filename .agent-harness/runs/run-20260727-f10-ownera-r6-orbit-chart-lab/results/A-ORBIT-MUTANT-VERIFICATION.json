@@ -1,0 +1,73 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-MUTANT-VERIFICATION",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "a3e6200e825bdcb7d",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-MUTANT-VERIFICATION",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:95138434ec7c59dbacd1e75c4f72cbfc156759499a62b38d6ab13357bf226751",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-MUTANT-VERIFICATION.json",
+ "started_at": "2026-07-27T12:50:00+00:00",
+ "completed_at": "2026-07-27T12:53:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "sha256sum -c MANIFEST_AUTHORED.sha256",
+  "sha256sum -c MANIFEST.sha256",
+  "cmp across three replay copies",
+  "git show --stat 4c05ce2",
+  "JSON parsing of MUTANTS.json/RESULTS.json; no lab re-execution"
+ ],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-MUTVER-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Independent blind verification of the sealed evidence, 8/9 items fully VERIFIED without re-execution: authored-file integrity (pre==post hashes), complete 29-file MANIFEST covering every file except itself with no conflict copies, replay byte-identity across all three phases for both artifacts, three-phase exit 0, isolation probes both false, seal chronology matching on-disk contract hash and pre-output commit 4c05ce2, and all 10 mutants KILLED with first lines matching their preregistered kills: MUT-1/4/7 'FAIL A3: rational entry (0,0)'; MUT-2/8 'FAIL A6: entropy certificate violated at (0, 0, 0)'; MUT-3 'FAIL A4: Reynolds of a single member must be the half-half orbit'; MUT-5 'FAIL A10-scramble: gl8 bitwise entry (0,0): -3.6324435929678036 vs -3.6324435929678045'; MUT-6 'FAIL A6: exact number null: 17801518115143/30923764531200'; MUT-9A 'FAIL ANCHOR: kernel(1/2,3/2,1/4)'; MUT-9B 'FAIL ANCHOR: fixture species 0 at 1/2'. RESULTS.json check set complete with A1 witnesses 1/12, 5/144, 5/144 and 4096 sweep cases. Sole discrepancy, benign and fail-closed reported: the console log lacks the invoking wrapper's LAB_EXIT=0 trailing line (captured in the task output stream instead); exit 0 corroborated by PHASES.txt and ACCOUNTING.",
+   "assumptions_used": [
+    "Verification restricted to hashing, byte comparison, git inspection, and JSON parsing; the lab was not re-executed."
+   ],
+   "evidence_refs": [
+    "MANIFEST_AUTHORED.sha256",
+    "MANIFEST.sha256",
+    "MUTANTS.json sha256 9da373d1...",
+    "RESULTS.json sha256 b2ac53f7...",
+    "raw/SEAL_CHRONOLOGY.json sha256 69fec2dd..."
+   ],
+   "evidence_fingerprint": "sha256:9da373d1d23131dd62c9932350fff8e2dbeec15c3faae67e4f1b33fcfb588791",
+   "counterevidence_refs": [
+    "Recorded mutant check field uses the coarse check name (A6, ANCHOR); the first_line disambiguates the preregistered sub-variant in every case."
+   ],
+   "reproduction": [
+    "Re-run the listed hash/cmp commands against the committed evidence."
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-MUTANT-VERIFICATION.json"
+ ]
+}

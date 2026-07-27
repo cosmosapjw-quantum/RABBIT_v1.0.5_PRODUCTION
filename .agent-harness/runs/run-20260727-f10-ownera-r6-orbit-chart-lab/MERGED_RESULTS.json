@@ -1,0 +1,343 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "generated_at": "2026-07-27T12:57:19+00:00",
+  "result_count": 6,
+  "unique_finding_count": 9,
+  "findings": [
+    {
+      "finding_id": "F-ORBIT-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS. All eleven D-044 obligations (frozen sign product, both ordered charts, derived orientation/stabilizer quotient, absolute factor/multiplicity, pre-native modal observables, nonzero antisymmetric response, two-contribution JVP, deterministic accumulation, absolute/native metrics, cost, semantic mutants) and all eight D-045 local-sealed adaptations (pre-output git seal 4c05ce2, single no-arg runner, network-off unshare -rn, raw logs, complete 29-file manifest, two byte-identical fresh-process replays, accounting, exact terminal line) are SATISFIED on adjudicator-reverified evidence. Terminal claim statuses: C-R6-ORBIT-CHART-MICROCASE=VALIDATED (manufactured nonphysical microcase, local-sealed execution only); lab code IMPLEMENTED; C-R6-ORBIT-CHART-RABBIT-APPLICABILITY=PROPOSED pending OWNER-B; every G-F10-* scientific gate and G-EXT-FEASIBILITY UNCHANGED. Terminal line REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW is ratified as a request only; OWNER-B remains REQUIRED_NOT_GRANTED.",
+      "assumptions_used": [
+        "Adjudication limited to hashing, byte comparison, git inspection, and envelope reads."
+      ],
+      "evidence_refs": [
+        "RESULTS.json sha256 b2ac53f7",
+        "MUTANTS.json sha256 9da373d1",
+        "MANIFEST.sha256 sha256 504095f2",
+        "raw/SEAL_CHRONOLOGY.json sha256 69fec2dd",
+        "seal commit 4c05ce2"
+      ],
+      "evidence_fingerprint": "sha256:b2ac53f7c32e5eb44a8c21f9ca986cf308221744433e8431222e54402a0b3f45",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Re-verify the four hashes and cmp the three replay copies."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ORBIT-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-ADJ-002",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Permanent recorded limitations qualifying the VALIDATED microcase: (a) all blind reviews were same-model Claude-family agents in one session, blind to results but not organizationally external; (b) the seal was preceded by a static review-fix loop that removed three would-be-fatal defects (MUT-6 double substitution site, missing authored manifest/uncommitted lab, non-executable runner) before any output existed; (c) the run validates the orbit-chart closure mechanism on manufactured nonphysical objects only and validates nothing about collision physics, absolute normalization, finite-m_e, or any F-10 gate; (d) the MUT-5 kill is probabilistic (binary64 reorder) rather than algebraic; (e) the wrapper LAB_EXIT line and terminal line are corroborated by PHASES/ACCOUNTING/structure rather than direct on-disk console capture; (f) version-string pins replace a digest-pinned image, replay byte-identity is single-host, the tree was Dropbox-synced during execution, token accounting is UNAVAILABLE by construction, mutant check labels are coarse with first-line disambiguation, and the manifest includes two derived .pyc files.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "Five sibling envelopes",
+        "EXPERIMENT_CONTRACT.json",
+        "raw/ evidence tree"
+      ],
+      "evidence_fingerprint": "sha256:9da373d1d23131dd62c9932350fff8e2dbeec15c3faae67e4f1b33fcfb588791",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.9,
+      "unresolved": [
+        "OWNER-B target replay decision is the owner's next checkpoint."
+      ],
+      "supporting_assignments": [
+        "A-ORBIT-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-NUM-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PRE-SEAL BLOCKERS FOUND AND VERIFIED RESOLVED BEFORE SEAL: (1) MUT-6 double substitution site guaranteeing mechanical exit 20 (independently confirmed); (2) missing MANIFEST_AUTHORED.sha256 and uncommitted lab directory guaranteeing SEAL_MISMATCH exit 30; (3) run_lab.sh not executable (exit 126). All fixed at seal: docstring reworded, manifest generated and force-added past the *.sha256 gitignore rule, chmod +x, lab committed as 4c05ce2 before first execution.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "run_lab.sh seal check",
+        "seal commit 4c05ce2"
+      ],
+      "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git show 4c05ce2 --stat lists 7 lab files including MANIFEST_AUTHORED.sha256 and mode 100755 run_lab.sh"
+      ],
+      "confidence": 0.98,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ORBIT-BLIND-NUMERICS"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-NUM-002",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Numerics and protocol verified statically: type genericity closed for all three engine value types (Fraction, float, Dual) including every mixed operator combination; IEEE bitwise arguments hold (negation exactness, two-term commutativity, exact 0.5 scaling, loss-gain as exact negation) so A3/A9/A10 bitwise checks and the A5/A6 exact-zero float checks are sound; RESULTS.json and MUTANTS.json contain only deterministic content so three fresh-process replays must be byte-identical; mutant subprocess mechanics import the mutated copies (cwd-resolved sys.path[0]); shell protocol (set -euo pipefail, timeout propagation, manifest self-exclusion, fail-closed isolation probes) is correct; runtime estimate ~15-25 min total with the 4096-case GL8 sweep dominating (~4-6x margin under the 1800 s per-phase cap); leggauss is deterministic on one machine/version. Residual accepted risks: A2 agreement margin (~10x expected), MUT-5 probabilistic kill, Dropbox sync interference during the run.",
+      "assumptions_used": [
+        "Stdlib semantic probes (Fraction/float interop) executed; no lab file imported or run."
+      ],
+      "evidence_refs": [
+        "mechanism.py",
+        "test_mechanism.py",
+        "mutants.py",
+        "run_lab.sh",
+        "EXPERIMENT_CONTRACT.json"
+      ],
+      "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+      "counterevidence_refs": [
+        "Minor pre-seal gaps fixed: scipy pin unasserted, non-contract exit codes (124/126) unmapped, locale-dependent manifest sort, uncaught mutant TimeoutExpired."
+      ],
+      "reproduction": [
+        "Static reasoning recorded in the review transcript."
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Scientific verdict awaits the sealed execution."
+      ],
+      "supporting_assignments": [
+        "A-ORBIT-BLIND-NUMERICS"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-PHYS-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PRE-SEAL BLOCKER FOUND AND VERIFIED RESOLVED BEFORE SEAL: the MUT-6 substitution string NATIVE_ROUNDTRIP_ENABLED = False occurred twice in mechanism.py (assignment line and verbatim in the native_roundtrip docstring), so the mutant battery would deterministically return substitution-site ERROR and exit 20 on every sealed execution. The docstring was reworded before sealing; post-fix count is exactly one.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "mechanism.py native_roundtrip docstring (pre-fix)",
+        "mutants.py run_mutant count check"
+      ],
+      "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -c 'NATIVE_ROUNDTRIP_ENABLED = False' mechanism.py == 1 post-fix"
+      ],
+      "confidence": 0.98,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ORBIT-BLIND-PHYSICS"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-PHYS-002",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "All physics/algebra content verified by hand: index algebra gives C(Pf;M+) == P.C(f;M-) entrywise with identical operation sequences (basis of bitwise A3); sigma(M+)=M- and Reynolds idempotence holds exactly for q=1/2 and fails for q=1 and q=1/4; the entropy certificate lane0*drive*(gain-loss) equals +(G-L)^2 for the frozen code and -(G-L)^2 for MUT-2/MUT-8; all hand-derived anchors (kernel 27/256 and 1/4; fixtures 15/32, 29/64, 21/64, 39/128; b2(3)=-1/8, b3(1)=7/16; G witnesses 1/12, 5/144, 5/144) recompute correctly; BASIS_POLY matches LegendreP_k(y/2-1) for all four modes; exact number and energy nulls hold per member and closed (2b0+2b1=y identically); F_ASYM and sweep fixtures stay strictly inside (0,1); all ten mutants are semantically killed by their preregistered checks, including MUT-6 whose lossy 3-point 1/y^2 round trip provably breaks the exact number null (hand integral L(b2-row)_0 = 645568/27000 != 0); S_anti is exactly zero on the symmetric fixture by equivariance + P-invariance and genuinely nonzero on the asymmetric fixture (sampled events all give d_minus - d_plus > 0 with positive weight).",
+      "assumptions_used": [
+        "No lab code executed before seal; verification is hand derivation only."
+      ],
+      "evidence_refs": [
+        "mechanism.py",
+        "fixtures.py",
+        "test_mechanism.py",
+        "mutants.py",
+        "EXPERIMENT_CONTRACT.json"
+      ],
+      "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+      "counterevidence_refs": [
+        "MUT-5 kill is probabilistic (float reorder) rather than algebraic; rational half of A10-scramble cannot kill it."
+      ],
+      "reproduction": [
+        "Hand recomputation steps recorded in the review transcript."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Scientific verdict awaits the sealed execution."
+      ],
+      "supporting_assignments": [
+        "A-ORBIT-BLIND-PHYSICS"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-IMPL-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Six authored files implement the contract finalist exactly: two ordered members (0,1,2,3)/(2,3,0,1) through one shared generic evaluator with native-incoming legs 1,2 and Lagrange-interpolated outgoing legs 3,4; frozen (+,+,-,-) x gain-minus-loss product; derived Reynolds quotient 1/2 with executable idempotence witness; exact-Fraction, float-mirror, and GL8 engines; dual-number JVP; ten-mutant battery; three-process replay protocol under unshare -rn. Static checks pass: bash -n, py_compile, forbidden-import scan (no rabbit.* anywhere), 1072 authored lines. One pre-seal defect from blind review was fixed before sealing (MUT-6 substitution-site ambiguity in a docstring), plus robustness minors (scipy version assert, exit-code normalization, LC_ALL=C manifest sort, subprocess timeout handling).",
+      "assumptions_used": [
+        "Static checks only before seal; no lab output produced pre-seal."
+      ],
+      "evidence_refs": [
+        "BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST_AUTHORED.sha256",
+        "seal commit 4c05ce2"
+      ],
+      "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sha256sum -c BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST_AUTHORED.sha256"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Scientific verdict awaits the sealed execution."
+      ],
+      "supporting_assignments": [
+        "A-ORBIT-IMPLEMENTATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-MUTVER-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Independent blind verification of the sealed evidence, 8/9 items fully VERIFIED without re-execution: authored-file integrity (pre==post hashes), complete 29-file MANIFEST covering every file except itself with no conflict copies, replay byte-identity across all three phases for both artifacts, three-phase exit 0, isolation probes both false, seal chronology matching on-disk contract hash and pre-output commit 4c05ce2, and all 10 mutants KILLED with first lines matching their preregistered kills: MUT-1/4/7 'FAIL A3: rational entry (0,0)'; MUT-2/8 'FAIL A6: entropy certificate violated at (0, 0, 0)'; MUT-3 'FAIL A4: Reynolds of a single member must be the half-half orbit'; MUT-5 'FAIL A10-scramble: gl8 bitwise entry (0,0): -3.6324435929678036 vs -3.6324435929678045'; MUT-6 'FAIL A6: exact number null: 17801518115143/30923764531200'; MUT-9A 'FAIL ANCHOR: kernel(1/2,3/2,1/4)'; MUT-9B 'FAIL ANCHOR: fixture species 0 at 1/2'. RESULTS.json check set complete with A1 witnesses 1/12, 5/144, 5/144 and 4096 sweep cases. Sole discrepancy, benign and fail-closed reported: the console log lacks the invoking wrapper's LAB_EXIT=0 trailing line (captured in the task output stream instead); exit 0 corroborated by PHASES.txt and ACCOUNTING.",
+      "assumptions_used": [
+        "Verification restricted to hashing, byte comparison, git inspection, and JSON parsing; the lab was not re-executed."
+      ],
+      "evidence_refs": [
+        "MANIFEST_AUTHORED.sha256",
+        "MANIFEST.sha256",
+        "MUTANTS.json sha256 9da373d1...",
+        "RESULTS.json sha256 b2ac53f7...",
+        "raw/SEAL_CHRONOLOGY.json sha256 69fec2dd..."
+      ],
+      "evidence_fingerprint": "sha256:9da373d1d23131dd62c9932350fff8e2dbeec15c3faae67e4f1b33fcfb588791",
+      "counterevidence_refs": [
+        "Recorded mutant check field uses the coarse check name (A6, ANCHOR); the first_line disambiguates the preregistered sub-variant in every case."
+      ],
+      "reproduction": [
+        "Re-run the listed hash/cmp commands against the committed evidence."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ORBIT-MUTANT-VERIFICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ORBIT-SEAL-001",
+      "claim_id": "C-R6-ORBIT-CHART",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The single sealed execution completed with exit 0 and terminal line REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW. Seal chronology: contract sha256 41bfb8ba..., git_head 4c05ce2 committed at 2026-07-27T21:41:05+09:00 strictly before the first output at 12:41:31Z; python 3.12.3 / numpy 2.4.2 / scipy 1.17.0 runtime-asserted. Isolation: unshare -rn user+net namespaces, both negative network probes false, host uid 1000, namespace uid 0. Three phases (primary + two fresh-process replays) all exit 0; RESULTS.json and MUTANTS.json byte-identical across all three. Acceptance battery ANCHOR, A1-A7, A9, A10-scramble, A10-sweep (4096 cases) all PASS: exact witness 1/12 vs 5/144 reproduced; single-member equivariance fails exactly (max residual -3254999227/17179869184) while the closed two-member object is equivariant exactly and bitwise; Reynolds one-half idempotence holds and kills q in {1, 1/4}; antisymmetric response retained (s_anti_rat 2194213851/268435456, gl8 7.264887185935607, symmetric fixture exactly zero); number/energy/entropy nulls exact with 84 traced events; JVP carries both member contributions (sample tau0 eps 470698029/1073741824). All 10 mutants KILLED for their preregistered reasons. Wall 353 s under the 1800 s cap. Evidence hashes: RESULTS b2ac53f7, MUTANTS 9da373d1, MANIFEST 504095f2, SEAL_CHRONOLOGY 69fec2dd.",
+      "assumptions_used": [
+        "Local sealed execution per D-045 LOCAL-ADAPT: local git commit replaces GitHub pinning; runtime version assertion replaces digest-pinned OCI image."
+      ],
+      "evidence_refs": [
+        "raw/SEAL_CHRONOLOGY.json",
+        "raw/ISOLATION.json",
+        "raw/PHASES.txt",
+        "RESULTS.json",
+        "MUTANTS.json",
+        "MANIFEST.sha256"
+      ],
+      "evidence_fingerprint": "sha256:b2ac53f7c32e5eb44a8c21f9ca986cf308221744433e8431222e54402a0b3f45",
+      "counterevidence_refs": [
+        "The invoking wrapper's LAB_EXIT echo landed in the task output stream rather than the tee'd console log; exit 0 is corroborated by PHASES.txt, ACCOUNTING exit_code=0, and the process exit code."
+      ],
+      "reproduction": [
+        "cd BD622_OWNERA_R6_ORBIT_CHART_LAB && sha256sum -c MANIFEST.sha256"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Applicability to live RABBIT row 6 requires OWNER-B target replay; nothing here validates collision physics, absolute normalization, or any F-10 gate."
+      ],
+      "supporting_assignments": [
+        "A-ORBIT-SEAL-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

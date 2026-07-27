@@ -1,0 +1,65 @@
+{
+ "contract_id": "EC-OWNERA-R6-ORBIT-CHART-2026-07-27",
+ "mutants": [
+  {
+   "check": "A3",
+   "first_line": "FAIL A3: rational entry (0,0)",
+   "id": "MUT-1",
+   "status": "KILLED"
+  },
+  {
+   "check": "A6",
+   "first_line": "FAIL A6: entropy certificate violated at (0, 0, 0)",
+   "id": "MUT-2",
+   "status": "KILLED"
+  },
+  {
+   "check": "A4",
+   "first_line": "FAIL A4: Reynolds of a single member must be the half-half orbit",
+   "id": "MUT-3",
+   "status": "KILLED"
+  },
+  {
+   "check": "A3",
+   "first_line": "FAIL A3: rational entry (0,0)",
+   "id": "MUT-4",
+   "status": "KILLED"
+  },
+  {
+   "check": "A10-scramble",
+   "first_line": "FAIL A10-scramble: gl8 bitwise entry (0,0): -3.6324435929678036 vs -3.6324435929678045",
+   "id": "MUT-5",
+   "status": "KILLED"
+  },
+  {
+   "check": "A6",
+   "first_line": "FAIL A6: exact number null: 17801518115143/30923764531200",
+   "id": "MUT-6",
+   "status": "KILLED"
+  },
+  {
+   "check": "A3",
+   "first_line": "FAIL A3: rational entry (0,0)",
+   "id": "MUT-7",
+   "status": "KILLED"
+  },
+  {
+   "check": "A6",
+   "first_line": "FAIL A6: entropy certificate violated at (0, 0, 0)",
+   "id": "MUT-8",
+   "status": "KILLED"
+  },
+  {
+   "check": "ANCHOR",
+   "first_line": "FAIL ANCHOR: kernel(1/2,3/2,1/4)",
+   "id": "MUT-9A",
+   "status": "KILLED"
+  },
+  {
+   "check": "ANCHOR",
+   "first_line": "FAIL ANCHOR: fixture species 0 at 1/2",
+   "id": "MUT-9B",
+   "status": "KILLED"
+  }
+ ]
+}

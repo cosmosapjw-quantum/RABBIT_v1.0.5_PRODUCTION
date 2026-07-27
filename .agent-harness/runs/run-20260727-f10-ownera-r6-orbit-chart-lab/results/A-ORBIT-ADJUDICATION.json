@@ -1,0 +1,93 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-ADJUDICATION",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "a7e7e11078003463d",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-ADJUDICATION",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:d106b4caea651be447f33313e75a10a742e04fbfc5ccaf92187e76fc9881bac9",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-ADJUDICATION.json",
+ "started_at": "2026-07-27T12:55:00+00:00",
+ "completed_at": "2026-07-27T13:00:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "read all five sibling envelopes",
+  "recompute RESULTS/MUTANTS/contract hashes",
+  "cmp replay byte-identity",
+  "git inspect seal commit 4c05ce2",
+  "no lab execution"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/MERGED_RESULTS.json"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "VERDICT PASS. All eleven D-044 obligations (frozen sign product, both ordered charts, derived orientation/stabilizer quotient, absolute factor/multiplicity, pre-native modal observables, nonzero antisymmetric response, two-contribution JVP, deterministic accumulation, absolute/native metrics, cost, semantic mutants) and all eight D-045 local-sealed adaptations (pre-output git seal 4c05ce2, single no-arg runner, network-off unshare -rn, raw logs, complete 29-file manifest, two byte-identical fresh-process replays, accounting, exact terminal line) are SATISFIED on adjudicator-reverified evidence. Terminal claim statuses: C-R6-ORBIT-CHART-MICROCASE=VALIDATED (manufactured nonphysical microcase, local-sealed execution only); lab code IMPLEMENTED; C-R6-ORBIT-CHART-RABBIT-APPLICABILITY=PROPOSED pending OWNER-B; every G-F10-* scientific gate and G-EXT-FEASIBILITY UNCHANGED. Terminal line REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW is ratified as a request only; OWNER-B remains REQUIRED_NOT_GRANTED.",
+   "assumptions_used": [
+    "Adjudication limited to hashing, byte comparison, git inspection, and envelope reads."
+   ],
+   "evidence_refs": [
+    "RESULTS.json sha256 b2ac53f7",
+    "MUTANTS.json sha256 9da373d1",
+    "MANIFEST.sha256 sha256 504095f2",
+    "raw/SEAL_CHRONOLOGY.json sha256 69fec2dd",
+    "seal commit 4c05ce2"
+   ],
+   "evidence_fingerprint": "sha256:b2ac53f7c32e5eb44a8c21f9ca986cf308221744433e8431222e54402a0b3f45",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Re-verify the four hashes and cmp the three replay copies."
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-ORBIT-ADJ-002",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "medium",
+   "statement": "Permanent recorded limitations qualifying the VALIDATED microcase: (a) all blind reviews were same-model Claude-family agents in one session, blind to results but not organizationally external; (b) the seal was preceded by a static review-fix loop that removed three would-be-fatal defects (MUT-6 double substitution site, missing authored manifest/uncommitted lab, non-executable runner) before any output existed; (c) the run validates the orbit-chart closure mechanism on manufactured nonphysical objects only and validates nothing about collision physics, absolute normalization, finite-m_e, or any F-10 gate; (d) the MUT-5 kill is probabilistic (binary64 reorder) rather than algebraic; (e) the wrapper LAB_EXIT line and terminal line are corroborated by PHASES/ACCOUNTING/structure rather than direct on-disk console capture; (f) version-string pins replace a digest-pinned image, replay byte-identity is single-host, the tree was Dropbox-synced during execution, token accounting is UNAVAILABLE by construction, mutant check labels are coarse with first-line disambiguation, and the manifest includes two derived .pyc files.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "Five sibling envelopes",
+    "EXPERIMENT_CONTRACT.json",
+    "raw/ evidence tree"
+   ],
+   "evidence_fingerprint": "sha256:9da373d1d23131dd62c9932350fff8e2dbeec15c3faae67e4f1b33fcfb588791",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.9,
+   "unresolved": [
+    "OWNER-B target replay decision is the owner's next checkpoint."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-ADJUDICATION.json"
+ ]
+}

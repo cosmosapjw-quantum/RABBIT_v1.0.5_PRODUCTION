@@ -45,6 +45,39 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-27 D-045/D-046 owner-grant and OWNER-A discriminator overlay
+
+- D-045 recorded the 2026-07-27 owner grants: handoff durability, one
+  validation-only `G-F10C1-REGRESSION` bundle re-run, and OWNER-A for one
+  prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+  discriminator with local sealed execution. OWNER-B (target replay) and
+  OWNER-C (`_independent_noqke.py` modification) were defined and remain
+  ungranted.
+- The regression bundle ran in full on commit `b2542fc`: fmt, check, the
+  238/0 release test suite, and the 54-page report build all pass; clippy
+  fails with `too_many_arguments` on `gk_recurse`
+  (`src/isotropic_boltzmann.rs:2513`, lib-test target), a successor-branch
+  lint regression absent from historical closeouts. `G-F10C1-REGRESSION`
+  therefore stays FAIL on fresh current-tree evidence; the fix is a separate
+  owner decision (validation-only stage edited no source).
+- D-046 closed the OWNER-A discriminator as an adjudicated PASS. The sealed
+  lab (`BD622_OWNERA_R6_ORBIT_CHART_LAB/`, seal `4c05ce2`, run
+  `run-20260727-f10-ownera-r6-orbit-chart-lab`) proves on manufactured
+  nonphysical objects that the two-ordered-member orientation orbit with the
+  derived Reynolds one-half quotient restores mu/tau modal equivariance that
+  a single ordered member exactly lacks, with retained antisymmetric
+  response, exact conservation/entropy certificates, two-contribution JVP,
+  10/10 preregistered mutant kills, and three byte-identical isolated
+  replays.
+- Claim statuses: `C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured
+  nonphysical microcase only), lab code `IMPLEMENTED`,
+  `C-R6-ORBIT-CHART-RABBIT-APPLICABILITY=PROPOSED`. Recorded limitations:
+  same-model blind reviews, pre-seal static fix loop, probabilistic MUT-5
+  kill, single-host determinism, version-string pins.
+- Terminal line `REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW` is
+  a request only. `OWNER-B=REQUIRED_NOT_GRANTED`; every scientific gate is
+  unchanged; all hard stops remain in force.
+
 ## 2026-07-24 D-044 open-breakthrough intake closeout overlay
 
 - The external response `F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` to the D-043
@@ -1360,12 +1393,20 @@ discriminator with local sealed execution. OWNER-B (target replay) and
 OWNER-C (`_independent_noqke.py` modification) are defined in D-045 and are
 not granted.
 
-Immediate actions, in order: (1) execute the full regression bundle on the
-current tree under `run-20260727-f10-d045-regression-rerun`, flipping
-`G-F10C1-REGRESSION` only on an all-command PASS; (2) design, seal, and run
-the OWNER-A discriminator lab per the D-044 obligations and the D-042R gates
-adapted for local sealed execution; (3) stop at the terminal owner line — a
-discriminator PASS may only request OWNER-B authorization. Exact-byte
+Both granted actions are complete. The regression bundle ran in full and
+FAILED at clippy only (`gk_recurse` too-many-arguments,
+`src/isotropic_boltzmann.rs:2513`); `G-F10C1-REGRESSION` stays FAIL on
+fresh evidence and its fix needs a separate owner decision. The D-046
+OWNER-A discriminator passed adjudication:
+`C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured nonphysical microcase
+only) and the sealed run's terminal line requests OWNER-B authorization.
+
+The two open owner decisions are now: (1) whether to grant a small
+validation-only lint-fix authority so the regression bundle can pass on a
+fixed tree; (2) whether to grant OWNER-B for a target replay of the
+validated closure construction against the live `_independent_noqke.py`
+row-6 evaluator (read-only; OWNER-C would still be required for any source
+modification). Absent those grants, STOP/PRESERVE controls. Exact-byte
 remediation readiness, W7 execution, B3 implementation, and
 independent-FLRW closure remain **FAIL**; preserve every exact failure,
 bounded pass, unfinished D-037 axis, legacy bundle, user-owned review, and

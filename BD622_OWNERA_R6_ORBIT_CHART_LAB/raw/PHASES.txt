@@ -1,0 +1,3 @@
+phase run_primary exit=0
+phase replay_1 exit=0
+phase replay_2 exit=0

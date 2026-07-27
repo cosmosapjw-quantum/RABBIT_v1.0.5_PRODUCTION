@@ -1,6 +1,33 @@
 # Next Session Prompt
 
-## 2026-07-27 D-044/D-045 controlling overlay
+## 2026-07-27 D-046 controlling overlay
+
+D-046 closed the OWNER-A discriminator as an adjudicated PASS:
+`C-R6-ORBIT-CHART-MICROCASE=VALIDATED` on manufactured nonphysical objects
+under the sealed lab `BD622_OWNERA_R6_ORBIT_CHART_LAB/` (seal `4c05ce2`,
+run `run-20260727-f10-ownera-r6-orbit-chart-lab`, adjudication `569f7d6e`).
+RABBIT row-6 applicability remains `PROPOSED`. The regression bundle ran in
+full and failed at clippy only (`gk_recurse`,
+`src/isotropic_boltzmann.rs:2513`); `G-F10C1-REGRESSION` stays FAIL on
+fresh current-tree evidence.
+
+The next session has exactly two possible owner decision points and
+otherwise preserves STOP/PRESERVE:
+
+1. Owner may grant a validation-only lint-fix authority (annotate or split
+   `gk_recurse`) followed by a full bundle re-run; only an all-command PASS
+   on the fixed tree may flip `G-F10C1-REGRESSION`.
+2. Owner may grant OWNER-B: a read-only target replay of the validated
+   two-member closure construction against the live `_independent_noqke.py`
+   row-6 evaluator on the D-028 asymmetric state. A structurally passing
+   replay still requires OWNER-C for any source modification.
+
+Do not modify `_independent_noqke.py`, run W7/B3 output, T01--T12,
+GL64/Radau/trajectory/endpoint, unblind RABBIT, restart Rust/JAX forward
+work, or open F-11/QKE/public claims. Do not re-dispatch any external
+prompt.
+
+## 2026-07-27 D-044/D-045 controlling overlay (superseded by D-046 above)
 
 D-044 closed the external open-breakthrough intake: the returned
 `F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` is `PROVENANCE_FAIL` at
