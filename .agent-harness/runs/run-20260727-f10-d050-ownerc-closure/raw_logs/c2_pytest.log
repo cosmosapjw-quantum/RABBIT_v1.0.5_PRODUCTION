@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.9
+collecting ... collected 3 items
+
+tests/test_independent_noqke_comparator.py::test_modal_basis_and_unique_catalogues_reconstruct_target_views PASSED [ 33%]
+tests/test_independent_noqke_comparator.py::test_synthetic_weak_event_embeds_number_and_energy_before_reduction PASSED [ 66%]
+tests/test_independent_noqke_comparator.py::test_low_order_real_operator_static_invariants_and_entropy PASSED [100%]
+
+============================== 3 passed in 0.67s ===============================

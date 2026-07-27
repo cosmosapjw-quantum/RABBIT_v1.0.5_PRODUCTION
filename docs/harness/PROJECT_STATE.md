@@ -45,6 +45,28 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-27 D-049/D-050/D-051 lint-fix and OWNER-C closure overlay
+
+- D-049: the sole regression-bundle failure (test-only clippy lint on the
+  ten-argument `gk_recurse` recursion) was fixed by a single `#[allow]`
+  attribute (commit `1697e76`, zero codegen change); the full bundle then
+  passed (fmt/check/clippy clean, 238/0 release tests, 54-page report
+  clean) and **`G-F10C1-REGRESSION` flipped fail -> pass**.
+- D-050/D-051: under OWNER-C with a prospectively frozen contract, the
+  live comparator now carries the D-046/D-048-validated row-6 two-member
+  orientation closure (`_independent_noqke.py` sha256 `29a652fd` at
+  commit `d22d001`; catalogue 24 -> 25; both members at `K_t`/`16.0`).
+  All frozen checks pass: 3/3 focused tests including the D-028
+  executing-gate assertion; GL48 `mu_tau_residual =
+  2.6019033208963758e-11` (18x under the `1e-10` cap); conservation,
+  first law, CP, entropy, and the equilibrium null preserved at their
+  recorded classes. Terminal: `STATIC_GATES_PASS_ON_CLOSED_SOURCE`.
+- Unchanged: the historical D-028 FAIL for bytes `535370c1` stands;
+  `G-F10-COVARIANCE-METROLOGY` remains FAIL (identity + `B_native`
+  program unbuilt); `G-F10-INDEPENDENT-FLRW` remains FAIL. Row 9 remains
+  single-membered (open question). Trajectory/endpoint eligibility is
+  newly live as a question for a separate explicit owner decision.
+
 ## 2026-07-27 D-047/D-048 OWNER-B target replay overlay
 
 - D-047 recorded the OWNER-B grant and prospectively froze the read-only
@@ -1429,17 +1451,20 @@ OWNER-A discriminator passed adjudication:
 `C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured nonphysical microcase
 only) and the sealed run's terminal line requests OWNER-B authorization.
 
-OWNER-B was granted and executed: the D-048 replay passed all gated checks
-and validated the bounded applicability claim (the D-028 covariance
-residual is the row-6 orientation artifact, removed by the derived-quotient
-closure). The two open owner decisions are now: (1) whether to grant a
-small validation-only lint-fix authority so the regression bundle can pass
-on a fixed tree; (2) whether to grant **OWNER-C** — modifying
-`_independent_noqke.py` (or an equivalent implementation route) to carry
-the two-member closure, which would then feed the still-unbuilt
-weak/mass-weighted identity and `B_native` metrology work that
-`G-F10-COVARIANCE-METROLOGY` requires. Absent those grants, STOP/PRESERVE
-controls. Exact-byte
+D-049 through D-051 are complete: `G-F10C1-REGRESSION` is PASS on the
+lint-fixed tree, and the live comparator carries the validated row-6
+closure with all frozen static gates passing on the accepted bytes
+(`STATIC_GATES_PASS_ON_CLOSED_SOURCE`). The open owner decisions are now:
+(1) whether to authorize the **covariance-metrology program** — the
+weak/mass-weighted identity plus the prospectively frozen `B_native`
+bound (summation, basis, mass-solve, conditioning, interval, denominator,
+state-envelope terms) that `G-F10-COVARIANCE-METROLOGY` requires;
+(2) whether to grant **trajectory/endpoint eligibility** on the accepted
+static bytes (the module ceiling makes this a separate decision, newly
+live now that the static gates pass) — this is the route toward
+`G-F10-INDEPENDENT-FLRW`; (3) whether to validate and close **row 9**
+orientation members. Absent those grants, STOP/PRESERVE controls.
+Exact-byte
 remediation readiness, W7 execution, B3 implementation, and
 independent-FLRW closure remain **FAIL**; preserve every exact failure,
 bounded pass, unfinished D-037 axis, legacy bundle, user-owned review, and

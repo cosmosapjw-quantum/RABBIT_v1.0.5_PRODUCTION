@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260727-f10-d050-ownerc-closure",
+  "assignment_id": "A-CLOSURE-ADJUDICATION",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY"
+  ],
+  "task": "Adjudicate the OWNER-C closure acceptance per the frozen decision rule and fix terminal statuses (D-051).",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/assignments/A-CLOSURE-ADJUDICATION.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "allowed_sibling_results": [
+    "A-CLOSURE-BLIND-REVIEW",
+    "A-CLOSURE-EXECUTION"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-ADJUDICATION.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-ADJUDICATION.json",
+  "status": "registered"
+}

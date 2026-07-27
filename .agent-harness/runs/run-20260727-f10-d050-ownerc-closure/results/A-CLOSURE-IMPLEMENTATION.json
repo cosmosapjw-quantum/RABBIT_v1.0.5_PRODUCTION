@@ -1,0 +1,66 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d050-ownerc-closure",
+ "assignment_id": "A-CLOSURE-IMPLEMENTATION",
+ "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+ "agent_id": "fable-main-implementation",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d050-ownerc-closure",
+  "assignment_id": "A-CLOSURE-IMPLEMENTATION",
+  "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:6543bc8ee0984b09c115800f9ef2de7429bc051c2a162d67b5abcbe8d4bd74c0",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-IMPLEMENTATION.json",
+ "started_at": "2026-07-27T15:12:00+00:00",
+ "completed_at": "2026-07-27T15:20:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "surgical edits to independent_self_events, independent_pair_row_fingerprint, count assertion, docstrings; test aggregate + closure assertions"
+ ],
+ "artifacts": [
+  "src/rabbit/decoupling/_independent_noqke.py",
+  "tests/test_independent_noqke_comparator.py"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-CLOSURE-IMPL-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Three-hunk module diff only: fingerprint (docstring + tuple), independent_self_events (docstring + mu/tau two-member branch at K_t/16.0 each + count 25). New module sha256 29a652fd...; evaluator, kinematics, kernels, electron sector, transforms, and the M0/M1 authority ceiling byte-identical. Test file: two-sided per-(category,target) aggregate reconstruction, count 25, fingerprint assertion, ordered two-member closure assertion (mu-first then tau-first pinned).",
+   "assumptions_used": [
+    "Static checks only before the freeze commit."
+   ],
+   "evidence_refs": [
+    "git diff 1697e76..d22d001 -- src/rabbit/decoupling/_independent_noqke.py"
+   ],
+   "evidence_fingerprint": "sha256:29a652fd00000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "git show d22d001"
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-IMPLEMENTATION.json"
+ ]
+}

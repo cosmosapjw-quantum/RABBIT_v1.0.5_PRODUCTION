@@ -1,0 +1,69 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d050-ownerc-closure",
+ "assignment_id": "A-CLOSURE-EXECUTION",
+ "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+ "agent_id": "fable-main-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d050-ownerc-closure",
+  "assignment_id": "A-CLOSURE-EXECUTION",
+  "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:733e679b8c50c86ddec49d0c3192144ffcfab62bf1950e6dbf31e907bc730f95",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-EXECUTION.json",
+ "started_at": "2026-07-27T15:30:00+00:00",
+ "completed_at": "2026-07-27T15:33:00+00:00",
+ "tool_versions": {
+  "python_system": "3.12.3/numpy 2.4.2/scipy 1.17.0",
+  "python_venv": "3.12.3/numpy 2.4.4/scipy 1.17.1/pytest 9.0.3"
+ },
+ "commands": [
+  "venv/bin/python -m pytest tests/test_independent_noqke_comparator.py -v (PYTHONPATH=src, BLAS pins)",
+  "PYTHONPATH=src python3 scripts/audit/d050_ownerc_closure_verification.py --out raw_logs/c_verification_report.json"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/raw_logs/c_verification_report.json",
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/raw_logs/c2_pytest.log"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-CLOSURE-EXEC-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "All frozen acceptance checks PASS on the sealed bytes (freeze d22d001, module 29a652fd). C1: 25 events, fingerprint (2,1,6,2,2,2,4,4,2), exactly the two mutually-reverse mu/tau members at K_t/16.0, two-sided aggregate reconstruction exact. C2: 3/3 focused tests pass under the venv environment, including the frozen D-028 executing-gate assertion mu_tau_residual <= 1e-10 now passing on the closed catalogue at low order. C3: GL48 D-028 cell mu_tau_residual = 2.6019033208963758e-11 - under the 1e-10 cap by 18x and within the same-noise-class band of the D-048 external prediction (agreement 0.330 <= 5e-1). C4: number ratio 1.97e-16, energy ratio 4.76e-17, first_law_residual 0.0, charge_conjugation_residual 4.587059566179814e-11 <= 1e-10 (re-drawn from 3.49e-11 as predicted), entropy_production 9.69e-18 >= 0. C5: H-normalized number 6.488e-12 and energy 1.542e-11, matching the recorded S0 anchors 6.59e-12/1.56e-11 class. Verification wall ~40 s.",
+   "assumptions_used": [
+    "Frozen bytes unchanged through execution; BLAS single-thread pins active."
+   ],
+   "evidence_refs": [
+    "c_verification_report.json sha256 810fec58...",
+    "c2_pytest.log sha256 4aa58ced..."
+   ],
+   "evidence_fingerprint": "sha256:810fec5800000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Re-run the two frozen commands."
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-EXECUTION.json"
+ ]
+}

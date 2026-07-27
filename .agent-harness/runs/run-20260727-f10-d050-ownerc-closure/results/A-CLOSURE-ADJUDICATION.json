@@ -1,0 +1,72 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d050-ownerc-closure",
+ "assignment_id": "A-CLOSURE-ADJUDICATION",
+ "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+ "agent_id": "a564ffc0631556db5",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d050-ownerc-closure",
+  "assignment_id": "A-CLOSURE-ADJUDICATION",
+  "context_version": "1d34575e4f540c159fde8edb9994ef523ffa1cd835283595e68afbbf4fdb4284",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:6459849800275b4ad73100bf02cd66d220d29a5c8032d5e5c6158b303a126620",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-ADJUDICATION.json",
+ "started_at": "2026-07-27T15:40:00+00:00",
+ "completed_at": "2026-07-27T15:44:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "recompute all C1..C5 comparisons; verify freeze chronology (d22d001 at 14:59:53Z vs outputs +15 s/+58 s); hash module/contract/script vs committed bytes; no re-execution"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/MERGED_RESULTS.json"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-CLOSURE-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "VERDICT PASS, BYTES ACCEPTED. All frozen checks recompute as PASS: C1 exact catalogue structure; C2 3/3 focused tests including the frozen D-028 executing-gate assertion; C3 GL48 mu_tau_residual 2.6019033208963758e-11 within [1e-12, 1e-10] and same-noise-class agreement 0.330 <= 5e-1; C4 conservation 1.97e-16/4.76e-17, first law 0.0, CP 4.587059566179814e-11 <= 1e-10, entropy 9.69e-18 >= 0; C5 equilibrium null 6.49e-12/1.54e-11 in the recorded S0 class. Freeze chronology held at second resolution; module sha256 29a652fd... equals the committed d22d001 bytes; three-hunk diff only. Established: the live comparator carries the validated row-6 closure and the D-028 native covariance criterion is met by the current source with the frozen executing gate passing. Not established: the historical D-028 FAIL for bytes 535370c1 stands; G-F10-COVARIANCE-METROLOGY does not flip (weak/mass-weighted identity + B_native program unbuilt); G-F10-INDEPENDENT-FLRW unchanged; no trajectory/endpoint/GL64/Radau authority (eligibility for that separate owner decision is newly live since the static gates now pass); row 9 remains single-membered. Terminal: STATIC_GATES_PASS_ON_CLOSED_SOURCE.",
+   "assumptions_used": [
+    "Adjudication limited to hashing, git inspection, and JSON parsing."
+   ],
+   "evidence_refs": [
+    "c_verification_report.json 810fec58...",
+    "c2_pytest.log 4aa58ced...",
+    "freeze commit d22d001",
+    "module sha256 29a652fd316ab937f9aba8850f35dbf6c86de26c8a39df27111b26c37a1a199f"
+   ],
+   "evidence_fingerprint": "sha256:810fec5800000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [
+    "Limitations: same-model reviews; single execution per check; CP margin halved on this draw (2.18x under cap); agreement same-noise-class not digit-level; W5/D-047 scripts non-rerunnable on new bytes; row-9 artifact inside the undecomposed sub-cap floor."
+   ],
+   "reproduction": [
+    "Recompute the C1..C5 comparisons from the report."
+   ],
+   "confidence": 0.95,
+   "unresolved": [
+    "Trajectory/endpoint eligibility and the covariance-metrology program are the owner's next checkpoints."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/results/A-CLOSURE-ADJUDICATION.json"
+ ]
+}

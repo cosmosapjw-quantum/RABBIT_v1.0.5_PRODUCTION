@@ -1,6 +1,37 @@
 # Next Session Prompt
 
-## 2026-07-27 D-048 controlling overlay
+## 2026-07-27 D-049/D-051 controlling overlay
+
+D-049 fixed the `gk_recurse` lint and the full bundle passed:
+**`G-F10C1-REGRESSION` is PASS** (run
+`run-20260727-f10-d049-regression-fix`). D-050/D-051 implemented and
+accepted the row-6 orientation closure in the live comparator
+(`_independent_noqke.py` `29a652fd` at `d22d001`): all frozen static
+physics gates pass on the accepted bytes, GL48 `mu_tau_residual =
+2.6019033208963758e-11 <= 1e-10`. Terminal:
+`STATIC_GATES_PASS_ON_CLOSED_SOURCE`.
+
+Remaining FAIL gates: `G-F10-COVARIANCE-METROLOGY` (weak/mass-weighted
+identity + prospectively frozen `B_native` bound program unbuilt) and
+`G-F10-INDEPENDENT-FLRW` (no structurally independent full-spectral
+endpoint). The next session has exactly three possible owner decision
+points and otherwise preserves STOP/PRESERVE:
+
+1. Authorize the covariance-metrology program (design-first, own frozen
+   contract; do not reuse the D-028 `1/y^2` model or the `~1.2e-8` cap).
+2. Grant trajectory/endpoint eligibility on the accepted static bytes —
+   the newly live route toward `G-F10-INDEPENDENT-FLRW` (GL64/Radau and
+   any endpoint run still require this explicit grant first).
+3. Authorize row-9 orientation-closure validation (own discriminator or
+   acceptance contract; row 9 currently remains single-membered).
+
+Do not run W7/B3 output, T01--T12, GL64/Radau/trajectory/endpoint without
+grant 2, unblind RABBIT, restart Rust/JAX forward work, or open
+F-11/QKE/public claims. Do not re-dispatch any external prompt. The
+historical D-028 FAIL for bytes `535370c1` and the W5/D-047 hash-pinned
+records stand; do not re-run those scripts against the new bytes.
+
+## 2026-07-27 D-048 controlling overlay (superseded by D-049/D-051 above)
 
 D-047 granted OWNER-B and froze the target replay (commit `9c99ecf`);
 D-048 closed it as an adjudicated PASS on all nine gated checks. The
