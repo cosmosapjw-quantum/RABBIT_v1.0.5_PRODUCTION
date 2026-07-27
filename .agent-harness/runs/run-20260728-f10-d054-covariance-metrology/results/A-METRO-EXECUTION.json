@@ -1,0 +1,57 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d054-covariance-metrology",
+ "assignment_id": "A-METRO-EXECUTION",
+ "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+ "agent_id": "fable-main-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d054-covariance-metrology",
+  "assignment_id": "A-METRO-EXECUTION",
+  "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:5959a7f793fd09d0895e740c3a45406f484056461adfe5adb797a3d8330a08c3",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "fail",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-EXECUTION.json",
+ "started_at": "2026-07-28T01:50:00+00:00",
+ "completed_at": "2026-07-28T01:57:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-METRO-EXEC-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "fail",
+   "severity": "high",
+   "statement": "The frozen oracle returned FAIL (exit 10). Meaningful-state results are overwhelmingly clean: S-A R_weak 1.144e-15, R_mass 2.965e-15, R_native 2.448e-11 <= B_native 7.788e-02 and <= 1e-10; S-C R_weak 7.355e-16, R_native 5.936e-12; the post-closure weak identity improved ~300x over the pre-closure 5e-13 class. The FAIL has two contract-design causes, not physics causes: (1) M3 froze electron mu/tau modal equality at bitwise 0.0, but the realized gaps are 2.889e-34 (S-A), 1.926e-34 (S-C), 2.190e-47 (S-B) absolute - roundoff-class, ~1e-13 relative to row scale, violating the exact-zero gate; (2) state S-B (equilibrium) is degenerate for every relative metric: the collision action is roundoff-of-zero (D_native 3.4e-29), so R_weak 1.383e-03 and R_native 1.679e-04 are ratios of noise to noise with no covariance content. All seven bound terms were measured and recorded per state; module sha verified 760a7c04; longdouble 80-bit confirmed.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "m_oracle_report.json"
+   ],
+   "evidence_fingerprint": "sha256:f456f3dd08d737ed2d09c4a0892ef35fb98b4e5395dd51fee66c33354d6053c7",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.93,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-EXECUTION.json"
+ ]
+}

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d054-covariance-metrology",
+  "generated_at": "2026-07-27T16:29:00+00:00",
+  "result_count": 4,
+  "unique_finding_count": 4,
+  "findings": [
+    {
+      "finding_id": "F-METRO-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "VERDICT FAIL for this contract; G-F10-COVARIANCE-METROLOGY stays FAIL and no refitting of BD622_D054 is permitted. Both failure causes are adjudicated as contract-DESIGN defects, not physics or implementation defects: (1) M3 froze bitwise-zero electron mu/tau equality while the realized gaps are 2.9e-34/1.9e-34/2.2e-47 absolute (4.6e-14/1.5e-14 relative) - an implementation-path expectation the physics does not require; (2) state S-B (equilibrium) is degenerate for relative metrics (D_native 3.4e-29; R_weak 1.383e-3 is noise/noise). The meaningful states satisfied every physics check: S-A R_weak 1.144e-15, R_mass 2.965e-15, R_native 2.448e-11 <= B_native 7.788e-2 and <= 1e-10 (reproducing the D-053 anchor exactly); S-C R_weak 7.355e-16, R_native 5.936e-12. SUPERSESSION PERMITTED under the D-052 stage-2 program grant and the D-042/D-043 preserve-first-FAIL precedent: a new D-055 contract may change exactly the two adjudicated defects (nondegenerate P-closed split state replacing S-B; M3 demoted to a measured relative bound with absolute gap recorded) with every other term, threshold, and formula byte-identical, frozen before any new output. Minor blemishes recorded: envelope nominal timestamps mislabeled as UTC; synthetic evidence fingerprints superseded by verified hashes.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "m_oracle_report.json f456f3dd",
+        "freeze 46ef477"
+      ],
+      "evidence_fingerprint": "sha256:f456f3dd00000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Recompute gate comparisons from the report."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "D-055 corrected reissue."
+      ],
+      "supporting_assignments": [
+        "A-METRO-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-METRO-REVIEW-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Blind pre-freeze review found no correctness-breaking defect: M3 lemma walked (per-species electron rows on bitwise-equal inputs), bound algebra sound and conservative, shadow assembly faithful, longdouble mirror exact. Recommended hardenings F2-F6 applied. The review's M3 walk did not predict the observed sub-1e-13-relative electron row gap (realized 2.9e-34 absolute), and neither reviewer nor author flagged the equilibrium state's degenerate relative denominators - both recorded as the contract-design defects that produced the FAIL.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "review transcript",
+        "freeze commit 46ef477"
+      ],
+      "evidence_fingerprint": "sha256:46ef477000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-METRO-BLIND-REVIEW"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-METRO-CONTRACT-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The D-054 metrology contract, bound formula, and oracle were prospectively frozen at commit 46ef477 before any output, with five review hardenings applied pre-freeze.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "freeze commit 46ef477"
+      ],
+      "evidence_fingerprint": "sha256:46ef477000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-METRO-CONTRACT"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-METRO-EXEC-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The frozen oracle returned FAIL (exit 10). Meaningful-state results are overwhelmingly clean: S-A R_weak 1.144e-15, R_mass 2.965e-15, R_native 2.448e-11 <= B_native 7.788e-02 and <= 1e-10; S-C R_weak 7.355e-16, R_native 5.936e-12; the post-closure weak identity improved ~300x over the pre-closure 5e-13 class. The FAIL has two contract-design causes, not physics causes: (1) M3 froze electron mu/tau modal equality at bitwise 0.0, but the realized gaps are 2.889e-34 (S-A), 1.926e-34 (S-C), 2.190e-47 (S-B) absolute - roundoff-class, ~1e-13 relative to row scale, violating the exact-zero gate; (2) state S-B (equilibrium) is degenerate for every relative metric: the collision action is roundoff-of-zero (D_native 3.4e-29), so R_weak 1.383e-03 and R_native 1.679e-04 are ratios of noise to noise with no covariance content. All seven bound terms were measured and recorded per state; module sha verified 760a7c04; longdouble 80-bit confirmed.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "m_oracle_report.json"
+      ],
+      "evidence_fingerprint": "sha256:f456f3dd08d737ed2d09c4a0892ef35fb98b4e5395dd51fee66c33354d6053c7",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-METRO-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

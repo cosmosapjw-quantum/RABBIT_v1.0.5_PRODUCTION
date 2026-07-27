@@ -1,0 +1,66 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d054-covariance-metrology",
+ "assignment_id": "A-METRO-ADJUDICATION",
+ "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+ "agent_id": "afa7c6fde02eacdf1",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d054-covariance-metrology",
+  "assignment_id": "A-METRO-ADJUDICATION",
+  "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:a233687cb381aec676dac278d77f948fcafa7472845fd0f60138f8cb2e8c1765",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "fail",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-ADJUDICATION.json",
+ "started_at": "2026-07-28T02:05:00+00:00",
+ "completed_at": "2026-07-28T02:10:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "verify freeze chain 46ef477 -> report f456f3dd (+87 s); recompute all gate comparisons; classify root causes"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/MERGED_RESULTS.json"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-METRO-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "fail",
+   "severity": "high",
+   "statement": "VERDICT FAIL for this contract; G-F10-COVARIANCE-METROLOGY stays FAIL and no refitting of BD622_D054 is permitted. Both failure causes are adjudicated as contract-DESIGN defects, not physics or implementation defects: (1) M3 froze bitwise-zero electron mu/tau equality while the realized gaps are 2.9e-34/1.9e-34/2.2e-47 absolute (4.6e-14/1.5e-14 relative) - an implementation-path expectation the physics does not require; (2) state S-B (equilibrium) is degenerate for relative metrics (D_native 3.4e-29; R_weak 1.383e-3 is noise/noise). The meaningful states satisfied every physics check: S-A R_weak 1.144e-15, R_mass 2.965e-15, R_native 2.448e-11 <= B_native 7.788e-2 and <= 1e-10 (reproducing the D-053 anchor exactly); S-C R_weak 7.355e-16, R_native 5.936e-12. SUPERSESSION PERMITTED under the D-052 stage-2 program grant and the D-042/D-043 preserve-first-FAIL precedent: a new D-055 contract may change exactly the two adjudicated defects (nondegenerate P-closed split state replacing S-B; M3 demoted to a measured relative bound with absolute gap recorded) with every other term, threshold, and formula byte-identical, frozen before any new output. Minor blemishes recorded: envelope nominal timestamps mislabeled as UTC; synthetic evidence fingerprints superseded by verified hashes.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "m_oracle_report.json f456f3dd",
+    "freeze 46ef477"
+   ],
+   "evidence_fingerprint": "sha256:f456f3dd00000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Recompute gate comparisons from the report."
+   ],
+   "confidence": 0.95,
+   "unresolved": [
+    "D-055 corrected reissue."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-ADJUDICATION.json"
+ ]
+}

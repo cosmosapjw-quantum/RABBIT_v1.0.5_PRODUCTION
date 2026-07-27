@@ -1,0 +1,58 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d054-covariance-metrology",
+ "assignment_id": "A-METRO-BLIND-REVIEW",
+ "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+ "agent_id": "ab3ec72b891dc7132",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d054-covariance-metrology",
+  "assignment_id": "A-METRO-BLIND-REVIEW",
+  "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:f1abf7034313fced0aaf257cbfe936747febab678e71088a40db426661981edd",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-BLIND-REVIEW.json",
+ "started_at": "2026-07-28T01:25:00+00:00",
+ "completed_at": "2026-07-28T01:45:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-METRO-REVIEW-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Blind pre-freeze review found no correctness-breaking defect: M3 lemma walked (per-species electron rows on bitwise-equal inputs), bound algebra sound and conservative, shadow assembly faithful, longdouble mirror exact. Recommended hardenings F2-F6 applied. The review's M3 walk did not predict the observed sub-1e-13-relative electron row gap (realized 2.9e-34 absolute), and neither reviewer nor author flagged the equilibrium state's degenerate relative denominators - both recorded as the contract-design defects that produced the FAIL.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "review transcript",
+    "freeze commit 46ef477"
+   ],
+   "evidence_fingerprint": "sha256:46ef477000000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.93,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-BLIND-REVIEW.json"
+ ]
+}
