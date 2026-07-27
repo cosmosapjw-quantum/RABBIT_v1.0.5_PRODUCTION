@@ -1,0 +1,442 @@
+   Compiling rabbit_cpu v0.1.0 (/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/native/rabbit_cpu)
+    Finished `release` profile [optimized] target(s) in 42.51s
+     Running unittests src/lib.rs (target/release/deps/_rabbit_cpu-abbdc917863ea139)
+
+running 240 tests
+test born_freezeout::tests::negative_neutron_fraction_fails_without_clipping ... ok
+test born_freezeout::tests::equilibrium_and_boundary_vector_fields_have_physical_signs ... ok
+test born_freezeout::tests::analytic_neutron_fraction_jacobian_matches_centered_difference ... ok
+test born_weak::tests::analytic_i0_matches_independent_bounded_momentum_integral ... ok
+test born_weak::tests::all_six_ccr_channels_match_independent_primat_scipy_anchors ... ok
+test born_weak::tests::all_six_physical_channels_match_independent_scipy_anchors ... ok
+test born_weak::tests::bounded_decay_phase_space_vanishes_continuously_at_both_thresholds ... ok
+test born_weak::tests::born_compatibility_wrapper_is_bitwise_identical_to_model_dispatch ... ok
+test born_weak::tests::ccr_component_factors_match_live_primat_v032 ... ok
+test born_weak::tests::ccr_invalid_inputs_and_factor_domains_remain_raw ... ok
+test born_weak::tests::ccr_control_path_bit_pattern_is_locked_at_the_f08b_boundary ... ok
+test born_weak::tests::ccr_preserves_equal_temperature_detailed_balance ... ok
+test born_weak::tests::ccr_threshold_products_use_the_analytic_physical_limits ... ok
+test born_weak::tests::corrected_lifetime_normalization_matches_live_primat_v032 ... ok
+test born_weak::tests::f08b_compact_chi_matches_independent_expanded_primat_points ... ok
+test born_weak::tests::f08b_invalid_inputs_and_internal_domains_remain_raw ... ok
+test born_weak::tests::every_channel_scales_exactly_with_inverse_neutron_lifetime ... ok
+test born_weak::tests::f08c_compact_chi_matches_independent_expanded_primat_points ... ok
+test born_weak::tests::ccr_quadrature_converges_and_low_temperature_has_no_rate_floor ... ok
+test born_weak::tests::f08b_coefficients_and_lifetime_normalization_lock_no_weak_magnetism ... ok
+test born_weak::tests::generated_unit_nodes_integrate_legendre_moments ... ok
+test born_weak::tests::ccr_totals_match_independent_temperature_anchors ... ok
+test born_weak::tests::invalid_inputs_return_typed_raw_errors ... ok
+test born_weak::tests::high_temperature_rate_approaches_fifth_power_scaling ... ok
+test born_weak::tests::f08c_physical_weak_magnetism_coefficients_and_normalization_match_primat ... ok
+test born_weak::tests::f08b_exposes_first_order_modified_detailed_balance_residual ... ok
+test born_weak::tests::f08b_all_six_channels_match_independent_unequal_temperature_anchor ... ok
+T=10: n2p=9.6756653428238700e4 (3.833e-9), p2n=8.5017913056590114e4 (3.833e-9)
+test born_weak::tests::low_temperature_limit_is_free_neutron_decay ... ok
+test born_weak::tests::f08c_exposes_the_physical_first_order_detailed_balance_residual ... ok
+T=1: n2p=1.5822853653547932e0 (1.861e-8), p2n=4.3249782152819694e-1 (2.299e-8)
+test born_weak::tests::pairwise_detailed_balance_holds_only_at_equal_temperature ... ok
+test born_weak::tests::pre_f08d_models_have_no_hidden_thermal_directional_term ... ok
+T=0.86164715286738: n2p=8.0862953767294166e-1 (2.248e-8), p2n=1.7922261766455053e-1 (2.892e-8)
+test born_weak::tests::default_order_tracks_96_for_both_totals_over_full_and_extreme_grid ... ok
+test born_weak::tests::f08b_quadrature_converges_and_low_temperature_has_no_rate_floor ... ok
+T=0.3: n2p=8.7233529992376563e-3 (1.099e-7), p2n=1.0857400578889206e-4 (1.867e-7)
+test electron_catalog_falsifiers::frozen::catalogues_are_exact_unique_and_structural ... ok
+test electron_catalog_falsifiers::frozen::checked_coordinates_units_and_metric_are_unambiguous ... ok
+T=0.1: n2p=1.1671525864721869e-3 (-1.250e-9), p2n=9.1058281151844726e-10 (-3.578e-8)
+test born_weak::tests::quadrature_converges_across_32_64_96_nodes ... ok
+test electron_catalog_falsifiers::frozen::structural_fold_uses_four_only_in_readout ... ok
+test born_weak::tests::unequal_temperatures_match_independent_scipy_anchor ... ok
+test electron_event_falsifiers::frozen::pauli_directional_derivative_matches_five_seed_ladder ... ok
+test electron_event_falsifiers::frozen::pauli_gain_loss_matches_six_monomial_and_boundaries ... ok
+test electron_event_falsifiers::frozen::topology_aware_weighted_event_jvp_is_pointwise_db_consistent ... ok
+test born_weak::tests::f08c_quadrature_converges_and_raw_low_temperature_failure_is_exposed ... ok
+test electron_hm_falsifiers::frozen::cp_crossing_and_wrong_permutations_are_discriminating ... ok
+test electron_hm_falsifiers::frozen::full_sector_fold_uses_four_only_in_readout ... ok
+test electron_hm_falsifiers::frozen::massless_scale_bridge_exposes_double_node_scaling ... ok
+test electron_hm_falsifiers::frozen::physical_hm_events_match_independent_reductions ... ok
+test born_weak::tests::totals_match_live_primat_born_instantaneous_decoupling_grid ... ok
+test electron_phase_point_falsifiers::frozen::measure_and_p2_densities_match_direct_delta_oracle ... ok
+test electron_phase_point_falsifiers::frozen::pair_order_and_fixed_occupations_are_discriminating ... ok
+test born_weak::tests::f08b_totals_match_independent_adaptive_temperature_anchors ... ok
+test electron_phase_point_falsifiers::frozen::support_and_body_point_match_direct_shell_oracle ... ok
+test electron_response_falsifiers::frozen::generalized_equal_weights_reproduce_j0_and_common_factor_scales ... ok
+test electron_response_falsifiers::frozen::generalized_unequal_target_and_coupled_weights_match_event_algebra ... ok
+test electron_response_falsifiers::frozen::generalized_weights_reject_bad_length_nonfinite_and_overflow ... ok
+test electron_response_falsifiers::frozen::j0_matches_five_seeded_channel_and_total_action_ladders ... ok
+test electron_response_falsifiers::frozen::j0_preserves_channel_reduction_sparsity_pair_coupling_and_signed_multiplicity ... ok
+test born_weak::tests::total_rates_match_independent_scipy_temperature_grid ... ok
+test electron_spectral::tests::invalid_inputs_fail_without_clipping ... ok
+test electron_supplied_falsifiers::frozen::all_process_slots_materialize_exact_dynamic_leg_contract ... ok
+test electron_supplied_falsifiers::frozen::explicit_action_preserves_signed_gain_loss_rows_and_multiplicity ... ok
+test electron_supplied_falsifiers::frozen::supplied_stream_rejects_invalid_dimensions_indices_and_values ... ok
+test electron_thermal::tests::common_temperature_rescaling_is_ninth_order ... ok
+test electron_thermal::tests::electron_to_heavy_pair_ratio_matches_the_independent_coupling_anchor ... ok
+test electron_thermal::tests::electron_transfer_has_nonnegative_thermal_entropy_production ... ok
+test electron_thermal::tests::equal_temperatures_are_an_exact_null ... ok
+test electron_thermal::tests::matches_independent_decimal_anchors_at_two_and_one_point_nine_mev ... ok
+test electron_thermal::tests::invalid_raw_inputs_and_nonfinite_outputs_fail_without_clamping ... ok
+test electron_thermal::tests::sign_and_antisymmetry_follow_the_temperature_ordering ... ok
+test electron_thermal_fd::tests::cm_event_construction_conserves_energy_for_elastic_and_pair_channels ... ok
+test electron_thermal_fd::tests::direct_fd_operator_has_an_exact_equal_temperature_null ... ok
+test born_weak::tests::f08c_all_six_channels_and_equal_temperature_totals_match_primat_anchors ... ok
+test electron_response_falsifiers::frozen::j0_rejects_invalid_states_directions_and_overflow ... ok
+test electron_spectral::tests::pair_channel_preserves_the_explicit_lepton_number_moment ... ok
+test electron_spectral::tests::equilibrium_fd_state_is_an_exact_action_null ... ok
+test electron_thermal_fd::tests::direct_operator_rejects_invalid_mass_and_orders ... ok
+test electron_thermal_fd::tests::electron_catalog_preserves_elastic_number_and_pair_lepton_number ... ok
+test flrw::tests::analytic_temperature_derivative_matches_centered_difference ... ok
+test electron_thermal_fd::tests::cm_massless_mb_limit_matches_the_analytic_elastic_and_pair_terms ... ok
+test electron_thermal_fd::tests::direct_fd_operator_is_signed_by_temperature_ordering ... ok
+test born_weak::tests::f08b_direction_scaled_quadrature_resolves_extreme_bath_ratios ... ok
+test electron_spectral::tests::elastic_channel_preserves_the_pair_number_moment ... ok
+test electron_thermal_fd::tests::cm_production_rule_matches_independent_python_cm_components ... ok
+test flrw::tests::electron_pair_reaches_the_nonrelativistic_maxwell_boltzmann_limit ... ok
+test born_weak::tests::f08c_physical_rates_remain_raw_and_positive_at_extreme_bath_ratios ... ok
+test flrw::tests::cooling_and_owned_comoving_entropy_hold_on_both_branches ... ok
+test flrw::tests::frozen_gl64_port_values_are_not_continuum_authority ... ok
+test flrw::tests::default_quadrature_matches_refined_tail_and_resolution ... ok
+test flrw::tests::ideal_high_temperature_entropy_mode_matches_live_primat_blocks ... ok
+test flrw::tests::invalid_inputs_are_returned_without_clipping ... ok
+test flrw::tests::instantaneous_decoupling_changes_entropy_owner_continuously ... ok
+test flrw::tests::relativistic_and_photon_limits_are_recovered ... ok
+spectral HM grid6 event6/4: e/GF2=9.48159608671994447e-1 (9.054449491e-1x), x/GF2=1.99119099273507433e-1 (9.048156553e-1x)
+test flrw::tests::eos_matches_independent_continuum_quadrature_references ... ok
+test flrw::tests::friedmann_limit_has_standard_g_star ... ok
+test flrw::tests::three_temperature_invalid_states_fail_without_clipping ... ok
+test flrw::tests::three_temperature_equilibrium_source_is_an_exact_null ... ok
+test flrw::tests::qed_off_is_bitwise_identical_to_the_f06_eos_and_flrw_path ... ok
+test isotropic_boltzmann::f10_independent_evidence::export_f10_independent_bdf_evidence ... ignored, requires exact stage-2 output authority and a frozen complete Fort bundle
+test flrw::tests::transformed_quadrature_converges ... ok
+test isotropic_boltzmann::f10_independent_evidence::f10_nonphysical_first_law_consumes_total_block_q ... ok
+F10_RUST_GK_ARTIFACT={"call_cap":true,"depth":true,"dual_transform":true,"equality":true,"exact_fraction_denominator":"9842959429656787573772398083360525213633788470409790471919535770244079266815986945706020897759378143617756918355765798301235802965197396253878046259854801111797575264905496416641325657882508783950597668102576949989214816717347552541807091103964053976227077831042748675469202355169385616275351261946601273582735803406482020450281876577531275499100171825368836939424003970798394277866775482166564222615429756768325148388916776453284668751986247807795200","exact_fraction_numerator":"19685918893639194464452448367780047320884800172344097481579344457433385619488528681029067169754881774235738859296689979550272106686236893645157905454124965918755875847818352925791973464803287949432635804266828183498641658432948168132908132632071808725564854092279411536990106812115653784075817547599140214982330796705992601658970213928587761729819873110003776542071965424315756746490430757967458921809849928011623319562425365387237968261439331825996123","exact_target_bits":"400000000077d2db","forced":true,"forced_embedded_bits":"3ce1000000000000","forced_estimate_bits":"400000000077d2da","left_first":true,"node_bits":["3fefba009d4d09b1","3fee5f178e7c6229","3febacf827b9bb3e","3fe7ba9f9be3a1d6","3fe2c13a049dfa24","3fd9f95df119fd62","3fca98b2892e0c78","0000000000000000"],"nonfinite":true,"reversed":true,"root_embedded_bits":"0000000000000000","root_gauss_bits":"4000000000000000","root_kronrod_bits":"4000000000000000","schema_id":"rabbit.f10.rust-gk-artifact.v1","zero":true}
+test isotropic_boltzmann::f10_independent_evidence::f10_nonphysical_gk_controller_contract_branches ... ok
+test flrw::tests::qed_high_temperature_anchor_and_cold_reheating_ratio_are_consistent ... ok
+test isotropic_boltzmann::f10_independent_evidence::f10_nonphysical_em_certificate_covers_every_checkpoint ... ok
+test flrw::tests::qed_finite_decoupling_anchor_is_consistent_on_both_entropy_owners ... ok
+test flrw::tests::complete_qed_eos_is_positive_and_thermodynamically_closed ... ok
+test isotropic_boltzmann::tests::analytic_jacobian_and_explicit_time_derivative_match_five_point_stencils ... ok
+test electron_thermal_fd::tests::finite_electron_mass_source_has_cold_suppression_beyond_t9_scaling ... ok
+test isotropic_boltzmann::tests::arbitrary_distribution_has_exact_comoving_number_and_energy_scaling ... ok
+F10_GRID_HASH_ARTIFACT={"grid_sha256":{"EXP48":"6e34b889e1c3f39e202ec143f7975b10f4d315283a540f4db407945e9e2a86a6","EXP64":"204f093affff0c9b8c406b644126b3cf2cff7b187cb96c2c21a7b15ca265ca4c"},"hash_domain":"rabbit.f10.grid.v1\u0000","reference_temperature_mev":10.0,"scale_parameter":3.0,"schema_id":"rabbit.f10.nonphysical-grid-hashes.v1"}
+test isotropic_boltzmann::tests::invalid_grid_distribution_and_solver_state_fail_without_clipping ... ok
+test isotropic_boltzmann::f10_independent_evidence::f10_nonphysical_grid_hashes_are_exact ... ok
+test electron_thermal_fd::tests::endpoint_cm_source_has_exact_null_sign_entropy_and_multiplicity ... ok
+test isotropic_boltzmann::tests::fused_rhs_and_jacobian_matches_separate_calls_bitwise ... ok
+test electron_spectral::tests::folded_action_jacobian_matches_five_point_occupation_stencils ... ok
+test isotropic_boltzmann::tests::fd_number_and_energy_moments_converge_without_a_tail_cutoff ... ok
+test isotropic_boltzmann::tests::rodas5p_hmax_sensitivity_diagnostic ... ignored, diagnostic: h_max fairness sweep, run manually with --ignored
+test isotropic_boltzmann::tests::classical_spectral_rhs_closes_the_combined_first_law ... ok
+test isotropic_boltzmann::tests::selected_exponential_grid_resolves_fd_moments_and_is_constructor_locked ... ok
+test isotropic_boltzmann::tests::spectral_logit_state_preserves_open_occupations_and_fails_raw_on_underflow ... ok
+test minimal_bbn::tests::coupled_analytic_abundance_jacobian_matches_centered_difference ... ok
+test isotropic_boltzmann::tests::classical_spectral_flrw_jacobian_and_time_derivative_match_stencils ... ok
+test flrw::tests::three_temperature_rhs_closes_the_combined_first_law ... ok
+test minimal_bbn::tests::late_eta_anchor_and_a_cubed_density_history_are_exact ... ok
+test minimal_bbn::tests::fixed_state_rhs_has_cooling_density_and_baryon_invariants ... ok
+test minimal_bbn::tests::negative_abundance_fails_raw_without_observable_repair ... ok
+test minimal_bbn::tests::observable_builder_uses_raw_state_and_rejects_bad_contracts ... ok
+F10A Bdf: N=7.93804264042577046e0 elapsed=5.27960351545762896e4s Tnu=3.56904385272369552e-3 steps=3148/0
+test electron_thermal_fd::tests::production_polar_four_tracks_polar_six_over_the_endpoint_envelope ... ok
+test flrw::tests::both_solvers_reach_the_ideal_flrw_temperature_event ... ok
+F10A Rodas5P: N=7.93804264041354379e0 elapsed=5.27960351520691038e4s Tnu=3.56904385276733335e-3 steps=322/0
+test isotropic_boltzmann::tests::both_solvers_consume_the_collisionless_distribution_to_the_flrw_event ... ok
+F10C explicit-N support ladder step=4.0e-5 block=photon residual=1.90797288772545369e-5
+F10C explicit-N support ladder step=4.0e-5 block=elapsed residual=1.33729992177432366e-11
+F10C explicit-N support ladder step=4.0e-5 block=occupation residual=1.51088757160132915e-5
+F10C explicit-N support ladder step=2.0e-5 block=photon residual=1.67692499333660547e-5
+F10C explicit-N support ladder step=2.0e-5 block=elapsed residual=7.13219492689594334e-12
+F10C explicit-N support ladder step=2.0e-5 block=occupation residual=1.39026554648037463e-5
+test isotropic_boltzmann::tests::selected_spectral_rule_has_a_bounded_explicit_lna_derivative_step_ladder ... ok
+test minimal_bbn::tests::selected_31_saha_adds_only_authorized_positive_lithium6_seed ... ok
+spectral HM grid6 event32/24: e/GF2=1.05478570703621832e0 (1.007267534e0x), x/GF2=2.21637222657478650e-1 (1.007140096e0x)
+spectral HM grid12 event6/4: e/GF2=1.05662356253681877e0 (1.009022594e0x), x/GF2=2.22247786288614302e-1 (1.009914554e0x)
+spectral HM grid12 event4/3: e/GF2=1.03593646830041464e0 (9.892674548e-1x), x/GF2=2.17470158431382260e-1 (9.882045701e-1x)
+spectral HM grid16 event4/3: e/GF2=9.86017240181986554e-1 (9.415970915e-1x), x/GF2=2.07166686071123207e-1 (9.413846361e-1x)
+spectral HM grid24 event4/3: e/GF2=1.01733673846845085e0 (9.715056441e-1x), x/GF2=2.13676756973374155e-1 (9.709670021e-1x)
+Bdf leading-QED+CCR standalone: activation N=2.4593219315089394e0, Xn=2.3933997784918984e-1; final N=5.6328995461992619e0, Xn=8.8818084653262686e-2
+spectral HM grid32 event4/3: e/GF2=9.96488907259049594e-1 (9.515970092e-1x), x/GF2=2.09367609229274443e-1 (9.513858350e-1x)
+F10C exponential electron thermal anchor: e/GF2=1.04095937643237080e0 residual=5.93591947533442677e-3; x/GF2=2.18746834418332148e-1 residual=5.99409578328752735e-3
+test isotropic_boltzmann::tests::selected_exponential_grid_keeps_the_electron_thermal_anchor ... ok
+spectral HM grid16 event6/4: e/GF2=1.03751899019573712e0 (9.907786839e-1x), x/GF2=2.18056442595272182e-1 (9.908686997e-1x)
+spectral HM grid24 event6/4: e/GF2=1.05077118527196367e0 (1.003433867e0x), x/GF2=2.20743124282787223e-1 (1.003077231e0x)
+Bdf: density_residual=4.7509980727333812e-7, temperature_residual=-2.9976021664879227e-15, accepted=1846, rejected=52
+test born_freezeout::tests::both_solvers_reach_the_standalone_freezeout_endpoint ... ok
+test minimal_network::tests::all_rates_match_the_independent_python_vectorized_formulation_off_grid ... ok
+test minimal_network::tests::analytic_abundance_jacobian_matches_centered_finite_difference ... ok
+test minimal_network::tests::both_tables_match_only_after_the_named_nontrivial_permutation ... ok
+test minimal_network::tests::closed_network_rhs_preserves_baryon_and_charge_exactly ... ok
+test minimal_network::tests::density_powers_and_identical_particle_factors_are_exact ... ok
+test minimal_network::tests::explicit_number_density_path_matches_eta_and_stage_extension_is_not_repair ... ok
+test minimal_network::tests::full_rhs_matches_independent_python_species_remap_anchor ... ok
+test minimal_network::tests::interpolation_and_reverse_formula_match_independent_numeric_anchors ... ok
+test minimal_network::tests::manufactured_single_reverse_radiative_reaction_matches_exact_solution ... ok
+test minimal_network::tests::manufactured_two_reaction_linear_chain_matches_exact_solution ... ok
+test minimal_network::tests::neutron_proton_only_handoff_has_finite_boundary_jacobian_and_expected_signs ... ok
+test minimal_network::tests::radiative_reaction_can_be_constructed_at_exact_directional_balance ... ok
+test minimal_network::tests::reaction_sum_is_permutation_invariant_and_rejects_bad_orders ... ok
+test minimal_network::tests::selected_31_extension_rates_match_independent_json_math_formulation ... ok
+test minimal_network::tests::selected_31_identity_extent_and_reverse_metadata_are_explicit ... ok
+test minimal_network::tests::selected_31_multi_particle_density_and_symmetry_contracts_are_exact ... ok
+test minimal_network::tests::selected_31_rhs_and_jacobian_match_independent_formulation ... ok
+test minimal_network::tests::species_order_and_every_reaction_conserve_baryon_and_charge ... ok
+test minimal_network::tests::strict_table_domain_and_raw_inputs_fail_without_clamping ... ok
+test neutrino_self_spectral::tests::action_has_the_massless_fifth_power_temperature_scaling ... ok
+test neutrino_self_spectral::tests::aggregated_topologies_match_the_explicit_row_sum ... ok
+test neutrino_self_spectral::tests::common_affine_fd_logits_are_numerical_nulls_with_nonzero_response ... ok
+F10C CM identical same-sign tagged MB loss order=4: actual=9.50081005318688947e-24 expected=9.50081005318701289e-24 residual=1.29911982394529680e-14
+F10C CM identical same-sign tagged MB loss order=8: actual=9.50081005318686008e-24 expected=9.50081005318701289e-24 residual=1.60843406774179609e-14
+F10C CM identical same-sign tagged MB loss order=12: actual=9.50081005318686155e-24 expected=9.50081005318701289e-24 residual=1.59296835555197101e-14
+F10C CM identical same-sign tagged MB loss order=20: actual=9.50081005318693208e-24 expected=9.50081005318701289e-24 residual=8.50614170440372952e-15
+F10C CM distinct same-sign tagged MB loss order=4: actual=4.75040502659344473e-24 expected=4.75040502659350645e-24 residual=1.29911982394529680e-14
+F10C CM distinct same-sign tagged MB loss order=8: actual=4.75040502659343004e-24 expected=4.75040502659350645e-24 residual=1.60843406774179609e-14
+F10C CM distinct same-sign tagged MB loss order=12: actual=4.75040502659343077e-24 expected=4.75040502659350645e-24 residual=1.59296835555197101e-14
+F10C CM distinct same-sign tagged MB loss order=20: actual=4.75040502659346604e-24 expected=4.75040502659350645e-24 residual=8.50614170440372952e-15
+test neutrino_self_spectral::tests::corrected_tagged_coefficients_reach_the_analytic_mb_losses ... ok
+test neutrino_self_spectral::tests::every_folded_channel_has_the_required_nulls_invariants_and_entropy_sign ... ok
+test neutrino_self_spectral::tests::every_folded_channel_jacobian_matches_five_point_stencils ... ok
+test born_freezeout::tests::freezeout_endpoint_converges_from_64_to_96_nodes ... ok
+spectral HM grid32 event6/4test neutrino_self_spectral::tests::explicit_six_species_enumerator_recovers_all_folded_row_factors ... ok
+: e/GF2=1.04167373976924971e0 (9.947462617e-1x), x/GF2=2.18939343828314592e-1 (9.948806848e-1x)
+spectral HM grid8 event8/6: e/GF2=9.88574434714880490e-1 (9.440390843e-1x), x/GF2=2.07592800874709882e-1 (9.433209413e-1x)
+spectral HM grid12 event8/6: e/GF2=1.03237076129651451e0 (9.858623831e-1x), x/GF2=2.16879426146263737e-1 (9.855202278e-1x)
+Bdf leading-QED+CCR+finite-mass(no-WM) standalone: activation N=2.4593219040374019e0, Xn=2.4009432294275196e-1; final N=5.6328995186069406e0, Xn=8.9226028145082278e-2
+Bdf leading-QED+CCR+finite-mass(physical-WM) standalone: activation N=2.4593219066332219e0, Xn=2.4019629115929314e-1; final N=5.6328995211511366e0, Xn=8.9280361303065298e-2
+activation=0.08: Yp=2.4230454999261572e-1, D/H=2.4340087774636721e-5, He3/H=1.0400635571400929e-5, Li7/H=5.4170823679541587e-10
+test flrw::tests::both_solvers_reach_the_complete_qed_flrw_event_with_entropy_closure ... ok
+test neutrino_self_spectral::tests::invalid_inputs_fail_without_clipping_or_tail_extrapolation ... ok
+test neutrino_self_spectral::tests::kt_azimuth_average_matches_explicit_phi_and_primary_q ... ok
+test neutrino_self_spectral::tests::logit_jacobian_matches_five_point_stencils ... ok
+test neutrino_self_spectral::tests::nonthermal_full_catalogue_conserves_weighted_number_and_energy ... ok
+F10C catalogue tagged oracle row1-E: production=-2.65840646592578344e-26 tagged=-2.68141740025453083e-26 residual=8.58163086678079279e-3
+spectral HM grid12 event12/8: e/GF2=9.82609836359933153e-1 (9.383431915e-1x), x/GF2=2.06342959285834848e-1 (9.376415452e-1x)
+F10C production/tagged weak oracle order=24: production=-2.43415405187638081e-26 oracle=-2.54248079236751762e-26 residual=4.26067094848196146e-2
+F10C exponential radial order=32: weak=-2.63102850820790981e-26 reference=-2.68126263978827971e-26 residual=1.87352521289509098e-2
+Bdf: wall=0.596818s, Xn(handoff)=2.3830683681849960e-1, Yp=2.4241188794410981e-1, D/H=2.4298296377440426e-5, He3/H=1.0394582467338770e-5, Li7/H=5.4315138427382403e-10
+F10C catalogue tagged oracle row3-X: production=-2.81658096835578612e-26 tagged=-2.84133193511828906e-26 residual=8.71104373853191262e-3
+F10C exponential radial order=40: weak=-2.64835301523534529e-26 reference=-2.68126263978827971e-26 residual=1.22739279862315361e-2
+F10C production/tagged weak oracle order=32: production=-2.49365837850350303e-26 oracle=-2.68377782268999676e-26 residual=7.08402322200925444e-2
+F10C exponential radial order=48: weak=-2.65840646592578344e-26 reference=-2.68126263978827971e-26 residual=8.52440694295470390e-3
+Rodas5P leading-QED+CCR standalone: activation N=2.4593219123405481e0, Xn=2.3933997825914843e-1; final N=5.6328995267280835e0, Xn=8.8818084858009988e-2
+test born_freezeout::tests::leading_qed_ccr_standalone_freezeout_reaches_both_solver_endpoints ... ok
+F10C CM same-nunu angular ladder order=2: normalized=1.16655257275489216e-4
+F10C CM same-nunu angular ladder order=4: normalized=1.72245746190464387e-4
+F10C CM same-nunu angular ladder order=6: normalized=1.78769387669942977e-4
+F10C CM same-nunu angular ladder order=8: normalized=1.81223255402275280e-4
+F10C CM same-nunu angular ladder order=12: normalized=1.82657274277431086e-4
+spectral HM grid16 event16/10: e/GF2=9.97604208033988415e-1 (9.526620656e-1x), x/GF2=2.09581585933111991e-1 (9.523581650e-1x)
+F10C catalogue tagged oracle row7-E: production=-1.34922289071819217e-24 tagged=-1.35243448712882998e-24 residual=2.37467799083999724e-3
+F10C CM same-nunu angular ladder order=16: normalized=1.82383889446195724e-4
+F10C production/tagged weak oracle order=40: production=-2.55186067461064669e-26 oracle=-2.68129167397680716e-26 residual=4.82718835188088655e-2
+F10C CM same-nunu angular ladder order=20: normalized=1.82389703230678962e-4
+F10C CM same-nunu angular ladder order=24: normalized=1.82236274923235905e-4
+test neutrino_self_spectral::tests::selected_angular_rule_has_a_nonthermal_entropy_ladder ... ok
+F10C exponential radial order=64: weak=-2.66813238624493158e-26 reference=-2.68126263978827971e-26 residual=4.89704117325295927e-3
+test neutrino_self_spectral::tests::exponential_radial_rule_has_a_monotone_direct_ladder ... ok
+test neutrino_self_spectral::tests::shared_heavy_row3_matches_an_explicit_six_family_projection ... ok
+test ode::tests::bdf_attempt_budget_returns_last_raw_state ... ok
+test ode::tests::bdf_reuses_full_jacobian_across_dense_columns ... ok
+test ode::tests::both_event_refiners_reject_nonphysical_interpolated_states ... ok
+test ode::tests::both_solvers_detect_directionless_zero_at_step_endpoint ... ok
+test ode::tests::both_solvers_ignore_a_crossing_in_the_wrong_direction ... ok
+test ode::tests::both_solvers_match_nonautonomous_exact_endpoint ... ok
+test ode::tests::both_solvers_match_robertson_reference_and_preserve_mass ... ok
+test ode::tests::both_solvers_match_stiff_scalar_exact_solution ... ok
+test ode::tests::both_solvers_nonfinite_jacobian_fail_loud_with_raw_state ... ok
+test ode::tests::both_solvers_nonfinite_rhs_fail_loud_with_raw_state ... ok
+test ode::tests::both_solvers_refine_downward_terminal_event ... ok
+test ode::tests::both_solvers_refine_upward_event_after_skipping_downward_crossing ... ok
+test ode::tests::both_solvers_repeat_bit_for_bit_on_the_same_host ... ok
+test ode::tests::both_solvers_stop_on_an_initial_terminal_event ... ok
+test ode::tests::default_rhs_and_jacobian_matches_separate_calls ... ok
+test ode::tests::invalid_dimension_and_nonfinite_state_preserve_raw_input ... ok
+test ode::tests::invalid_event_direction_preserves_raw_initial_state ... ok
+test ode::tests::invalid_tolerance_preserves_raw_initial_state ... ok
+test ode::tests::jacobian_cache_key_requires_one_finite_bitwise_point ... ok
+test ode::tests::rodas_error_rejection_at_step_floor_preserves_raw_state ... ok
+test ode::tests::rodas_event_refinement_failure_returns_last_raw_endpoint ... ok
+test ode::tests::rodas_has_fifth_order_nonautonomous_convergence ... ok
+test ode::tests::rodas_nonfinite_time_derivative_fails_loud_with_raw_state ... ok
+test ode::tests::rodas_reuses_jacobian_and_dfdt_at_an_unchanged_point ... ok
+test ode::tests::rodas_singular_linear_system_fails_loud_with_raw_state ... ok
+T0_COUNTERS Rodas5P: accepted=16 rejected=0 attempts=16 rhs_evaluations=129 dfdt_evaluations=16
+T0_COUNTERS Bdf: accepted=131 rejected=0 rhs_evaluations=142 dfdt_evaluations=0
+test ode::tests::solver_counters_report_trait_level_rhs_and_dfdt_calls ... ok
+test ode::tests::state_domain_rejects_raw_initial_and_solver_specific_candidates ... ok
+test qed_eos::tests::exchange_pressure_derivatives_match_independent_dblquad_anchors ... ok
+test qed_eos::tests::fermi_integrals_match_independent_adaptive_anchors ... ok
+test qed_eos::tests::gauss_legendre_rule_integrates_polynomials ... ok
+test qed_eos::tests::off_is_an_exact_zero_without_validating_unused_inputs ... ok
+test qed_eos::tests::pressure_derivatives_match_five_point_differences ... ok
+test qed_eos::tests::pressure_terms_match_independent_primat_formulation ... ok
+test qed_eos::tests::quadratures_converge_in_value_and_derivatives ... ok
+test qed_eos::tests::thermodynamic_identities_signs_and_limits_hold ... ok
+F10C catalogue tagged oracle row7-X: production=6.03981094577111303e-25 tagged=6.05127314419117169e-25 residual=1.89417964566045388e-3
+F10C production/tagged weak oracle order=48: production=-2.58642087223707311e-26 oracle=-2.68126219809010489e-26 residual=3.53718953411525372e-2
+F10C catalogue tagged oracle row2-E: production=-1.61649366025316026e-26 tagged=-1.63057865967629509e-26 residual=8.63803738602283121e-3
+activation=0.10: Yp=2.4247285917310796e-1, D/H=2.4347856909727647e-5, He3/H=1.0401689158946336e-5, Li7/H=5.4199997512353134e-10
+F10C catalogue tagged oracle rows4-6-X: production=-1.70363997209724380e-26 tagged=-1.71862117742550873e-26 residual=8.71699099548322275e-3
+F10C1 N48 auxiliary profile=soft rule=compact30_N128: basis=-3.29427303239934855e-27 exact=-3.32554063432595573e-27 residual=9.40226127561503283e-3 Nrel=5.58274752356592651e-15 Erel=1.04302695974420253e-14 entropy=3.29427303239934855e-27 domain=1.37936068177464220e-6
+F10C production/tagged weak oracle order=64: production=-2.62566719933840425e-26 oracle=-2.68126263978827971e-26 residual=2.07347984583358194e-2
+F10C selected GL16/high-order tagged weak oracle: production=-2.47921427665910203e-26 residual=7.53556776314654453e-2
+test neutrino_self_spectral::tests::production_weak_action_converges_to_a_tagged_target_oracle ... ok
+F10C catalogue tagged oracle row8-E: production=-2.35848920854977910e-25 tagged=-2.36428044303186297e-25 residual=2.44947019680009578e-3
+F10C catalogue tagged oracle row8-X: production=1.03976325979844896e-25 tagged=1.04171978063101479e-25 residual=1.87816423278501857e-3
+F10C catalogue tagged oracle row9-E: production=-8.55752705266661118e-25 tagged=-8.63679172808686638e-25 residual=9.17756013063118076e-3
+full matched BDF endpoint wall: first=0.616770s, repeat=0.624136s
+test minimal_bbn::tests::repeated_full_matched_bdf_endpoint_is_bitwise_deterministic_and_reports_wall_time ... ok
+F10C1 N48 auxiliary profile=soft rule=exponential4_N128: basis=-3.28880041820024450e-27 exact=-3.32554063680033546e-27 residual=1.10478934443094083e-2 Nrel=1.73032301938214593e-15 Erel=1.36254235353531026e-14 entropy=3.28880041820024450e-27 domain=1.51971200489692251e-6
+late-eta density residual: rtol=2e-7 4.7509980727333812e-7, rtol=5e-8 2.6689390408840552e-7
+test minimal_bbn::tests::born_quadrature_and_solver_tolerance_converge_at_endpoint ... ok
+F10C catalogue tagged oracle row9-X: production=3.88773766439341127e-25 tagged=3.92532367958405775e-25 residual=9.57526519052034897e-3
+test neutrino_self_spectral::tests::every_folded_family_matches_an_independent_tagged_target_oracle ... ok
+activation=0.12: Yp=2.4247349006691302e-1, D/H=2.4347887576603387e-5, He3/H=1.0401693058332557e-5, Li7/H=5.4200103499504493e-10
+test minimal_bbn::tests::zero_seed_activation_is_stable_from_point_zero_eight_to_point_one_two_mev ... ok
+massless MB order=24: nue=7.64710810556415754e-21 (1.011916242e0x), nux=1.63443026802404766e-21 (1.011916242e0x)
+finite-mass FD order=24: e/GF2=1.02973318619184551e0 (9.833436310e-1x), x/GF2=2.16380023385101455e-1 (9.832508954e-1x)
+Rodas5P leading-QED+CCR+finite-mass(no-WM) standalone: activation N=2.4593219123405241e0, Xn=2.4009432335028977e-1; final N=5.6328995267280488e0, Xn=8.9226028318155098e-2
+test born_freezeout::tests::finite_mass_no_weak_magnetism_constructor_dispatches_both_solvers ... ok
+test thermal_weak::tests::invalid_direct_quadrature_order_fails_closed ... ok
+test thermal_weak::tests::local_quadratic_interpolation_reproduces_knots ... ok
+test thermal_weak::tests::profile_mismatch_and_low_temperature_clamp_fail_closed_without_a_table ... ok
+test thermal_weak::tests::stable_distribution_limits_and_log_identity_are_finite ... ok
+test tier1_lrs::tests::eos_is_finite_across_frozen_temperature_grid ... ok
+test tier1_lrs::tests::frozen_gl64_bits_are_positive ... ok
+test tier1_lrs::tests::photon_limit_has_exact_cooling_law ... ok
+test tier1_lrs::tests::qed_total_scale_is_positive ... ok
+test tier1_lrs::tests::stable_characteristic_primitives_have_exact_center_limit ... ok
+Rodas5P: density_residual=-1.4871437414853972e-12, temperature_residual=-2.4424906541753444e-15, accepted=802, rejected=35
+species=0: bdf=5.8620089285540130e-11, rodas=5.8619970106949951e-11, abs=1.1917859017886470e-16, rel=2.0330673602072214e-6
+species=1: bdf=7.5763492562059831e-1, rodas=7.5763492522713571e-1, abs=3.9346259583794563e-10, rel=5.1933006588318279e-10
+species=2: bdf=3.6881801876636423e-5, rodas=3.6881810670800076e-5, abs=8.7941636530428427e-12, rel=2.3844175470499131e-7
+species=3: bdf=1.7644992223000330e-7, rodas=1.7645016025938501e-7, abs=2.3802938170989646e-13, rel=1.3489893200436251e-6
+species=4: bdf=2.3463208073752254e-5, rodas=2.3463206857917374e-5, abs=1.2158348804201628e-12, rel=5.1818782691540335e-8
+species=5: bdf=2.4230454998798528e-1, rodas=2.4230455037363813e-1, abs=3.8565284299352243e-10, rel=1.5916037994286057e-9
+species=6: bdf=0.0000000000000000e0, rodas=0.0000000000000000e0, abs=0.0000000000000000e0, rel=0.0000000000000000e0
+species=7: bdf=1.4979971635736116e-10, rodas=1.4979970880367922e-10, abs=7.5536819355144294e-18, rel=5.0425208533068370e-8
+species=8: bdf=2.7231196469925776e-9, rodas=2.7231185528831107e-9, abs=1.0941094668832848e-15, rel=4.0178530829213581e-7
+test minimal_bbn::tests::both_solvers_reach_the_first_coupled_bbn_endpoint ... ok
+Rodas5P leading-QED+CCR+finite-mass(physical-WM) standalone: activation N=2.4593219123405259e0, Xn=2.4019629154783906e-1; final N=5.6328995267280533e0, Xn=8.9280361455712692e-2
+test born_freezeout::tests::physical_weak_magnetism_selector_dispatches_both_solvers ... ok
+F10C1 N48 auxiliary profile=baseline rule=compact30_N128: basis=-2.63427644232799292e-26 exact=-2.68126160580020516e-26 residual=1.75235282415457660e-2 Nrel=2.23440208620757467e-15 Erel=2.77906287704330329e-15 entropy=2.63427644232799292e-26 domain=3.89930300399810220e-6
+F08D direct T_K=2.0e8 direction=1: reference=5.99337768067460902e-7; order64=DirectionalThermalRadiativeComponents { true_photon: 2.208027568768531e-5, differential_bremsstrahlung: 3.8315116087319373e-7, medium_one_dimensional: -2.1863041886653353e-5, medium_two_dimensional: 1.640099685809672e-16 }, total=6.00384962069157997e-7; order128=DirectionalThermalRadiativeComponents { true_photon: 2.208027568768772e-5, differential_bremsstrahlung: 3.8315126077354416e-7, medium_one_dimensional: -2.1864447241008618e-5, medium_two_dimensional: 1.6615312272499778e-16 }, total=5.98979707618798944e-7
+test thermal_weak::tests::f08d_direct_covered_subterms_match_independent_dblquad_and_refine ... ok
+spectral HM grid24 event24/16: e/GF2=1.02659089968364881e0 (9.803429047e-1x), x/GF2=2.15729905587691673e-1 (9.802966998e-1x)
+F10C1 N48 auxiliary profile=baseline rule=exponential4_N128: basis=-2.63465021320160546e-26 exact=-2.68126161154474790e-26 residual=1.73841292257521790e-2 Nrel=7.79679091347504239e-16 Erel=1.89807923644560103e-15 entropy=2.63465021320160546e-26 domain=4.27216969066339991e-6
+F08D direct T_K=2.0e8 direction=-1: reference=1.17142040830713635e-37; order64=DirectionalThermalRadiativeComponents { true_photon: 1.4372757104546272e-37, differential_bremsstrahlung: -3.4014794008438916e-38, medium_one_dimensional: -2.5223641115201333e-41, medium_two_dimensional: -6.428929365790352e-54 }, total=1.09687553395908617e-37; order128=DirectionalThermalRadiativeComponents { true_photon: 1.4372757119373284e-37, differential_bremsstrahlung: -3.4014793974596176e-38, medium_one_dimensional: -3.179166436106276e-41, medium_two_dimensional: -1.732383809829208e-54 }, total=1.09680985554775595e-37
+F10C1 N48 auxiliary profile=mid rule=compact30_N128: basis=-1.86163504230449384e-26 exact=-1.89415000107006954e-26 residual=1.71659893605083554e-2 Nrel=1.06360238295599234e-14 Erel=1.03743019751977818e-14 entropy=1.86163504230449384e-26 domain=4.35354230366044995e-6
+F08D direct T_K=1.0e9 direction=1: reference=1.85491500000000011e-4; order64=DirectionalThermalRadiativeComponents { true_photon: 0.0005967592244051571, differential_bremsstrahlung: 0.00012987611619010196, medium_one_dimensional: -0.0005500391932094501, medium_two_dimensional: 9.219551686539726e-6 }, total=1.85815699072348683e-4; order128=DirectionalThermalRadiativeComponents { true_photon: 0.0005967592244051564, differential_bremsstrahlung: 0.00012987611620337495, medium_one_dimensional: -0.0005500408404251997, medium_two_dimensional: 9.32364435753638e-6 }, total=1.85918144540868049e-4
+F10C1 N48 auxiliary profile=mid rule=exponential4_N128: basis=-1.86086179407621360e-26 exact=-1.89415000575329557e-26 residual=1.75742214586871587e-2 Nrel=1.71020643563199225e-15 Erel=3.06992000912458221e-16 entropy=1.86086179407621360e-26 domain=4.76410106991698793e-6
+F08D direct T_K=1.0e9 direction=-1: reference=2.82295566068127509e-10; order64=DirectionalThermalRadiativeComponents { true_photon: 3.1220454269145885e-10, differential_bremsstrahlung: -2.0363819496452448e-11, medium_one_dimensional: -1.1128970258337593e-11, medium_two_dimensional: 2.2067413138429355e-13 }, total=2.80932427068053097e-10; order128=DirectionalThermalRadiativeComponents { true_photon: 3.1220454269145947e-10, differential_bremsstrahlung: -2.036381949241583e-11, medium_one_dimensional: -1.1129653485239884e-11, medium_two_dimensional: 2.2149807952473534e-13 }, total=2.80932567793328474e-10
+F10C1 N48 auxiliary profile=hard rule=compact30_N128: basis=-2.12319027793303726e-27 exact=-2.16483500811589518e-27 residual=1.92369072131285714e-2 Nrel=6.43750966500802747e-15 Erel=1.14421129904240549e-14 entropy=2.12319027793303726e-27 domain=6.88278584380073072e-5
+F08D direct T_K=1.0e10 direction=1: reference=-1.67849409999999999e0; order64=DirectionalThermalRadiativeComponents { true_photon: 2.778420078734732, differential_bremsstrahlung: -3.576829866894328, medium_one_dimensional: -0.6984223640977073, medium_two_dimensional: -0.18040597282864618 }, total=-1.67723812508594938e0; order128=DirectionalThermalRadiativeComponents { true_photon: 2.7784200787350377, differential_bremsstrahlung: -3.576829866893537, medium_one_dimensional: -0.6984223640977074, medium_two_dimensional: -0.18093219832130128 }, total=-1.67776435057750795e0
+F10C1 N48 auxiliary profile=hard rule=exponential4_N128: basis=-2.12203291501224820e-27 exact=-2.16483504985126571e-27 residual=1.97715455696997403e-2 Nrel=1.17508435039278173e-14 Erel=1.78411949713579962e-14 entropy=2.12203291501224820e-27 domain=7.60981935006110308e-5
+F08D direct T_K=1.0e10 direction=-1: reference=4.86649219999999993e-1; order64=DirectionalThermalRadiativeComponents { true_photon: 1.2570083572099844, differential_bremsstrahlung: -0.6945569435160012, medium_one_dimensional: -0.08164397932103223, medium_two_dimensional: 0.005972600582260878 }, total=4.86780034955211882e-1; order128=DirectionalThermalRadiativeComponents { true_photon: 1.257008357209928, differential_bremsstrahlung: -0.694556943516031, medium_one_dimensional: -0.08164397932103225, medium_two_dimensional: 0.005915180306807958 }, total=4.86722614679672649e-1
+test thermal_weak::tests::f08d_direct_complete_sum_matches_frozen_external_envelopes_and_refines ... ok
+F10C1 N48 auxiliary profile=negative rule=compact30_N128: basis=-1.66742230076919387e-26 exact=-1.69641411366243828e-26 residual=1.70900564076616468e-2 Nrel=5.53696479780856400e-15 Erel=3.87788376228649827e-15 entropy=1.66742230076919387e-26 domain=5.06107394829405052e-6
+F10C1 N48 auxiliary profile=negative rule=exponential4_N128: basis=-1.66746379084794673e-26 exact=-1.69641411838452048e-26 residual=1.70656016257061602e-2 Nrel=3.22688951055972516e-15 Erel=1.59976636302978461e-15 entropy=1.66746379084794673e-26 domain=5.54497128425606132e-6
+test neutrino_self_spectral::tests::selected_exponential_n48_has_a_five_profile_auxiliary_basis_envelope ... ok
+Rodas5P: wall=2.709739s, Xn(handoff)=2.3830683723151180e-1, Yp=2.4241190706312640e-1, D/H=2.4298298550581691e-5, He3/H=1.0394582738500974e-5, Li7/H=5.4315136448807892e-10
+test minimal_bbn::tests::primat_matched_saha_handoff_and_dual_solver_endpoint_are_live_anchored ... ok
+massless MB order=32: nue=7.58560607509179295e-21 (1.003777884e0x), nux=1.62128532764127847e-21 (1.003777884e0x)
+test electron_thermal_fd::tests::direct_massless_mb_operator_reaches_the_analytic_limit ... ok
+finite-mass FD order=32: e/GF2=1.04424614293698470e0 (9.972027780e-1x), x/GF2=2.19448214382406831e-1 (9.971930398e-1x)
+test electron_thermal_fd::tests::direct_finite_mass_fd_operator_tracks_independent_cm_anchors ... ok
+spectral HM grid32 event32/24: e/GF2=1.04886924985394603e0 (1.001617614e0x), x/GF2=2.20440136781202750e-1 (1.001700427e0x)
+test electron_spectral::tests::thermal_energy_moment_tracks_the_independent_cm_anchor ... ok
+test minimal_bbn::tests::selected_31_log_coordinate_abundance_jacobian_matches_five_point_difference ... ok
+Bdf leading-QED+F08D standalone: activation N=2.4593218295530521e0, Xn=2.4020238686934622e-1; final N=5.6328994441452407e0, Xn=8.9278226538978600e-2
+Rodas5P leading-QED+F08D standalone: activation N=2.4593219123405348e0, Xn=2.4020238770812863e-1; final N=5.6328995267280568e0, Xn=8.9278226744845340e-2
+test born_freezeout::tests::complete_thermal_radiative_selector_has_finite_boundary_jacobian_and_dual_endpoints ... ok
+CCR matched endpoint: external_born=[0.24240826096918933, 2.4324175351206648e-5, 1.0398334393771488e-5, 5.424418461753546e-10], external_ccr=[0.2455582967943563, 2.4495160175689093e-5, 1.0424117029619264e-5, 5.47022984399739e-10], Rust_born=[0.24240922988176763, 2.4323732382260646e-5, 1.039828851978368e-5, 5.424538981124169e-10], Rust_bdf=[0.24555944587510375, 2.449470389399336e-5, 1.042407102739187e-5, 5.470358224075774e-10], Rust_rodas=[0.24555946656470976, 2.449470639494554e-5, 1.0424071307204379e-5, 5.4703579359022e-10], Xn_bdf=2.3933997784918984e-1, Xn_rodas=2.3933997825914843e-1, BDF_wall=1.275224s, BDF_repeat_wall=1.265963s, Rodas_wall=4.835607s
+test minimal_bbn::tests::zero_temperature_ccr_matched_endpoint_tracks_live_primat_delta ... ok
+F08B matched endpoints [Xn,Yp,DH,He3H,Li7H]: BDF=[0.24009432294275196, 0.24668541343980116, 2.4556267578584473e-5, 1.0433336797768224e-5, 5.48654585726901e-10], Rodas5P=[0.24009432335028977, 0.24668542688179274, 2.4556271300872044e-5, 1.0433337361479505e-5, 5.486545085568795e-10]
+test minimal_bbn::tests::finite_mass_no_weak_magnetism_entrypoint_labels_and_supports_both_solvers ... ok
+QED matched endpoints: off=[0.2424118879441098, 2.4298296377440426e-5, 1.039458246733877e-5, 5.43151384273824e-10], leading=[0.24240922988176763, 2.4323732382260646e-5, 1.039828851978368e-5, 5.424538981124169e-10], complete_bdf=[0.2424107431490362, 2.432381666355107e-5, 1.0398301047865582e-5, 5.42456058373719e-10], complete_rodas=[0.24241075702214393, 2.4323817657396513e-5, 1.0398301075576955e-5, 5.424560548774084e-10]
+observable=0: leading_shift=-2.6580623421756933e-6, exchange_shift=1.5132672685769233e-6, ratio=5.6931218074376488e-1
+observable=1: leading_shift=2.5436004820220495e-8, exchange_shift=8.4281290422454167e-11, ratio=3.3134641630298122e-3
+observable=2: leading_shift=3.7060524449099817e-9, exchange_shift=1.2528081902709264e-11, ratio=3.3804383745070195e-3
+observable=3: leading_shift=-6.9748616140714971e-13, exchange_shift=2.1602613021223268e-15, ratio=3.0972102697551566e-3
+QED handoff Xn: off=2.3830683681849960e-1, leading=2.3829460773914851e-1, complete_bdf=2.3829538458389990e-1, complete_rodas=2.3829538497905611e-1
+test minimal_bbn::tests::complete_qed_matched_endpoint_has_isolated_shift_and_dual_solver_convergence ... ok
+F08C matched endpoints [Xn,Yp,DH,He3H,Li7H]: BDF=[0.24019629115929314, 0.2468369814321261, 2.4564568596661556e-5, 1.0434585907028622e-5, 5.488720109289649e-10], Rodas5P=[0.24019629154783906, 0.24683701452683648, 2.45645716039475e-5, 1.0434586301065364e-5, 5.488719893518859e-10]; BDF_wall=2.255923s, repeat_wall=2.390441s, Rodas_wall=7.770516s
+test minimal_bbn::tests::physical_weak_magnetism_generic_selector_reaches_deterministic_dual_solver_endpoint ... ok
+test flrw::tests::both_solvers_match_the_independent_qed_off_three_temperature_endpoint ... ok
+F08D matched endpoints [Xn,Yp,DH,He3H,Li7H]: BDF=[0.24020238686934622, 0.24683356615720803, 2.4564374518213406e-5, 1.0434556632413961e-5, 5.488674122424027e-10], Rodas5P=[0.24020238770812863, 0.24683358495050578, 2.4564376830218522e-5, 1.043455690926778e-5, 5.488673896701071e-10]; cold_BDF_wall=8.781129s, repeat_BDF_wall=2.548714s, Rodas_wall=10.666519s
+test minimal_bbn::tests::complete_thermal_radiative_generic_selector_reaches_conditional_dual_solver_endpoint ... ok
+F08D private-table midpoint maximum normalized interpolation difference=8.78790433404704530e-1
+test thermal_weak::tests::f08d_private_table_all_interval_midpoints_track_refined_direct_values ... ok
+F08N selected-31 endpoints [Yp,DH,He3H,Li7H,Li6H]: BDF=[0.24683358124527852, 2.456516625200859e-5, 1.0433716330832902e-5, 5.437257176155468e-10, 7.818856581771896e-15], Rodas5P=[0.24683358304487701, 2.4565166617141467e-5, 1.0433716373987523e-5, 5.437257132026343e-10, 7.818856790219118e-15], BDF_rtol3e-11=[0.24683358128054264, 2.4565166601201154e-5, 1.0433716372463938e-5, 5.437257096810452e-10, 7.818856690501073e-15]; baryon_residuals=[7.57231721770779131e-10,2.90709456507443065e-10,1.11938835978264706e-9]; charges=[8.76556790428543064e-1,8.76556790576403011e-1,8.76556790048473311e-1]; cold_BDF_wall=9.079693s, repeat_BDF_wall=3.325321s, Rodas_wall=18.182199s, ladder_wall=3.213617s
+test minimal_bbn::tests::selected_31_complete_endpoint_satisfies_pre_rust_external_and_nested_budgets ... ok
+test thermal_bbn::tests::f09b_coupled_log_jacobian_matches_five_point_difference ... ok
+test isotropic_boltzmann::tests::both_solvers_consume_the_classical_collision_action_to_an_flrw_event has been running for over 60 seconds
+test thermal_bbn::tests::f09b_bdf_and_rodas_reach_collision_consuming_selected31_endpoint has been running for over 60 seconds
+test thermal_bbn::tests::f09b_tighter_bdf_converges_and_immediate_repeat_is_bitwise_deterministic has been running for over 60 seconds
+F09B BDF_freezeout2e-8_endpoint1e-10_first: wall=32.341853s; activation N=2.45844330260138921e0 T=[8.61647152867379029e-1,8.56999675983846299e-1,8.56197877660242357e-1] Xn=2.40223661207886796e-1 steps=1033/0; background N=7.93591222227854587e0 T=[4.99999999999998970e-3,3.58589075136048381e-3,3.57956036392688979e-3] steps=2518/0; network N=7.93591222096288185e0 T=[4.99999999999999663e-3,3.58589075230166627e-3,3.57956036486918377e-3] steps=5370/349; observables=[2.46754323486263361e-1,2.46481646600842009e-5,1.04454913664838519e-5,5.41291091761305023e-10,7.84169643120307939e-15]
+F09B BDF_freezeout2e-8_endpoint1e-10_repeat: wall=29.829019s; activation N=2.45844330260138921e0 T=[8.61647152867379029e-1,8.56999675983846299e-1,8.56197877660242357e-1] Xn=2.40223661207886796e-1 steps=1033/0; background N=7.93591222227854587e0 T=[4.99999999999998970e-3,3.58589075136048381e-3,3.57956036392688979e-3] steps=2518/0; network N=7.93591222096288185e0 T=[4.99999999999999663e-3,3.58589075230166627e-3,3.57956036486918377e-3] steps=5370/349; observables=[2.46754323486263361e-1,2.46481646600842009e-5,1.04454913664838519e-5,5.41291091761305023e-10,7.84169643120307939e-15]
+F09B BDF_freezeout6e-9_endpoint3e-11: wall=32.299109s; activation N=2.45844330920647147e0 T=[8.61647152867379362e-1,8.56999675983830533e-1,8.56197877660250573e-1] Xn=2.40223661205653416e-1 steps=1142/0; background N=7.93591222890396164e0 T=[4.99999999999998015e-3,3.58589075130482564e-3,3.57956036387161282e-3] steps=2603/0; network N=7.93591222914163907e0 T=[4.99999999999999143e-3,3.58589075144763285e-3,3.57956036401795713e-3] steps=5931/368; observables=[2.46754324609757880e-1,2.46481646406184351e-5,1.04454913509388322e-5,5.41291099655827764e-10,7.84169645410599128e-15]
+test thermal_bbn::tests::f09b_tighter_bdf_converges_and_immediate_repeat_is_bitwise_deterministic ... ok
+F09B raw Saha sums/projections: BDF=[1.00000000000177880e0,9.99999999998221201e-1] Rodas5P=[1.00000000000177880e0,9.99999999998221201e-1]
+F09B BDF_freezeout2e-8_endpoint1e-10: wall=34.283695s; activation N=2.45844330260138921e0 T=[8.61647152867379029e-1,8.56999675983846299e-1,8.56197877660242357e-1] Xn=2.40223661207886796e-1 steps=1033/0; background N=7.93591222227854587e0 T=[4.99999999999998970e-3,3.58589075136048381e-3,3.57956036392688979e-3] steps=2518/0; network N=7.93591222096288185e0 T=[4.99999999999999663e-3,3.58589075230166627e-3,3.57956036486918377e-3] steps=5370/349; observables=[2.46754323486263361e-1,2.46481646600842009e-5,1.04454913664838519e-5,5.41291091761305023e-10,7.84169643120307939e-15]
+F09B Rodas5P_freezeout2e-8_endpoint1e-10: wall=178.936436s; activation N=2.45844330986792281e0 T=[8.61647152867378696e-1,8.56999675984288278e-1,8.56197877660280215e-1] Xn=2.40223661286417062e-1 steps=202/0; background N=7.93591222954424147e0 T=[4.99999999999999490e-3,3.58589075142754388e-3,3.57956036399281405e-3] steps=285/0; network N=7.93591222955353537e0 T=[4.99999999999999750e-3,3.58589075139504557e-3,3.57956036396010540e-3] steps=4885/205; observables=[2.46754325431965904e-1,2.46481646053035173e-5,1.04454913451229803e-5,5.41291102076464810e-10,7.84169646967723149e-15]
+test thermal_bbn::tests::f09b_bdf_and_rodas_reach_collision_consuming_selected31_endpoint ... ok
+F10C Bdf: N=7.93669333948508360e0 elapsed=5.26776344870795510e4s Neff=3.03403598358439952e0 max_df/f(f0>1e-8)=1.41617562687702342e-1 q=2.83296810339798281e-87 steps=1459/1 wall=294.205641s rhs=1731 dfdt=0
+F10C2_BDF_BLOCKS Tcm=3.57386281733714905e-3 H=9.49254546115975869e-6 rho_nu=2.83361184184362380e-10 n_e=8.38689035133557397e-9 rho_e=9.47981915653400480e-11 n_x=8.35845135010454098e-9 rho_x=9.42814963095111658e-11 Qe_e=1.32299422286384658e-87 Qe_x=7.54986940267068118e-88 Qe_total=2.83296810339798281e-87 Qnunu_e=-4.33549683486559935e-47 Qnunu_x=2.16774841743279482e-47
+F10C2_BDF_SPECTRUM node=0 y=1.84405576219537630e-3 weight=4.73292744521058243e-3 f_e=4.99537869986163674e-1 f_x=4.99538023296629830e-1
+F10C2_BDF_SPECTRUM node=1 y=9.72047253670633299e-3 weight=1.10270022544166311e-2 f_e=4.97562900387155449e-1 f_x=4.97564496088548691e-1
+F10C2_BDF_SPECTRUM node=2 y=2.39081383608116954e-2 weight=1.73535996782517160e-2 f_e=4.94005390704613134e-1 f_x=4.94009617306927995e-1
+F10C2_BDF_SPECTRUM node=3 y=4.44401463192199836e-2 weight=2.37177238275133283e-2 f_e=4.88858558719446612e-1 f_x=4.88865411440787989e-1
+F10C2_BDF_SPECTRUM node=4 y=7.13604752101613948e-2 weight=3.01325406590295108e-2 f_e=4.82115375044247230e-1 f_x=4.82124626668823164e-1
+F10C2_BDF_SPECTRUM node=5 y=1.04726829123947152e-1 weight=3.66121827691090335e-2 f_e=4.73771008486377987e-1 f_x=4.73782893704606189e-1
+F10C2_BDF_SPECTRUM node=6 y=1.44611368035248794e-1 weight=4.31714307271673023e-2 f_e=4.63829370858875989e-1 f_x=4.63839457772689590e-1
+F10C2_BDF_SPECTRUM node=7 y=1.91101384783977590e-1 weight=4.98257900513347785e-2 f_e=4.52276480162597860e-1 f_x=4.52288452872620650e-1
+F10C2_BDF_SPECTRUM node=8 y=2.44300097431800756e-1 weight=5.65916315839331205e-2 f_e=4.39120679388900814e-1 f_x=4.39136999828703800e-1
+F10C2_BDF_SPECTRUM node=9 y=3.04327596251837473e-1 weight=6.34863586855187595e-2 f_e=4.24382950711857720e-1 f_x=4.24403387967523915e-1
+F10C2_BDF_SPECTRUM node=10 y=3.71321969545607478e-1 weight=7.05285979004179886e-2 f_e=4.08102956425466679e-1 f_x=4.08122070683100135e-1
+F10C2_BDF_SPECTRUM node=11 y=4.45440632984394846e-1 weight=7.77384160592383411e-2 f_e=3.90332667212432760e-1 f_x=3.90346252284844430e-1
+F10C2_BDF_SPECTRUM node=12 y=5.26861891360052681e-1 weight=8.51375689900478322e-2 f_e=3.71156054999429164e-1 f_x=3.71155541701671088e-1
+F10C2_BDF_SPECTRUM node=13 y=6.15786767591451234e-1 weight=9.27497885712128128e-2 f_e=3.50662192983085319e-1 f_x=3.50651930058396066e-1
+F10C2_BDF_SPECTRUM node=14 y=7.12441141376628062e-1 weight=1.00601116525441306e-1 f_e=3.28992718622641678e-1 f_x=3.28977478959358527e-1
+F10C2_BDF_SPECTRUM node=15 y=8.17078249259891032e-1 weight=1.08720295391070823e-1 f_e=3.06329930469838307e-1 f_x=3.06310460092439785e-1
+F10C2_BDF_SPECTRUM node=16 y=9.29981609560020295e-1 weight=1.17139229695902736e-1 f_e=2.82902812199872788e-1 f_x=2.82869401535724430e-1
+F10C2_BDF_SPECTRUM node=17 y=1.05146845022984237e0 weight=1.25893533701387061e-1 f_e=2.58945395267090650e-1 f_x=2.58898808657177959e-1
+F10C2_BDF_SPECTRUM node=18 y=1.18189373616560078e0 weight=1.35023186440598880e-1 f_e=2.34741313708797028e-1 f_x=2.34683540558625198e-1
+F10C2_BDF_SPECTRUM node=19 y=1.32165491593758544e0 weight=1.44573320496551527e-1 f_e=2.10606679177842482e-1 f_x=2.10533194720260552e-1
+F10C2_BDF_SPECTRUM node=20 y=1.47119753797147723e0 weight=1.54595178550914814e-1 f_e=1.86857253818062674e-1 f_x=1.86768822496944653e-1
+F10C2_BDF_SPECTRUM node=21 y=1.63102192506057331e0 weight=1.65147281872144058e-1 f_e=1.63817145456634811e-1 f_x=1.63715845770053520e-1
+F10C2_BDF_SPECTRUM node=22 y=1.80169114675388964e0 weight=1.76296868597937251e-1 f_e=1.41798868374188147e-1 f_x=1.41686496199438350e-1
+F10C2_BDF_SPECTRUM node=23 y=1.98384059586260686e0 weight=1.88121678331844511e-1 f_e=1.21078192780914362e-1 f_x=1.20962666988409087e-1
+F10C2_BDF_SPECTRUM node=24 y=2.17818956401653718e0 weight=2.00712185312811486e-1 f_e=1.01903073230923472e-1 f_x=1.01787594345503232e-1
+F10C2_BDF_SPECTRUM node=25 y=2.38555533040748369e0 weight=2.14174418336991856e-1 f_e=8.44716954765559330e-2 f_x=8.43512379220629910e-2
+F10C2_BDF_SPECTRUM node=26 y=2.60687043993643908e0 weight=2.28633556391848070e-1 f_e=6.88991780936270282e-2 f_x=6.87741318381049349e-2
+F10C2_BDF_SPECTRUM node=27 y=2.84320407011770149e0 weight=2.44238561760628359e-1 f_e=5.52311040352420693e-2 f_x=5.51107948673583981e-2
+F10C2_BDF_SPECTRUM node=28 y=3.09578869745565122e0 weight=2.61168218312009759e-1 f_e=4.34751633936527951e-2 f_x=4.33579525618971034e-2
+F10C2_BDF_SPECTRUM node=29 y=3.36605371490341998e0 weight=2.79639099478112330e-1 f_e=3.35509208253554833e-2 f_x=3.34448811663257406e-2
+F10C2_BDF_SPECTRUM node=30 y=3.65566828640787111e0 weight=2.99916226661340268e-1 f_e=2.53475868992639498e-2 f_x=2.52567451031726203e-2
+F10C2_BDF_SPECTRUM node=31 y=3.96659665356031477e0 weight=3.22327541891663183e-1 f_e=1.87194837197382190e-2 f_x=1.86416292428852742e-2
+F10C2_BDF_SPECTRUM node=32 y=4.30117049646860661e0 weight=3.47283888946565367e-1 f_e=1.34835149682457790e-2 f_x=1.34187599751334034e-2
+F10C2_BDF_SPECTRUM node=33 y=4.66218506701888735e0 weight=3.75307115257399182e-1 f_e=9.44848464286416646e-3 f_x=9.39619423828574885e-3
+F10C2_BDF_SPECTRUM node=34 y=5.05302911912034958e0 weight=4.07070425366506228e-1 f_e=6.42337624899808404e-3 f_x=6.38072104381643811e-3
+F10C2_BDF_SPECTRUM node=35 y=5.47786396792120112e0 weight=4.43457705721023110e-1 f_e=4.21891889701540585e-3 f_x=4.18522575369561969e-3
+F10C2_BDF_SPECTRUM node=36 y=5.94187579271773991e0 weight=4.85653109997755350e-1 f_e=2.66438389949016441e-3 f_x=2.63851014369502869e-3
+F10C2_BDF_SPECTRUM node=37 y=6.45164034600270231e0 weight=5.35280583039235869e-1 f_e=1.60610691996134381e-3 f_x=1.58814212681616983e-3
+F10C2_BDF_SPECTRUM node=38 y=7.01566606663014358e0 weight=5.94629119384554983e-1 f_e=9.16622729882689085e-4 f_x=9.05131261586247554e-4
+F10C2_BDF_SPECTRUM node=39 y=7.64523174208433165e0 weight=6.67032211123245400e-1 f_e=4.90305105325135999e-4 f_x=4.83187580380163844e-4
+F10C2_BDF_SPECTRUM node=40 y=8.35573390108024228e0 weight=7.57540419167094470e-1 f_e=2.41984042173790277e-4 f_x=2.37903954779284039e-4
+F10C2_BDF_SPECTRUM node=41 y=9.16896817067164882e0 weight=8.74190123781838024e-1 f_e=1.07979363181357401e-4 f_x=1.05761545666518175e-4
+F10C2_BDF_SPECTRUM node=42 y=1.01172477918130443e1 weight=1.03059134220666393e0 f_e=4.22350888143315314e-5 f_x=4.11177924749746800e-5
+F10C2_BDF_SPECTRUM node=43 y=1.12514797715040320e1 weight=1.25176784220708148e0 f_e=1.37074718528287171e-5 f_x=1.32718786131301968e-5
+F10C2_BDF_SPECTRUM node=44 y=1.26588655747912018e1 weight=1.58927161364760128e0 f_e=3.39530890889693509e-6 f_x=3.26352252892320255e-6
+F10C2_BDF_SPECTRUM node=45 y=1.45083920787689831e1 weight=2.16886934720650215e0 f_e=5.43620544302090973e-7 f_x=5.16738149720851259e-7
+F10C2_BDF_SPECTRUM node=46 y=1.72012589303571239e1 weight=3.39771978618502413e0 f_e=3.86463774681762313e-8 f_x=3.55447316175672768e-8
+F10C2_BDF_SPECTRUM node=47 y=2.21841225901637316e1 weight=7.69739136019362746e0 f_e=2.93919402829400205e-10 f_x=2.50923003030727181e-10
+F10C Rodas5P: N=7.93670604025685922e0 elapsed=5.26780987530529019e4s Neff=3.03390437892078513e0 max_df/f(f0>1e-8)=1.41723182354725030e-1 q=2.83286674673765809e-87 steps=253/7 wall=585.969339s rhs=2375 dfdt=253
+test isotropic_boltzmann::tests::both_solvers_consume_the_classical_collision_action_to_an_flrw_event ... ok
+
+test result: ok. 238 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 880.45s
+
+   Doc-tests _rabbit_cpu
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
