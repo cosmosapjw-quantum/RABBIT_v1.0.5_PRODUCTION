@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "run_id": "run-20260728-f10-d062-trajectory-r2",
-  "created_at": "2026-07-28T09:09:50+00:00",
-  "spec_ref": "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md",
+  "run_id": "run-20260729-f10-d062-closeout",
+  "created_at": "2026-07-28T15:37:11+00:00",
+  "spec_ref": ".agent-harness/context/FROZEN_DECISIONS.md",
   "base_ref": "main",
   "head_ref": "f10-independent-validation-b3v2",
-  "context_version": "fa94d678056d81665f45aa7b101c255303d9e2893cac5ac3b8331e29381eedbd",
+  "context_version": "bccfc6c5fa023df2befe2de43057b78c34e7fc3c806a198484e29a0bb2c0518a",
   "budget": {
     "max_concurrent": 4,
     "max_total": 8,
@@ -19,5 +19,5 @@
     "gate-evaluation",
     "single-writer-update"
   ],
-  "status": "completed"
+  "status": "initialized"
 }

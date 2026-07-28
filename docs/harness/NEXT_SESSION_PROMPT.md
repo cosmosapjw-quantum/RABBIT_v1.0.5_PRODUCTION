@@ -40,10 +40,12 @@ Next order is fixed:
    report `56529e65`) PASSED all 11 checks on all 8 members with physics
    bitwise-identical to r3. `C-F10-METROLOGY-R3` VALIDATED; the gate
    flip waits for D-063;
-4. prospectively replay the endpoint against the completed-catalogue anchors
-   with cross-code block/spectrum observables, an independently reduced
-   coupled-energy residual, retained state/tail evidence, and one holdout
-   refinement.
+4. **IN PROGRESS (D-062 FAIL preserved, D-063 r3 pending):** the r2
+   completed-catalogue replay (freeze `3849193`) executed and FAILED on
+   exactly two frozen-parameter design defects (T8 sub-support node; T10
+   mutant window below the measured activity floor) while every physics
+   check passed (base bitwise-replays D-056; holdout drift `-1.2e-5`).
+   The adjudicated exactly-two-change r3 reissue decides the program.
 
 Do not unblind or open public/production, W7/B3, T01--T12, GL64/Radau,
 Rust/JAX forward work, F-11/Bianchi, or QKE. Governing report:
