@@ -33,8 +33,12 @@ Next order is fixed:
    preserved supportive, prospective `E-F10-D060-METROLOGY-R3` /
    `E-F10-D061-TRAJECTORY-R2` added to the two FAIL gates, no science
    gate moved; context `a26149ab`;
-3. prospectively run an asymmetric covariance contract with an
-   identical-operation-graph outward interval;
+3. **IN PROGRESS (D-060 FAIL preserved, D-061 r4 pending):** the r3
+   asymmetric covariance contract (freeze `17fedc6`) executed and FAILED
+   only on the degenerate P-fixed N7X check (contract-design defect,
+   D-054 S-B class); all physics checks passed. The adjudicated one-change
+   r4 reissue (N7X gating restricted to distinct-mu/tau members) decides
+   the program;
 4. prospectively replay the endpoint against the completed-catalogue anchors
    with cross-code block/spectrum observables, an independently reduced
    coupled-energy residual, retained state/tail evidence, and one holdout

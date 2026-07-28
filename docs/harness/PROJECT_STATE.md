@@ -46,6 +46,28 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-28 D-060 covariance r3 FAIL-preserved overlay
+
+- D-057 remedy step 3 first attempt executed under freeze `17fedc6` and
+  preserved as an adjudicated FAIL (report `e40d80a7`, 867 s): the only
+  failing check is `N7X_exchange` on the three P-fixed SS continuity
+  states, where the `{mu,tau}` distinct-elastic exchange observable is
+  degenerate (elastic energy conservation zeroes the Pauli affinity when
+  the mu and tau logit rows share one slope; rates are `~1e-34`
+  cancellation noise, the relative metric is noise/noise `~5e-2`).
+- Everything physics-bearing passed: asymmetric equivariance N1/N2
+  `<=1.2e-15` and N3 max `5.092e-11` under caps; N7X `<=7.7e-13` where
+  nondegenerate; certified interval brackets at all eight states;
+  M-INT-2 full-node replay `1522656` containment checks, zero failures;
+  five mutant kills with a bitwise restoration canary; D-055 anchors
+  reproduced bitwise under the frozen venv.
+- Registered adjudication `A-D060-ADJUDICATION` (lease-validated Stop
+  accept) classified the cause as a contract-design defect of the D-054
+  S-B class and scoped the supersession to EXACTLY ONE change: D-061 r4
+  restricts N7X gating to members with distinct mu/tau state rows, SS
+  values recorded non-gating. The trajectory r2 program renumbers to
+  D-062; gate reconsideration to D-063. Context `a26149ab` -> `d9591408`.
+
 ## 2026-07-28 D-059 claim/evidence rebinding overlay
 
 - D-057 remedy step 2 executed with zero scientific-gate movement:

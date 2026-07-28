@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d060-metrology-r3",
+  "assignment_id": "A-D060-ADJUDICATION",
+  "context_version": "a26149ab0d05ff9fe826cd25b4ca3c454337f8089093b55b0da6cc2332d9cba4",
+  "agent_id": "d060-adjudicator",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d060-metrology-r3",
+    "assignment_id": "A-D060-ADJUDICATION",
+    "context_version": "a26149ab0d05ff9fe826cd25b4ca3c454337f8089093b55b0da6cc2332d9cba4",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b7fbe4a292e7f4df02c2fe0fae5862b14b66c99c61051c7441569372870eb987",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/results/A-D060-ADJUDICATION.json",
+  "started_at": "2026-07-28T08:40:12Z",
+  "completed_at": "2026-07-28T08:47:55Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "numpy_reported_by_oracle": "2.4.4",
+    "mpmath_reported_by_oracle": "1.3.0"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d060-metrology-r3/assignments/A-D060-ADJUDICATION.json",
+    "sha256sum .agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json",
+    "python3 - <<'EOF' (inline report-JSON verification: per-state failed-check pattern; SA/SB N1/N2/N3 caps; N7X fp levels; certified-residual brackets; M-INT-2 counters; mutant kill margins and canary; bitwise D-055 N8 anchors; SS mu==tau degeneracy evidence) EOF",
+    "date -u +%Y-%m-%dT%H:%M:%SZ && python3 --version && sha256sum --version | head -1"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-D060-ADJUDICATION",
+      "claim_id": "C-F10-METROLOGY-R3",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Adjudicated FAIL preserved: the r3 oracle report (exit 10) shows exactly one failing check anywhere — N7X_exchange on the three P-fixed SS states (sup_rel 4.91e-2 / 5.03e-2 / 5.36e-2) — while every physics-bearing check passes on all members, including N1/N2/N3 on the five asymmetric members under their caps (N3 max 5.09e-11 vs 1e-10, SB under 2.5e-10), N7X at fp level (max 7.68e-13), the certified interval residuals bracketing the float64 values within slack, M-INT-2 (1522656 containment checks, 0 containment and 0 identity failures, contraction ok), all five mutants killed with recorded margins plus a bitwise restoration canary, and the D-055 N8 anchors matched EXACTLY at all three SS states. The failure is a contract-design defect of the adjudicated D-054 S-B class (a relative metric applied to a degenerate observable): for P-fixed states the mu and tau logit rows are equal with a common slope, so for the four {mu,tau} distinct-elastic exchange events the Pauli affinity u3+u4-u1-u2 = (-1/s)(y3+y4-y_alpha-y_beta) vanishes identically by massless elastic energy conservation, leaving N7X to compare pure float64 cancellation noise against cancellation noise (rate magnitudes ~1e-34 at the diagonal node pair) — not a physics or implementation failure, since the same check passes at 2.3e-14..7.7e-13 on every member where the observable is nondegenerate. Permitted supersession scope per the D-054/D-055 precedent is exactly one change: restrict N7X gating to family members with distinct mu/tau state rows (the SA/SB blocks), with SS-state N7X values still computed and recorded non-gating alongside the degeneracy rationale; every other family member, threshold, formula, mutant, and interval tier must remain byte-identical in behaviour.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json"
+      ],
+      "evidence_fingerprint": "sha256:e40d80a747bfc907c67537b5f6898ac952976809cfec8d780a09fb1c8ea629e2",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python scripts/audit/d060_covariance_metrology_r3_oracle.py --out <path>"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/results/A-D060-ADJUDICATION.json"
+  ]
+}
