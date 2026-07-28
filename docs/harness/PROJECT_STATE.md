@@ -1,6 +1,6 @@
 # Project State
 
-Date: 2026-07-24
+Date: 2026-07-28
 
 ## Current status
 
@@ -32,12 +32,13 @@ a declared five-profile, two-auxiliary-rule `2.1%` envelope. F-10C2 now
 executes and internally validates all nine frozen classical diagonal collision
 rows and materially moves the whole-endpoint wall. The crate-private dual-
 solver endpoint and `N_eff` readouts remain internal regression evidence. Two
-private structurally independent full-spectral static formulations have run
-and failed their frozen M1 discriminators before trajectory authority. A third
-three-node maximum-relative-entropy route was rejected at blind design review
-before implementation because its derivation and executable selector are not
-one coherent continuous/covariant method. No independent FLRW endpoint has
-run.
+private structurally independent full-spectral static formulations failed
+their original frozen M1 discriminators, and a three-node
+maximum-relative-entropy route was rejected at design review. The later
+orientation-closed comparator executed one D-056 collision-coupled FLRW
+endpoint and agrees supportively with the completed Rust catalogue, but D-057
+finds that the prospective contract froze obsolete F10C1 anchors and therefore
+does not admit the endpoint as gate-closing evidence.
 JAX remains frozen as a non-dispatchable
 bounded component parity, AD, Jacobian, and numerical-method oracle. QKE and
 public production are FORBIDDEN. By the 2026-07-16 owner decision, the current
@@ -45,7 +46,34 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
-## 2026-07-28 D-052--D-056 gate-matrix completion overlay
+## 2026-07-28 D-057 adversarial closeout correction
+
+- The static 27-event orientation-artifact repair is retained as
+  **IMPLEMENTED** and bounded **VALIDATED**. Fresh asymmetric state/swap checks pass below
+  `1e-10`, while an in-memory reconstruction of the historical 24-event
+  single-orientation form fails by `1e-6` modal and `6.8e-3` native.
+  Absolute `V-A`/phase-space normalization and physical catalogue
+  completeness remain **INCONCLUSIVE**.
+- D-055 and D-056 are preserved as reproducible/supportive evidence, but
+  D-055 freezes only P-fixed inputs rather than asymmetric `F(Pf)=PF(f)`
+  pairs. Its `B_native` also omits the production split-map operation graph
+  and is not an end-to-end outward-rounded precision replay. D-056 freezes
+  the obsolete F10C1 partial-catalogue endpoint
+  rather than the already-existing completed-catalogue F10C2 endpoint; it
+  also lacks a cross-code block/spectrum predicate, refinement/tail budget,
+  and independently reduced coupled-trajectory energy-law check.
+- D-053 through D-056 registered all findings under the unrelated row-6
+  claim ID, leaving the covariance and independent-endpoint claims/evidence
+  unbound. A live audit also reproduced an `ACTIVE_RUN` race between
+  overlapping main sessions; static hook fixtures do not close that current
+  lifecycle failure.
+- Effective state: `G-F10-COVARIANCE-METROLOGY=FAIL`,
+  `G-F10-INDEPENDENT-FLRW=FAIL`, and
+  `G-HARNESS-INTEGRITY=FAIL` for the current workflow.
+  `G-F10C1-REGRESSION` remains PASS. Report:
+  `docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`.
+
+## 2026-07-28 D-052--D-056 gate-matrix completion overlay (superseded by D-057)
 
 - Under the D-052 omnibus grant (row-9 closure, covariance-metrology,
   trajectory/endpoint, sequenced), all three stages closed in one session:
@@ -57,8 +85,9 @@ started without a new explicit instruction.
   with `N_eff = 3.034054` (delta `+7.4e-4` vs the Rust N48 anchor, band
   `3e-3`), `t_end` delta `-1.47 s`, clean blockwise hierarchy and first
   law, flipping `G-F10-INDEPENDENT-FLRW`.
-- **All eight F-10 gates are PASS.** The independent-validation gate
-  matrix is complete on catalogue bytes `760a7c04`.
+- D-056 recorded **all eight F-10 gates PASS** on catalogue bytes `760a7c04`;
+  D-057 rejects that terminal interpretation while preserving the raw
+  execution records.
 - Boundaries unchanged: matched-resolution N48-class endpoint agreement on
   the frozen 10 MeV -> 5 keV cell only; no continuum claim. Unblinding,
   public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward

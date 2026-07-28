@@ -1,0 +1,121 @@
+{
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "branch": "f10-independent-validation-b3v2",
+  "head": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+  "comparison_base": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+  "head_matches_origin": true,
+  "pre_audit_tracked_dirty_paths": [
+    ".agent-harness/context/CONTEXT_INDEX.json",
+    ".agent-harness/generated/CONTEXT_PACK.md"
+  ],
+  "claimed_terminal_state": {
+    "source": "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md",
+    "gates_claimed_pass": [
+      "G-F10C1-RADIAL",
+      "G-F10C1-REGRESSION",
+      "G-F10-PERFORMANCE",
+      "G-F10-CATALOGUE",
+      "G-F10-INDEPENDENT-FLRW",
+      "G-F10-COVARIANCE-METROLOGY",
+      "G-F10-SCOPE",
+      "G-HARNESS-INTEGRITY"
+    ],
+    "explicitly_closed_follow_on_scope": [
+      "unblinding",
+      "public and production claims",
+      "W7 and B3",
+      "T01-T12",
+      "GL64 and Radau",
+      "Rust and JAX forward work",
+      "F-11 and Bianchi",
+      "QKE"
+    ]
+  },
+  "key_live_hashes": {
+    "src/rabbit/decoupling/_independent_noqke.py": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+    "tests/test_independent_noqke_comparator.py": "8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8",
+    "scripts/audit/d047_ownerb_r6_target_replay.py": "c90a7e4d642cf1a86979b349bf3e3af72e187c81dd897a5dcf6d10809a491a52",
+    "scripts/audit/d050_ownerc_closure_verification.py": "eb7673d936bd31323469310c64da2c05d8ad0d1c83c47284453ad54d90588aa4",
+    "scripts/audit/d053_row9_closure_verification.py": "db7812568c4e8b73d665c13ae4be2dc2c348587793ee5594297916dc6f42d6c4",
+    "scripts/audit/d054_covariance_metrology_oracle.py": "2af35004798fa2c9d96257e7149fec742b5d09cda0e347b06b565d55bacf527b",
+    "scripts/audit/d055_covariance_metrology_oracle.py": "7a5c84f84666cfd068086f6878374e5800b1d7769d4044ba6876d756ca7a2a3b",
+    "scripts/audit/d056_independent_trajectory.py": "35c889e6fb9b28dbf7143665227e9daa223c4ba436cc5797b569c8324800e819",
+    ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json": "4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json": "8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+    ".agent-harness/runs/run-20260727-f10-d049-regression-fix/raw_logs/04_cargo_test_release.log": "15d30ef36f245cff2beaa798db9661190e287a922a072b67323eeb7d0f80bd91"
+  },
+  "bounded_evidence": {
+    "owner_and_contract_chronology": [
+      ".agent-harness/context/FROZEN_DECISIONS.md",
+      "docs/audit/BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md",
+      "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md",
+      "docs/audit/BD622_D048_ownerb_target_replay_result_2026-07-27.md",
+      "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md",
+      "docs/audit/BD622_D051_ownerc_closure_acceptance_2026-07-27.md",
+      "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md",
+      "docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md",
+      "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+      "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+      "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md"
+    ],
+    "implementation_and_tests": [
+      "src/rabbit/decoupling/_independent_noqke.py",
+      "tests/test_independent_noqke_comparator.py",
+      "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "scripts/audit/d047_ownerb_r6_target_replay.py",
+      "scripts/audit/d050_ownerc_closure_verification.py",
+      "scripts/audit/d053_row9_closure_verification.py",
+      "scripts/audit/d055_covariance_metrology_oracle.py",
+      "scripts/audit/d056_independent_trajectory.py"
+    ],
+    "raw_results": [
+      ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/raw_logs/replay_report.json",
+      ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure/raw_logs/c_verification_report.json",
+      ".agent-harness/runs/run-20260728-f10-d053-row9-closure/raw_logs/e_verification_report.json",
+      ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/raw_logs/m_oracle_report.json",
+      ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json",
+      ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+      ".agent-harness/runs/run-20260727-f10-d049-regression-fix/raw_logs/status.txt"
+    ]
+  },
+  "audit_claims": [
+    {
+      "claim_id": "C-RESOLUTION-PROVENANCE",
+      "question": "Were owner grants, prospective freezes, result chronology, hashes, and gate flips valid and non-retrofitted?"
+    },
+    {
+      "claim_id": "C-RESOLUTION-PHYSICS",
+      "question": "Does the 16+16 ordered-orientation closure preserve the absolute physics normalization, signs, detailed balance, conservation, entropy, and all-flavour catalogue rather than only reduce a covariance residual?"
+    },
+    {
+      "claim_id": "C-RESOLUTION-METROLOGY",
+      "question": "Does D055 provide an independent, mathematically valid and informative forward-error enclosure for native covariance, rather than a self-referential or vacuous bound?"
+    },
+    {
+      "claim_id": "C-RESOLUTION-TRAJECTORY",
+      "question": "Does D056 establish an independently reproducible cold endpoint at the stated resolution, and are its frozen bands, reduced quadrature, solver accuracy, and anchor use sufficiently discriminating?"
+    },
+    {
+      "claim_id": "C-RESOLUTION-ANTI-DRIFT",
+      "question": "Did the 18125-added/71-deleted, 209-file chain move hard blockers cost-effectively without inflating governance and duplicated evidence surfaces?"
+    }
+  ],
+  "observed_delta": {
+    "files_changed_vs_comparison_base": 209,
+    "added_lines": 18125,
+    "deleted_lines": 71,
+    "net_lines": 18054,
+    "production_comparator_delta": "24 added / 9 deleted",
+    "focused_test_delta": "18 added / 5 deleted",
+    "rust_runtime_physics_delta": "none; four cfg(test) lint-allow lines",
+    "known_hygiene_anomaly": "two tracked __pycache__ .pyc files under BD622_OWNERA_R6_ORBIT_CHART_LAB"
+  },
+  "review_protocol": [
+    "Each blind reviewer must steelman both acceptance and rejection.",
+    "Each reviewer must name a decisive falsifier and conditions for changing its verdict.",
+    "Do not treat reviewer count as evidence.",
+    "Do not read sibling results until a registered cross-steelman or adjudication assignment authorizes them.",
+    "Write only the registered result artifact."
+  ]
+}

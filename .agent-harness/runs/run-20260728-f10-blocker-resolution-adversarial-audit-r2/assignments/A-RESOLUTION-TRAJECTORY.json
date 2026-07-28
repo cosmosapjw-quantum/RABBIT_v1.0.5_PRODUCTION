@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+  "assignment_id": "A-RESOLUTION-TRAJECTORY",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-RESOLUTION-TRAJECTORY"
+  ],
+  "task": "Blind hostile scientific-code audit of D056 independent FLRW trajectory. Check actual structural independence, physical equations and signs, units, initial and terminal conditions, positivity, reduced quadrature evidence, BDF tolerances and missing refinement, anchor and acceptance-band chronology, endpoint observable calculation, single-run reproducibility, failure preservation and whether evidence warrants the full G-F10-INDEPENDENT-FLRW PASS. Use only declared files and do not read sibling results. Execute self-discover then step-back then metacognitive self-ask then CoVe then adversarial self-ask then CCoT then PDR. Steelman acceptance and rejection, identify decisive falsifiers and change-of-view conditions. Write only the registered result artifact.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-TRAJECTORY.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json",
+    "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+    "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md",
+    "scripts/audit/d056_independent_trajectory.py",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_stdout.log",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_time.txt",
+    "src/rabbit/decoupling/_independent_noqke.py"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-TRAJECTORY.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-TRAJECTORY.json",
+  "status": "registered"
+}

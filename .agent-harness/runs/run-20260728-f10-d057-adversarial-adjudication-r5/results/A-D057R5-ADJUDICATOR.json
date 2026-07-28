@@ -1,0 +1,310 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+  "assignment_id": "A-D057R5-ADJUDICATOR",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "agent_id": "019fa743-c47c-7e70-b83a-4dfcc78d7a9b",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+    "assignment_id": "A-D057R5-ADJUDICATOR",
+    "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8181047bfb1905fe56ba86ff113d7c15e91eb43d29a9c021abea976517d6a605",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-ADJUDICATOR.json",
+  "started_at": "2026-07-28T14:47:44.124000+09:00",
+  "completed_at": "2026-07-28T14:52:03+09:00",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "token_counter": "UNAVAILABLE: the harness exposes no exact per-agent token counter"
+  },
+  "commands": [
+    "Read .agent-harness/generated/CONTEXT_PACK.md completely in bounded sed ranges before the assignment.",
+    "sha256sum and read .agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-ADJUDICATOR.json; verified sha256:8181047bfb1905fe56ba86ff113d7c15e91eb43d29a9c021abea976517d6a605.",
+    "Read the result template and adjudicator role; verified template raw SHA-256 936c043e... and path-NUL-bytes-NUL role aggregate bd1c0501....",
+    "sha256sum docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md before analysis; verified required d3ecd54d....",
+    "Read the exact D-057 report and all seven assignment-authorized sibling envelopes completely; no sibling outside the registered allowlist was read.",
+    "jq -r '.findings[] | [.claim_id,.evidence_fingerprint,.verdict] | @tsv' over the seven sibling envelopes, then sort and uniq -c to deduplicate exact keys.",
+    "Computed the path-aware aggregate SHA-256 over the exact D-057 report plus seven authorized sibling envelopes in assignment order: 1a7d17f1143407ef18c0959689f70d527fb0e4ebbe26b472c6acd7b405911216.",
+    "sha256sum docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md after analysis; verified unchanged d3ecd54d...."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+      "sha256": "d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+      "trust_class": "trusted_current",
+      "note": "Required raw hash matched before and after analysis."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json",
+      "sha256": "c427d7285d73c21c973dde1065492dc8955d27c2136ecee52fbff2ef0c286962",
+      "trust_class": "trusted_current",
+      "note": "Current context and run; exact d3ecd54d report verified before and after; substantive fail verdict, no lifecycle error."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-REJECT.json",
+      "sha256": "12d17edef9382b76959e1cf0d7f189ffae932d82d7b5c436a6f37e082ed1f486",
+      "trust_class": "contextual_drifted",
+      "note": "Valid current-run envelope, but its analyzed report hash f5c16c42... is not the required current d3ecd54d...; used only to corroborate stable R4 keys."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R2.json",
+      "sha256": "b47b0960f8e013f75688b33f26701923bcdd52ef847ec71016bcc1eb5d9d5806",
+      "trust_class": "drift_error",
+      "note": "Correct fail-closed error envelope for an input mutation; it makes no scientific verdict and is excluded from scientific adjudication."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PROVENANCE.json",
+      "sha256": "3ff2fa107e8895bcb97ae5231ad21096df8439d562d0a95e0e5d25d337b1f0f1",
+      "trust_class": "contextual",
+      "note": "Registered scientific/provenance input, but not promoted as live R4 admission because the observed ACTIVE_RUN race broke the original lifecycle."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json",
+      "sha256": "624fa6a507cdb45a5b1513a3b3030469b6fe139ca96a59c6f68a0013980f8576",
+      "trust_class": "contextual",
+      "note": "Preserves bounded physics subclaims; not promoted as live R4 admission."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json",
+      "sha256": "5d840c7cc80e49401ff6a6268ea5fa91205c24fbf8b59208a0e629f473b81750",
+      "trust_class": "contextual",
+      "note": "Stable technical metrology evidence normalized by the trusted R5 R3 result; not promoted as live R4 admission."
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json",
+      "sha256": "79803c857997ed3e96115eaf016c57af9f8d4cd8c95205e0a6712dece6ea1283",
+      "trust_class": "contextual",
+      "note": "Stable trajectory analysis normalized by the trusted R5 R3 result; not promoted as live R4 admission."
+    },
+    {
+      "path": "authorized-evidence-set",
+      "sha256": "1a7d17f1143407ef18c0959689f70d527fb0e4ebbe26b472c6acd7b405911216",
+      "trust_class": "aggregate",
+      "note": "Path-aware aggregate of the report and seven authorized sibling results in assignment order."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057R5-ADJ-COV-BOUNDED-001",
+      "claim_id": "C-F10-COVARIANCE-METROLOGY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "BOUNDED PASS, not gate admission. The current 27-chart/24-physical-reaction half-weight orientation closure is IMPLEMENTED; the sign/reversal quotient is DERIVED relative to the already specified K_t/32 operator; D-053 replays byte-identically; and D-057's three asymmetric state/swap cells plus the historical 24-event negative mutant strongly support causal removal of the row-6/row-9 orientation artifact in the tested cells. D-055's local M1-M5 report formula also reproduces. These successes do not independently validate absolute V-A amplitude, phase-space normalization, physical catalogue completeness, or a rigorous end-to-end native arithmetic enclosure.",
+      "assumptions_used": [
+        "Bounded implementation and numerical validation are kept separate from gate admission.",
+        "The half-weight result is relative to the frozen K_t/32 continuum operator rather than an independent absolute-normalization derivation.",
+        "The required d3ecd54d report and trusted R5 R3 normalization are the current authority for scope."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#what-is-genuinely-established sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json#F-D057R5-CROSS-R3-METROLOGY-002",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json#F-D057-PHYS-001-through-F-D057-PHYS-004",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json#F-D057R4-MET-001-through-F-D057R4-MET-002"
+      ],
+      "evidence_fingerprint": "sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json#F-D057-PHYS-005-through-F-D057-PHYS-007",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json#F-D057R4-MET-004-through-F-D057R4-MET-006"
+      ],
+      "reproduction": [
+        "Verify the required D-057 report hash and read its retained D-053/D-055 replay hashes, asymmetric state/swap table, and 24-event negative control.",
+        "Keep homogeneous invariant checks separate from absolute normalization by observing that common positive rescaling, and often the zero map, preserves covariance, null, conservation, and entropy sign."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Absolute V-A amplitude and phase-space normalization remain INCONCLUSIVE.",
+        "Physical catalogue completeness remains INCONCLUSIVE.",
+        "No current evidence supplies a rigorous identical-operation-graph native enclosure."
+      ]
+    },
+    {
+      "finding_id": "F-D057R5-ADJ-COV-GATE-002",
+      "claim_id": "C-F10-COVARIANCE-METROLOGY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "TERMINAL GATE VERDICT: G-F10-COVARIANCE-METROLOGY=FAIL. Exact dedup collapsed the two sibling keys (C-F10-COVARIANCE-METROLOGY, sha256:5d840c7c..., fail) to one finding. D-055's frozen states are P-fixed, so they prove only fixed-subspace preservation; the later asymmetric cells are supportive but retrospective. Decisively, production computes native(self_modal)+native(electron_modal), while B_native reassociates self_modal+electron_modal before one map and contains no certified E_split term. W_ld starts from already-binary64 collision values, covers only the final map, casts back before differencing, has no outward rounding, and omits upstream/off-grid basis rounding. Three sampled points do not define a state/denominator envelope. The gate registry explicitly fails an absent term or non-rigorous canonical arithmetic graph; favorable local residuals cannot override that conjunctive failure.",
+      "assumptions_used": [
+        "The canonical G-F10-COVARIANCE-METROLOGY pass and fail conditions govern over the local D-055 interpretation.",
+        "A native conditioning bound must enclose the identical operation graph or include a proved reassociation remainder.",
+        "Prospective predicates cannot be retrofitted after favorable output.",
+        "Claim/evidence binding is an admission requirement, not decorative metadata."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#G-F10-COVARIANCE-METROLOGY",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#F-D057-02 sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json#F-D057R5-CROSS-R3-METROLOGY-002",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json#F-D057R4-MET-004-through-F-D057R4-MET-007"
+      ],
+      "evidence_fingerprint": "sha256:5d840c7cc80e49401ff6a6268ea5fa91205c24fbf8b59208a0e629f473b81750",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json#F-D057R4-MET-001-through-F-D057R4-MET-002",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#what-is-genuinely-established"
+      ],
+      "reproduction": [
+        "Trace the split production map and the reassociated bound map as normalized in F-D057R4-MET-005.",
+        "Inspect W_ld and off-grid basis coverage as normalized in F-D057R4-MET-004.",
+        "Apply the canonical gate fail condition without majority voting."
+      ],
+      "confidence": 0.999,
+      "unresolved": [
+        "Minimal falsifier: prospectively freeze asymmetric state/swap and boundary families plus 24-event, wrong-half-weight, sign, and lane mutants.",
+        "Position changes only after the diagnostic and bound use the identical production graph or a certified E_split term, all upstream/off-grid work is covered by independent MPFR or outward-rounded interval arithmetic, and a declared state/denominator envelope passes.",
+        "The replacement result must be keyed to C-F10-COVARIANCE-METROLOGY under a trusted live lifecycle."
+      ]
+    },
+    {
+      "finding_id": "F-D057R5-ADJ-ENDPOINT-BOUNDED-003",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "BOUNDED PASS, not gate admission. D-056 is a preserved, hash-stable, scientifically supportive one-run matched-resolution scalar endpoint observation on the accepted comparator bytes. Its private affine GL48-Y24/cloglog/SciPy-BDF implementation is structurally separate from Rust, no sign/unit/transform defect was identified, and the successful endpoint lies very close to the correct completed-catalogue BDF anchor: delta N=+5.5258786e-6, delta t=+1.09743 s, and delta N_eff=+1.8324492e-5. This numerical support is preserved without retrospectively changing the frozen D-056 contract.",
+      "assumptions_used": [
+        "The retained raw report hash named by D-057 identifies the completed one-run process.",
+        "The completed-catalogue anchors in the current context are the correct post-hoc scientific comparands.",
+        "Raw numerical support, full-spectral validation, and legal gate admission are separate propositions."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#F-D057-01 sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#what-is-genuinely-established",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json#F-D057R4-TRAJ-001-through-F-D057R4-TRAJ-002",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json#F-D057R5-CROSS-R3-ENDPOINT-003"
+      ],
+      "evidence_fingerprint": "sha256:79803c857997ed3e96115eaf016c57af9f8d4cd8c95205e0a6712dece6ea1283",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json#F-D057R4-TRAJ-003-through-F-D057R4-TRAJ-007"
+      ],
+      "reproduction": [
+        "Recompute the independent-minus-completed-catalogue deltas from the values retained in the authorized D-057 report.",
+        "Do not substitute those favorable post-hoc deltas for the prospective D-056 target."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The raw report retains aggregates rather than endpoint/checkpoint states and spectra.",
+        "No holdout refinement or tail/rejected-domain enclosure bounds the one-run observation.",
+        "The observation is supportive but not current gate authority."
+      ]
+    },
+    {
+      "finding_id": "F-D057R5-ADJ-ENDPOINT-GATE-004",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "TERMINAL GATE VERDICT: G-F10-INDEPENDENT-FLRW=FAIL. Exact dedup collapsed the two sibling keys (C-F10-INDEPENDENT, sha256:79803c85..., fail) to one finding; the pass with the same fingerprint is not a conflict because it concerns only the bounded raw observation. D-056 prospectively froze obsolete F10C1 partial-catalogue anchors, not the existing completed-catalogue F10C2 target. T5 contains only internal qualitative heating order and mu/tau equality, with no Rust electron/heavy block or mapped-spectrum comparison. T6 is same-rate event bookkeeping computed before the coupled ODE derivatives and is insensitive to neutrino/EM source-sign mutants. The single GL48-Y24/angular-4/4/4/rtol-1e-6 run retains no state/spectrum, holdout refinement, or tail/rejected-domain budget. Each omission independently defeats the completed full-spectral endpoint and discriminating blockwise-observable gate predicate; the unrelated historical row-6 claim binding further blocks admission.",
+      "assumptions_used": [
+        "The canonical gate targets completed F10C2 and requires prospectively bound discriminating blockwise observables.",
+        "A favorable post-output comparison cannot repair target identity.",
+        "A coupled-trajectory energy test must be sensitive to neutrino and electromagnetic source-sign errors.",
+        "One scalar endpoint at one resolution does not establish full-spectral or convergence validation."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#G-F10-INDEPENDENT-FLRW",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#F-D057-01 sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json#F-D057R5-CROSS-R3-ENDPOINT-003",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json#F-D057R4-TRAJ-003-through-F-D057R4-TRAJ-008"
+      ],
+      "evidence_fingerprint": "sha256:79803c857997ed3e96115eaf016c57af9f8d4cd8c95205e0a6712dece6ea1283",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json#F-D057R4-TRAJ-001-through-F-D057R4-TRAJ-002",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#what-is-genuinely-established"
+      ],
+      "reproduction": [
+        "Compare the D-056 frozen anchors with the completed-catalogue anchors in the current context.",
+        "Construct a block/spectral counterexample with unchanged total N_eff and e>heavy>0 ordering.",
+        "Negate either coupled ODE source and observe that the current event-level T6 definition is unchanged.",
+        "Apply the canonical gate predicate without treating scalar endpoint proximity as a substitute."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Minimal falsifier: a fresh prospectively sealed replay binds exact completed-catalogue BDF/Rodas hashes and anchors and passes frozen cross-code electron/heavy block and mapped-spectrum tolerances.",
+        "Position changes only after an independently reduced coupled-energy residual kills neutrino/EM source-sign mutants, endpoint/checkpoint states and spectra plus a tail/rejected-domain enclosure are retained, and at least one holdout tolerance/angular/radial refinement passes.",
+        "D-056 remains immutable and must not be retrospectively relabelled; replacement evidence must use C-F10-INDEPENDENT under a trusted lifecycle."
+      ]
+    },
+    {
+      "finding_id": "F-D057R5-ADJ-HARNESS-BOUNDED-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "BOUNDED PASS, not gate closure. This adjudicator's exact four-line header, current context, assignment SHA-256, runtime identity, template digest, and path-aware adjudicator-role aggregate all verify; the required D-057 report remained byte-identical before and after analysis. The role aggregate bd1c0501... differs from raw file SHA-256 267fd3ac... by design because the registered algorithm hashes relative path, NUL, bytes, NUL. This refutes a role-byte-mutation diagnosis and demonstrates a clean single-run bootstrap for this assignment.",
+      "assumptions_used": [
+        "The registered path-aware hash_files convention is relative path plus NUL plus file bytes plus NUL.",
+        "A clean current bootstrap does not test a second main advancing ACTIVE_RUN between Start and Stop."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-ADJUDICATOR.json sha256:8181047bfb1905fe56ba86ff113d7c15e91eb43d29a9c021abea976517d6a605",
+        ".agent-harness/context/roles/adjudicator.md path-aware-sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+        ".agent-harness/templates/RESULT_ENVELOPE.json sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a"
+      ],
+      "evidence_fingerprint": "sha256:8181047bfb1905fe56ba86ff113d7c15e91eb43d29a9c021abea976517d6a605",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#F-D057-04"
+      ],
+      "reproduction": [
+        "Verify the assignment and template raw SHA-256 values.",
+        "Hash '.agent-harness/context/roles/adjudicator.md' as relative path plus NUL plus exact bytes plus NUL and obtain bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc.",
+        "Verify the report raw hash before and after analysis."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "This assignment does not itself exercise an overlapping-main Start/Stop negative canary."
+      ]
+    },
+    {
+      "finding_id": "F-D057R5-ADJ-HARNESS-GATE-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "TERMINAL GATE VERDICT: effective current G-HARNESS-INTEGRITY=FAIL. Exact dedup collapsed the two sibling keys (C-HARNESS-INTEGRITY, sha256:3ff2fa10..., fail) to one finding. D-057 reproduced the decisive lifecycle falsifier: overlapping main sessions changed mutable ACTIVE_RUN between Start and Stop, so Stop sought valid assignments/results under unrelated r2/r3/r4 runs. Static fixtures, an empty structural closeout, and clean single-run R5 bootstraps do not exercise that case. D-053 through D-056 also used the unrelated row-6 claim ID, current evidence IDs were not properly registered to the scientific gates, and historical lifecycle envelopes have synthetic identities/chronology and incomplete input/write attribution. R2 is classified only as a correct drift-error hard stop and makes no scientific verdict; CROSS-REJECT is contextual because it analyzed report hash f5c16c42... rather than required d3ecd54d.... Neither is counted as a vote.",
+      "assumptions_used": [
+        "Start and Stop must bind the same immutable run and assignment digest under overlapping mains.",
+        "A reproduced cross-run misbinding is decisive even when stable single-run fixtures pass.",
+        "Truthful lifecycle identity, claim/evidence binding, authorized inputs, and exclusive write attribution are admission requirements.",
+        "Drift-error and contextual envelopes cannot be promoted into current scientific authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#G-HARNESS-INTEGRITY",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#F-D057-03-through-F-D057-04 sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json#F-D057R5-CROSS-R3-HARNESS-004",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PROVENANCE.json#F-D057R4-PROVENANCE-001",
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R2.json#F-D057R5-CROSS-ACCEPT-R2-EVIDENCE-DRIFT-001"
+      ],
+      "evidence_fingerprint": "sha256:3ff2fa107e8895bcb97ae5231ad21096df8439d562d0a95e0e5d25d337b1f0f1",
+      "counterevidence_refs": [
+        "F-D057R5-ADJ-HARNESS-BOUNDED-005",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md#commands-and-validation"
+      ],
+      "reproduction": [
+        "Separate the expected raw-role-versus-path-aware-role digest difference from the genuine ACTIVE_RUN race.",
+        "Apply the current harness gate to the overlapping-main case rather than to an empty or single-run closeout.",
+        "Confirm that the R2 envelope has status=error and that CROSS-REJECT records report hash f5c16c42..., while trusted R3 binds d3ecd54d...."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Minimal falsifier: bind Stop to the immutable run ID and assignment digest captured at Start, add an atomic single-writer run lease, and pass a live overlapping-main negative test plus replacement canary with exact pre/post write attribution.",
+        "Then repair distinct claim/evidence IDs and reconcile all canonical status surfaces without moving either scientific gate.",
+        "Any replacement scientific adjudication must have truthful live identity/chronology, authorized inputs, and result-only write attribution."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-ADJUDICATOR.json"
+  ]
+}

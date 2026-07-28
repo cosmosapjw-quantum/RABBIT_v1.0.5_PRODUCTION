@@ -1,0 +1,164 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+  "assignment_id": "A-RESOLUTION-PHYSICS",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa723-7bf3-73e1-a152-33a9d3598d78",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+    "assignment_id": "A-RESOLUTION-PHYSICS",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8ad856585fecdf8e48ab7e889e4d0713892ffef330c9fa88a60b4d0d5f0f3dda",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-PHYSICS.json",
+  "started_at": "2026-07-28T05:10:54Z",
+  "completed_at": "2026-07-28T05:19:14Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3"
+  },
+  "commands": [
+    "sha256sum declared inputs; canonical role digest independently recomputed with path+NUL+bytes+NUL",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src venv/bin/python -m pytest -p no:cacheprovider -q tests/test_independent_noqke_comparator.py",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 venv/bin/python scripts/audit/d053_row9_closure_verification.py",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src venv/bin/python -c <fixed Pauli reversal/sign/null discriminator>",
+    "git status --short --untracked-files=all",
+    "sed -n '1,5p' .agent-harness/ACTIVE_RUN"
+  ],
+  "artifacts": [
+    "Live source SHA-256 verified: src/rabbit/decoupling/_independent_noqke.py = 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a.",
+    "Focused comparator tests: 3 passed in 0.64 s.",
+    "Fresh D-053 verifier: PASS; 27 events; six pair-conversion members; e-mu self residual 3.525406360939371e-11; single-member negative-control residual 1.0000171560718123; mu-tau residual 2.447560236182917e-11; self number ratio 6.560719562181335e-17; self energy ratio 2.3321774904894606e-15; first-law residual 0.0; charge-conjugation residual 3.138183248343415e-11; entropy production 9.691739087718254e-18; equilibrium H-normalized number/energy 5.8980696702487084e-12/1.4820594018942042e-11.",
+    "Fixed Pauli discriminator: reverse_abs_gap=0.0, minimum rate-times-affinity=0.0, exact-affinity-null=[0.0].",
+    "Adversarial-loop receipt in required order: self-discover mapped only declared bytes and hashes; step-back tested the reversible collision operator rather than the reported metric; metacognitive self-ask exposed the frozen-32 and self-sector scope assumptions; CoVe independently checked Pauli reversal, coefficient ledger, catalogue closure, and invariant outputs; adversarial self-ask tested the wrong-map-symmetrization and finite-mass objections; CCoT compared the operator-level acceptance case with the shared-implementation rejection case; PDR retained the algebraic conclusion while imposing explicit claim ceilings and falsifiers.",
+    "Pre-stop harness check: .agent-harness/ACTIVE_RUN points to run-20260728-f10-blocker-resolution-adversarial-audit-r4, not this registered r2 assignment. The r2 result is locally contract-validated only; no SubagentStop acceptance is claimed, and the agent remains active for parent-side resolution."
+  ],
+  "findings": [
+    {
+      "finding_id": "F-RESOLUTION-PHYSICS-001",
+      "claim_id": "C-RESOLUTION-PHYSICS",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED, conditional on the frozen base pair-conversion normalization: the two ordered orientation members at coefficient 16.0 each preserve the original coefficient-32 reversible collision operator. Under (1,2)<->(3,4), K_t=(p1.p4)(p2.p3) is invariant, the Pauli gain-minus-loss rate changes sign, and the four-leg (+,+,-,-) deposition also changes sign; the physical contribution is therefore unchanged, and one half plus one half neither doubles nor attenuates it. The closure is assembled modally before the native map and is not post-hoc averaging of the covariance diagnostic.",
+      "assumptions_used": [
+        "Flat-FLRW, six massless flavour-diagonal neutrino/antineutrino species and natural units as frozen in Tier 0.",
+        "The pre-existing pair-conversion absolute factor 32.0 and directed K_t kernel are governing frozen inputs; this audit tests preservation, not a new primary-source derivation of those inputs.",
+        "Legs 1 and 2 are incoming, legs 3 and 4 are outgoing, and _minkowski_dot uses the (+---) scalar-product convention.",
+        "All four neutrino legs share the same finite spectral domain and flavour-independent self-collision kinematics."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:445-519 (48 target-directed rows and coefficient 32 pair conversion), sha256:760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+        "src/rabbit/decoupling/_independent_noqke.py:540-599 (27 global events; all three reverse pairs at 16+16)",
+        "src/rabbit/decoupling/_independent_noqke.py:686-718 (stable Pauli gain-minus-loss)",
+        "src/rabbit/decoupling/_independent_noqke.py:941-959 (K_s/K_t matrix construction)",
+        "src/rabbit/decoupling/_independent_noqke.py:1070-1137 (event rates and four-leg modal deposition)",
+        "Fresh fixed Pauli reversal/sign/null discriminator recorded in artifacts"
+      ],
+      "evidence_fingerprint": "sha256:760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+      "counterevidence_refs": [
+        "Steelman rejection: an orbit average can make a wrong base map covariant; the declared files do not independently redo the primary v-spinor trace or absolute coefficient-32 derivation.",
+        "Steelman rejection: both ordered members use the same kinematics and matrix implementation, so agreement is not an independent collision-amplitude validation.",
+        "Steelman acceptance: the exact target/global coefficient ledger, time-reversal algebra, operator-level placement before native reconstruction, and an order-one single-chart negative control jointly distinguish this change from metric-only output symmetrization."
+      ],
+      "reproduction": [
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src venv/bin/python -c <fixed Pauli reversal/sign/null discriminator>",
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src venv/bin/python -m pytest -p no:cacheprovider -q tests/test_independent_noqke_comparator.py"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Decisive falsifier: a direct independent matrix-element/crossing derivation showing that the reverse chart requires a different kernel or coefficient, or that the frozen absolute factor is not 32.0.",
+        "Change of view: any exact aggregate mismatch between the 27-event and 48-target catalogues, or any non-roundoff failure of reverse Pauli/deposition equivalence, changes this verdict to fail."
+      ]
+    },
+    {
+      "finding_id": "F-RESOLUTION-PHYSICS-002",
+      "claim_id": "C-RESOLUTION-PHYSICS",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "IMPLEMENTED and VALIDATED within the frozen static comparator cell: the live catalogue contains all three flavour-pair conversions as six mutually reverse ordered members at K_t/16.0, exactly reconstructs the unchanged 48 target-directed coefficient ledger, and passes detailed-balance/null, total self number and energy conservation, first law, charge conjugation, entropy sign, and both e-mu and mu-tau covariance discriminators. Each event is 2-to-2, and rate times affinity is nonnegative, so the algebraic number/energy/entropy conclusions are not inferred from the covariance metric alone.",
+      "assumptions_used": [
+        "GL48-Y24, T_cm=T_gamma=10 MeV, default 12/12/4/48 quadrature controls for the fresh D-053 execution.",
+        "Complementary-log-log coordinates decode to strict-open occupations; equilibrium uses the exactly linear common-FD logit on the declared finite domain.",
+        "The reported conservation ratios use the declared Galerkin weak moments and are static-cell evidence, not continuum or endpoint evidence."
+      ],
+      "evidence_refs": [
+        "tests/test_independent_noqke_comparator.py:12-94, sha256:8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8",
+        "scripts/audit/d053_row9_closure_verification.py:1-206, sha256:db7812568c4e8b73d665c13ae4be2dc2c348587793ee5594297916dc6f42d6c4",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:1-45, sha256:7bcfcbda8f9e8e8f6f724d0266239fb932b6b3064ba49b9b90152818e89cff41",
+        "Fresh D-053 PASS values recorded in artifacts",
+        "Fresh focused-test result: 3 passed in 0.64 s"
+      ],
+      "evidence_fingerprint": "sha256:db7812568c4e8b73d665c13ae4be2dc2c348587793ee5594297916dc6f42d6c4",
+      "counterevidence_refs": [
+        "Steelman rejection: the high-order evidence is one deterministic platform/run and the focused tests share the implementation under review.",
+        "Steelman rejection: the e-mu discriminator explicitly samples one row-9 pair, while e-tau completeness is established structurally by the uniform loop and exact catalogue, not by a separate high-order cell.",
+        "Steelman acceptance: the e-mu single-member control is order one while the closed self action is 3.53e-11, so the test is discriminating rather than a near-null smoke check."
+      ],
+      "reproduction": [
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 venv/bin/python scripts/audit/d053_row9_closure_verification.py",
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src venv/bin/python -m pytest -p no:cacheprovider -q tests/test_independent_noqke_comparator.py"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Decisive falsifier: on a nondegenerate state, any flavour permutation P for the self sector yields ||C(Pf)-P C(f)|| above the prospectively controlled arithmetic bound, or any closure member produces negative entropy beyond roundoff.",
+        "Change of view: an independent replay that reproduces the single-chart artifact but fails the closed catalogue, conservation, or entropy gates changes this verdict to fail."
+      ]
+    },
+    {
+      "finding_id": "F-RESOLUTION-PHYSICS-003",
+      "claim_id": "C-RESOLUTION-PHYSICS",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Claim ceiling PASS: this is a physics-symmetry repair to the semidiscrete neutrino self operator, not a new interaction and not validation of the finite-electron-mass sector. The closure changes only massless neutrino pair-conversion event charts; finite m_e remains confined to the separately assembled electron elastic/pair kinematics and matrix terms, which the closure does not alter. The fresh full-action null/first-law/entropy checks show no regression at m_e=0.5109989500 MeV, but they do not independently validate the electron amplitudes, continuum limit, trajectory, endpoint, or public production.",
+      "assumptions_used": [
+        "Neutrino self events call two-body kinematics with mass2=mass3=mass4=0.",
+        "Electron reactions call separate finite-mass kinematics and _electron_matrix and are outside the edited closure surface.",
+        "Static M0/M1 evidence is kept distinct from independent trajectory and endpoint authority."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:24-30 (frozen constants)",
+        "src/rabbit/decoupling/_independent_noqke.py:963-1017 (finite-m_e electron matrix)",
+        "src/rabbit/decoupling/_independent_noqke.py:1087-1095 (massless self-event kinematics)",
+        "src/rabbit/decoupling/_independent_noqke.py:1146-1244 (separate finite-m_e electron assembly)",
+        "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md:1-55, sha256:4e63a4810849a784203faebdc58ac2be9df30565866881908546592f4c41112d",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:1-45"
+      ],
+      "evidence_fingerprint": "sha256:4e63a4810849a784203faebdc58ac2be9df30565866881908546592f4c41112d",
+      "counterevidence_refs": [
+        "The fresh D-053 first-law and equilibrium checks include the finite-mass electron action and therefore provide regression evidence only.",
+        "No declared closure artifact independently derives the electron weak-coupling interference signs or finite-mass shell normalization."
+      ],
+      "reproduction": [
+        "Inspect the disjoint _assemble_self and _assemble_electron call graphs on source SHA-256 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a.",
+        "Re-run the fresh D-053 verifier under the pinned single-thread environment."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Decisive falsifier for the scope claim: a source-level dependency showing that the orientation closure changes finite-m_e electron events, kernels, couplings, or bath transfer.",
+        "A broader finite-m_e or endpoint claim requires its own independent derivation and evidence; it cannot be upgraded from this closure audit."
+      ]
+    }
+  ],
+  "errors": [
+    "Harness stop-target mismatch: immediately before result creation, .agent-harness/ACTIVE_RUN was run-20260728-f10-blocker-resolution-adversarial-audit-r4 while this exact assignment/result is registered under run-20260728-f10-blocker-resolution-adversarial-audit-r2. Scientific verdict is complete, but SubagentStop acceptance for r2 is not claimed."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-PHYSICS.json"
+  ]
+}

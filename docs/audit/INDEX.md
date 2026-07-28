@@ -22,6 +22,8 @@ linked from canonical docs. Start from these anchors:
   [BD622_D054_covariance_metrology_contract_2026-07-28.md](BD622_D054_covariance_metrology_contract_2026-07-28.md),
   [BD622_D055_covariance_metrology_contract_r2_2026-07-28.md](BD622_D055_covariance_metrology_contract_r2_2026-07-28.md),
   [BD622_D056_independent_trajectory_contract_2026-07-28.md](BD622_D056_independent_trajectory_contract_2026-07-28.md))
+- D-057 adversarial correction of the claimed blocker closeout:
+  [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
 - D-049/D-051 lint fix, regression gate PASS, OWNER-C closure acceptance:
   [BD622_D051_ownerc_closure_acceptance_2026-07-27.md](BD622_D051_ownerc_closure_acceptance_2026-07-27.md)
   (contract: [BD622_D050_ownerc_row6_closure_contract_2026-07-27.md](BD622_D050_ownerc_row6_closure_contract_2026-07-27.md))

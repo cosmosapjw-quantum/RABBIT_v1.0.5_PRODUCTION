@@ -1,0 +1,289 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+  "assignment_id": "A-D057R4-METROLOGY",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa728-38bf-79d2-bbb1-5d9fb25c9b18",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+    "assignment_id": "A-D057R4-METROLOGY",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:1ab3e933cd057563c3a9b16b9d4092eeb6d610391e3a09d274bf53bd1d1885b4",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json",
+  "started_at": "2026-07-28T05:18:00Z",
+  "completed_at": "2026-07-28T05:26:08Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy": "2.4.2",
+    "scipy": "1.17.0",
+    "git": "2.43.0",
+    "longdouble_eps": "1.084202172485504434e-19"
+  },
+  "commands": [
+    "PYTHONPATH=.agent-harness/scripts python3 -c \"from pathlib import Path; from _harness import hash_files; ...\"",
+    "diff -u docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+    "diff -u scripts/audit/d054_covariance_metrology_oracle.py scripts/audit/d055_covariance_metrology_oracle.py",
+    "sha256sum scripts/audit/d054_covariance_metrology_oracle.py scripts/audit/d055_covariance_metrology_oracle.py docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md src/rabbit/decoupling/_independent_noqke.py",
+    "python3 -c \"import json; ... recompute gamma_n, every B_native component, R_native/B_native, and formula delta from retained m2_oracle_report.json\"",
+    "PYTHONDONTWRITEBYTECODE=1 python3 .agent-harness/scripts/validate_harness.py --help -> exit 1; this script has no help path and instead reported stale global context files",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agent-harness/scripts python3 -c \"... validate_result_contract(...)\" -> []",
+    "Static line-by-line inspection only; no collision, trajectory, endpoint, or other scientific rerun was performed."
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/raw_logs/m_oracle_report.json",
+    ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json",
+    "docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md",
+    "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+    "scripts/audit/d054_covariance_metrology_oracle.py",
+    "scripts/audit/d055_covariance_metrology_oracle.py",
+    "src/rabbit/decoupling/_independent_noqke.py",
+    ".agent-harness/context/GATE_REGISTRY.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057R4-MET-001",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Stage 1, exact reissue delta: the D-054 to D-055 contract and oracle diff contains exactly the two authorized semantic repairs (S-B equilibrium replaced by S-D scales 1.0/0.98/0.98, and M3 exact-zero replaced by a relative electron-row predicate with the absolute gap retained) plus necessary document, script, report-key, and family-max naming/plumbing. The B_native formula, all other states, thresholds, and numerical term definitions are unchanged. This is a bounded PASS for reissue-scope fidelity, not for the metrology gate.",
+      "assumptions_used": [
+        "Unified diffs expose all byte changes between the two named tracked files.",
+        "Identifier and output-field edits implementing the two semantic repairs are clerical consequences, not third numerical changes."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md",
+        "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+        "scripts/audit/d054_covariance_metrology_oracle.py",
+        "scripts/audit/d055_covariance_metrology_oracle.py",
+        ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-ADJUDICATION.json"
+      ],
+      "evidence_fingerprint": "sha256:359206b893d040a4d57fe9357476771ef26b4c4afcd8aa4baa06126015c1cd9b",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "diff -u docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+        "diff -u scripts/audit/d054_covariance_metrology_oracle.py scripts/audit/d055_covariance_metrology_oracle.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze chronology and lifecycle provenance are outside this numerical finding."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-002",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Stage 2, formal predicate and dimensions: recomputation from the retained D-055 report reproduces B_native exactly (zero difference for S-A/S-C and 6.94e-18 summation-order difference for S-D), and every recorded M1-M5 Boolean is true. The formula is dimensionally coherent: A_cond maps modal-action units to native-action units; N_weak, B_sum, and B_basis are modal-action quantities; B_map and W_ld*D_native are native-action quantities; division by D_native makes B_native dimensionless. The denominator used by R_native is the same max-norm/tiny convention reconstructed by the oracle. This proves an executed-formula PASS only.",
+      "assumptions_used": [
+        "The retained JSON numbers are authentic outputs of the hash-checked oracle.",
+        "Modal and native quantities have the mapping relation implemented by _native_action."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json:1",
+        "scripts/audit/d055_covariance_metrology_oracle.py:180",
+        "scripts/audit/d055_covariance_metrology_oracle.py:213",
+        "src/rabbit/decoupling/_independent_noqke.py:1246"
+      ],
+      "evidence_fingerprint": "sha256:4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+      "counterevidence_refs": [
+        "F-D057R4-MET-004",
+        "F-D057R4-MET-005"
+      ],
+      "reproduction": [
+        "Recompute 4*(A_cond*(N_weak+B_sum+B_basis)+B_map+W_ld*D_native)/D_native and all five comparisons from m2_oracle_report.json."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A formula can recompute exactly while failing to enclose the operation that its gate claim names."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-003",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Stage 3, summation and operation counts: the oracle reports addend_count=27,746,139 in every state, giving gamma_n=6.160880510406452e-9. But the code obtains that number as the aggregate sum of valid_samples*27 plus only 48+27, while the executed graph has four leg reductions, fixed-block matrix products, and repeated event/node accumulations. It is not an exact operation trace for any output component. The count is probably a gross conservative overcount, but no derivation maps it to each BLAS/FMA/reduction path, and S_abs itself is accumulated in ordinary round-to-nearest float64 without an outward enclosure. Correspondingly, the B_sum contribution alone is 0.05838959-0.07861286 and supplies more than 99.97 percent of B_native. Its safety is plausible but not rigorous on the named evidence.",
+      "assumptions_used": [
+        "Higham gamma_n must be tied to a defined rounding path or a proved conservative path-length upper bound.",
+        "A computed absolute shadow is not automatically an outward upper bound."
+      ],
+      "evidence_refs": [
+        "scripts/audit/d055_covariance_metrology_oracle.py:49",
+        "scripts/audit/d055_covariance_metrology_oracle.py:75",
+        "scripts/audit/d055_covariance_metrology_oracle.py:92",
+        "scripts/audit/d055_covariance_metrology_oracle.py:113",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json:22",
+        "src/rabbit/decoupling/_independent_noqke.py:1034"
+      ],
+      "evidence_fingerprint": "sha256:95d133413f6de0caad0befbb7e10d5c74eee094d75f9dd76a66566e4164b9568",
+      "counterevidence_refs": [
+        "The very large aggregate count and frozen factor 4 make an underestimate unlikely for ordinary reductions.",
+        "No recorded state exceeds the resulting B_native."
+      ],
+      "reproduction": [
+        "Compute addend_count*eps/(1-addend_count*eps) from each retained state.",
+        "Decompose B_native into its five additive relative contributions."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "A path-by-path operation-count proof including BLAS/FMA semantics could change this verdict to pass.",
+        "An upward-rounded or interval S_abs construction could close the shadow-enclosure gap."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-004",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Stage 4, longdouble independence and basis/interval completeness: the contract calls W_ld an end-to-end longdouble shadow enclosure, but the oracle casts the already-computed float64 modal_total and float64 grid nodes to longdouble, reevaluates only the native-node basis and final modal-to-native matmul, then casts native_ld back to float64 before differencing. It neither reruns the collision assembly in higher precision nor performs directed/outward rounding, so W_ld is a same-input discrepancy estimator, not an interval enclosure. delta_basis is likewise measured only on native grid nodes, while the collision assembly evaluates the basis at off-grid y3/y4 in _modal_product. Therefore the interval and basis terms are incomplete for a rigorous end-to-end bound.",
+      "assumptions_used": [
+        "An interval enclosure requires outward rounding or a proved error remainder.",
+        "End-to-end independence must cover upstream values whose rounding contributes to the target observable."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md:44",
+        "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md:47",
+        "scripts/audit/d055_covariance_metrology_oracle.py:117",
+        "scripts/audit/d055_covariance_metrology_oracle.py:125",
+        "scripts/audit/d055_covariance_metrology_oracle.py:134",
+        "scripts/audit/d055_covariance_metrology_oracle.py:138",
+        "src/rabbit/decoupling/_independent_noqke.py:1034"
+      ],
+      "evidence_fingerprint": "sha256:95d133413f6de0caad0befbb7e10d5c74eee094d75f9dd76a66566e4164b9568",
+      "counterevidence_refs": [
+        "The recorded 80-bit epsilon confirms genuinely wider arithmetic for the final transform.",
+        "The same-input transform comparison remains a useful diagnostic even though it is not an enclosure."
+      ],
+      "reproduction": [
+        "Inspect native_map_terms at lines 117-138 and compare its inputs with evaluate_independent_collision_action.",
+        "Inspect _modal_product at source lines 1034-1041 for off-grid basis evaluations."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A full independent longdouble/MPFR or interval replay of rates, off-grid basis evaluations, reductions, transforms, and additions with certified rounding would change this verdict."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-005",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Stage 5, operation-graph identity: R_native and D_native are measured from action.total, whose production path is native(self_modal)+native(electron_modal), i.e. two separate modal-to-native matmuls followed by a native addition. In contrast, N_weak, B_map, and W_ld are derived from modal_total=self_modal+electron_modal and one combined modal-to-native matmul. No term bounds E_split=[M(self)+M(electron)]-M(self+electron), including the two independent matmul roundoffs and final addition. Binary64 linearity is not exact under this reassociation. Thus B_native is not an enclosure of the same operation graph that produces the claimed R_native diagnostic, regardless of its numerical largeness.",
+      "assumptions_used": [
+        "The gate's native conditioning bound must enclose the actual operation path used by the native diagnostic.",
+        "Floating-point reassociation requires its own error term or an exact identity proof."
+      ],
+      "evidence_refs": [
+        "scripts/audit/d055_covariance_metrology_oracle.py:180",
+        "scripts/audit/d055_covariance_metrology_oracle.py:190",
+        "scripts/audit/d055_covariance_metrology_oracle.py:205",
+        "scripts/audit/d055_covariance_metrology_oracle.py:213",
+        "src/rabbit/decoupling/_independent_noqke.py:1271",
+        "src/rabbit/decoupling/_independent_noqke.py:1273",
+        "src/rabbit/decoupling/_independent_noqke.py:1285",
+        "src/rabbit/decoupling/_independent_noqke.py:1296"
+      ],
+      "evidence_fingerprint": "sha256:95d133413f6de0caad0befbb7e10d5c74eee094d75f9dd76a66566e4164b9568",
+      "counterevidence_refs": [
+        "Exact real-arithmetic linearity makes the two paths mathematically equivalent.",
+        "The frozen factor 4 may empirically absorb the omitted reassociation on these three states, but no proof binds it."
+      ],
+      "reproduction": [
+        "Trace action.total in evaluate_independent_collision_action and compare it with native64/native_ld in native_map_terms."
+      ],
+      "confidence": 0.995,
+      "unresolved": [
+        "Add and certify E_split on the exact two-map-plus-add path, or compute the diagnostic and all bound terms on one identical path."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-006",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Stage 6, denominator, state envelope, cap, and gate predicate: D-055 removes the D-054 noise/noise equilibrium denominator, and the three retained D_native values are internally consistent with the module convention. However, the family is only three sampled thermal-scale states; no continuous state domain, denominator floor, or bound between samples is defined. More decisively, B_native=0.058405-0.078629 is 5.84e8-7.86e8 times the 1e-10 native cap, while R_native/B_native is only 7.55e-11-3.14e-10. M4 is therefore non-discriminating at the target scale and M5 is merely the direct observed residual check. Because findings 004-005 show the named basis/interval/operation graph cannot produce a rigorous bound, the registry's explicit fail condition is triggered; recording seven fields is not enough to support status=pass for G-F10-COVARIANCE-METROLOGY.",
+      "assumptions_used": [
+        "The current GATE_REGISTRY fail condition governs over the looser local interpretation of a conditioning indicator.",
+        "A three-point maximum is not a mathematical envelope outside those three exact points."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json:3",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json:14",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json:58",
+        "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md:20",
+        "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md:58",
+        ".agent-harness/context/GATE_REGISTRY.json:90",
+        ".agent-harness/context/GATE_REGISTRY.json:97",
+        ".agent-harness/context/GATE_REGISTRY.json:98"
+      ],
+      "evidence_fingerprint": "sha256:95d133413f6de0caad0befbb7e10d5c74eee094d75f9dd76a66566e4164b9568",
+      "counterevidence_refs": [
+        "The gate statement asks that a method-specific conditioning bound be reported; it does not explicitly require B_native itself to be below 1e-10.",
+        "M1, M2, M3, and M5 are strong observed covariance checks on all three frozen states."
+      ],
+      "reproduction": [
+        "Divide each retained B_native by 1e-10 and each R_native by B_native.",
+        "Apply the GATE_REGISTRY fail condition to findings 004-005."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "A prospective continuous state/denominator envelope and a complete rigorous operation-graph bound would change this verdict.",
+        "Alternatively, an explicit authority revision could define a loose same-input conditioning indicator as sufficient, but that would be a gate change rather than validation of the current claim."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-MET-007",
+      "claim_id": "C-D057-METROLOGY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Stage 7, opposing steelmen, falsifiers, and change-of-view: the strongest PASS case is that D-055 is a clean prospective two-defect reissue, its module hash and wider arithmetic are recorded, its dimensional algebra and exact report formula check, and observed weak/mass/electron/native residuals are all far below 1e-10 on three non-equilibrium states. The strongest FAIL case is that the purported rigorous native enclosure uses a different reassociated path, a same-input final-transform longdouble comparison mislabeled as end-to-end interval evidence, a non-certified summation shadow, and only three sampled states; its 0.06-0.08 width is eight to nine orders above the hard cap. The FAIL case controls under the registry. In addition, every D-055 result finding is keyed to C-R6-ORBIT-CHART-RABBIT-APPLICABILITY rather than a covariance-metrology claim, so the claimed gate flip is not independently claim-bound. Overall: D-055 is IMPLEMENTED and mechanically reproduced as a local predicate PASS, but the gate-level metrology claim is not VALIDATED and G-F10-COVARIANCE-METROLOGY should not remain PASS on this evidence.",
+      "assumptions_used": [
+        "Exact contradictions to a binding gate predicate are not resolved by the number of earlier PASS envelopes.",
+        "Claim IDs are part of the evidence contract, not decorative metadata."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-CONTRACT.json:37",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-EXECUTION.json:37",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/results/A-METRO2-ADJUDICATION.json:37",
+        ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/MERGED_RESULTS.json",
+        ".agent-harness/context/GATE_REGISTRY.json:90"
+      ],
+      "evidence_fingerprint": "sha256:088aeacb93931a241dfe53db0f6a435a76473a7a43a122889f405c9485c5cb2b",
+      "counterevidence_refs": [
+        "The D-055 adjudication explicitly recomputed M1-M5 and interpreted the registry as requiring only the presence of the named terms.",
+        "The wrong historical claim key may be remediable as provenance metadata if a trusted, correctly assigned metrology adjudication independently re-establishes the science."
+      ],
+      "reproduction": [
+        "Read the claim_id in all three D-055 result envelopes.",
+        "Apply the two steelmen to the exact registry pass/fail language without majority voting."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Change-of-view condition 1: certify the exact native operation graph, including E_split, off-grid basis evaluation, upstream collision reductions, and outward-rounded interval remainders.",
+        "Change-of-view condition 2: predeclare a meaningful state and denominator envelope and show a bound relevant to the hard-cap scale, or explicitly revise the gate authority.",
+        "Change-of-view condition 3: produce a trusted result keyed to the covariance-metrology claim with exact assignment, evidence, and lifecycle provenance."
+      ]
+    }
+  ],
+  "errors": [
+    "Ancillary global validate_harness.py invocation reported: Context files changed after the pack was built; Generated CONTEXT_PACK.md carries a stale context version. The injected SubagentStart preflight was PASS, the assignment-bound context version matched, no shared file was edited by this agent, and validate_result_contract for this result returned an empty error list. Main was notified."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json"
+  ]
+}

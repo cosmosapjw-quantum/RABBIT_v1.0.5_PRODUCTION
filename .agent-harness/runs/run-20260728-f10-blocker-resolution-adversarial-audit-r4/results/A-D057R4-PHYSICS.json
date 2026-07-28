@@ -1,0 +1,282 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+  "assignment_id": "A-D057R4-PHYSICS",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa728-1d58-76d2-9db9-dcc8503e6611",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+    "assignment_id": "A-D057R4-PHYSICS",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:75d7a8e57fb21b204188a744baafb28b92670ec96b0c8a359c2f930a42c3938c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json",
+  "started_at": "2026-07-28T05:17:14Z",
+  "completed_at": "2026-07-28T05:23:44Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3",
+    "git_head": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+    "token_counter": "UNAVAILABLE: harness exposes no exact per-agent token counter"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/assignments/A-D057R4-PHYSICS.json",
+    "python3 -c 'from pathlib import Path; import sys; sys.path.insert(0,\".agent-harness/scripts\"); from _harness import hash_files; ...' (verified role aggregate 9675bef9... and template raw hash 936c043e...)",
+    "sha256sum docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md docs/audit/BD622_W5_d028_discriminator_result.md src/rabbit/decoupling/_independent_noqke.py tests/test_independent_noqke_comparator.py scripts/audit/d047_ownerb_r6_target_replay.py scripts/audit/d050_ownerc_closure_verification.py scripts/audit/d053_row9_closure_verification.py",
+    "PYTHONPATH=src pytest -q tests/test_independent_noqke_comparator.py (exit 127: system pytest unavailable)",
+    "PYTHONPATH=src venv/bin/python -m pytest -q tests/test_independent_noqke_comparator.py (exit 0: 3 passed in 0.58s)",
+    "PYTHONPATH=src venv/bin/python -c '<Pauli reversal and affinity-sign probe>' (max_reverse_abs=6.938893903907228e-17; sign_affinity=True)",
+    "git rev-parse HEAD"
+  ],
+  "artifacts": [
+    "src/rabbit/decoupling/_independent_noqke.py sha256:760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+    "tests/test_independent_noqke_comparator.py sha256:8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/artifacts/AUDIT_EVIDENCE_MAP.json sha256:863c1ed2e986f7348716a771015cf1b2fd4be64c38973aa85ae1fe2c6ceee36f"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057-PHYS-001",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Seven-stage audit stage 1 (assumptions, conventions, dimensions): PASS within the declared massless, flavour-diagonal, zero-asymmetry, natural-unit comparator. K_t=(p1.p4)(p2.p3) has MeV^4, G_F^2 K_t is dimensionless, the global event measure and p1 weak-form weight give a modal rate in MeV^4, and division by T^3 in _native_action returns a collision action in MeV (inverse natural time). The row-6/row-9 closure changes only the dimensionless coefficient/orientation enumeration, so it introduces no unit, branch, support, or sign-convention change.",
+      "assumptions_used": [
+        "Natural units c=hbar=k_B=1.",
+        "All four self-collision legs are massless and future-directed.",
+        "The finite spectral domain is 0<y<24 and the closure is audited only on the existing Galerkin-Petrov self sector.",
+        "Metric products follow the source convention used by _minkowski_dot."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:1-11",
+        "src/rabbit/decoupling/_independent_noqke.py:941-960",
+        "src/rabbit/decoupling/_independent_noqke.py:1044-1061",
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:24-41"
+      ],
+      "evidence_fingerprint": "sha256:65bb5f13a65224331accb345d50d0185e52dd19814c063152cb23e9430d1a3e1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Inspect the powers of MeV in _event_measure, _self_matrix, and _native_action at the cited lines."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D057-PHYS-002",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Seven-stage audit stage 2 (signs, detailed balance, invariant nullspace, entropy): PASS as a structural result. With A=u3+u4-u1-u2, _stable_pauli_gain_minus_loss has sign(A) and equals gain into legs 1,2 minus loss from them; the +,+,-,- deposition is therefore correct. Incoming/outgoing reversal sends A->-A, rate->-rate, and the signed leg jump->minus itself, leaving the weak contribution unchanged. The source accumulates rate*(u1+u2-u3-u4)=-rate*A<=0 and reports its negative as entropy production, so the H-theorem sign is correct for a nonnegative matrix element. Common zero-chemical-potential FD data give A=0 on the on-shell energy constraint, hence eventwise detailed balance. The numerical reversal probe found a maximum antisymmetry error 6.94e-17 and correct affinity sign.",
+      "assumptions_used": [
+        "The kinematic batch enforces E1+E2=E3+E4 on accepted support to floating shell tolerance.",
+        "The self matrix is nonnegative after only roundoff-scale correction.",
+        "Occupations remain strict-open so logits and Pauli factors are defined."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:686-717",
+        "src/rabbit/decoupling/_independent_noqke.py:1092-1117",
+        "src/rabbit/decoupling/_independent_noqke.py:1118-1136",
+        "src/rabbit/decoupling/_independent_noqke.py:1286-1296",
+        "tests/test_independent_noqke_comparator.py:65-94"
+      ],
+      "evidence_fingerprint": "sha256:5589dc5a1b7fdde32733a1ee4efa295de07e1b025971147e2fed4bfb88131aa5",
+      "counterevidence_refs": [
+        "The null, conservation, and entropy properties are homogeneous in the matrix coefficient and therefore do not validate its absolute normalization."
+      ],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python -c '<Pauli reversal and affinity-sign probe>'",
+        "PYTHONPATH=src venv/bin/python -m pytest -q tests/test_independent_noqke_comparator.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The assigned evidence does not test detailed balance with independent neutrino and antineutrino chemical potentials outside the pair-reduced zero-asymmetry subspace."
+      ]
+    },
+    {
+      "finding_id": "F-D057-PHYS-003",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Seven-stage audit stage 3 (orientation quotient and multiplicity): PASS, but only relative to the frozen K_t/32 pair-conversion operator. Under R:(p1,p2,p3,p4)->(p3,p4,p1,p2), K_t=(p1.p4)(p2.p3) is invariant, while both the Pauli rate and four-leg jump change sign. Thus the two orientations are two charts of the same continuum weak event, not two physical reactions. Their orbit has two members, so the Reynolds quotient is 1/2 and K_t/16 plus K_t/16 reproduces one K_t/32 event in the continuum. The source implements exactly six ordered members forming three reverse pairs, while coefficient-times-leg-count reconstruction preserves the 48 target-directed view. The physical reversible-reaction multiset remains 24; 27 is an ordered-chart count.",
+      "assumptions_used": [
+        "Microreversibility of the massless neutral-current pair-conversion matrix element.",
+        "The finite-domain continuum restriction applies symmetrically to all four legs.",
+        "No additional flavour-dependent self-sector coupling distinguishes e, mu, and tau."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:43-60",
+        "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md:8-28",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:3-24",
+        "src/rabbit/decoupling/_independent_noqke.py:445-520",
+        "src/rabbit/decoupling/_independent_noqke.py:540-597",
+        "tests/test_independent_noqke_comparator.py:14-41"
+      ],
+      "evidence_fingerprint": "sha256:65bb5f13a65224331accb345d50d0185e52dd19814c063152cb23e9430d1a3e1",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:17-22",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:116-144"
+      ],
+      "reproduction": [
+        "Enumerate independent_self_events and verify six pair_conversion legs form three reverse pairs at coefficient 16.",
+        "For each event, sum coefficient*leg multiplicity by (category,species) and compare to independent_self_reactions."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "The quotient derivation preserves the specified continuum operator; it does not independently establish that K_t/32 is the correctly normalized physical operator."
+      ]
+    },
+    {
+      "finding_id": "F-D057-PHYS-004",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Seven-stage audit stage 4 (current implementation and bounded reproduction): PASS. The exact source hash is 760a7c04..., the current catalogue has the uniform two-member closure, and the assigned focused test file executes successfully in the sealed venv: 3/3 tests pass. Those tests check modal reconstruction, exact event/target aggregate consistency, six reverse pair-conversion members, synthetic weak number/energy conservation, and a low-order real-operator cell covering common-FD null, resolved self conservation, first law, pair-preserving CP, mu-tau covariance, and entropy sign. No D047/D050/D053 full GL48 script was rerun in this audit, so historical full-resolution values remain evidence references rather than newly completed validation.",
+      "assumptions_used": [
+        "The venv is the intended test environment.",
+        "A low-order current-tree test is a regression check, not a replacement for retained GL48 artifacts."
+      ],
+      "evidence_refs": [
+        "tests/test_independent_noqke_comparator.py:14-94",
+        "src/rabbit/decoupling/_independent_noqke.py:559-597",
+        "scripts/audit/d053_row9_closure_verification.py:81-105",
+        "scripts/audit/d053_row9_closure_verification.py:129-190"
+      ],
+      "evidence_fingerprint": "sha256:5589dc5a1b7fdde32733a1ee4efa295de07e1b025971147e2fed4bfb88131aa5",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W5_d028_discriminator_result.md:22-36"
+      ],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python -m pytest -q tests/test_independent_noqke_comparator.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The focused tests use a GL8/2x2x4 low-order physical cell for the real-operator invariant test.",
+        "The full-resolution retained scripts were inspected but not executed, avoiding an unauthorized new GL48 evidence run."
+      ]
+    },
+    {
+      "finding_id": "F-D057-PHYS-005",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 5 (mutual steelman): the strongest PASS case establishes a real, non-fitted symmetry repair, while the strongest FAIL case defeats any upgrade to independent physical-catalogue validation. PASS steelman: D047 predeclares the half quotient, verifies live M-/permuted-M+ identity on symmetric and asymmetric states, localizes the old failure to row 6, retains a nonzero single-member negative control, and preserves conservation; D053 then uses exact self-sector flavour symmetry plus an e/mu discriminator to extend the same construction uniformly. W3 independently supports the K_t row-v kernel and the 32 ratio. FAIL steelman: Reynolds averaging enforces covariance even for a wrong or zero base map; null, conservation, entropy, CP, and covariance survive an arbitrary common rescaling or zeroing; event/target aggregate reconstruction and the hard-coded fingerprint share the same module constants; W3 explicitly says no comparator was executed and absolute phase-space normalization remains unvalidated. The PASS evidence therefore wins only for the bounded orientation-artifact mechanism, not for physical normalization or catalogue completeness.",
+      "assumptions_used": [
+        "A scientific validation claim must be discriminating against a wrong-scaled or zero collision operator.",
+        "Internal consistency and same-module reconstruction are not independent physical normalization evidence.",
+        "Claim scope follows the narrowest explicit limitation in the governing evidence."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:9-22",
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:62-84",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:17-39",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:3-20",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:116-144",
+        "docs/audit/BD622_W5_d028_discriminator_result.md:22-52",
+        "tests/test_independent_noqke_comparator.py:21-41"
+      ],
+      "evidence_fingerprint": "sha256:95b8c1629933e4a4a5b31f25005a363f0583b370fbb9ddbd691434255b14a551",
+      "counterevidence_refs": [
+        "scripts/audit/d047_ownerb_r6_target_replay.py:139-218",
+        "scripts/audit/d053_row9_closure_verification.py:129-190"
+      ],
+      "reproduction": [
+        "Observe analytically that multiplying every pair-conversion coefficient by any positive lambda preserves equilibrium null, conservation, entropy sign, and flavour covariance.",
+        "Observe that the zero pair-conversion operator also passes those homogeneous invariants while failing physical loss-rate magnitude."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No repository-independent absolute V-A amplitude/phase-space normalization closes row v.",
+        "No assigned evidence executes the W3 T01 loss oracle against the comparator.",
+        "No closure-specific order/tail refinement shows the two-chart average converging to the same non-equilibrium continuum loss action as a single exact chart."
+      ]
+    },
+    {
+      "finding_id": "F-D057-PHYS-006",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Seven-stage audit stage 6 (falsifiers and change-of-view conditions): the closure claim would be falsified by an arbitrary-state reversal test showing M-(f) differs from the correctly relabelled M+(Pf), by a multi-order loss-only replay in which 16*M+ + 16*M- fails to converge to 32*M+, by a negative entropy contribution from a nonnegative event matrix, or by any coefficient-times-leg mismatch. The stronger physical-catalogue claim could change from FAIL to PASS only after a repository-independent direct V-A spin trace fixes the absolute row-v coefficient, an independent phase-space reduction fixes the 1/(256*pi^4) weak-form normalization, the actual comparator passes the predeclared MB row-v loss oracle over multiple y and quadrature orders, and arbitrary flavour/CP-role plus finite-domain refinement checks exclude a constructional cancellation.",
+      "assumptions_used": [
+        "Change-of-view evidence must discriminate normalization, not only symmetry.",
+        "The new evidence must be prospective and must not tune coefficients, caps, grids, or norms after output."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:82-114",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:146-157",
+        "docs/audit/BD622_W5_d028_discriminator_result.md:48-52",
+        "src/rabbit/decoupling/_independent_noqke.py:1044-1130"
+      ],
+      "evidence_fingerprint": "sha256:be82b60b0b4af7c7d06acc4fb3c1c25fed2323512ec3c4f0ba729e442b8b9950",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:66-84"
+      ],
+      "reproduction": [
+        "Prospective falsifier A: direct six-species M-/P.M+(P f) identity on random strict-open spectra at MPFR and binary64.",
+        "Prospective falsifier B: per-target MB loss C_loss/(G_F^2 T^5 y exp(-y))=4/(3*pi^3) for row v at multiple y and orders.",
+        "Prospective falsifier C: compare single-chart and half-weight two-chart weak actions through a grid/order/tail ladder before any endpoint readout."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "These are change-of-view conditions, not authorized executions in this assignment."
+      ]
+    },
+    {
+      "finding_id": "F-D057-PHYS-007",
+      "claim_id": "C-D057-PHYSICS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 7 (final verdict): FAIL any claim that D047/D050/D053 independently proves a physically normalized or complete neutrino self-collision catalogue. PASS the narrower claim that the current bytes IMPLEMENT a mathematically DERIVED, half-weighted two-orientation discretization of the already specified K_t/32 pair-conversion process and that the named evidence VALIDATES the bounded row-6/row-9 covariance-artifact repair plus static invariants. The defensible claim ceiling is: quotient/sign/multiplicity equivalence DERIVED; current 27-chart/24-reaction bytes IMPLEMENTED and current focused tests executed; orientation-artifact removal VALIDATED only in the frozen static cells; absolute physical normalization and catalogue validation INCONCLUSIVE. The source phrase 'physical reversible-reaction multiset is unchanged' is sound as bookkeeping, but 'the physical catalogue is validated by the closure evidence' is unsupported.",
+      "assumptions_used": [
+        "Physical validation requires independent evidence for amplitude, phase-space normalization, multiplicity, and a discriminating non-null observable.",
+        "A bounded symmetry repair must not be promoted into a normalization or completeness claim.",
+        "Zero-asymmetry pair spectra limit CP evidence to preservation of the pair-reduced invariant subspace."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:540-597",
+        "src/rabbit/decoupling/_independent_noqke.py:1025-1031",
+        "src/rabbit/decoupling/_independent_noqke.py:1285-1296",
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:77-84",
+        "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md:40-49",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:36-39",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:3-20",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:136-144"
+      ],
+      "evidence_fingerprint": "sha256:95b8c1629933e4a4a5b31f25005a363f0583b370fbb9ddbd691434255b14a551",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md:66-75",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:28-34",
+        "tests/test_independent_noqke_comparator.py:14-94"
+      ],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python -m pytest -q tests/test_independent_noqke_comparator.py",
+        "Read W3's explicit claim ceiling and compare it with the homogeneous invariant checks in D047/D050/D053."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Direct absolute row-v spin/phase-space normalization.",
+        "Comparator-executed W3 T01 loss oracle.",
+        "General six-species CP/flavour covariance outside the pair-reduced zero-asymmetry state.",
+        "Closure-specific convergence and finite-domain tail ladder."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json"
+  ]
+}

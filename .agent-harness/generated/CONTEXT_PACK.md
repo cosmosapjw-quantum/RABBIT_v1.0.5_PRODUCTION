@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6`
-Built at: `2026-07-27T19:42:58+00:00`
+Context version: `ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb`
+Built at: `2026-07-28T05:55:23+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,14 +9,15 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `b83ced3e8d17e8ff30cfdbe62bb4ab28242e8a6132edcd2577aca7fac3726de1`
+SHA-256: `61f1db088314207a7babcb4c4127593138e5cabd59f23753de6d6916c7cdd87b`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
 ## Project objective
 
 - Scientific objective: complete and validate the crate-private Rust-first collision-coupled isotropic neutrino Boltzmann FLRW endpoint through F-10, then stop.
-- Current milestone: F-10C2 implements the frozen nine-row catalogue. D-027 and D-028 remain validated static failures and D-029 remains a rejected design. D-034 exact-byte adjudication failed, and D-037 stopped the sealed D-035 candidate at two independent schema-v2 design FAIL envelopes before CAS completion/adjudication. B3-v2/W7 remains `PROPOSED / DESIGN ONLY`; `G-HARNESS-INTEGRITY` passes only in the validated schema-v2 boundary, while independent-FLRW, covariance-metrology, and full-regression gates remain `FAIL`.
+- Current milestone: F-10C2 implements the frozen nine-row catalogue and the D-053 private comparator carries a bounded-validated 27-event orientation-artifact repair; absolute physical normalization/catalogue completeness remains `INCONCLUSIVE`. D-057 rejects the later all-gates closeout: `G-F10C1-REGRESSION` remains `PASS`, while `G-F10-INDEPENDENT-FLRW`, `G-F10-COVARIANCE-METROLOGY`, and the effective current `G-HARNESS-INTEGRITY` are `FAIL`. D-056 is a preserved, scientifically supportive endpoint, not gate-closing authority. B3-v2/W7 remains `PROPOSED / DESIGN ONLY`.
+- D-057 controlling audit: D-055 froze only P-fixed states and its `B_native` omits the production split-map operation graph/full precision interval; D-056 froze obsolete F10C1 rather than completed-catalogue F10C2 anchors, has no cross-code block/spectral or refinement/tail predicate, and its T6 checks event bookkeeping rather than the coupled trajectory energy law; D-053--D-056 reused the unrelated row-6 claim ID; and overlapping main sessions changed the global `ACTIVE_RUN` between Start and Stop. Repair harness run leasing first, then claim/evidence bindings, then prospective asymmetric covariance and corrected-anchor endpoint contracts. Report: `docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`.
 - Owner disposition: D-039 selects **STOP/PRESERVE** after D-038. The optional final design cycle is frozen without activation. Corrected external prompt audit R3 `a424e9c9` passes only the read-only request contract; neither its request nor any returned proposal grants repository, design-cycle, numerical, implementation, or endpoint authority.
 - Owner disposition: D-040's read-only current/legacy JAX and primary-literature survey is complete. Registered adjudication `d7d34e41` excludes conventional DSMC from future Bianchi primary, precision, covariance/derivative, and endpoint-authority lanes; only a separately authorized bounded stochastic cross-check remains `PROPOSED`. The no-stress Type-I shear norm is `DERIVED` monotone on its physical branch, while coupled oscillatory shear remains `SPECULATIVE`. Legacy JAX supplies formula/mechanism clues only, not restoration or promotion authority. D-039 remains controlling for all execution and implementation.
 - Governing specifications: `docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md`, section 14 (`F-10`), the owner-scope paragraph at section 15, and `docs/audit/BD622_W6_comparator_design_proof_pack.md` for the B3-v2/W7 successor contract.
@@ -60,7 +61,7 @@ SHA-256: `b83ced3e8d17e8ff30cfdbe62bb4ab28242e8a6132edcd2577aca7fac3726de1`
 - D-029 rejects the current three-node maximum-relative-entropy design before implementation. Its fixed-triple exact-arithmetic theorem is **DERIVED** and its standalone piecewise binary64 stencil is **VALIDATED** only within its declared local limits, but the executable GL-weight prior, nearest-exterior selector, and exact-node one-hot branch are not derived as one continuous/covariant semidiscrete method. Support-switch/Jacobian behavior, the frozen 24-self/15-electron binary64 collision contract, and the native mu-tau `1e-10` co-gate are absent. No implementation or physical-output authority exists.
 - W3 is **DERIVED** and internally cross-checked only for coefficient ratios and the Maxwell-Boltzmann reduction; it does not validate direct row-ii v-spinor traces, absolute phase-space normalization, finite-`m_e` interference, or multiplicities. W5 is **VALIDATED localization evidence** only and does not establish an exclusive `1/y^2` root cause.
 - D-030 does not copy D-028's native cap. B3-v2 binds weak/mass-weighted covariance at `1e-10` and separately requires a pre-output native cap from summation, basis, solve/conditioning, and MPFR interval terms. Both `G-F10-INDEPENDENT-FLRW` and `G-F10-COVARIANCE-METROLOGY` remain **FAIL**.
-- D-034 Sage/Singular's repository-root `.singularhistory` (`5abbc842`) remains preserved as raw failure evidence. D-036 exercised the `/tmp` confinement rule live, and D-037's two admitted agents wrote only their registered results with identical parent pre/post hashes. Effective `G-HARNESS-INTEGRITY` is therefore **PASS only inside the supported schema-v2 parent/Start/Stop boundary**; this process result does not validate science.
+- D-034 Sage/Singular's repository-root `.singularhistory` (`5abbc842`) remains preserved as raw failure evidence. D-036 validates the historical stable-single-run schema-v2 boundary, but D-057 reproduces a mutable-`ACTIVE_RUN` Start/Stop race under overlapping mains. Effective current `G-HARNESS-INTEGRITY` is **FAIL** pending run-identity leasing and a replacement live canary.
 - Reference: FortEPiaNO tag `1.4.0`, commit `6cac851dcc8224693937dbf8d1cbd3367c26af53`; keep `/tmp/fortepiano_public_probe` pristine and preserve the separate adapter patch, resolved inputs, strict flags, binary and raw hashes/failures.
 - Model: flat FLRW; three massless diagonal active flavours; zero mixing/masses/asymmetry; finite vacuum `m_e`; all tree-level electron and neutrino-self collisions; no off-diagonal state/commutator, QED/thermal mass, muons, low reheating, NSI/non-unitarity, fast-math, QKE, or coherence.
 - Constants: `m_e=0.5109989500 MeV`, `G_F=1.1663788e-11 MeV^-2`, `sin^2(theta_W)=0.23122`, `G_N=6.708830746231458e-45 MeV^-2`, `M_Pl=1.2208901285838955e22 MeV`, `1 MeV=1.519267447878626e21 s^-1`; never fit them.
@@ -76,11 +77,11 @@ SHA-256: `b83ced3e8d17e8ff30cfdbe62bb4ab28242e8a6132edcd2577aca7fac3726de1`
 
 - In scope: structurally independent full-spectral FLRW validation, matched-switch/grid/tolerance checks, and F-10 closeout.
 - Immediate slice: STOP/PRESERVE plus a read-only external breakthrough/remedy design request only. Fort r6, D-027, `GL48_STATIC_R1`, D-029, and all D-037/D-038 artifacts are immutable contextual/failure evidence. Do not remediate, activate a design cycle, execute B3/W7/Radau/trajectory, or tune any norm, cap, grid, formula, or tolerance.
-- Historical retained-tree closeout recorded `221/221` release tests and doctests. It does not validate this successor HEAD; `G-F10C1-REGRESSION` is **FAIL** until the full current-tree command bundle runs.
+- The D-049 current-tree bundle records `238 passed / 0 failed / 2 ignored`, strict Clippy, and a clean 54-page report; `G-F10C1-REGRESSION` is **PASS**.
 - Explicit non-goals: F-11 Bianchi/LRS/non-LRS Type-I implementation or scheduling, QKE/coherence/oscillations, public dispatch, public production, precision Standard-Model or publication claims.
 - F-10C2 catalogue boundary: all nine frozen rows execute. Rowwise tagged normalization, explicit six-species multiplicity, equilibrium/null, number/energy conservation, entropy, scaling, response, and five-point Jacobian tests pass; full production aggregation is checked against the explicit seven folded channel sum.
 - The retained exact-point BDF Jacobian cache improves the same F-10C1 endpoint by 55.815% with bitwise-identical solver outputs. On the completed catalogue, four-topology aggregation reduces the measured endpoint from 1520.92 s to 1184.77 s (22.102%, 1.284x) and RSS by 0.195%.
-- Final Rust release regression is 230/230 plus 0 doctests. BDF gives `(N,t,N_eff)=(7.936693339485084,52677.63448707955 s,3.034035983584400)`; Rodas5P gives `(7.936706017467941,52678.09666722039 s,3.033904967773792)`.
+- The current D-049 Rust release regression is 238 passed / 0 failed / 2 ignored plus 0 doctests. Completed-catalogue BDF gives `(N,t,N_eff)=(7.936693339485084,52677.63448707955 s,3.034035983584400)`; the current Rodas5P replay is `(7.936706040256859,52678.0987530529 s,3.033904378920785)`.
 - N48 validation is limited to the declared five smooth profiles and two N128 auxiliary rules. Same-code endpoint `N_eff` is only a regression readout.
 - Do not silently strengthen `IMPLEMENTED` into `VALIDATED`, internal parity into independent validation, or a segment/profile speedup into endpoint progress.
 
@@ -115,7 +116,7 @@ SHA-256: `b83ced3e8d17e8ff30cfdbe62bb4ab28242e8a6132edcd2577aca7fac3726de1`
 | E-F10-B3V2-D033-CANDIDATE | W6 `e0103e29`; `scripts/audit/w7_b3v2_contract_source.py` `5e8842d9`; `docs/audit/BD622_W7_exact_test_vectors.json` `5a16c903` | SPECIFIED_NOT_EXECUTED remediation candidate; source structure 24+15 and source/vector identity pass; fresh blind verdict pending |
 | E-F10-W3-PARTIAL | `docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md` | coefficient-ratio and MB-reduction evidence only |
 | E-F10-W5-LOCALIZATION | `docs/audit/BD622_W5_d028_discriminator_result.md` | D-028 conditioning localization only; not an exclusive root cause |
-| E-F10-INDEPENDENT-ENDPOINT | `NOT_PRODUCED` | independent gate RED |
+| E-F10-INDEPENDENT-ENDPOINT | D-056 report `8ea58a3a`; D-057 audit | endpoint produced and supportive, but prospective wrong-anchor contract keeps independent gate RED |
 | E-HARNESS-R3-FAIL | `run-20260722-f10-harness-r3-hook-repair` / canary `0d4528f7`; block probe `e6673bbf` | Start/Stop work; VS Code collaboration bypasses project PreToolUse allow-rewrite and blocking |
 | E-HARNESS-WORKAROUND-STATIC | `.agent-harness/tests/test_hooks.py` | four fixtures pass for main admission, Start identity/context, Stop spawn-contract/hash/envelope, and retry blocking |
 | E-HARNESS-CANARY-R4 | `run-20260722-f10-harness-r4-supported-workaround` / assignment `7a1aad3c`; result `5a979857`; pre/post non-run diff `828cd996`; pre/post status `7ad89840` | live Start bootstrap/preflight PASS; invalid first Stop blocked; assignment-hash-bound corrected result automatically accepted; result-only write attribution PASS |
@@ -128,7 +129,7 @@ Rebuild the context pack and refresh any changed evidence hash before spawning a
 | Question ID | Question | Required discriminating evidence | Owner |
 |---|---|---|---|
 | Q-IND-01 | Does a structurally independent full-spectral FLRW solve reproduce the accepted envelope? | Independent formulation/integrator with frozen inputs and tolerances, not same-code replay | future F-10 validation |
-| Q-HOOK-01 | **RESOLVED:** the supported main/SubagentStart/SubagentStop workaround closes the registered live integrity chain without relying on unavailable VS Code PreToolUse interception. | R4 `5a979857`: exact header, Start bootstrap/preflight PASS, assignment-hash-bound spawn contract, blocked invalid first stop, accepted corrected result, and identical pre/post non-run hashes | owner/main |
+| Q-HOOK-01 | **REOPENED by D-057:** the historical single-active-run workaround does not bind a spawned agent to its original run when another main changes `ACTIVE_RUN` before Stop. | Pin Start/Stop to the same immutable run/assignment digest; atomic run lease; overlapping-main negative test; replacement live canary | owner/main |
 
 ---
 
@@ -168,7 +169,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `05241b9f84cb6565e3a5d12988f305055551a50ae706125caaa36914dd1997e5`
+SHA-256: `6755ac734b4f34650195dae568ad962104dd33b84620c2bb2aa4c6357098a122`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -230,6 +231,7 @@ SHA-256: `05241b9f84cb6565e3a5d12988f305055551a50ae706125caaa36914dd1997e5`
 | D-054 | Record the first covariance-metrology contract (`BD622_D054`, freeze `46ef477`) as an adjudicated **FAIL, preserved**: `G-F10-COVARIANCE-METROLOGY` stays FAIL and no term or threshold of that contract may be refitted. Both failure causes are contract-design defects, not physics: M3 froze bitwise-zero electron mu/tau equality (realized gaps `2.9e-34`/`1.9e-34`/`2.2e-47` absolute, `~1e-14` relative), and the equilibrium state S-B is degenerate for relative metrics (`D_native 3.4e-29`; its residuals are noise/noise). The meaningful states passed every physics check: S-A `R_weak 1.144e-15`, `R_mass 2.965e-15`, `R_native 2.448e-11 <= B_native 7.788e-2` and `<= 1e-10` (reproducing the D-053 anchor exactly); S-C `R_weak 7.355e-16`, `R_native 5.936e-12`. | Run `run-20260728-f10-d054-covariance-metrology`, report `f456f3dd`, adjudication confirmed the freeze chain and recomputed every gate. | FAIL record only; no gate movement; no refitting | Supersession PERMITTED per the D-052 stage-2 program grant and the D-042/D-043 preserve-first-FAIL precedent: D-055 may change exactly the two adjudicated defects and nothing else. |
 | D-055 | Issue the corrected covariance-metrology contract (`BD622_D055` r2) changing exactly: (1) degenerate S-B replaced by the nondegenerate P-closed split state S-D scales `(1.0, 0.98, 0.98)`; (2) M3 demoted from bitwise zero to a measured relative electron-row bound `<= 1e-10` with the absolute gap recorded. Every other term, threshold, formula, and state is byte-identical to BD622_D054 (delta verified by mechanical diff). | D-054 adjudication scoped the permitted correction; the r2 oracle is a two-change derivative of the frozen d054 oracle. | One corrected metrology attempt deciding `G-F10-COVARIANCE-METROLOGY` | All-pass flips the gate by single-writer update; any failure preserves FAIL with no further reissue under this grant absent a new owner decision. |
 | D-056 | Close the D-052 stage-3 independent trajectory as an adjudicated **PASS** and flip `G-F10-INDEPENDENT-FLRW` fail -> pass: the structurally independent comparator (affine GL48-Y24, cloglog state, SciPy BDF, independent EOS and constants) integrated the collision-coupled FLRW system from 10 MeV equilibrium to the 0.005 MeV cold endpoint on bytes `760a7c04` in 2:45:28 (3694 evaluations) and met every predeclared band against the Rust N48 anchors: `N_eff = 3.034054308076679` (delta `+7.44e-4`, band `3e-3`, also in band of the Rodas5P partner), `N_end` delta `-2.26e-5`, `t_end` delta `-1.47 s` (band `15 s`), blockwise e/mu/tau enhancements `9.37e-3 > 3.85e-3 > 0` with heavy gap `4.69e-10`, first law `<= 8.31e-15` throughout. **All eight F-10 gates are now PASS.** | Run `run-20260728-f10-d056-independent-trajectory`, report `8ea58a3a`, freeze `5d9f521` with the pre-freeze quadrature discriminator (`3.94e-5` net-transfer agreement vs the `3e-3` band); adjudication recomputed every band and verified the closed historical routes (D-027/D-028/D-029/D-037) are not implicated. | Matched-resolution N48-class endpoint agreement on the frozen 10 MeV -> 5 keV cell only | Limitations recorded: 4/4/24 trajectory angular order (bounded pre-freeze), single execution/platform, `rtol 1e-6`, same-model reviews, no continuum claim. The flip authorizes nothing further: unblinding, public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed and are separate owner decisions under `G-F10-SCOPE`. |
+| D-057 | Preserve the D-053/D-055/D-056 artifacts but reject the all-eight-gates terminal interpretation after adversarial audit. The 27-event orientation-artifact repair is **IMPLEMENTED** and bounded **VALIDATED**; absolute physical normalization/catalogue completeness is **INCONCLUSIVE**. D-055 and D-056 are reproducible/supportive artifacts, not current gate authority. Set `G-F10-COVARIANCE-METROLOGY`, `G-F10-INDEPENDENT-FLRW`, and the effective current `G-HARNESS-INTEGRITY` back to **FAIL**. | D-057 reproduces D-053/D-055 byte-identically, passes three new asymmetric state/swap checks and kills the historical 24-event negative control, but finds that D-055 froze only P-fixed states and its bound omits the production split-map graph/full precision interval; D-056 froze obsolete F10C1 rather than completed-catalogue F10C2 anchors, has no cross-code block/spectral predicate or refinement/tail budget, and its T6 is event bookkeeping rather than a coupled-trajectory first-law test; D-053--D-056 reused the unrelated row-6 claim ID; current claim/handoff surfaces contradict the PASS registry; and concurrent mains move `ACTIVE_RUN` between Start and Stop. Report `docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`. | Audit/status correction only; no production, physics, solver, endpoint, or public behavior changed | First repair the run-identity lease and pass a live overlapping-run canary; then correct claim/evidence bindings; then prospectively execute an asymmetric covariance contract with an identical-operation-graph outward interval and a completed-catalogue-anchor endpoint replay with cross-code block/spectral predicates, independently reduced coupled energy, retained state/tail evidence, and a holdout refinement. D-056 is never overwritten or retrospectively relabelled. All downstream work remains closed. |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 
@@ -237,7 +239,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897`
+SHA-256: `05ae9f3f111988676adf41bd34b5ba78a38a4b8ad60af4a620772814d6db20bc`
 
 {
   "schema_version": 1,
@@ -319,7 +321,7 @@ SHA-256: `34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897`
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
       "owner": "main",
-      "status": "pass"
+      "status": "fail"
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",
@@ -338,7 +340,7 @@ SHA-256: `34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897`
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
-      "status": "pass"
+      "status": "fail"
     },
     {
       "gate_id": "G-F10-SCOPE",
@@ -372,7 +374,7 @@ SHA-256: `34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897`
       "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, exact four-line prompt, and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
       "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "pass"
+      "status": "fail"
     }
   ]
 }

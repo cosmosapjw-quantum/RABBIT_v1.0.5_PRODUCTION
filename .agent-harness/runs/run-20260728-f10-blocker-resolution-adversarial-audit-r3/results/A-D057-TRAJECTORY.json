@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+  "assignment_id": "A-D057-TRAJECTORY",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa725-25d5-7203-953f-d68ee53f0ebe",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+    "assignment_id": "A-D057-TRAJECTORY",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:5a03f523e13300527866ac6bf23e3ca4eec3d18a1bdf3acd81c889c6263f2533",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r3/results/A-D057-TRAJECTORY.json",
+  "started_at": "2026-07-28T05:13:00Z",
+  "completed_at": "2026-07-28T05:15:13Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r3/assignments/A-D057-TRAJECTORY.json",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r3/assignments/A-D057-TRAJECTORY.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "findings": [],
+  "errors": [
+    "BOOTSTRAP_CONTRACT_VIOLATION: assignment review_role_sha256 is sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1, but .agent-harness/context/roles/independent_auditor.md hashes to sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836. Scientific analysis did not begin."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r3/results/A-D057-TRAJECTORY.json"
+  ]
+}

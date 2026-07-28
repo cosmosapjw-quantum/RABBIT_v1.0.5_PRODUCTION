@@ -1,6 +1,41 @@
 # Next Session Prompt
 
-## 2026-07-28 D-056 controlling overlay — gate matrix complete
+## 2026-07-28 D-057 controlling overlay — STOP/PRESERVE
+
+The claimed D-056 all-gates closeout failed adversarial audit. Preserve every
+D-053/D-055/D-056 artifact, but keep
+`G-F10-COVARIANCE-METROLOGY=FAIL`,
+`G-F10-INDEPENDENT-FLRW=FAIL`, and the effective current
+`G-HARNESS-INTEGRITY=FAIL`.
+
+The 27-event orientation-artifact repair is retained as **IMPLEMENTED** and
+bounded **VALIDATED**: D-053/D-055 replay byte-identically, three fresh
+asymmetric state/swap tests pass `1e-10`, and the historical 24-event negative
+control fails strongly. Absolute physical normalization and catalogue
+completeness remain **INCONCLUSIVE**. The gate flips are not admissible
+because D-055 froze only P-fixed states and its `B_native` omits the
+production split-map operation graph/full precision interval, D-056 froze
+obsolete F10C1 rather than completed-catalogue F10C2 anchors and lacks
+cross-code block/spectrum, coupled-energy, and refinement/tail predicates,
+all D-053--D-056 findings reused the unrelated row-6 claim ID, and
+overlapping main sessions changed `ACTIVE_RUN` between Start and Stop.
+
+Next order is fixed:
+
+1. repair and canary-test run-identity leasing under overlapping mains;
+2. reconcile distinct claim/evidence IDs without moving a science gate;
+3. prospectively run an asymmetric covariance contract with an
+   identical-operation-graph outward interval;
+4. prospectively replay the endpoint against the completed-catalogue anchors
+   with cross-code block/spectrum observables, an independently reduced
+   coupled-energy residual, retained state/tail evidence, and one holdout
+   refinement.
+
+Do not unblind or open public/production, W7/B3, T01--T12, GL64/Radau,
+Rust/JAX forward work, F-11/Bianchi, or QKE. Governing report:
+`docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`.
+
+## 2026-07-28 D-056 overlay — gate matrix claim (superseded by D-057)
 
 **All eight F-10 gates are PASS** on catalogue bytes `760a7c04`
 (D-052--D-056: row-9 closure; metrology r2 after a preserved D-054 FAIL;
@@ -8,8 +43,8 @@ independent trajectory endpoint `N_eff = 3.034054`, delta `+7.4e-4` vs
 the Rust N48 anchor). The F-10 independent-validation programme's gate
 matrix is complete.
 
-The next session preserves this state and has NO open technical task.
-The remaining decisions are owner-level programme decisions under
+This was the D-056 recorded state; it is no longer controlling. The remaining
+text is retained as provenance. The recorded owner-level decisions were under
 `G-F10-SCOPE` and the standing hard stops:
 
 1. Whether to unblind / hand off F-10 (the original 2026-07-16 owner
