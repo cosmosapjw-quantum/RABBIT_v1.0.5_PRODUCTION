@@ -58,7 +58,9 @@ Thumbs.db
 **/.claude/first-run
 **/.claude/assistant-daemon-state.json
 /.agent-harness/ACTIVE_RUN
+/.agent-harness/ACTIVE_RUN.tmp.*
 /.agent-harness/runs/
+/.agent-harness/leases/
 /.superpowers/
 /.benchmarks/
 

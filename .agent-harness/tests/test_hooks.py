@@ -479,3 +479,148 @@ def test_new_assignment_prints_exact_header_first(tmp_path: Path) -> None:
         created,
         role_files=index["role_files"],
     )
+
+
+def write_lease(repo: Path, version: str, agent_id: str = "agent-fixture") -> Path:
+    lease = repo / ".agent-harness" / "leases" / f"{agent_id}.json"
+    write_json(
+        lease,
+        {
+            "schema_version": 1,
+            "agent_id": agent_id,
+            "agent_type": "context_mapper",
+            "run_id": RUN_ID,
+            "context_version": version,
+            "created_at": "2026-07-28T00:00:00+00:00",
+            "assignment_digests": {ASSIGNMENT_ID: assignment_sha256(repo)},
+        },
+    )
+    return lease
+
+
+def stop_event(version: str) -> dict[str, object]:
+    marker = {
+        "assignment_id": ASSIGNMENT_ID,
+        "context_version": version,
+        "status": "pass",
+        "result_path": RESULT_PATH,
+    }
+    return {
+        "hook_event_name": "SubagentStop",
+        "stop_hook_active": False,
+        "agent_id": "agent-fixture",
+        "agent_type": "context_mapper",
+        "last_assistant_message": "HARNESS_RESULT: " + json.dumps(marker),
+    }
+
+
+def run_stop_hook(repo: Path, event: dict[str, object]) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(HOOKS_DIR / "subagent_stop_validate.py")],
+        cwd=repo,
+        input=json.dumps(event),
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def test_subagentstop_accepts_leased_run_after_pointer_moves(tmp_path: Path) -> None:
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    lease = write_lease(tmp_path, version)
+    (tmp_path / ".agent-harness/ACTIVE_RUN").write_text(
+        "run-decoy\n", encoding="utf-8"
+    )
+    accepted = run_stop_hook(tmp_path, stop_event(version))
+    assert accepted.returncode == 0
+    assert accepted.stdout == ""
+    assert not lease.exists(), "lease must be consumed on acceptance"
+
+
+def test_subagentstop_blocks_on_unparseable_lease(tmp_path: Path) -> None:
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    lease = tmp_path / ".agent-harness/leases/agent-fixture.json"
+    lease.parent.mkdir(parents=True, exist_ok=True)
+    lease.write_text("{corrupt", encoding="utf-8")
+    blocked = run_stop_hook(tmp_path, stop_event(version))
+    assert json.loads(blocked.stdout)["decision"] == "block"
+    assert "cannot be parsed" in json.loads(blocked.stdout)["reason"]
+    assert lease.exists(), "corrupt lease evidence must be preserved"
+
+
+def test_subagentstop_without_lease_blocks_on_moved_pointer(tmp_path: Path) -> None:
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    (tmp_path / ".agent-harness/ACTIVE_RUN").write_text(
+        "run-decoy\n", encoding="utf-8"
+    )
+    blocked = run_stop_hook(tmp_path, stop_event(version))
+    assert blocked.returncode == 0
+    assert json.loads(blocked.stdout)["decision"] == "block"
+    assert "Registered assignment does not exist" in json.loads(blocked.stdout)["reason"]
+
+
+def test_subagentstop_blocks_when_assignment_tampered_after_start(
+    tmp_path: Path,
+) -> None:
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    lease = write_lease(tmp_path, version)
+    assignment_path = (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/assignments/{ASSIGNMENT_ID}.json"
+    )
+    assignment_path.write_bytes(assignment_path.read_bytes() + b"\n")
+    blocked = run_stop_hook(tmp_path, stop_event(version))
+    assert json.loads(blocked.stdout)["decision"] == "block"
+    assert "changed after SubagentStart" in json.loads(blocked.stdout)["reason"]
+    assert lease.exists(), "lease must survive a blocked stop for the retry"
+
+
+def test_subagentstart_writes_atomic_lease(tmp_path: Path, capsys) -> None:
+    version, _ = make_harness(tmp_path)
+    subagent_start_context.inject_subagent_context(
+        {"agent_id": "agent-fixture", "agent_type": "context_mapper"}, tmp_path
+    )
+    output = json.loads(capsys.readouterr().out)
+    context = output["hookSpecificOutput"]["additionalContext"]
+    assert f"Run lease: recorded for run {RUN_ID}" in context
+    assert "verify_assignment.py" in context
+    lease_path = tmp_path / ".agent-harness/leases/agent-fixture.json"
+    lease = json.loads(lease_path.read_text(encoding="utf-8"))
+    assert lease["run_id"] == RUN_ID
+    assert lease["context_version"] == version
+    assert lease["assignment_digests"][ASSIGNMENT_ID] == assignment_sha256(tmp_path)
+    assert not list(lease_path.parent.glob(".tmp.*")), "atomic write left temp files"
+
+
+def test_verify_assignment_matches_sealed_hashes(tmp_path: Path) -> None:
+    make_harness_v2(tmp_path)
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    assignment_rel = f".agent-harness/runs/{RUN_ID}/assignments/{ASSIGNMENT_ID}.json"
+    command = [
+        sys.executable,
+        str(HARNESS_SCRIPTS / "verify_assignment.py"),
+        assignment_rel,
+    ]
+    passed = subprocess.run(
+        command, cwd=tmp_path, text=True, capture_output=True, check=False
+    )
+    assert passed.returncode == 0, passed.stderr
+    assert "VERIFY: PASS" in passed.stdout
+    assert f"assignment_sha256={assignment_sha256(tmp_path)}" in passed.stdout
+    role_path = tmp_path / ".agent-harness/context/roles/context_mapper.md"
+    role_path.write_bytes(role_path.read_bytes() + b"tampered\n")
+    failed = subprocess.run(
+        command, cwd=tmp_path, text=True, capture_output=True, check=False
+    )
+    assert failed.returncode == 1
+    assert "review_role_sha256" in failed.stdout
+    assert "VERIFY: FAIL" in failed.stdout

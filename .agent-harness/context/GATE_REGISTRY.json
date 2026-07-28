@@ -126,12 +126,13 @@
         "E-HARNESS-D034-UNAUTHORIZED-WRITE",
         "E-HARNESS-D035-RUNTIME-ROLE-FAILURE",
         "E-HARNESS-D036-CANARY",
-        "E-HARNESS-D037-RESULT-ONLY"
+        "E-HARNESS-D037-RESULT-ONLY",
+        "E-HARNESS-D058-LEASE-CANARY"
       ],
       "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, exact four-line prompt, and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
       "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     }
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d058-lease-replacement-canary",
+  "generated_at": "2026-07-28T07:22:10+00:00",
+  "result_count": 1,
+  "unique_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "F-D058-LEASE-REPLACEMENT",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The normal single-run path completed end to end under the repaired lease mechanism: SubagentStart preflight passed with a recorded run lease, the sealed assignment, review-role, and result-template digests were all reproduced verbatim by the canonical verifier (VERIFY: PASS), and a valid schema-v2 pass envelope was authored at the required result path with no pointer movement.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d058-lease-replacement-canary/assignments/A-LEASE-REPLACEMENT.json"
+      ],
+      "evidence_fingerprint": "sha256:8d781dae4a525291b332d3c7aa3d8b681ade2ea03f1fdd246e8fa54c9fd6a4a8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-replacement-canary/assignments/A-LEASE-REPLACEMENT.json"
+      ],
+      "confidence": 0.97,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-LEASE-REPLACEMENT"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "context_mapper"
+      ],
+      "supporting_agent_types": [
+        "context_mapper"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

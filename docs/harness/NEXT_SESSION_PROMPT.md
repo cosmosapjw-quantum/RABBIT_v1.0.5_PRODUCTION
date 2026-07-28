@@ -22,7 +22,11 @@ overlapping main sessions changed `ACTIVE_RUN` between Start and Stop.
 
 Next order is fixed:
 
-1. repair and canary-test run-identity leasing under overlapping mains;
+1. **DONE (D-058, 2026-07-28):** run-identity leasing repaired and
+   canary-tested under two live overlapping runs (race accept under a moved
+   pointer, post-Start tamper block, replacement canary, 12/12 hook
+   fixtures); `Q-HOOK-01` RESOLVED; `G-HARNESS-INTEGRITY` fail -> pass;
+   evidence `E-HARNESS-D058-LEASE-CANARY`; context `c3adcd99`;
 2. reconcile distinct claim/evidence IDs without moving a science gate;
 3. prospectively run an asymmetric covariance contract with an
    identical-operation-graph outward interval;

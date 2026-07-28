@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d058-lease-decoy",
+  "assignment_id": "A-LEASE-NEG",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "agent_id": "d058-canary-agent-2",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d058-lease-decoy",
+    "assignment_id": "A-LEASE-NEG",
+    "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d03b5bcbfb4df069663fe19214b8d0457a2fb56dab163dc9089c4478e22d9b37",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d058-lease-decoy/results/A-LEASE-NEG.json",
+  "started_at": "2026-07-28T07:17:10Z",
+  "completed_at": "2026-07-28T07:18:33Z",
+  "tool_versions": {
+    "python": "Python 3.12.3"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-decoy/assignments/A-LEASE-NEG.json",
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-decoy/assignments/A-LEASE-NEG.json | sha256sum; python3 --version; date -u +%Y-%m-%dT%H:%M:%SZ"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-D058-LEASE-NEG",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The canonical verifier reproduced the sealed assignment, review-role, and result-template digests for decoy-run assignment A-LEASE-NEG (VERIFY: PASS), and this valid schema-v2 pass envelope is authored for the post-Start tamper discriminator.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d058-lease-decoy/assignments/A-LEASE-NEG.json"
+      ],
+      "evidence_fingerprint": "sha256:ffe8c261d3e7004c8337c409282dff0d309f96e9f40f8733d7b5e5954966f722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-decoy/assignments/A-LEASE-NEG.json"
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d058-lease-decoy/results/A-LEASE-NEG.json"
+  ]
+}

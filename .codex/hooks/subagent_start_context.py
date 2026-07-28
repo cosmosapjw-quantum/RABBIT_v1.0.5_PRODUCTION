@@ -2,10 +2,18 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from _common import emit_additional_context, load_json, read_stdin_json, repo_root
+from _common import (
+    emit_additional_context,
+    lease_path,
+    load_json,
+    read_stdin_json,
+    repo_root,
+    write_json_atomic,
+)
 
 def read_bounded(path: Path, max_chars: int) -> str:
     try:
@@ -94,6 +102,46 @@ def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
             f"no registered runtime context for agent_type={runtime_agent_type!r}"
         )
 
+    # Run-identity lease (D-058): seal the Start-time run id and the digests of
+    # every assignment registered in it, so SubagentStop validates against this
+    # run even if another main session moves ACTIVE_RUN before this agent stops.
+    lease_note = "not recorded (no active run or missing agent_id)"
+    if active_run != "none" and agent_id:
+        target = lease_path(harness, agent_id)
+        if target is None:
+            lease_note = "not recorded (agent_id is not a safe lease key)"
+        else:
+            digests: dict[str, str] = {}
+            for path in sorted(
+                (harness / "runs" / active_run / "assignments").glob("*.json")
+            ):
+                try:
+                    digests[path.stem] = (
+                        "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+                    )
+                except OSError:
+                    continue
+            try:
+                write_json_atomic(
+                    target,
+                    {
+                        "schema_version": 1,
+                        "agent_id": agent_id,
+                        "agent_type": runtime_agent_type,
+                        "run_id": active_run,
+                        "context_version": version,
+                        "created_at": datetime.now(timezone.utc).isoformat(
+                            timespec="seconds"
+                        ),
+                        "assignment_digests": digests,
+                    },
+                )
+                lease_note = f"recorded for run {active_run}"
+            except OSError:
+                lease_note = (
+                    "unavailable (write failed); Stop validation falls back to ACTIVE_RUN"
+                )
+
     pieces = [read_bounded(pack_path, max_chars)]
     used = len(pieces[0])
 
@@ -111,6 +159,7 @@ def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
 Runtime agent type: {runtime_agent_type}
 Agent ID: {agent_id or "MISSING"}
 Active run: {active_run}
+Run lease: {lease_note}
 Canonical context version: {version}
 
 VS Code collaboration does not expose `spawn_agent` to project PreToolUse hooks.
@@ -118,11 +167,17 @@ The main agent therefore owns registered launch admission and pre/post write has
 Before any broad search or analysis:
 1. Verify that the first four prompt lines are exactly RUN_ID, ASSIGNMENT_ID,
    CONTEXT_VERSION, and INDEPENDENCE_MODE and that CONTEXT_VERSION equals `{version}`.
-2. Read `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json` and compute its SHA-256.
+2. Read `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json` and record the
+   `assignment_sha256` printed by the verifier in step 4.
 3. Verify that assignment `runtime_agent_type` equals `{runtime_agent_type}` and that
    its compatibility `agent_type` has the same value.
-4. Read the assignment's canonical result template and every `review_role_files`
-   entry. Verify `review_role_sha256` and `result_template_sha256` before analysis.
+4. Run the single command
+   `python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json`
+   and require `VERIFY: PASS`. Copy its printed `assignment_sha256`,
+   `review_role_sha256`, and `result_template_sha256` verbatim into
+   `spawn_contract` (v1 assignments print `assignment_sha256` only). Do not
+   hand-compute these: `review_role_sha256` is a path-aware aggregate digest
+   (relpath\\0bytes\\0 per file, in `review_role_files` order), not a raw file hash.
 5. Read only files listed by the assignment, plus targeted evidence needed to verify a cited claim.
 6. Do not read sibling result files unless INDEPENDENCE_MODE is `adjudication` or the assignment explicitly allows them.
 7. Write only to the unique result path in the assignment.

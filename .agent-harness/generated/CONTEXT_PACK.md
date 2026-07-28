@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb`
-Built at: `2026-07-28T05:55:23+00:00`
+Context version: `c3adcd995b7b6017b399913780735d9ef1a7532b6b837f9eb9cdd9050478c718`
+Built at: `2026-07-28T07:23:56+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,7 +9,7 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `61f1db088314207a7babcb4c4127593138e5cabd59f23753de6d6916c7cdd87b`
+SHA-256: `8f8099bb27b57f5dfb8a9eed6db3d551fae2bc7f67c832b992b35eb6383ef9ef`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
@@ -121,6 +121,7 @@ SHA-256: `61f1db088314207a7babcb4c4127593138e5cabd59f23753de6d6916c7cdd87b`
 | E-HARNESS-WORKAROUND-STATIC | `.agent-harness/tests/test_hooks.py` | four fixtures pass for main admission, Start identity/context, Stop spawn-contract/hash/envelope, and retry blocking |
 | E-HARNESS-CANARY-R4 | `run-20260722-f10-harness-r4-supported-workaround` / assignment `7a1aad3c`; result `5a979857`; pre/post non-run diff `828cd996`; pre/post status `7ad89840` | live Start bootstrap/preflight PASS; invalid first Stop blocked; assignment-hash-bound corrected result automatically accepted; result-only write attribution PASS |
 | E-F10-B3V2-W7-BLIND-FAIL | `run-20260722-f10-b3v2-w6w7-blind-review` / CAS contract `00460d92`; merged `1c28dcfb`; adjudication `e5b21e26` | overall FAIL: B3 implementation specification and W7 metrology incomplete; nullspace exact subclaim PASS; broader normalization and required four-axis closures not complete; no output or implementation authority |
+| E-HARNESS-D058-LEASE-CANARY | `run-20260728-f10-d058-lease-canary` (+`-decoy`, `-replacement-canary`) / lease `5cea6cc0`; timeline `1cee21e7`; decoy warning `ff53948d`; race-accept result `c8492cfb`; tamper block `b7e46374`; restored-retry + negative result `5aa9bf96`; replacement result `72bc82df`; pytest 12/12 `cce5f7ae` | D-058 run-identity lease live PASS: Stop accepted a real subagent result under its Start-time lease after `ACTIVE_RUN` moved to a decoy run; post-Start assignment tamper blocked on the sealed digest and accepted after byte restoration; replacement canary clean on the normal path; hooks invoked explicitly with real event payloads (LOCAL-ADAPT: VS Code does not dispatch project Start/Stop hooks) |
 
 Rebuild the context pack and refresh any changed evidence hash before spawning a subagent.
 
@@ -129,7 +130,7 @@ Rebuild the context pack and refresh any changed evidence hash before spawning a
 | Question ID | Question | Required discriminating evidence | Owner |
 |---|---|---|---|
 | Q-IND-01 | Does a structurally independent full-spectral FLRW solve reproduce the accepted envelope? | Independent formulation/integrator with frozen inputs and tolerances, not same-code replay | future F-10 validation |
-| Q-HOOK-01 | **REOPENED by D-057:** the historical single-active-run workaround does not bind a spawned agent to its original run when another main changes `ACTIVE_RUN` before Stop. | Pin Start/Stop to the same immutable run/assignment digest; atomic run lease; overlapping-main negative test; replacement live canary | owner/main |
+| Q-HOOK-01 | **RESOLVED by D-058** (was reopened by D-057): SubagentStart now writes an atomic per-agent run lease sealing the Start-time run id and every registered assignment digest; SubagentStop resolves the run via the lease (legacy `ACTIVE_RUN` fallback only when no lease exists), blocks unparseable/malformed leases and post-Start assignment tampering, and consumes the lease only on acceptance; `init_run.py` claims run dirs and replaces the pointer atomically and warns about outstanding leases. Evidence: `E-HARNESS-D058-LEASE-CANARY` (overlapping-main race accept, tamper negative, replacement canary, 12/12 hook fixtures). | Pin Start/Stop to the same immutable run/assignment digest; atomic run lease; overlapping-main negative test; replacement live canary — all delivered | owner/main |
 
 ---
 
@@ -169,7 +170,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `6755ac734b4f34650195dae568ad962104dd33b84620c2bb2aa4c6357098a122`
+SHA-256: `12eb8beb788313fcd54f870fd0bb5894db14a7a02df9c8d76762a11b02d23db8`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -232,6 +233,7 @@ SHA-256: `6755ac734b4f34650195dae568ad962104dd33b84620c2bb2aa4c6357098a122`
 | D-055 | Issue the corrected covariance-metrology contract (`BD622_D055` r2) changing exactly: (1) degenerate S-B replaced by the nondegenerate P-closed split state S-D scales `(1.0, 0.98, 0.98)`; (2) M3 demoted from bitwise zero to a measured relative electron-row bound `<= 1e-10` with the absolute gap recorded. Every other term, threshold, formula, and state is byte-identical to BD622_D054 (delta verified by mechanical diff). | D-054 adjudication scoped the permitted correction; the r2 oracle is a two-change derivative of the frozen d054 oracle. | One corrected metrology attempt deciding `G-F10-COVARIANCE-METROLOGY` | All-pass flips the gate by single-writer update; any failure preserves FAIL with no further reissue under this grant absent a new owner decision. |
 | D-056 | Close the D-052 stage-3 independent trajectory as an adjudicated **PASS** and flip `G-F10-INDEPENDENT-FLRW` fail -> pass: the structurally independent comparator (affine GL48-Y24, cloglog state, SciPy BDF, independent EOS and constants) integrated the collision-coupled FLRW system from 10 MeV equilibrium to the 0.005 MeV cold endpoint on bytes `760a7c04` in 2:45:28 (3694 evaluations) and met every predeclared band against the Rust N48 anchors: `N_eff = 3.034054308076679` (delta `+7.44e-4`, band `3e-3`, also in band of the Rodas5P partner), `N_end` delta `-2.26e-5`, `t_end` delta `-1.47 s` (band `15 s`), blockwise e/mu/tau enhancements `9.37e-3 > 3.85e-3 > 0` with heavy gap `4.69e-10`, first law `<= 8.31e-15` throughout. **All eight F-10 gates are now PASS.** | Run `run-20260728-f10-d056-independent-trajectory`, report `8ea58a3a`, freeze `5d9f521` with the pre-freeze quadrature discriminator (`3.94e-5` net-transfer agreement vs the `3e-3` band); adjudication recomputed every band and verified the closed historical routes (D-027/D-028/D-029/D-037) are not implicated. | Matched-resolution N48-class endpoint agreement on the frozen 10 MeV -> 5 keV cell only | Limitations recorded: 4/4/24 trajectory angular order (bounded pre-freeze), single execution/platform, `rtol 1e-6`, same-model reviews, no continuum claim. The flip authorizes nothing further: unblinding, public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed and are separate owner decisions under `G-F10-SCOPE`. |
 | D-057 | Preserve the D-053/D-055/D-056 artifacts but reject the all-eight-gates terminal interpretation after adversarial audit. The 27-event orientation-artifact repair is **IMPLEMENTED** and bounded **VALIDATED**; absolute physical normalization/catalogue completeness is **INCONCLUSIVE**. D-055 and D-056 are reproducible/supportive artifacts, not current gate authority. Set `G-F10-COVARIANCE-METROLOGY`, `G-F10-INDEPENDENT-FLRW`, and the effective current `G-HARNESS-INTEGRITY` back to **FAIL**. | D-057 reproduces D-053/D-055 byte-identically, passes three new asymmetric state/swap checks and kills the historical 24-event negative control, but finds that D-055 froze only P-fixed states and its bound omits the production split-map graph/full precision interval; D-056 froze obsolete F10C1 rather than completed-catalogue F10C2 anchors, has no cross-code block/spectral predicate or refinement/tail budget, and its T6 is event bookkeeping rather than a coupled-trajectory first-law test; D-053--D-056 reused the unrelated row-6 claim ID; current claim/handoff surfaces contradict the PASS registry; and concurrent mains move `ACTIVE_RUN` between Start and Stop. Report `docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`. | Audit/status correction only; no production, physics, solver, endpoint, or public behavior changed | First repair the run-identity lease and pass a live overlapping-run canary; then correct claim/evidence bindings; then prospectively execute an asymmetric covariance contract with an identical-operation-graph outward interval and a completed-catalogue-anchor endpoint replay with cross-code block/spectral predicates, independently reduced coupled energy, retained state/tail evidence, and a holdout refinement. D-056 is never overwritten or retrospectively relabelled. All downstream work remains closed. |
+| D-058 | Repair the run-identity lease (D-057 remedy step 1) and close `Q-HOOK-01`: `SubagentStart` writes an atomic per-agent lease (`.agent-harness/leases/<agent_id>.json`) sealing the Start-time run id and the raw sha256 of every registered assignment; `SubagentStop` resolves the run via the lease with legacy `ACTIVE_RUN` fallback only when no lease exists, blocks unparseable or malformed leases, blocks post-Start assignment tampering on the sealed digest (single byte-read for digest and contract), and consumes the lease only on acceptance; `init_run.py` claims run directories and replaces the pointer atomically and warns on outstanding leases; `verify_assignment.py` is the canonical sealed-hash verifier (aggregate role digest vs raw file digests), ending the F-D057-04 role-hash false-positive trap. Live canary under two overlapping runs: a real subagent result was accepted under its Start-time lease after the pointer moved to a decoy run, a post-Start one-byte tamper was blocked and accepted only after byte restoration, and a replacement canary passed the normal path. `G-HARNESS-INTEGRITY` fail -> pass. | Two blind adversarial pre-seal reviews (no blockers; one MAJOR corrupt-lease fallback fixed pre-seal with a regression test), 12/12 hook fixtures, evidence `E-HARNESS-D058-LEASE-CANARY`. LOCAL-ADAPT recorded: VS Code does not dispatch project Start/Stop hooks, so the canary invoked the real hook processes with real event payloads against the real harness; pointer movement and subagents were live. | Harness governance code only; no physics, solver, comparator, or scientific-gate movement | Reopen only if a live workflow shows a lease bypass admitting a result the pre-D-058 hook would have rejected, or hook fixtures regress. |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 
@@ -239,7 +241,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `05ae9f3f111988676adf41bd34b5ba78a38a4b8ad60af4a620772814d6db20bc`
+SHA-256: `8c7c70cc9b0ea54ceece477e4e37aa5ffccec172d019ce5cc9d7155971558f44`
 
 {
   "schema_version": 1,
@@ -369,12 +371,13 @@ SHA-256: `05ae9f3f111988676adf41bd34b5ba78a38a4b8ad60af4a620772814d6db20bc`
         "E-HARNESS-D034-UNAUTHORIZED-WRITE",
         "E-HARNESS-D035-RUNTIME-ROLE-FAILURE",
         "E-HARNESS-D036-CANARY",
-        "E-HARNESS-D037-RESULT-ONLY"
+        "E-HARNESS-D037-RESULT-ONLY",
+        "E-HARNESS-D058-LEASE-CANARY"
       ],
       "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, exact four-line prompt, and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
       "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     }
   ]
 }

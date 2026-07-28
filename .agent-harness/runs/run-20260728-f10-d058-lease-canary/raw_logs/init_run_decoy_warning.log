@@ -1,0 +1,1 @@
+warning: 1 outstanding subagent lease(s) still reference run run-20260728-f10-d058-lease-canary; their Stop validation stays bound to that run: d058-canary-agent-1

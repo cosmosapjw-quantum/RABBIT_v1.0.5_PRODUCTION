@@ -7,7 +7,7 @@ import re
 import sys
 from pathlib import Path
 
-from _common import load_json, read_stdin_json, repo_root
+from _common import lease_path, load_json, read_stdin_json, repo_root
 
 HARNESS_SCRIPTS = Path(__file__).resolve().parents[2] / ".agent-harness" / "scripts"
 sys.path.insert(0, str(HARNESS_SCRIPTS))
@@ -34,8 +34,25 @@ def main() -> None:
     harness = root / ".agent-harness"
     active_path = harness / "ACTIVE_RUN"
 
-    # Outside an explicitly active harness run, do not impose the result envelope.
-    if not active_path.exists() or not active_path.read_text(encoding="utf-8").strip():
+    # Run-identity lease (D-058): resolve the run this agent was bound to at
+    # SubagentStart instead of trusting the mutable global ACTIVE_RUN pointer.
+    event_agent_id = str(event.get("agent_id") or "")
+    lease_file = lease_path(harness, event_agent_id) if event_agent_id else None
+    lease = load_json(lease_file, None) if lease_file is not None else None
+    if lease is None and lease_file is not None and lease_file.exists():
+        block(
+            "Run lease for this agent exists but cannot be parsed; refusing to "
+            "resolve the run via the mutable ACTIVE_RUN pointer."
+        )
+        return
+
+    active_run = ""
+    if active_path.exists():
+        active_run = active_path.read_text(encoding="utf-8").strip()
+
+    # Outside an explicitly active harness run *and* with no Start-time lease,
+    # do not impose the result envelope.
+    if not active_run and lease is None:
         return
 
     message = str(event.get("last_assistant_message") or "")
@@ -65,16 +82,50 @@ def main() -> None:
         block("HARNESS_RESULT assignment_id has an invalid form.")
         return
 
-    active_run = active_path.read_text(encoding="utf-8").strip()
-    run_dir = harness / "runs" / active_run
+    if lease is not None:
+        if (
+            not isinstance(lease, dict)
+            or str(lease.get("agent_id") or "") != event_agent_id
+            or not ASSIGNMENT_ID_RE.fullmatch(str(lease.get("run_id") or ""))
+        ):
+            block(
+                "Run lease for this agent is malformed; refusing to resolve the "
+                "run via the mutable ACTIVE_RUN pointer."
+            )
+            return
+        bound_run = str(lease["run_id"])
+    else:
+        bound_run = active_run
+
+    run_dir = harness / "runs" / bound_run
     assignment_path = run_dir / "assignments" / f"{assignment_id}.json"
-    assignment = load_json(assignment_path, None)
+    try:
+        assignment_raw = assignment_path.read_bytes()
+        assignment = json.loads(assignment_raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        assignment = None
     if not isinstance(assignment, dict):
         block(f"Registered assignment does not exist: {assignment_path.relative_to(root)}")
         return
-    if str(assignment.get("run_id")) != active_run:
-        block("Registered assignment run_id does not match ACTIVE_RUN.")
+    if str(assignment.get("run_id")) != bound_run:
+        block("Registered assignment run_id does not match the bound run identity.")
         return
+    # Single read: the digest and the parsed contract come from the same bytes.
+    recomputed_sha = "sha256:" + hashlib.sha256(assignment_raw).hexdigest()
+    if lease is not None:
+        sealed = (lease.get("assignment_digests") or {}).get(assignment_id)
+        if sealed is None:
+            block(
+                f"Assignment {assignment_id!r} was not registered when this agent "
+                "started (missing from the Start-time lease)."
+            )
+            return
+        if sealed != recomputed_sha:
+            block(
+                "Assignment file changed after SubagentStart: the Start-time sealed "
+                "digest does not match the current bytes."
+            )
+            return
     event_agent_type = str(event.get("agent_type") or "")
     expected_runtime_type = assignment_runtime_agent_type(assignment)
     if event_agent_type != expected_runtime_type:
@@ -83,7 +134,6 @@ def main() -> None:
             "runtime_agent_type."
         )
         return
-    event_agent_id = str(event.get("agent_id") or "")
     if not event_agent_id:
         block("SubagentStop event omitted agent_id; result identity cannot be verified.")
         return
@@ -92,7 +142,7 @@ def main() -> None:
     current_version = str(index.get("context_version", "UNBUILT"))
     assignment_errors = validate_assignment_contract(
         assignment,
-        expected_run_id=active_run,
+        expected_run_id=bound_run,
         expected_context_version=current_version,
         role_files=index.get("role_files", {}),
     )
@@ -156,12 +206,10 @@ def main() -> None:
     contract_errors = validate_result_contract(
         result,
         assignment,
-        expected_run_id=active_run,
+        expected_run_id=bound_run,
         expected_context_version=current_version,
         expected_agent_id=event_agent_id,
-        expected_assignment_sha256=(
-            "sha256:" + hashlib.sha256(assignment_path.read_bytes()).hexdigest()
-        ),
+        expected_assignment_sha256=recomputed_sha,
     )
     if str(result.get("status")) != str(envelope["status"]):
         contract_errors.append(
@@ -179,6 +227,11 @@ def main() -> None:
             + retry_note
         )
         return
+
+    # Acceptance: consume the lease so a reused agent_id starts clean. Blocked
+    # stops above leave the lease in place for the fail-closed retry.
+    if lease_file is not None:
+        lease_file.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

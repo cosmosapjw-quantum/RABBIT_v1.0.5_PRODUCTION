@@ -46,6 +46,34 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-28 D-058 run-identity lease repair overlay
+
+- D-057 remedy step 1 executed under the owner's full-DAG grant
+  (2026-07-28): `SubagentStart` now writes an atomic per-agent run lease
+  sealing the Start-time run id and every registered assignment digest;
+  `SubagentStop` resolves the run via the lease (legacy `ACTIVE_RUN`
+  fallback only when no lease exists), blocks unparseable leases and
+  post-Start assignment tampering, and consumes the lease only on
+  acceptance; `init_run.py` claims run directories and replaces the
+  pointer atomically with outstanding-lease warnings;
+  `verify_assignment.py` is the canonical sealed-hash verifier closing
+  the F-D057-04 role-hash false-positive trap.
+- Live canary: runs `run-20260728-f10-d058-lease-canary` / `-lease-decoy`
+  / `-lease-replacement-canary`. A real subagent result was accepted
+  under its Start-time lease after a decoy `init_run` moved the global
+  pointer; a post-Start one-byte tamper was blocked on the sealed digest
+  and accepted only after byte restoration; the replacement canary passed
+  the untouched path. Hook fixtures 12/12 (five new lease tests plus a
+  corrupt-lease regression). Two blind adversarial pre-seal reviews; the
+  one MAJOR (corrupt-lease fallback) was fixed pre-seal.
+- LOCAL-ADAPT recorded: VS Code does not dispatch project Start/Stop
+  hooks, so the canary invoked the real hook processes with real event
+  payloads; runs, pointer movement, and subagents were live.
+- `Q-HOOK-01` RESOLVED; `G-HARNESS-INTEGRITY` fail -> pass with evidence
+  `E-HARNESS-D058-LEASE-CANARY`; context `ead0407d` -> `c3adcd99`.
+  Science gates remain FAIL pending remedy steps 2-4 and the final
+  single-writer reconsideration.
+
 ## 2026-07-28 D-057 adversarial closeout correction
 
 - The static 27-event orientation-artifact repair is retained as
