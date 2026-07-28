@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d063-trajectory-r3",
+  "assignment_id": "A-D063-ADJUDICATION",
+  "context_version": "bccfc6c5fa023df2befe2de43057b78c34e7fc3c806a198484e29a0bb2c0518a",
+  "agent_id": "d063-adjudicator",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d063-trajectory-r3",
+    "assignment_id": "A-D063-ADJUDICATION",
+    "context_version": "bccfc6c5fa023df2befe2de43057b78c34e7fc3c806a198484e29a0bb2c0518a",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:41e52164ca951ed1a26a20dd1f2d59af153ebb10aa80be8f353efc48a4375519",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json",
+  "started_at": "2026-07-28T23:05:00Z",
+  "completed_at": "2026-07-28T23:20:00Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/assignments/A-D063-ADJUDICATION.json",
+    "sha256sum .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+    "diff scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py",
+    "python3 - <<EOF (inline verification: 12/12 check census on the r3 report; bitwise base-endpoint and full-spectrum/blocks/residual-row comparison against the preserved r2 report run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json and bitwise base-endpoint comparison against the preserved D-056 report run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json; holdout bitwise comparison r3 vs r2 incl. T12 drift triple; T2/T3/T4/T5/T7-split/T9/T11 margin recomputation against the frozen contract bands; T8 gated vs full-domain sup and sub-support count; T10 mutant kill modes, M2 per-sample activity and R_transfer vs kill level 1.0; module and anchor-log sha256 vs contract) EOF"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-D063-ADJUDICATION",
+      "claim_id": "C-F10-TRAJECTORY-R2",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The D-063 r3 trajectory report (sha256 daf4fc06, verdict PASS, exit 0, wall 27325 s) was verified check-by-check: all 12 checks pass, and the mechanical diff of the frozen r3 driver against the preserved r2 driver contains EXACTLY the two adjudicated supersession changes (T8 support gating with the sub-support deviations retained non-gating, and the mutant-window relocation 4.00/4.20 samples {4.05,4.10,4.15} -> 2.00/2.20 samples {2.05,2.10,2.15}) plus docstring/contract-name strings, with every band, anchor, threshold, floor, checkpoint, and formula otherwise unchanged. The r3 base endpoint (N_eff 3.034054308076679, N_end 7.936698865363719, t 52678.7319 s, 3694 evals) is bitwise identical to both the preserved r2 base and the preserved D-056 report, and the r3 rtol 3e-7 holdout (4331 evals; dNeff -1.199e-5, dN 8.4e-7, dt -0.71 s vs base) is bitwise identical to the r2 holdout, so three independent executions of each trajectory now agree bitwise; all physics margins reproduce the r2 record (T2/T3/T4 anchor deltas +1.832e-5/+5.53e-6/+1.10 s vs bands 3e-4/1e-4/5 s, rejecting the 7.44e-4 obsolete-anchor class; split-ratio delta 1.80e-5 vs 2e-4; max R_total 6.97e-5 vs 5e-4 with 4 >= 4 clean window checkpoints; tail 1.24e-8 and rejections 919848-972552 in envelope; roundoff 0), T8 now gates in-band at sup 1.5881626368e-3 <= 2e-3 over the 46 in-support Rust nodes with the full-domain sup 2.0800641747e-3 recorded non-gating (2 sub-support nodes), and both sign mutants are KILLED at the relocated activity-peak window: M1 by solver failure (step-size collapse under the flipped collision sign, a preregistered kill mode) and M2 by the coupled-energy residual with max_R_transfer 2.011284806535093 vs the kill level 1.0, matching the contract's structural prediction ~2.0 at all three active FD samples. The PASS is admissible under the adjudicated exactly-two-change supersession scope, and C-F10-TRAJECTORY-R2 earns a VALIDATED recommendation, with the explicit reservation that the G-F10-INDEPENDENT-FLRW gate flip is the D-064 single-writer reconsideration (D-057 remedy step 5, now unblocked since steps 1-4 are complete). Limitations of record: matched-resolution N48-class agreement on the frozen 10 MeV -> 5 keV cell only; single platform; same-model reviews; T3/T4 do not discriminate the obsolete-anchor class on their own (T2 does); T8 gates the collocation support only (sub-support extrapolation recorded); no continuum or production claim.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json"
+      ],
+      "evidence_fingerprint": "sha256:daf4fc06b8cc3bb5b07a92e436fd95f78cb208a10becaac22c7013e7f2fba9d4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python scripts/audit/d063_independent_trajectory_r3.py --out <path>"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+  ]
+}

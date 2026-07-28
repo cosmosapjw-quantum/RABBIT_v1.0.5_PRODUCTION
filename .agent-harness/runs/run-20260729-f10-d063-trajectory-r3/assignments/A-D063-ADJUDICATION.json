@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d063-trajectory-r3",
+  "assignment_id": "A-D063-ADJUDICATION",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "bccfc6c5fa023df2befe2de43057b78c34e7fc3c806a198484e29a0bb2c0518a",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-F10-TRAJECTORY-R2"
+  ],
+  "task": "Adjudicate the D-063 trajectory r3 PASS (raw_logs/r3_trajectory_report.json, exit 0): verify every recorded check against the frozen r3 contract, confirm the exactly-two-change supersession discipline vs the preserved r2 (physics bitwise-identical; only the T8 support gating and the mutant window changed), verify both mutant kills, and state whether the PASS earns C-F10-TRAJECTORY-R2 VALIDATED pending the D-064 single-writer gate reconsideration.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/assignments/A-D063-ADJUDICATION.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json",
+  "status": "registered"
+}
