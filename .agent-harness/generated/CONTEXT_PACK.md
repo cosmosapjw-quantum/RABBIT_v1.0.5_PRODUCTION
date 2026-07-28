@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `b5c40c7d4b7b26d161d846d036cc1a5f7beb5777426f28a97e0d305c37b59ee0`
-Built at: `2026-07-28T23:18:25+00:00`
+Context version: `208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b`
+Built at: `2026-07-28T23:20:03+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,7 +9,7 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `c7623ce7d05c0599db6d5b6f2ce697df8781c92f82b85da881496f8e6252405f`
+SHA-256: `dbe0ae35957f051a44693d23981fc3014973292da8118fb6a323f72a34962841`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
@@ -124,8 +124,8 @@ SHA-256: `c7623ce7d05c0599db6d5b6f2ce697df8781c92f82b85da881496f8e6252405f`
 | E-HARNESS-D058-LEASE-CANARY | `run-20260728-f10-d058-lease-canary` (+`-decoy`, `-replacement-canary`) / lease `5cea6cc0`; timeline `1cee21e7`; decoy warning `ff53948d`; race-accept result `c8492cfb`; tamper block `b7e46374`; restored-retry + negative result `5aa9bf96`; replacement result `72bc82df`; pytest 12/12 `cce5f7ae` | D-058 run-identity lease live PASS: Stop accepted a real subagent result under its Start-time lease after `ACTIVE_RUN` moved to a decoy run; post-Start assignment tamper blocked on the sealed digest and accepted after byte restoration; replacement canary clean on the normal path; hooks invoked explicitly with real event payloads (LOCAL-ADAPT: VS Code does not dispatch project Start/Stop hooks) |
 | E-F10-D055-METROLOGY-R2 | `run-20260728-f10-d055-metrology-r2` / report `4c6e3aba`; freeze `904acb2`; D-057 byte-identical replay | preserved supportive artifact, NOT gate-authoritative (D-057): P-fixed-state identities and the recorded seven-term bound reproduce exactly, but the frozen family omits asymmetric state/swap pairs and the bound covers a reassociated one-map graph without `E_split`, off-grid basis shadowing, or a rigorous interval |
 | E-F10-D056-INDEPENDENT-TRAJECTORY | `run-20260728-f10-d056-independent-trajectory` / report `8ea58a3a`; freeze `5d9f521` | preserved supportive artifact, NOT gate-authoritative (D-057): endpoint internally consistent and closer to the completed-catalogue anchors than to its own frozen obsolete F10C1 anchors; retained unchanged, never relabelled |
-| E-F10-D060-METROLOGY-R3 | prospective: D-060 r3 contract + oracle (to be frozen before any output) under claim `C-F10-METROLOGY-R3` | required for any future `G-F10-COVARIANCE-METROLOGY` pass: asymmetric state/swap family, mutant kills, identical-operation-graph bound with explicit `E_split`, off-grid basis coverage, outward-rounded interval replay |
-| E-F10-D061-TRAJECTORY-R2 | prospective: D-061 r2 contract + driver (to be frozen before any output) under claim `C-F10-TRAJECTORY-R2` | required for any future `G-F10-INDEPENDENT-FLRW` pass: completed-catalogue anchors + log hashes, cross-code block/spectral predicates, independently reduced coupled-energy residual with sign-mutant kills, retained state/tail evidence, one holdout refinement |
+| E-F10-D060-METROLOGY-R3 | REALIZED: D-060 r3 (freeze `17fedc6`, FAIL preserved, report `e40d80a7`) + D-061 r4 one-change reissue (freeze `8492382`, PASS, report `56529e65`) under claim `C-F10-METROLOGY-R3`; runs `run-20260728-f10-d060-metrology-r3` / `-d061-metrology-r4` | delivered for the D-064 `G-F10-COVARIANCE-METROLOGY` pass: asymmetric state/swap family (N3 max `5.092e-11`), five mutant kills, identical-graph bound with explicit `E_split`, off-grid coverage via bitwise/N7X rate equivariance, outward mpmath.iv tiers (`1522656/0` deep-node containment); degenerate P-fixed N7X recorded non-gating |
+| E-F10-D061-TRAJECTORY-R2 | REALIZED: D-062 r2 (freeze `3849193`, FAIL preserved, report `fc6f98bd`) + D-063 r3 two-change reissue (freeze `db9d0e3`, PASS, report `daf4fc06`) under claim `C-F10-TRAJECTORY-R2`; runs `run-20260728-f10-d062-trajectory-r2` / `run-20260729-f10-d063-trajectory-r3` | delivered for the D-064 `G-F10-INDEPENDENT-FLRW` pass: completed-catalogue anchors + pinned log hashes (`N_eff` delta `+1.83e-5` vs `3e-4`, rejecting the obsolete-anchor class), cross-code block/spectral predicates + split ratio, coupled-energy residual with both sign mutants killed (`max_R_transfer 2.011`), retained checkpoint/spectrum/tail evidence, `rtol 3e-7` holdout; base and holdout bitwise across three executions |
 
 Rebuild the context pack and refresh any changed evidence hash before spawning a subagent.
 
@@ -174,7 +174,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `59f9442291c2479f999c525a4cdbca8238800dc56e3b7f769ac4af21dfb9dddf`
+SHA-256: `b5116e9f1afa75c55c38e18a9623ae37dbe95af2d65638a4cdb267a172f8b9b9`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -243,6 +243,7 @@ SHA-256: `59f9442291c2479f999c525a4cdbca8238800dc56e3b7f769ac4af21dfb9dddf`
 | D-061 | Close the covariance r4 reissue (`BD622_D061`, freeze `8492382`) as an adjudicated **PASS** under the one-change supersession scope. The mechanical diff vs the frozen r3 oracle contains exactly the permitted hunks; the report's physics numbers are bitwise identical to the preserved r3 FAIL (deterministic replay), with `N7X_exchange` gating true only on the degenerate P-fixed SS states (`gated: false`, sup values recorded). All 11 checks pass on all 8 family members: asymmetric N1/N2 `<=1.2e-15`, N3 max `5.092e-11` (1.96x under the `1e-10` cap; SB 7.1x under `2.5e-10`), N7X `<=7.7e-13` where nondegenerate, certified interval residuals bracket float64 at every state, M-INT-2 `1522656/0`, five mutant kills with bitwise canary, D-055 anchors exact. `C-F10-METROLOGY-R3` -> VALIDATED. | Run `run-20260728-f10-d061-metrology-r4`, report `56529e65`, registered adjudication `A-D061-ADJUDICATION` (lease-validated Stop accept) verified the diff hunks, the r3/r4 leaf deltas (17, all in scope), and the margins. | Matched-family asymmetric-covariance and split-graph metrology claim on module bytes `760a7c04` only | **`G-F10-COVARIANCE-METROLOGY` is NOT flipped here**: per the D-057 remedy step 5, the gate flip is a D-063 single-writer reconsideration after the D-062 trajectory program completes. Limitations recorded: single execution/platform, same-model reviews, SS N7X non-gating rests on the degeneracy rationale. |
 | D-062 | Record the independent trajectory r2 contract (`BD622_D062`, freeze `3849193`) as an adjudicated **FAIL, preserved**: `G-F10-INDEPENDENT-FLRW` stays FAIL and no band or anchor may be refitted. Exactly two frozen-parameter contract-design defects (D-054/D-060 class): T8's gated domain included the two Rust nodes below the first GL48 collocation node (`y ~= 0.01475`) — the sup `2.0801e-3` vs the `2e-3` band lands at `y = 0.00184` where the degree-47 interpolant is an extrapolation with negligible `y^2`-measure weight (in-support sup `1.588e-3`, in band); T10's frozen mutant restart `N = 4.00` sits below the measured `5e-4` activity floor (profile peaks `2.40e-3` at `N = 2.00`, is `3.81e-4` at `4.00`; all six mutant FD samples `2.8-3.5e-4`), so both sign-mutant kills were structurally unreachable. Every physics check passed: base endpoint bitwise-identical to the preserved D-056 report (3694 evaluations; anchor deltas `+1.832e-5`/`+5.53e-6`/`+1.10 s` inside `3e-4`/`1e-4`/`5 s`, rejecting the `7.44e-4` obsolete-anchor class); Rodas partner, blockwise, block anchors + split ratio (`1.80e-5` vs `2e-4`), coupled-energy (`R_total <= 6.97e-5`, 4/4 clean window checkpoints), tail/rejections, and the `rtol 3e-7` holdout (4331 evaluations, drift `-1.199e-5` vs `2e-4`). | Run `run-20260728-f10-d062-trajectory-r2`, report `fc6f98bd`, registered adjudication `A-D062-ADJUDICATION` (lease-validated Stop accept) recomputed the node/support geometry and the activity profile. | FAIL record only; no gate movement; no refitting | Supersession PERMITTED per the D-054/D-055 and D-060/D-061 precedent: a D-063 r3 reissue may change EXACTLY TWO items — (1) gate T8 on Rust nodes with `y >= GRID.nodes[0]`, sub-support deviations recorded non-gating with the full-domain sup retained; (2) relocate the mutant restart to the measured activity peak `N = 2.00` (span `[2.00, 2.20]`, samples `{2.05, 2.10, 2.15}`) — with everything else unchanged and a full fresh re-execution. |
 | D-063 | Close the trajectory r3 reissue (`BD622_D063`, freeze `db9d0e3`) as an adjudicated **PASS** under the exactly-two-change supersession scope: all 12 checks pass in a full fresh execution (7:35:25 wall). The base endpoint is bitwise identical to BOTH the preserved r2 base and the preserved D-056 report (`N_eff 3.034054308076679`, `N_end 7.936698865363719`, `t 52678.7319 s`, 3694 evaluations) and the holdout is bitwise identical to the r2 holdout (4331 evaluations, drift `-1.199e-5`/`8.4e-7`/`-0.71 s`) — three independent executions of each trajectory agree bitwise including spectra and residual rows. T8 gated sup `1.588e-3 <= 2e-3` over the 46 in-support nodes (full-domain `2.080e-3` recorded non-gating); T10 both sign mutants KILLED (M1 solver step-size collapse under the flipped collision sign at the activity peak; M2 coupled-energy residual `max_R_transfer 2.0113` vs kill `1.0`, matching the structural `~2.0` prediction); anchor deltas `+1.832e-5`/`+5.53e-6`/`+1.10 s` reject the `7.44e-4` obsolete-anchor class; split ratio `1.80e-5` vs `2e-4`; `R_total <= 6.97e-5`; tail/rejections in envelope. `C-F10-TRAJECTORY-R2` -> VALIDATED. | Run `run-20260729-f10-d063-trajectory-r3`, report `daf4fc06`, registered adjudication `A-D063-ADJUDICATION` (lease-validated Stop accept) verified the two-change diff and every margin. | Matched-resolution N48-class endpoint claim on the frozen 10 MeV -> 5 keV cell, module bytes `760a7c04` only | **`G-F10-INDEPENDENT-FLRW` is NOT flipped here**: the D-057 remedy steps 1--4 are now all complete, so the D-064 single-writer reconsideration of both science gates is unblocked. Limitations: single platform, same-model reviews, T3/T4 non-discriminating alone (T2 carries anchor-class rejection), T8 gates the collocation support only, no continuum/production claim. |
+| D-064 | Single-writer reconsideration under the D-057 remedy step 5, with steps 1--4 all complete and adjudicated: flip `G-F10-COVARIANCE-METROLOGY` fail -> pass (evidence `E-F10-D060-METROLOGY-R3`: D-060 FAIL preserved + D-061 r4 PASS) and `G-F10-INDEPENDENT-FLRW` fail -> pass (evidence `E-F10-D061-TRAJECTORY-R2`: D-062 FAIL preserved + D-063 r3 PASS); `C-F10-COVARIANCE-METROLOGY` and `C-F10-INDEPENDENT` -> VALIDATED at matched-resolution scope. **All eight F-10 gates are PASS** on catalogue bytes `760a7c04`, this time through the corrected evidence contracts the D-057 audit demanded: run-identity leases with a live overlapping-run canary, stable claim/evidence bindings, asymmetric covariance with identical-graph interval certification, and a completed-catalogue endpoint replay with discriminating bands, coupled-energy mutants, retained state/tail evidence, and a holdout refinement — with every intermediate FAIL preserved (D-060, D-062) and every reissue scoped by a registered adjudication. | Reports `56529e65` (metrology r4) and `daf4fc06` (trajectory r3); registered adjudications `A-D061-ADJUDICATION` / `A-D063-ADJUDICATION`; the preserved FAIL lineage D-054/D-056(interpretation)/D-060/D-062 stands unmodified. | Matched-resolution N48-class validation of the frozen 10 MeV -> 5 keV cell on module bytes `760a7c04`; no continuum, absolute-normalization, precision-production, Type-I, or QKE claim | **The flips authorize nothing further.** STOP before any downstream authority decision: unblinding/handoff, public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed owner decisions under `G-F10-SCOPE`. Reopen any gate only via a new adversarial finding with evidence. |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 
@@ -250,7 +251,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `f809c47ad7ab75b3c5e3b23c7220907f8f5964367ae58c9e3d8f3ec6551c78ba`
+SHA-256: `93991ccd967a26af30faed3bca0911a368b239552501c91d08baaf5c767b434b`
 
 {
   "schema_version": 1,
@@ -333,7 +334,7 @@ SHA-256: `f809c47ad7ab75b3c5e3b23c7220907f8f5964367ae58c9e3d8f3ec6551c78ba`
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",
@@ -353,7 +354,7 @@ SHA-256: `f809c47ad7ab75b3c5e3b23c7220907f8f5964367ae58c9e3d8f3ec6551c78ba`
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
-      "status": "fail"
+      "status": "pass"
     },
     {
       "gate_id": "G-F10-SCOPE",

@@ -24,6 +24,13 @@ linked from canonical docs. Start from these anchors:
   [BD622_D056_independent_trajectory_contract_2026-07-28.md](BD622_D056_independent_trajectory_contract_2026-07-28.md))
 - D-057 adversarial correction of the claimed blocker closeout:
   [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
+- D-058–D-064 remedy DAG completion (lease repair, rebinding, covariance
+  r3/r4, trajectory r2/r3, gate reconsideration):
+  [BD622_D064_remedy_dag_completion_2026-07-29.md](BD622_D064_remedy_dag_completion_2026-07-29.md)
+  (contracts: [BD622_D060_covariance_metrology_contract_r3_2026-07-28.md](BD622_D060_covariance_metrology_contract_r3_2026-07-28.md),
+  [BD622_D061_covariance_metrology_contract_r4_2026-07-28.md](BD622_D061_covariance_metrology_contract_r4_2026-07-28.md),
+  [BD622_D062_independent_trajectory_r2_contract_2026-07-28.md](BD622_D062_independent_trajectory_r2_contract_2026-07-28.md),
+  [BD622_D063_independent_trajectory_r3_contract_2026-07-28.md](BD622_D063_independent_trajectory_r3_contract_2026-07-28.md))
 - D-049/D-051 lint fix, regression gate PASS, OWNER-C closure acceptance:
   [BD622_D051_ownerc_closure_acceptance_2026-07-27.md](BD622_D051_ownerc_closure_acceptance_2026-07-27.md)
   (contract: [BD622_D050_ownerc_row6_closure_contract_2026-07-27.md](BD622_D050_ownerc_row6_closure_contract_2026-07-27.md))

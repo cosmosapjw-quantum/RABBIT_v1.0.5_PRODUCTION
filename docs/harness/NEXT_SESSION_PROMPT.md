@@ -1,6 +1,40 @@
 # Next Session Prompt
 
-## 2026-07-28 D-057 controlling overlay — STOP/PRESERVE
+## 2026-07-29 D-064 controlling overlay — remedy DAG complete, STOP/PRESERVE
+
+**All eight F-10 gates are PASS** on catalogue bytes `760a7c04` at context
+`208c9c60`, closing the D-057 remedy DAG through the corrected evidence
+contracts the audit demanded: run-identity leases with a live
+overlapping-run canary (D-058), stable claim/evidence bindings (D-059),
+asymmetric covariance with identical-graph outward-interval certification
+(D-060 FAIL preserved → D-061 r4 PASS), and a completed-catalogue endpoint
+replay with discriminating bands, coupled-energy sign-mutant kills,
+retained state/tail evidence, and a `rtol 3e-7` holdout (D-062 FAIL
+preserved → D-063 r3 PASS). Every intermediate FAIL is preserved; every
+reissue was scoped by a registered, lease-validated adjudication.
+
+Endpoint of record vs the completed-catalogue Rust BDF anchor: `N_eff`
+delta `+1.83e-5` (band `3e-4`, rejecting the `7.44e-4` obsolete-anchor
+class), `N_end` delta `+5.53e-6`, `t_end` delta `+1.10 s`; base and
+holdout bitwise-reproduced across three executions. Covariance of record:
+asymmetric `N3` max `5.092e-11` under the `1e-10` cap with
+interval-certified brackets and `1522656/0` deep-node containment.
+
+**The next session preserves this state and has NO open technical task.**
+Remaining items are owner-level programme decisions under `G-F10-SCOPE`:
+
+1. whether to unblind / hand off F-10 (the 2026-07-16 stop condition is
+   met at matched-resolution class, now on audit-corrected evidence);
+2. whether to open any public/production claim (currently FORBIDDEN);
+3. whether to un-pause F-11 Bianchi/Type-I;
+4. QKE remains FORBIDDEN.
+
+Do not modify `_independent_noqke.py` or the Rust tree; do not re-run
+frozen historical scripts against new bytes; do not re-dispatch any
+external prompt. Governing note:
+`docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md`.
+
+## 2026-07-28 D-057 overlay — STOP/PRESERVE (superseded by D-064)
 
 The claimed D-056 all-gates closeout failed adversarial audit. Preserve every
 D-053/D-055/D-056 artifact, but keep

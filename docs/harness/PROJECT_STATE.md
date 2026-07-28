@@ -46,6 +46,29 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-29 D-064 remedy-DAG completion overlay (controlling)
+
+- The D-057 five-step remedy DAG is complete: D-058 lease repair
+  (`G-HARNESS-INTEGRITY` pass), D-059 rebinding, D-060 covariance r3
+  FAIL preserved -> D-061 r4 PASS, D-062 trajectory r2 FAIL preserved ->
+  D-063 r3 PASS, D-064 single-writer reconsideration. **All eight F-10
+  gates are PASS** on catalogue bytes `760a7c04`, this time through the
+  corrected evidence contracts the audit demanded, with every
+  intermediate FAIL preserved and every reissue scoped by a registered
+  lease-validated adjudication.
+- Trajectory endpoint vs the completed-catalogue Rust BDF anchor:
+  `N_eff` delta `+1.83e-5` (band `3e-4`, rejecting the `7.44e-4`
+  obsolete-anchor class), `N_end` delta `+5.53e-6`, `t_end` delta
+  `+1.10 s`; base and holdout bitwise-reproduced across three
+  executions. Covariance: asymmetric N3 max `5.092e-11` under the
+  `1e-10` cap with interval-certified brackets and `1522656/0` deep-node
+  containment.
+- STOP/PRESERVE: the flips authorize nothing further. Unblinding/handoff,
+  public/production, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work,
+  F-11/Bianchi, and QKE remain closed owner decisions under
+  `G-F10-SCOPE`. Context `208c9c60`; closeout
+  `run-20260729-f10-d064-remedy-dag-closeout`.
+
 ## 2026-07-28 D-060 covariance r3 FAIL-preserved overlay
 
 - D-057 remedy step 3 first attempt executed under freeze `17fedc6` and

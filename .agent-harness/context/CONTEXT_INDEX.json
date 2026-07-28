@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "context_version": "b5c40c7d4b7b26d161d846d036cc1a5f7beb5777426f28a97e0d305c37b59ee0",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
   "max_injected_chars": 24000,
   "shared_files": [
     ".agent-harness/context/SHARED_CONTEXT.md",
@@ -47,11 +47,11 @@
     ".agent-harness/runs/*/results/*",
     ".agent-harness/runs/*/raw_logs/*"
   ],
-  "built_at": "2026-07-28T23:18:25+00:00",
+  "built_at": "2026-07-28T23:20:03+00:00",
   "file_hashes": {
-    ".agent-harness/context/SHARED_CONTEXT.md": "c7623ce7d05c0599db6d5b6f2ce697df8781c92f82b85da881496f8e6252405f",
+    ".agent-harness/context/SHARED_CONTEXT.md": "dbe0ae35957f051a44693d23981fc3014973292da8118fb6a323f72a34962841",
     ".agent-harness/context/SYMBOLS.md": "6d5fbe058c2750ed680ce835e6e03438200b36b16743bf6c1be99649030e096b",
-    ".agent-harness/context/FROZEN_DECISIONS.md": "59f9442291c2479f999c525a4cdbca8238800dc56e3b7f769ac4af21dfb9dddf",
-    ".agent-harness/context/GATE_REGISTRY.json": "f809c47ad7ab75b3c5e3b23c7220907f8f5964367ae58c9e3d8f3ec6551c78ba"
+    ".agent-harness/context/FROZEN_DECISIONS.md": "b5116e9f1afa75c55c38e18a9623ae37dbe95af2d65638a4cdb267a172f8b9b9",
+    ".agent-harness/context/GATE_REGISTRY.json": "93991ccd967a26af30faed3bca0911a368b239552501c91d08baaf5c767b434b"
   }
 }
