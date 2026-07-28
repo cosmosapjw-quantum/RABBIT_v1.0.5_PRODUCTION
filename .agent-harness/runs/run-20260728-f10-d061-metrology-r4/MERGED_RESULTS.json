@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d061-metrology-r4",
+  "generated_at": "2026-07-28T09:09:20+00:00",
+  "result_count": 1,
+  "unique_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "F-D061-ADJUDICATION",
+      "claim_id": "C-F10-METROLOGY-R3",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The D-061 r4 oracle report (sha256 56529e65, verdict PASS) was verified check-by-check against the frozen r4 contract: all 11 checks true on all 8 family states, five preregistered mutants killed with the restoration canary bitwise, N8 anchors exactly equal to the D-055 values with the division identity numerator/D_anchor reproduced, module sha 760a7c04..., numpy 2.4.4, mpmath 1.3.0, and recomputed margins hold (max asymmetric N3 5.092e-11 under the 1e-10 cap at 1.96x, SB N3 ~3.53e-11 under 2.5e-10 at 7.1x, every certified residual hi under its block cap with float64 N3 inside the certified band). The adjudicated one-change supersession discipline held exactly: a leaf-level diff of the r3 and r4 reports shows 17 deltas, all within the permitted scope (contract string, verdict, wall_seconds, the added N7X gated field, and N7X_exchange/ok flipping true only on P-fixed SS-A/SS-C/SS-D with gated:false and the degenerate sup values still recorded), while every physics number - per-state N1/N2/N3/N4/D_cov, N7X sup_rel, certified residual lo/hi, W_int, entropy, mutant margins, and the 1522656/0 M-INT-2 containment counters - is bitwise identical to the preserved r3 FAIL, and the oracle-script diff contains exactly the docstring/contract-name strings, the single gating predicate (n7x[\"ok\"] or p_fixed), and the gated record field. The r4 contract PASS is therefore admissible and C-F10-METROLOGY-R3 earns a VALIDATED status recommendation, with the explicit reservation that the G-F10-COVARIANCE-METROLOGY gate flip itself is deferred to the D-063 single-writer reconsideration after the D-062 trajectory program (D-057 remedy step 5). Recorded limitations: single execution on a single host/platform; same-model authorship and blind reviews; the interval tiers certify the production graph only on the frozen matched family, not a general-state proof; and the SS N7X non-gating rests on the degeneracy rationale (elastic energy conservation zeroes the Pauli affinity for shared mu/tau logit slopes, making the relative metric noise/noise at ~0.05) rather than on a measured equivariance bound at those states.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json"
+      ],
+      "evidence_fingerprint": "sha256:56529e65b59726610e5d484fb37d1460d60153e6af9feba95254c8d21686fad0",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python scripts/audit/d061_covariance_metrology_r4_oracle.py --out <path>"
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-D061-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}
