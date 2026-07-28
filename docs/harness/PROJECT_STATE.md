@@ -46,6 +46,23 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
+## 2026-07-28 D-059 claim/evidence rebinding overlay
+
+- D-057 remedy step 2 executed with zero scientific-gate movement:
+  registered `C-F10-ROW9-CLOSURE` (VALIDATED, bounded
+  discretization-repair only), `C-F10-METROLOGY-R3` and
+  `C-F10-TRAJECTORY-R2` (SPECIFIED successor obligations for D-060 and
+  D-061); defined the previously dangling `E-F10-D055-METROLOGY-R2` and
+  `E-F10-D056-INDEPENDENT-TRAJECTORY` as preserved supportive, NOT
+  gate-authoritative; added prospective `E-F10-D060-METROLOGY-R3` /
+  `E-F10-D061-TRAJECTORY-R2` to the two FAIL gates' required evidence;
+  reconciled the `C-HARNESS-INTEGRITY` statement with the D-058
+  resolution. Bounded cleanup: the two OWNER-A lab `__pycache__/*.pyc`
+  files untracked (`3f7a10a`), sealed source bytes untouched.
+- `G-F10-COVARIANCE-METROLOGY` and `G-F10-INDEPENDENT-FLRW` remain FAIL.
+  Context `c3adcd99` -> `a26149ab`; closeout
+  `run-20260728-f10-d059-closeout`.
+
 ## 2026-07-28 D-058 run-identity lease repair overlay
 
 - D-057 remedy step 1 executed under the owner's full-DAG grant

@@ -73,7 +73,8 @@
       "required_evidence": [
         "E-F10-INDEPENDENT-ENDPOINT",
         "E-F10-B3V2-D037-BLIND-FAIL",
-        "E-F10-D056-INDEPENDENT-TRAJECTORY"
+        "E-F10-D056-INDEPENDENT-TRAJECTORY",
+        "E-F10-D061-TRAJECTORY-R2"
       ],
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
@@ -92,7 +93,8 @@
         "E-F10-B3V2-STATIC",
         "E-F10-W7-ARITHMETIC",
         "E-F10-B3V2-D037-BLIND-FAIL",
-        "E-F10-D055-METROLOGY-R2"
+        "E-F10-D055-METROLOGY-R2",
+        "E-F10-D060-METROLOGY-R3"
       ],
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",

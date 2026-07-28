@@ -27,7 +27,12 @@ Next order is fixed:
    pointer, post-Start tamper block, replacement canary, 12/12 hook
    fixtures); `Q-HOOK-01` RESOLVED; `G-HARNESS-INTEGRITY` fail -> pass;
    evidence `E-HARNESS-D058-LEASE-CANARY`; context `c3adcd99`;
-2. reconcile distinct claim/evidence IDs without moving a science gate;
+2. **DONE (D-059, 2026-07-28):** distinct claim IDs registered
+   (`C-F10-ROW9-CLOSURE` VALIDATED bounded; `C-F10-METROLOGY-R3` /
+   `C-F10-TRAJECTORY-R2` SPECIFIED), dangling evidence IDs defined as
+   preserved supportive, prospective `E-F10-D060-METROLOGY-R3` /
+   `E-F10-D061-TRAJECTORY-R2` added to the two FAIL gates, no science
+   gate moved; context `a26149ab`;
 3. prospectively run an asymmetric covariance contract with an
    identical-operation-graph outward interval;
 4. prospectively replay the endpoint against the completed-catalogue anchors
