@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d067-review-r2",
+  "agent_type": "default",
+  "last_assistant_message": "Round-2 review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-REVIEW-R2\", \"context_version\": \"daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r2/results/A-D067-REVIEW-R2.json\", \"admission_proof\": \"sha256:7af2ebded2bac15b68814f9af17fe8a33dd6e04844eabb54e725332dcb53ad37\"}"
+}

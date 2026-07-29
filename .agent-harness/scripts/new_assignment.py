@@ -161,6 +161,10 @@ def main() -> None:
     print(f"CONTEXT_VERSION={index['context_version']}")
     print(f"INDEPENDENCE_MODE={args.independence_mode}")
     print(out.relative_to(repo))
+    print(
+        "next: python3 .agent-harness/scripts/admit_agent.py --assignment-id "
+        f"{args.assignment_id}  # mints ADMISSION_TOKEN, the 5th spawn-header line"
+    )
 
 
 if __name__ == "__main__":

@@ -2,18 +2,23 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
+import os
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
-from _common import lease_path, load_json, read_stdin_json, repo_root
+from _common import lease_path, load_json, read_stdin_json, repo_root, write_json_atomic
 
 HARNESS_SCRIPTS = Path(__file__).resolve().parents[2] / ".agent-harness" / "scripts"
 sys.path.insert(0, str(HARNESS_SCRIPTS))
 
 from _harness import (  # noqa: E402
+    admission_path,
     assignment_runtime_agent_type,
+    token_digest,
     validate_assignment_contract,
     validate_assignment_resource_hashes,
     validate_result_contract,
@@ -22,6 +27,11 @@ from _harness import (  # noqa: E402
 MARKER_RE = re.compile(r"(?:^|\n)HARNESS_RESULT:\s*(\{[^\n]+\})\s*\Z")
 ASSIGNMENT_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 VALID_STATUS = {"pass", "fail", "inconclusive", "error"}
+ENVELOPE_HINT = (
+    "HARNESS_RESULT: {\"assignment_id\":\"...\",\"context_version\":\"...\","
+    "\"status\":\"pass|fail|inconclusive|error\",\"result_path\":\"...\","
+    "\"admission_proof\":\"<ADMISSION_TOKEN from your prompt>\"}"
+)
 
 
 def block(reason: str) -> None:
@@ -37,9 +47,21 @@ def main() -> None:
     # Run-identity lease (D-058): resolve the run this agent was bound to at
     # SubagentStart instead of trusting the mutable global ACTIVE_RUN pointer.
     event_agent_id = str(event.get("agent_id") or "")
-    lease_file = lease_path(harness, event_agent_id) if event_agent_id else None
-    lease = load_json(lease_file, None) if lease_file is not None else None
-    if lease is None and lease_file is not None and lease_file.exists():
+    if not event_agent_id:
+        block(
+            "SubagentStop event omitted agent_id; no result can be attributed to "
+            "this agent."
+        )
+        return
+    lease_file = lease_path(harness, event_agent_id)
+    if lease_file is None:
+        block(
+            f"agent_id {event_agent_id!r} is not a safe lease key, so SubagentStart "
+            "could not seal a run lease for it and no result is admissible."
+        )
+        return
+    lease = load_json(lease_file, None)
+    if lease is None and lease_file.exists():
         block(
             "Run lease for this agent exists but cannot be parsed; refusing to "
             "resolve the run via the mutable ACTIVE_RUN pointer."
@@ -48,20 +70,34 @@ def main() -> None:
 
     active_run = ""
     if active_path.exists():
-        active_run = active_path.read_text(encoding="utf-8").strip()
+        try:
+            active_run = active_path.read_text(encoding="utf-8").strip()
+        except OSError:
+            active_run = ""
 
     # Outside an explicitly active harness run *and* with no Start-time lease,
-    # do not impose the result envelope.
+    # do not impose the result envelope. "Harness installed" is judged from the
+    # context index rather than the mutable pointer, so deleting or blanking
+    # ACTIVE_RUN no longer switches validation off (D-067 review F-D067-06).
     if not active_run and lease is None:
+        # "Installed" is the presence of the harness directory itself, not of any
+        # single file inside it: keying off one file just relocates the bypass
+        # to deleting that file (D-067 round-2 review F-6).
+        if harness.is_dir():
+            block(
+                "The agent harness is installed but ACTIVE_RUN is missing or empty "
+                "and this agent has no Start-time lease, so no result can be bound "
+                "to a run. Initialize a run with init_run.py before spawning agents."
+            )
+            return
         return
 
     message = str(event.get("last_assistant_message") or "")
     match = MARKER_RE.search(message)
     if not match:
         block(
-            "Before stopping, write the assignment result artifact and finish with exactly one line: "
-            "HARNESS_RESULT: {\"assignment_id\":\"...\",\"context_version\":\"...\","
-            "\"status\":\"pass|fail|inconclusive|error\",\"result_path\":\"...\"}"
+            "Before stopping, write the assignment result artifact and finish with "
+            "exactly one line: " + ENVELOPE_HINT
         )
         return
 
@@ -71,10 +107,19 @@ def main() -> None:
         block("HARNESS_RESULT is not valid single-line JSON. Correct it before stopping.")
         return
 
-    required = {"assignment_id", "context_version", "status", "result_path"}
+    required = {
+        "assignment_id",
+        "context_version",
+        "status",
+        "result_path",
+        "admission_proof",
+    }
     missing = sorted(required - set(envelope))
     if missing:
-        block(f"HARNESS_RESULT is missing required fields: {', '.join(missing)}")
+        block(
+            f"HARNESS_RESULT is missing required fields: {', '.join(missing)}. "
+            "Expected form: " + ENVELOPE_HINT
+        )
         return
 
     assignment_id = str(envelope["assignment_id"])
@@ -89,13 +134,22 @@ def main() -> None:
             or not ASSIGNMENT_ID_RE.fullmatch(str(lease.get("run_id") or ""))
         ):
             block(
-                "Run lease for this agent is malformed; refusing to resolve the "
-                "run via the mutable ACTIVE_RUN pointer."
+                "Run lease for this agent is malformed; its run identity cannot "
+                "be established."
             )
             return
         bound_run = str(lease["run_id"])
     else:
-        bound_run = active_run
+        # D-067: no ACTIVE_RUN fallback. Inside an active run, a stopping agent
+        # with no Start-time lease is unbindable, and resolving it through the
+        # mutable pointer is exactly the fail-open path D-065 rejected.
+        block(
+            "No Start-time run lease exists for this agent, so its run identity "
+            "cannot be established. Refusing to fall back to the mutable "
+            "ACTIVE_RUN pointer. Re-run the agent after confirming that "
+            "SubagentStart can write .agent-harness/leases/."
+        )
+        return
 
     run_dir = harness / "runs" / bound_run
     assignment_path = run_dir / "assignments" / f"{assignment_id}.json"
@@ -126,6 +180,84 @@ def main() -> None:
                 "digest does not match the current bytes."
             )
             return
+
+    # Exact agent-to-assignment binding (D-067). The lease proves which *run* the
+    # agent belongs to; it cannot prove which assignment, because SubagentStart
+    # never sees the spawn prompt. The parent-minted admission receipt supplies
+    # that binding: only the agent holding this assignment's token can consume it.
+    admission_file = admission_path(harness, bound_run, assignment_id)
+    if admission_file is None:
+        block("Bound run id or assignment id is not a safe admission path key.")
+        return
+    if admission_file.is_symlink():
+        block("Admission receipt path is a symlink; refusing to follow it.")
+        return
+    admission = load_json(admission_file, None)
+    if not isinstance(admission, dict):
+        block(
+            f"No usable parent-authenticated admission receipt for assignment "
+            f"{assignment_id!r} in run {bound_run!r} (absent or unparseable). The "
+            "parent must mint one with `python3 "
+            f".agent-harness/scripts/admit_agent.py --assignment-id {assignment_id}` "
+            "before the agent is spawned."
+        )
+        return
+    if admission.get("schema_version") != 1:
+        block(
+            "Admission receipt has an unsupported schema_version "
+            f"{admission.get('schema_version')!r}."
+        )
+        return
+    if (
+        str(admission.get("run_id")) != bound_run
+        or str(admission.get("assignment_id")) != assignment_id
+    ):
+        block("Admission receipt does not match the bound run and assignment.")
+        return
+    if str(admission.get("assignment_sha256")) != recomputed_sha:
+        block(
+            "Admission receipt was minted against different assignment bytes than "
+            "the ones being validated."
+        )
+        return
+    proof = str(envelope.get("admission_proof") or "")
+    if not proof:
+        block(
+            "HARNESS_RESULT admission_proof is empty; paste the ADMISSION_TOKEN from "
+            "your prompt."
+        )
+        return
+    if not hmac.compare_digest(token_digest(proof), str(admission.get("token_digest"))):
+        block(
+            f"admission_proof does not match the receipt for {assignment_id!r}. An "
+            "agent may only submit the assignment it was admitted for."
+        )
+        return
+    expected_agent_id = str(admission.get("expected_agent_id") or "")
+    if expected_agent_id and expected_agent_id != event_agent_id:
+        block(
+            f"Admission receipt for {assignment_id!r} was minted for agent "
+            f"{expected_agent_id!r}, not {event_agent_id!r}."
+        )
+        return
+
+    # Single-use, with one deliberate exception: a re-stop by the *same* agent
+    # whose result bytes are unchanged is idempotent. Without this a resumed
+    # subagent could never terminate, because acceptance consumes the receipt
+    # (D-067 review F-D067-03).
+    admission_state = str(admission.get("state"))
+    already_consumed_by_this_agent = (
+        admission_state == "consumed"
+        and str(admission.get("consumed_by_agent_id") or "") == event_agent_id
+    )
+    if admission_state != "open" and not already_consumed_by_this_agent:
+        block(
+            f"Admission receipt for {assignment_id!r} is {admission_state!r}, not "
+            "'open'. Receipts are single-use; a replayed or already-consumed "
+            "receipt cannot admit another agent's result."
+        )
+        return
+
     event_agent_type = str(event.get("agent_type") or "")
     expected_runtime_type = assignment_runtime_agent_type(assignment)
     if event_agent_type != expected_runtime_type:
@@ -134,10 +266,6 @@ def main() -> None:
             "runtime_agent_type."
         )
         return
-    if not event_agent_id:
-        block("SubagentStop event omitted agent_id; result identity cannot be verified.")
-        return
-
     index = load_json(harness / "context" / "CONTEXT_INDEX.json", {}) or {}
     current_version = str(index.get("context_version", "UNBUILT"))
     assignment_errors = validate_assignment_contract(
@@ -178,6 +306,12 @@ def main() -> None:
     if result_path.is_absolute():
         block("result_path must be repository-relative.")
         return
+    # A symlink at the declared path resolves to the canonical location while the
+    # real bytes live elsewhere, so the attribution digest would describe a file
+    # the run does not own (D-067 review F-D067-06).
+    if (root / result_path).is_symlink():
+        block("Declared result artifact is a symlink; write the file itself.")
+        return
     resolved = (root / result_path).resolve()
     try:
         resolved.relative_to(root)
@@ -199,10 +333,17 @@ def main() -> None:
         block(f"Declared result artifact does not exist: {result_path}")
         return
 
-    result = load_json(resolved, None)
+    # Single read, as for the assignment: the validated object and the attributed
+    # digest must describe the same bytes (D-067 round-2 review F-14).
+    try:
+        result_raw = resolved.read_bytes()
+        result = json.loads(result_raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        result = None
     if not isinstance(result, dict):
-        block("Declared result artifact is not a JSON object.")
+        block("Declared result artifact is not a readable JSON object.")
         return
+    result_sha = "sha256:" + hashlib.sha256(result_raw).hexdigest()
     contract_errors = validate_result_contract(
         result,
         assignment,
@@ -228,9 +369,109 @@ def main() -> None:
         )
         return
 
-    # Acceptance: consume the lease so a reused agent_id starts clean. Blocked
-    # stops above leave the lease in place for the fail-closed retry.
-    if lease_file is not None:
+    # Acceptance. Claim the receipt exclusively first: O_EXCL is the only step
+    # here that is atomic against a concurrent stop, so it, not the earlier
+    # state read, is what makes the receipt single-use (D-067 review F-D067-02).
+    claim_file = admission_file.with_name(admission_file.name + ".claim")
+    try:
+        fd = os.open(claim_file, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError:
+        holder = ""
+        try:
+            holder = claim_file.read_text(encoding="utf-8").strip()
+        except OSError:
+            pass
+        if holder != event_agent_id:
+            block(
+                f"Admission receipt for {assignment_id!r} is already claimed by "
+                f"{holder or 'another agent'}; refusing a concurrent second consume."
+            )
+            return
+        # Same agent re-stopping. The only admissible reason a claim exists for
+        # this agent is that a previous stop already consumed the receipt and
+        # recorded the attribution. Anything else -- a planted claim, a consume
+        # that died before writing the record -- must block, or attribution
+        # could be skipped entirely (D-067 round-2 review F-11).
+        if admission_state != "consumed":
+            block(
+                f"A claim exists for {assignment_id!r} but the receipt is "
+                f"{admission_state!r} with no attribution record. Refusing to "
+                "accept a result that was never attributed; the parent must "
+                "reissue the receipt with admit_agent.py --reopen."
+            )
+            return
+        if str(admission.get("result_sha256")) != result_sha:
+            block(
+                "Result artifact changed after this agent's result was admitted; "
+                "refusing to re-admit different bytes under the same receipt."
+            )
+            return
+        return
+    except OSError as exc:
+        block(
+            f"Admission receipt could not be claimed ({exc.__class__.__name__}); "
+            "refusing to accept a result that cannot be attributed to this agent."
+        )
+        return
+    else:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(event_agent_id + "\n")
+
+    consumed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    try:
+        write_json_atomic(
+            admission_file,
+            {
+                **admission,
+                "state": "consumed",
+                "consumed_at": consumed_at,
+                "consumed_by_agent_id": event_agent_id,
+                "consumed_by_agent_type": event_agent_type,
+                "result_sha256": result_sha,
+            },
+        )
+        # Durable attribution: the receipt directory is gitignored working state,
+        # so the record that survives into committed evidence is this append-only
+        # ledger inside the run directory (D-067 review F-D067-07).
+        with (run_dir / "ADMISSIONS.jsonl").open("a", encoding="utf-8") as ledger:
+            ledger.write(
+                json.dumps(
+                    {
+                        "event": "consumed",
+                        "run_id": bound_run,
+                        "assignment_id": assignment_id,
+                        "agent_id": event_agent_id,
+                        "agent_type": event_agent_type,
+                        "result_sha256": result_sha,
+                        "assignment_sha256": recomputed_sha,
+                        "token_digest": str(admission.get("token_digest")),
+                        "at": consumed_at,
+                    },
+                    sort_keys=True,
+                )
+                + "\n"
+            )
+    except OSError as exc:
+        block(
+            f"Admission receipt could not be consumed ({exc.__class__.__name__}); "
+            "refusing to accept a result that cannot be attributed to this agent."
+        )
+        return
+
+    # Mark the lease consumed rather than deleting it: SubagentStart overwrites
+    # it for a reused agent_id anyway, and keeping it lets an idempotent re-stop
+    # of the same agent still resolve its bound run instead of livelocking.
+    try:
+        write_json_atomic(
+            lease_file,
+            {
+                **lease,
+                "state": "consumed",
+                "consumed_assignment_id": assignment_id,
+                "consumed_at": consumed_at,
+            },
+        )
+    except OSError:
         lease_file.unlink(missing_ok=True)
 
 

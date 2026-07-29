@@ -40,11 +40,22 @@ python3 .agent-harness/scripts/new_assignment.py \
 python3 .agent-harness/scripts/validate_harness.py
 ```
 
-Paste the first four lines printed by `new_assignment.py` verbatim at the start of
-the subagent spawn prompt. The main agent validates the harness immediately before
-launch and records the non-run diff/status hashes. The fifth printed line is the
-assignment path and is not part of the spawn prompt. The assignment JSON supplies
-the unique result path.
+Before spawning, mint the assignment's single-use admission receipt with
+`python3 .agent-harness/scripts/admit_agent.py --assignment-id <ASSIGNMENT_ID>`
+(add `--expect-agent-id <id>` when the parent chooses the agent id). Paste the
+first five lines it prints — `RUN_ID`, `ASSIGNMENT_ID`, `CONTEXT_VERSION`,
+`INDEPENDENCE_MODE`, `ADMISSION_TOKEN` — verbatim at the start of the subagent
+spawn prompt; the trailing `receipt:` line is not part of the prompt. The main
+agent validates the harness immediately before launch and records the non-run
+diff/status hashes. The assignment JSON supplies the unique result path.
+
+The token is what binds one agent to one assignment: `SubagentStart` never
+receives the spawn prompt, so without it `SubagentStop` can only trust whichever
+assignment the stopping agent names for itself. The receipt is consumed exactly
+once, recording the writing `agent_id` and the result SHA-256 into the run's
+append-only `ADMISSIONS.jsonl`. This defeats confusion, races, and prompt-level
+substitution; it is not a defence against an agent that deliberately writes
+outside its declared result path, because agent and harness share one OS user.
 
 VS Code collaboration `spawn_agent` does not currently traverse project
 `PreToolUse`; live R3 allow-rewrite and block-only probes both demonstrated that gap.
@@ -68,8 +79,9 @@ RUN_ID=<run-id>
 ASSIGNMENT_ID=<assignment-id>
 CONTEXT_VERSION=<sha256>
 INDEPENDENCE_MODE=shared-core|blind-results|adjudication
+ADMISSION_TOKEN=<single-use token from admit_agent.py>
 
-Execute only the registered assignment. Load the canonical pack and assignment file before analysis. Do not inspect sibling results unless the assignment permits it. Write the declared result artifact and end with HARNESS_RESULT.
+Execute only the registered assignment. Load the canonical pack and assignment file before analysis. Do not inspect sibling results unless the assignment permits it. Write the declared result artifact and end with HARNESS_RESULT, including admission_proof set to the ADMISSION_TOKEN above.
 ```
 
 ## Finish

@@ -1,0 +1,228 @@
+#!/usr/bin/env python3
+"""Mint a single-use admission receipt binding one spawned agent to one assignment.
+
+Why this exists (D-067, discharging D-065 finding F-D065-01): the SubagentStart
+hook event carries only ``agent_id`` and ``agent_type``. It never carries the
+spawn prompt, so no hook can infer which assignment an agent was launched for.
+The D-058 lease therefore sealed *every* assignment registered in the run, and
+SubagentStop admitted whichever one the stopping agent declared for itself. A
+controlled same-run substitution passed.
+
+The fix moves the binding to the only party that knows it: the parent. Before
+spawning, the parent runs this script, which stores ``sha256(token)`` in the
+receipt and prints ``token`` exactly once for pasting into the spawn prompt.
+SubagentStop admits the agent only if the ``admission_proof`` in its
+HARNESS_RESULT envelope hashes to the stored digest, then consumes the receipt,
+recording the writing ``agent_id`` and the result SHA-256 as the
+write-attribution record.
+
+TOKEN HANDLING -- this script never writes the raw token to disk, but the token
+does not stay secret by itself. It is pasted into a spawn prompt, echoed in the
+agent's final message, and therefore appears in any transcript or captured
+SubagentStop event JSON. A captured *blocked* stop is the dangerous case,
+because the receipt is still open. Two consequences, both load-bearing:
+
+* Always pass ``--expect-agent-id`` when the parent chooses the agent id (it
+  does under the recorded VS Code LOCAL-ADAPT). A leaked token is then useless
+  to any other agent.
+* Scrub ``admission_proof`` before retaining a stop-event JSON as run evidence;
+  ``scrub_admission_proof.py`` does this, replacing the value with its digest.
+
+An already-consumed receipt cannot be re-admitted regardless.
+
+THREAT MODEL -- read this before claiming more than it delivers. The harness and
+its subagents run as the same OS user, so an agent that deliberately writes
+outside its declared result path can forge any repo-local artifact, including a
+receipt, a lease, and the ledger. What this mechanism removes is *confusion*:
+prompt-level substitution, same-run assignment mix-ups, races between
+overlapping mains, and unattributable writes. Deliberate forgery is not
+prevented.
+
+Usage:
+    python3 .agent-harness/scripts/admit_agent.py --assignment-id A-XXXX
+    python3 .agent-harness/scripts/admit_agent.py --assignment-id A-XXXX \\
+        --expect-agent-id canary-01
+    python3 .agent-harness/scripts/admit_agent.py --assignment-id A-XXXX \\
+        --reopen --reason "first agent died before stopping"
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import secrets
+
+from _harness import (
+    ADMISSION_KEY_RE,
+    ASSIGNMENT_ID_RE,
+    active_run_id,
+    admission_path,
+    assignment_runtime_agent_type,
+    dump_json_atomic,
+    load_json,
+    root,
+    token_digest,
+    utc_now,
+)
+
+TOKEN_BYTES = 32
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"admit_agent: {message}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--assignment-id", required=True)
+    parser.add_argument(
+        "--run-id",
+        default=None,
+        help="Defaults to ACTIVE_RUN; must equal it (admission is for the live run).",
+    )
+    parser.add_argument(
+        "--expect-agent-id",
+        default="",
+        help="Bind the receipt to this agent_id as well as to the token. Use it "
+        "whenever the parent chooses the id; SubagentStop then rejects any other "
+        "agent even if it holds the token.",
+    )
+    parser.add_argument(
+        "--reopen",
+        action="store_true",
+        help="Replace an existing receipt for this assignment. Requires --reason.",
+    )
+    parser.add_argument("--reason", default="")
+    args = parser.parse_args()
+
+    repo = root()
+    harness = repo / ".agent-harness"
+
+    assignment_id = str(args.assignment_id)
+    if not ASSIGNMENT_ID_RE.fullmatch(assignment_id):
+        fail(f"assignment_id {assignment_id!r} has an invalid form")
+    expect_agent_id = str(args.expect_agent_id or "")
+    if expect_agent_id and not ADMISSION_KEY_RE.fullmatch(expect_agent_id):
+        fail(f"expect-agent-id {expect_agent_id!r} has an invalid form")
+
+    active = active_run_id(repo)
+    run_id = str(args.run_id or active)
+    if run_id != active:
+        fail(
+            f"run_id {run_id!r} is not the active run {active!r}; admission is only "
+            "minted for the live run"
+        )
+
+    assignment_file = harness / "runs" / run_id / "assignments" / f"{assignment_id}.json"
+    try:
+        assignment_raw = assignment_file.read_bytes()
+    except OSError:
+        fail(f"registered assignment does not exist: {assignment_file.relative_to(repo)}")
+        return
+    assignment = load_json(assignment_file)
+    if not isinstance(assignment, dict):
+        fail("registered assignment is not a JSON object")
+        return
+    if str(assignment.get("run_id")) != run_id:
+        fail("registered assignment run_id does not match the active run")
+
+    index = load_json(harness / "context" / "CONTEXT_INDEX.json")
+    context_version = str(index.get("context_version", "UNBUILT"))
+    if str(assignment.get("context_version")) != context_version:
+        fail(
+            f"registered assignment is stale for context {context_version!r}; rebuild "
+            "the pack and reissue the assignment before admitting an agent"
+        )
+
+    target = admission_path(harness, run_id, assignment_id)
+    if target is None:
+        fail("run_id or assignment_id is not a safe admission path key")
+        return
+
+    prior = None
+    if target.exists():
+        try:
+            prior = load_json(target)
+        except (OSError, json.JSONDecodeError):
+            prior = {"state": "unreadable", "created_at": "", "consumed_by_agent_id": ""}
+        if not isinstance(prior, dict):
+            prior = {"state": "malformed", "created_at": "", "consumed_by_agent_id": ""}
+    if prior is not None:
+        if not args.reopen:
+            fail(
+                f"an admission receipt already exists for {assignment_id!r} in state "
+                f"{str(prior.get('state'))!r}. Receipts are single-use; pass --reopen "
+                "--reason '...' to replace it deliberately."
+            )
+        if not args.reason.strip():
+            fail("--reopen requires a non-empty --reason")
+
+    token = secrets.token_urlsafe(TOKEN_BYTES)
+    receipt = {
+        "schema_version": 1,
+        "run_id": run_id,
+        "assignment_id": assignment_id,
+        "assignment_sha256": "sha256:" + hashlib.sha256(assignment_raw).hexdigest(),
+        "runtime_agent_type": assignment_runtime_agent_type(assignment),
+        "context_version": context_version,
+        "token_digest": token_digest(token),
+        "expected_agent_id": expect_agent_id,
+        "state": "open",
+        "created_at": utc_now(),
+    }
+    if prior is not None:
+        receipt["reopened_from"] = {
+            "state": str(prior.get("state")),
+            "created_at": str(prior.get("created_at")),
+            "consumed_at": str(prior.get("consumed_at") or ""),
+            "consumed_by_agent_id": str(prior.get("consumed_by_agent_id") or ""),
+            "consumed_by_agent_type": str(prior.get("consumed_by_agent_type") or ""),
+            "result_sha256": str(prior.get("result_sha256") or ""),
+            "reason": args.reason.strip(),
+        }
+
+    # A reopen must also release the O_EXCL claim, or the new agent cannot
+    # consume the receipt it was just admitted for.
+    claim = target.with_name(target.name + ".claim")
+    minted_at = utc_now()
+    # Ledger first, receipt second. If the ledger append fails the receipt was
+    # never created, so no open receipt survives whose token was never printed
+    # (D-067 round-2 review F-13).
+    try:
+        with (harness / "runs" / run_id / "ADMISSIONS.jsonl").open(
+            "a", encoding="utf-8"
+        ) as ledger:
+            ledger.write(
+                json.dumps(
+                    {
+                        "event": "minted",
+                        "run_id": run_id,
+                        "assignment_id": assignment_id,
+                        "assignment_sha256": receipt["assignment_sha256"],
+                        "token_digest": receipt["token_digest"],
+                        "expected_agent_id": expect_agent_id,
+                        "reopened": bool(prior is not None),
+                        "at": minted_at,
+                    },
+                    sort_keys=True,
+                )
+                + "\n"
+            )
+    except OSError as exc:
+        fail(f"admission ledger could not be appended ({exc.__class__.__name__})")
+    try:
+        dump_json_atomic(target, receipt)
+        claim.unlink(missing_ok=True)
+    except OSError as exc:
+        fail(f"admission receipt could not be written ({exc.__class__.__name__})")
+
+    print(f"RUN_ID={run_id}")
+    print(f"ASSIGNMENT_ID={assignment_id}")
+    print(f"CONTEXT_VERSION={context_version}")
+    print(f"INDEPENDENCE_MODE={assignment.get('independence_mode')}")
+    print(f"ADMISSION_TOKEN={token}")
+    print(f"receipt: {target.relative_to(repo)}")
+
+
+if __name__ == "__main__":
+    main()

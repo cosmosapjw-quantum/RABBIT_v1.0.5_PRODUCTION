@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 
 from _harness import (
     active_run_id,
@@ -111,10 +112,147 @@ def main() -> None:
                 for error in result_errors
             )
 
+    # D-067: retained run evidence is append-only. A tracked file under runs/ that
+    # differs from its committed bytes is the D-066 write-attribution incident
+    # class, so surface it here rather than discovering it in a later audit.
+    try:
+        completed = subprocess.run(
+            ["git", "status", "--porcelain", "--", ".agent-harness/runs"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        # Fail closed: an unrunnable integrity check is not a passed one.
+        errors.append(
+            "Tracked-run-evidence integrity check could not run "
+            f"({exc.__class__.__name__}); git is required for validation."
+        )
+    else:
+        # Only tracked-file changes matter here: `??` entries are new run
+        # directories that have not been force-added yet, which is the normal
+        # state of a live run (round-2 review F-8).
+        dirty = [
+            line.strip()
+            for line in completed.stdout.splitlines()
+            if line.strip() and not line.startswith("??")
+        ]
+        errors.extend(
+            f"Tracked run evidence modified after commit: {entry}" for entry in dirty
+        )
+
+    open_admissions: list[str] = []
+    open_receipts: set[tuple[str, str]] = set()
+    consumed: dict[tuple[str, str], dict] = {}
+    for path in sorted((harness / "admissions").glob("*/*.json")):
+        if path.name.startswith(".tmp."):
+            continue
+        try:
+            receipt = load_json(path)
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+            errors.append(f"Admission receipt is unreadable: {path.relative_to(repo)}")
+            continue
+        if not isinstance(receipt, dict):
+            errors.append(f"Admission receipt is not an object: {path.relative_to(repo)}")
+            continue
+        state = str(receipt.get("state"))
+        if state == "open":
+            open_admissions.append(f"{path.parent.name}/{path.stem}")
+            open_receipts.add((path.parent.name, path.stem))
+        elif state == "consumed":
+            consumed[(path.parent.name, path.stem)] = receipt
+
+    # Every result in the active run must be attributable: a consumed receipt
+    # whose recorded digest still matches the bytes on disk. This is what
+    # detects a fabricated or post-hoc edited result artifact, which the
+    # git-porcelain check above cannot see for an untracked new file
+    # (D-067 review F-D067-08).
+    pending_results: list[str] = []
+    if active:
+        for result_path in sorted((harness / "runs" / active / "results").glob("*.json")):
+            receipt = consumed.get((active, result_path.stem))
+            if receipt is None:
+                if (active, result_path.stem) in open_receipts:
+                    # The agent wrote its artifact but has not stopped yet. Report
+                    # it rather than erroring, so a live run is not wedged
+                    # (D-067 round-2 review F-12).
+                    pending_results.append(result_path.stem)
+                    continue
+                errors.append(
+                    "Result artifact has no admission receipt at all: "
+                    f"{result_path.relative_to(repo)}"
+                )
+                continue
+            result_sha = "sha256:" + hashlib.sha256(result_path.read_bytes()).hexdigest()
+            if str(receipt.get("result_sha256")) != result_sha:
+                errors.append(
+                    "Result artifact changed after it was admitted: "
+                    f"{result_path.relative_to(repo)}"
+                )
+
+    # The receipts above are gitignored working state; the record that survives
+    # into committed evidence is the per-run append-only ledger. Cross-check them
+    # against each other, so a consumed receipt with no ledger line -- or a
+    # ledger line contradicting the receipt -- is visible (round-2 review F-7).
+    for run_dir in sorted((harness / "runs").glob("*")):
+        ledger_path = run_dir / "ADMISSIONS.jsonl"
+        run_receipts = {
+            aid: receipt for (run, aid), receipt in consumed.items() if run == run_dir.name
+        }
+        if not ledger_path.is_file():
+            errors.extend(
+                f"Consumed receipt has no admission ledger: {run_dir.name}/{aid}"
+                for aid in sorted(run_receipts)
+            )
+            continue
+        ledger_consumed: dict[str, dict] = {}
+        for number, line in enumerate(
+            ledger_path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                errors.append(f"Malformed admission ledger line: {ledger_path.name}:{number}")
+                continue
+            if isinstance(row, dict) and row.get("event") == "consumed":
+                ledger_consumed[str(row.get("assignment_id"))] = row
+        for aid, receipt in sorted(run_receipts.items()):
+            row = ledger_consumed.get(aid)
+            if row is None:
+                errors.append(
+                    f"Consumed receipt has no ledger entry: {run_dir.name}/{aid}"
+                )
+                continue
+            for field in ("result_sha256", "token_digest"):
+                if str(row.get(field)) != str(receipt.get(field)):
+                    errors.append(
+                        f"Admission ledger disagrees with the receipt on {field}: "
+                        f"{run_dir.name}/{aid}"
+                    )
+            if str(row.get("agent_id")) != str(receipt.get("consumed_by_agent_id")):
+                errors.append(
+                    "Admission ledger disagrees with the receipt on the writing "
+                    f"agent: {run_dir.name}/{aid}"
+                )
+
     if errors:
         print(json.dumps({"ok": False, "errors": errors}, indent=2))
         raise SystemExit(1)
-    print(json.dumps({"ok": True, "context_version": actual, "active_run": active}, indent=2))
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "context_version": actual,
+                "active_run": active,
+                "open_admissions": open_admissions,
+                "pending_results": pending_results,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

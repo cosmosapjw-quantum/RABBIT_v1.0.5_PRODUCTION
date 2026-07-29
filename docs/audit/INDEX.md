@@ -26,6 +26,9 @@ linked from canonical docs. Start from these anchors:
   [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
 - D-065 adversarial audit of the D-058--D-064 remediation:
   [BD622_D065_remediation_adversarial_audit_2026-07-29.md](BD622_D065_remediation_adversarial_audit_2026-07-29.md)
+- D-067 exact agent-to-assignment admission binding (harness lane; implemented
+  and reviewed, adjudication deferred to D-070):
+  [BD622_D067_admission_binding_2026-07-29.md](BD622_D067_admission_binding_2026-07-29.md)
 - D-066 write-attribution incident on a tracked D-057 evidence artifact
   (both byte-sets preserved, authenticity open as `Q-ATTRIB-01`):
   [BD622_D066_write_attribution_incident_2026-07-29.md](BD622_D066_write_attribution_incident_2026-07-29.md)

@@ -110,6 +110,9 @@ def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
         target = lease_path(harness, agent_id)
         if target is None:
             lease_note = "not recorded (agent_id is not a safe lease key)"
+            start_errors.append(
+                "agent_id is not a safe lease key, so no run lease could be sealed"
+            )
         else:
             digests: dict[str, str] = {}
             for path in sorted(
@@ -137,9 +140,18 @@ def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
                     },
                 )
                 lease_note = f"recorded for run {active_run}"
-            except OSError:
+            except OSError as exc:
+                # D-067: a lease that cannot be written is a hard Start failure.
+                # There is no ACTIVE_RUN fallback any more -- SubagentStop blocks
+                # a leaseless agent inside an active run, so this degradation is
+                # fail-closed rather than silently reverting to the mutable pointer.
                 lease_note = (
-                    "unavailable (write failed); Stop validation falls back to ACTIVE_RUN"
+                    f"NOT RECORDED ({exc.__class__.__name__}); SubagentStop will "
+                    "block this agent"
+                )
+                start_errors.append(
+                    f"run lease could not be written ({exc.__class__.__name__}); "
+                    "this agent cannot produce an admissible result"
                 )
 
     pieces = [read_bounded(pack_path, max_chars)]
@@ -162,11 +174,14 @@ Active run: {active_run}
 Run lease: {lease_note}
 Canonical context version: {version}
 
-VS Code collaboration does not expose `spawn_agent` to project PreToolUse hooks.
-The main agent therefore owns registered launch admission and pre/post write hashing.
+VS Code collaboration does not expose `spawn_agent` to project PreToolUse hooks,
+so this hook cannot see your prompt and cannot know which assignment you were
+launched for. The parent binds that with a single-use admission token minted
+before you were spawned; echoing it is how you prove which assignment is yours.
 Before any broad search or analysis:
-1. Verify that the first four prompt lines are exactly RUN_ID, ASSIGNMENT_ID,
-   CONTEXT_VERSION, and INDEPENDENCE_MODE and that CONTEXT_VERSION equals `{version}`.
+1. Verify that the first five prompt lines are exactly RUN_ID, ASSIGNMENT_ID,
+   CONTEXT_VERSION, INDEPENDENCE_MODE, and ADMISSION_TOKEN, and that
+   CONTEXT_VERSION equals `{version}`.
 2. Read `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json` and record the
    `assignment_sha256` printed by the verifier in step 4.
 3. Verify that assignment `runtime_agent_type` equals `{runtime_agent_type}` and that
@@ -183,11 +198,17 @@ Before any broad search or analysis:
 7. Write only to the unique result path in the assignment.
 8. Copy Agent ID `{agent_id or "MISSING"}`, runtime type `{runtime_agent_type}`, and
    the assignment `review_role` into the result artifact.
-9. Populate top-level `spawn_contract` with the four verified prompt values,
+9. Populate top-level `spawn_contract` with the four verified non-secret prompt
+   values (RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, INDEPENDENCE_MODE — never the
+   ADMISSION_TOKEN, which is a single-use secret and must not be copied into any
+   artifact),
    `prompt_header_verified=true`, `subagent_start_injected=true`,
    `subagent_start_preflight="PASS"`, the assignment SHA-256, runtime type,
    review-role verification/hash, and result-template verification/hash.
-10. End with the required one-line HARNESS_RESULT JSON envelope.
+10. End with the required one-line HARNESS_RESULT JSON envelope, including
+    `admission_proof` set to the exact ADMISSION_TOKEN value from your prompt.
+    Do not read, guess, or reuse any other agent's token: the receipt is
+    single-use and bound to one assignment, and a mismatch blocks your stop.
 If any required field or file is missing, stop substantive work and return status `error`.
 
 Hook preflight: {"PASS — canonical context and runtime identity verified; assignment role verification required" if not start_errors else "FAIL — " + "; ".join(start_errors)}

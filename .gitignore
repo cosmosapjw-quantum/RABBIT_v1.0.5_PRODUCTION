@@ -61,6 +61,7 @@ Thumbs.db
 /.agent-harness/ACTIVE_RUN.tmp.*
 /.agent-harness/runs/
 /.agent-harness/leases/
+/.agent-harness/admissions/
 /.superpowers/
 /.benchmarks/
 

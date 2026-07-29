@@ -59,7 +59,11 @@ def main() -> None:
                 data = json.loads(lease.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
                 continue
-            if isinstance(data, dict) and data.get("run_id") == previous:
+            if (
+                isinstance(data, dict)
+                and data.get("run_id") == previous
+                and data.get("state") != "consumed"
+            ):
                 held.append(lease.stem)
         if held:
             print(

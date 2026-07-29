@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 from datetime import datetime, timezone
@@ -10,6 +11,7 @@ from typing import Any
 
 
 ASSIGNMENT_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
+ADMISSION_KEY_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 SHA256_FINGERPRINT_RE = re.compile(r"sha256:[0-9a-f]{64}\Z")
 VALID_INDEPENDENCE_MODES = {"shared-core", "blind-results", "adjudication"}
 VALID_DISCOVERY_MODES = {"targeted", "independent"}
@@ -49,8 +51,35 @@ def dump_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def dump_json_atomic(path: Path, value: Any) -> None:
+    """Same payload as dump_json, but a reader never observes a partial file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".tmp.{os.getpid()}.{path.name}")
+    tmp.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def admission_path(harness: Path, run_id: str, assignment_id: str) -> Path | None:
+    """Single-use parent-authenticated admission receipt for one assignment.
+
+    SubagentStart never receives the spawn prompt (D-031/D-032), so no hook can
+    infer which assignment an agent was launched for. The parent mints this
+    receipt before spawning and SubagentStop admits the stopping agent only when
+    it echoes a token whose digest matches. Returns None for unsafe path keys.
+    """
+    if not ADMISSION_KEY_RE.fullmatch(run_id or ""):
+        return None
+    if not ADMISSION_KEY_RE.fullmatch(assignment_id or ""):
+        return None
+    return harness / "admissions" / run_id / f"{assignment_id}.json"
+
+
+def token_digest(token: str) -> str:
+    return "sha256:" + hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
 def hash_files(repo: Path, files: list[str]) -> tuple[str, list[tuple[str, str]]]:

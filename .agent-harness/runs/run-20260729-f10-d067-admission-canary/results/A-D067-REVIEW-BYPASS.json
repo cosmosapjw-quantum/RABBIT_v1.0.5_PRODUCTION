@@ -1,0 +1,318 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-admission-canary",
+  "assignment_id": "A-D067-REVIEW-BYPASS",
+  "context_version": "daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b",
+  "agent_id": "d067-review-bypass",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d067-admission-canary",
+    "assignment_id": "A-D067-REVIEW-BYPASS",
+    "context_version": "daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:124c847087ccdc9d15f5ed1a36be5fa46d13e1404abb47e8fc36f3785a12e563",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-BYPASS.json",
+  "started_at": "2026-07-29T02:12:55Z",
+  "completed_at": "2026-07-29T02:26:41Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "git": "2.43.0",
+    "pytest": "invoked via python3 -m pytest"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d067-admission-canary/assignments/A-D067-REVIEW-BYPASS.json  -> VERIFY: PASS",
+    "git --no-pager diff b9b00cd -- .codex/hooks .agent-harness/scripts .agent-harness/tests .gitignore",
+    "python3 -m pytest .agent-harness/tests/test_hooks.py -q  -> 21 passed",
+    "python3 /tmp/.../scratchpad/bypass_probe_d067.py   (probes A,B,B2,C,C2,C3,C4,D,E,F,G)",
+    "python3 /tmp/.../scratchpad/bypass_probe_d067_b.py (probes F4,G,M,N)",
+    "python3 /tmp/.../scratchpad/bypass_probe_d067_c.py (probes S1,S2,R1,R2)",
+    "python3 /tmp/race3_d067.py (true-concurrency receipt race)",
+    "grep -o 'ADMISSION_TOKEN=[A-Za-z0-9_-]*' ~/.claude/projects/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45.jsonl | sort -u",
+    "git check-ignore -v .agent-harness/admissions/... .agent-harness/leases/... .agent-harness/ACTIVE_RUN"
+  ],
+  "artifacts": [
+    "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/bypass_probe_d067.py",
+    "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/bypass_probe_d067_b.py",
+    "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/bypass_probe_d067_c.py",
+    "/tmp/race3_d067.py"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D067-01",
+      "severity": "critical",
+      "verdict": "fail",
+      "statement": "A subagent can mint its own admission receipt and obtain SubagentStop acceptance for an assignment it was never admitted for. `.agent-harness/admissions/` is an ordinary agent-writable directory and the receipt carries no parent authentication (no signature, MAC, ownership check, or out-of-band secret). subagent_stop_validate.py:159-201 validates only receipt-internal self-consistency: run_id/assignment_id match, state=='open', assignment_sha256 == recomputed bytes, and token_digest == sha256(admission_proof) - every one of which the writing agent controls. Executed in a /tmp sandbox against the real hook: the agent wrote `.agent-harness/admissions/<run>/A-VICTIM-ASSIGNMENT.json` with state 'open', the victim assignment's true sha256, and token_digest=sha256('i-made-this-up'), wrote the victim result artifact naming its own agent_id, and stopped with HARNESS_RESULT admission_proof='i-made-this-up'. The hook ACCEPTED (empty stdout) and flipped the forged receipt to consumed. Nothing else catches this: admissions/ is gitignored (.gitignore:64), validate_harness.py:135-145 only lists open receipts and never checks a receipt against a registered assignment, and the new tracked-run-evidence check cannot see the new result file because `/.agent-harness/runs/` is gitignored so porcelain omits it.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.97,
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/_harness.py",
+        ".agent-harness/scripts/admit_agent.py",
+        ".gitignore",
+        ".agent-harness/scripts/validate_harness.py"
+      ],
+      "evidence_fingerprint": "sha256:59f3f49893f5f67b44672273fa50952cd27cd8c2db0521fb0769965559c5333e",
+      "reproduction": [
+        "/tmp sandbox probe A (bypass_probe_d067.py): 'A self-minted receipt, un-admitted assignment -> ACCEPTED'",
+        "forged receipt after stop: state=consumed consumed_by=agent-fixture"
+      ],
+      "assumptions_used": [
+        "the threat model includes an agent that writes outside its declared result path, which is the D-066 incident class the change is meant to answer",
+        "assignment allowed_tools includes exec_command/apply_patch"
+      ],
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-02",
+      "severity": "critical",
+      "verdict": "fail",
+      "statement": "The Start-time lease is equally forgeable, so the D-058 post-Start tamper seal is defeated and run binding is agent-chosen. `.agent-harness/leases/` is gitignored (.gitignore:63) and agent-writable; subagent_stop_validate.py:101-112 accepts any lease whose agent_id equals the event agent_id and whose run_id matches ASSIGNMENT_ID_RE, then takes bound_run and the sealed assignment_digests straight from it. Probe B: an agent whose Start lease sealed only its own assignment appended the victim assignment's digest to its own lease file, minted the matching receipt, and was ACCEPTED. Probe B2: post-Start assignment tampering is correctly BLOCKED ('Assignment file changed after SubagentStart') and then ACCEPTED after the agent simply re-armed its lease and receipt against the tampered bytes - the seal only survives an adversary who does not touch the seal.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.96,
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py",
+        ".codex/hooks/subagent_start_context.py",
+        ".gitignore"
+      ],
+      "evidence_fingerprint": "sha256:929972fa6bd829f59b8cb08840fe1644e6e1b4ace6aab3614f9f0203396bd6dd",
+      "reproduction": [
+        "probe B: 'self-rewritten lease + forged receipt -> ACCEPTED'",
+        "probe B2: BLOCKED on tamper, then ACCEPTED after re-arming lease+receipt"
+      ],
+      "assumptions_used": [
+        "agent has shell write access to the repository working tree"
+      ],
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-03",
+      "severity": "high",
+      "verdict": "fail",
+      "statement": "The claim 'the raw token exists only in the spawn prompt of one agent' is false, verified live and non-destructively. During this review the sibling agent d067-review-correctness held an OPEN receipt (token_digest sha256:694a010f...). Its raw token was recovered by grepping the parent session transcript `~/.claude/projects/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45.jsonl` for 'ADMISSION_TOKEN=', and sha256 of the recovered string equals the digest stored in that open receipt exactly. The same value is also in the sibling's own subagent transcript under .../60cdc9a2-.../subagents/. The token was NOT used and the sibling receipt was left open. The exposure is structural, not incidental: admit_agent.py:149 prints the token to stdout, so it is captured as parent tool output, and it is by construction inside a spawn prompt - both of which the runtime persists on the same filesystem the subagent can read. The tokens do NOT reach the repository (a grep of the whole worktree for both raw tokens found nothing), so committed evidence is clean; the leak is local-transcript, and local transcripts are exactly what a concurrent subagent can read.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.95,
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:51b778d19df931d139d72e42f7d1918405033c0c3a245d09c1ca25e315328cef",
+      "reproduction": [
+        "grep -o 'ADMISSION_TOKEN=[A-Za-z0-9_-]*' ~/.claude/projects/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45.jsonl | sort -u",
+        "python3 -c \"import hashlib;print(hashlib.sha256(open('/dev/stdin').read().strip().encode()).hexdigest())\" compared against .agent-harness/admissions/<run>/A-D067-REVIEW-CORRECTNESS.json token_digest",
+        "grep -rl <raw token> over the repository worktree: no hits"
+      ],
+      "assumptions_used": [
+        "subagents run as the same OS user as the parent and can read ~/.claude"
+      ],
+      "counterevidence_refs": [],
+      "unresolved": [
+        "whether the deployment target's runtime persists prompts/tool output in a location the subagent cannot read; on this host it does not"
+      ]
+    },
+    {
+      "finding_id": "F-D067-04",
+      "severity": "high",
+      "verdict": "fail",
+      "statement": "The receipt binds token->assignment, not agent->assignment, so any token holder is admitted. admit_agent.py takes no --agent-id and the minted receipt has no agent_id field (admit_agent.py:121-131); the Stop hook never compares the stopping agent to any parent-declared identity. D-065's stated obligation (Q-HOOK-01) was an 'atomic parent-authenticated agent_id to one-assignment receipt'. Sandbox probe S1: an agent 'agent-thief' with a normal lease submitted a different agent's assignment using that agent's token and was ACCEPTED; consumed_by_agent_id recorded 'agent-thief', so the theft is recorded but not prevented. Combined with F-D067-03 this is a live, non-hypothetical path.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.94,
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:8a6a2307965c4d7cfe099e17e71cefbf2b4b3122a66cc7624f42522d6fedc2bd",
+      "reproduction": [
+        "probe S1: 'thief submits victim's assignment with the harvested token -> ACCEPTED'"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-05",
+      "severity": "high",
+      "verdict": "fail",
+      "statement": "'Single-use' is not atomic: the receipt is a read-check-then-write TOCTOU with a very wide window. The state=='open' check is subagent_stop_validate.py:178-185 and the consuming write is line 310, with the whole assignment-contract, role/template rehash, result load, result-contract and result rehash between them, and no lock, no O_EXCL create, and no compare-and-swap. Measured with three genuinely concurrent stop processes against ONE open receipt (stdin from a file so the processes are not serialised): accepted counts per trial were [3,1,2,3,2,2,2,1] with a small artifact and [3,3,3,3,3,3,3,3] with a 20 MB result artifact. Multiple acceptances under one receipt also mean the last writer's consume record silently overwrites the others, so the write-attribution record is lossy precisely under the concurrent-mains condition that produced the D-066 incident.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.93,
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:b188e1c44630e849d15ec0ef02a1798daca01164df1252368b82cb7cc7845171",
+      "reproduction": [
+        "/tmp/race3_d067.py: 'pad=20MB, 3 truly-concurrent stops on ONE open receipt: accepted counts per trial = [3,3,3,3,3,3,3,3]'"
+      ],
+      "assumptions_used": [
+        "two stops can overlap, e.g. a shared/stolen token or two mains in one repo"
+      ],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-06",
+      "severity": "high",
+      "verdict": "fail",
+      "statement": "A silent no-op path bypasses the entire Stop contract, not just admission. subagent_stop_validate.py:63-64 returns with no output when there is no active run AND no lease. Both inputs are agent-writable and gitignored (`.agent-harness/ACTIVE_RUN` is .gitignore:60 and untracked; `.agent-harness/leases/` is .gitignore:63). Sandbox probe C/S2: deleting ACTIVE_RUN, or truncating it to '' or whitespace, together with removing the agent's own lease, makes the hook ACCEPT a stop whose last message contains no HARNESS_RESULT line, no admission_proof, and with no result artifact on disk at all. This is louder than F-D067-01 (the parent's ACTIVE_RUN visibly disappears) but nothing in the D-067 change detects it, and validate_harness.py:38-43 treats a missing ACTIVE_RUN as merely active=None and still prints ok:true.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.95,
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/validate_harness.py",
+        ".gitignore"
+      ],
+      "evidence_fingerprint": "sha256:bb5469d0ce52b5b03915fa7c7206463f0b02f87279eda25e1954e6c860315a41",
+      "reproduction": [
+        "probe C: 'ACTIVE_RUN deleted + no lease + no HARNESS_RESULT -> ACCEPTED'",
+        "probe S2: 'empty ACTIVE_RUN + no lease, no envelope -> ACCEPTED'; 'whitespace ACTIVE_RUN ... -> ACCEPTED'",
+        "control probe C2: 'lease absent, ACTIVE_RUN present -> BLOCKED (No Start-time run lease)'"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-07",
+      "severity": "medium",
+      "verdict": "fail",
+      "statement": "Gitignoring `.agent-harness/admissions/` does destroy the durability of the attribution evidence the design claims to produce, and the record is forgeable after the fact. The consumed receipt is the only artifact naming which agent produced which result bytes, but .gitignore:64 keeps it untracked, so it is never committed, never diffed, and never reviewable in history - while the D-066 remedy Q-ATTRIB-01 explicitly requires parent-side write attribution that survives the run. Probe M: after a fully legitimate acceptance, rewriting the consumed receipt's consumed_by_agent_id to 'some-innocent-other-agent' and zeroing result_sha256 is a one-line file write, and nothing in the harness recomputes, signs, or cross-checks it. Note the correct half: the raw token itself never enters committed evidence, so the gitignore does prevent token leakage into the repository.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.9,
+      "evidence_refs": [
+        ".gitignore",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/validate_harness.py"
+      ],
+      "evidence_fingerprint": "sha256:d19ed39282753b74bb38e3779c7cc0ebcba38f9dcab8e93db87943eab12a5305",
+      "reproduction": [
+        "probe M1/M2/M3 in bypass_probe_d067_b.py",
+        "git check-ignore -v .agent-harness/admissions/<run>/A-D067-REVIEW-BYPASS.json -> .gitignore:64"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-08",
+      "severity": "medium",
+      "verdict": "fail",
+      "statement": "The new validate_harness.py tracked-run-evidence check is evadable and, more importantly, blind to fabrication. (a) `git update-index --assume-unchanged <file>` or `--skip-worktree <file>` makes `git status --porcelain -- .agent-harness/runs` report clean while the tampered bytes remain on disk. (b) `git add -f` + commit launders the tampered bytes to clean. (c) Decisively: `/.agent-harness/runs/` is gitignored and only ~305 files are force-added, so a brand-new fabricated result artifact under a tracked run directory does not appear in porcelain at all - the check watches modification of committed evidence but not creation of new evidence, which is the exact primitive F-D067-01 needs. (d) On any git failure the check degrades to a `checks_skipped` note and the validator still returns ok:true with exit 0. (e) The admissions scan never validates a receipt against a registered assignment (a ghost consumed receipt for A-NO-SUCH passes ok:true), never compares a consumed result_sha256 to the on-disk result bytes, and never asserts that every result in the run has a matching consumed receipt - that last check is the one that would detect F-D067-01.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.92,
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py",
+        ".gitignore"
+      ],
+      "evidence_fingerprint": "sha256:90b79f2fd371d40fbc6f2a43961b91d141f1102ad650963651089a80c90a7c6f",
+      "reproduction": [
+        "probe F1/F2/F3 (bypass_probe_d067.py) and F4a/F4b, G, N (bypass_probe_d067_b.py)",
+        "F2: after `git update-index --assume-unchanged`: (clean) | disk: {\"v\":\"TAMPERED\"}",
+        "G: new fabricated file + deleted tracked file -> only the deletion is reported",
+        "N: validate_harness ok:true with a ghost consumed receipt for a nonexistent assignment"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-09",
+      "severity": "low",
+      "verdict": "fail",
+      "statement": "`admit_agent.py --reopen` destroys the prior acceptance binding. The reopened_from stub (admit_agent.py:132-138) preserves only state, created_at, consumed_by_agent_id and reason; the measured consumed record also contains consumed_at, consumed_by_agent_type and result_sha256, all three of which are dropped. Because the receipt file is the sole attribution record and is untracked, a reopen permanently erases which result bytes were accepted. Separately, --reopen's --reason guard is advisory only: any actor with write access replaces the file directly without running the script.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.9,
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:b496a450265ea458be097a3fbc12ef29170799250de03344b5b0820db6acba8f",
+      "reproduction": [
+        "probe R1/R2: consumed keys vs reopened_from keys; DROPPED: ['consumed_at','consumed_by_agent_type','result_sha256']"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-10",
+      "severity": "low",
+      "verdict": "pass",
+      "statement": "Path traversal and key confusion in admission_path are NOT exploitable - this attack FAILS. ADMISSION_KEY_RE (_harness.py:14) requires a leading alphanumeric and forbids '/', so admission_path returns None for '../../etc', '..', '../../../etc/passwd' and 'run/nested', and both the Stop hook (line 160) and admit_agent (line 105) fail closed on None. The 128-character cap is stricter than the unbounded ASSIGNMENT_ID_RE, so an over-long assignment_id blocks rather than escapes. The only oddity is cosmetic: an assignment id 'A.json' maps to 'A.json.json', which cannot collide with any other id. Two receipt fields, runtime_agent_type and context_version, are stored but never read by the Stop hook; they are decorative, not exploitable, because the assignment contract covers both.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.95,
+      "evidence_refs": [
+        ".agent-harness/scripts/_harness.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:fff23d7b16684e882cf8c6c2afb636739a56a9eb84da86cc7c08f4de23005610",
+      "reproduction": [
+        "probe E: admission_path() returns None for every traversal and over-length key"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-11",
+      "severity": "medium",
+      "verdict": "pass",
+      "statement": "What the change genuinely fixes, stated fairly: against an agent that does not write outside its result path, the D-065 controlled same-run substitution is now closed. A stop declaring a sibling assignment with its own token is BLOCKED with 'admission_proof does not match', a missing/empty admission_proof is BLOCKED, a consumed receipt cannot be replayed, a missing receipt is BLOCKED, and a leaseless agent inside an active run is BLOCKED instead of falling back to ACTIVE_RUN. A blocked stop leaves both the lease and the open receipt in place for a fail-closed retry, and acceptance writes the receipt atomically via os.replace with no temp-file residue. The full fixture suite is green: `python3 -m pytest .agent-harness/tests/test_hooks.py -q` -> 21 passed. The defect is that the fixtures model only a prompt-confused agent; none of them models an agent with filesystem write access, which is the actor D-066 actually observed.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.93,
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".codex/hooks/subagent_start_context.py"
+      ],
+      "evidence_fingerprint": "sha256:fff49acf3eae8f3f8f5ffe7ed1523bd520e617b4489adff7238921e0dc9d5f04",
+      "reproduction": [
+        "python3 -m pytest .agent-harness/tests/test_hooks.py -q -> 21 passed in 0.84s",
+        "probe C2 control: leaseless stop with a correct ACTIVE_RUN is BLOCKED"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-12",
+      "severity": "low",
+      "verdict": "inconclusive",
+      "statement": "Independence hygiene observed while probing, outside the D-067 claim: sibling subagents of one session share the scratchpad directory /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad, and the concurrently running d067-review-correctness agent's working probe files were visible there. Under independence_mode=blind-results this is a filesystem-level channel between blind reviewers. No sibling result artifact was read and no sibling file was opened; only the directory listing was observed. Not adjudicated here because it is a runtime/venue property, not part of the reviewed diff.",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "confidence": 0.7,
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:28f654e613cbb2be30bcabc242b1c70a6d3f99b30545053baea8fb30aec22ae1",
+      "reproduction": [
+        "ls -la /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/"
+      ],
+      "assumptions_used": [],
+      "counterevidence_refs": [],
+      "unresolved": [
+        "whether the harness intends scratchpad isolation between blind siblings"
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-BYPASS.json"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d067-review-bypass",
+  "agent_type": "default",
+  "last_assistant_message": "Review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-REVIEW-BYPASS\", \"context_version\": \"daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-BYPASS.json\", \"admission_proof\": \"sha256:58b8819efa25e9a9de520f426fd7652e21e1e50b25607a0fd1995f87439a80de\"}"
+}
