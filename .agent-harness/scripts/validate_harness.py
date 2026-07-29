@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Iterator
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from _harness import (
@@ -49,6 +50,50 @@ LEGACY_MANIFEST_CRITERION = (
     "that had no ADMISSIONS.jsonl at generation time"
 )
 SHA256_RE = re.compile(r"sha256:[0-9a-f]{64}\Z")
+
+# D-070 round-5 review, finding 1. The manifest's git binding stopped at the
+# working tree. `git status --porcelain` reports a *modified tracked* file, so
+# planting a result and blessing it with a matching manifest entry failed only
+# until the next `git commit`; after one commit the porcelain was clean again
+# and the validator reported `ok (2 pinned)`. One commit defeated the pin.
+#
+# The manifest describes a CLOSED set -- the result artifacts that existed
+# before the admission mechanism landed -- so it should never legitimately grow.
+# Its identity is therefore pinned on two further surfaces that are checked by
+# two different checkers:
+#
+#   * the entry COUNT is declared in SSOT_FACTS.json, which
+#     check_ssot_consistency.py re-verifies against the manifest's own
+#     `entry_count` field and against the prose that quotes it in
+#     FROZEN_DECISIONS.md and VALIDATION_LEDGER.md;
+#   * the canonical DIGEST of the entry set is pinned here, in the checker
+#     itself, so swapping one entry for another at an unchanged count fails too.
+#
+# WHAT THIS DOES AND DOES NOT BUY. It does not defeat the accepted same-OS-user
+# residual: an agent that deliberately writes outside its declared result path
+# can still edit the manifest, this constant, SSOT_FACTS.json and the prose
+# together. What it removes is the single-step laundering route above. Growing
+# the pinned set now takes coordinated edits to four places across three
+# independently checked surfaces (manifest bytes, this checker, the declared
+# facts file, and the two prose surfaces the facts file binds), each covered by
+# a different test suite. That is the whole claim: "one commit" becomes
+# "coordinated edits across cross-checked surfaces", not "cannot be forged".
+SSOT_FACTS_REL = ".agent-harness/context/SSOT_FACTS.json"
+LEGACY_MANIFEST_PIN_FACT_ID = "legacy_results_manifest_entry_count"
+# Canonical digest of the pinned entry set as of manifest head a1cdd8a. Recompute
+# with `--emit-legacy-manifest`, which prints it, and expect the diff to be
+# reviewed alongside the SSOT_FACTS.json value and the prose that quotes it.
+LEGACY_MANIFEST_PINNED_SHA256 = (
+    "sha256:14c89504abffed6b1c719bce34f3469670e634f7bf3908215b7552d060be18e8"
+)
+
+# D-070 round-5 review, finding F-R5-04. A result whose receipt is still `open`
+# is tolerated so a live run is not wedged (round-2 finding F-12), but that
+# tolerance used to be unbounded: mint a receipt through admit_agent.py, write a
+# result, never stop, and those bytes were excused for ever and in whichever run
+# directory the receipt sat in. The carve-out is now bounded to an admission
+# that can still plausibly be IN FLIGHT -- see pending_carve_out_refusal.
+PENDING_ADMISSION_MAX_AGE_HOURS = 24
 
 
 def sha256_of(path: Path) -> str:
@@ -210,7 +255,231 @@ def load_legacy_manifest(
             )
             continue
         index[key] = digest
+    # `entry_count` is the field the declared-facts cross-check reads, so it has
+    # to agree with the entries it counts, or the two checkers would be looking
+    # at different numbers. Checked after the entries themselves so a malformed
+    # entry is still named.
+    declared_count = payload.get("entry_count")
+    if not isinstance(declared_count, int) or isinstance(declared_count, bool):
+        errors.append("Legacy results manifest has no integer `entry_count`.")
+        return {}, "malformed", errors
+    if declared_count != len(entries):
+        errors.append(
+            f"Legacy results manifest declares entry_count {declared_count} but "
+            f"carries {len(entries)} entries."
+        )
+        return {}, "malformed", errors
     return index, f"ok ({len(index)} pinned)", errors
+
+
+def canonical_legacy_digest(index: dict[tuple[str, str], str]) -> str:
+    """Digest of the pinned SET, independent of the manifest's formatting.
+
+    Taken from the parsed index rather than the file bytes so that reindenting
+    or reordering the JSON is not an integrity failure, while adding, removing
+    or swapping any pinned artifact is.
+    """
+    payload = "\n".join(
+        f"{run_id}\0{assignment_id}\0{digest}"
+        for (run_id, assignment_id), digest in sorted(index.items())
+    )
+    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def git_tracked(repo: Path, rel: str) -> tuple[bool | None, str]:
+    """``(is_tracked, failure)``; ``failure`` is an exception class name or ""."""
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", "--", rel],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError as exc:
+        return None, exc.__class__.__name__
+    return completed.returncode == 0, ""
+
+
+def declared_legacy_entry_count(repo: Path) -> tuple[int | None, list[str]]:
+    """The manifest's entry count as declared on the cross-checked SSOT surface.
+
+    Returns ``None`` when SSOT_FACTS.json is absent, which is a synthetic tree
+    with no second surface to cross-check against -- the same applicability rule
+    the gate registry uses below. Deleting a *tracked* facts file to reach that
+    branch is closed here, exactly as the registry-deletion bypass is.
+    """
+    errors: list[str] = []
+    path = repo / SSOT_FACTS_REL
+    if not path.is_file():
+        tracked, failure = git_tracked(repo, SSOT_FACTS_REL)
+        if failure:
+            errors.append(
+                "Could not determine whether the declared-facts file is tracked "
+                f"({failure}); git is required for validation."
+            )
+        elif tracked:
+            errors.append(
+                "Declared-facts file is tracked in git but missing from the "
+                "working tree; the legacy results manifest pin cannot be "
+                "disabled by deleting its input."
+            )
+        return None, errors
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        errors.append(
+            f"Declared-facts file is unreadable or invalid JSON "
+            f"({exc.__class__.__name__}); the legacy results manifest pin cannot "
+            "be checked."
+        )
+        return None, errors
+    facts = payload.get("facts") if isinstance(payload, dict) else None
+    if not isinstance(facts, list):
+        errors.append("Declared-facts file has no `facts` list.")
+        return None, errors
+    for fact in facts:
+        if not isinstance(fact, dict):
+            continue
+        if fact.get("fact_id") != LEGACY_MANIFEST_PIN_FACT_ID:
+            continue
+        value = fact.get("value")
+        if not isinstance(value, int) or isinstance(value, bool):
+            errors.append(
+                f"Declared fact {LEGACY_MANIFEST_PIN_FACT_ID!r} has no integer "
+                "value; the legacy results manifest pin cannot be checked."
+            )
+            return None, errors
+        return value, errors
+    errors.append(
+        f"Declared-facts file declares no {LEGACY_MANIFEST_PIN_FACT_ID!r}; the "
+        "legacy results manifest would then be pinned by nothing outside itself."
+    )
+    return None, errors
+
+
+def check_legacy_manifest_pin(
+    repo: Path,
+    legacy_index: dict[tuple[str, str], str],
+    legacy_status: str,
+) -> tuple[str, list[str]]:
+    """Cross-check the manifest's identity against the declared count and digest."""
+    errors: list[str] = []
+    declared, pin_errors = declared_legacy_entry_count(repo)
+    errors.extend(pin_errors)
+    if declared is None:
+        return legacy_status, errors
+    if not legacy_status.startswith("ok"):
+        errors.append(
+            f"Declared-facts file pins {declared} legacy result artifacts, but the "
+            f"legacy results manifest is {legacy_status}. The manifest cannot be "
+            "removed or broken to drop the pin."
+        )
+        return legacy_status, errors
+    if declared != len(legacy_index):
+        errors.append(
+            f"Legacy results manifest holds {len(legacy_index)} entries but the "
+            f"declared-facts file pins {declared}. The manifest describes a closed "
+            "pre-admission set; growing it requires the declared count, the prose "
+            "that quotes it, and the digest pinned in validate_harness.py to move "
+            "together."
+        )
+    actual = canonical_legacy_digest(legacy_index)
+    if actual != LEGACY_MANIFEST_PINNED_SHA256:
+        errors.append(
+            "Legacy results manifest entries do not match the digest pinned in "
+            f"validate_harness.py: {actual} != {LEGACY_MANIFEST_PINNED_SHA256}. "
+            "An entry was added, removed or altered."
+        )
+    if not errors:
+        legacy_status += f"; pinned by declared fact and digest ({declared})"
+    return legacy_status, errors
+
+
+def pending_carve_out_refusal(
+    harness: Path,
+    run_name: str,
+    assignment_id: str,
+    receipt: dict,
+    active: str | None,
+    now: datetime,
+) -> str | None:
+    """Why this open receipt does NOT excuse a result, or None when it does.
+
+    D-070 round-5 review, finding F-R5-04. The carve-out exists so a genuinely
+    live run is not wedged between the moment an agent writes its artifact and
+    the moment SubagentStop consumes its receipt (round-2 finding F-12). That is
+    a window inside ONE run -- the live one -- and it closes in minutes, or in
+    however long a blocked stop takes to be retried. Everything below states
+    that window and nothing wider, so a live run still cannot be wedged:
+
+    * the run must be the ACTIVE one. admit_agent.py mints only for the active
+      run, so an open receipt in any other run directory is left-over state, not
+      an agent in flight. Before this, the global forward sweep let one such
+      receipt excuse a result in that run directory indefinitely.
+    * the receipt must name the assignment whose result it is excusing, so a
+      receipt cannot be moved to cover a different artifact.
+    * the assignment must still be registered in the active run. Nothing can be
+      in flight for an assignment the run does not have.
+    * the admission must be younger than PENDING_ADMISSION_MAX_AGE_HOURS. This
+      is what turns "for ever" into a bound, and the exact claim is narrow: one
+      admission excuses one artifact for at most that long, and extending it
+      means running admit_agent.py --reopen --reason '...', which writes a
+      declared supersession row onto the append-only ledger. The ceiling sits
+      far above any real write-to-stop window -- the artifact is written
+      immediately before the stop, and only a blocked stop being retried holds
+      it open -- so an agent genuinely in flight is not wedged by it. An agent
+      sitting on an unadmitted artifact for over a day is not in flight, and
+      saying so is the point.
+
+    This does not make an unattributed result safe and does not claim to: while
+    the carve-out holds, the bytes are tolerated, not verified. What changes is
+    that the tolerance is scoped to one run, tied to a registered assignment,
+    capped in time, and reported with its digest and a count.
+    """
+    if active is None or run_name != active:
+        return (
+            f"its open admission receipt sits in run {run_name!r}, which is not "
+            f"the active run ({active!r}); admit_agent.py mints only for the "
+            "active run, so an open receipt anywhere else is left-over state"
+        )
+    named = (str(receipt.get("run_id")), str(receipt.get("assignment_id")))
+    if named != (run_name, assignment_id):
+        return (
+            f"its open admission receipt names {named[0]}/{named[1]}, not the "
+            "artifact it is being read to excuse"
+        )
+    registered = harness / "runs" / run_name / "assignments" / f"{assignment_id}.json"
+    if not registered.is_file():
+        return (
+            "no assignment is registered for it in the active run, so no agent "
+            "can be in flight for it"
+        )
+    raw = str(receipt.get("created_at") or "")
+    try:
+        created = datetime.fromisoformat(raw)
+    except ValueError:
+        created = None
+    if created is None or created.tzinfo is None:
+        return (
+            f"its open admission receipt carries no parseable UTC created_at "
+            f"({raw!r}), so how long it has been open cannot be established"
+        )
+    age = now - created
+    if age < timedelta(0):
+        return (
+            f"its open admission receipt is dated {raw}, in the future; the "
+            "carve-out cannot be extended by dating a receipt forward"
+        )
+    if age > timedelta(hours=PENDING_ADMISSION_MAX_AGE_HOURS):
+        return (
+            f"its open admission receipt has been open for {age.total_seconds() / 3600:.1f}h, "
+            f"past the {PENDING_ADMISSION_MAX_AGE_HOURS}h in-flight ceiling. Let "
+            "the agent stop, delete the artifact, or re-admit with admit_agent.py "
+            "--reopen --reason '...', which records the supersession on the "
+            "append-only ledger"
+        )
+    return None
 
 
 def git_porcelain_errors(repo: Path, pathspec: str, label: str) -> list[str]:
@@ -298,6 +567,9 @@ def emit_legacy_manifest(repo: Path, force: bool) -> None:
     }
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    canonical = canonical_legacy_digest(
+        {(entry["run_id"], entry["assignment_id"]): entry["sha256"] for entry in entries}
+    )
     print(
         json.dumps(
             {
@@ -306,6 +578,14 @@ def emit_legacy_manifest(repo: Path, force: bool) -> None:
                 "entry_count": len(entries),
                 "generated_at_head": head,
                 "sha256": sha256_of(target),
+                "canonical_entries_sha256": canonical,
+                "next": (
+                    "Re-pinning the boundary is a cross-surface edit: set "
+                    f"LEGACY_MANIFEST_PINNED_SHA256 in validate_harness.py to "
+                    f"{canonical}, set the "
+                    f"{LEGACY_MANIFEST_PIN_FACT_ID!r} value in {SSOT_FACTS_REL} "
+                    f"to {len(entries)}, and update the prose that quotes it."
+                ),
             },
             indent=2,
         )
@@ -353,14 +633,48 @@ def main() -> None:
         active = active_run_id(repo)
     except SystemExit:
         pass
-    if active:
+    # D-070 round-5 review, finding F-R5-08 (pre-existing, present at a1cdd8a).
+    # An ACTIVE_RUN naming a directory that does not exist used to raise
+    # FileNotFoundError out of load_json: fail-closed, but as a traceback on
+    # stderr with an empty stdout, so every caller that parses this script's JSON
+    # saw a crash rather than a verdict. Same for an unreadable or budget-less
+    # RUN_PLAN.json. They are errors now, reported in the normal payload.
+    if active and not (harness / "runs" / active).is_dir():
+        errors.append(
+            "ACTIVE_RUN names a run directory that does not exist: "
+            f".agent-harness/runs/{active}. Point ACTIVE_RUN at a run created by "
+            "init_run.py, or clear it."
+        )
+    elif active:
         run_dir = harness / "runs" / active
-        plan = load_json(run_dir / "RUN_PLAN.json")
-        if plan.get("context_version") != index.get("context_version"):
-            errors.append("Active run was initialized against a stale context version.")
+        plan: object = None
+        try:
+            plan = load_json(run_dir / "RUN_PLAN.json")
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            errors.append(
+                f"Active run plan is missing or unreadable ({exc.__class__.__name__}): "
+                f".agent-harness/runs/{active}/RUN_PLAN.json"
+            )
         assignments = sorted((run_dir / "assignments").glob("*.json"))
-        if len(assignments) > int(plan["budget"]["max_total"]):
-            errors.append("Assignment count exceeds run max_total.")
+        if plan is not None and not isinstance(plan, dict):
+            errors.append(
+                f"Active run plan is not a JSON object: "
+                f".agent-harness/runs/{active}/RUN_PLAN.json"
+            )
+        elif isinstance(plan, dict):
+            if plan.get("context_version") != index.get("context_version"):
+                errors.append(
+                    "Active run was initialized against a stale context version."
+                )
+            budget = plan.get("budget")
+            max_total = budget.get("max_total") if isinstance(budget, dict) else None
+            if not isinstance(max_total, int) or isinstance(max_total, bool):
+                errors.append(
+                    "Active run plan has no integer budget.max_total, so the "
+                    "assignment ceiling cannot be checked."
+                )
+            elif len(assignments) > max_total:
+                errors.append("Assignment count exceeds run max_total.")
         ids: set[str] = set()
         declared_results: dict[str, str] = {}
         for path in assignments:
@@ -439,7 +753,7 @@ def main() -> None:
     )
 
     open_admissions: list[str] = []
-    open_receipts: set[tuple[str, str]] = set()
+    open_receipts: dict[tuple[str, str], dict] = {}
     consumed: dict[tuple[str, str], dict] = {}
     for path in sorted((harness / "admissions").glob("*/*.json")):
         if path.name.startswith(".tmp."):
@@ -455,7 +769,7 @@ def main() -> None:
         state = str(receipt.get("state"))
         if state == "open":
             open_admissions.append(f"{path.parent.name}/{path.stem}")
-            open_receipts.add((path.parent.name, path.stem))
+            open_receipts[(path.parent.name, path.stem)] = receipt
         elif state == "consumed":
             consumed[(path.parent.name, path.stem)] = receipt
 
@@ -464,16 +778,16 @@ def main() -> None:
     # detects a fabricated or post-hoc edited result artifact, which the
     # git-porcelain check above cannot see for an untracked new file
     # (D-067 review F-D067-08).
-    pending_results: list[str] = []
+    pending_results: list[dict[str, str]] = []
     if active:
         for result_path in sorted((harness / "runs" / active / "results").glob("*.json")):
             receipt = consumed.get((active, result_path.stem))
             if receipt is None:
                 if (active, result_path.stem) in open_receipts:
-                    # The agent wrote its artifact but has not stopped yet. Report
-                    # it rather than erroring, so a live run is not wedged
-                    # (D-067 round-2 review F-12).
-                    pending_results.append(result_path.stem)
+                    # The agent may still be in flight. Whether that actually
+                    # excuses these bytes is decided in exactly one place, the
+                    # forward sweep below, so the carve-out cannot be granted
+                    # here and bounded there (D-070 round-5 review F-R5-04).
                     continue
                 errors.append(
                     "Result artifact has no admission receipt at all: "
@@ -577,23 +891,24 @@ def main() -> None:
         # so out loud rather than letting an uncommitted pin read as a sealed
         # one -- while the manifest is uncommitted, an added entry leaves no git
         # trace.
-        try:
-            tracked = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", "--", LEGACY_MANIFEST_REL],
-                cwd=repo,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-        except OSError as exc:
+        tracked, failure = git_tracked(repo, LEGACY_MANIFEST_REL)
+        if failure:
             errors.append(
                 "Could not determine whether the legacy results manifest is "
-                f"tracked ({exc.__class__.__name__}); git is required for "
+                f"tracked ({failure}); git is required for "
                 "validation."
             )
-        else:
-            if tracked.returncode != 0:
-                legacy_status += "; UNCOMMITTED, so the pin is not yet git-bound"
+        elif not tracked:
+            legacy_status += "; UNCOMMITTED, so the pin is not yet git-bound"
+    # ...and being tracked is not enough either, because `git commit` clears the
+    # porcelain check. The manifest's own identity is cross-checked against the
+    # declared count and the pinned digest; see LEGACY_MANIFEST_PINNED_SHA256.
+    legacy_status, pin_errors = check_legacy_manifest_pin(
+        repo, legacy_index, legacy_status
+    )
+    errors.extend(pin_errors)
+
+    now = datetime.now(timezone.utc)
     for run_name, assignment_id, result_path in result_files(harness):
         key = (run_name, assignment_id)
         if key in attributed:
@@ -615,17 +930,30 @@ def main() -> None:
                     f"pinned it: {run_name}/{assignment_id}"
                 )
             continue
-        if key in open_receipts:
+        open_receipt = open_receipts.get(key)
+        if open_receipt is not None:
             # An admitted agent that has written its artifact but not stopped.
             # Reported rather than errored so a live run is not wedged
-            # (D-067 round-2 review F-12).
-            label = (
-                assignment_id
-                if run_name == active
-                else f"{run_name}/{assignment_id}"
+            # (D-067 round-2 review F-12) -- but only while the admission can
+            # still plausibly be in flight (D-070 round-5 review F-R5-04).
+            refusal = pending_carve_out_refusal(
+                harness, run_name, assignment_id, open_receipt, active, now
             )
-            if label not in pending_results:
-                pending_results.append(label)
+            if refusal is None:
+                pending_results.append(
+                    {
+                        "run_id": run_name,
+                        "assignment_id": assignment_id,
+                        "sha256": result_digest,
+                        "receipt_created_at": str(open_receipt.get("created_at") or ""),
+                    }
+                )
+                continue
+            errors.append(
+                "Result artifact is not attributed: the open-admission carve-out "
+                f"is refused for {run_name}/{assignment_id} ({result_digest}) "
+                f"because {refusal}."
+            )
             continue
         errors.append(
             "Result artifact is not attributed: no consumed admission ledger row "
@@ -650,26 +978,18 @@ def main() -> None:
     ssot_applicable = registry.is_file()
     ssot_status = "ok" if ssot_applicable else "not applicable (no gate registry)"
     if not ssot_applicable:
-        try:
-            tracked = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", "--", str(registry.relative_to(repo))],
-                cwd=repo,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-        except OSError as exc:
+        tracked, failure = git_tracked(repo, str(registry.relative_to(repo)))
+        if failure:
             errors.append(
                 "Could not determine whether the gate registry is tracked "
-                f"({exc.__class__.__name__}); git is required for validation."
+                f"({failure}); git is required for validation."
             )
-        else:
-            if tracked.returncode == 0:
-                errors.append(
-                    "Gate registry is tracked in git but missing from the working "
-                    "tree; the SSOT consistency check cannot be disabled by "
-                    "deleting its input."
-                )
+        elif tracked:
+            errors.append(
+                "Gate registry is tracked in git but missing from the working "
+                "tree; the SSOT consistency check cannot be disabled by "
+                "deleting its input."
+            )
 
     ssot = Path(__file__).resolve().parent / "check_ssot_consistency.py"
     if not ssot_applicable:
@@ -721,6 +1041,9 @@ def main() -> None:
                 "context_version": actual,
                 "active_run": active,
                 "open_admissions": open_admissions,
+                # Reported with their digests and counted, because a pending
+                # result is tolerated, not verified (D-070 round-5 F-R5-04).
+                "pending_result_count": len(pending_results),
                 "pending_results": pending_results,
                 "legacy_results_manifest": legacy_status,
                 "ssot_consistency": ssot_status,

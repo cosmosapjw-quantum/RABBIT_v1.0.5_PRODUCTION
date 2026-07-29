@@ -120,6 +120,90 @@ def last_consumed_result_sha256(ledger_path: Path, assignment_id: str) -> str:
     return digest
 
 
+def other_assignment_bound_to_agent(
+    admissions_dir: Path, agent_id: str, assignment_id: str
+) -> str:
+    """The assignment_id of another receipt in this run already bound to
+    ``agent_id`` by an open or consumed receipt, or ``""`` if none exists.
+
+    D-065 obligation 1 (round-5 finding): the obligation is one spawned
+    ``agent_id`` bound to one run, assignment, and digest. What was enforced
+    before this was one *token* to one assignment -- nothing stopped minting a
+    second receipt naming the same ``expect_agent_id`` for a different
+    assignment, so a single agent_id could consume two assignments in one run.
+    This is the mint-time half of the fix; ``subagent_stop_validate.py`` is the
+    other half.
+
+    A receipt for the SAME ``assignment_id`` is deliberately excluded: that is
+    the ordinary ``--reopen`` path (re-minting for the same assignment and
+    agent), which is legitimate and handled by the existing `prior` logic in
+    `main`, not by this guard.
+
+    Fails closed on any receipt in the directory that cannot be listed, read,
+    or parsed as a JSON object -- not only ones that turn out to bind this
+    agent_id -- because an unparseable file cannot be proven not to bind it.
+    This mirrors ``list_admission_matches`` in ``subagent_start_context.py``,
+    which folds the same class of failure into a hard FAIL rather than a skip.
+    """
+    if admissions_dir.is_symlink():
+        fail(f"admission directory path is a symlink: {admissions_dir}")
+        return ""
+    try:
+        entries = sorted(admissions_dir.iterdir())
+    except FileNotFoundError:
+        return ""
+    except OSError as exc:
+        fail(
+            "admission receipts directory could not be listed "
+            f"({exc.__class__.__name__}); the agent-to-assignment binding "
+            "cannot be verified"
+        )
+        return ""
+    for entry in entries:
+        if entry.name.startswith("."):
+            continue  # atomic-write temp files: .tmp.<pid>.<assignment_id>.json
+        if entry.suffix != ".json":
+            continue  # e.g. Stop's O_EXCL claim files: <assignment_id>.json.claim
+        if entry.is_symlink():
+            fail(
+                "admission receipt path is a symlink; refusing to follow it: "
+                f"{entry.name}"
+            )
+            return ""
+        if not entry.is_file():
+            continue
+        try:
+            raw = entry.read_text(encoding="utf-8")
+        except OSError as exc:
+            fail(
+                f"admission receipt unreadable ({exc.__class__.__name__}): "
+                f"{entry.name}; the agent-to-assignment binding cannot be verified"
+            )
+            return ""
+        try:
+            receipt = json.loads(raw)
+        except json.JSONDecodeError:
+            fail(
+                f"admission receipt is not valid JSON: {entry.name}; the "
+                "agent-to-assignment binding cannot be verified"
+            )
+            return ""
+        if not isinstance(receipt, dict):
+            fail(
+                f"admission receipt is not a JSON object: {entry.name}; the "
+                "agent-to-assignment binding cannot be verified"
+            )
+            return ""
+        other_assignment_id = str(receipt.get("assignment_id") or entry.stem)
+        if other_assignment_id == assignment_id:
+            continue
+        if str(receipt.get("expected_agent_id") or "") != agent_id:
+            continue
+        if str(receipt.get("state") or "") in ("open", "consumed"):
+            return other_assignment_id
+    return ""
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--assignment-id", required=True)
@@ -207,6 +291,30 @@ def main() -> None:
     if target is None:
         fail("run_id or assignment_id is not a safe admission path key")
         return
+
+    # One agent_id binds to one assignment per run (D-065 obligation 1), not
+    # merely one token to one assignment. Minting a second receipt naming an
+    # expect_agent_id already bound elsewhere -- open or consumed -- would
+    # recreate exactly the gap this guard closes: --reopen for the SAME
+    # assignment is excluded from this check (see
+    # other_assignment_bound_to_agent) because that is the legitimate
+    # supersession path handled below.
+    if expect_agent_id:
+        admissions_dir = harness / "admissions" / run_id
+        conflict_assignment_id = other_assignment_bound_to_agent(
+            admissions_dir, expect_agent_id, assignment_id
+        )
+        if conflict_assignment_id:
+            fail(
+                f"agent_id {expect_agent_id!r} already holds an open or "
+                f"consumed admission receipt for assignment "
+                f"{conflict_assignment_id!r} in run {run_id!r}. One admission "
+                "token binds one agent_id to exactly one assignment (D-065 "
+                f"obligation 1); mint {assignment_id!r} for a different "
+                f"--expect-agent-id, or reopen {conflict_assignment_id!r} "
+                "instead if that is the assignment this agent should hold."
+            )
+            return
 
     prior = None
     if target.exists():

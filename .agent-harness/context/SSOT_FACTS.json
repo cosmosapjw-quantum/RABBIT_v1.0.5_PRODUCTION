@@ -67,12 +67,48 @@
  "assertion_exemptions": [],
  "facts": [
   {
+   "fact_id": "legacy_results_manifest_entry_count",
+   "description": "Result artifacts pinned by digest in .agent-harness/context/LEGACY_RESULTS_MANIFEST.json. The pre-admission boundary is a CLOSED set, so this number must not move without a decision; validate_harness.py reads this value and refuses a manifest whose entries do not match it, and separately refuses one whose canonical entry digest is not LEGACY_MANIFEST_PINNED_SHA256. Growing the set therefore takes coordinated edits to the manifest, this declaration, the pinned digest in the checker, and the prose below -- rather than one commit, which is all it took before (D-070 round-5 review, finding 1).",
+   "measurement": "python3 -c \"import json;print(json.load(open('.agent-harness/context/LEGACY_RESULTS_MANIFEST.json'))['entry_count'])\"",
+   "value": 136,
+   "as_of_commit": "a1cdd8a",
+   "assertions": [
+    {
+     "file": ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json",
+     "line_contains": "entry_count",
+     "value_regex": "\"entry_count\": (\\d+)",
+     "role": "current",
+     "note": "The manifest's own count of itself; validate_harness.py separately proves it equals the number of entries."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B1",
+     "value_regex": "\\((\\d+) pinned\\)",
+     "role": "current",
+     "note": "Live ledger row for the validation that introduced the manifest."
+    },
+    {
+     "file": ".agent-harness/context/FROZEN_DECISIONS.md",
+     "line_contains": "| D-070-B1 |",
+     "value_regex": "(\\d+) pre-admission results pinned",
+     "role": "frozen",
+     "pinned_to_commit": "a1cdd8a",
+     "note": "Frozen row: pinned to the count the manifest was generated with, never refreshed."
+    }
+   ]
+  },
+  {
    "fact_id": "hook_fixture_count",
    "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
    "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
-   "value": 58,
-   "as_of_commit": "6318a79",
+   "value": 74,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 58,
+     "as_of_commit": "6318a79",
+     "note": "D-070 Part B1 round-4 fixes (Start receipt check, forward sweep, supersession)."
+    },
     {
      "value": 39,
      "as_of_commit": "07e3507",

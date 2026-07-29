@@ -104,14 +104,53 @@ history pinned by digest in `.agent-harness/context/LEGACY_RESULTS_MANIFEST.json
 rather than exempted; and a second consume row is admissible only when a declared
 `"event": "reopened"` row carrying the superseded digest and a non-empty reason
 sits between them. Start now also checks the admission receipt, closing the half
-of obligation 2 that was never implemented, and a fresh overlapping-run canary
-(C4) was passed on the post-`96089f0` bytes with the stolen `ACTIVE_RUN` pointer
-attested in-band. Hook fixtures went 39 → 58.
+of obligation 2 that was never implemented. A fresh overlapping-run canary (C4)
+was run on the post-`96089f0` bytes, but round 5 then rejected its attestation —
+see the round-5 correction below. Hook fixtures went 39 → 74.
 
 The lesson is recorded here rather than only in the fix: **this report asserted as
 settled two properties the code did not have, after three review rounds had already
 passed over it.** That is the D-064 failure mode — the record getting ahead of the
 mechanism — reproduced at smaller scale inside the remedy for it.
+
+### Obligation 2 — what Start can and cannot do, stated rather than argued
+
+Round 5 judged obligation 2 ("make receipt/lease creation failure a hard Start
+failure") only partially discharged, and the reasoning is structural rather than
+a defect to patch. It is recorded here instead of being closed by assertion.
+
+The **lease** half is fully met: a lease-write `OSError` yields
+`Hook preflight: FAIL`, no lease is recorded, and Stop then blocks. Fixture- and
+canary-attested.
+
+The **receipt** half cannot be fully met at Start, because a mint failure and a
+legitimately unregistered agent are indistinguishable from inside the hook. Start
+receives only `agent_id` and `agent_type` — never the spawn prompt, and never any
+statement of the parent's intent (frozen rows D-031/D-032). "No receipt for this
+agent" is therefore ambiguous: it is what a failed `admit_agent.py` looks like,
+and equally what every unregistered helper agent looks like. Making absence fatal
+would hard-fail every helper spawn; making it silent would hide a mint failure.
+The implemented rule takes the middle: absence is **reported in the injected
+context and in the transcript** but is not fatal, while a receipt that exists and
+is unusable — `consumed`, wrong run, malformed, or ambiguous — is a hard FAIL.
+
+Two compensating controls carry the rest, and they are where the obligation is
+actually satisfied:
+
+- `admit_agent.py` **exits non-zero** on any mint failure, so creation failure is
+  a hard failure at the moment of creation, in the process that knows the intent.
+- `SubagentStop` refuses to admit any result without a matching open receipt, so
+  an agent that was never minted cannot produce an admissible artifact regardless
+  of what Start said.
+
+Round 5 also observed that under the recorded LOCAL-ADAPT — VS Code does not
+dispatch project Start/Stop hooks, so the parent invokes them explicitly — the
+parent always mints, and "none found" would then unambiguously mean "the parent
+failed to mint". That is correct for this deployment and does not generalise:
+the hook must remain correct where the IDE does dispatch it and unregistered
+agents exist. The narrower deployment-specific tightening is available and is
+deliberately not taken, because a rule that is only sound under one dispatch mode
+is the kind of thing this record has been burned by before.
 
 The table's last row remains the honest limit. It is stated in `admit_agent.py`,
 in `.agent-harness/README.md`, and here. Nothing in this slice should be read as a
@@ -161,7 +200,7 @@ modifications; two false claims in the `admit_agent.py` docstring about token
 secrecy; and a concurrency test that ran nothing concurrently because
 `communicate()` in a loop serialises the children.
 
-Tests: **58 pass** (was 12), including same-run substitution, receipt-write
+Tests: **74 pass** (was 12), including same-run substitution, receipt-write
 failure, lease-write failure, planted claim, replayed receipt, changed-bytes
 re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
 idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper

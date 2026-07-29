@@ -38,6 +38,51 @@ def block(reason: str) -> None:
     print(json.dumps({"decision": "block", "reason": reason}, ensure_ascii=False))
 
 
+def conflicting_agent_assignment(
+    ledger_path: Path, agent_id: str, assignment_id: str
+) -> tuple[str, str]:
+    """Has ``agent_id`` already consumed a DIFFERENT assignment in this run?
+
+    D-065 obligation 1 (round-5 finding): the obligation is one spawned
+    agent_id bound to one run, assignment, and digest. admit_agent.py now
+    refuses to mint a second receipt for the same agent_id, but that guard
+    only covers receipts minted after the fix; this is the Stop-time backstop
+    for anything else -- a receipt minted before the fix, or written directly.
+    A consume row for the SAME assignment_id is not a conflict: that is the
+    idempotent re-stop path a resumed agent relies on, handled separately by
+    the admission-receipt state check below.
+
+    Returns ``(conflicting_assignment_id, error)``. A missing ledger is not an
+    error -- nothing has been consumed yet in this run. An unreadable or
+    malformed ledger *is* an error and must fail closed: this is the
+    enforcement point for the binding, so an unprovable negative must not
+    default to "no conflict" (mirrors validate_harness.read_ledger and
+    admit_agent.last_consumed_result_sha256).
+    """
+    if not ledger_path.exists():
+        return "", ""
+    try:
+        raw = ledger_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        return "", f"could not be read ({exc.__class__.__name__})"
+    for number, line in enumerate(raw.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            return "", f"line {number} is malformed"
+        if not isinstance(row, dict):
+            return "", f"line {number} is not an object"
+        if (
+            row.get("event") == "consumed"
+            and str(row.get("agent_id") or "") == agent_id
+            and str(row.get("assignment_id") or "") != assignment_id
+        ):
+            return str(row.get("assignment_id") or ""), ""
+    return "", ""
+
+
 def main() -> None:
     event = read_stdin_json()
     root = repo_root()
@@ -160,6 +205,35 @@ def main() -> None:
         return
 
     run_dir = harness / "runs" / bound_run
+
+    # Exact agent-to-assignment binding, the ledger half (D-065 obligation 1,
+    # round-5 finding). admit_agent.py now refuses to mint a second receipt for
+    # the same agent_id naming a different assignment, but that is a mint-time
+    # guard; this is the Stop-time enforcement point, and it is the one that
+    # actually consumes a receipt. A conflict here means this agent_id already
+    # has a 'consumed' row for a DIFFERENT assignment in this run -- the same
+    # assignment_id is the idempotent re-stop path and is deliberately excluded
+    # by conflicting_agent_assignment.
+    conflict_assignment_id, ledger_error = conflicting_agent_assignment(
+        run_dir / "ADMISSIONS.jsonl", event_agent_id, assignment_id
+    )
+    if ledger_error:
+        block(
+            f"Admission ledger for run {bound_run!r} {ledger_error}; refusing to "
+            "accept a result whose agent-to-assignment binding cannot be "
+            "verified."
+        )
+        return
+    if conflict_assignment_id:
+        block(
+            f"agent_id {event_agent_id!r} already consumed an admission receipt "
+            f"for assignment {conflict_assignment_id!r} in run {bound_run!r}. "
+            "One agent_id may consume at most one assignment per run (D-065 "
+            f"obligation 1); this stop cannot also be attributed to assignment "
+            f"{assignment_id!r}."
+        )
+        return
+
     assignment_path = run_dir / "assignments" / f"{assignment_id}.json"
     try:
         assignment_raw = assignment_path.read_bytes()

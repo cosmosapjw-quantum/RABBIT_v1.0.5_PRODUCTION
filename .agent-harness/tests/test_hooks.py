@@ -14,6 +14,7 @@ sys.path.insert(0, str(HOOKS_DIR))
 sys.path.insert(0, str(HARNESS_SCRIPTS))
 
 import subagent_start_context  # noqa: E402
+import validate_harness  # noqa: E402
 from _harness import (  # noqa: E402
     RESULT_TEMPLATE_PATH,
     validate_assignment_contract,
@@ -1895,8 +1896,18 @@ def test_legacy_manifest_pins_rather_than_exempts_preadmission_results(
     ), payload["errors"]
 
 
-def test_committed_legacy_manifest_cannot_be_edited_or_deleted(tmp_path: Path) -> None:
-    """Blessing a fabrication by editing the manifest is itself an error."""
+def test_uncommitted_legacy_manifest_edit_or_deletion_is_an_error(
+    tmp_path: Path,
+) -> None:
+    """Blessing a fabrication by editing the manifest is a working-tree error.
+
+    Renamed in the D-070 round-5 review. The old name,
+    `test_committed_legacy_manifest_cannot_be_edited_or_deleted`, claimed more
+    than the body proves: `git status --porcelain` reports a tracked file that
+    differs from HEAD, so this only holds while the edit is UNCOMMITTED. One
+    `git commit` cleared it. The committed case is
+    `test_legacy_manifest_pin_survives_a_commit` below.
+    """
 
     _admitted_active_run(tmp_path)
     legacy = _legacy_result_path(tmp_path)
@@ -2235,3 +2246,897 @@ def test_validate_harness_still_surfaces_ssot_divergence(tmp_path: Path) -> None
         "cannot be disabled by deleting its input" in error
         for error in payload["errors"]
     ), payload["errors"]
+
+
+# ---------------------------------------------------------------------------
+# D-070 round-5 review, finding 1: the manifest's git binding stopped at the
+# working tree, so one `git commit` laundered a fabricated result plus the
+# manifest entry blessing it. Its identity is now pinned on two further
+# cross-checked surfaces.
+# ---------------------------------------------------------------------------
+
+SECOND_ASSIGNMENT_ID = "A-HOOK-FIXTURE-2"
+OTHER_RUN_ID = "run-fixture-other"
+
+
+def _canonical_manifest_digest(entries: list[dict]) -> str:
+    """The documented canonical form, written out independently of the checker.
+
+    Reimplemented here on purpose: if `validate_harness.canonical_legacy_digest`
+    ever changes shape, this fixture disagrees with it instead of silently
+    following it.
+    """
+    payload = "\n".join(
+        "{run_id}\0{assignment_id}\0{sha256}".format(**entry)
+        for entry in sorted(
+            entries, key=lambda entry: (entry["run_id"], entry["assignment_id"])
+        )
+    )
+    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _write_fixture_facts(tmp_path: Path, entry_count: int) -> None:
+    """A minimal declared-facts surface; validate_harness reads only the value."""
+    write_json(
+        tmp_path / ".agent-harness/context/SSOT_FACTS.json",
+        {
+            "schema_version": 1,
+            "purpose": "fixture",
+            "coverage_policy": {"claims": {"exempt": []}},
+            "assertion_exemptions": [],
+            "facts": [
+                {
+                    "fact_id": "legacy_results_manifest_entry_count",
+                    "description": "fixture",
+                    "measurement": "fixture",
+                    "value": entry_count,
+                    "as_of_commit": "fixture",
+                    "assertions": [],
+                }
+            ],
+        },
+    )
+
+
+def _repinned_validator(tmp_path: Path, canonical_sha256: str) -> Path:
+    """Copy the checker into the fixture with its pinned digest re-aimed.
+
+    The pinned digest is a constant of the real repository, so a fixture can
+    only exercise it by substituting its own. The substitution is a plain
+    replacement of the constant's value and is asserted to have happened.
+    """
+    scripts = tmp_path / ".agent-harness" / "scripts"
+    scripts.mkdir(parents=True, exist_ok=True)
+    (scripts / "_harness.py").write_bytes((HARNESS_SCRIPTS / "_harness.py").read_bytes())
+    source = (HARNESS_SCRIPTS / "validate_harness.py").read_text(encoding="utf-8")
+    pinned = validate_harness.LEGACY_MANIFEST_PINNED_SHA256
+    assert source.count(pinned) == 1, "the pinned digest is not a single literal"
+    patched = source.replace(pinned, canonical_sha256)
+    target = scripts / "validate_harness.py"
+    target.write_text(patched, encoding="utf-8")
+    return target
+
+
+def _validate_with(script: Path, tmp_path: Path) -> dict:
+    completed = subprocess.run(
+        [sys.executable, str(script)],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.stdout, completed.stderr
+    return json.loads(completed.stdout)
+
+
+def _pinned_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    """An admitted run plus a committed, fully pinned legacy manifest."""
+    _admitted_active_run(tmp_path)
+    legacy = _legacy_result_path(tmp_path)
+    assert _emit_legacy_manifest(tmp_path).returncode == 0
+    manifest_path = tmp_path / LEGACY_MANIFEST_REL
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    _write_fixture_facts(tmp_path, manifest["entry_count"])
+    script = _repinned_validator(
+        tmp_path, _canonical_manifest_digest(manifest["entries"])
+    )
+    _git_commit_all(tmp_path, "pin the legacy boundary")
+    return legacy, script
+
+
+def test_legacy_manifest_pin_survives_a_commit(tmp_path: Path) -> None:
+    """The reported defect: `git commit` used to make an edited manifest clean.
+
+    Reproduced before the fix as `ok: true, "ok (2 pinned)"`. The porcelain
+    check only ever saw a tracked file differing from HEAD, and
+    `.agent-harness/runs/` is gitignored in full, so committing the manifest
+    left nothing at all to notice.
+    """
+
+    legacy, script = _pinned_fixture(tmp_path)
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is True, payload
+    assert payload["legacy_results_manifest"] == (
+        "ok (1 pinned); pinned by declared fact and digest (1)"
+    )
+
+    manifest_path = tmp_path / LEGACY_MANIFEST_REL
+    planted = legacy.with_name("A-BLESSED.json")
+    write_json(planted, {"schema_version": 2, "summary": "fabricated"})
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["entries"].append(
+        {
+            "run_id": LEGACY_RUN_ID,
+            "assignment_id": "A-BLESSED",
+            "sha256": "sha256:" + hashlib.sha256(planted.read_bytes()).hexdigest(),
+        }
+    )
+    manifest["entry_count"] = len(manifest["entries"])
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    _git_commit_all(tmp_path, "launder: commit the edited manifest")
+
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert not any(
+        "modified after commit" in error for error in payload["errors"]
+    ), "the porcelain check is clean again; the pin is what has to catch this"
+    assert any(
+        "declared-facts file pins 1" in error for error in payload["errors"]
+    ), payload["errors"]
+    assert any(
+        "do not match the digest pinned" in error for error in payload["errors"]
+    ), payload["errors"]
+
+    # Moving the declared count too is still not enough: the digest pins WHICH
+    # artifacts, not merely how many.
+    _write_fixture_facts(tmp_path, 2)
+    _git_commit_all(tmp_path, "launder: move the declared count as well")
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert not any("declared-facts file pins" in error for error in payload["errors"])
+    assert any(
+        "do not match the digest pinned" in error for error in payload["errors"]
+    ), payload["errors"]
+
+    # A swap at an unchanged count fails on the digest alone.
+    planted.unlink()
+    manifest["entries"] = manifest["entries"][1:]
+    manifest["entry_count"] = 1
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    _write_fixture_facts(tmp_path, 1)
+    _git_commit_all(tmp_path, "launder: swap one pinned entry for another")
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "do not match the digest pinned" in error for error in payload["errors"]
+    ), payload["errors"]
+
+    # A manifest that miscounts itself is refused outright: check_ssot_consistency
+    # reads the `entry_count` field while this checker counts the entries, and
+    # the cross-check only means something while those are the same number.
+    manifest["entry_count"] = 99
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    _git_commit_all(tmp_path, "launder: lie about the entry count")
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "declares entry_count 99 but carries 1 entries" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_legacy_manifest_pin_cannot_be_dropped_by_deleting_its_declaration(
+    tmp_path: Path,
+) -> None:
+    """Deleting the tracked declared-facts file is an error, not a bypass."""
+
+    _, script = _pinned_fixture(tmp_path)
+    assert _validate_with(script, tmp_path)["ok"] is True
+
+    (tmp_path / ".agent-harness/context/SSOT_FACTS.json").unlink()
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Declared-facts file is tracked in git but missing" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+    # Emptying it of the declaration is an error too, rather than a silent pass.
+    write_json(
+        tmp_path / ".agent-harness/context/SSOT_FACTS.json",
+        {"schema_version": 1, "facts": []},
+    )
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "declares no 'legacy_results_manifest_entry_count'" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+    # And removing the manifest while its pin stands is refused as well.
+    _write_fixture_facts(tmp_path, 1)
+    (tmp_path / LEGACY_MANIFEST_REL).unlink()
+    payload = _validate_with(script, tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "cannot be removed or broken to drop the pin" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_repository_legacy_manifest_pin_is_self_consistent() -> None:
+    """The real pin must describe the real manifest, or it has rotted.
+
+    Read-only against the repository: the checker's constant, the declared fact
+    and the manifest are three surfaces that only mean something while they
+    agree.
+    """
+
+    manifest = json.loads(
+        (REPO / LEGACY_MANIFEST_REL).read_text(encoding="utf-8")
+    )
+    entries = manifest["entries"]
+    assert manifest["entry_count"] == len(entries)
+    assert _canonical_manifest_digest(entries) == (
+        validate_harness.LEGACY_MANIFEST_PINNED_SHA256
+    )
+    facts = json.loads(
+        (REPO / ".agent-harness/context/SSOT_FACTS.json").read_text(encoding="utf-8")
+    )
+    declared = [
+        fact
+        for fact in facts["facts"]
+        if fact["fact_id"] == validate_harness.LEGACY_MANIFEST_PIN_FACT_ID
+    ]
+    assert len(declared) == 1, "the manifest pin must be declared exactly once"
+    assert declared[0]["value"] == len(entries)
+
+
+# ---------------------------------------------------------------------------
+# D-070 round-5 review, finding F-R5-04: the open-receipt carve-out was
+# unbounded in time and in scope. It must stay wide enough that a live run is
+# never wedged, and no wider.
+# ---------------------------------------------------------------------------
+
+
+def _mint(tmp_path: Path, assignment_id: str, agent_id: str) -> str:
+    minted = subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            assignment_id,
+            "--expect-agent-id",
+            agent_id,
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert minted.returncode == 0, minted.stderr
+    return next(
+        line.split("=", 1)[1]
+        for line in minted.stdout.splitlines()
+        if line.startswith("ADMISSION_TOKEN=")
+    )
+
+
+def _in_flight_second_agent(tmp_path: Path) -> tuple[str, str, Path]:
+    """A second assignment, admitted through the real interface, result written.
+
+    This is exactly the shape of the reported attack -- no forgery, only the
+    legitimate `admit_agent.py` interface -- and also exactly the shape of a
+    genuinely live agent that has not stopped yet. The two are indistinguishable
+    at this instant, which is why the carve-out is bounded rather than removed.
+    """
+    version = _admitted_active_run(tmp_path)
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    token = _mint(tmp_path, SECOND_ASSIGNMENT_ID, "agent-fixture-2")
+    result_file = (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/results/{SECOND_ASSIGNMENT_ID}.json"
+    )
+    write_json(
+        result_file,
+        valid_result(
+            version,
+            assignment_sha256(tmp_path, SECOND_ASSIGNMENT_ID),
+            assignment_id=SECOND_ASSIGNMENT_ID,
+            agent_id="agent-fixture-2",
+        ),
+    )
+    return version, token, result_file
+
+
+def test_live_run_with_an_open_admission_is_not_wedged(tmp_path: Path) -> None:
+    """The control for round-2 finding F-12: the carve-out still carves out.
+
+    A genuinely in-flight admission in the active run keeps the validator green,
+    now reports the pending artifact with its digest and a count, and the run
+    completes normally when the agent stops.
+    """
+
+    version, token, result_file = _in_flight_second_agent(tmp_path)
+    payload = _validate(tmp_path)
+    assert payload["ok"] is True, payload
+    assert payload["pending_result_count"] == 1
+    pending = payload["pending_results"][0]
+    assert pending["run_id"] == RUN_ID
+    assert pending["assignment_id"] == SECOND_ASSIGNMENT_ID
+    assert pending["sha256"] == (
+        "sha256:" + hashlib.sha256(result_file.read_bytes()).hexdigest()
+    )
+    assert pending["receipt_created_at"]
+
+    write_lease(
+        tmp_path,
+        version,
+        agent_id="agent-fixture-2",
+        assignment_ids=(ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID),
+    )
+    accepted = run_stop_hook(
+        tmp_path,
+        stop_event(
+            version,
+            assignment_id=SECOND_ASSIGNMENT_ID,
+            proof=token,
+            agent_id="agent-fixture-2",
+        ),
+    )
+    assert accepted.stdout == "", accepted.stdout
+    payload = _validate(tmp_path)
+    assert payload["ok"] is True, payload
+    assert payload["pending_result_count"] == 0
+
+
+def test_open_admission_carve_out_lapses_when_the_admission_is_stale(
+    tmp_path: Path,
+) -> None:
+    """The tolerance is bounded in time, so "never stop" is no longer a strategy.
+
+    The receipt is back-dated rather than waited out; waiting is what an
+    attacker would actually do, and the clock the validator reads is the same
+    either way.
+    """
+
+    _in_flight_second_agent(tmp_path)
+    assert _validate(tmp_path)["ok"] is True
+
+    receipt = (
+        tmp_path / ".agent-harness/admissions" / RUN_ID / f"{SECOND_ASSIGNMENT_ID}.json"
+    )
+    body = json.loads(receipt.read_text(encoding="utf-8"))
+    body["created_at"] = "2020-01-01T00:00:00+00:00"
+    write_json(receipt, body)
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "carve-out is refused" in error and "in-flight ceiling" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+    # Dating the receipt forward buys nothing either.
+    body["created_at"] = "2099-01-01T00:00:00+00:00"
+    write_json(receipt, body)
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "in the future" in error for error in payload["errors"]
+    ), payload["errors"]
+
+    # Nor does removing the timestamp the bound is measured against.
+    body.pop("created_at")
+    write_json(receipt, body)
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "no parseable UTC created_at" in error for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_open_admission_carve_out_needs_a_registered_assignment(
+    tmp_path: Path,
+) -> None:
+    """Nothing can be in flight for an assignment the run does not have."""
+
+    _in_flight_second_agent(tmp_path)
+    assert _validate(tmp_path)["ok"] is True
+    (
+        tmp_path
+        / f".agent-harness/runs/{RUN_ID}/assignments/{SECOND_ASSIGNMENT_ID}.json"
+    ).unlink()
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "carve-out is refused" in error and "no assignment is registered" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_open_admission_carve_out_is_bound_to_the_active_run(
+    tmp_path: Path,
+) -> None:
+    """The global forward sweep must not make the carve-out global too.
+
+    Reproduced before the fix: a receipt minted while `ACTIVE_RUN` pointed at a
+    second run directory excused arbitrary bytes there for ever, even after the
+    pointer moved back -- and outside the active run not even the result
+    contract is applied to them.
+    """
+
+    version = _admitted_active_run(tmp_path)
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    assignment = json.loads(
+        (
+            tmp_path
+            / f".agent-harness/runs/{RUN_ID}/assignments/{SECOND_ASSIGNMENT_ID}.json"
+        ).read_text(encoding="utf-8")
+    )
+    result_rel = (
+        f".agent-harness/runs/{OTHER_RUN_ID}/results/{SECOND_ASSIGNMENT_ID}.json"
+    )
+    assignment.update(
+        {
+            "run_id": OTHER_RUN_ID,
+            "result_path": result_rel,
+            "required_outputs": [result_rel],
+            "required_inputs": [
+                ".agent-harness/generated/CONTEXT_PACK.md",
+                f".agent-harness/runs/{OTHER_RUN_ID}/assignments/"
+                f"{SECOND_ASSIGNMENT_ID}.json",
+            ],
+        }
+    )
+    write_json(
+        tmp_path
+        / f".agent-harness/runs/{OTHER_RUN_ID}/assignments/{SECOND_ASSIGNMENT_ID}.json",
+        assignment,
+    )
+    write_json(
+        tmp_path / f".agent-harness/runs/{OTHER_RUN_ID}/RUN_PLAN.json",
+        {
+            "context_version": version,
+            "budget": {"max_concurrent": 1, "max_total": 4, "max_depth": 1},
+        },
+    )
+    active = tmp_path / ".agent-harness/ACTIVE_RUN"
+    active.write_text(OTHER_RUN_ID + "\n", encoding="utf-8")
+    _mint(tmp_path, SECOND_ASSIGNMENT_ID, "agent-fixture-3")
+    write_json(tmp_path / result_rel, {"anything": "at all"})
+    active.write_text(RUN_ID + "\n", encoding="utf-8")
+
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "carve-out is refused" in error
+        and OTHER_RUN_ID in error
+        and "not the active run" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+# ---------------------------------------------------------------------------
+# D-070 round-5 review, finding F-R5-08: an unusable active run crashed the
+# validator instead of reporting an error. Confirmed present at a1cdd8a.
+# ---------------------------------------------------------------------------
+
+
+def test_missing_active_run_directory_is_a_clear_error(tmp_path: Path) -> None:
+    """A crash is fail-closed but unreadable: stdout was empty, JSON unparseable."""
+
+    _admitted_active_run(tmp_path)
+    (tmp_path / ".agent-harness/ACTIVE_RUN").write_text(
+        "run-that-never-existed\n", encoding="utf-8"
+    )
+    completed = subprocess.run(
+        [sys.executable, str(HARNESS_SCRIPTS / "validate_harness.py")],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 1, completed.stderr
+    assert "Traceback" not in completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["ok"] is False
+    assert any(
+        "ACTIVE_RUN names a run directory that does not exist" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_unusable_active_run_plan_is_a_clear_error(tmp_path: Path) -> None:
+    """The same for a run plan that is absent, not an object, or budget-less."""
+
+    _admitted_active_run(tmp_path)
+    plan_path = tmp_path / f".agent-harness/runs/{RUN_ID}/RUN_PLAN.json"
+    version = json.loads(plan_path.read_text(encoding="utf-8"))["context_version"]
+
+    plan_path.unlink()
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Active run plan is missing or unreadable" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+    plan_path.write_text("[]", encoding="utf-8")
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Active run plan is not a JSON object" in error for error in payload["errors"]
+    ), payload["errors"]
+
+    write_json(plan_path, {"context_version": version, "budget": {}})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "no integer budget.max_total" in error for error in payload["errors"]
+    ), payload["errors"]
+
+
+# ---------------------------------------------------------------------------
+# D-065 obligation 1, round-5 finding: one *agent_id* binds to one assignment,
+# not merely one token. What was enforced before was token-to-assignment, so a
+# single agent_id could hold -- and consume -- two receipts for two assignments
+# in one run. admit_agent.py refuses to mint the second receipt;
+# subagent_stop_validate.py refuses to consume it. Both halves are exercised
+# here, together with the false-positive controls that keep an ordinary
+# multi-agent run unwedged.
+# ---------------------------------------------------------------------------
+
+
+def _admit(
+    tmp_path: Path, assignment_id: str, agent_id: str, *extra: str
+) -> subprocess.CompletedProcess:
+    """`admit_agent.py` as a subprocess, whether it succeeds or refuses.
+
+    `_mint` asserts success and returns the token; the mint-time binding guard
+    needs the failing invocations too, so this returns the process instead.
+    """
+    return subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            assignment_id,
+            "--expect-agent-id",
+            agent_id,
+            *extra,
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def _receipt_path(tmp_path: Path, assignment_id: str) -> Path:
+    return (
+        tmp_path / ".agent-harness" / "admissions" / RUN_ID / f"{assignment_id}.json"
+    )
+
+
+def _two_assignment_fixture(tmp_path: Path) -> str:
+    """Two registered assignments in the active run, mintable through the CLI."""
+    version, _ = make_harness(tmp_path)
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    return version
+
+
+def test_admit_agent_refuses_second_assignment_for_same_agent_id(
+    tmp_path: Path,
+) -> None:
+    """The reported gap: the same agent_id minted onto a second assignment.
+
+    Nothing about the second mint is malformed -- the assignment is registered,
+    the run is active, the token is fresh. The only thing wrong with it is that
+    `agent-fixture` is already bound elsewhere in this run, which is precisely
+    the obligation the token-only check never expressed.
+    """
+
+    _two_assignment_fixture(tmp_path)
+    first = _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture")
+    assert first.returncode == 0, first.stderr
+    receipt_before = _receipt_path(tmp_path, ASSIGNMENT_ID).read_bytes()
+
+    refused = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-fixture")
+    assert refused.returncode != 0, refused.stdout
+    assert "already holds an open or consumed admission receipt" in refused.stderr
+    # The refusal has to name the assignment already held, not just complain:
+    # the operator's next move is to reopen it or pick another agent_id.
+    assert repr(ASSIGNMENT_ID) in refused.stderr, refused.stderr
+    assert repr(SECOND_ASSIGNMENT_ID) in refused.stderr, refused.stderr
+
+    assert not _receipt_path(tmp_path, SECOND_ASSIGNMENT_ID).exists()
+    assert _receipt_path(tmp_path, ASSIGNMENT_ID).read_bytes() == receipt_before, (
+        "a refused mint must not disturb the receipt it refused on behalf of"
+    )
+    assert json.loads(receipt_before.decode("utf-8"))["state"] == "open"
+    assert [
+        (row["event"], row["assignment_id"]) for row in _ledger_rows(tmp_path)
+    ] == [("minted", ASSIGNMENT_ID)]
+
+
+def test_admit_agent_reopen_same_assignment_is_exempt_from_the_binding_guard(
+    tmp_path: Path,
+) -> None:
+    """The carve-out is deliberate and must stay narrow.
+
+    `--reopen` re-mints for the SAME assignment and agent, which is the
+    supersession path `main` already governs. Exempting it must not exempt the
+    agent_id itself: a second assignment is still refused afterwards.
+    """
+
+    _two_assignment_fixture(tmp_path)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    first_receipt = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "binding-guard carve-out fixture",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    assert "already holds an open or consumed" not in reopened.stderr
+    reopened_receipt = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+    assert reopened_receipt["state"] == "open"
+    assert reopened_receipt["expected_agent_id"] == "agent-fixture"
+    assert reopened_receipt["token_digest"] != first_receipt["token_digest"], (
+        "the carve-out must be a real re-mint, not a no-op that hid a refusal"
+    )
+
+    refused = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-fixture")
+    assert refused.returncode != 0, refused.stdout
+    assert "already holds an open or consumed admission receipt" in refused.stderr
+    assert repr(ASSIGNMENT_ID) in refused.stderr, refused.stderr
+    assert not _receipt_path(tmp_path, SECOND_ASSIGNMENT_ID).exists()
+
+
+def test_admit_agent_binding_guard_allows_distinct_agent_ids(tmp_path: Path) -> None:
+    """The false-positive control: two agents, two assignments, one run.
+
+    A guard that keyed off the receipt rather than off the agent_id would refuse
+    the second mint here and wedge every multi-agent run, which is a worse
+    failure than the one being fixed.
+    """
+
+    _two_assignment_fixture(tmp_path)
+    first = _admit(tmp_path, ASSIGNMENT_ID, "agent-one")
+    assert first.returncode == 0, first.stderr
+    second = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-two")
+    assert second.returncode == 0, second.stderr
+
+    receipts = {
+        assignment_id: json.loads(
+            _receipt_path(tmp_path, assignment_id).read_text(encoding="utf-8")
+        )
+        for assignment_id in (ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID)
+    }
+    assert receipts[ASSIGNMENT_ID]["expected_agent_id"] == "agent-one"
+    assert receipts[SECOND_ASSIGNMENT_ID]["expected_agent_id"] == "agent-two"
+    assert [r["state"] for r in receipts.values()] == ["open", "open"]
+    assert (
+        receipts[ASSIGNMENT_ID]["token_digest"]
+        != receipts[SECOND_ASSIGNMENT_ID]["token_digest"]
+    )
+    assert sorted(
+        (row["event"], row["assignment_id"]) for row in _ledger_rows(tmp_path)
+    ) == [("minted", ASSIGNMENT_ID), ("minted", SECOND_ASSIGNMENT_ID)]
+
+
+def test_admit_agent_binding_guard_fails_closed_on_unreadable_sibling_receipt(
+    tmp_path: Path,
+) -> None:
+    """A receipt that cannot be read cannot be proven not to bind this agent.
+
+    The guard therefore fails on any unparseable sibling, not only on ones that
+    turn out to name this agent_id -- otherwise corrupting a receipt would be a
+    way to mint past the binding.
+    """
+
+    _two_assignment_fixture(tmp_path)
+    corrupt = _receipt_path(tmp_path, SECOND_ASSIGNMENT_ID)
+    corrupt.parent.mkdir(parents=True, exist_ok=True)
+    corrupt.write_text("{corrupt", encoding="utf-8")
+
+    refused = _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture")
+    assert refused.returncode != 0, refused.stdout
+    assert "agent-to-assignment binding cannot be verified" in refused.stderr
+    assert corrupt.name in refused.stderr, refused.stderr
+    assert not _receipt_path(tmp_path, ASSIGNMENT_ID).exists()
+    assert not (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ).exists(), "a refused mint must not leave a minted row behind"
+    assert corrupt.read_text(encoding="utf-8") == "{corrupt", (
+        "corrupt receipt evidence must be preserved"
+    )
+
+
+def test_subagentstop_blocks_agent_id_already_consumed_a_different_assignment(
+    tmp_path: Path,
+) -> None:
+    """The Stop-time backstop, which is the half that actually consumes.
+
+    The two receipts are written directly rather than minted, which is the
+    point: the mint guard only covers receipts created after it landed, so the
+    ledger check has to stand on its own for anything minted before the fix or
+    written around it. The second stop presents its OWN valid token for its own
+    registered assignment -- the only defect is that one agent_id is doing both.
+    """
+
+    version, _ = make_harness(tmp_path)
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    second_result = (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/results/{SECOND_ASSIGNMENT_ID}.json"
+    )
+    write_json(
+        second_result,
+        valid_result(
+            version,
+            assignment_sha256(tmp_path, SECOND_ASSIGNMENT_ID),
+            SECOND_ASSIGNMENT_ID,
+        ),
+    )
+    write_lease(
+        tmp_path, version, assignment_ids=(ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID)
+    )
+    first = write_admission(
+        tmp_path,
+        version,
+        ASSIGNMENT_ID,
+        token="token-first",
+        expected_agent_id="agent-fixture",
+    )
+    second = write_admission(
+        tmp_path,
+        version,
+        SECOND_ASSIGNMENT_ID,
+        token="token-second",
+        expected_agent_id="agent-fixture",
+    )
+
+    accepted = run_stop_hook(tmp_path, stop_event(version, proof="token-first"))
+    assert accepted.stdout == "", accepted.stdout
+    assert json.loads(first.read_text(encoding="utf-8"))["state"] == "consumed"
+    assert json.loads(first.read_text(encoding="utf-8"))["consumed_by_agent_id"] == (
+        "agent-fixture"
+    )
+
+    blocked = run_stop_hook(
+        tmp_path,
+        stop_event(version, assignment_id=SECOND_ASSIGNMENT_ID, proof="token-second"),
+    )
+    payload = json.loads(blocked.stdout)
+    assert payload["decision"] == "block", payload
+    assert "already consumed" in payload["reason"]
+    assert repr(ASSIGNMENT_ID) in payload["reason"], payload["reason"]
+    assert repr(SECOND_ASSIGNMENT_ID) in payload["reason"], payload["reason"]
+
+    assert json.loads(second.read_text(encoding="utf-8"))["state"] == "open", (
+        "a blocked stop must leave the receipt it was refused unspent"
+    )
+    consumed = [
+        row for row in _ledger_rows(tmp_path) if row["event"] == "consumed"
+    ]
+    assert [(row["agent_id"], row["assignment_id"]) for row in consumed] == [
+        ("agent-fixture", ASSIGNMENT_ID)
+    ], consumed
+
+
+def test_subagentstop_ledger_conflict_check_ignores_same_assignment_restop(
+    tmp_path: Path,
+) -> None:
+    """The conflict filter is (agent_id AND assignment_id), not either alone.
+
+    Another agent's consume row must not block this one, and this agent's own
+    consume row must not block its idempotent re-stop. That re-stop path has
+    already been broken once by a well-meant check (round-2 review F-11), so a
+    guard added above it needs its own control.
+    """
+
+    version, _ = make_harness(tmp_path)
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_json(
+        tmp_path / f".agent-harness/runs/{RUN_ID}/results/{SECOND_ASSIGNMENT_ID}.json",
+        valid_result(
+            version,
+            assignment_sha256(tmp_path, SECOND_ASSIGNMENT_ID),
+            SECOND_ASSIGNMENT_ID,
+            agent_id="agent-other",
+        ),
+    )
+    write_lease(tmp_path, version)
+    write_lease(
+        tmp_path,
+        version,
+        agent_id="agent-other",
+        assignment_ids=(SECOND_ASSIGNMENT_ID,),
+    )
+    write_admission(
+        tmp_path,
+        version,
+        ASSIGNMENT_ID,
+        token="token-mine",
+        expected_agent_id="agent-fixture",
+    )
+    write_admission(
+        tmp_path,
+        version,
+        SECOND_ASSIGNMENT_ID,
+        token="token-theirs",
+        expected_agent_id="agent-other",
+    )
+
+    foreign = run_stop_hook(
+        tmp_path,
+        stop_event(
+            version,
+            assignment_id=SECOND_ASSIGNMENT_ID,
+            proof="token-theirs",
+            agent_id="agent-other",
+        ),
+    )
+    assert foreign.stdout == "", foreign.stdout
+
+    for attempt in range(3):
+        again = run_stop_hook(tmp_path, stop_event(version, proof="token-mine"))
+        assert again.returncode == 0, (attempt, again.stderr)
+        assert again.stdout == "", (attempt, again.stdout)
+
+    consumed = [
+        (row["agent_id"], row["assignment_id"])
+        for row in _ledger_rows(tmp_path)
+        if row["event"] == "consumed"
+    ]
+    assert sorted(consumed) == [
+        ("agent-fixture", ASSIGNMENT_ID),
+        ("agent-other", SECOND_ASSIGNMENT_ID),
+    ], consumed
+
+
+def test_subagentstop_fails_closed_on_unreadable_admission_ledger(
+    tmp_path: Path,
+) -> None:
+    """The ledger is the enforcement point, so an unprovable negative blocks.
+
+    Defaulting an unparseable ledger to "no conflict" would make garbling one
+    line the way past the binding check.
+    """
+
+    version, _ = make_harness(tmp_path)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version, expected_agent_id="agent-fixture")
+    accepted = run_stop_hook(tmp_path, stop_event(version))
+    assert accepted.stdout == "", accepted.stdout  # control: the same stop, readable
+
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.write_text(
+        ledger.read_text(encoding="utf-8") + "{not json\n", encoding="utf-8"
+    )
+
+    blocked = run_stop_hook(tmp_path, stop_event(version))
+    payload = json.loads(blocked.stdout)
+    assert payload["decision"] == "block", payload
+    assert "line 2 is malformed" in payload["reason"], payload["reason"]
+    assert "binding cannot be verified" in payload["reason"], payload["reason"]
+    assert repr(RUN_ID) in payload["reason"], payload["reason"]

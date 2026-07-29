@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260729-f10-d070-b2-closeout",
+  "created_at": "2026-07-29T10:04:39+00:00",
+  "spec_ref": "SPEC.md",
+  "base_ref": "main",
+  "head_ref": "HEAD",
+  "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}
