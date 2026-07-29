@@ -40,12 +40,18 @@ D-067 moves the binding to the one party that knows it, the parent:
 - `validate_harness.py` reconciles results against the run's append-only
   `ADMISSIONS.jsonl` in both directions: every result in the active run must
   carry a consumed receipt whose `result_sha256` still matches the bytes on
-  disk, and every consume row in the ledger permanently pins the bytes it
-  admitted. The ledger direction is the load-bearing one, because the
-  receipt-driven check alone is cleared by `admit_agent.py --reopen`, which
-  replaces a consumed receipt with an open one. A result whose receipt is still
-  open is reported as `pending_results` rather than an error, so a live run is
-  not wedged; a missing git fails validation instead of being skipped.
+  disk, and every consume row in the ledger pins the bytes it admitted. The
+  ledger direction is the load-bearing one, because the receipt-driven check
+  alone is cleared by `admit_agent.py --reopen`, which replaces a consumed
+  receipt with an open one. A result whose receipt is still open is reported as
+  `pending_results` rather than an error, so a live run is not wedged; a missing
+  git fails validation instead of being skipped.
+
+  **As sealed, both halves of that sentence were narrower than written** — the
+  forward check covered only the active run, and the ledger was last-row-wins so
+  a later consume row silently superseded an earlier one. Both were corrected at
+  D-070; see the round-4 correction under §2. Read the two claims as scoped to
+  what the code did, not to what this paragraph said.
 - `scrub_admission_proof.py` replaces raw tokens with their digest in retained
   event JSON, because a captured *blocked* stop would otherwise deposit a still
   valid single-use secret into committed run evidence.
@@ -67,14 +73,51 @@ What D-067 removes is *confusion*, which is what actually failed:
 | Lease-write failure | fell back to `ACTIVE_RUN` | hard Start failure, Stop blocks |
 | `ACTIVE_RUN` deleted/blanked | validation switched off | blocked while the harness dir exists |
 | Concurrent double consume | silent overwrite | `O_EXCL`, one attribution row |
-| Fabricated or post-hoc edited result | invisible | validator error, from the append-only ledger |
+| Fabricated or post-hoc edited result | invisible | validator error — but see the D-070 correction below: as sealed here this held for the ACTIVE run only |
 | Deliberate forgery by a writing agent | undetected | **still possible**, recorded as a residual |
 
-The last row is the honest limit. It is stated in `admit_agent.py`, in
-`.agent-harness/README.md`, and here. Nothing in this slice should be read as a
+### D-070 round-4 correction — two rows above were overstated
+
+A fourth adversarial review round (mixed-model, 2 FAIL / 1 PASS) found that two
+claims in this report were **false as written at the time they were written**, and
+both were reproduced end to end:
+
+- **"Fabricated or post-hoc edited result → validator error"** held for the ACTIVE
+  run only. The forward `result → receipt` check sat inside two `if active:`
+  blocks, so it covered **1 of 83 run directories**; the ledger loop walked every
+  run but only in the `ledger → result` direction and never asked whether a result
+  file had a row. A wholly fabricated result — `agent_id` that never existed, no
+  assignment, no receipt, no Stop event — dropped into any closed-out run left the
+  validator reporting `ok: true` in silence. Compounding it, `/.agent-harness/runs/`
+  is gitignored in full, so 60 of 146 result files were untracked and the
+  tracked-evidence check could never have seen the file either.
+- **"every consume row permanently pins the bytes it admitted"** (§1) was
+  last-row-wins: `validate_harness.py` built `ledger_consumed[assignment_id] = row`
+  while scanning, discarding earlier rows, and `admit_agent.py --reopen` wrote an
+  `"event": "minted"` row indistinguishable from a first mint. Two laundering
+  routes followed, neither needing the stated same-OS-user residual — `--reopen`
+  after an edit, and deleting the gitignored `.claim` file so the Stop hook took
+  the fresh-acceptance path without ever comparing the new bytes.
+
+Both are now fixed: a forward sweep covers every run directory, with pre-admission
+history pinned by digest in `.agent-harness/context/LEGACY_RESULTS_MANIFEST.json`
+rather than exempted; and a second consume row is admissible only when a declared
+`"event": "reopened"` row carrying the superseded digest and a non-empty reason
+sits between them. Start now also checks the admission receipt, closing the half
+of obligation 2 that was never implemented, and a fresh overlapping-run canary
+(C4) was passed on the post-`96089f0` bytes with the stolen `ACTIVE_RUN` pointer
+attested in-band. Hook fixtures went 39 → 58.
+
+The lesson is recorded here rather than only in the fix: **this report asserted as
+settled two properties the code did not have, after three review rounds had already
+passed over it.** That is the D-064 failure mode — the record getting ahead of the
+mechanism — reproduced at smaller scale inside the remedy for it.
+
+The table's last row remains the honest limit. It is stated in `admit_agent.py`,
+in `.agent-harness/README.md`, and here. Nothing in this slice should be read as a
 claim that a hostile agent cannot mis-attribute a result.
 
-## 3. Review record — three rounds, all FAIL, all acted on
+## 3. Review record — four rounds, all FAIL, all acted on
 
 Reviews ran through the new flow itself (registered assignments, minted
 receipts, real Stop-hook validation).
@@ -118,7 +161,7 @@ modifications; two false claims in the `admit_agent.py` docstring about token
 secrecy; and a concurrency test that ran nothing concurrently because
 `communicate()` in a loop serialises the children.
 
-Tests: **39 pass** (was 12), including same-run substitution, receipt-write
+Tests: **58 pass** (was 12), including same-run substitution, receipt-write
 failure, lease-write failure, planted claim, replayed receipt, changed-bytes
 re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
 idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper

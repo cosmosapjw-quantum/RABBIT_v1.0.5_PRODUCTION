@@ -512,26 +512,32 @@ def write_admission(
     assignment_id: str = ASSIGNMENT_ID,
     token: str = ADMISSION_TOKEN,
     state: str = "open",
+    expected_agent_id: str | None = None,
 ) -> Path:
-    """Stand in for `admit_agent.py`: the parent-minted single-use receipt."""
+    """Stand in for `admit_agent.py`: the parent-minted single-use receipt.
+
+    `expected_agent_id` is written only when supplied, in the same field
+    position `admit_agent.py` uses, so callers that do not pass it keep minting
+    exactly the receipt they minted before this parameter existed.
+    """
     path = (
         repo / ".agent-harness" / "admissions" / RUN_ID / f"{assignment_id}.json"
     )
-    write_json(
-        path,
-        {
-            "schema_version": 1,
-            "run_id": RUN_ID,
-            "assignment_id": assignment_id,
-            "assignment_sha256": assignment_sha256(repo, assignment_id),
-            "runtime_agent_type": "context_mapper",
-            "context_version": version,
-            "token_digest": "sha256:"
-            + hashlib.sha256(token.encode("utf-8")).hexdigest(),
-            "state": state,
-            "created_at": "2026-07-28T00:00:00+00:00",
-        },
-    )
+    receipt: dict[str, object] = {
+        "schema_version": 1,
+        "run_id": RUN_ID,
+        "assignment_id": assignment_id,
+        "assignment_sha256": assignment_sha256(repo, assignment_id),
+        "runtime_agent_type": "context_mapper",
+        "context_version": version,
+        "token_digest": "sha256:"
+        + hashlib.sha256(token.encode("utf-8")).hexdigest(),
+    }
+    if expected_agent_id is not None:
+        receipt["expected_agent_id"] = expected_agent_id
+    receipt["state"] = state
+    receipt["created_at"] = "2026-07-28T00:00:00+00:00"
+    write_json(path, receipt)
     return path
 
 
@@ -872,6 +878,228 @@ def test_subagentstart_hard_fails_when_lease_cannot_be_written(
         "SubagentStart preflight failed; do not perform substantive work"
     )
     assert not (leases / "agent-fixture.json").exists()
+    assert version
+
+
+START_FAIL_MESSAGE = "SubagentStart preflight failed; do not perform substantive work"
+
+
+def run_start_hook(
+    repo: Path, capsys, agent_id: str = "agent-fixture"
+) -> tuple[str, dict[str, object]]:
+    """Drive SubagentStart in-process; returns (injected context, hook output)."""
+    subagent_start_context.inject_subagent_context(
+        {"agent_id": agent_id, "agent_type": "context_mapper"}, repo
+    )
+    output = json.loads(capsys.readouterr().out)
+    return output["hookSpecificOutput"]["additionalContext"], output
+
+
+def bootstrap_line(context: str, prefix: str) -> str:
+    """The one `<prefix>...` line of the injected bootstrap block.
+
+    Asserting against this line rather than the whole context keeps each check
+    pinned to the field it is about: a `Run lease:` string cannot satisfy an
+    `Admission receipt:` assertion, and neither can the injected pack.
+    """
+    lines = [line for line in context.splitlines() if line.startswith(prefix)]
+    assert len(lines) == 1, f"expected exactly one {prefix!r} line, found {lines}"
+    return lines[0]
+
+
+def test_subagentstart_reports_an_open_bound_admission_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """D-065 obligation 2 (receipt half): the admitted case is reported, not fatal."""
+
+    version, _ = make_harness(tmp_path)
+    receipt = write_admission(tmp_path, version, expected_agent_id="agent-fixture")
+    before = receipt.read_bytes()
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: open, bound to assignment" in admission
+    assert repr(ASSIGNMENT_ID) in admission
+    assert repr(RUN_ID) in admission
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+    assert receipt.read_bytes() == before, "Start must never mutate a receipt"
+    assert [p.name for p in receipt.parent.iterdir()] == [f"{ASSIGNMENT_ID}.json"], (
+        "Start must not claim or lock the receipt; consumption stays at Stop"
+    )
+
+
+def test_subagentstart_hard_fails_on_a_consumed_admission_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """A receipt naming this agent that cannot admit it is a hard Start failure."""
+
+    version, _ = make_harness(tmp_path)
+    receipt = write_admission(
+        tmp_path, version, state="consumed", expected_agent_id="agent-fixture"
+    )
+    before = receipt.read_bytes()
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: UNUSABLE" in admission
+    assert "'consumed'" in admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "not 'open'" in preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    # The lease succeeded: the FAIL is carried by the receipt check alone.
+    assert f"Run lease: recorded for run {RUN_ID}" in context
+    assert receipt.read_bytes() == before, "Start must never mutate a receipt"
+
+
+def test_subagentstart_hard_fails_on_an_unparseable_admission_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """An unreadable receipt cannot be proven not to be this agent's: FAIL, not skip."""
+
+    version, _ = make_harness(tmp_path)
+    receipt = (
+        tmp_path / ".agent-harness" / "admissions" / RUN_ID / f"{ASSIGNMENT_ID}.json"
+    )
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    receipt.write_text("{corrupt", encoding="utf-8")
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: AMBIGUOUS" in admission
+    assert f"{ASSIGNMENT_ID}.json" in admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "ambiguous" in preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert receipt.read_text(encoding="utf-8") == "{corrupt", (
+        "corrupt receipt evidence must be preserved"
+    )
+    assert version
+
+
+def test_subagentstart_reports_an_absent_admission_receipt_without_failing(
+    tmp_path: Path, capsys
+) -> None:
+    """Most spawned agents hold no assignment, so absence is reported, not fatal."""
+
+    version, _ = make_harness(tmp_path)
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: none found" in admission
+    assert repr("agent-fixture") in admission
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    # A receipt minted for a different agent is still "none found" for this one.
+    write_admission(tmp_path, version, expected_agent_id="agent-other")
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: none found" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+
+def test_subagentstart_hard_fails_on_a_receipt_bound_to_another_run(
+    tmp_path: Path, capsys
+) -> None:
+    """Receipt is open, in the active run's directory, but claims a different run."""
+
+    version, _ = make_harness(tmp_path)
+    receipt_path = write_admission(
+        tmp_path, version, expected_agent_id="agent-fixture"
+    )
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["run_id"] = "run-decoy"
+    write_json(receipt_path, receipt)
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: UNUSABLE" in admission
+    assert "'run-decoy'" in admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "bound to a different run" in preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert json.loads(receipt_path.read_text(encoding="utf-8"))["state"] == "open", (
+        "an open receipt for another run must stay open; Start only reads"
+    )
+
+
+def test_subagentstart_hard_fails_on_ambiguous_admission_receipts(
+    tmp_path: Path, capsys
+) -> None:
+    """Two open receipts claim this agent_id: each usable alone, ambiguous together."""
+
+    version, _ = make_harness(tmp_path)
+    other_id = "A-HOOK-FIXTURE-OTHER"
+    add_second_assignment(tmp_path, other_id)
+    write_admission(tmp_path, version, expected_agent_id="agent-fixture")
+    write_admission(
+        tmp_path,
+        version,
+        other_id,
+        token="token-two",
+        expected_agent_id="agent-fixture",
+    )
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: AMBIGUOUS" in admission
+    assert ASSIGNMENT_ID in admission
+    assert other_id in admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "2 admission receipts" in preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+
+def test_subagentstart_separates_a_lease_failure_from_a_healthy_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """The two Start checks are independent: neither masks nor implies the other."""
+
+    version, _ = make_harness(tmp_path)
+    write_admission(tmp_path, version, expected_agent_id="agent-fixture")
+    leases = tmp_path / ".agent-harness" / "leases"
+    leases.mkdir(parents=True, exist_ok=True)
+    leases.chmod(0o500)
+    try:
+        context, output = run_start_hook(tmp_path, capsys)
+    finally:
+        leases.chmod(0o700)
+    assert "Run lease: NOT RECORDED" in bootstrap_line(context, "Run lease: ")
+    assert "open, bound to assignment" in bootstrap_line(context, "Admission receipt: ")
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "run lease could not be written" in preflight
+    assert "receipt" not in preflight.lower(), (
+        "a healthy receipt must not be blamed for the lease failure"
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert not (leases / "agent-fixture.json").exists()
+
+
+def test_subagentstart_skips_the_receipt_check_for_an_unsafe_agent_id(
+    tmp_path: Path, capsys
+) -> None:
+    """An unsafe agent_id is never used as a path key: reported, not traversed."""
+
+    version, _ = make_harness(tmp_path)
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent/../escape")
+    assert (
+        "Admission receipt: not checked (agent_id is not a safe admission key)"
+        in bootstrap_line(context, "Admission receipt: ")
+    )
+    assert "Run lease: not recorded (agent_id is not a safe lease key)" in (
+        bootstrap_line(context, "Run lease: ")
+    )
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL")
+    assert "not a safe lease key" in preflight
+    assert "receipt" not in preflight.lower(), (
+        "the skipped receipt check must contribute no error"
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert not (tmp_path / ".agent-harness" / "leases").exists()
+    assert not (tmp_path / ".agent-harness" / "admissions").exists()
     assert version
 
 
@@ -1445,4 +1673,565 @@ def test_validate_harness_flags_unattributed_result(tmp_path: Path) -> None:
     assert payload["ok"] is False
     assert any(
         "no admission receipt at all" in error for error in payload["errors"]
+    ), payload["errors"]
+
+
+# ---------------------------------------------------------------------------
+# D-067 round-4 review, defect 1: attribution has to cover *every* run
+# directory, not just the active one, and the boundary at which the admission
+# mechanism was introduced has to be pinned rather than exempted.
+# ---------------------------------------------------------------------------
+
+LEGACY_RUN_ID = "run-fixture-legacy"
+LEGACY_ASSIGNMENT_ID = "A-LEGACY-FIXTURE"
+LEGACY_MANIFEST_REL = ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json"
+
+
+def _git_init(tmp_path: Path) -> None:
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    # Mirror the real repo, where `/.agent-harness/runs/` is gitignored in full
+    # (.gitignore:62) and individual evidence files are force-added. Without
+    # this the fixture would not reproduce the condition that makes defect 1
+    # invisible: a new file under runs/ produces no git status entry at all,
+    # not even `??`.
+    (tmp_path / ".gitignore").write_text(
+        "/.agent-harness/runs/\n/.agent-harness/leases/\n"
+        "/.agent-harness/admissions/\n/.agent-harness/ACTIVE_RUN\n",
+        encoding="utf-8",
+    )
+    # `--emit-legacy-manifest` records the HEAD it was generated at, so the
+    # fixture needs one commit before the boundary can be pinned.
+    _git_commit_all(tmp_path, "fixture baseline")
+
+
+def _git_commit_all(tmp_path: Path, message: str) -> None:
+    subprocess.run(
+        ["git", "add", "-A"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "-c",
+            "user.name=harness fixture",
+            "commit",
+            "-q",
+            "--allow-empty",
+            "-m",
+            message,
+        ],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _admitted_active_run(tmp_path: Path) -> str:
+    """A fixture whose active-run result is properly admitted and ledgered."""
+    version, _ = make_harness(tmp_path)
+    _git_init(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version)
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+    return version
+
+
+def _legacy_result_path(tmp_path: Path) -> Path:
+    """A result in a second run directory that predates the admission ledger."""
+    path = (
+        tmp_path
+        / ".agent-harness/runs"
+        / LEGACY_RUN_ID
+        / "results"
+        / f"{LEGACY_ASSIGNMENT_ID}.json"
+    )
+    write_json(path, {"schema_version": 2, "summary": "pre-admission history"})
+    return path
+
+
+def _emit_legacy_manifest(tmp_path: Path, *args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "validate_harness.py"),
+            "--emit-legacy-manifest",
+            *args,
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def test_fabricated_result_in_a_non_active_run_is_flagged(tmp_path: Path) -> None:
+    """The reported defect: a result nobody ever assigned, outside the active run.
+
+    Before the fix, attribution ran only inside `.agent-harness/runs/<ACTIVE_RUN>/`
+    and only in the ledger->result direction, so a wholly fabricated artifact
+    dropped into any other run directory left the validator reporting `ok: true`.
+    """
+
+    version = _admitted_active_run(tmp_path)
+    assert _validate(tmp_path)["ok"] is True
+
+    fabricated = (
+        tmp_path
+        / ".agent-harness/runs"
+        / LEGACY_RUN_ID
+        / "results"
+        / "A-NEVER-ASSIGNED.json"
+    )
+    write_json(fabricated, {"schema_version": 2, "agent_id": "ghost", "status": "pass"})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "not attributed" in error and "A-NEVER-ASSIGNED" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+    assert version
+
+
+def test_fabricated_result_in_a_ledgered_run_is_flagged(tmp_path: Path) -> None:
+    """Dropping the file next to genuinely admitted results does not help either."""
+
+    _admitted_active_run(tmp_path)
+    fabricated = (
+        tmp_path / ".agent-harness/runs" / RUN_ID / "results" / "A-SMUGGLED.json"
+    )
+    write_json(fabricated, {"schema_version": 2, "status": "pass"})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "not attributed" in error and "A-SMUGGLED" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_legacy_manifest_pins_rather_than_exempts_preadmission_results(
+    tmp_path: Path,
+) -> None:
+    """The boundary is pinned by digest, so ledger-less runs are not a free pass.
+
+    Skipping runs without an `ADMISSIONS.jsonl` would reintroduce the hole. The
+    manifest instead records what was there when the mechanism landed: genuine
+    history passes, an edit to it fails, and a newly planted file fails.
+    """
+
+    _admitted_active_run(tmp_path)
+    legacy = _legacy_result_path(tmp_path)
+    pinned_bytes = legacy.read_bytes()
+
+    # Unpinned, the legacy result is unattributed and therefore an error.
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any("not attributed" in error for error in payload["errors"])
+
+    emitted = _emit_legacy_manifest(tmp_path)
+    assert emitted.returncode == 0, emitted.stderr
+    manifest = json.loads((tmp_path / LEGACY_MANIFEST_REL).read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == 1
+    assert manifest["entry_count"] == 1
+    assert manifest["entries"] == [
+        {
+            "run_id": LEGACY_RUN_ID,
+            "assignment_id": LEGACY_ASSIGNMENT_ID,
+            "sha256": "sha256:" + hashlib.sha256(pinned_bytes).hexdigest(),
+        }
+    ]
+    # Reproducible and self-describing rather than hand-written.
+    assert "--emit-legacy-manifest" in manifest["generated_by"]
+    assert manifest["generated_at"] and manifest["generated_at_head"]
+    assert "ADMISSIONS.jsonl" in manifest["selection_criterion"]
+    # The active run is ledgered, so it must not be grandfathered.
+    assert all(entry["run_id"] != RUN_ID for entry in manifest["entries"])
+
+    payload = _validate(tmp_path)
+    assert payload["ok"] is True, payload
+    # Uncommitted, the pin is real but not yet git-bound; say so out loud.
+    assert payload["legacy_results_manifest"] == (
+        "ok (1 pinned); UNCOMMITTED, so the pin is not yet git-bound"
+    )
+    _git_commit_all(tmp_path, "pin the legacy boundary")
+    assert _validate(tmp_path)["legacy_results_manifest"] == "ok (1 pinned)"
+
+    # (a) editing a pinned legacy result fails, even though git cannot see the
+    #     file at all: `.agent-harness/runs/` is gitignored in full.
+    assert (
+        subprocess.run(
+            ["git", "status", "--porcelain", "--", str(legacy)],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        == ""
+    )
+    write_json(legacy, {"schema_version": 2, "summary": "rewritten history"})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "changed since the legacy manifest pinned it" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+    legacy.write_bytes(pinned_bytes)
+    assert _validate(tmp_path)["ok"] is True
+
+    # (b) a newly planted file in the same ledger-less run still fails.
+    write_json(legacy.with_name("A-PLANTED.json"), {"schema_version": 2})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "not attributed" in error and "A-PLANTED" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_committed_legacy_manifest_cannot_be_edited_or_deleted(tmp_path: Path) -> None:
+    """Blessing a fabrication by editing the manifest is itself an error."""
+
+    _admitted_active_run(tmp_path)
+    legacy = _legacy_result_path(tmp_path)
+    assert _emit_legacy_manifest(tmp_path).returncode == 0
+    _git_commit_all(tmp_path, "pin the legacy boundary")
+    assert _validate(tmp_path)["ok"] is True
+
+    manifest_path = tmp_path / LEGACY_MANIFEST_REL
+    planted = legacy.with_name("A-BLESSED.json")
+    write_json(planted, {"schema_version": 2, "summary": "fabricated"})
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["entries"].append(
+        {
+            "run_id": LEGACY_RUN_ID,
+            "assignment_id": "A-BLESSED",
+            "sha256": "sha256:" + hashlib.sha256(planted.read_bytes()).hexdigest(),
+        }
+    )
+    manifest["entry_count"] = len(manifest["entries"])
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Legacy results manifest modified after commit" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+    # Deleting it does not help: the deletion is visible, and with nothing
+    # grandfathered every legacy result becomes unattributed.
+    planted.unlink()
+    manifest_path.unlink()
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Legacy results manifest modified after commit" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+    assert any("not attributed" in error for error in payload["errors"])
+
+
+def test_legacy_manifest_fails_closed_when_it_cannot_be_trusted(
+    tmp_path: Path,
+) -> None:
+    """An unparseable or malformed manifest is an error, never a skip."""
+
+    _admitted_active_run(tmp_path)
+    _legacy_result_path(tmp_path)
+    assert _emit_legacy_manifest(tmp_path).returncode == 0
+    assert _validate(tmp_path)["ok"] is True
+    manifest_path = tmp_path / LEGACY_MANIFEST_REL
+
+    manifest_path.write_text("{not json", encoding="utf-8")
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False
+    assert any("not valid JSON" in error for error in payload["errors"])
+    assert any("not attributed" in error for error in payload["errors"])
+
+    manifest_path.write_text(
+        json.dumps({"schema_version": 99, "entries": []}), encoding="utf-8"
+    )
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False
+    assert any("unsupported schema_version" in error for error in payload["errors"])
+
+    manifest_path.write_text(
+        json.dumps({"schema_version": 1, "entries": [{"run_id": LEGACY_RUN_ID}]}),
+        encoding="utf-8",
+    )
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False
+    assert any("entry 1 is malformed" in error for error in payload["errors"])
+
+    # A re-emit must not silently overwrite a pinned boundary.
+    refused = _emit_legacy_manifest(tmp_path)
+    assert refused.returncode != 0
+    assert "already exists" in refused.stderr
+    assert _emit_legacy_manifest(tmp_path, "--force").returncode == 0
+
+
+# ---------------------------------------------------------------------------
+# D-067 round-4 review, defect 2: an admitted digest is only permanently pinned
+# if superseding it must be *declared*.
+# ---------------------------------------------------------------------------
+
+
+def _ledger_rows(tmp_path: Path) -> list[dict]:
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    return [
+        json.loads(line)
+        for line in ledger.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _write_ledger_rows(tmp_path: Path, rows: list[dict]) -> None:
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+
+
+def _edit_admitted_result(tmp_path: Path, version: str) -> None:
+    edited = valid_result(version, assignment_sha256(tmp_path))
+    edited["commands"] = ["fixture", "edited after admission"]
+    write_json(tmp_path / RESULT_PATH, edited)
+
+
+def test_undeclared_second_consume_is_refused(tmp_path: Path) -> None:
+    """Deleting the gitignored `.claim` produces a second consume row.
+
+    Measured route (b): the receipt is already `consumed` by this agent, so the
+    stop hook's idempotent path is taken -- but that path is only reached when
+    the O_EXCL claim exists. With the claim removed the hook takes the fresh
+    acceptance path instead, never compares the new bytes against the admitted
+    ones, and appends a second consume row. The digest check then passed because
+    the validator kept only the last row. It no longer does.
+    """
+
+    version = _admitted_active_run(tmp_path)
+    receipt = tmp_path / ".agent-harness/admissions" / RUN_ID / f"{ASSIGNMENT_ID}.json"
+    claim = receipt.with_name(receipt.name + ".claim")
+    assert claim.is_file()
+    assert json.loads(receipt.read_text(encoding="utf-8"))["state"] == "consumed"
+    admitted_sha = _ledger_rows(tmp_path)[-1]["result_sha256"]
+
+    _edit_admitted_result(tmp_path, version)
+    assert _validate(tmp_path)["ok"] is False
+
+    claim.unlink()
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+    rows = _ledger_rows(tmp_path)
+    consumes = [row for row in rows if row["event"] == "consumed"]
+    assert len(consumes) == 2, rows
+    assert not any(row["event"] == "reopened" for row in rows)
+
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    conflict = [
+        error
+        for error in payload["errors"]
+        if "second consume with no declared reopen" in error
+    ]
+    assert conflict, payload["errors"]
+    assert admitted_sha in conflict[0]
+    assert consumes[1]["result_sha256"] in conflict[0]
+    assert f"{RUN_ID}/{ASSIGNMENT_ID}" in conflict[0]
+
+
+def test_declared_reopen_licenses_a_second_consume(tmp_path: Path) -> None:
+    """`--reopen` now records a distinct, digest-naming supersession row."""
+
+    version = _admitted_active_run(tmp_path)
+    admitted_sha = _ledger_rows(tmp_path)[-1]["result_sha256"]
+    _edit_admitted_result(tmp_path, version)
+    assert _validate(tmp_path)["ok"] is False
+
+    reopened = subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            ASSIGNMENT_ID,
+            "--expect-agent-id",
+            "agent-fixture",
+            "--reopen",
+            "--reason",
+            "first agent died before stopping",
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    token = next(
+        line.split("=", 1)[1]
+        for line in reopened.stdout.splitlines()
+        if line.startswith("ADMISSION_TOKEN=")
+    )
+
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["event"] == "reopened", row
+    assert row["superseded_result_sha256"] == admitted_sha
+    assert row["superseded_state"] == "consumed"
+    assert row["reason"] == "first agent died before stopping"
+
+    assert run_stop_hook(tmp_path, stop_event(version, proof=token)).stdout == ""
+    rows = _ledger_rows(tmp_path)
+    assert [entry["event"] for entry in rows] == ["consumed", "reopened", "consumed"]
+    payload = _validate(tmp_path)
+    assert payload["ok"] is True, payload
+    # The superseded digest is still on the permanent record.
+    assert rows[0]["result_sha256"] == admitted_sha
+    assert rows[2]["result_sha256"] != admitted_sha
+
+
+def test_reopen_row_must_match_the_digest_it_claims_to_supersede(
+    tmp_path: Path,
+) -> None:
+    """A reopen row that names other bytes, or carries no reason, licenses nothing."""
+
+    version = _admitted_active_run(tmp_path)
+    _edit_admitted_result(tmp_path, version)
+    reopened = subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            ASSIGNMENT_ID,
+            "--expect-agent-id",
+            "agent-fixture",
+            "--reopen",
+            "--reason",
+            "fixture",
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    token = next(
+        line.split("=", 1)[1]
+        for line in reopened.stdout.splitlines()
+        if line.startswith("ADMISSION_TOKEN=")
+    )
+    assert run_stop_hook(tmp_path, stop_event(version, proof=token)).stdout == ""
+    good_rows = _ledger_rows(tmp_path)
+    assert _validate(tmp_path)["ok"] is True
+
+    for mutation, field, value in (
+        ("wrong digest", "superseded_result_sha256", "sha256:" + "0" * 64),
+        ("blank reason", "reason", "   "),
+    ):
+        rows = [dict(row) for row in good_rows]
+        rows[1][field] = value
+        _write_ledger_rows(tmp_path, rows)
+        payload = _validate(tmp_path)
+        assert payload["ok"] is False, (mutation, payload)
+        assert any(
+            "second consume with no declared reopen" in error
+            for error in payload["errors"]
+        ), (mutation, payload["errors"])
+
+    # An ordinary mint row cannot stand in for a declared reopen either.
+    rows = [dict(row) for row in good_rows]
+    rows[1]["event"] = "minted"
+    _write_ledger_rows(tmp_path, rows)
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "second consume with no declared reopen" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_admission_ledger_garbage_is_an_error_not_a_skip(tmp_path: Path) -> None:
+    """A non-object ledger row used to be silently ignored."""
+
+    _admitted_active_run(tmp_path)
+    rows = _ledger_rows(tmp_path)
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.write_text(
+        json.dumps(rows[0], sort_keys=True) + "\n[1, 2, 3]\n", encoding="utf-8"
+    )
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Admission ledger line is not an object" in error for error in payload["errors"]
+    ), payload["errors"]
+
+
+# ---------------------------------------------------------------------------
+# Regression guards for checks the round-4 panel confirmed already working.
+# ---------------------------------------------------------------------------
+
+
+def test_validate_harness_fails_closed_when_git_is_unavailable(tmp_path: Path) -> None:
+    """No git means no integrity evidence, which is a failure, not a pass.
+
+    The scripts are copied into the fixture so `_harness.root()` falls back to
+    the fixture tree rather than the real repository when `git rev-parse` cannot
+    run; otherwise the check would silently validate the wrong tree.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    scripts = tmp_path / ".agent-harness" / "scripts"
+    scripts.mkdir(parents=True, exist_ok=True)
+    for name in ("validate_harness.py", "_harness.py"):
+        (scripts / name).write_bytes((HARNESS_SCRIPTS / name).read_bytes())
+
+    completed = subprocess.run(
+        [sys.executable, str(scripts / "validate_harness.py")],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+        env={"PATH": str(tmp_path / "no-such-bin")},
+    )
+    assert completed.returncode == 1, completed.stdout
+    payload = json.loads(completed.stdout)
+    assert payload["ok"] is False
+    required = (
+        "Tracked run evidence integrity check could not run",
+        "Legacy results manifest integrity check could not run",
+    )
+    for prefix in required:
+        matched = [error for error in payload["errors"] if error.startswith(prefix)]
+        assert matched, (prefix, payload["errors"])
+        assert "git is required for validation" in matched[0]
+
+
+def test_validate_harness_still_surfaces_ssot_divergence(tmp_path: Path) -> None:
+    """The registry-vs-prose consistency check stays wired in and fail-closed."""
+
+    _admitted_active_run(tmp_path)
+    _emit_legacy_manifest(tmp_path)
+    assert _validate(tmp_path)["ssot_consistency"].startswith("not applicable")
+
+    registry = tmp_path / ".agent-harness/context/GATE_REGISTRY.json"
+    write_json(registry, {"gates": []})
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        error.startswith("SSOT") for error in payload["errors"]
+    ), payload["errors"]
+
+    # Deleting a tracked registry must not switch the check off.
+    _git_commit_all(tmp_path, "track the gate registry")
+    registry.unlink()
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "cannot be disabled by deleting its input" in error
+        for error in payload["errors"]
     ), payload["errors"]

@@ -125,8 +125,15 @@ in hand-typeable envelope stamps they remain a default failure.
 - The coverage floor proves every gate is *stated* where it is current and agrees
   with the registry. It does not prove the registry is right — that is what
   adjudication is for.
-- The D-069 contract's `4.754 s/eval` at order 60 / `y_max` 30 still has no
-  committed backing artifact. The probe can check it; it has not been run.
+- The D-069 contract's `4.754 s/eval` at order 60 / `y_max` 30 had no committed
+  backing artifact when this was written. It has since been measured directly
+  from the frozen r4 domain-holdout phase — better provenance than the probe
+  would have given, since it is the contract's own execution rather than a
+  separate rehearsal: **4.275 s/eval** over evals 1→151, i.e. the asserted figure
+  was ~11% conservative, which is the safe direction for a wall budget. The
+  measured cost ratio against the 48/24 base (2.655 s/eval) is 1.610×. The probe
+  `d070_cost_probe.py` remains unrun and is still needed for the angular and
+  collision-radial axes, which the r4 contract does not exercise.
 
 ## 6. Cost
 
@@ -138,5 +145,6 @@ known_blocker_reduced: no -- Part A moves no gate; it makes the bookkeeping
   falsification-resistant and closes the F-D065-05 mechanism
 blocker_movement_ratio: 0.0
 reviews: 5 reviewers, mixed-model, 5/5 FAIL, 7 confirmed findings, all fixed
-tests: 39 hook fixtures unchanged; 55 new SSOT regression cases
+tests: Part A left the 39 hook fixtures unchanged and added 55 SSOT regression
+  cases; Part B's round-4 fixes took the hook fixtures 39 -> 58
 ```

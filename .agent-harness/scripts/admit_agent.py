@@ -51,6 +51,7 @@ import argparse
 import hashlib
 import json
 import secrets
+from pathlib import Path
 
 from _harness import (
     ADMISSION_KEY_RE,
@@ -70,6 +71,53 @@ TOKEN_BYTES = 32
 
 def fail(message: str) -> None:
     raise SystemExit(f"admit_agent: {message}")
+
+
+def last_consumed_result_sha256(ledger_path: Path, assignment_id: str) -> str:
+    """The digest of the bytes the ledger last admitted for this assignment.
+
+    A reopen must *declare* which admitted digest it supersedes (D-067 round-4
+    review, defect 2). The declaration is taken from the append-only ledger
+    rather than from the receipt, because the receipt directory is gitignored
+    working state and may have been replaced or corrupted -- the ledger is the
+    record that survives into committed evidence. Fails closed: an existing
+    ledger that cannot be read or parsed aborts the mint rather than emitting a
+    reopen row that declares nothing.
+    """
+    if not ledger_path.exists():
+        return ""
+    try:
+        raw = ledger_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        fail(
+            f"admission ledger could not be read ({exc.__class__.__name__}); a "
+            "reopen must declare the digest it supersedes"
+        )
+        return ""
+    digest = ""
+    for number, line in enumerate(raw.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            fail(
+                f"admission ledger line {number} is malformed; a reopen must "
+                "declare the digest it supersedes"
+            )
+            return ""
+        if not isinstance(row, dict):
+            fail(
+                f"admission ledger line {number} is not an object; a reopen must "
+                "declare the digest it supersedes"
+            )
+            return ""
+        if (
+            row.get("event") == "consumed"
+            and str(row.get("assignment_id")) == assignment_id
+        ):
+            digest = str(row.get("result_sha256") or "")
+    return digest
 
 
 def main() -> None:
@@ -98,9 +146,11 @@ def main() -> None:
         "--reopen",
         action="store_true",
         help="Replace an existing receipt for this assignment. Requires --reason. "
-        "Note: the append-only ledger keeps the previous consume row, so until "
-        "the reopened assignment is consumed again, validate_harness reports any "
-        "result whose bytes differ from that row.",
+        "Appends a declared `reopened` ledger row naming the result digest it "
+        "supersedes, which is what licenses the second consume row that follows: "
+        "validate_harness errors on an undeclared second consume. Until the "
+        "reopened assignment is consumed again, it also reports any result whose "
+        "bytes differ from the last consume row.",
     )
     parser.add_argument("--reason", default="")
     args = parser.parse_args()
@@ -204,29 +254,46 @@ def main() -> None:
     # consume the receipt it was just admitted for.
     claim = target.with_name(target.name + ".claim")
     minted_at = utc_now()
+    ledger_path = harness / "runs" / run_id / "ADMISSIONS.jsonl"
+
+    # A reopen is a *declared* supersession, not merely a second mint. Before
+    # this the reopen row was indistinguishable from a first mint (`"event":
+    # "minted"`), so a second consume row could appear with nothing on the
+    # append-only record saying that superseding the first was intended -- which
+    # is how an edited artifact was laundered back to green (D-067 round-4
+    # review, defect 2). The distinct event, the superseded digest, and the
+    # mandatory reason are what validate_harness requires before it will accept
+    # more than one consume row for an assignment.
+    row: dict[str, object] = {
+        "event": "reopened" if prior is not None else "minted",
+        "run_id": run_id,
+        "assignment_id": assignment_id,
+        "assignment_sha256": receipt["assignment_sha256"],
+        "token_digest": receipt["token_digest"],
+        "expected_agent_id": expect_agent_id,
+        "reopened": bool(prior is not None),
+        "at": minted_at,
+    }
+    if prior is not None:
+        superseded = last_consumed_result_sha256(ledger_path, assignment_id)
+        if not superseded:
+            # No consume row yet: the receipt being replaced was never admitted
+            # (a dead agent, a failed stop). Fall back to whatever the receipt
+            # itself recorded so the row is still explicit about what it found.
+            superseded = str(prior.get("result_sha256") or "")
+        row["superseded_result_sha256"] = superseded
+        row["superseded_state"] = str(prior.get("state"))
+        row["superseded_consumed_by_agent_id"] = str(
+            prior.get("consumed_by_agent_id") or ""
+        )
+        row["reason"] = args.reason.strip()
+
     # Ledger first, receipt second. If the ledger append fails the receipt was
     # never created, so no open receipt survives whose token was never printed
     # (D-067 round-2 review F-13).
     try:
-        with (harness / "runs" / run_id / "ADMISSIONS.jsonl").open(
-            "a", encoding="utf-8"
-        ) as ledger:
-            ledger.write(
-                json.dumps(
-                    {
-                        "event": "minted",
-                        "run_id": run_id,
-                        "assignment_id": assignment_id,
-                        "assignment_sha256": receipt["assignment_sha256"],
-                        "token_digest": receipt["token_digest"],
-                        "expected_agent_id": expect_agent_id,
-                        "reopened": bool(prior is not None),
-                        "at": minted_at,
-                    },
-                    sort_keys=True,
-                )
-                + "\n"
-            )
+        with ledger_path.open("a", encoding="utf-8") as ledger:
+            ledger.write(json.dumps(row, sort_keys=True) + "\n")
     except OSError as exc:
         fail(f"admission ledger could not be appended ({exc.__class__.__name__})")
     try:

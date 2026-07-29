@@ -1,0 +1,10 @@
+{
+ "attestation": "ACTIVE_RUN pointer state captured by the parent, in-band, at the moment of the C4 canary stop dispatch",
+ "why": "D-067 round-4 obligation 4 was judged NOT DISCHARGED because the C1 canary's overlap was corroborated (decoy RUN_PLAN.created_at) but never attested, and the canary predated the 96089f0 stop-hook change.",
+ "captured_at": "2026-07-29T08:41:06+00:00",
+ "active_run_pointer_now": "run-20260729-f10-d070-canary-c4-decoy",
+ "canary_agent_lease_run_id": "run-20260729-f10-d070-canary-c4",
+ "head_commit": "a1cdd8afe30d318f0129d2c0a6e1e06fab58d244",
+ "stop_hook_sha256": "9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+ "overlap_is_real": true
+}

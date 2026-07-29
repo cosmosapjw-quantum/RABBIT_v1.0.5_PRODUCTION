@@ -1,0 +1,691 @@
+{
+  "schema_version": 1,
+  "purpose": "Pin the pre-admission boundary. validate_harness.py requires every result artifact in every run directory to be either attributed by a consumed ADMISSIONS.jsonl row whose digest matches the bytes on disk, or listed here with a matching digest. Anything else is an error, so a fabricated result fails wherever it is dropped and an edit to a legacy result fails too.",
+  "generated_by": "python3 .agent-harness/scripts/validate_harness.py --emit-legacy-manifest",
+  "generated_at": "2026-07-29T08:26:36+00:00",
+  "generated_at_head": "a1cdd8afe30d318f0129d2c0a6e1e06fab58d244",
+  "selection_criterion": "every *.json in .agent-harness/runs/<run>/results/ for each run directory that had no ADMISSIONS.jsonl at generation time",
+  "entry_count": 136,
+  "entries": [
+    {
+      "run_id": "run-20260722-f10-b3v2-blocker-remediation",
+      "assignment_id": "A-HARNESS-CANARY",
+      "sha256": "sha256:2480838fa3218c972eb30549fd391564d2f8c45140e7096ebac9bd681a24cc6a"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-blocker-remediation",
+      "assignment_id": "A-HARNESS-CANARY-R2",
+      "sha256": "sha256:0402f1b390ef6802af7ef169406f8b23bba00e97f24696ff66d9d9ec0d9cb27f"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-ADJUDICATOR",
+      "sha256": "sha256:95870216b95f6aad3e6d26995a6b0ab8ba6040ad5dfcfed431de07c43fef0ee5"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-B3-DESIGN",
+      "sha256": "sha256:39e9394a6fd2b354cf6c56a7051cab53b12cc9de60d99d45615c2992fc6eca49"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-CAS-LEAN",
+      "sha256": "sha256:f19f64a93092f9b6000dc43cfecb2c272011e1f7e5fbd4c41ed4bdc06756cb52"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-CAS-SAGE",
+      "sha256": "sha256:d8e4b2c804ab30c855b7d5431064cfab7ba8a5a8c702df2492fbdd6007ab6481"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-CAS-SYMPY",
+      "sha256": "sha256:c9f6521552f45169200a276c50b8b7cabf8a6daf56e0b1ce1559ca1001a3f66c"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-CAS-WOLFRAM",
+      "sha256": "sha256:91c45257c79570bf508b03f5e1ac6603c3b7b143952ce12704a5c6c30e82cd9a"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+      "assignment_id": "A-W7-METROLOGY",
+      "sha256": "sha256:98a73fce2de0bb5bbd64ba5f12d71d24f33272f13e1afb8486bc95bb0fb147af"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-ADJUDICATOR",
+      "sha256": "sha256:e5b21e266afefa8d9dffc61b7722a9dda9935c369d739539ceeea9be87648e5e"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-B3-DESIGN",
+      "sha256": "sha256:fc283d4f41d01bd1002fcd3094cf2390771e594630590736e623daa56631962e"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-CAS-LEAN",
+      "sha256": "sha256:b5c61f027e0f193d9a13b10e33d04ba565aa261f1e31a71d6572f1078e7092a5"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-CAS-SAGE",
+      "sha256": "sha256:722dfa8a83a9f757640eff8eebb5302f6ffac156a043f89a7e4fc28c0d31fe92"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-CAS-SYMPY",
+      "sha256": "sha256:21abb162c14eb07f9dc3207567905fd56296323e62ced1bcef95ac485da26faf"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-CAS-WOLFRAM",
+      "sha256": "sha256:4d81d99c21be66357c67c44eb5c688bb36c39580e43a5d6f93139889d5d6faf6"
+    },
+    {
+      "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+      "assignment_id": "A-W7-METROLOGY",
+      "sha256": "sha256:8d490da0488d9412f89509d36286e7d6538928ebde75e4d11364e8c4e80b4ddb"
+    },
+    {
+      "run_id": "run-20260722-f10-harness-r3-hook-repair",
+      "assignment_id": "A-HARNESS-CANARY-R3",
+      "sha256": "sha256:0d4528f78f39e0e5ed021c8847c1ca43def46f1302b11c2d330385d818b8e7b7"
+    },
+    {
+      "run_id": "run-20260722-f10-harness-r3-hook-repair",
+      "assignment_id": "A-HARNESS-PRETOOL-BLOCK-PROBE-R3",
+      "sha256": "sha256:e6673bbfd1ea644c13bcd35074bf6215772335c78ef8bd6d97394781e3fce8e0"
+    },
+    {
+      "run_id": "run-20260722-f10-harness-r4-supported-workaround",
+      "assignment_id": "A-HARNESS-CANARY-R4",
+      "sha256": "sha256:5a97985745f9a3de51540f92b557e7394a78c8e74a905f92ac1c8e441914082d"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+      "assignment_id": "A-B3-DESIGN",
+      "sha256": "sha256:4cb9132c0a39bab102f599671278183810e826268a3392c1e49a9f99b1f384b0"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+      "assignment_id": "A-CAS-SAGE",
+      "sha256": "sha256:ff1620c1265f418b95b06ac7cc0d63d3df42ffe487e8062f798cf760d6cb2178"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+      "assignment_id": "A-CAS-WOLFRAM",
+      "sha256": "sha256:4d7686626de64cc89b808bfed8bcaba904ad20aacab9c02681f80e8b328043ea"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+      "assignment_id": "A-W7-METROLOGY",
+      "sha256": "sha256:a998edb42436052c9f3a800dbcbe7eeda42c724439f08c270a74d6c1b4207150"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+      "assignment_id": "A-B3-DESIGN",
+      "sha256": "sha256:bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+      "assignment_id": "A-W7-METROLOGY",
+      "sha256": "sha256:f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-ADJUDICATOR",
+      "sha256": "sha256:c145f298ac65dbcf76676542ff4ebcbb85f14a157dd956a6e0b2f71d2c0a3e6f"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-HISTORY-MAPPER",
+      "sha256": "sha256:7beb87a448dc42b7d9c72eeea5415696ef522a179e7a80a804692c7c80c3904b"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-HISTORY-MAPPER-R2",
+      "sha256": "sha256:f7c47490c409afb7c10f40aea6cb17357d055fac893ba075a306fa260fa75087"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-HISTORY-MAPPER-R3",
+      "sha256": "sha256:7e0dc3a7aeb067178ac9a17d9db86f81da4aa65b134237e5f1217ac2afb14e02"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-PHYSICS-DESIGN-AUDITOR",
+      "sha256": "sha256:b49b7bf0fe244313e16899af92d08fb26a956573a9c4c57125a38c2d55f94302"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-STEELMAN-AUDIT",
+      "sha256": "sha256:0c1153c7c5859877991baebdf236df980d112dc6b47901aca8ccb0d13bbefa30"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-STEELMAN-DESIGN",
+      "sha256": "sha256:af052d01138a332f2b249dab7abb99bd6c3641ca0c551d1e04e35f67b5832d74"
+    },
+    {
+      "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+      "assignment_id": "A-SYSTEMS-PROCESS-AUDITOR",
+      "sha256": "sha256:92104e01d649e8439191ddbaf60f9d2e8e35cd08bc60665019b3ff93aadfdca0"
+    },
+    {
+      "run_id": "run-20260723-f10-d039-external-remedy-prompt-closeout",
+      "assignment_id": "A-D039-FINAL-HASH-AUDIT",
+      "sha256": "sha256:11370b9f001480d3666281cfef580e0d8c75c7100db0096afe370898523c53b0"
+    },
+    {
+      "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r2",
+      "assignment_id": "A-D039-PROMPT-AUDIT-R2",
+      "sha256": "sha256:898fcf024505e495c265823da1fab012e1c55363ab726ff44b0bf3c5b2f40f0e"
+    },
+    {
+      "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r3",
+      "assignment_id": "A-D039-PROMPT-AUDIT-R3",
+      "sha256": "sha256:a424e9c90658db072cb89163ee1e89f0b5a02d64fd544c93fb799c6480f18bfe"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-ADJUDICATOR",
+      "sha256": "sha256:d7d34e412bd3b8d94f382748f58b53c6102a1f806aa64f443c656a29203d481c"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-BIANCHI-DSMC-LOCAL",
+      "sha256": "sha256:ac87b8d2806bfc2e4c4c490d2d0a38de48225e11e04ce75c9b8f834b0ff2de06"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-JAX-HISTORY-MAP",
+      "sha256": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-JAX-LEGACY-RECOVERY",
+      "sha256": "sha256:8df6b7b589c7bda86de08b0f6e589d4f128106926a8a1a9c5840ea1ed2f7b47f"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-JAX-NUMERICS-REUSE",
+      "sha256": "sha256:3534afc268c74be15f0a9a345816ba2c58415844a13d412f229ab30fbea4f4c7"
+    },
+    {
+      "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+      "assignment_id": "A-D040-JAX-PHYSICS-REUSE",
+      "sha256": "sha256:2ba9d3fb1ec7a8ca41350f15d4d2b89a3da26348815af6016c438a92acaecfcf"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-ADJUDICATOR-R2",
+      "sha256": "sha256:9607e9cf820dde1eaa3f27288e6de2cd634f8e037c676c0cb6c31073db2446f7"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-CANDIDATE-SEARCH",
+      "sha256": "sha256:4c61cc527b2f2bed4e5d1e2208f50071f2f838a87fff365101a1104256099677"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-EXPERIMENT-PACKAGE",
+      "sha256": "sha256:444add51b849cfee0d8eebb5e2782104d644e5fb6528a3e81544cbbc0e8f754c"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-FAILURE-REFLECTION",
+      "sha256": "sha256:f7b308db42cf0cac171378b68af77fe6046b73ca3def16f0cda612e41936302e"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-PR-DAG-ANTI-DRIFT",
+      "sha256": "sha256:687d9a0541d88db1399cba92ccdf0e5c88eec8a17eec510b3a7f7e3f90e19f4f"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-PROMPT-ADMIT",
+      "sha256": "sha256:3040ba23a1ce4511b4f6e77b964d2206844369eb02cee8321895b060429ae7cc"
+    },
+    {
+      "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+      "assignment_id": "A-D042-PROMPT-REJECT",
+      "sha256": "sha256:eb2c80d65fc4c1a6ca2aac6849213714216134b3f25f7ee740e20d7826e53aa0"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-ADJUDICATOR",
+      "sha256": "sha256:18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-LEAN",
+      "sha256": "sha256:83260763e11e414765a7153906963a366c28bae57232d0679565ca4f6c637c10"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-ROCQ",
+      "sha256": "sha256:34340cd1b9561a5b1716a2fef01b463f7841fcce3e964b3adc4a4476c84ead2d"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-SAGE",
+      "sha256": "sha256:f97e0a8f91051d5356378973cabc73d531059d69fd5ff66512975dd2d1dfd449"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-STEELMAN-ADMIT",
+      "sha256": "sha256:16601f44b1d07101f69fadca55bf23c292da81ad964f30b9dc291d361c3e38ea"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-STEELMAN-REJECT",
+      "sha256": "sha256:fe94d6875893220beb792622cadb6850f1ea4bd370d0d1cb923f0c9b2871af15"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-SYMPY",
+      "sha256": "sha256:610256b5478d05b49422bbb8cb9107cbe3c0c758bff5cc0472654fd56778e65e"
+    },
+    {
+      "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+      "assignment_id": "A-EXT01-WOLFRAM",
+      "sha256": "sha256:d0cd486f2df33396713c893fbfa9754962968362c8e573b46201e072a0e6fc12"
+    },
+    {
+      "run_id": "run-20260723-f10-harness-d036-final-canary",
+      "assignment_id": "A-HARNESS-RUNTIME-ROLE-CANARY-R3",
+      "sha256": "sha256:1b2f2e23d74172383aed4d2f57b6e3451c1289f9e408a35f3bb0f707e49e36d4"
+    },
+    {
+      "run_id": "run-20260723-f10-harness-d036-runtime-role-canary-r2",
+      "assignment_id": "A-HARNESS-RUNTIME-ROLE-CANARY-R2",
+      "sha256": "sha256:5e9441335aff4ba93bb62242ebcd92e9142e04b2e434395b560f8d004ae3e8d1"
+    },
+    {
+      "run_id": "run-20260724-f10-d043-prompt-adjudication",
+      "assignment_id": "A-D043-ADJUDICATOR-R2",
+      "sha256": "sha256:910c6af15c04fb519928fe9c5375f7586b806d4a16e096e4fd0ea2d7d68b5f99"
+    },
+    {
+      "run_id": "run-20260724-f10-d043-prompt-adjudication",
+      "assignment_id": "A-D043-ADJUDICATOR-R3",
+      "sha256": "sha256:955586e9ace3dacbb25c9ebabe992428792d846f22b056361557eea81061b8d3"
+    },
+    {
+      "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+      "assignment_id": "A-D043-ARTIFACT-BOUNDARY",
+      "sha256": "sha256:ec550f9dad83be9453df968264802898749a557de10be351ab0469f4266359a1"
+    },
+    {
+      "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+      "assignment_id": "A-D043-CONTRACT-REDESIGN",
+      "sha256": "sha256:a26ee4f19fdaabac01f880c269bac31a06582821da15ffa68795df10181c4994"
+    },
+    {
+      "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+      "assignment_id": "A-D043-HISTORY-PROVENANCE",
+      "sha256": "sha256:f1acafa043a30db249b1a4a748d148118b8542595cfb11859cc2f772ef934f7a"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-CROSS-ADMIT",
+      "sha256": "sha256:f8b484d22388e2a112c3fe6b196c06841a72089fd815cfa7083c22df04dd8dd3"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-CROSS-REJECT",
+      "sha256": "sha256:e4f887585843f135c93b20bc7bb2d2d9226013f454916002b82ee2b7a0a0dcaf"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-INTAKE-ADJUDICATOR",
+      "sha256": "sha256:7beccc8844265af1c91fb00c47c0f44516794c2c54e925dceaedabee8edbc5a4"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-INTAKE-CONTRACT",
+      "sha256": "sha256:35bd47044c9ae2bb77fd399731101710ddd57d7edfdfe382bff2d7533ee2ce98"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-INTAKE-PROVENANCE",
+      "sha256": "sha256:8108f3372545400860c80bb6bbaf46b428cf7a6204b17e91cdc2867d8dd55732"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-ROW6-NUMERICS",
+      "sha256": "sha256:7de7f8c9213feb1985dda64a4f7af2eaa2009ee2611aa2984459f59611c73040"
+    },
+    {
+      "run_id": "run-20260724-f10-open-breakthrough-intake",
+      "assignment_id": "A-OPEN-ROW6-PHYSICS",
+      "sha256": "sha256:3197ee7afe29e2c97b7a762a6d8daaf0fb60eae5266995799fff473dbb1241e5"
+    },
+    {
+      "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+      "assignment_id": "A-REPLAY-ADJUDICATION",
+      "sha256": "sha256:b2912459d6feff12fb3fc560265d0f8e5b9a527dcef679828d06d2a3aaaab9b4"
+    },
+    {
+      "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+      "assignment_id": "A-REPLAY-BLIND-REVIEW",
+      "sha256": "sha256:9d2430ea78c8219308ca9a8027ba4041b7456206bcaf4877ab8f72b0c5947cb1"
+    },
+    {
+      "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+      "assignment_id": "A-REPLAY-CONTRACT",
+      "sha256": "sha256:f97b35b88da8adc4fac20da87d0915ccd3a7a5fec827e6b631dc27a6b5fb013a"
+    },
+    {
+      "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+      "assignment_id": "A-REPLAY-EXECUTION",
+      "sha256": "sha256:a15fa8eb952216a4b7594310c81635bf124fb4c2e35e6188850d8de4ebae3d37"
+    },
+    {
+      "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+      "assignment_id": "A-REPLAY-VERIFICATION",
+      "sha256": "sha256:4589bd53acd1a7961d58350279dd44ac0c25b2f6ab8f71d6186a17bc5859ae94"
+    },
+    {
+      "run_id": "run-20260727-f10-d050-ownerc-closure",
+      "assignment_id": "A-CLOSURE-ADJUDICATION",
+      "sha256": "sha256:3aa9b7d2cb9f49e5b169221802898642019dc9273cb7c0b6bce7465f6dde8c51"
+    },
+    {
+      "run_id": "run-20260727-f10-d050-ownerc-closure",
+      "assignment_id": "A-CLOSURE-BLIND-REVIEW",
+      "sha256": "sha256:938fc4b61bda18003ad384d99e007b8b584d2985369155b9ecd8534286b7fedc"
+    },
+    {
+      "run_id": "run-20260727-f10-d050-ownerc-closure",
+      "assignment_id": "A-CLOSURE-CONTRACT",
+      "sha256": "sha256:6cdebc91b883cb4d19ae0104afca0887c917480bb6f8eaca9587d682ff69db20"
+    },
+    {
+      "run_id": "run-20260727-f10-d050-ownerc-closure",
+      "assignment_id": "A-CLOSURE-EXECUTION",
+      "sha256": "sha256:6693923e4fc72e1deff5b57795bcb207b28fb13355c51cf67afb42a1280e14db"
+    },
+    {
+      "run_id": "run-20260727-f10-d050-ownerc-closure",
+      "assignment_id": "A-CLOSURE-IMPLEMENTATION",
+      "sha256": "sha256:d81e6f4f35ee7cdd50edcfa3eea7f47eb631cbe9d8d06c52599f3c3115710ed6"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-ADJUDICATION",
+      "sha256": "sha256:569f7d6e2ddfcaab946c9234ec88dfbfba73614b9de1c2a11775d1bb2c1a2a13"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-BLIND-NUMERICS",
+      "sha256": "sha256:84be9064d111a0d7cb794e918c696846a554c609a6ad7ba3c3dd1f87ef3b4c59"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-BLIND-PHYSICS",
+      "sha256": "sha256:9c99af3c0b974a59e7423b35843f5f2fae73ccae8192447fb57a6b60b6ff9b30"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-IMPLEMENTATION",
+      "sha256": "sha256:14299a3db860ab58dfb63432c79c3c6861d54f0d445f6a6af4fa650b0d86ac97"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-MUTANT-VERIFICATION",
+      "sha256": "sha256:14b49509445b9c2d558c6e1762513c77bd32e52a57ca1ec42386fc2a85f8c0ff"
+    },
+    {
+      "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+      "assignment_id": "A-ORBIT-SEAL-EXECUTION",
+      "sha256": "sha256:422d5885ce28ed458be611f146ed0d27d740a7b7838d179b48302cf4eeb6a190"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+      "assignment_id": "A-D056-PHYSICS",
+      "sha256": "sha256:661238c4b1825342c5625d74c555c9b1d2551048d28b1b33ef440ba304e57fb3"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+      "assignment_id": "A-D056-PROVENANCE",
+      "sha256": "sha256:44cd812ec2d840428eb03cec7e60642d559e257a1c858439ec4322fd172f0034"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+      "assignment_id": "A-D056-SOFTWARE",
+      "sha256": "sha256:6e98970c127c5ef2cc28fa1ad5bb695226f1cc07aba669bdd1b1ea243a8a58ee"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+      "assignment_id": "A-RESOLUTION-METROLOGY",
+      "sha256": "sha256:8bbfff41dc2b34436ba2654cfc07646f75eb76248006a2e0b97e83d369ed6461"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+      "assignment_id": "A-RESOLUTION-PHYSICS",
+      "sha256": "sha256:a176cad9c84efbe83fca73d74e64f754921fa679761df76992029268242e225b"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+      "assignment_id": "A-RESOLUTION-PROVENANCE",
+      "sha256": "sha256:49b7eef6cc184559990310556c588caa950468e093d974b284e4dd4fcd2336cc"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+      "assignment_id": "A-RESOLUTION-TRAJECTORY",
+      "sha256": "sha256:5a8625551c7b2f87265af259a0fc7d34a5e1f1ad9e6eb3187f57ad5ebbbb5e1f"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+      "assignment_id": "A-D057-PHYSICS",
+      "sha256": "sha256:883309fbee4dd4661c951e4fd50bfcf9f6528cbb89add078840766a10fab445d"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+      "assignment_id": "A-D057-PROVENANCE",
+      "sha256": "sha256:53fe2dce5da1bc11255f043f2996c42b419c22bcc98ea8aeebb9c633176d46be"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+      "assignment_id": "A-D057-TRAJECTORY",
+      "sha256": "sha256:1aa03b3c96063d76d353ee4fc21d7d3079f42127dda65b020b6e31913e0bb763"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+      "assignment_id": "A-D057R4-METROLOGY",
+      "sha256": "sha256:5d840c7cc80e49401ff6a6268ea5fa91205c24fbf8b59208a0e629f473b81750"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+      "assignment_id": "A-D057R4-PHYSICS",
+      "sha256": "sha256:624fa6a507cdb45a5b1513a3b3030469b6fe139ca96a59c6f68a0013980f8576"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+      "assignment_id": "A-D057R4-PROVENANCE",
+      "sha256": "sha256:3ff2fa107e8895bcb97ae5231ad21096df8439d562d0a95e0e5d25d337b1f0f1"
+    },
+    {
+      "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+      "assignment_id": "A-D057R4-TRAJECTORY",
+      "sha256": "sha256:79803c857997ed3e96115eaf016c57af9f8d4cd8c95205e0a6712dece6ea1283"
+    },
+    {
+      "run_id": "run-20260728-f10-d053-row9-closure",
+      "assignment_id": "A-ROW9-ADJUDICATION",
+      "sha256": "sha256:e59c003b7576943d512832a0a7b1caaa903965d8a9cc71aea411e01b3a77e144"
+    },
+    {
+      "run_id": "run-20260728-f10-d053-row9-closure",
+      "assignment_id": "A-ROW9-BLIND-REVIEW",
+      "sha256": "sha256:aa789adfa4917b370f86001634e3afc1bc8542d17a743f4b8ed245cc515bfb8f"
+    },
+    {
+      "run_id": "run-20260728-f10-d053-row9-closure",
+      "assignment_id": "A-ROW9-CONTRACT",
+      "sha256": "sha256:bcc201b28e6ed390d2ada1fe5746cd044c432e48eb0494061cc9b368a56f51d8"
+    },
+    {
+      "run_id": "run-20260728-f10-d053-row9-closure",
+      "assignment_id": "A-ROW9-EXECUTION",
+      "sha256": "sha256:ec1733fa31d2a3d4f641bdc4df7322279f60d7dd5316c7845f81e1e42f52f983"
+    },
+    {
+      "run_id": "run-20260728-f10-d053-row9-closure",
+      "assignment_id": "A-ROW9-IMPLEMENTATION",
+      "sha256": "sha256:2b28668163e93d24de161811f2de4be558540d9f1feb533b7bf5c5da5025b575"
+    },
+    {
+      "run_id": "run-20260728-f10-d054-covariance-metrology",
+      "assignment_id": "A-METRO-ADJUDICATION",
+      "sha256": "sha256:e21d01dd3709fc84958758cb28b63c92ef4eda206ce0c25f5e572b25ffd840e7"
+    },
+    {
+      "run_id": "run-20260728-f10-d054-covariance-metrology",
+      "assignment_id": "A-METRO-BLIND-REVIEW",
+      "sha256": "sha256:6c1eb386af031a894258adb24966f84a6153a97861b04fcccd4c67c12144a363"
+    },
+    {
+      "run_id": "run-20260728-f10-d054-covariance-metrology",
+      "assignment_id": "A-METRO-CONTRACT",
+      "sha256": "sha256:73692db1e58c7e485af79412ff51f9f5587ff593b2cc1a1b2576a7c997a6adfc"
+    },
+    {
+      "run_id": "run-20260728-f10-d054-covariance-metrology",
+      "assignment_id": "A-METRO-EXECUTION",
+      "sha256": "sha256:bab552a368c623265d135c8872a338b5980f4a034836200d31610272f3007674"
+    },
+    {
+      "run_id": "run-20260728-f10-d055-metrology-r2",
+      "assignment_id": "A-METRO2-ADJUDICATION",
+      "sha256": "sha256:beda075d9dcc8952a49a846d453d2fbbf75c63135ba1e1eca5707d0aba0dfa6b"
+    },
+    {
+      "run_id": "run-20260728-f10-d055-metrology-r2",
+      "assignment_id": "A-METRO2-CONTRACT",
+      "sha256": "sha256:bc4d014a95eeae3a82c9118f120ac7277d2cfef4f15aa11820e8eadd88e9683a"
+    },
+    {
+      "run_id": "run-20260728-f10-d055-metrology-r2",
+      "assignment_id": "A-METRO2-EXECUTION",
+      "sha256": "sha256:db9930d23374185a164679a66446c0a7990b8962a32ac0b7d2d65ca67aee9a0d"
+    },
+    {
+      "run_id": "run-20260728-f10-d056-independent-trajectory",
+      "assignment_id": "A-TRAJ-ADJUDICATION",
+      "sha256": "sha256:2f3074770c7eea46f89182fe7eed93a3d84bb8f41d792759ea973b4390528707"
+    },
+    {
+      "run_id": "run-20260728-f10-d056-independent-trajectory",
+      "assignment_id": "A-TRAJ-BLIND-REVIEW",
+      "sha256": "sha256:9e3d63b9063027783478549be6995e7eb7035f577a29e729639f43165423852e"
+    },
+    {
+      "run_id": "run-20260728-f10-d056-independent-trajectory",
+      "assignment_id": "A-TRAJ-CONTRACT",
+      "sha256": "sha256:e328bc992b295226a9103ec10647ad9362541f9048c3a92b22df8be70746c33c"
+    },
+    {
+      "run_id": "run-20260728-f10-d056-independent-trajectory",
+      "assignment_id": "A-TRAJ-EXECUTION",
+      "sha256": "sha256:b6ae9002573fd80a763a324f27bec88d727227382d7490c84d92222096806396"
+    },
+    {
+      "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+      "assignment_id": "A-D057R5-ADJUDICATOR",
+      "sha256": "sha256:15a5abb2c7d6a9d64ab06664a162470ca7b5b35d7884a63ac9554baae97c1f18"
+    },
+    {
+      "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+      "assignment_id": "A-D057R5-CROSS-ACCEPT",
+      "sha256": "sha256:f402bf39da3675a2dfc2ef95f5ff1702e185c9192fa9520ea9551cfa49ac1815"
+    },
+    {
+      "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+      "assignment_id": "A-D057R5-CROSS-ACCEPT-R2",
+      "sha256": "sha256:b47b0960f8e013f75688b33f26701923bcdd52ef847ec71016bcc1eb5d9d5806"
+    },
+    {
+      "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+      "assignment_id": "A-D057R5-CROSS-ACCEPT-R3",
+      "sha256": "sha256:c427d7285d73c21c973dde1065492dc8955d27c2136ecee52fbff2ef0c286962"
+    },
+    {
+      "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+      "assignment_id": "A-D057R5-CROSS-REJECT",
+      "sha256": "sha256:12d17edef9382b76959e1cf0d7f189ffae932d82d7b5c436a6f37e082ed1f486"
+    },
+    {
+      "run_id": "run-20260728-f10-d058-lease-canary",
+      "assignment_id": "A-LEASE-CANARY",
+      "sha256": "sha256:c8492cfb4dcb5cd670cb360333653640ceae0b975c563b2e9723e1117dbb6d25"
+    },
+    {
+      "run_id": "run-20260728-f10-d058-lease-decoy",
+      "assignment_id": "A-LEASE-NEG",
+      "sha256": "sha256:5aa9bf96a3b8a01bad08f7fa296a1391232ea75b99f8e476d23dfeb0cec3d15b"
+    },
+    {
+      "run_id": "run-20260728-f10-d058-lease-replacement-canary",
+      "assignment_id": "A-LEASE-REPLACEMENT",
+      "sha256": "sha256:72bc82dfac3e4606895307c691079c9461442aa9fbf5dc577904158803e0bc0e"
+    },
+    {
+      "run_id": "run-20260728-f10-d060-metrology-r3",
+      "assignment_id": "A-D060-ADJUDICATION",
+      "sha256": "sha256:45d223fcec1af38674c8ecb5cfd1032c1721f4bd312084208e6c893f1d4a74c9"
+    },
+    {
+      "run_id": "run-20260728-f10-d061-metrology-r4",
+      "assignment_id": "A-D061-ADJUDICATION",
+      "sha256": "sha256:25216232ce11a508396f90ba482d4d1963ef95df3694ff5c7c07c5a2521fccba"
+    },
+    {
+      "run_id": "run-20260728-f10-d062-trajectory-r2",
+      "assignment_id": "A-D062-ADJUDICATION",
+      "sha256": "sha256:e913d47e292b11c8c81e09dc9c0cfb7397ce14098a70e249bf2d4234330203e1"
+    },
+    {
+      "run_id": "run-20260729-f10-d063-trajectory-r3",
+      "assignment_id": "A-D063-ADJUDICATION",
+      "sha256": "sha256:96f5fcea9207b6c4b98c447d3edd0fab76630d6299f6b50f77928eb537fdd582"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-ADJUDICATION-R2",
+      "sha256": "sha256:a9425033a46825f022d650042d0a8fee236098e3f67b88845cb2a9f82da11862"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-HARNESS",
+      "sha256": "sha256:70ced3ec7a1ac084cb8b6e1d719d14fc3b98d24bbed42d2e11f7c9358bedf330"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-METROLOGY",
+      "sha256": "sha256:dd47daf7fce30f434a510e4a467a2ca24eb8828c95be33a809824f4dd6659c87"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-PHYSICS",
+      "sha256": "sha256:0f70b12f9861d00172243f85e63ce4faf22b8d0865359145b2d9f2e274a614ec"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-PROVENANCE-HARNESS",
+      "sha256": "sha256:07f732bfa3831f456002e437edf9e8e7904e4f54059b7c785758aba1e2ea3e68"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-SOFTWARE-COST",
+      "sha256": "sha256:8afb0ce1d86008039ae3fe94b0471e597d7fdcc28b077fa945ce00d4779d2302"
+    },
+    {
+      "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+      "assignment_id": "A-D065-TRAJECTORY",
+      "sha256": "sha256:579c6bc4e05adf93cf9b68fe9605b33a836481b3636b092dba227450274dbacf"
+    }
+  ]
+}

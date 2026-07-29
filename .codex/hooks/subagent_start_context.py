@@ -1,7 +1,67 @@
 #!/usr/bin/env python3
+"""SubagentStart preflight: inject canonical context and seal a run-identity lease.
+
+Receipt visibility (D-065 obligation 2, round-4 finding): the obligation reads
+"make receipt/lease creation failure a hard Start failure." The lease half was
+fully met (see the run-identity lease block below); the receipt half was not
+implemented at all -- this hook never referenced `.agent-harness/admissions/`.
+A run with zero receipts minted anywhere still produced `Hook preflight: PASS`
+and `systemMessage: null`. Receipt failure was only ever caught parent-side
+(`admit_agent.py` exits 1 before the agent is even spawned) or Stop-side
+(`subagent_stop_validate.py`, potentially hours later). That was fail-closed
+end-to-end, but it did not discharge the Start half of the obligation, and
+Start *can* check, because receipts carry `expected_agent_id`.
+
+THE RULE -- decided deliberately, not left to convention: absence of a receipt
+for this `agent_id` is reported but is NOT fatal, because not every spawned
+agent is a registered assignment; the parent runs plenty of unregistered
+helper agents that were never meant to hold one, and Start hard-failing on all
+of them would make the common case indistinguishable from the dangerous one.
+But a receipt that names this exact `agent_id` and is unusable -- malformed,
+unreadable, already `consumed`, bound to a different run, or ambiguous because
+more than one receipt claims the same `expected_agent_id` -- IS a hard Start
+failure, because in each of those cases something concrete and identifiable
+went wrong for this specific agent_id, and staying silent about it is exactly
+the failure mode the round-4 review flagged. Silence must never be the
+permissive default: whichever of the two states holds, this hook says so, in
+the injected context, load-bearing in `Hook preflight: PASS|FAIL`.
+
+Concretely, at Start this hook scans `.agent-harness/admissions/<ACTIVE_RUN>/`
+(read-only -- it never claims, locks, or mutates a receipt; consumption stays
+at Stop, under the `O_EXCL` claim in subagent_stop_validate.py) for receipts
+whose `expected_agent_id` equals this event's `agent_id`:
+
+  * No active run, no agent_id, or an agent_id that fails the same safe-key
+    regex the run lease uses -> the check is skipped and reported as "not
+    checked", mirroring the existing lease behaviour for the same inputs
+    exactly. A deliberate no-op, not a silent one: the reason is always
+    printed.
+  * Directory missing (no receipts minted yet in this run) or present with
+    zero matches for this agent_id -> reported as "none found", not fatal.
+  * Exactly one matching receipt, state "open", its own `run_id` field equal
+    to the active run -> reported as admitted, not fatal.
+  * Exactly one matching receipt but state != "open", or its `run_id` field
+    disagrees with the active run -> hard FAIL. The receipt exists and names
+    this agent but cannot admit it.
+  * More than one receipt claims the same `expected_agent_id`, or any receipt
+    file in the run's admission directory (not only ones that turn out to
+    match this agent_id) cannot be listed, read, or parsed as a JSON object
+    -> hard FAIL. A parse failure on some *other* assignment's receipt is
+    folded in too, deliberately: this hook cannot prove that an unparseable
+    file was not meant for this agent_id, and an unprovable negative must not
+    default to PASS. Ambiguity is a FAIL, not a skip.
+
+This mirrors, but does not duplicate the authority of, subagent_stop_validate.py.
+Start reports what it can see before the agent has produced a result (there is
+no HARNESS_RESULT envelope yet to check `admission_proof` against); Stop still
+performs the authoritative token/attribution check and the single-use consume.
+Start must never contradict Stop's later verdict, so it only reads.
+"""
 from __future__ import annotations
 
 import hashlib
+import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -14,6 +74,12 @@ from _common import (
     repo_root,
     write_json_atomic,
 )
+
+HARNESS_SCRIPTS = Path(__file__).resolve().parents[2] / ".agent-harness" / "scripts"
+sys.path.insert(0, str(HARNESS_SCRIPTS))
+
+from _harness import ADMISSION_KEY_RE  # noqa: E402
+
 
 def read_bounded(path: Path, max_chars: int) -> str:
     try:
@@ -61,6 +127,132 @@ def active_run_id(harness: Path) -> str:
     if not active_path.is_file():
         return ""
     return active_path.read_text(encoding="utf-8").strip()
+
+
+def list_admission_matches(
+    admissions_dir: Path, agent_id: str
+) -> tuple[list[tuple[Path, dict[str, Any]]], list[str]]:
+    """Read-only scan for receipts in ``admissions_dir`` bound to ``agent_id``.
+
+    Returns ``(matches, errors)``. ``errors`` accumulates every read/parse
+    failure encountered while scanning the directory, not only ones for files
+    that turn out to match ``agent_id`` -- see the module docstring for why an
+    unparseable receipt for a *different* assignment still has to fail closed
+    here.
+    """
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    errors: list[str] = []
+    if admissions_dir.is_symlink():
+        errors.append(f"admission directory path is a symlink: {admissions_dir.name}")
+        return matches, errors
+    try:
+        entries = sorted(admissions_dir.iterdir())
+    except FileNotFoundError:
+        return matches, errors
+    except OSError as exc:
+        errors.append(
+            f"admission receipts directory is unreadable ({exc.__class__.__name__})"
+        )
+        return matches, errors
+    for entry in entries:
+        if entry.name.startswith("."):
+            continue  # atomic-write temp files: .tmp.<pid>.<assignment_id>.json
+        if entry.suffix != ".json":
+            continue  # e.g. Stop's O_EXCL claim files: <assignment_id>.json.claim
+        if entry.is_symlink():
+            errors.append(
+                f"admission receipt path is a symlink; refusing to follow it: {entry.name}"
+            )
+            continue
+        if not entry.is_file():
+            continue
+        try:
+            raw = entry.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(
+                f"admission receipt unreadable ({exc.__class__.__name__}): {entry.name}"
+            )
+            continue
+        try:
+            receipt = json.loads(raw)
+        except json.JSONDecodeError:
+            errors.append(f"admission receipt is not valid JSON: {entry.name}")
+            continue
+        if not isinstance(receipt, dict):
+            errors.append(f"admission receipt is not a JSON object: {entry.name}")
+            continue
+        if str(receipt.get("expected_agent_id") or "") == agent_id:
+            matches.append((entry, receipt))
+    return matches, errors
+
+
+def describe_admission_receipt(
+    harness: Path, active_run: str, agent_id: str
+) -> tuple[str, list[str]]:
+    """Start-time, read-only classification of the receipt bound to ``agent_id``.
+
+    Returns ``(note, errors)``. ``note`` is always non-empty and always goes
+    into the injected context (visibility is unconditional); ``errors`` feeds
+    the same ``start_errors`` list the run-identity lease uses, so an unusable
+    or ambiguous receipt is load-bearing in ``Hook preflight: PASS|FAIL`` the
+    same way a lease-write failure already is. See the module docstring for
+    the admitted / unusable / absent rule.
+    """
+    if not ADMISSION_KEY_RE.fullmatch(agent_id or ""):
+        return "not checked (agent_id is not a safe admission key)", []
+
+    admissions_dir = harness / "admissions" / active_run
+    matches, scan_errors = list_admission_matches(admissions_dir, agent_id)
+    if scan_errors:
+        detail = "; ".join(scan_errors)
+        return (
+            f"AMBIGUOUS ({detail})",
+            [f"admission receipt state for agent_id={agent_id!r} is ambiguous: {detail}"],
+        )
+    if not matches:
+        return (
+            f"none found for agent_id={agent_id!r} in run {active_run!r} "
+            "(not every spawned agent holds a registered assignment; if this "
+            "one is meant to submit a HARNESS_RESULT, SubagentStop still "
+            "requires a matching receipt)",
+            [],
+        )
+    if len(matches) > 1:
+        assignment_ids = ", ".join(
+            sorted(str(r.get("assignment_id") or p.stem) for p, r in matches)
+        )
+        return (
+            f"AMBIGUOUS ({len(matches)} receipts claim expected_agent_id="
+            f"{agent_id!r}: {assignment_ids})",
+            [
+                f"{len(matches)} admission receipts claim expected_agent_id="
+                f"{agent_id!r}: {assignment_ids}"
+            ],
+        )
+    entry, receipt = matches[0]
+    assignment_id = str(receipt.get("assignment_id") or entry.stem)
+    state = str(receipt.get("state") or "")
+    receipt_run = str(receipt.get("run_id") or "")
+    if receipt_run != active_run:
+        return (
+            f"UNUSABLE (receipt for assignment {assignment_id!r} is bound to run "
+            f"{receipt_run!r}, not active run {active_run!r})",
+            [
+                f"admission receipt for agent_id={agent_id!r} is bound to a "
+                f"different run ({receipt_run!r} != {active_run!r})"
+            ],
+        )
+    if state != "open":
+        return (
+            f"UNUSABLE (receipt for assignment {assignment_id!r} is "
+            f"{state!r}, not 'open')",
+            [
+                f"admission receipt for agent_id={agent_id!r} (assignment "
+                f"{assignment_id!r}) is {state!r}, not 'open'; this agent was "
+                "not admitted"
+            ],
+        )
+    return f"open, bound to assignment {assignment_id!r} in run {active_run!r}", []
 
 
 def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
@@ -154,6 +346,18 @@ def inject_subagent_context(event: dict[str, Any], root: Path) -> None:
                     "this agent cannot produce an admissible result"
                 )
 
+    # Admission-receipt visibility (D-065 obligation 2, receipt half; round-4
+    # review finding). Independent of, and does not gate, the lease block
+    # above: a receipt problem must not be masked by a healthy lease or vice
+    # versa. Read-only -- see the module docstring for the full rule.
+    if active_run == "none" or not agent_id:
+        admission_note = "not checked (no active run or missing agent_id)"
+    else:
+        admission_note, admission_errors = describe_admission_receipt(
+            harness, active_run, agent_id
+        )
+        start_errors.extend(admission_errors)
+
     pieces = [read_bounded(pack_path, max_chars)]
     used = len(pieces[0])
 
@@ -172,6 +376,7 @@ Runtime agent type: {runtime_agent_type}
 Agent ID: {agent_id or "MISSING"}
 Active run: {active_run}
 Run lease: {lease_note}
+Admission receipt: {admission_note}
 Canonical context version: {version}
 
 VS Code collaboration does not expose `spawn_agent` to project PreToolUse hooks,

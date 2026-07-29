@@ -1,141 +1,146 @@
 {
-  "schema_version": 1,
-  "purpose": "Declarations checked by .agent-harness/scripts/check_ssot_consistency.py. 'facts' are numbers that appear in prose and must agree across every surface: a fact is a value plus the commit it holds at, not a bare number, so a superseded value is legal exactly where it is dated. 'coverage_policy' names the claims that are excused from needing a statement in a live handoff region -- everything not named is required, so silence is never the permissive option. 'assertion_exemptions' names individual narrative lines in a LIVE region whose registry disagreement is corrected later in the same section; it is currently empty, because the one section that needed it -- '## Next action' in PROJECT_STATE.md -- is now marked superseded in its own heading, which is the better fix. Every entry here is re-verified on every run: a declaration that no longer describes the repository is an error, not a silent pass, so a dead exemption is reported rather than accumulating.",
-  "coverage_policy": {
-    "note": "Gates have no exemption list by design: every gate in GATE_REGISTRY.json must be asserted by name in a live region. Claims are different. Most registry claims are bounded findings sealed at their decision, whose status is carried by the FROZEN_DECISIONS.md row and the audit report that established them; forcing the rolling handoff to restate them would produce ceremonial prose rather than checkable prose. The claims NOT listed below are the ones the current handoff is actively carrying -- contested, critical-risk, or under live remediation -- and they must be stated where they are current. A claim added to CLAIM_REGISTRY.jsonl is required by default until someone writes down here why it is not.",
-    "claims": {
-      "exempt": [
-        {
-          "claim_id": "C-F10C1-N48",
-          "reason": "F-10C1 baseline representation claim, sealed at D-004 with its envelope frozen. Carried by the FROZEN_DECISIONS.md row, not by the rolling handoff."
-        },
-        {
-          "claim_id": "C-F10C1-ENDPOINT",
-          "reason": "F-10C1 baseline implementation claim, settled and unmoving. Its evidence is the retained crate-private solver pair, not a handoff statement."
-        },
-        {
-          "claim_id": "C-F10C1-CACHE",
-          "reason": "DEPRECATED record of a rejected geometry cache. A deprecation is a closed record; restating it in each handoff would add noise, not checkability."
-        },
-        {
-          "claim_id": "C-F10-CATALOGUE",
-          "reason": "F-10C2 nine-row catalogue claim, validated and frozen at module bytes 760a7c04. Movement would require a new decision, which would carry its own row."
-        },
-        {
-          "claim_id": "C-F10-PERF",
-          "reason": "Performance claim closed with its measured profile evidence; not part of the live independent-validation programme."
-        },
-        {
-          "claim_id": "C-F10-INDEPENDENT-POINTWISE-M1",
-          "reason": "Sealed D-027 record of a comparator that failed its M1 discriminator. A preserved failure is history and is quoted, correctly, with its original status in superseded overlays."
-        },
-        {
-          "claim_id": "C-F10-INDEPENDENT-GALERKIN-M1",
-          "reason": "Sealed D-028 record of a bounded static failure. Same preserved-failure reasoning as the pointwise comparator."
-        },
-        {
-          "claim_id": "C-F10-INDEPENDENT-MAXENT3-DESIGN",
-          "reason": "Sealed D-029 design-review rejection, closed before implementation; there is no live surface for it to be current on."
-        },
-        {
-          "claim_id": "C-F10-W3-PARTIAL",
-          "reason": "Bounded W3 derivation with an explicit ceiling, recorded in its own audit document."
-        },
-        {
-          "claim_id": "C-F10-W5-LOCALIZATION",
-          "reason": "Bounded W5 localization result, recorded in its own audit document and in the D-030 frozen row."
-        },
-        {
-          "claim_id": "C-F10-B3V2-DESIGN",
-          "reason": "PROPOSED pre-output design sealed at D-034/D-035 and failed at D-037. It is a frozen proposal, not a live status."
-        },
-        {
-          "claim_id": "C-R6-ORBIT-CHART",
-          "reason": "Bounded OWNER-A manufactured-microcase result, sealed with its lab contract."
-        },
-        {
-          "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
-          "reason": "Bounded OWNER-B target-replay result on two frozen states, sealed with its replay contract."
-        },
-        {
-          "claim_id": "C-F10-ROW9-CLOSURE",
-          "reason": "Bounded discretization-repair claim sealed at D-053 with byte-identical replay; superseded overlays quote it correctly."
-        }
-      ]
-    }
-  },
-  "assertion_exemptions": [],
-  "facts": [
+ "schema_version": 1,
+ "purpose": "Declarations checked by .agent-harness/scripts/check_ssot_consistency.py. 'facts' are numbers that appear in prose and must agree across every surface: a fact is a value plus the commit it holds at, not a bare number, so a superseded value is legal exactly where it is dated. 'coverage_policy' names the claims that are excused from needing a statement in a live handoff region -- everything not named is required, so silence is never the permissive option. 'assertion_exemptions' names individual narrative lines in a LIVE region whose registry disagreement is corrected later in the same section; it is currently empty, because the one section that needed it -- '## Next action' in PROJECT_STATE.md -- is now marked superseded in its own heading, which is the better fix. Every entry here is re-verified on every run: a declaration that no longer describes the repository is an error, not a silent pass, so a dead exemption is reported rather than accumulating.",
+ "coverage_policy": {
+  "note": "Gates have no exemption list by design: every gate in GATE_REGISTRY.json must be asserted by name in a live region. Claims are different. Most registry claims are bounded findings sealed at their decision, whose status is carried by the FROZEN_DECISIONS.md row and the audit report that established them; forcing the rolling handoff to restate them would produce ceremonial prose rather than checkable prose. The claims NOT listed below are the ones the current handoff is actively carrying -- contested, critical-risk, or under live remediation -- and they must be stated where they are current. A claim added to CLAIM_REGISTRY.jsonl is required by default until someone writes down here why it is not.",
+  "claims": {
+   "exempt": [
     {
-      "fact_id": "hook_fixture_count",
-      "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
-      "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
-      "value": 39,
-      "as_of_commit": "07e3507",
-      "prior": [
-        {
-          "value": 35,
-          "as_of_commit": "ed7bc49",
-          "note": "D-067 seal. The frozen D-067 row records 35 because that was the true count at sealing; it must not be refreshed."
-        },
-        {
-          "value": 12,
-          "as_of_commit": "b28ea0b",
-          "note": "D-058 run-identity lease repair."
-        }
-      ],
-      "assertions": [
-        {
-          "file": ".agent-harness/context/SHARED_CONTEXT.md",
-          "line_contains": "Q-HOOK-01 remediation",
-          "value_regex": "(\\d+) hook tests",
-          "role": "current",
-          "note": "Controlling Q-table row."
-        },
-        {
-          "file": "docs/harness/VALIDATION_LEDGER.md",
-          "line_contains": "D-067 admission binding",
-          "value_regex": "(\\d+) hook fixtures",
-          "role": "current",
-          "note": "Live ledger row for the D-067 validation."
-        },
-        {
-          "file": "docs/harness/VALIDATION_LEDGER.md",
-          "line_contains": "D-067 admission binding",
-          "value_regex": "Hooks `(\\d+)/\\d+`",
-          "role": "current",
-          "note": "Result cell of the same ledger row."
-        },
-        {
-          "file": "docs/harness/VALIDATION_LEDGER.md",
-          "line_contains": "D-067 admission binding",
-          "value_regex": "(\\d+) at the D-067 seal",
-          "role": "historical",
-          "note": "Dated back-reference inside the live row; must cite its commit."
-        },
-        {
-          "file": ".agent-harness/context/FROZEN_DECISIONS.md",
-          "line_contains": "| D-067 |",
-          "value_regex": "(\\d+) hook fixtures",
-          "role": "frozen",
-          "pinned_to_commit": "ed7bc49",
-          "note": "Frozen row: pinned to the seal-time count, never refreshed."
-        },
-        {
-          "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
-          "line_contains": "Tests:",
-          "value_regex": "\\*\\*(\\d+) pass\\*\\*",
-          "role": "current",
-          "note": "Report prose. This is the surface that contradicted itself (F-D065-05 class)."
-        },
-        {
-          "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
-          "line_contains": "tests: 12 ->",
-          "value_regex": "tests: 12 -> (\\d+)",
-          "role": "historical",
-          "note": "Cost block of the same report; must carry its as-of commit."
-        }
-      ]
+     "claim_id": "C-F10C1-N48",
+     "reason": "F-10C1 baseline representation claim, sealed at D-004 with its envelope frozen. Carried by the FROZEN_DECISIONS.md row, not by the rolling handoff."
+    },
+    {
+     "claim_id": "C-F10C1-ENDPOINT",
+     "reason": "F-10C1 baseline implementation claim, settled and unmoving. Its evidence is the retained crate-private solver pair, not a handoff statement."
+    },
+    {
+     "claim_id": "C-F10C1-CACHE",
+     "reason": "DEPRECATED record of a rejected geometry cache. A deprecation is a closed record; restating it in each handoff would add noise, not checkability."
+    },
+    {
+     "claim_id": "C-F10-CATALOGUE",
+     "reason": "F-10C2 nine-row catalogue claim, validated and frozen at module bytes 760a7c04. Movement would require a new decision, which would carry its own row."
+    },
+    {
+     "claim_id": "C-F10-PERF",
+     "reason": "Performance claim closed with its measured profile evidence; not part of the live independent-validation programme."
+    },
+    {
+     "claim_id": "C-F10-INDEPENDENT-POINTWISE-M1",
+     "reason": "Sealed D-027 record of a comparator that failed its M1 discriminator. A preserved failure is history and is quoted, correctly, with its original status in superseded overlays."
+    },
+    {
+     "claim_id": "C-F10-INDEPENDENT-GALERKIN-M1",
+     "reason": "Sealed D-028 record of a bounded static failure. Same preserved-failure reasoning as the pointwise comparator."
+    },
+    {
+     "claim_id": "C-F10-INDEPENDENT-MAXENT3-DESIGN",
+     "reason": "Sealed D-029 design-review rejection, closed before implementation; there is no live surface for it to be current on."
+    },
+    {
+     "claim_id": "C-F10-W3-PARTIAL",
+     "reason": "Bounded W3 derivation with an explicit ceiling, recorded in its own audit document."
+    },
+    {
+     "claim_id": "C-F10-W5-LOCALIZATION",
+     "reason": "Bounded W5 localization result, recorded in its own audit document and in the D-030 frozen row."
+    },
+    {
+     "claim_id": "C-F10-B3V2-DESIGN",
+     "reason": "PROPOSED pre-output design sealed at D-034/D-035 and failed at D-037. It is a frozen proposal, not a live status."
+    },
+    {
+     "claim_id": "C-R6-ORBIT-CHART",
+     "reason": "Bounded OWNER-A manufactured-microcase result, sealed with its lab contract."
+    },
+    {
+     "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+     "reason": "Bounded OWNER-B target-replay result on two frozen states, sealed with its replay contract."
+    },
+    {
+     "claim_id": "C-F10-ROW9-CLOSURE",
+     "reason": "Bounded discretization-repair claim sealed at D-053 with byte-identical replay; superseded overlays quote it correctly."
     }
-  ]
+   ]
+  }
+ },
+ "assertion_exemptions": [],
+ "facts": [
+  {
+   "fact_id": "hook_fixture_count",
+   "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
+   "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
+   "value": 58,
+   "as_of_commit": "PENDING_COMMIT",
+   "prior": [
+    {
+     "value": 39,
+     "as_of_commit": "07e3507",
+     "note": "D-067 round-3 regression fixtures."
+    },
+    {
+     "value": 35,
+     "as_of_commit": "ed7bc49",
+     "note": "D-067 seal. The frozen D-067 row records 35 because that was the true count at sealing; it must not be refreshed."
+    },
+    {
+     "value": 12,
+     "as_of_commit": "b28ea0b",
+     "note": "D-058 run-identity lease repair."
+    }
+   ],
+   "assertions": [
+    {
+     "file": ".agent-harness/context/SHARED_CONTEXT.md",
+     "line_contains": "Q-HOOK-01 remediation",
+     "value_regex": "(\\d+) hook tests",
+     "role": "current",
+     "note": "Controlling Q-table row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "current",
+     "note": "Live ledger row for the D-067 validation."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "current",
+     "note": "Result cell of the same ledger row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "(\\d+) at the D-067 seal",
+     "role": "historical",
+     "note": "Dated back-reference inside the live row; must cite its commit."
+    },
+    {
+     "file": ".agent-harness/context/FROZEN_DECISIONS.md",
+     "line_contains": "| D-067 |",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "frozen",
+     "pinned_to_commit": "ed7bc49",
+     "note": "Frozen row: pinned to the seal-time count, never refreshed."
+    },
+    {
+     "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+     "line_contains": "Tests:",
+     "value_regex": "\\*\\*(\\d+) pass\\*\\*",
+     "role": "current",
+     "note": "Report prose. This is the surface that contradicted itself (F-D065-05 class)."
+    },
+    {
+     "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+     "line_contains": "tests: 12 ->",
+     "value_regex": "tests: 12 -> (\\d+)",
+     "role": "historical",
+     "note": "Cost block of the same report; must carry its as-of commit."
+    }
+   ]
+  }
+ ]
 }
