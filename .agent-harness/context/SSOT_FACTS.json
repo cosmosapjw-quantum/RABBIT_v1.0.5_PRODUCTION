@@ -102,7 +102,7 @@
    "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
    "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
    "value": 102,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "a9db6b2",
    "prior": [
     {
      "value": 74,
