@@ -48,6 +48,42 @@ started without a new explicit instruction.
 
 ## 2026-07-29 D-066 durability and lane-grant overlay (controlling)
 
+### Gate board (authoritative statuses restated from GATE_REGISTRY.json)
+
+Added at D-070. Before this, the controlling overlay said only "the board remains
+6 PASS / 2 FAIL" without naming a single gate, so three gates and seven claims had
+no checkable statement anywhere current. `check_ssot_consistency.py` now requires
+every gate and every non-exempt claim to be stated where it is current, and fails
+closed when one is not.
+
+| Gate | Status | Basis |
+|---|---|---|
+| `G-F10C1-RADIAL` | PASS | frozen direct/five-profile envelope |
+| `G-F10C1-REGRESSION` | PASS | lint-fixed retained tree |
+| `G-F10-PERFORMANCE` | PASS | measured whole-endpoint reduction |
+| `G-F10-CATALOGUE` | PASS | nine rows execute with rowwise invariants |
+| `G-F10-INDEPENDENT-FLRW` | FAIL | D-065: no evolved tail enclosure, checkpoint full states, or spatial/tail holdout |
+| `G-F10-COVARIANCE-METROLOGY` | PASS | matched family / module-byte ceiling only |
+| `G-F10-SCOPE` | PASS | F-10 fence holds; downstream authority closed |
+| `G-HARNESS-INTEGRITY` | FAIL | D-065: no exact agent-to-assignment binding; fail-open lease-write fallback |
+
+### Claim board
+
+| Claim | Status |
+|---|---|
+| `C-F10-INDEPENDENT` | IMPLEMENTED |
+| `C-HARNESS-INTEGRITY` | IMPLEMENTED |
+| `C-F10-COVARIANCE-METROLOGY` | VALIDATED |
+| `C-F10-METROLOGY-R3` | VALIDATED |
+| `C-F10-TRAJECTORY-R2` | IMPLEMENTED |
+| `C-F10-SCOPE` | IMPLEMENTED |
+| `C-F10-FULL-AUTHORITY` | FORBIDDEN |
+
+Fourteen further registered claims are closed records whose status is carried by
+their `FROZEN_DECISIONS` row and audit report; they are listed with written
+reasons in `SSOT_FACTS.json` under `coverage_policy.claims.exempt`. Anything added
+to the claim registry later is required here until someone writes down why not.
+
 - D-066 changes no gate. The board remains **6 PASS / 2 FAIL** as adjudicated by
   D-065. It commits the D-065 audit and its run evidence durably, and records the
   owner grant of 2026-07-29 authorising three bounded lanes with gate
@@ -1617,7 +1653,14 @@ with limits because it closes the declared N48 radial envelope with durable
 falsifiers and reuses existing solver/report/ledger surfaces; it does not close
 F-10C.
 
-## Next action
+## Next action as of D-051 (HISTORICAL — superseded by the controlling overlay at the top of this file)
+
+This section was last updated at D-051 and describes the D-044--D-051 situation.
+It is retained as a record and is **not** current guidance: every gate status,
+owner grant, and "next step" below has been superseded. For the live board and the
+current next action, read `## Current status` and the topmost `(controlling)`
+overlay above. Statements here such as `G-F10C1-REGRESSION` staying FAIL were true
+when written and were superseded within this same section by D-049--D-051.
 
 D-044 closed the external open-breakthrough intake as `PROVENANCE_FAIL`
 (`DO_NOT_REOPEN` for those exact bytes); the external prompt chain is

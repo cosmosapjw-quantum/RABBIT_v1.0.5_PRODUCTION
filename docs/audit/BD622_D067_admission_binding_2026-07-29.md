@@ -169,6 +169,9 @@ rather than under `results/`, because it was never admitted.
 runtime_behavior_changed: yes -- harness only
 physics_behavior_changed: no
 production_source_lines_changed: 0
-tests: 12 -> 35
-reviews: 3 (2 blind round-1 axes + 1 adversarial round-2), all FAIL, all acted on
+tests: 12 -> 35 at the seal `ed7bc49`; -> 39 at `07e3507`, which added four
+  regression fixtures for the three defects the round-3 review found. The
+  frozen D-067 row records 35 because that was the true count at sealing.
+reviews: 4 reviewer runs across 3 rounds (2 blind round-1 axes, 1 adversarial
+  round-2, 1 post-fix round-3), all FAIL, all acted on
 ```

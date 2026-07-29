@@ -4,6 +4,8 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
+from pathlib import Path
 
 from _harness import (
     active_run_id,
@@ -260,6 +262,84 @@ def main() -> None:
                     f"agent: {run_dir.name}/{aid}"
                 )
 
+    # D-070: SSOT semantic consistency. The structural hashes above prove the
+    # context files are unchanged since the pack was built; they say nothing
+    # about whether those files agree with each other. F-D065-05 was exactly
+    # that gap -- the gate registry recorded PASS while the prose surfaces still
+    # said FAIL, and no machine check existed. Run it as a subprocess rather
+    # than importing it: it is a large fail-closed checker with its own
+    # regression suite, and keeping the two concerns in separate processes means
+    # a change to one cannot quietly alter the other's verdict.
+    # Applicability is decided by the authoritative registry, not by a flag. A
+    # synthetic harness built by a fixture has no gate registry and nothing to be
+    # inconsistent with; the real project always does. The one way that could
+    # become a bypass -- deleting the registry to silence the check -- is closed
+    # just below, because a tracked deletion is itself an error.
+    registry = harness / "context" / "GATE_REGISTRY.json"
+    ssot_applicable = registry.is_file()
+    ssot_status = "ok" if ssot_applicable else "not applicable (no gate registry)"
+    if not ssot_applicable:
+        try:
+            tracked = subprocess.run(
+                ["git", "ls-files", "--error-unmatch", "--", str(registry.relative_to(repo))],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except OSError as exc:
+            errors.append(
+                "Could not determine whether the gate registry is tracked "
+                f"({exc.__class__.__name__}); git is required for validation."
+            )
+        else:
+            if tracked.returncode == 0:
+                errors.append(
+                    "Gate registry is tracked in git but missing from the working "
+                    "tree; the SSOT consistency check cannot be disabled by "
+                    "deleting its input."
+                )
+
+    ssot = Path(__file__).resolve().parent / "check_ssot_consistency.py"
+    if not ssot_applicable:
+        pass
+    elif not ssot.is_file():
+        errors.append(f"SSOT consistency checker is missing: {ssot.name}")
+    else:
+        try:
+            completed = subprocess.run(
+                [sys.executable, str(ssot)],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except OSError as exc:
+            # Fail closed: an unrunnable consistency check is not a passed one.
+            errors.append(
+                "SSOT consistency check could not run "
+                f"({exc.__class__.__name__}); it is required for validation."
+            )
+        else:
+            if completed.returncode != 0:
+                try:
+                    payload = json.loads(completed.stdout)
+                except json.JSONDecodeError:
+                    errors.append(
+                        "SSOT consistency check failed and its output was not "
+                        f"readable JSON (exit {completed.returncode})."
+                    )
+                else:
+                    reported = payload.get("errors")
+                    if not isinstance(reported, list) or not reported:
+                        errors.append(
+                            "SSOT consistency check exited "
+                            f"{completed.returncode} but reported no errors; "
+                            "treating the disagreement itself as a failure."
+                        )
+                    else:
+                        errors.extend(f"SSOT: {entry}" for entry in reported)
+
     if errors:
         print(json.dumps({"ok": False, "errors": errors}, indent=2))
         raise SystemExit(1)
@@ -271,6 +351,7 @@ def main() -> None:
                 "active_run": active,
                 "open_admissions": open_admissions,
                 "pending_results": pending_results,
+                "ssot_consistency": ssot_status,
             },
             indent=2,
         )

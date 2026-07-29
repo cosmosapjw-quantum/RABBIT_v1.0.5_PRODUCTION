@@ -26,6 +26,17 @@ linked from canonical docs. Start from these anchors:
   [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
 - D-065 adversarial audit of the D-058--D-064 remediation:
   [BD622_D065_remediation_adversarial_audit_2026-07-29.md](BD622_D065_remediation_adversarial_audit_2026-07-29.md)
+- D-070 Part A evidence closure and SSOT integrity machinery (four fail-closed
+  checkers; mixed-model panel returned 5/5 FAIL and all seven confirmed findings
+  were fixed; no gate movement):
+  [BD622_D070_evidence_closure_2026-07-29.md](BD622_D070_evidence_closure_2026-07-29.md)
+- D-069 independent trajectory r4 contract (frozen before any output byte;
+  full-domain norms, evolved `y>24` enclosure, domain holdout, recomputable
+  checkpoints — execution adjudicated at D-070):
+  [BD622_D069_independent_trajectory_r4_contract_2026-07-29.md](BD622_D069_independent_trajectory_r4_contract_2026-07-29.md)
+- D-068 forward-only cost discipline and the shared trajectory core (record
+  written retrospectively at D-070; adds lines this cycle, saves on the next):
+  [BD622_D068_cost_discipline_2026-07-29.md](BD622_D068_cost_discipline_2026-07-29.md)
 - D-067 exact agent-to-assignment admission binding (harness lane; implemented
   and reviewed, adjudication deferred to D-070):
   [BD622_D067_admission_binding_2026-07-29.md](BD622_D067_admission_binding_2026-07-29.md)
