@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d070-canary-c6",
+  "agent_type": "default",
+  "last_assistant_message": "C6 canary complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D070-CANARY-C6\", \"context_version\": \"048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0\", \"status\": \"pass\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d070-canary-c6/results/A-D070-CANARY-C6.json\", \"admission_proof\": \"sha256:cd642438462651f8e2b7824219612e8dbccd9c1bf59f25cc9bde2da459941da8\"}"
+}
