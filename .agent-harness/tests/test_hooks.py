@@ -4716,6 +4716,174 @@ def test_subagentstart_clears_a_token_only_mint_that_produced_a_receipt(
 
 
 # ---------------------------------------------------------------------------
+# D-065 obligation 2, round-8 correction (F-R8-004). Round 7's own fix -- making
+# the ledger read unconditional -- changed the verdict for exactly one
+# population: an agent holding a valid, matching, `open`, right-run receipt now
+# hard-FAILs when ANY line of the run's ADMISSIONS.jsonl is malformed. An
+# identical-fixture A/B proved it (PASS at cef6f00, FAIL at 4305533) and no
+# fixture covered the interaction. The FAIL is kept, deliberately; what is
+# fixtured below is the reasoning that decided it, so a later round cannot
+# quietly downgrade it on the plausible-sounding argument that a valid receipt
+# settles the question.
+# ---------------------------------------------------------------------------
+
+
+def test_subagentstart_fails_on_a_malformed_ledger_beside_a_valid_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """The A/B case, and the three reasons the FAIL is not downgraded.
+
+    The tempting rule is that a valid, `open`, correctly-bound receipt naming
+    this exact agent and assignment is positive proof the parent admitted it,
+    and so settles the question `orphaned_mints` exists to ask. It is proof of
+    exactly that, and it still does not settle it, because that question is
+    asked per-assignment across the WHOLE run: the receipt answers it for its
+    own assignment and for no other, and an unparseable line cannot be shown
+    not to be the orphaned mint for a different one. The two controls at the
+    bottom are the load-bearing half -- one shows the orphan the downgrade
+    would hide, the other shows that passing this agent at Start would only
+    move the same refusal to after it has done the work.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    minted = _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture")
+    assert minted.returncode == 0, minted.stderr
+    token = _token_of(minted)
+    receipt = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+    assert (receipt["state"], receipt["expected_agent_id"], receipt["run_id"]) == (
+        "open",
+        "agent-fixture",
+        RUN_ID,
+    ), receipt
+
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    healthy = ledger.read_text(encoding="utf-8")
+    assert len(healthy.splitlines()) == 1, healthy
+    ledger.write_text(healthy + "{not json\n", encoding="utf-8")
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    # 1. Still fatal. "Fail closed on ambiguity" is not weakened by a receipt
+    #    that is positive evidence about one assignment out of several.
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert "line 2 is malformed" in admission, admission
+    # 2. The round-8 fix: the receipt verdict is classified first and reported
+    #    ALONGSIDE the ledger complaint rather than replaced by it. Before this,
+    #    the note said only that the ledger was broken, so an operator triaging
+    #    a wedged run could not see whether this agent was admitted at all.
+    assert "Admission receipt: AMBIGUOUS (receipt state: open, bound to " in admission
+    assert repr(ASSIGNMENT_ID) in admission, admission
+    assert "orphaned-mint check could not be evaluated" in admission, admission
+    # 3. The FAIL explains why the receipt does not clear it, in the output --
+    #    a downgrade is only honest if its reasoning is legible here.
+    assert "cannot be ruled out" in preflight, preflight
+    assert "for some other assignment" in preflight, preflight
+    assert "about that assignment and about no other" in preflight, preflight
+    assert f"Run lease: recorded for run {RUN_ID}" in context
+    assert ledger.read_text(encoding="utf-8").endswith("{not json\n"), (
+        "Start only reads; malformed ledger evidence must be preserved"
+    )
+    assert json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    ) == receipt, "Start must never mutate a receipt"
+
+    # Control A: the malformed row is the ONLY thing separating that FAIL from a
+    # PASS. Same receipt, same ledger rows, line removed -> admitted and PASS.
+    ledger.write_text(healthy, encoding="utf-8")
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: open, bound to assignment" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    # Control B: what the downgrade would hide. This needs its OWN tree, because
+    # the mint-time binding guard refuses a second mint for an agent that
+    # already holds a receipt -- the masking shape only exists when the FIRST
+    # mint is the orphaned one. Orphan A, land a good receipt for B naming the
+    # same agent (round-7 reproduction 1), then garble A's row and only A's row.
+    # It stops parsing, so `open_mints` never sees it. Were a malformed line
+    # non-fatal for a receipt-holding agent, this exact tree would be a PASS and
+    # round 7's fix would be reopened through a cheaper door: garbling one byte
+    # is easier than losing a receipt write.
+    masked = tmp_path / "masked-orphan-tree"
+    masked.mkdir()
+    make_harness(masked)
+    _git_init_bare(masked)
+    assert _mint_with_unwritable_receipt_dir(masked).returncode != 0
+    assert not _receipt_path(masked, ASSIGNMENT_ID).exists()
+    add_second_assignment(masked, SECOND_ASSIGNMENT_ID)
+    assert _admit(masked, SECOND_ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    context, _ = run_start_hook(masked, capsys)
+    assert "Admission receipt: MINT FAILED" in bootstrap_line(
+        context, "Admission receipt: "
+    ), "the orphan must be visible while its own row still parses"
+
+    masked_ledger = masked / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    rows = masked_ledger.read_text(encoding="utf-8").splitlines()
+    assert json.loads(rows[0])["assignment_id"] == ASSIGNMENT_ID, rows
+    rows[0] = "{not json"
+    masked_ledger.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    context, output = run_start_hook(masked, capsys)
+    assert "Hook preflight: FAIL" in context, (
+        "garbling the orphan's own row must not turn its FAIL into a PASS"
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+    # Control C: the wedge is not lifted by passing the agent, only postponed.
+    # Stop reads the same ledger under the per-agent lock and blocks the same
+    # agent on the same tree, so a report-but-pass Start would buy this agent
+    # hours of work and then the identical refusal.
+    ledger.write_text(healthy + "{not json\n", encoding="utf-8")
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path)))
+    write_lease(tmp_path, version)
+    blocked = run_stop_hook(tmp_path, stop_event(version, proof=token))
+    payload = json.loads(blocked.stdout)
+    assert payload["decision"] == "block", payload
+    assert "line 2 is malformed" in payload["reason"], payload["reason"]
+    assert "binding cannot be verified" in payload["reason"], payload["reason"]
+
+
+def test_subagentstart_keeps_a_fatal_receipt_verdict_when_the_ledger_is_broken(
+    tmp_path: Path, capsys
+) -> None:
+    """The second half of the round-8 ordering defect: a masked receipt FAIL.
+
+    A `consumed` receipt naming this agent is a hard Start failure on its own.
+    Returning on the ledger error before `classify_receipt_matches` ran replaced
+    that error with the ledger's -- the verdict stayed FAIL, so nothing was
+    admitted that should not have been, but the reported reason was wrong, and
+    this file has been burned before by records asserting more than the code
+    does. Both errors are now carried.
+    """
+
+    version, _ = make_harness(tmp_path)
+    write_admission(
+        tmp_path, version, state="consumed", expected_agent_id="agent-fixture"
+    )
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text("{not json\n", encoding="utf-8")
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert "Admission receipt: AMBIGUOUS (receipt state: UNUSABLE" in admission, (
+        admission
+    )
+    assert "'consumed', not 'open'" in admission, admission
+    assert "line 1 is malformed" in admission, admission
+    assert "this agent was not admitted" in preflight, preflight
+    assert "line 1 is malformed" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+
+# ---------------------------------------------------------------------------
 # The after-the-fact detectors. A live guard that is raced or bypassed leaves no
 # trace unless something reads the append-only record afterwards, so
 # `check_one_agent_one_assignment` is exercised on row sequences directly:

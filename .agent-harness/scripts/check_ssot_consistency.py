@@ -172,6 +172,88 @@ to leave an empty needle, and ``"" in line`` is always True, so one deleted
 JSON key silently switched off both the undated-superseded-value rule and the
 self-contradiction rule that depends on it.
 
+Measured, not asserted
+----------------------
+Every fact carries a ``measurement``: the mechanical derivation of its number
+from the repository. That field used to be prose. It named the exact command
+that produced the value, it was quoted in reviews as if it had been run, and it
+was never executed by anything -- it appeared once in this file, as a schema
+key. The declared hook-fixture count therefore sat two behind the real one
+while this checker printed ``{"ok": true}``, because "all the surfaces agree
+with the declaration" was being checked and "the declaration agrees with the
+repository" was not. That is the F-D065-05 shape -- a stated fact diverging
+from reality with no machine check -- recurring inside the tool built to close
+F-D065-05. So the measurement is now RUN, and the fact's ``value`` is compared
+against what it returns.
+
+EXECUTION MODEL: declarative, never a shell. A measurement is a small typed
+object with a closed vocabulary of kinds --
+
+* ``{"kind": "count_lines_matching", "path": ..., "pattern": ...}``
+  lines of a repository file matching a Python regular expression;
+* ``{"kind": "json_array_length", "path": ..., "json_path": [...]}``
+  the length of the JSON array at a path of object keys.
+
+-- and this checker executes those two operations itself. It never passes any
+string from ``SSOT_FACTS.json`` to a shell, a subprocess, ``eval`` or an
+import. The alternative was to keep the shell string and run it under
+``subprocess`` with ``shell=True``. It was rejected on four counts, and the
+usual defence of it is the weakest of the four:
+
+1. It would make this checker a NEW code-execution path for repository data.
+   The same-OS-user residual (recorded against the admission mechanism, and
+   restated in the frozen decision rows) does mean that whoever can edit
+   ``SSOT_FACTS.json`` can already run code some other way -- but "it was
+   already possible" argues for not widening it, not for widening it. This
+   script is run by hooks, by CI, and by reviewers pointing it at a branch they
+   are auditing; in every one of those contexts it is otherwise a pure reader,
+   and a pure reader is a thing you can safely run against untrusted bytes.
+   That property is worth more than the convenience of arbitrary commands.
+2. A shell string is not a measurement, it is a program, and its result depends
+   on things nothing here pins: ``PATH``, the shell dialect, the ``grep``
+   implementation and whether the pattern is BRE or ERE, the locale, and the
+   working directory. The declarative form resolves paths from the repository
+   root and compiles the pattern with Python's own engine, so it returns the
+   same number wherever it runs.
+3. ``grep -c`` exits 1 and prints ``0`` when nothing matches. A mistyped pattern
+   would therefore report the number zero rather than an error -- silence
+   presenting as data, which is the failure mode this whole file exists to
+   refuse.
+4. The vocabulary is closed, so every way of getting it wrong is enumerable and
+   is an error: an unknown ``kind``, a missing or unknown key, a path that is
+   absolute or escapes the repository, an uncompilable pattern, an unreadable
+   file, malformed JSON, a ``json_path`` that does not exist, a target that is
+   not an array. FAIL CLOSED: a measurement that cannot be run is an error and
+   never a skip, because a skipped measurement leaves the fact asserted, which
+   is precisely the state this section removes.
+
+The cost is real and is accepted: a new kind of fact needs a new kind here.
+That is the point. Adding a kind is a reviewed change to this file; adding a
+shell string is an unreviewed change to a data file.
+
+NO EXEMPTION. ``measurement`` is required on every fact -- there is no "this one
+cannot be measured" key, in the JSON or in the code. A number that cannot be
+derived mechanically from the repository is not a fact this file can keep
+honest; it is a claim, and claims belong in CLAIM_REGISTRY.jsonl with a status.
+An opt-out key would be reached for the first time it was inconvenient and
+would recreate exactly the unchecked-declaration state that this section
+closes. If a future number genuinely needs a different derivation, the change
+is a new ``kind`` with its own validation and its own fixture, which is a
+strictly smaller and more reviewable thing than a blanket escape hatch.
+
+WHAT MEASUREMENT MEANS FOR A FROZEN FACT: nothing, deliberately. The
+measurement runs exactly once per fact, against the working tree, and is
+compared against ONE number: the fact's head-of-chain ``value``. It is never
+compared against a ``prior`` entry and never against a ``frozen`` assertion.
+A frozen row records what was true at a commit that is not this working tree;
+"measuring" it here would either be meaningless or -- far worse -- would
+"correct" ``35 @ ed7bc49`` to today's count, which is the exact refresh the
+frozen role exists to forbid. Prior values and frozen rows keep the
+commit-pinned checks above and are not re-derived. Re-deriving them would mean
+reading historical blobs out of git, which trades a real property (this script
+reads the working tree and nothing else) for a check that the pin rule already
+provides.
+
 Decision inventory
 ------------------
 Every decision that has landed must be registered on both decision surfaces.
@@ -230,7 +312,7 @@ from __future__ import annotations
 import json
 import re
 from datetime import date
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from _harness import load_json, root
@@ -897,7 +979,14 @@ FACT_KEYS = {
     "prior",
     "assertions",
 }
-FACT_REQUIRED = {"fact_id", "value", "as_of_commit", "assertions"}
+FACT_REQUIRED = {"fact_id", "measurement", "value", "as_of_commit", "assertions"}
+# Closed vocabulary of measurement kinds -> the keys each one takes. Every key
+# is required; nothing is optional, so a half-written measurement is an error
+# rather than a measurement with a default silently filled in.
+MEASUREMENT_KEYS: dict[str, set[str]] = {
+    "count_lines_matching": {"kind", "path", "pattern"},
+    "json_array_length": {"kind", "path", "json_path"},
+}
 PRIOR_KEYS = {"value", "as_of_commit", "note"}
 PRIOR_REQUIRED = {"value", "as_of_commit"}
 ASSERTION_KEYS = {"file", "line_contains", "value_regex", "role", "pinned_to_commit", "note"}
@@ -930,6 +1019,168 @@ def _require_keys(
             errors.append(f"{FACTS_FILE}: {where} has an empty {key!r}.")
             ok = False
     return ok
+
+
+def describe_measurement(spec: Any) -> str:
+    """Render a measurement as the operation it is, for an error message.
+
+    Rendered from the declaration itself rather than from a second, prose copy
+    of it: a human-readable duplicate stored alongside the machine-readable one
+    is one more stated fact that can drift from reality unchecked, which is the
+    thing this file is for.
+    """
+    if not isinstance(spec, dict):
+        return f"(not a measurement: {spec!r})"
+    kind = spec.get("kind")
+    if kind == "count_lines_matching":
+        return f"count_lines_matching(path={spec.get('path')!r}, pattern={spec.get('pattern')!r})"
+    if kind == "json_array_length":
+        keys = spec.get("json_path")
+        rendered = ".".join(keys) if isinstance(keys, list) and all(
+            isinstance(key, str) for key in keys
+        ) else repr(keys)
+        return f"json_array_length(path={spec.get('path')!r}, json_path={rendered!r})"
+    return f"(unrunnable measurement of kind {kind!r})"
+
+
+def _measured_path(repo: Path, spec: dict[str, Any], where: str, errors: list[str]) -> Path | None:
+    """Resolve a measurement's target inside the repository, or error.
+
+    A measurement reads repository files and nothing else, so an absolute path
+    or one containing ``..`` is refused rather than followed.
+    """
+    rel = spec.get("path")
+    if not isinstance(rel, str) or not rel.strip():
+        errors.append(f"{FACTS_FILE}: {where} has no usable 'path'.")
+        return None
+    pure = PurePosixPath(rel)
+    if pure.is_absolute() or ".." in pure.parts:
+        errors.append(
+            f"{FACTS_FILE}: {where} names {rel!r}, which is absolute or escapes the "
+            "repository. A measurement reads repository files and nothing else."
+        )
+        return None
+    return repo / rel
+
+
+def _read_measured_file(path: Path, rel: str, where: str, errors: list[str]) -> str | None:
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        errors.append(
+            f"{FACTS_FILE}: {where} cannot be run: {rel} is unreadable "
+            f"({exc.__class__.__name__}). A measurement that cannot be run is an error, "
+            "never a skip -- a skipped measurement leaves the fact merely asserted."
+        )
+        return None
+
+
+def _count_lines_matching(
+    path: Path, spec: dict[str, Any], where: str, errors: list[str]
+) -> int | None:
+    pattern = spec.get("pattern")
+    if not isinstance(pattern, str):
+        errors.append(f"{FACTS_FILE}: {where} has a 'pattern' that is not a string.")
+        return None
+    try:
+        regex = re.compile(pattern)
+    except re.error as exc:
+        errors.append(
+            f"{FACTS_FILE}: {where} has an invalid 'pattern' ({exc}), so it cannot be run."
+        )
+        return None
+    text = _read_measured_file(path, str(spec["path"]), where, errors)
+    if text is None:
+        return None
+    return sum(1 for line in text.splitlines() if regex.search(line))
+
+
+def _json_array_length(
+    path: Path, spec: dict[str, Any], where: str, errors: list[str]
+) -> int | None:
+    keys = spec.get("json_path")
+    if (
+        not isinstance(keys, list)
+        or not keys
+        or not all(isinstance(key, str) and key.strip() for key in keys)
+    ):
+        errors.append(
+            f"{FACTS_FILE}: {where} needs a non-empty 'json_path' of object key names."
+        )
+        return None
+    rel = str(spec["path"])
+    text = _read_measured_file(path, rel, where, errors)
+    if text is None:
+        return None
+    try:
+        value: Any = json.loads(text)
+    except json.JSONDecodeError as exc:
+        errors.append(
+            f"{FACTS_FILE}: {where} cannot be run: {rel} is not valid JSON "
+            f"({exc.__class__.__name__})."
+        )
+        return None
+    walked: list[str] = []
+    for key in keys:
+        walked.append(key)
+        if not isinstance(value, dict) or key not in value:
+            errors.append(
+                f"{FACTS_FILE}: {where} cannot be run: {rel} has no {'.'.join(walked)}."
+            )
+            return None
+        value = value[key]
+    if not isinstance(value, list):
+        errors.append(
+            f"{FACTS_FILE}: {where} cannot be run: {rel} {'.'.join(keys)} is "
+            f"{type(value).__name__}, not an array."
+        )
+        return None
+    return len(value)
+
+
+def measure_fact(
+    repo: Path, fact_id: str, spec: Any, errors: list[str]
+) -> tuple[int | None, str]:
+    """Run one fact's declared measurement against the working tree.
+
+    Returns ``(value, description)``; ``value`` is None exactly when the
+    measurement could not be run, and in that case an error has been recorded.
+    Nothing here is handed to a shell, a subprocess, ``eval`` or an import: the
+    two supported kinds are performed by this function. See the module
+    docstring for why the executable-string form was rejected.
+    """
+    where = f"fact {fact_id} measurement"
+    description = describe_measurement(spec)
+    if isinstance(spec, str):
+        errors.append(
+            f"{FACTS_FILE}: {where} is a command string ({spec!r}). This checker never "
+            f"hands anything in {FACTS_FILE} to a shell; declare the measurement "
+            f"structurally instead, using one of: {', '.join(sorted(MEASUREMENT_KEYS))}."
+        )
+        return None, description
+    if not isinstance(spec, dict):
+        errors.append(
+            f"{FACTS_FILE}: {where} is not an object. Every fact must declare how it is "
+            "measured; there is no exemption."
+        )
+        return None, description
+    kind = spec.get("kind")
+    if not isinstance(kind, str) or kind not in MEASUREMENT_KEYS:
+        errors.append(
+            f"{FACTS_FILE}: {where} has kind {kind!r}, which this checker cannot run. "
+            f"Known kinds: {', '.join(sorted(MEASUREMENT_KEYS))}. An unknown kind is an "
+            "error, never a skip."
+        )
+        return None, description
+    allowed = MEASUREMENT_KEYS[kind]
+    if not _require_keys(where, spec, allowed, allowed, errors):
+        return None, description
+    path = _measured_path(repo, spec, where, errors)
+    if path is None:
+        return None, description
+    if kind == "count_lines_matching":
+        return _count_lines_matching(path, spec, where, errors), description
+    return _json_array_length(path, spec, where, errors), description
 
 
 def load_facts_document(repo: Path, errors: list[str]) -> dict[str, Any]:
@@ -1060,13 +1311,16 @@ def check_exemptions_used(
         )
 
 
-def check_facts(repo: Path, document: dict[str, Any], errors: list[str]) -> int:
+def check_facts(
+    repo: Path, document: dict[str, Any], errors: list[str]
+) -> tuple[int, dict[str, int]]:
     facts = document.get("facts")
     if not isinstance(facts, list) or not facts:
         errors.append(f"{FACTS_FILE}: no 'facts' array.")
-        return 0
+        return 0, {}
 
     checked = 0
+    measurements: dict[str, int] = {}
     for fact in facts:
         if not isinstance(fact, dict):
             errors.append(f"{FACTS_FILE}: fact entry is not an object.")
@@ -1079,6 +1333,25 @@ def check_facts(repo: Path, document: dict[str, Any], errors: list[str]) -> int:
             errors.append(f"{FACTS_FILE}: {fact_id} has no integer 'value'.")
             continue
         current_commit = str(fact["as_of_commit"]).strip()
+
+        # The declaration is compared against the repository, not merely against
+        # the other places it is written down. Only the head-of-chain `value` is
+        # measured: `prior` entries and `frozen` assertions are pinned to commits
+        # that are not this working tree, and re-deriving them here would refresh
+        # exactly what the frozen role forbids refreshing.
+        measured, measurement = measure_fact(repo, fact_id, fact.get("measurement"), errors)
+        if measured is not None:
+            measurements[fact_id] = measured
+            if measured != current:
+                errors.append(
+                    f"{FACTS_FILE}: {fact_id} declares value {current} (as of "
+                    f"{current_commit}) but measures {measured} in the working tree. "
+                    f"Measurement: {measurement}. The declaration has drifted from the "
+                    "repository -- set 'value' to the measured number, move the old "
+                    "value into 'prior' with the commit it held at, and update every "
+                    "role 'current' assertion site; or repair the repository. Do not "
+                    "touch the 'frozen' or 'historical' rows."
+                )
 
         priors: dict[int, str] = {}
         prior_entries = fact.get("prior", [])
@@ -1236,7 +1509,7 @@ def check_facts(repo: Path, document: dict[str, Any], errors: list[str]) -> int:
                     "A surface that contradicts itself at one commit cannot be resolved "
                     "by precedence."
                 )
-    return checked
+    return checked, measurements
 
 
 # --------------------------------------------------------------------------
@@ -1449,7 +1722,7 @@ def main() -> None:
                 "need to be stated."
             )
 
-    facts_checked = check_facts(repo, document, errors)
+    facts_checked, fact_measurements = check_facts(repo, document, errors)
     decisions = check_decision_inventory(repo, errors)
 
     if errors:
@@ -1467,6 +1740,7 @@ def main() -> None:
                 "claims_covered": len([c for c in claims if c in covered]),
                 "claims_coverage_exempt": len(exempt_claims),
                 "fact_assertions_checked": facts_checked,
+                "fact_measurements": fact_measurements,
                 "decisions": decisions,
             },
             indent=2,

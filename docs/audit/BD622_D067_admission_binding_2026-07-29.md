@@ -313,7 +313,7 @@ at round 4, one false justification found at round 6, and this section's own
 staleness found at round 8. None would have been caught by testing. All three were
 caught by registered adversarial review by agents that had not written the thing.
 
-Tests: **106 pass** hook fixtures (12 at D-058, 35 at the D-067 seal `ed7bc49`),
+Tests: **108 pass** hook fixtures (12 at D-058, 35 at the D-067 seal `ed7bc49`),
 full harness suite **161**. Round 8 killed 16 of 16 single-anchor mutants with
 on-topic named fixtures and found no vacuous tests by AST sweep.
 

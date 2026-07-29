@@ -89,7 +89,12 @@ that admits THIS agent for THAT assignment:
     scan found (round-7 correction; this used to sit under `if not matches:`):
       - the ledger cannot be read, or any line in it cannot be parsed as a JSON
         object -> hard FAIL, same "unprovable negative" logic as an unparseable
-        receipt file. A malformed ledger line is never silently dropped.
+        receipt file. A malformed ledger line is never silently dropped, and
+        this is fatal even for an agent holding a valid open receipt: the
+        receipt-state verdict is classified first and reported alongside the
+        ledger complaint, but it does not clear it, because the orphan question
+        below is asked per-assignment across the whole run and one receipt
+        answers it for one assignment only (round-8 correction, F-R8-004).
       - a `minted`/`reopened` row that is the *latest* for its assignment, is
         not followed by a `consumed` row for that assignment, and names this
         `agent_id` -> hard FAIL, UNLESS the admitted receipt above is for that
@@ -146,6 +151,75 @@ declines to record. `--expect-agent-id` -- which `admit_agent.py` requires unles
 `--agent-id-unknown` is passed explicitly -- avoids the over-breadth entirely,
 and Stop's per-`(run_id, agent_id)` consume lock remains the compensating control
 for what this mode gives up.
+
+ROUND-8 CORRECTION (F-R8-004): round 7's own fix changed the Start verdict for
+exactly one population, and only that one. Proved by an identical-fixture A/B at
+cef6f00 vs 4305533: an agent holding a valid, matching, `open`, right-run receipt
+got PASS on the round-6 bytes and FAIL on the round-7 bytes as soon as ANY line
+of the run's `ADMISSIONS.jsonl` was malformed, because the ledger read moved out
+from under `if not matches:`. An agent holding no receipt at all FAILs
+identically on both -- the round-6 bytes already read the ledger for it -- so
+nothing else moved.
+
+THE FAIL STANDS, and it stands for the agent holding the receipt. The tempting
+rule is that a valid, `open`, correctly-bound receipt naming this exact agent and
+assignment is positive proof that the parent admitted this agent, and so settles
+the question the orphan check exists to ask. It is proof of exactly that, and it
+still does not settle the question, for three reproduced reasons:
+
+  1. THE QUESTION IS NOT ABOUT ONE ASSIGNMENT. `orphaned_mints` is
+     per-assignment and ranges over EVERY assignment in the run. A receipt
+     admitting this agent for B is proof about B; the check's remaining question
+     is about A. Reproduced: orphan the mint for A with an unwritable admissions
+     directory, land a good receipt for B naming the SAME agent (the round-7
+     masking shape), then garble A's ledger row and only that row. The row stops
+     parsing, so `open_mints` never sees it, and on that exact tree a
+     report-but-pass rule prints `Hook preflight: PASS`. That is the round-7
+     hole reopened through a cheaper door: garbling one byte is easier than
+     losing a receipt write. An unparseable line cannot be shown to name any
+     particular assignment, so it cannot be shown NOT to be the orphan for a
+     different one -- and no narrowing fixes that, because the narrowing would
+     have to read the line the failure is that it cannot read.
+  2. THE TOKEN-ONLY ARM IS WORSE OFF STILL. An `--agent-id-unknown` row names no
+     agent, so "the agent holds an admitting receipt for the assignment in
+     question" is not merely false for it, it is not expressible: the row
+     records nobody for a receipt to be about. Garbling one reproduces the same
+     PASS, and the run-scope arm is the ONLY detection that shape has.
+  3. IT WOULD NOT UNWEDGE THE RUN, ONLY MOVE THE WEDGE PAST THE WORK.
+     `subagent_stop_validate.py` calls `conflicting_agent_assignment` inside the
+     per-agent lock on every stop; it returns `line N is malformed` and blocks --
+     the same agent, the same tree, verified. Passing that agent at Start buys it
+     hours of work and then the identical refusal, which is precisely the failure
+     reason 3 of the token-only rule above exists to prevent.
+  Nor could the downgrade be reported honestly. The only preflight fact that
+  outlives the agent is `spawn_contract.subagent_start_preflight`, which
+  `_harness.validate_result_contract` requires to equal "PASS"; a report-but-pass
+  verdict would be recorded in the durable artifact as a clean preflight, and the
+  loud note would live only in the agent's context window, which nothing audits.
+  A downgrade that is invisible in the record is a silent downgrade.
+
+What WAS defective at round 7 is the ORDERING, and that is what changed here: the
+ledger error returned before `classify_receipt_matches` ran, so the receipt
+verdict was discarded. Two consequences, both fixed by classifying first and
+reporting both facts -- an operator triaging a wedged run could not see whether
+the agent was admitted, the single most useful fact available; and a receipt that
+was ITSELF fatal (consumed, wrong-run, ambiguous) had its error replaced by the
+ledger's, so the verdict never changed direction but the stated reason was wrong.
+This module's own rule for the orphan arm -- "an already-fatal receipt verdict
+keeps its own note verbatim" -- simply was not being applied to the ledger arm.
+The receipt SCAN error is deliberately NOT merged the same way: a scan failure
+means `matches` is incomplete and there is no sound receipt verdict to report,
+whereas a ledger failure leaves the receipt scan wholly intact.
+
+One thing this is NOT is the defect that wedged a live run earlier in this chain
+(round-2 finding F-12, whose control is
+`test_live_run_with_an_open_admission_is_not_wedged`): that one refused a run
+that was entirely HEALTHY, with a legitimately in-flight open admission. This
+refuses a run whose append-only admission ledger is genuinely corrupt, and it
+names the offending line number in both the injected note and the
+`Hook preflight: FAIL` error, so repairing the one line clears it.
+`validate_harness.py` and Stop are where a corrupt ledger is otherwise
+adjudicated, and neither is weakened by anything above.
 
 This mirrors, but does not duplicate the authority of, subagent_stop_validate.py.
 Start reports what it can see before the agent has produced a result (there is
@@ -492,6 +566,17 @@ def describe_admission_receipt(
     keeps its own note verbatim -- those AMBIGUOUS/UNUSABLE strings are the
     receipt-state rules' exact output -- and the orphan is carried in ``errors``,
     which is what ``Hook preflight: FAIL -- ...`` prints.
+
+    Order matters and is now explicit (round-8, F-R8-004). The receipt is
+    classified BEFORE the ledger error is acted on, because a ledger read failure
+    leaves ``matches`` complete and its verdict sound. An unusable ledger is then
+    still a hard FAIL -- for an agent holding a valid open receipt too -- but it
+    returns BOTH the receipt verdict and the ledger complaint, and both their
+    errors, instead of replacing the former with the latter. It deliberately does
+    not run ``orphaned_mints``: over a partially parsed ledger that function's
+    "no orphans" answer would be unsound, and the returned note says so in as
+    many words. The receipt-scan error above still returns early and alone, for
+    the opposite reason: it means ``matches`` itself is incomplete.
     """
     if not ADMISSION_KEY_RE.fullmatch(agent_id or ""):
         return "not checked (agent_id is not a safe admission key)", []
@@ -512,24 +597,55 @@ def describe_admission_receipt(
     # mint for assignment A went unreported. The ledger is now consulted on
     # every path -- see the module docstring.
     ledger_rows: list[dict[str, Any]] = []
+    ledger_errors: list[str] = []
     ledger_path = harness / "runs" / active_run / "ADMISSIONS.jsonl"
     if ledger_path.is_file():
         ledger_rows, ledger_errors = read_admission_ledger(ledger_path)
-        if ledger_errors:
-            detail = "; ".join(ledger_errors)
-            return (
-                f"AMBIGUOUS (admission ledger for run {active_run!r} {detail})",
-                [
-                    f"admission ledger for run {active_run!r} is unreadable or "
-                    f"malformed ({detail}); whether a mint for agent_id="
-                    f"{agent_id!r} was ever intended cannot be ruled out"
-                ],
-            )
 
+    # Round-8 correction (F-R8-004): classify the receipt BEFORE deciding what a
+    # broken ledger means. The receipt scan already succeeded here -- only the
+    # ledger read failed -- so `matches` is complete and its verdict is sound;
+    # returning on the ledger error first threw that verdict away and reported
+    # only "the ledger is broken", which hid both the fact that this agent does
+    # hold an open receipt (the operator's fastest route to triage) and any
+    # receipt-state FAIL of its own. Ordering, not policy: the verdict below is
+    # still fatal.
     note, errors, admitted_assignment_id = classify_receipt_matches(
         matches, active_run, agent_id
     )
     receipt_verdict_is_fatal = bool(errors)
+
+    if ledger_errors:
+        # STILL FATAL, deliberately, and for an agent holding a valid open
+        # receipt too -- see the round-8 section of the module docstring for the
+        # reproduction that decided it. `orphaned_mints` is per-assignment and
+        # ranges over EVERY assignment in the run, so a receipt admitting this
+        # agent for one of them settles that one and no other; an unparseable
+        # line cannot be shown to name any particular assignment, so it cannot
+        # be shown not to be the orphaned mint for a different one. What changes
+        # here is only that both facts are now reported instead of one.
+        detail = "; ".join(ledger_errors)
+        held = (
+            f"; this agent does hold an open receipt for assignment "
+            f"{admitted_assignment_id!r}, which is positive proof about that "
+            "assignment and about no other"
+            if admitted_assignment_id
+            else ""
+        )
+        return (
+            f"AMBIGUOUS (receipt state: {note}; the admission ledger for run "
+            f"{active_run!r} is unusable ({detail}), so the orphaned-mint check "
+            "could not be evaluated over it)",
+            errors
+            + [
+                f"admission ledger for run {active_run!r} is unreadable or "
+                f"malformed ({detail}); the orphaned-mint check cannot be "
+                f"evaluated over it, so a failed mint naming agent_id="
+                f"{agent_id!r} for some other assignment cannot be ruled "
+                f"out{held}"
+            ],
+        )
+
     bound_orphans, token_only_orphans = orphaned_mints(
         ledger_rows, agent_id, admitted_assignment_id, receipts_on_disk
     )

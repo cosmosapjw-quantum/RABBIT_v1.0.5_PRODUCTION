@@ -69,7 +69,13 @@
   {
    "fact_id": "legacy_results_manifest_entry_count",
    "description": "Result artifacts pinned by digest in .agent-harness/context/LEGACY_RESULTS_MANIFEST.json. The pre-admission boundary is a CLOSED set, so this number must not move without a decision; validate_harness.py reads this value and refuses a manifest whose entries do not match it, and separately refuses one whose canonical entry digest is not LEGACY_MANIFEST_PINNED_SHA256. Growing the set therefore takes coordinated edits to the manifest, this declaration, the pinned digest in the checker, and the prose below -- rather than one commit, which is all it took before (D-070 round-5 review, finding 1).",
-   "measurement": "python3 -c \"import json;print(json.load(open('.agent-harness/context/LEGACY_RESULTS_MANIFEST.json'))['entry_count'])\"",
+   "measurement": {
+    "kind": "json_array_length",
+    "path": ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json",
+    "json_path": [
+     "entries"
+    ]
+   },
    "value": 136,
    "as_of_commit": "a1cdd8a",
    "assertions": [
@@ -99,11 +105,20 @@
   },
   {
    "fact_id": "hook_fixture_count",
-   "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
-   "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
-   "value": 106,
-   "as_of_commit": "5c474d0",
+   "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py. The measurement is run against the working tree on every check, so this number cannot drift from the file again: it sat at 106 while the file held 108 precisely because the declared measurement was prose that nothing executed. 'as_of_commit' is PENDING_COMMIT while the fixtures that produced the value are still uncommitted, and is pinned to the real hash by a follow-up commit -- the same convention the 58/74/102/106 rounds used.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_hooks.py",
+    "pattern": "^def test_"
+   },
+   "value": 108,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 106,
+     "as_of_commit": "5c474d0",
+     "note": "D-070 Part B4 round-7 obligation-2 gating. This is the value that silently drifted: two fixtures were added afterwards and the declaration was not moved, because nothing ran the measurement."
+    },
     {
      "value": 102,
      "as_of_commit": "a9db6b2",

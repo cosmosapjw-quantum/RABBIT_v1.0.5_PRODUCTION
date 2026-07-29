@@ -64,9 +64,12 @@ SHA256_RE = re.compile(r"sha256:[0-9a-f]{64}\Z")
 # two different checkers:
 #
 #   * the entry COUNT is declared in SSOT_FACTS.json, which
-#     check_ssot_consistency.py re-verifies against the manifest's own
-#     `entry_count` field and against the prose that quotes it in
-#     FROZEN_DECISIONS.md and VALIDATION_LEDGER.md;
+#     check_ssot_consistency.py now MEASURES by counting the manifest's
+#     `entries` array, not by reading its `entry_count` field back out of the
+#     same file -- that older form only proved the file equalled itself. The
+#     `entry_count` field is still bound separately, as a `current` assertion,
+#     alongside the prose that quotes the number in FROZEN_DECISIONS.md and
+#     VALIDATION_LEDGER.md;
 #   * the canonical DIGEST of the entry set is pinned here, in the checker
 #     itself, so swapping one entry for another at an unchanged count fails too.
 #

@@ -8,6 +8,14 @@ already worked -- registry-vs-prose divergence, the frozen-value rule, the
 per-file self-contradiction rule, and the correct exclusion of genuinely
 superseded overlays -- must keep working.
 
+The F-SSOT-10 section pins the newest of those defects: each fact declared the
+command that measured it, nothing ever ran that command, and the declared
+hook-fixture count therefore drifted two behind the file while the checker
+reported ok. Those fixtures require that the measurement is run, that it is run
+declaratively rather than through a shell, that a measurement which cannot be
+run is an error rather than a skip, and that it is never applied to a frozen or
+prior value.
+
 Every test builds a complete miniature SSOT corpus in a temporary git
 repository and runs the installed checker against it with ``cwd`` set there, so
 the real repository is never read or written.
@@ -69,16 +77,112 @@ def claim_registry() -> str:
     return "".join(json.dumps(row) + "\n" for row in rows)
 
 
+# The fixture corpus mirrors the real one: the measured fact counts `def test_`
+# definitions in a hook fixture file that the fixture repository actually
+# contains, so a measurement is genuinely run on every test below.
+HOOK_FIXTURE_FILE = ".agent-harness/tests/test_hooks.py"
+BASELINE_HOOK_COUNT = 39
+HOOK_MEASUREMENT: dict[str, object] = {
+    "kind": "count_lines_matching",
+    "path": HOOK_FIXTURE_FILE,
+    "pattern": "^def test_",
+}
+MANIFEST_FILE = ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json"
+
+_DEFAULT = object()
+
+
+def hook_fixture_source(count: int) -> str:
+    """A stand-in hook fixture file holding exactly `count` definitions.
+
+    NOTE FOR EDITORS: this lands under an artifact-scan root, so nothing here
+    may contain a literal decision id.
+    """
+    lines = ['"""Stand-in for the measured hook fixture file."""', ""]
+    for index in range(count):
+        lines.append("def test_fixture_%03d() -> None:" % index)
+        lines.append("    assert True")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def manifest_source(entries: int, declared: int | None = None) -> str:
+    """A manifest whose self-reported count may disagree with its array."""
+    return json.dumps(
+        {
+            "entry_count": entries if declared is None else declared,
+            "entries": [{"path": "results/r%03d.json" % index} for index in range(entries)],
+        },
+        indent=2,
+    )
+
+
+def manifest_fact(value: int, json_path: list[str] | None = None) -> dict[str, object]:
+    return {
+        "fact_id": "manifest_entry_count",
+        "measurement": {
+            "kind": "json_array_length",
+            "path": MANIFEST_FILE,
+            "json_path": json_path if json_path is not None else ["entries"],
+        },
+        "value": value,
+        "as_of_commit": "a1cdd8a",
+        "assertions": [
+            {
+                "file": MANIFEST_FILE,
+                "line_contains": "entry_count",
+                "value_regex": r"\"entry_count\": (\d+)",
+                "role": "current",
+            }
+        ],
+    }
+
+
 def facts_document(
     *,
     drop_prior_commit: bool = False,
     extra_assertions: list[dict[str, object]] | None = None,
     exemptions: list[dict[str, object]] | None = None,
     exempt_claims: list[dict[str, str]] | None = None,
+    measurement: object = _DEFAULT,
+    drop_measurement: bool = False,
+    value: int = BASELINE_HOOK_COUNT,
+    extra_facts: list[dict[str, object]] | None = None,
 ) -> str:
     prior_35: dict[str, object] = {"value": 35, "as_of_commit": "ed7bc49"}
     if drop_prior_commit:
         del prior_35["as_of_commit"]
+    fact: dict[str, object] = {
+        "fact_id": "hook_fixture_count",
+        "measurement": dict(HOOK_MEASUREMENT) if measurement is _DEFAULT else measurement,
+        "value": value,
+        "as_of_commit": "07e3507",
+        "prior": [prior_35, {"value": 12, "as_of_commit": "b28ea0b"}],
+        "assertions": [
+            {
+                "file": ".agent-harness/context/SHARED_CONTEXT.md",
+                "line_contains": "Q-HOOK-01 remediation",
+                "value_regex": r"(\d+) hook tests",
+                "role": "current",
+            },
+            {
+                "file": ".agent-harness/context/FROZEN_DECISIONS.md",
+                "line_contains": "| %s |" % EARLY,
+                "value_regex": r"(\d+) hook fixtures",
+                "role": "frozen",
+                "pinned_to_commit": "ed7bc49",
+            },
+            {
+                "file": "docs/harness/VALIDATION_LEDGER.md",
+                "line_contains": "seal back-reference",
+                "value_regex": r"(\d+) at the seal",
+                "role": "historical",
+            },
+        ]
+        + (extra_assertions or []),
+    }
+    if drop_measurement:
+        del fact["measurement"]
     document = {
         "schema_version": 1,
         "purpose": "fixture",
@@ -93,36 +197,7 @@ def facts_document(
             },
         },
         "assertion_exemptions": exemptions or [],
-        "facts": [
-            {
-                "fact_id": "hook_fixture_count",
-                "value": 39,
-                "as_of_commit": "07e3507",
-                "prior": [prior_35, {"value": 12, "as_of_commit": "b28ea0b"}],
-                "assertions": [
-                    {
-                        "file": ".agent-harness/context/SHARED_CONTEXT.md",
-                        "line_contains": "Q-HOOK-01 remediation",
-                        "value_regex": r"(\d+) hook tests",
-                        "role": "current",
-                    },
-                    {
-                        "file": ".agent-harness/context/FROZEN_DECISIONS.md",
-                        "line_contains": "| %s |" % EARLY,
-                        "value_regex": r"(\d+) hook fixtures",
-                        "role": "frozen",
-                        "pinned_to_commit": "ed7bc49",
-                    },
-                    {
-                        "file": "docs/harness/VALIDATION_LEDGER.md",
-                        "line_contains": "seal back-reference",
-                        "value_regex": r"(\d+) at the seal",
-                        "role": "historical",
-                    },
-                ]
-                + (extra_assertions or []),
-            }
-        ],
+        "facts": [fact] + (extra_facts or []),
     }
     return json.dumps(document, indent=2)
 
@@ -222,6 +297,7 @@ def repo(tmp_path: Path) -> Path:
     write(tmp_path / "docs/harness/NEXT_SESSION_PROMPT.md", NEXT_SESSION_PROMPT.format(**names))
     write(tmp_path / "docs/harness/DECISION_LOG.md", DECISION_LOG.format(**names))
     write(tmp_path / "docs/harness/VALIDATION_LEDGER.md", VALIDATION_LEDGER)
+    write(tmp_path / HOOK_FIXTURE_FILE, hook_fixture_source(BASELINE_HOOK_COUNT))
     for directory in (
         "docs/audit",
         "scripts/audit",
@@ -278,6 +354,8 @@ def test_baseline_fixture_is_clean(repo: Path) -> None:
     assert payload["claims_covered"] == 1
     assert payload["claims_coverage_exempt"] == 1
     assert payload["status_assertions_checked"] > 0
+    # The declared value was measured, not taken on trust.
+    assert payload["fact_measurements"] == {"hook_fixture_count": BASELINE_HOOK_COUNT}
 
 
 # --------------------------------------------------------------------------
@@ -825,3 +903,191 @@ def test_exemption_missing_a_field_is_an_error(repo: Path) -> None:
     write(repo / ".agent-harness/context/SSOT_FACTS.json", facts_document(exemptions=[entry]))
     messages = errors_of(repo)
     assert any("missing required key 'reason'" in m for m in messages)
+
+
+# --------------------------------------------------------------------------
+# F-SSOT-10 -- declared facts are MEASURED, not asserted.
+#
+# `measurement` named the exact command that produced each number and was never
+# run: it appeared once in the checker, as a schema key. So the declared
+# hook-fixture count sat two behind the file while the checker printed
+# `{"ok": true}` -- the F-D065-05 shape (a stated fact diverging from reality
+# with no machine check) recurring inside the tool built to close F-D065-05.
+# The measurement is now executed declaratively, never through a shell.
+# --------------------------------------------------------------------------
+
+
+def facts_and_measurement(repo: Path, **kwargs: object) -> None:
+    write(repo / ".agent-harness/context/SSOT_FACTS.json", facts_document(**kwargs))  # type: ignore[arg-type]
+
+
+def test_f_ssot_10_declared_value_that_drifted_from_the_repository_is_caught(repo: Path) -> None:
+    """The live defect: two fixtures were added and the declaration was not."""
+    write(repo / HOOK_FIXTURE_FILE, hook_fixture_source(BASELINE_HOOK_COUNT + 2))
+    messages = errors_of(repo)
+    assert any(
+        "hook_fixture_count declares value 39" in m
+        and "measures 41" in m
+        and "count_lines_matching" in m
+        and HOOK_FIXTURE_FILE in m
+        for m in messages
+    ), messages
+
+
+def test_f_ssot_10_drift_is_caught_when_the_repository_shrinks(repo: Path) -> None:
+    write(repo / HOOK_FIXTURE_FILE, hook_fixture_source(BASELINE_HOOK_COUNT - 1))
+    assert any("declares value 39" in m and "measures 38" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_prose_agreeing_with_a_wrong_declaration_is_not_enough(repo: Path) -> None:
+    """Every surface agrees; only the repository disagrees.
+
+    This is the state the checker used to call `ok: true`: it proved the
+    surfaces agreed with the declaration and never that the declaration agreed
+    with the repository.
+    """
+    facts_and_measurement(repo, value=BASELINE_HOOK_COUNT + 1)
+    edit(repo, ".agent-harness/context/SHARED_CONTEXT.md", "39 hook tests", "40 hook tests")
+    messages = errors_of(repo)
+    assert messages == [
+        message for message in messages if "measures 39 in the working tree" in message
+    ], messages
+    assert len(messages) == 1, messages
+
+
+def test_f_ssot_10_measurement_is_required_on_every_fact(repo: Path) -> None:
+    """No exemption key, in the JSON or in the code: an unmeasured fact fails."""
+    facts_and_measurement(repo, drop_measurement=True)
+    assert any("missing required key 'measurement'" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_a_shell_command_string_is_refused(repo: Path) -> None:
+    """The old prose form must not become an execution path."""
+    facts_and_measurement(repo, measurement="grep -c '^def test_' %s" % HOOK_FIXTURE_FILE)
+    messages = errors_of(repo)
+    assert any("is a command string" in m and "never hands anything" in m for m in messages), messages
+
+
+def test_f_ssot_10_unknown_measurement_kind_is_an_error(repo: Path) -> None:
+    facts_and_measurement(repo, measurement={"kind": "run_shell", "path": "x", "pattern": "y"})
+    messages = errors_of(repo)
+    assert any("has kind 'run_shell'" in m and "never a skip" in m for m in messages), messages
+
+
+def test_f_ssot_10_unknown_measurement_key_is_an_error(repo: Path) -> None:
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, shell=True))
+    assert any("measurement has unknown key(s) shell" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_missing_measurement_key_is_an_error(repo: Path) -> None:
+    spec = {key: value for key, value in HOOK_MEASUREMENT.items() if key != "pattern"}
+    facts_and_measurement(repo, measurement=spec)
+    assert any("measurement is missing required key 'pattern'" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_unreadable_measurement_target_is_an_error_not_a_skip(repo: Path) -> None:
+    """Fail closed: a measurement that cannot be run leaves the fact asserted."""
+    (repo / HOOK_FIXTURE_FILE).unlink()
+    messages = errors_of(repo)
+    assert any(
+        "cannot be run" in m and "unreadable" in m and "never a skip" in m for m in messages
+    ), messages
+
+
+def test_f_ssot_10_measurement_path_escaping_the_repository_is_refused(repo: Path) -> None:
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, path="../outside.py"))
+    assert any("escapes the repository" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_absolute_measurement_path_is_refused(repo: Path) -> None:
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, path="/etc/hostname"))
+    assert any("absolute or escapes the repository" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_invalid_measurement_pattern_is_an_error(repo: Path) -> None:
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, pattern="[unclosed"))
+    assert any("invalid 'pattern'" in m and "cannot be run" in m for m in errors_of(repo))
+
+
+# ---- what measurement means for a frozen fact: nothing, deliberately -------
+
+
+def test_f_ssot_10_frozen_row_is_not_measured_against_current_reality(repo: Path) -> None:
+    """The frozen row stays 35 while the measured reality moves to 40."""
+    write(repo / HOOK_FIXTURE_FILE, hook_fixture_source(40))
+    facts_and_measurement(repo, value=40)
+    edit(repo, ".agent-harness/context/SHARED_CONTEXT.md", "39 hook tests", "40 hook tests")
+    payload = assert_clean(repo)
+    assert payload["fact_measurements"] == {"hook_fixture_count": 40}
+    frozen = (repo / ".agent-harness/context/FROZEN_DECISIONS.md").read_text(encoding="utf-8")
+    assert "Sealed with 35 hook fixtures" in frozen
+
+
+def test_f_ssot_10_measurement_does_not_legitimise_a_refreshed_frozen_row(repo: Path) -> None:
+    """A frozen row edited to today's measured value is still an error."""
+    edit(
+        repo,
+        ".agent-harness/context/FROZEN_DECISIONS.md",
+        "Sealed with 35 hook fixtures",
+        "Sealed with %d hook fixtures" % BASELINE_HOOK_COUNT,
+    )
+    assert any("A frozen row is not refreshed" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_prior_values_are_not_measured_against_the_working_tree(repo: Path) -> None:
+    """Priors 35 and 12 differ from the measured 39 and that is not a defect."""
+    payload = assert_clean(repo)
+    assert payload["fact_measurements"]["hook_fixture_count"] == BASELINE_HOOK_COUNT  # type: ignore[index]
+    ledger = (repo / "docs/harness/VALIDATION_LEDGER.md").read_text(encoding="utf-8")
+    assert "35 at the seal `ed7bc49`" in ledger
+
+
+# ---- the JSON kind ---------------------------------------------------------
+
+
+def test_f_ssot_10_json_array_length_measurement_is_clean_when_it_agrees(repo: Path) -> None:
+    write(repo / MANIFEST_FILE, manifest_source(3))
+    facts_and_measurement(repo, extra_facts=[manifest_fact(3)])
+    payload = assert_clean(repo)
+    assert payload["fact_measurements"]["manifest_entry_count"] == 3  # type: ignore[index]
+
+
+def test_f_ssot_10_json_array_length_measures_the_array_not_its_self_report(repo: Path) -> None:
+    """A manifest that miscounts itself is caught even though every surface agrees.
+
+    The old measurement read `entry_count` back out of the same file that
+    declares it, so the number proved only that the file equalled itself.
+    """
+    write(repo / MANIFEST_FILE, manifest_source(3, declared=2))
+    facts_and_measurement(repo, extra_facts=[manifest_fact(2)])
+    messages = errors_of(repo)
+    assert any(
+        "manifest_entry_count declares value 2" in m
+        and "measures 3" in m
+        and "json_array_length" in m
+        for m in messages
+    ), messages
+
+
+def test_f_ssot_10_json_path_that_does_not_exist_is_an_error(repo: Path) -> None:
+    write(repo / MANIFEST_FILE, manifest_source(3))
+    facts_and_measurement(repo, extra_facts=[manifest_fact(3, json_path=["records"])])
+    assert any("cannot be run" in m and "has no records" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_json_path_pointing_at_a_non_array_is_an_error(repo: Path) -> None:
+    write(repo / MANIFEST_FILE, manifest_source(3))
+    facts_and_measurement(repo, extra_facts=[manifest_fact(3, json_path=["entry_count"])])
+    assert any("is int, not an array" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_malformed_json_measurement_target_is_an_error(repo: Path) -> None:
+    write(repo / MANIFEST_FILE, "{not json")
+    facts_and_measurement(repo, extra_facts=[manifest_fact(3)])
+    assert any("is not valid JSON" in m for m in errors_of(repo))
+
+
+def test_f_ssot_10_empty_json_path_is_an_error(repo: Path) -> None:
+    write(repo / MANIFEST_FILE, manifest_source(3))
+    facts_and_measurement(repo, extra_facts=[manifest_fact(3, json_path=[])])
+    assert any("non-empty 'json_path'" in m for m in errors_of(repo))
