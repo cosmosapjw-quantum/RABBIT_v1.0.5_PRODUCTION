@@ -62,11 +62,16 @@ def scrub(value: Any) -> tuple[Any, int]:
             if ALREADY_SCRUBBED.fullmatch(token):
                 return match.group(0)
             changed += 1
-            return f'{match.group(1)}{token_digest(token)}"'
+            return f"{match.group(1)}{token_digest(token)}"
 
         # re.subn counts every match, including the ones `replace` leaves alone,
         # so count the real substitutions instead or the pass is never idempotent.
-        scrubbed = re.sub(r'("admission_proof"\s*:\s*")([^"]+)"', replace, value)
+        # Tolerate escaped quoting: a HARNESS_RESULT marker embedded inside
+        # another JSON string appears as \"admission_proof\": \"token\", and a
+        # regex anchored on bare quotes misses it (F-R3-12).
+        scrubbed = re.sub(
+            r'(admission_proof\\?"\s*:\s*\\?")([^"\\]+)', replace, value
+        )
         return scrubbed, changed
     return value, 0
 
@@ -84,21 +89,41 @@ def main() -> int:
         if not run_dir.is_dir():
             print(f"scrub: no such run: {args.run}", file=sys.stderr)
             return 2
-        targets.extend(sorted(run_dir.rglob("*.json")))
+        # Every file, not just *.json: tokens also reach .log and .md evidence
+        # (D-067 round-3 review F-R3-12).
+        targets.extend(sorted(p for p in run_dir.rglob("*") if p.is_file()))
     if not targets:
         parser.error("give at least one path or --run")
 
     total = 0
+    unreadable: list[Path] = []
     for path in targets:
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            unreadable.append(path)
+            continue
+        try:
+            value = json.loads(text)
+        except json.JSONDecodeError:
+            # Not JSON: scrub the raw text, which also catches the escaped
+            # payloads a structural walk misses.
+            scrubbed_text, count = scrub(text)
+            if count:
+                path.write_text(scrubbed_text, encoding="utf-8")
+                print(f"scrubbed {count} token(s) as text: {path}")
+                total += count
             continue
         scrubbed, count = scrub(value)
         if count:
             dump_json_atomic(path, scrubbed)
             print(f"scrubbed {count} token(s): {path}")
             total += count
+    if unreadable:
+        # Silence here would read as "clean" (F-R3-12).
+        print(f"NOT SCANNED (unreadable): {len(unreadable)} file(s)", file=sys.stderr)
+        for path in unreadable:
+            print(f"  {path}", file=sys.stderr)
     print(f"total tokens scrubbed: {total}")
     return 0
 

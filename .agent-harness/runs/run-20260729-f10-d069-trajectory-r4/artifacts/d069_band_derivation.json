@@ -1,0 +1,85 @@
+{
+  "collocation_order_needed_to_cover_first_rust_node": 135.7436415499393,
+  "disclosed_state": "equilibrium f = 1/(1+exp(y)); no trajectory, no endpoint, no anchor spectrum used",
+  "purpose": "pre-freeze derivation of the D-069 T8a/T8b bands and validation of the T13 analytic tail correction",
+  "rust_rule": {
+    "nodes": 48,
+    "sum_weights": 26.752783050383314,
+    "vs_exact_M2_rel": -5.401621150369351e-09,
+    "vs_exact_M3_rel": -5.1808108136874864e-08,
+    "y_max": 22.18412259016373
+  },
+  "setups": {
+    "order48_ymax24.0": {
+      "first_node": 0.014747912970887178,
+      "last_node": 23.985252087029114,
+      "moments": {
+        "M2": {
+          "analytic_tail_fraction": 1.3106610956742153e-08,
+          "independent": 1.8030853311070438,
+          "rel_after_tail_correction": 5.401628699885919e-09,
+          "rel_raw": -7.704982318834652e-09,
+          "rust": 1.8030853449997846
+        },
+        "M3": {
+          "analytic_tail_fraction": 1.0432084682901708e-07,
+          "independent": 5.682196384211829,
+          "rel_after_tail_correction": 5.180810291882665e-08,
+          "rel_raw": -5.251274937112527e-08,
+          "rust": 5.682196682599599
+        },
+        "M4": {
+          "analytic_tail_fraction": 6.38470573944917e-07,
+          "independent": 23.330859594648842,
+          "rel_after_tail_correction": 3.188307391432943e-07,
+          "rel_raw": -3.1964003843754085e-07,
+          "rust": 23.330867052128085
+        },
+        "M5": {
+          "analytic_tail_fraction": 3.1714925538767977e-06,
+          "independent": 118.26575587553802,
+          "rel_after_tail_correction": 1.3748035412319837e-06,
+          "rel_raw": -1.7966933727464607e-06,
+          "rust": 118.2659683632196
+        }
+      },
+      "node_density_per_unit_y": 2.0
+    },
+    "order60_ymax30.0": {
+      "first_node": 0.011848151588460532,
+      "last_node": 29.98815184841154,
+      "moments": {
+        "M2": {
+          "analytic_tail_fraction": 4.99252797610401e-11,
+          "independent": 1.8030853546493655,
+          "rel_after_tail_correction": 5.401630254198153e-09,
+          "rel_raw": 5.351705079092994e-09,
+          "rust": 1.8030853449997846
+        },
+        "M3": {
+          "analytic_tail_fraction": 4.921721142238624e-10,
+          "independent": 5.682196974186831,
+          "rel_after_tail_correction": 5.180810647154033e-08,
+          "rel_raw": 5.131593439067217e-08,
+          "rust": 5.682196682599599
+        },
+        "M4": {
+          "analytic_tail_fraction": 3.728245402383218e-09,
+          "independent": 23.330874403742477,
+          "rel_after_tail_correction": 3.188307404755619e-07,
+          "rel_raw": 3.1510249387523004e-07,
+          "rust": 23.330867052128085
+        },
+        "M5": {
+          "analytic_tail_fraction": 2.290443140759286e-08,
+          "independent": 118.26612824687304,
+          "rel_after_tail_correction": 1.3748035396776714e-06,
+          "rel_raw": 1.3518990766847594e-06,
+          "rust": 118.2659683632196
+        }
+      },
+      "node_density_per_unit_y": 2.0
+    }
+  },
+  "subsupport_energy_weight_share_equilibrium": 8.894740214084245e-10
+}

@@ -219,6 +219,28 @@ def main() -> None:
                 continue
             if isinstance(row, dict) and row.get("event") == "consumed":
                 ledger_consumed[str(row.get("assignment_id"))] = row
+        # Reverse reconciliation, ledger -> result. The receipt-driven check above
+        # is defeated by `admit_agent.py --reopen`, which replaces a consumed
+        # receipt with an open one and so demotes an edited artifact to merely
+        # "pending" (D-067 round-3 review F-R3-10). The ledger is append-only, so
+        # a consume row is a permanent statement about specific bytes: once an
+        # assignment has been admitted, its result may never differ from the last
+        # row recorded for it, whatever the receipt now says.
+        for aid, row in sorted(ledger_consumed.items()):
+            result_file = run_dir / "results" / f"{aid}.json"
+            if not result_file.is_file():
+                errors.append(
+                    "Admitted result artifact is missing: "
+                    f"{run_dir.name}/{aid}"
+                )
+                continue
+            ledger_sha = "sha256:" + hashlib.sha256(result_file.read_bytes()).hexdigest()
+            if str(row.get("result_sha256")) != ledger_sha:
+                errors.append(
+                    "Result artifact differs from the bytes recorded in the "
+                    f"admission ledger: {run_dir.name}/{aid}"
+                )
+
         for aid, receipt in sorted(run_receipts.items()):
             row = ledger_consumed.get(aid)
             if row is None:

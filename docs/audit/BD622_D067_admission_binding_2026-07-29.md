@@ -37,10 +37,15 @@ D-067 moves the binding to the one party that knows it, the parent:
   writes the consumed receipt, and appends the attribution row.
 - `SubagentStart` no longer swallows a lease-write `OSError`; it emits
   `Hook preflight: FAIL` and records no lease, which `SubagentStop` then blocks.
-- `validate_harness.py` requires every result in the active run to carry a
-  consumed receipt whose `result_sha256` still matches the bytes on disk, and
-  cross-checks each consumed receipt against the committed ledger. A missing git
-  now fails validation instead of being skipped.
+- `validate_harness.py` reconciles results against the run's append-only
+  `ADMISSIONS.jsonl` in both directions: every result in the active run must
+  carry a consumed receipt whose `result_sha256` still matches the bytes on
+  disk, and every consume row in the ledger permanently pins the bytes it
+  admitted. The ledger direction is the load-bearing one, because the
+  receipt-driven check alone is cleared by `admit_agent.py --reopen`, which
+  replaces a consumed receipt with an open one. A result whose receipt is still
+  open is reported as `pending_results` rather than an error, so a live run is
+  not wedged; a missing git fails validation instead of being skipped.
 - `scrub_admission_proof.py` replaces raw tokens with their digest in retained
   event JSON, because a captured *blocked* stop would otherwise deposit a still
   valid single-use secret into committed run evidence.
@@ -62,14 +67,14 @@ What D-067 removes is *confusion*, which is what actually failed:
 | Lease-write failure | fell back to `ACTIVE_RUN` | hard Start failure, Stop blocks |
 | `ACTIVE_RUN` deleted/blanked | validation switched off | blocked while the harness dir exists |
 | Concurrent double consume | silent overwrite | `O_EXCL`, one attribution row |
-| Fabricated or post-hoc edited result | invisible | validator error |
+| Fabricated or post-hoc edited result | invisible | validator error, from the append-only ledger |
 | Deliberate forgery by a writing agent | undetected | **still possible**, recorded as a residual |
 
 The last row is the honest limit. It is stated in `admit_agent.py`, in
 `.agent-harness/README.md`, and here. Nothing in this slice should be read as a
 claim that a hostile agent cannot mis-attribute a result.
 
-## 3. Review record — two rounds, both FAIL, both acted on
+## 3. Review record — three rounds, all FAIL, all acted on
 
 Reviews ran through the new flow itself (registered assignments, minted
 receipts, real Stop-hook validation).
@@ -77,7 +82,12 @@ receipts, real Stop-hook validation).
 Round 1, two independent blind reviewers, both `fail`:
 `A-D067-REVIEW-CORRECTNESS` (11 findings) and `A-D067-REVIEW-BYPASS`
 (12 findings, 6 succeeding attacks). Round 2, `A-D067-REVIEW-R2`, `fail`,
-16 findings, judgement "obligation NOT DISCHARGED".
+16 findings, judgement "obligation NOT DISCHARGED". Round 3,
+`A-D067-REVIEW-R3`, `fail`, judged against the committed post-fix bytes: it
+verified all nine round-2 findings genuinely fixed, found three new defects
+introduced by that fix pass, and returned "PARTIALLY DISCHARGED" with the
+recommendation not to flip the gate on those bytes. Those three are fixed
+below.
 
 Findings fixed after round 1: livelock on resumed agents (acceptance consumed
 the lease, so a re-stop could never succeed — a regression this slice
@@ -86,6 +96,17 @@ introduced); non-atomic single-use; `ACTIVE_RUN`-deletion bypass; missing
 results and fail-open on missing git; symlinked result path; four-vs-five field
 contract divergence across `AGENTS.md`, `.agent-harness/README.md`, the skill,
 the session hook, and `new_assignment.py`.
+
+Findings fixed after round 3 (all three were introduced by the round-2 fix
+pass, and all are confusion-class, not the stated residual): `--reopen` cleared
+the post-hoc-edit detector by demoting an edited artifact to `pending_results`,
+now closed by the reverse ledger reconciliation; the stop hook wrote the receipt
+before the ledger, so a failed append left a consumed receipt with no
+attribution row and the retry was then accepted, now ledger-first with the claim
+released on failure; `repo_root()` degrading to cwd could make the harness look
+uninstalled and switch every check off, now also checked next to the hook file;
+plus the agent binding is required rather than conventional, and the scrubber
+covers non-JSON and escaped payloads and reports what it could not read.
 
 Findings fixed after round 2: the idempotent re-stop guard defaulted a missing
 `result_sha256` to the current one, so planting a claim file yielded an accepted
@@ -97,10 +118,17 @@ modifications; two false claims in the `admit_agent.py` docstring about token
 secrecy; and a concurrency test that ran nothing concurrently because
 `communicate()` in a loop serialises the children.
 
-Tests: **35 pass** (was 12), including same-run substitution, receipt-write
+Tests: **39 pass** (was 12), including same-run substitution, receipt-write
 failure, lease-write failure, planted claim, replayed receipt, changed-bytes
-re-stop refusal, genuine four-process concurrency, ledger cross-check, and
-scrubber idempotence.
+re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
+idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper
+detector, a consume-side ledger failure leaving the receipt open, and the
+required agent binding.
+
+Three review rounds have now each found real defects, two of them regressions
+introduced by the previous round's fixes. That is the honest headline: this
+mechanism took four passes to stabilise, and the D-070 adjudicator should weigh
+that rather than the final green suite alone.
 
 ## 4. Live canaries
 

@@ -885,6 +885,8 @@ def test_admit_agent_mints_single_use_receipt(tmp_path: Path) -> None:
         str(HARNESS_SCRIPTS / "admit_agent.py"),
         "--assignment-id",
         ASSIGNMENT_ID,
+        "--expect-agent-id",
+        "agent-fixture",
     ]
     minted = subprocess.run(
         command, cwd=tmp_path, text=True, capture_output=True, check=False
@@ -1117,6 +1119,8 @@ def test_admit_agent_fails_closed_when_ledger_cannot_be_written(
                 str(HARNESS_SCRIPTS / "admit_agent.py"),
                 "--assignment-id",
                 ASSIGNMENT_ID,
+                "--expect-agent-id",
+                "agent-fixture",
             ],
             cwd=tmp_path,
             text=True,
@@ -1209,6 +1213,163 @@ def test_validate_harness_cross_checks_the_admission_ledger(tmp_path: Path) -> N
     payload = validate()
     assert payload["ok"] is False
     assert any("no admission ledger" in error for error in payload["errors"])
+
+
+def _validate(tmp_path: Path) -> dict:
+    completed = subprocess.run(
+        [sys.executable, str(HARNESS_SCRIPTS / "validate_harness.py")],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    return json.loads(completed.stdout)
+
+
+def _minimal_run_plan(tmp_path: Path, version: str) -> None:
+    write_json(
+        tmp_path / f".agent-harness/runs/{RUN_ID}/RUN_PLAN.json",
+        {
+            "context_version": version,
+            "budget": {"max_concurrent": 1, "max_total": 4, "max_depth": 1},
+        },
+    )
+
+
+def test_reopen_cannot_clear_the_tamper_detector(tmp_path: Path) -> None:
+    """`--reopen` must not launder an edited artifact into `pending_results`.
+
+    The receipt-driven check alone is defeated by replacing a consumed receipt
+    with an open one; the append-only ledger is what makes an admitted digest a
+    permanent statement (D-067 round-3 review F-R3-10).
+    """
+
+    version, _ = make_harness(tmp_path)
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    _minimal_run_plan(tmp_path, version)
+    result_file = tmp_path / RESULT_PATH
+    write_json(result_file, valid_result(version, assignment_sha256(tmp_path)))
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version)
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+    assert _validate(tmp_path)["ok"] is True
+
+    edited = valid_result(version, assignment_sha256(tmp_path))
+    edited["commands"] = ["fixture", "edited after admission"]
+    write_json(result_file, edited)
+    assert _validate(tmp_path)["ok"] is False
+
+    reopened = subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            ASSIGNMENT_ID,
+            "--expect-agent-id",
+            "agent-fixture",
+            "--reopen",
+            "--reason",
+            "round-3 fixture",
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    assert any(
+        "differs from the bytes recorded in the admission ledger" in error
+        for error in payload["errors"]
+    ), payload["errors"]
+
+
+def test_consume_ledger_failure_leaves_the_receipt_open(tmp_path: Path) -> None:
+    """A failed ledger append must not yield an accepted, unattributed result."""
+
+    version, _ = make_harness(tmp_path)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    receipt = write_admission(tmp_path, version)
+    run_dir = tmp_path / ".agent-harness/runs" / RUN_ID
+    run_dir.chmod(0o500)
+    try:
+        blocked = run_stop_hook(tmp_path, stop_event(version))
+    finally:
+        run_dir.chmod(0o700)
+    assert json.loads(blocked.stdout)["decision"] == "block"
+    assert json.loads(receipt.read_text(encoding="utf-8"))["state"] == "open"
+    assert not receipt.with_name(receipt.name + ".claim").exists()
+    # The retry now succeeds and produces exactly one attribution row.
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+    ledger = (run_dir / "ADMISSIONS.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len([r for r in ledger if json.loads(r)["event"] == "consumed"]) == 1
+
+
+def test_admit_agent_requires_an_agent_binding(tmp_path: Path) -> None:
+    version, _ = make_harness(tmp_path)
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    base = [
+        sys.executable,
+        str(HARNESS_SCRIPTS / "admit_agent.py"),
+        "--assignment-id",
+        ASSIGNMENT_ID,
+    ]
+    refused = subprocess.run(
+        base, cwd=tmp_path, text=True, capture_output=True, check=False
+    )
+    assert refused.returncode != 0
+    assert "--expect-agent-id is required" in refused.stderr
+    allowed = subprocess.run(
+        base + ["--agent-id-unknown"], cwd=tmp_path, text=True,
+        capture_output=True, check=False,
+    )
+    assert allowed.returncode == 0, allowed.stderr
+    receipt = json.loads(
+        (tmp_path / ".agent-harness/admissions" / RUN_ID / f"{ASSIGNMENT_ID}.json")
+        .read_text(encoding="utf-8")
+    )
+    assert receipt["expected_agent_id"] == ""
+    assert version
+
+
+def test_scrubber_reaches_escaped_and_non_json_evidence(tmp_path: Path) -> None:
+    version, _ = make_harness(tmp_path)
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+    logs = tmp_path / ".agent-harness/runs" / RUN_ID / "raw_logs"
+    logs.mkdir(parents=True, exist_ok=True)
+    # A marker embedded inside another JSON string: escaped quoting.
+    write_json(logs / "nested.json", {"transcript": json.dumps(stop_event(version))})
+    (logs / "console.log").write_text(
+        'HARNESS_RESULT: {"admission_proof":"' + ADMISSION_TOKEN + '"}\n',
+        encoding="utf-8",
+    )
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "scrub_admission_proof.py"),
+            "--run",
+            RUN_ID,
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    for name in ("nested.json", "console.log"):
+        assert ADMISSION_TOKEN not in (logs / name).read_text(encoding="utf-8"), name
+    digest = hashlib.sha256(ADMISSION_TOKEN.encode("utf-8")).hexdigest()
+    assert digest in (logs / "console.log").read_text(encoding="utf-8")
 
 
 def test_claim_holder_blocks_a_second_agent(tmp_path: Path) -> None:

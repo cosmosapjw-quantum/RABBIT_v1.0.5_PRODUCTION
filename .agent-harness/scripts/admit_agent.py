@@ -83,14 +83,24 @@ def main() -> None:
     parser.add_argument(
         "--expect-agent-id",
         default="",
-        help="Bind the receipt to this agent_id as well as to the token. Use it "
-        "whenever the parent chooses the id; SubagentStop then rejects any other "
-        "agent even if it holds the token.",
+        help="Bind the receipt to this agent_id as well as to the token. "
+        "SubagentStop then rejects any other agent even if it holds the token. "
+        "Required unless --agent-id-unknown is passed.",
+    )
+    parser.add_argument(
+        "--agent-id-unknown",
+        action="store_true",
+        help="Mint without an agent_id binding, for runtimes that assign the id "
+        "themselves and do not expose it before the spawn. The receipt is then "
+        "bound to the token only, which is weaker: record why in the run.",
     )
     parser.add_argument(
         "--reopen",
         action="store_true",
-        help="Replace an existing receipt for this assignment. Requires --reason.",
+        help="Replace an existing receipt for this assignment. Requires --reason. "
+        "Note: the append-only ledger keeps the previous consume row, so until "
+        "the reopened assignment is consumed again, validate_harness reports any "
+        "result whose bytes differ from that row.",
     )
     parser.add_argument("--reason", default="")
     args = parser.parse_args()
@@ -104,6 +114,15 @@ def main() -> None:
     expect_agent_id = str(args.expect_agent_id or "")
     if expect_agent_id and not ADMISSION_KEY_RE.fullmatch(expect_agent_id):
         fail(f"expect-agent-id {expect_agent_id!r} has an invalid form")
+    if not expect_agent_id and not args.agent_id_unknown:
+        # The D-065 obligation is an agent-to-assignment binding. Leaving the
+        # agent half to convention is how it quietly degrades to token-only
+        # (D-067 round-3 review F-R3-15).
+        fail(
+            "--expect-agent-id is required so the receipt binds an agent, not "
+            "just a token. Pass --agent-id-unknown only when the runtime assigns "
+            "the agent id itself and does not expose it before the spawn."
+        )
 
     active = active_run_id(repo)
     run_id = str(args.run_id or active)
