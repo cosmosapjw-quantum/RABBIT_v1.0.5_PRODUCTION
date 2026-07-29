@@ -83,7 +83,15 @@ def main() -> None:
         # "Installed" is the presence of the harness directory itself, not of any
         # single file inside it: keying off one file just relocates the bypass
         # to deleting that file (D-067 round-2 review F-6).
-        if harness.is_dir():
+        #
+        # It is also checked next to this hook file, not only under the resolved
+        # root. `repo_root()` degrades to cwd when git is unavailable, so running
+        # from outside the repo would otherwise leave `harness` pointing at a
+        # non-existent directory and switch every check off -- the same bypass
+        # relocated once more (round-3 review F-R3-13). The cwd-derived path
+        # still wins for resolution, which is what keeps fixtures isolated.
+        installed_here = Path(__file__).resolve().parents[2] / ".agent-harness"
+        if harness.is_dir() or installed_here.is_dir():
             block(
                 "The agent harness is installed but ACTIVE_RUN is missing or empty "
                 "and this agent has no Start-time lease, so no result can be bound "
@@ -419,17 +427,12 @@ def main() -> None:
 
     consumed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     try:
-        write_json_atomic(
-            admission_file,
-            {
-                **admission,
-                "state": "consumed",
-                "consumed_at": consumed_at,
-                "consumed_by_agent_id": event_agent_id,
-                "consumed_by_agent_type": event_agent_type,
-                "result_sha256": result_sha,
-            },
-        )
+        # Ledger first, receipt second -- the same ordering admit_agent.py uses.
+        # With the receipt written first, a failed ledger append left a consumed
+        # receipt with no attribution row, and the retry then took the idempotent
+        # path and was accepted (D-067 round-3 review F-R3-11). Written this way,
+        # a failed append leaves the receipt open and the retry re-consumes it.
+        #
         # Durable attribution: the receipt directory is gitignored working state,
         # so the record that survives into committed evidence is this append-only
         # ledger inside the run directory (D-067 review F-D067-07).
@@ -451,7 +454,21 @@ def main() -> None:
                 )
                 + "\n"
             )
+        write_json_atomic(
+            admission_file,
+            {
+                **admission,
+                "state": "consumed",
+                "consumed_at": consumed_at,
+                "consumed_by_agent_id": event_agent_id,
+                "consumed_by_agent_type": event_agent_type,
+                "result_sha256": result_sha,
+            },
+        )
     except OSError as exc:
+        # Release the claim so the retry is not wedged behind a half-finished
+        # consume that never produced an attribution row.
+        claim_file.unlink(missing_ok=True)
         block(
             f"Admission receipt could not be consumed ({exc.__class__.__name__}); "
             "refusing to accept a result that cannot be attributed to this agent."
