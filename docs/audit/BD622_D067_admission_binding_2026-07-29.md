@@ -50,7 +50,7 @@ D-067 moves the binding to the one party that knows it, the parent:
   **As sealed, both halves of that sentence were narrower than written** — the
   forward check covered only the active run, and the ledger was last-row-wins so
   a later consume row silently superseded an earlier one. Both were corrected at
-  D-070; see the round-4 correction under §2. Read the two claims as scoped to
+  D-070; see the round-4 correction in §2. Read the two claims as scoped to
   what the code did, not to what this paragraph said.
 - `scrub_admission_proof.py` replaces raw tokens with their digest in retained
   event JSON, because a captured *blocked* stop would otherwise deposit a still
@@ -72,7 +72,8 @@ What D-067 removes is *confusion*, which is what actually failed:
 | Overlapping-main pointer move | D-058 handled | still handled |
 | Lease-write failure | fell back to `ACTIVE_RUN` | hard Start failure, Stop blocks |
 | `ACTIVE_RUN` deleted/blanked | validation switched off | blocked while the harness dir exists |
-| Concurrent double consume | silent overwrite | `O_EXCL`, one attribution row |
+| Concurrent double consume, same assignment | silent overwrite | `O_EXCL` claim, one attribution row |
+| Concurrent double consume, one agent across two assignments | **accepted, 126/200 trials** | per-`(run, agent_id)` `flock(LOCK_EX\|LOCK_NB)` held across the consume; 0/200 |
 | Fabricated or post-hoc edited result | invisible | validator error — but see the D-070 correction below: as sealed here this held for the ACTIVE run only |
 | Deliberate forgery by a writing agent | undetected | **still possible**, recorded as a residual |
 
@@ -226,61 +227,95 @@ The table's last row remains the honest limit. It is stated in `admit_agent.py`,
 in `.agent-harness/README.md`, and here. Nothing in this slice should be read as a
 claim that a hostile agent cannot mis-attribute a result.
 
-## 3. Review record — four rounds, all FAIL, all acted on
+### D-070 round-7/8 correction — what the mechanism actually is at HEAD
 
-Reviews ran through the new flow itself (registered assignments, minted
-receipts, real Stop-hook validation).
+Round 8 found that this report no longer described the code, and rated that a
+FAIL rather than an advisory note, because the report is a required input to the
+review and is what a gate decision reads. Three of this chain's defects were in
+the record. That judgement is accepted. This section is the correction.
 
-Round 1, two independent blind reviewers, both `fail`:
-`A-D067-REVIEW-CORRECTNESS` (11 findings) and `A-D067-REVIEW-BYPASS`
-(12 findings, 6 succeeding attacks). Round 2, `A-D067-REVIEW-R2`, `fail`,
-16 findings, judgement "obligation NOT DISCHARGED". Round 3,
-`A-D067-REVIEW-R3`, `fail`, judged against the committed post-fix bytes: it
-verified all nine round-2 findings genuinely fixed, found three new defects
-introduced by that fix pass, and returned "PARTIALLY DISCHARGED" with the
-recommendation not to flip the gate on those bytes. Those three are fixed
-below.
+**Obligation 1 — the binding was not atomic, and this report said `O_EXCL`.**
+Until round 6 the only atomic primitive was the per-assignment `O_EXCL` claim,
+so two assignments took two different claim files and `conflicting_agent_assignment`
+was a plain check-then-act read underneath. One `agent_id` consuming two
+assignments concurrently was accepted in **126 of 200 trials**, reached with no
+forgery through the supported CLI, because the mint guard is keyed on
+`expected_agent_id` and `--agent-id-unknown` supplies none.
 
-Findings fixed after round 1: livelock on resumed agents (acceptance consumed
-the lease, so a re-stop could never succeed — a regression this slice
-introduced); non-atomic single-use; `ACTIVE_RUN`-deletion bypass; missing
-`agent_id` binding; gitignored attribution; validator blind to fabricated
-results and fail-open on missing git; symlinked result path; four-vs-five field
-contract divergence across `AGENTS.md`, `.agent-harness/README.md`, the skill,
-the session hook, and `new_assignment.py`.
+What closes it is a per-`(run, agent_id)` `flock(LOCK_EX|LOCK_NB)` at
+`.agent-harness/admissions/<run>/.agent-locks/<agent>.lock`, acquired **before**
+the ledger read it guards and held across the whole consume. `flock` rather than
+a second lock file because the kernel releases it on process death, so "released
+on every failure path" holds structurally; `LOCK_NB` because nothing waits, so
+deadlock is impossible by construction. Round 8 measured 0/60 breaches, and 28/60
+against a mirror whose only edit replaced the `flock` call with `pass`.
 
-Findings fixed after round 3 (all three were introduced by the round-2 fix
-pass, and all are confusion-class, not the stated residual): `--reopen` cleared
-the post-hoc-edit detector by demoting an edited artifact to `pending_results`,
-now closed by the reverse ledger reconciliation; the stop hook wrote the receipt
-before the ledger, so a failed append left a consumed receipt with no
-attribution row and the retry was then accepted, now ledger-first with the claim
-released on failure; `repo_root()` degrading to cwd could make the harness look
-uninstalled and switch every check off, now also checked next to the hook file;
-plus the agent binding is required rather than conventional, and the scrubber
-covers non-JSON and escaped payloads and reports what it could not read.
+Scope, stated rather than implied: the ceiling is **per run**. One `agent_id`
+legitimately rebinding in a different run is permitted and fixture-pinned.
 
-Findings fixed after round 2: the idempotent re-stop guard defaulted a missing
-`result_sha256` to the current one, so planting a claim file yielded an accepted
-result with **no attribution record at all**; orphan receipt on ledger-append
-failure; result artifact read twice (validated bytes ≠ digested bytes); ledger
-never validated and un-force-added; a live run wedged by the result↔receipt rule
-before its Stop was dispatched; `??` porcelain entries misreported as tracked
-modifications; two false claims in the `admit_agent.py` docstring about token
-secrecy; and a concurrency test that ran nothing concurrently because
-`communicate()` in a loop serialises the children.
+**Obligation 2 — the rule is per-assignment, not the round-6 three-state rule.**
+Round 6 made Start hard-fail on an orphaned mint. Round 7 found that check was
+evaluated only inside `if not matches:`, so a single receipt for a *different*
+assignment masked a genuine orphan — a rule written as universal, implemented as
+conditional. It is now called unconditionally, and the predicate is qualified:
 
-Tests: **106 pass** (was 12), including same-run substitution, receipt-write
-failure, lease-write failure, planted claim, replayed receipt, changed-bytes
-re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
-idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper
-detector, a consume-side ledger failure leaving the receipt open, and the
-required agent binding.
+- an orphan is cleared **only** by an admitting receipt (open, correct run, bound
+  to this agent) **for that same assignment**;
+- holding a valid receipt for B is not evidence that the mint for A completed;
+- the qualification is load-bearing, not decorative — an *unqualified* universal
+  check would fail every healthy in-flight agent, because "latest mint
+  unconsumed" is also the shape of a normal admission. It ships with a
+  false-positive control fixture, and round 8 probed 18 scenarios without firing
+  one.
 
-Three review rounds have now each found real defects, two of them regressions
-introduced by the previous round's fixes. That is the honest headline: this
-mechanism took four passes to stabilise, and the D-070 adjudicator should weigh
-that rather than the final green suite alone.
+Token-only (`--agent-id-unknown`) mints carry `expected_agent_id: ""`, so no agent
+key exists to check them against. That is structural, not an oversight: at mint
+time the agent does not exist. Such rows are therefore checked at **run scope**,
+and the over-breadth is named in code and docstring rather than left silently
+unreachable — an unconsumed token-only mint with no receipt file will fail
+whichever agent starts next in that run.
+
+**The honest residual on obligation 2**, verified at round 8: if the *ledger*
+append itself fails, `admit_agent.py` exits non-zero with empty stdout and no
+token printed, and nothing on disk records the parent's intent — so Start says
+PASS. Unlike the round-6 version of this paragraph, that statement is true. The
+compensating controls are the non-zero exit at creation time, in the process that
+knows the intent, and Stop's refusal to admit any result without a matching
+receipt.
+
+## 3. Review record — eight rounds; every one found real defects
+
+Reviews ran through the new flow itself: registered assignments, minted receipts,
+real Stop-hook validation. From round 4 the panels were mixed-model
+(Opus/Sonnet/Haiku), which retires the "same-model reviews" limitation D-065
+recorded.
+
+| Round | Outcome |
+|---|---|
+| 1 | Two blind axes, both `fail`: 23 findings, 6 succeeding attacks |
+| 2 | `fail`, 16 findings, "obligation NOT DISCHARGED" |
+| 3 | `fail`, 3 findings — **all three were regressions introduced by round 2's own fix pass** |
+| 4 | 2 FAIL / 1 PASS. Two confirmed criticals: attribution covered 1 of 83 run directories, and the ledger was last-row-wins. **Also found two claims in this report that were false as written** |
+| 5 | Both `fail`. The legacy-manifest pin was laundered by a single commit; the C4 canary attestation was 286 s early |
+| 6 | Both `fail`. Obligation 1 was **not atomic** (126/200 concurrent breaches); obligation 3's receipt-write-failure fixture **did not exist**, proven by mutation; **and the justification the writer had added for obligation 2 in response to round 5 was itself false** |
+| 7 | Obligations 1 and 3 **DISCHARGED**. Obligation 2 still open (the orphan check was gated by `if not matches:`); obligation 4 stale. The regression axis returned the chain's **first clean result** — no regression, no bypass |
+| 8 | **All four obligations PASS.** Overall `fail` on one finding: this report no longer described the code. The regression axis found one fail-closed regression (a malformed ledger row denying a healthy agent), no bypass |
+
+Two patterns in that table matter more than the individual defects.
+
+**Round 3's findings were all regressions from round 2's fixes**, and round 8's
+sole regression came from round 7's fix. A fix pass in this area introduces
+defects at a measurable rate, which is why every round since has been run against
+the *committed* post-fix bytes rather than against a description of them.
+
+**Three of the defects were in the record, not the code** — two false claims found
+at round 4, one false justification found at round 6, and this section's own
+staleness found at round 8. None would have been caught by testing. All three were
+caught by registered adversarial review by agents that had not written the thing.
+
+Tests: **106 pass** hook fixtures (12 at D-058, 35 at the D-067 seal `ed7bc49`),
+full harness suite **161**. Round 8 killed 16 of 16 single-anchor mutants with
+on-topic named fixtures and found no vacuous tests by AST sweep.
 
 ## 4. Live canaries
 
@@ -289,6 +324,9 @@ that rather than the final green suite alone.
 | C1 overlapping run | Real subagent admitted for `A-D067-CANARY-C1`; a decoy run stole `ACTIVE_RUN` mid-flight; Stop dispatched afterwards | **ACCEPT** under the lease; receipt consumed with `expected_agent_id` enforced and `result_sha256` recorded |
 | C2 substitution | Real subagent admitted for `A-D067-CANARY-C2` produced a byte-valid envelope for the sibling `A-D067-CANARY-C2-VICTIM` (zero contract errors against its own assignment); that envelope was fed to Stop with C2's token | **BLOCK**: "admission_proof does not match the receipt". Victim receipt still `open`. C2's own assignment then accepted |
 | C3 lease-write failure | `leases/` made read-only, then Start and Stop dispatched | Start: `Run lease: NOT RECORDED (PermissionError)`, `Hook preflight: FAIL`. Stop: **BLOCK** |
+| C4 replacement overlapping run | Re-run after `96089f0` changed the acceptance block | **REJECTED at round 5.** Its attestation was captured 286 s BEFORE the consume, so it never proved the overlap held at the decisive instant |
+| C5 replacement overlapping run | Bracketed the consume (39 ms) against bytes frozen at `d94270f` | **REJECTED at round 7 as STALE.** It pinned `stop_hook_sha256 dc19da4d`; the round-6 pass moved HEAD to `0533da88`. It also pinned only the stop hook, while the round-7 fix changed the start hook |
+| C6 replacement overlapping run | Run against bytes ALREADY FROZEN at `d564821`; `ACTIVE_RUN` read immediately before and after the Stop dispatch in one command; BOTH hook digests pinned | **ACCEPT.** 36 ms bracket, pointer named the decoy at both ends, `consumed_by_agent_id=d070-canary-c6`, `expected_agent_id` enforced, result digest in the append-only ledger. Round 8 recomputed both digests and confirmed C6 is **not stale at HEAD** |
 
 Negative control on the validator: editing a consumed result artifact produced
 `Result artifact changed after it was admitted`, and restoring it cleared the

@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r8-regression",
+  "agent_type": "default",
+  "last_assistant_message": "Round-8 regression hunt complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R8-REGRESSION\", \"context_version\": \"048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r8/results/A-D067-R8-REGRESSION.json\", \"admission_proof\": \"sha256:c649686404aefb583f48e97dac1b1d56663818c6e582214791fe440b54807efe\"}"
+}
