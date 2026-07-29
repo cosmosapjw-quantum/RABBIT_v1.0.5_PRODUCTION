@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d069-freeze-review",
+  "agent_type": "default",
+  "last_assistant_message": "Pre-freeze review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D069-FREEZE-REVIEW\", \"context_version\": \"3c777b2ab50aa667b37369cb778bcddc3b072123a76033f1cd8399643b115cf6\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d069-freeze-review/results/A-D069-FREEZE-REVIEW.json\", \"admission_proof\": \"sha256:93fcc59c3688efa837cb253c107f5762470aa60c47d88e44730b6b908b6baa27\"}"
+}

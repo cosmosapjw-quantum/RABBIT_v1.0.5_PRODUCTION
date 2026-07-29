@@ -27,8 +27,12 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Callable, Sequence
 
+# Hard assignment, not setdefault: a driver that forgot to pin, or an inherited
+# environment that set these to something else, must not silently produce a
+# multi-threaded and therefore non-reproducible run. Drivers still pin these
+# before their own `import numpy`, because OpenBLAS reads them at init.
 for _pin in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
-    os.environ.setdefault(_pin, "1")
+    os.environ[_pin] = "1"
 
 import numpy as np
 from scipy.integrate import solve_ivp
