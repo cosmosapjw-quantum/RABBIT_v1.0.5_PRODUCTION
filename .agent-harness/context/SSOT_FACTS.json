@@ -101,9 +101,14 @@
    "fact_id": "hook_fixture_count",
    "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py.",
    "measurement": "grep -c '^def test_' .agent-harness/tests/test_hooks.py",
-   "value": 74,
-   "as_of_commit": "d94270f",
+   "value": 102,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 74,
+     "as_of_commit": "d94270f",
+     "note": "D-070 Part B2 round-5 fixes (manifest pin, carve-out, obligation-1 guards)."
+    },
     {
      "value": 58,
      "as_of_commit": "6318a79",

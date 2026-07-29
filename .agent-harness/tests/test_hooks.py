@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
+import os
 import subprocess
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
@@ -1231,20 +1234,59 @@ def test_resumed_agent_can_restop_after_acceptance(tmp_path: Path) -> None:
 
 
 def test_consumed_receipt_still_blocks_a_different_agent(tmp_path: Path) -> None:
+    """The single-use receipt check, not the result contract, must be the refusal.
+
+    Strengthened in the D-065 round-6 lane: the body asserted only
+    `decision == "block"`, and this stop is refused by `validate_result_contract`
+    anyway -- the admitted artifact names `agent-fixture` as its writer, so
+    `agent-other` fails the `agent_id` check whatever the receipt says. Deleting
+    the single-use guard therefore left the fixture green while a consumed
+    receipt admitted a second agent's result. The reason string is now pinned to
+    the receipt state that is supposed to do the refusing, and the ledger is
+    checked for the second consume row the guard exists to prevent.
+    """
+
     version, _ = make_harness(tmp_path)
     write_json(
         tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
     )
     write_lease(tmp_path, version)
-    write_admission(tmp_path, version)
+    receipt = write_admission(tmp_path, version)
     assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
     write_lease(tmp_path, version, agent_id="agent-other")
     blocked = run_stop_hook(tmp_path, stop_event(version, agent_id="agent-other"))
-    assert json.loads(blocked.stdout)["decision"] == "block"
+    payload = json.loads(blocked.stdout)
+    assert payload["decision"] == "block"
+    assert "single-use" in payload["reason"], payload["reason"]
+    assert "'consumed'" in payload["reason"], payload["reason"]
+    assert repr(ASSIGNMENT_ID) in payload["reason"], payload["reason"]
+    assert "RESULT_ENVELOPE" not in payload["reason"], (
+        "the result contract must not be what refuses this; the receipt state is"
+    )
+    # The attribution already on the record must survive the refused stop, and
+    # no second one may join it.
+    body = json.loads(receipt.read_text(encoding="utf-8"))
+    assert body["state"] == "consumed"
+    assert body["consumed_by_agent_id"] == "agent-fixture"
+    consumed = [row for row in _ledger_rows(tmp_path) if row["event"] == "consumed"]
+    assert [(row["agent_id"], row["assignment_id"]) for row in consumed] == [
+        ("agent-fixture", ASSIGNMENT_ID)
+    ], consumed
 
 
 def test_concurrent_stops_consume_receipt_once(tmp_path: Path) -> None:
-    """O_EXCL claim, not the state read, is what makes the receipt single-use."""
+    """O_EXCL claim, not the state read, is what makes the receipt single-use.
+
+    Strengthened in the D-065 round-6 lane on two counts. The losers used to be
+    judged on stdout alone, with neither stderr nor the exit status captured, so
+    a child that died on an import error produced exactly the same empty stdout
+    as one that was idempotently accepted -- the fixture could not tell a
+    working harness from a broken one. And nothing in it proved the four stops
+    ever contended for anything: on a machine that happened to serialise them,
+    every assertion still held. The deterministic contention arm at the end
+    holds the per-(run, agent_id) lock from the test process, so the mutual
+    exclusion is observed rather than hoped for.
+    """
 
     version, _ = make_harness(tmp_path)
     write_json(
@@ -1259,6 +1301,7 @@ def test_concurrent_stops_consume_receipt_once(tmp_path: Path) -> None:
             cwd=tmp_path,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
         )
         for _ in range(4)
@@ -1269,15 +1312,23 @@ def test_concurrent_stops_consume_receipt_once(tmp_path: Path) -> None:
         assert proc.stdin is not None
         proc.stdin.write(payload)
         proc.stdin.close()
-    outs = []
+    finished: list[tuple[int, str, str]] = []
     for proc in procs:
-        assert proc.stdout is not None
-        outs.append(proc.stdout.read())
+        assert proc.stdout is not None and proc.stderr is not None
+        out = proc.stdout.read()
+        err = proc.stderr.read()
         proc.wait()
+        finished.append((proc.returncode, out, err))
+    # A hook that crashed is not a hook that fell through to the idempotent
+    # path, and only the exit status and stderr can tell them apart.
+    for returncode, out, err in finished:
+        assert returncode == 0, (returncode, out, err)
+        assert err == "", err
+    outs = [out for _, out, _ in finished]
     # Timing decides how many losers see a consumed receipt (accept idempotently)
-    # versus only the claim (fail closed); both are correct. What must hold
-    # regardless is that exactly one of them wrote the attribution, and that no
-    # loser silently produced a second one.
+    # versus only the claim or the agent lock (fail closed); all are correct.
+    # What must hold regardless is that exactly one of them wrote the
+    # attribution, and that no loser silently produced a second one.
     assert any(out == "" for out in outs), outs
     for out in outs:
         if out:
@@ -1287,6 +1338,30 @@ def test_concurrent_stops_consume_receipt_once(tmp_path: Path) -> None:
     ).read_text(encoding="utf-8").splitlines()
     consumed = [line for line in ledger if json.loads(line)["event"] == "consumed"]
     assert len(consumed) == 1, ledger
+
+    # The timing-free arm. Holding the per-(run, agent_id) flock from here makes
+    # a concurrent stop by that agent observable without racing anything: it is
+    # refused while the lock is held, and admitted the moment the descriptor
+    # closes. Without this the four stops above could all have run back to back
+    # and the fixture would still have passed.
+    lock_file = _agent_lock_path(tmp_path, "agent-fixture")
+    assert lock_file.is_file(), "the consume path must have taken the agent lock"
+    held = os.open(lock_file, os.O_RDWR)
+    try:
+        fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        contended = run_stop_hook(tmp_path, stop_event(version))
+    finally:
+        os.close(held)
+    assert contended.returncode == 0, contended.stderr
+    reason = json.loads(contended.stdout)["reason"]
+    assert "Another SubagentStop for agent_id 'agent-fixture'" in reason, reason
+    assert "serialised rather than interleaved" in reason, reason
+    # Released with the descriptor, so the same stop goes through immediately
+    # afterwards and still produces no second attribution row.
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+    assert len(
+        [row for row in _ledger_rows(tmp_path) if row["event"] == "consumed"]
+    ) == 1
 
 
 def test_planted_claim_cannot_skip_attribution(tmp_path: Path) -> None:
@@ -1333,7 +1408,16 @@ def test_restop_with_changed_bytes_is_refused(tmp_path: Path) -> None:
 def test_admit_agent_fails_closed_when_ledger_cannot_be_written(
     tmp_path: Path,
 ) -> None:
-    """Receipt-write-failure fixture: no receipt may outlive a failed mint."""
+    """Ledger-append-failure fixture: no receipt may outlive a failed mint.
+
+    Named accurately in the D-065 round-6 lane; the old docstring called this
+    the receipt-write fixture, which it is not. What is chmod'ed here is the
+    *run* directory, and `admit_agent.py` writes the ledger first, so this
+    aborts in the ledger append and returns before the receipt write is ever
+    reached -- proved by the `ledger could not be appended` assertion below.
+    The receipt half lives in its own directory and has its own fixture,
+    `test_admit_agent_fails_closed_when_the_receipt_cannot_be_written`.
+    """
 
     version, _ = make_harness(tmp_path)
     subprocess.run(
@@ -3140,3 +3224,1732 @@ def test_subagentstop_fails_closed_on_unreadable_admission_ledger(
     assert "line 2 is malformed" in payload["reason"], payload["reason"]
     assert "binding cannot be verified" in payload["reason"], payload["reason"]
     assert repr(RUN_ID) in payload["reason"], payload["reason"]
+
+
+# ---------------------------------------------------------------------------
+# D-065 obligation 3, round-6 mutation finding. A mint performs TWO writes, in
+# two different directories: the append-only ledger under
+# `.agent-harness/runs/<run>/`, then the receipt under
+# `.agent-harness/admissions/<run>/`. Only the ledger one had a fixture --
+# `test_admit_agent_fails_closed_when_ledger_cannot_be_written` chmods the run
+# directory and so returns before the receipt is ever attempted -- and round 6
+# proved the gap by mutation: replacing the receipt-write `except OSError:
+# fail(...)` with `pass`, which prints a live ADMISSION_TOKEN for a receipt
+# that is not on disk, left 74 passed / 0 failed.
+# ---------------------------------------------------------------------------
+
+
+def _git_init_bare(tmp_path: Path) -> None:
+    """`git init` and nothing else, so `_harness.root()` sees the fixture tree.
+
+    `root()` falls back to the script's own `parents[2]` -- the REAL repository
+    -- when `git rev-parse` fails, so every fixture that runs anything out of
+    `.agent-harness/scripts/` has to be a git repository of its own or it
+    validates, and can write to, the live tree. `_git_init` further down also
+    writes a .gitignore and commits, which mint-only fixtures do not need.
+    """
+    subprocess.run(
+        ["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, text=True
+    )
+
+
+def _admissions_dir(tmp_path: Path, run_id: str = RUN_ID) -> Path:
+    return tmp_path / ".agent-harness" / "admissions" / run_id
+
+
+def _agent_lock_path(
+    tmp_path: Path, agent_id: str, run_id: str = RUN_ID
+) -> Path:
+    """The per-(run, agent_id) consume lock `subagent_stop_validate.py` takes.
+
+    Spelled out here rather than imported so the fixture disagrees with the
+    hook if either moves, instead of silently following it.
+    """
+    return _admissions_dir(tmp_path, run_id) / ".agent-locks" / f"{agent_id}.lock"
+
+
+def _token_of(completed: subprocess.CompletedProcess) -> str:
+    return next(
+        line.split("=", 1)[1]
+        for line in completed.stdout.splitlines()
+        if line.startswith("ADMISSION_TOKEN=")
+    )
+
+
+def _admit_unbound(
+    tmp_path: Path, assignment_id: str, *extra: str
+) -> subprocess.CompletedProcess:
+    """`admit_agent.py --agent-id-unknown`: a receipt bound to its token only.
+
+    The mode in which the mint-time binding guard is not merely skipped but not
+    constructible, so the whole of D-065 obligation 1 rests on the Stop-time
+    per-agent lock.
+    """
+    return subprocess.run(
+        [
+            sys.executable,
+            str(HARNESS_SCRIPTS / "admit_agent.py"),
+            "--assignment-id",
+            assignment_id,
+            "--agent-id-unknown",
+            *extra,
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def _mint_with_unwritable_receipt_dir(
+    tmp_path: Path, agent_id: str = "agent-fixture", *extra: str
+) -> subprocess.CompletedProcess:
+    """Mint with the RECEIPT directory read-only and the ledger writable.
+
+    This is what isolates obligation 3's second write. The ledger lives under
+    `.agent-harness/runs/<run>/` and the receipt under
+    `.agent-harness/admissions/<run>/`, so revoking write on the latter alone
+    lets the append succeed and fails `dump_json_atomic` -- the exact split the
+    round-6 reproduction used, and the reason a surviving `minted` row is a
+    load-bearing assertion rather than a detail.
+    """
+    admissions = _admissions_dir(tmp_path)
+    admissions.mkdir(parents=True, exist_ok=True)
+    admissions.chmod(0o500)
+    try:
+        return _admit(tmp_path, ASSIGNMENT_ID, agent_id, *extra)
+    finally:
+        admissions.chmod(0o700)
+
+
+def test_admit_agent_fails_closed_when_the_receipt_cannot_be_written(
+    tmp_path: Path,
+) -> None:
+    """Obligation 3's missing half: the RECEIPT write failing, hard.
+
+    A mint that prints its token but leaves no receipt is the worst of both
+    states: the parent pastes a live ADMISSION_TOKEN into a spawn prompt, and
+    the agent's stop is then refused hours later for a receipt that never
+    existed. Nothing in the ledger row distinguishes it from a healthy mint.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    minted = _mint_with_unwritable_receipt_dir(tmp_path)
+
+    assert minted.returncode != 0, minted.stdout
+    # The error has to name the receipt, not the ledger: they are separate
+    # failure surfaces and the operator's next move differs.
+    assert "admission receipt could not be written" in minted.stderr, minted.stderr
+    assert "PermissionError" in minted.stderr, minted.stderr
+    assert "ledger could not be appended" not in minted.stderr, minted.stderr
+    # Nothing may reach stdout. stdout is what the parent pastes into the spawn
+    # prompt, and the token is the only thing that can consume a receipt.
+    assert minted.stdout == "", minted.stdout
+    assert "ADMISSION_TOKEN" not in minted.stdout
+
+    assert not _receipt_path(tmp_path, ASSIGNMENT_ID).exists()
+    assert list(_admissions_dir(tmp_path).iterdir()) == [], (
+        "a failed atomic write must not leave a .tmp.* file behind either"
+    )
+    # ...and the ledger row IS there. Without this assertion the fixture would
+    # not have proven which of the mint's two writes it made fail, which is
+    # exactly how the existing chmod-the-run-directory fixture came to be
+    # docstringed as this one.
+    assert [
+        (row["event"], row["assignment_id"]) for row in _ledger_rows(tmp_path)
+    ] == [("minted", ASSIGNMENT_ID)], _ledger_rows(tmp_path)
+    assert version
+
+
+# ---------------------------------------------------------------------------
+# D-065 obligation 1, round-6 finding: the per-(run, agent_id) consume lock.
+# The round-5 fix put a plain ledger READ in front of a consume whose only
+# atomic primitive was the per-*assignment* O_EXCL claim, so two concurrent
+# stops by one agent_id on two assignments took two different claim files and
+# raced -- both admitted in 126 of 200 measured trials. The lock is the missing
+# mutual exclusion; these fixtures are its detector.
+# ---------------------------------------------------------------------------
+
+AGENT_LOCK_TRIALS = 12
+
+
+def _feed_stop_hooks(
+    tmp_path: Path, events: list[dict[str, object]]
+) -> list[tuple[int, str, str]]:
+    """Run every stop hook concurrently; return `(returncode, stdout, stderr)`.
+
+    Every child is fed before any is read, for the reason
+    `test_concurrent_stops_consume_receipt_once` records: `communicate()` in a
+    loop serialises them and tests nothing.
+    """
+    procs = [
+        subprocess.Popen(
+            [sys.executable, str(HOOKS_DIR / "subagent_stop_validate.py")],
+            cwd=tmp_path,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        for _ in events
+    ]
+    for proc, event in zip(procs, events):
+        assert proc.stdin is not None
+        proc.stdin.write(json.dumps(event))
+        proc.stdin.close()
+    finished: list[tuple[int, str, str]] = []
+    for proc in procs:
+        assert proc.stdout is not None and proc.stderr is not None
+        out = proc.stdout.read()
+        err = proc.stderr.read()
+        proc.wait()
+        finished.append((proc.returncode, out, err))
+    return finished
+
+
+def _token_only_two_assignment_trial(tree: Path) -> tuple[str, str, str]:
+    """One trial tree: two assignments minted `--agent-id-unknown`, results written.
+
+    Minted through the real CLI in the real mode, because that is the mode in
+    which no mint-time guard exists at all: both receipts are agent-unbound, so
+    a single agent_id holding both tokens is refused by nothing except the
+    Stop-time lock.
+    """
+    version, _ = make_harness(tree)
+    _git_init_bare(tree)
+    add_second_assignment(tree, SECOND_ASSIGNMENT_ID)
+    first = _admit_unbound(tree, ASSIGNMENT_ID, "--reason", "runtime assigns agent ids")
+    second = _admit_unbound(
+        tree, SECOND_ASSIGNMENT_ID, "--reason", "runtime assigns agent ids"
+    )
+    assert first.returncode == 0, first.stderr
+    assert second.returncode == 0, second.stderr
+    write_json(tree / RESULT_PATH, valid_result(version, assignment_sha256(tree)))
+    write_json(
+        tree / f".agent-harness/runs/{RUN_ID}/results/{SECOND_ASSIGNMENT_ID}.json",
+        valid_result(
+            version,
+            assignment_sha256(tree, SECOND_ASSIGNMENT_ID),
+            SECOND_ASSIGNMENT_ID,
+        ),
+    )
+    write_lease(tree, version, assignment_ids=(ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID))
+    return version, _token_of(first), _token_of(second)
+
+
+def test_concurrent_stops_by_one_agent_consume_exactly_one_assignment(
+    tmp_path: Path,
+) -> None:
+    """The reported race, over enough trials to be a detector rather than a hope.
+
+    One `agent_id`, two agent-unbound receipts, two concurrent stops. The defect
+    reproduced in roughly 63% of trials, so a single trial would miss it more
+    than a third of the time; at twelve, a guard that is absent survives with
+    probability 0.37**12, about six in a million. Each trial gets its own tree
+    because the property being measured is per-run state.
+    """
+
+    for trial in range(AGENT_LOCK_TRIALS):
+        tree = tmp_path / f"trial-{trial:02d}"
+        tree.mkdir()
+        version, first_token, second_token = _token_only_two_assignment_trial(tree)
+        finished = _feed_stop_hooks(
+            tree,
+            [
+                stop_event(version, proof=first_token),
+                stop_event(
+                    version, assignment_id=SECOND_ASSIGNMENT_ID, proof=second_token
+                ),
+            ],
+        )
+        for returncode, out, err in finished:
+            assert returncode == 0, (trial, returncode, out, err)
+            assert err == "", (trial, err)
+        consumed = [
+            row for row in _ledger_rows(tree) if row["event"] == "consumed"
+        ]
+        assert len(consumed) == 1, (trial, consumed)
+        assert consumed[0]["agent_id"] == "agent-fixture", (trial, consumed)
+        assert len({row["assignment_id"] for row in consumed}) == 1, (trial, consumed)
+        # The loser must say why, and it must be the binding, not a coincidence.
+        losers = [out for _, out, _ in finished if out]
+        assert len(losers) == 1, (trial, [out for _, out, _ in finished])
+        reason = json.loads(losers[0])["reason"]
+        assert "D-065 obligation 1" in reason, (trial, reason)
+        assert "one assignment per run" in reason, (trial, reason)
+        # Both receipts still exist; exactly one of them was spent.
+        states = sorted(
+            json.loads(
+                _receipt_path(tree, assignment_id).read_text(encoding="utf-8")
+            )["state"]
+            for assignment_id in (ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID)
+        )
+        assert states == ["consumed", "open"], (trial, states)
+
+
+def test_concurrent_stops_by_distinct_agents_are_both_admitted(
+    tmp_path: Path,
+) -> None:
+    """The false-positive control: a per-agent lock must not serialise the run.
+
+    A lock keyed on the run, or one never released, would refuse one of these
+    two perfectly ordinary stops and wedge every multi-agent run -- a worse
+    failure than the race it is there to close. Run over the same number of
+    trials as the positive case so a lock that is merely usually-wrong is not
+    mistaken for a correct one.
+    """
+
+    for trial in range(AGENT_LOCK_TRIALS):
+        tree = tmp_path / f"trial-{trial:02d}"
+        tree.mkdir()
+        version, first_token, second_token = _token_only_two_assignment_trial(tree)
+        for assignment_id, agent_id in (
+            (ASSIGNMENT_ID, "agent-one"),
+            (SECOND_ASSIGNMENT_ID, "agent-two"),
+        ):
+            result_rel = (
+                f".agent-harness/runs/{RUN_ID}/results/{assignment_id}.json"
+            )
+            write_json(
+                tree / result_rel,
+                valid_result(
+                    version,
+                    assignment_sha256(tree, assignment_id),
+                    assignment_id,
+                    agent_id=agent_id,
+                ),
+            )
+            write_lease(
+                tree,
+                version,
+                agent_id=agent_id,
+                assignment_ids=(ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID),
+            )
+        finished = _feed_stop_hooks(
+            tree,
+            [
+                stop_event(version, proof=first_token, agent_id="agent-one"),
+                stop_event(
+                    version,
+                    assignment_id=SECOND_ASSIGNMENT_ID,
+                    proof=second_token,
+                    agent_id="agent-two",
+                ),
+            ],
+        )
+        for returncode, out, err in finished:
+            assert returncode == 0, (trial, returncode, out, err)
+            assert err == "", (trial, err)
+            assert out == "", (trial, out)
+        consumed = sorted(
+            (row["agent_id"], row["assignment_id"])
+            for row in _ledger_rows(tree)
+            if row["event"] == "consumed"
+        )
+        assert consumed == [
+            ("agent-one", ASSIGNMENT_ID),
+            ("agent-two", SECOND_ASSIGNMENT_ID),
+        ], (trial, consumed)
+        # Two agents, two locks: the lock is keyed on (run, agent_id), not run.
+        assert sorted(
+            path.name
+            for path in _agent_lock_path(tree, "agent-one").parent.iterdir()
+        ) == ["agent-one.lock", "agent-two.lock"]
+
+
+def test_agent_lock_is_released_after_a_blocked_stop(tmp_path: Path) -> None:
+    """A refused stop must not wedge its own agent_id for the rest of the run.
+
+    The lock is an flock on a descriptor precisely so that "released on every
+    failure path" holds structurally, including the ~20 `block(); return` paths
+    inside the guarded region. The retry here is the same agent, in the same
+    run, immediately after a hard refusal.
+    """
+
+    version, _ = make_harness(tmp_path)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    receipt = write_admission(tmp_path, version)
+
+    blocked = run_stop_hook(tmp_path, stop_event(version, proof="not-the-token"))
+    assert json.loads(blocked.stdout)["decision"] == "block"
+    assert "admission_proof does not match" in json.loads(blocked.stdout)["reason"]
+    lock_file = _agent_lock_path(tmp_path, "agent-fixture")
+    assert lock_file.is_file(), "the blocked stop must still have taken the lock"
+
+    accepted = run_stop_hook(tmp_path, stop_event(version))
+    assert accepted.returncode == 0, accepted.stderr
+    assert accepted.stdout == "", accepted.stdout
+    assert json.loads(receipt.read_text(encoding="utf-8"))["state"] == "consumed"
+    assert lock_file.is_file(), (
+        "the lock file is deliberately left in place; unlinking a flocked path "
+        "lets a racing process take a lock on a different inode of the same name"
+    )
+
+
+def test_agent_lock_directory_failure_is_fail_closed(tmp_path: Path) -> None:
+    """An unusable lock directory is an error, never a skip.
+
+    Skipping the lock when it cannot be created reopens exactly the window it
+    closes, and does so silently -- the consume would look completely ordinary
+    from the outside.
+    """
+
+    version, _ = make_harness(tmp_path)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    receipt = write_admission(tmp_path, version)
+    admissions = _admissions_dir(tmp_path)
+    admissions.chmod(0o500)
+    try:
+        blocked = run_stop_hook(tmp_path, stop_event(version))
+    finally:
+        admissions.chmod(0o700)
+
+    assert blocked.returncode == 0, blocked.stderr
+    reason = json.loads(blocked.stdout)["reason"]
+    assert "agent consume lock" in reason, reason
+    assert "lock directory could not be created" in reason, reason
+    assert "PermissionError" in reason, reason
+    assert "D-065 obligation 1" in reason, reason
+    assert json.loads(receipt.read_text(encoding="utf-8"))["state"] == "open", (
+        "a stop that never took the lock must not have consumed anything"
+    )
+    assert not (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ).exists(), "no attribution row may be written without the lock"
+    assert not receipt.with_name(receipt.name + ".claim").exists()
+
+
+def test_planted_symlink_at_the_agent_lock_path_blocks(tmp_path: Path) -> None:
+    """`O_NOFOLLOW` turns a planted lock symlink into ELOOP, not a lock elsewhere.
+
+    Without it, planting a symlink at the lock path aims the flock at some other
+    inode, so two stops for one agent take "the lock" on two different files and
+    the mutual exclusion evaporates while looking entirely healthy.
+    """
+
+    version, _ = make_harness(tmp_path)
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    receipt = write_admission(tmp_path, version)
+    lock_file = _agent_lock_path(tmp_path, "agent-fixture")
+    lock_file.parent.mkdir(parents=True, exist_ok=True)
+    decoy = lock_file.parent / "decoy.lock"
+    decoy.write_text("", encoding="utf-8")
+    lock_file.symlink_to(decoy)
+
+    blocked = run_stop_hook(tmp_path, stop_event(version))
+    assert blocked.returncode == 0, blocked.stderr
+    reason = json.loads(blocked.stdout)["reason"]
+    assert "agent consume lock" in reason, reason
+    assert "lock could not be opened" in reason, reason
+    assert json.loads(receipt.read_text(encoding="utf-8"))["state"] == "open"
+    assert not (
+        tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ).exists()
+    assert lock_file.is_symlink(), "the hook must not have followed or replaced it"
+    assert decoy.read_text(encoding="utf-8") == "", (
+        "nothing may be written through the planted symlink"
+    )
+
+    # Control: the same stop is admitted once the symlink is gone, so the block
+    # is attributable to the symlink and not to the rest of the fixture.
+    lock_file.unlink()
+    assert run_stop_hook(tmp_path, stop_event(version)).stdout == ""
+
+
+def test_agent_binding_mode_is_recorded_on_the_receipt_and_the_ledger(
+    tmp_path: Path,
+) -> None:
+    """`agent_binding` is a recorded fact, not something inferred from a blank.
+
+    An empty `expected_agent_id` could equally mean "minted with no agent
+    binding" or "field written by an older tool". The receipt is gitignored
+    working state, so the ledger row has to carry it too or an auditor cannot
+    tell after the fact which receipts never bound an agent.
+    """
+
+    version = _two_assignment_fixture(tmp_path)
+    unbound = _admit_unbound(
+        tmp_path, ASSIGNMENT_ID, "--reason", "runtime assigns agent ids"
+    )
+    assert unbound.returncode == 0, unbound.stderr
+    # The mode is warned about on stderr, never silently, and never on stdout.
+    assert "--agent-id-unknown" in unbound.stderr
+    assert "bound to its token only" in unbound.stderr
+    assert "NOT guaranteed" in unbound.stderr
+    assert "WARNING" not in unbound.stdout
+
+    bound = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-two")
+    assert bound.returncode == 0, bound.stderr
+
+    receipts = {
+        assignment_id: json.loads(
+            _receipt_path(tmp_path, assignment_id).read_text(encoding="utf-8")
+        )
+        for assignment_id in (ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID)
+    }
+    assert receipts[ASSIGNMENT_ID]["agent_binding"] == "token-only"
+    assert receipts[ASSIGNMENT_ID]["expected_agent_id"] == ""
+    assert receipts[SECOND_ASSIGNMENT_ID]["agent_binding"] == "agent-id"
+    assert receipts[SECOND_ASSIGNMENT_ID]["expected_agent_id"] == "agent-two"
+
+    rows = {row["assignment_id"]: row for row in _ledger_rows(tmp_path)}
+    assert rows[ASSIGNMENT_ID]["agent_binding"] == "token-only"
+    assert rows[ASSIGNMENT_ID]["agent_binding_reason"] == "runtime assigns agent ids"
+    assert rows[SECOND_ASSIGNMENT_ID]["agent_binding"] == "agent-id"
+    assert "agent_binding_reason" not in rows[SECOND_ASSIGNMENT_ID]
+
+    # A second unbound mint names the other open, agent-unbound receipts, which
+    # is what keeps the residual ambiguity of the mode concrete rather than
+    # stated once in a docstring.
+    add_second_assignment(tmp_path, "A-HOOK-FIXTURE-3")
+    also = _admit_unbound(tmp_path, "A-HOOK-FIXTURE-3")
+    assert also.returncode == 0, also.stderr
+    assert f"other open, agent-unbound receipt(s): {ASSIGNMENT_ID}" in also.stderr
+    assert "no --reason was given" in also.stderr
+    assert version
+
+
+# ---------------------------------------------------------------------------
+# Every fixture above this line runs inside a single hardcoded RUN_ID, so the
+# one shape none of them can express is an agent legitimately reused across two
+# DIFFERENT runs. That matters now: the guards D-065 obligation 1 rests on are
+# all keyed per-run -- the mint scans `admissions/<run>/`, the Stop-time ledger
+# check reads `runs/<run>/ADMISSIONS.jsonl`, and the consume lock is
+# per-(run, agent_id) -- so an over-broad version of any of them would look
+# correct in every other fixture here and wedge the second run of a session.
+# ---------------------------------------------------------------------------
+
+CROSS_RUN_ID = "run-fixture-cross"
+
+
+def _register_assignment_in_run(
+    repo: Path, run_id: str, assignment_id: str = ASSIGNMENT_ID
+) -> dict[str, object]:
+    """Clone the fixture assignment into another run directory.
+
+    `add_second_assignment` gives a sibling inside RUN_ID; this gives the same
+    assignment in a different run, which is the axis the module-level RUN_ID
+    constant makes otherwise unreachable.
+    """
+    source = repo / f".agent-harness/runs/{RUN_ID}/assignments/{ASSIGNMENT_ID}.json"
+    assignment = json.loads(source.read_text(encoding="utf-8"))
+    result_rel = f".agent-harness/runs/{run_id}/results/{assignment_id}.json"
+    assignment_rel = f".agent-harness/runs/{run_id}/assignments/{assignment_id}.json"
+    assignment.update(
+        {
+            "run_id": run_id,
+            "assignment_id": assignment_id,
+            "result_path": result_rel,
+            "required_outputs": [result_rel],
+            "required_inputs": [
+                ".agent-harness/generated/CONTEXT_PACK.md",
+                assignment_rel,
+            ],
+        }
+    )
+    write_json(repo / assignment_rel, assignment)
+    return assignment
+
+
+def _run_assignment_sha256(
+    repo: Path, run_id: str, assignment_id: str = ASSIGNMENT_ID
+) -> str:
+    path = repo / f".agent-harness/runs/{run_id}/assignments/{assignment_id}.json"
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_result_in_run(
+    repo: Path,
+    run_id: str,
+    version: str,
+    assignment_id: str = ASSIGNMENT_ID,
+    agent_id: str = "agent-fixture",
+) -> Path:
+    """`valid_result` re-aimed at another run, every run-bearing field included."""
+    digest = _run_assignment_sha256(repo, run_id, assignment_id)
+    result = valid_result(version, digest, assignment_id, agent_id)
+    result_rel = f".agent-harness/runs/{run_id}/results/{assignment_id}.json"
+    result["run_id"] = run_id
+    result["result_path"] = result_rel
+    result["files_written"] = [result_rel]
+    result["findings"][0]["evidence_refs"] = [result_rel]
+    result["spawn_contract"]["run_id"] = run_id
+    result["spawn_contract"]["assignment_sha256"] = digest
+    write_json(repo / result_rel, result)
+    return repo / result_rel
+
+
+def _write_lease_in_run(
+    repo: Path,
+    run_id: str,
+    version: str,
+    agent_id: str = "agent-fixture",
+    assignment_ids: tuple[str, ...] = (ASSIGNMENT_ID,),
+) -> Path:
+    lease = repo / ".agent-harness" / "leases" / f"{agent_id}.json"
+    write_json(
+        lease,
+        {
+            "schema_version": 1,
+            "agent_id": agent_id,
+            "agent_type": "context_mapper",
+            "run_id": run_id,
+            "context_version": version,
+            "created_at": "2026-07-28T00:00:00+00:00",
+            "assignment_digests": {
+                aid: _run_assignment_sha256(repo, run_id, aid)
+                for aid in assignment_ids
+            },
+        },
+    )
+    return lease
+
+
+def _stop_event_in_run(
+    run_id: str,
+    version: str,
+    assignment_id: str = ASSIGNMENT_ID,
+    proof: str = ADMISSION_TOKEN,
+    agent_id: str = "agent-fixture",
+) -> dict[str, object]:
+    marker = {
+        "assignment_id": assignment_id,
+        "context_version": version,
+        "status": "pass",
+        "result_path": f".agent-harness/runs/{run_id}/results/{assignment_id}.json",
+        "admission_proof": proof,
+    }
+    return {
+        "hook_event_name": "SubagentStop",
+        "stop_hook_active": False,
+        "agent_id": agent_id,
+        "agent_type": "context_mapper",
+        "last_assistant_message": "HARNESS_RESULT: " + json.dumps(marker),
+    }
+
+
+def test_one_agent_bound_in_one_run_is_still_admissible_in_another(
+    tmp_path: Path,
+) -> None:
+    """One agent_id, one assignment PER RUN -- not one for its whole existence.
+
+    The obligation is scoped to a run, and reusing an agent id across runs is
+    ordinary: a session initialises a second run and spawns the same named agent
+    again. Nothing above this line can catch a guard that dropped the run from
+    its key, because every other fixture lives in the one hardcoded RUN_ID. The
+    second run deliberately uses a DIFFERENT assignment id, so both run-scoped
+    guards are actually reached: a mint-time scan that swept every run's
+    receipts, and a Stop-time ledger read that swept every run's rows, would each
+    see the first binding and refuse. Both consumes go through the real mint and
+    the real Stop hook.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+
+    first_token = _mint(tmp_path, ASSIGNMENT_ID, "agent-roaming")
+    _write_result_in_run(tmp_path, RUN_ID, version, agent_id="agent-roaming")
+    _write_lease_in_run(tmp_path, RUN_ID, version, agent_id="agent-roaming")
+    first_stop = run_stop_hook(
+        tmp_path,
+        _stop_event_in_run(
+            RUN_ID, version, proof=first_token, agent_id="agent-roaming"
+        ),
+    )
+    assert first_stop.returncode == 0, first_stop.stderr
+    assert first_stop.stdout == "", first_stop.stdout
+
+    # A second run, same agent id, different assignment.
+    _register_assignment_in_run(tmp_path, CROSS_RUN_ID, SECOND_ASSIGNMENT_ID)
+    (tmp_path / ".agent-harness/ACTIVE_RUN").write_text(
+        CROSS_RUN_ID + "\n", encoding="utf-8"
+    )
+    second_mint = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-roaming")
+    assert second_mint.returncode == 0, (
+        "an agent bound in a previous run must still be mintable in a new one: "
+        + second_mint.stderr
+    )
+    second_token = _token_of(second_mint)
+    _write_result_in_run(
+        tmp_path,
+        CROSS_RUN_ID,
+        version,
+        assignment_id=SECOND_ASSIGNMENT_ID,
+        agent_id="agent-roaming",
+    )
+    _write_lease_in_run(
+        tmp_path,
+        CROSS_RUN_ID,
+        version,
+        agent_id="agent-roaming",
+        assignment_ids=(SECOND_ASSIGNMENT_ID,),
+    )
+    second_stop = run_stop_hook(
+        tmp_path,
+        _stop_event_in_run(
+            CROSS_RUN_ID,
+            version,
+            assignment_id=SECOND_ASSIGNMENT_ID,
+            proof=second_token,
+            agent_id="agent-roaming",
+        ),
+    )
+    assert second_stop.returncode == 0, second_stop.stderr
+    assert second_stop.stdout == "", second_stop.stdout
+
+    for run_id, assignment_id in (
+        (RUN_ID, ASSIGNMENT_ID),
+        (CROSS_RUN_ID, SECOND_ASSIGNMENT_ID),
+    ):
+        rows = [
+            json.loads(line)
+            for line in (
+                tmp_path / f".agent-harness/runs/{run_id}/ADMISSIONS.jsonl"
+            )
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line.strip()
+        ]
+        assert [row["event"] for row in rows] == ["minted", "consumed"], (run_id, rows)
+        assert rows[1]["agent_id"] == "agent-roaming", (run_id, rows)
+        assert rows[1]["run_id"] == run_id, (run_id, rows)
+        assert rows[1]["assignment_id"] == assignment_id, (run_id, rows)
+        # Each run's detector sees one agent on one assignment, as it should.
+        assert validate_harness.check_one_agent_one_assignment(run_id, rows) == []
+    # Two runs, two lock files: the lock is keyed on (run, agent_id), so the
+    # first run's lock cannot exclude the second run's stop.
+    for run_id in (RUN_ID, CROSS_RUN_ID):
+        assert _agent_lock_path(tmp_path, "agent-roaming", run_id).is_file(), run_id
+
+    # ...and the per-run ceiling still bites INSIDE the second run.
+    _register_assignment_in_run(tmp_path, CROSS_RUN_ID, "A-HOOK-FIXTURE-3")
+    refused = _admit(tmp_path, "A-HOOK-FIXTURE-3", "agent-roaming")
+    assert refused.returncode != 0, refused.stdout
+    assert "already holds an open or consumed admission receipt" in refused.stderr
+    assert repr(SECOND_ASSIGNMENT_ID) in refused.stderr, refused.stderr
+    assert repr(CROSS_RUN_ID) in refused.stderr, refused.stderr
+
+
+# ---------------------------------------------------------------------------
+# D-070 round-6 finding F-R6-02: `--reopen` used to restamp `created_at` with
+# `utc_now()` unconditionally, so one documented, non-forged reopen of a
+# never-consumed receipt reset the in-flight clock on the same never-verified
+# bytes, indefinitely -- the ceiling was not a bound. admit_agent.py now asks
+# the append-only ledger the same question validate_harness asks before it
+# stamps anything.
+# ---------------------------------------------------------------------------
+
+
+def _backdate_open_chain(
+    tmp_path: Path, assignment_id: str, hours: float, run_id: str = RUN_ID
+) -> str:
+    """Back-date the row that opened this assignment's currently-open chain.
+
+    Walks the rows the way `open_chain_started_at` and
+    `open_admission_chain_start` both do -- a consume closes the chain, the
+    first mint/reopen after that opens it -- so the fixture moves exactly the
+    timestamp those functions read, and no other. Back-dating rather than
+    waiting is not a shortcut: it is the same surface either function measures,
+    and it is the surface an operator would have to forge.
+    """
+    stamp = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat(
+        timespec="seconds"
+    )
+    ledger = tmp_path / f".agent-harness/runs/{run_id}/ADMISSIONS.jsonl"
+    rows = [
+        json.loads(line)
+        for line in ledger.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    opened_at: int | None = None
+    for position, row in enumerate(rows):
+        if str(row.get("assignment_id")) != assignment_id:
+            continue
+        if row.get("event") == "consumed":
+            opened_at = None
+        elif row.get("event") in ("minted", "reopened") and opened_at is None:
+            opened_at = position
+    assert opened_at is not None, "no open admission chain to back-date"
+    rows[opened_at]["at"] = stamp
+    rows[opened_at]["chain_started_at"] = stamp
+    ledger.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    return stamp
+
+
+def _minted_and_admitted_run(tmp_path: Path) -> str:
+    """`_admitted_active_run`, but through the real mint so the ledger has a mint row.
+
+    `_admitted_active_run` writes the receipt directly with `write_admission`,
+    which is deliberate there -- the Stop-side checks have to stand on their own
+    for receipts nobody minted -- but it leaves the ledger with a lone `consumed`
+    row and no `minted` one, so nothing about mint-time chain bookkeeping can be
+    asserted against it.
+    """
+    version, _ = make_harness(tmp_path)
+    _git_init(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    token = _mint(tmp_path, ASSIGNMENT_ID, "agent-fixture")
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+    write_lease(tmp_path, version)
+    accepted = run_stop_hook(tmp_path, stop_event(version, proof=token))
+    assert accepted.stdout == "", accepted.stdout
+    return version
+
+
+def test_reopening_a_never_consumed_receipt_carries_the_chain_start_forward(
+    tmp_path: Path,
+) -> None:
+    """The receipt must stop claiming an age the append-only ledger disagrees with.
+
+    `created_at` was `now` on every mint, so a reopened-but-never-consumed
+    receipt read as freshly minted to any human opening the file, and to the
+    validator's receipt-side bound. Both timestamps now carry the ledger's true
+    chain start, and the difference is named loudly on stderr every time.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    chain_start = _backdate_open_chain(tmp_path, ASSIGNMENT_ID, 30)
+
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "first agent died before stopping",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+
+    receipt = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+    assert receipt["created_at"] == chain_start, receipt
+    assert receipt["chain_started_at"] == chain_start, receipt
+    assert receipt["state"] == "open"
+
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["event"] == "reopened"
+    assert row["chain_started_at"] == chain_start, row
+    assert row["at"] != chain_start, (
+        "the reopen still records WHEN it happened; only the chain start is "
+        "carried forward"
+    )
+    assert receipt["created_at"] != row["at"], (
+        "created_at must not be restamped to the moment of the reopen"
+    )
+
+    # The warning is the check that cannot be silenced, so it has to name both
+    # the true start and how long it has been open.
+    assert "reopening a receipt that was never consumed" in reopened.stderr
+    assert chain_start in reopened.stderr, reopened.stderr
+    assert "(30.0h)" in reopened.stderr, reopened.stderr
+    assert "does not restart that clock" in reopened.stderr
+    assert "WARNING" not in reopened.stdout
+    assert version
+
+
+def test_chain_started_at_is_recorded_on_minted_and_reopened_rows(
+    tmp_path: Path,
+) -> None:
+    """The field is on every mint row, and a consume legitimately restarts it.
+
+    A reopen after a genuine consume supersedes bytes that really were
+    admitted, which is a fresh admission: its clock starts over. Only a reopen
+    of a chain no consume has closed carries the old start forward. Both shapes
+    have to be visible on the row itself, or the intent is only recoverable by
+    replaying the whole ledger.
+    """
+
+    version = _minted_and_admitted_run(tmp_path)
+    rows = _ledger_rows(tmp_path)
+    assert [row["event"] for row in rows] == ["minted", "consumed"]
+    assert rows[0]["chain_started_at"] == rows[0]["at"], (
+        "a first mint opens its own chain"
+    )
+
+    _edit_admitted_result(tmp_path, version)
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "superseding the admitted bytes",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["event"] == "reopened"
+    assert row["chain_started_at"] == row["at"], (
+        "the consume closed the previous chain, so this reopen opens a new one"
+    )
+    receipt = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+    assert receipt["chain_started_at"] == row["at"]
+    assert receipt["created_at"] == row["at"]
+    # ...and no never-consumed warning, because this reopen is not that shape.
+    assert "reopening a receipt that was never consumed" not in reopened.stderr
+
+
+def test_reopen_of_a_never_consumed_receipt_declares_no_supersession(
+    tmp_path: Path,
+) -> None:
+    """An empty declaration must be distinguishable from a real one.
+
+    `superseded_result_sha256: ""` alone cannot say whether nothing was ever
+    admitted or whether the lookup merely defaulted, so
+    `supersedes_admitted_result` states which, explicitly.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+
+    first_reopen = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "nothing was ever admitted for this assignment",
+    )
+    assert first_reopen.returncode == 0, first_reopen.stderr
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["event"] == "reopened"
+    assert row["supersedes_admitted_result"] is False, row
+    assert row["superseded_result_sha256"] == "", row
+    assert row["superseded_state"] == "open", row
+
+    # Now admit something for real, and reopen again.
+    token = _token_of(first_reopen)
+    result_file = tmp_path / RESULT_PATH
+    write_json(result_file, valid_result(version, assignment_sha256(tmp_path)))
+    write_lease(tmp_path, version)
+    assert run_stop_hook(tmp_path, stop_event(version, proof=token)).stdout == ""
+    admitted_sha = "sha256:" + hashlib.sha256(result_file.read_bytes()).hexdigest()
+
+    second_reopen = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "superseding bytes that really were admitted",
+    )
+    assert second_reopen.returncode == 0, second_reopen.stderr
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["supersedes_admitted_result"] is True, row
+    assert row["superseded_result_sha256"] == admitted_sha, row
+    assert row["superseded_state"] == "consumed", row
+    assert row["superseded_consumed_by_agent_id"] == "agent-fixture", row
+
+
+def test_nested_reopen_separates_chain_age_from_supersession(
+    tmp_path: Path,
+) -> None:
+    """`chain_started_at` and `supersedes_admitted_result` answer different questions.
+
+    Consumed, then reopened without being consumed, then reopened again. The
+    chain start moves once (the consume closed the old chain) and then stops
+    moving (the second reopen re-mints an admission nothing ever consumed),
+    while the superseded digest is the same admitted digest throughout: the
+    last bytes EVER admitted, across every past chain. Collapsing the two into
+    one field -- in either direction -- is wrong for one of these three rows.
+    """
+
+    version = _admitted_active_run(tmp_path)
+    admitted_sha = _ledger_rows(tmp_path)[-1]["result_sha256"]
+
+    first = _admit(
+        tmp_path, ASSIGNMENT_ID, "agent-fixture", "--reopen", "--reason", "reopen one"
+    )
+    assert first.returncode == 0, first.stderr
+    first_row = _ledger_rows(tmp_path)[-1]
+    assert first_row["chain_started_at"] == first_row["at"], first_row
+    assert first_row["supersedes_admitted_result"] is True, first_row
+    assert first_row["superseded_result_sha256"] == admitted_sha, first_row
+
+    # Back-date the chain this reopen opened, so the carry-forward is provable
+    # rather than being hidden by two mints inside the same second.
+    chain_start = _backdate_open_chain(tmp_path, ASSIGNMENT_ID, 6)
+    second = _admit(
+        tmp_path, ASSIGNMENT_ID, "agent-fixture", "--reopen", "--reason", "reopen two"
+    )
+    assert second.returncode == 0, second.stderr
+    second_row = _ledger_rows(tmp_path)[-1]
+
+    # The chain age question: this reopen did NOT start a new chain.
+    assert second_row["chain_started_at"] == chain_start, second_row
+    assert second_row["at"] != chain_start, second_row
+    assert "(6.0h)" in second.stderr, second.stderr
+    # The supersession question: unchanged, because no second consume happened.
+    assert second_row["supersedes_admitted_result"] is True, second_row
+    assert second_row["superseded_result_sha256"] == admitted_sha, second_row
+    assert second_row["superseded_state"] == "open", second_row
+    # ...and the two really are different answers on the same row.
+    assert second_row["chain_started_at"] != first_row["chain_started_at"]
+    assert (
+        second_row["superseded_result_sha256"]
+        == first_row["superseded_result_sha256"]
+    )
+    assert version
+
+
+def test_backdated_admission_chain_refuses_the_carve_out_end_to_end(
+    tmp_path: Path,
+) -> None:
+    """The whole loop: reopen an old chain, write a result, get refused.
+
+    No forgery anywhere -- `admit_agent.py --reopen --reason '...'` is this
+    module's own documented recovery for a dead agent. Before F-R6-02 the
+    reopen restamped `created_at` and the artifact was excused for another
+    24 hours, repeatable for ever. The refusal now names the RECEIPT-side age,
+    because the receipt itself carries the carried-forward chain start.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    _backdate_open_chain(tmp_path, ASSIGNMENT_ID, 30)
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "the agent is taking its time",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    refusal = [
+        error for error in payload["errors"] if "carve-out is refused" in error
+    ]
+    assert refusal, payload["errors"]
+    assert "open admission receipt has been open for 30.0h" in refusal[0], refusal[0]
+    assert "24h in-flight ceiling" in refusal[0], refusal[0]
+    assert f"{RUN_ID}/{ASSIGNMENT_ID}" in refusal[0], refusal[0]
+
+
+# ---------------------------------------------------------------------------
+# D-065 obligation 2, round-6 correction. Start used to have two states -- a
+# receipt for this agent_id, or none -- on the argument that a failed mint and
+# a legitimately unregistered helper agent were indistinguishable from inside
+# the hook. They are not: `admit_agent.py` writes the ledger BEFORE the
+# receipt, so a `minted` row naming this agent_id with no receipt on disk is a
+# failed mint, and Start can read it. The rule now has a third state.
+# ---------------------------------------------------------------------------
+
+
+def test_subagentstart_hard_fails_on_an_orphaned_mint(
+    tmp_path: Path, capsys
+) -> None:
+    """The obligation-2 case that used to report `none found` / PASS.
+
+    Driven through the real `admit_agent.py` against a `chmod 500` admissions
+    directory rather than by hand-writing a ledger row, because the whole point
+    of the round-6 correction is that this state is REACHABLE: the ledger
+    append lands under `runs/`, the receipt write under `admissions/`, and one
+    can fail while the other succeeds.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    minted = _mint_with_unwritable_receipt_dir(tmp_path)
+    assert minted.returncode != 0, minted.stdout
+    assert not _receipt_path(tmp_path, ASSIGNMENT_ID).exists()
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: MINT FAILED" in admission, admission
+    assert repr("agent-fixture") in admission, admission
+    assert ASSIGNMENT_ID in admission, admission
+    assert repr(RUN_ID) in admission, admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert "did not produce a usable receipt" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    # The lease succeeded, so the FAIL is carried by the receipt check alone.
+    assert f"Run lease: recorded for run {RUN_ID}" in context
+    assert version
+
+
+def test_subagentstart_passes_for_an_unregistered_agent_despite_ledger_activity(
+    tmp_path: Path, capsys
+) -> None:
+    """The false-positive control that decides whether the third state is usable.
+
+    Most spawned agents hold no registered assignment. If a busy ledger were
+    enough to fail them, the common case would become indistinguishable from
+    the dangerous one and the whole check would be turned off within a day.
+    Only a mint naming THIS agent_id counts.
+    """
+
+    version = _minted_and_admitted_run(tmp_path)
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    assert _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-two").returncode == 0
+    rows = _ledger_rows(tmp_path)
+    assert {row["event"] for row in rows} == {"minted", "consumed"}, rows
+
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-helper")
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: none found" in admission, admission
+    assert repr("agent-helper") in admission, admission
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+    assert version
+
+
+def test_subagentstart_does_not_resurrect_a_consumed_mint(
+    tmp_path: Path, capsys
+) -> None:
+    """A `consumed` row proves a receipt existed, so its absence is not a failure.
+
+    Stop only appends `consumed` after claiming and validating an on-disk
+    admission file. Reading a missing receipt back as a failed mint would turn
+    every completed admission into a phantom Start failure the moment the
+    gitignored working state was cleaned up.
+    """
+
+    _minted_and_admitted_run(tmp_path)
+    receipt = _receipt_path(tmp_path, ASSIGNMENT_ID)
+    receipt.with_name(receipt.name + ".claim").unlink()
+    receipt.unlink()
+
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: none found" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    # The control that makes the assertion above mean something: with the
+    # consume row dropped, the very same tree IS a failed mint.
+    _write_ledger_rows(
+        tmp_path, [row for row in _ledger_rows(tmp_path) if row["event"] != "consumed"]
+    )
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: MINT FAILED" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+
+def test_subagentstart_lets_a_reopen_supersede_a_stale_mint_for_the_old_agent(
+    tmp_path: Path, capsys
+) -> None:
+    """A later `reopened` row is a more specific statement about the assignment.
+
+    Reopening for a different agent leaves the old agent's `minted` row in the
+    append-only ledger for ever. If that row still counted, the first agent
+    would fail Start permanently for a receipt that was deliberately reassigned.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-one").returncode == 0
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-two",
+        "--reopen",
+        "--reason",
+        "reassigned to a second agent",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    events = [(row["event"], row["expected_agent_id"]) for row in _ledger_rows(tmp_path)]
+    assert events == [("minted", "agent-one"), ("reopened", "agent-two")], events
+
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-one")
+    assert "Admission receipt: none found" in bootstrap_line(
+        context, "Admission receipt: "
+    ), context
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-two")
+    assert "Admission receipt: open, bound to assignment" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+    assert version
+
+
+def test_subagentstart_flags_the_new_agent_when_a_reopen_fails(
+    tmp_path: Path, capsys
+) -> None:
+    """A failed reopen is a failed mint for the agent it was reopened FOR.
+
+    The ledger row lands, the receipt write does not, and the previous agent's
+    receipt is still sitting on disk -- so the directory scan finds a perfectly
+    healthy receipt that simply names somebody else. Start must fail the agent
+    the reopen was for, and say why.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-one").returncode == 0
+    stale = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+
+    failed = _mint_with_unwritable_receipt_dir(
+        tmp_path, "agent-two", "--reopen", "--reason", "reassigning after a hang"
+    )
+    assert failed.returncode != 0, failed.stdout
+    assert "admission receipt could not be written" in failed.stderr
+    surviving = json.loads(
+        _receipt_path(tmp_path, ASSIGNMENT_ID).read_text(encoding="utf-8")
+    )
+    assert surviving == stale, "the failed reopen must not have half-written a receipt"
+
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-two")
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: MINT FAILED" in admission, admission
+    assert repr("agent-two") in admission, admission
+    assert ASSIGNMENT_ID in admission, admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert "overwritten by a failed reopen" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+    # Honest about the limit: agent-one's receipt is still open on disk, so
+    # Start reports it as usable. Only Stop can refuse the token itself.
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-one")
+    assert "Admission receipt: open, bound to assignment" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert version
+
+
+def test_subagentstart_fails_on_a_malformed_admission_ledger_line(
+    tmp_path: Path, capsys
+) -> None:
+    """An unparseable ledger line cannot be proven irrelevant to this agent_id.
+
+    The same unprovable-negative rule the receipt scan already applies. Dropping
+    the line silently would make garbling one row the way to hide a failed mint.
+    """
+
+    version, _ = make_harness(tmp_path)
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text("{not json\n", encoding="utf-8")
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: AMBIGUOUS" in admission, admission
+    assert "line 1 is malformed" in admission, admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert "cannot be ruled out" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert ledger.read_text(encoding="utf-8") == "{not json\n", (
+        "malformed ledger evidence must be preserved"
+    )
+
+    # A non-object row is refused on the same rule, not only invalid JSON.
+    ledger.write_text("[1, 2, 3]\n", encoding="utf-8")
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "line 1 is not an object" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert version
+
+
+# ---------------------------------------------------------------------------
+# The after-the-fact detectors. A live guard that is raced or bypassed leaves no
+# trace unless something reads the append-only record afterwards, so
+# `check_one_agent_one_assignment` is exercised on row sequences directly:
+# every arm below is a shape the ledger can genuinely hold, and the clean ones
+# decide whether the detector is usable at all.
+# ---------------------------------------------------------------------------
+
+LEDGER_STAMP = "2026-07-28T00:00:00+00:00"
+
+
+def _consume_row(
+    agent_id: str, assignment_id: str, sha: str = "sha256:" + "1" * 64
+) -> dict:
+    return {
+        "event": "consumed",
+        "run_id": RUN_ID,
+        "assignment_id": assignment_id,
+        "agent_id": agent_id,
+        "result_sha256": sha,
+        "at": LEDGER_STAMP,
+    }
+
+
+def _reopen_row(
+    assignment_id: str, released_agent: str = "", reason: str = ""
+) -> dict:
+    return {
+        "event": "reopened",
+        "run_id": RUN_ID,
+        "assignment_id": assignment_id,
+        "superseded_consumed_by_agent_id": released_agent,
+        "reason": reason,
+        "at": LEDGER_STAMP,
+    }
+
+
+def test_check_one_agent_one_assignment_over_ledger_row_sequences() -> None:
+    """One agent_id binds to one assignment per run, released only by declaration.
+
+    The five flagged shapes are the race itself plus the four ways a reopen can
+    look like a release without being one; the three clean shapes are what stop
+    the detector from failing ordinary runs. A reopen releases a binding only
+    when it names the assignment that agent holds, names the agent, and carries
+    a reason -- the same declared-supersession gesture
+    `check_declared_supersession` requires, read for a different question.
+    """
+
+    second = SECOND_ASSIGNMENT_ID
+    flagged: list[tuple[str, list[dict], str]] = [
+        (
+            "the race: one agent consumes two assignments",
+            [_consume_row("agent-one", ASSIGNMENT_ID), _consume_row("agent-one", second)],
+            "consuming two",
+        ),
+        (
+            "a reopen with no reason releases nothing",
+            [
+                _consume_row("agent-one", ASSIGNMENT_ID),
+                _reopen_row(ASSIGNMENT_ID, released_agent="agent-one", reason="   "),
+                _consume_row("agent-one", second),
+            ],
+            "consuming two",
+        ),
+        (
+            "a reopen naming another agent releases nothing",
+            [
+                _consume_row("agent-one", ASSIGNMENT_ID),
+                _reopen_row(ASSIGNMENT_ID, released_agent="agent-two", reason="why"),
+                _consume_row("agent-one", second),
+            ],
+            "consuming two",
+        ),
+        (
+            "a reopen of another assignment releases nothing",
+            [
+                _consume_row("agent-one", ASSIGNMENT_ID),
+                _reopen_row(second, released_agent="agent-one", reason="why"),
+                _consume_row("agent-one", second),
+            ],
+            "consuming two",
+        ),
+        (
+            "a consume with no agent_id is unattributable",
+            [_consume_row("", ASSIGNMENT_ID)],
+            "consume with no agent_id",
+        ),
+    ]
+    for label, rows, expected in flagged:
+        errors = validate_harness.check_one_agent_one_assignment(RUN_ID, rows)
+        assert errors, label
+        assert any(expected in error for error in errors), (label, errors)
+        assert any(RUN_ID in error for error in errors), (label, errors)
+
+    # The race error has to name the operator's way out, or it is a dead end.
+    race = validate_harness.check_one_agent_one_assignment(
+        RUN_ID,
+        [_consume_row("agent-one", ASSIGNMENT_ID), _consume_row("agent-one", second)],
+    )
+    assert len(race) == 1, race
+    assert "'agent-one'" in race[0], race[0]
+    assert ASSIGNMENT_ID in race[0] and second in race[0], race[0]
+    assert "D-065 obligation 1" in race[0], race[0]
+    assert "--reopen --reason" in race[0], race[0]
+
+    clean: list[tuple[str, list[dict]]] = [
+        (
+            "two distinct agents on two assignments",
+            [_consume_row("agent-one", ASSIGNMENT_ID), _consume_row("agent-two", second)],
+        ),
+        (
+            "a declared release rebinds the same agent",
+            [
+                _consume_row("agent-one", ASSIGNMENT_ID),
+                _reopen_row(
+                    ASSIGNMENT_ID, released_agent="agent-one", reason="agent died"
+                ),
+                _consume_row("agent-one", second),
+            ],
+        ),
+        (
+            "the same agent re-consuming the same assignment",
+            [
+                _consume_row("agent-one", ASSIGNMENT_ID),
+                _consume_row("agent-one", ASSIGNMENT_ID),
+            ],
+        ),
+    ]
+    for label, rows in clean:
+        assert validate_harness.check_one_agent_one_assignment(RUN_ID, rows) == [], label
+
+
+def test_reopen_does_not_restart_the_in_flight_ceiling(tmp_path: Path) -> None:
+    """The ledger bound alone must refuse a chain the receipt claims is fresh.
+
+    F-R6-02 has two surfaces and they are load-bearing in opposite directions.
+    Here the receipt is stamped `now` -- exactly what `admit_agent.py` did
+    before the fix, and what an operator gets by rewriting the gitignored
+    working-state file -- so the receipt-side bound passes and only the
+    append-only chain start can refuse. Its twin,
+    `test_backdated_admission_chain_refuses_the_carve_out_end_to_end`, asserts
+    the receipt half with the ledger untouched.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    _minimal_run_plan(tmp_path, version)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    chain_start = _backdate_open_chain(tmp_path, ASSIGNMENT_ID, 30)
+    assert _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "still working on it",
+    ).returncode == 0
+    write_json(
+        tmp_path / RESULT_PATH, valid_result(version, assignment_sha256(tmp_path))
+    )
+
+    receipt_path = _receipt_path(tmp_path, ASSIGNMENT_ID)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["created_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    receipt["chain_started_at"] = receipt["created_at"]
+    write_json(receipt_path, receipt)
+
+    payload = _validate(tmp_path)
+    assert payload["ok"] is False, payload
+    refusal = [
+        error for error in payload["errors"] if "carve-out is refused" in error
+    ]
+    assert refusal, payload["errors"]
+    assert "its admission chain has been open since" in refusal[0], refusal[0]
+    assert chain_start in refusal[0], refusal[0]
+    assert "30.0h" in refusal[0], refusal[0]
+    assert "not from the receipt's created_at" in refusal[0], refusal[0]
+    assert "open admission receipt has been open for" not in refusal[0], (
+        "the receipt-side bound must have passed, so this refusal is the "
+        "ledger's alone"
+    )
+
+
+def test_pending_carve_out_is_refused_without_a_readable_ledger(
+    tmp_path: Path,
+) -> None:
+    """The in-flight ceiling is measured from a record the holder cannot refresh.
+
+    With that record unreadable the age cannot be established at all, and an
+    unestablished age is not a young one -- otherwise garbling the ledger would
+    excuse every open receipt in the run indefinitely.
+    """
+
+    _in_flight_second_agent(tmp_path)
+    assert _validate(tmp_path)["ok"] is True  # control: the same tree, readable
+
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.chmod(0o000)
+    try:
+        payload = _validate(tmp_path)
+    finally:
+        ledger.chmod(0o600)
+    assert payload["ok"] is False, payload
+    assert any(
+        "Admission ledger is unreadable" in error for error in payload["errors"]
+    ), payload["errors"]
+    refusal = [
+        error
+        for error in payload["errors"]
+        if "carve-out is refused" in error and SECOND_ASSIGNMENT_ID in error
+    ]
+    assert refusal, payload["errors"]
+    assert "no readable admission ledger" in refusal[0], refusal[0]
+    assert "in-flight ceiling is measured from" in refusal[0], refusal[0]
+    assert _validate(tmp_path)["ok"] is True, "the refusal must lapse with the cause"
+
+
+# ---------------------------------------------------------------------------
+# D-070 round-6 review, finding 2: merge_results.py globbed `results/*.json`
+# and reduced whatever it found, with no reference to admissions, receipts, the
+# ledger or the legacy manifest -- a second, unguarded path to treating a result
+# as real, and the one whose output the adjudicator actually reads. It now
+# imports the validator's own attribution pass rather than restating the rule.
+# ---------------------------------------------------------------------------
+
+
+def _merge_results(
+    tmp_path: Path,
+    script: Path | None = None,
+    env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(script or (HARNESS_SCRIPTS / "merge_results.py"))],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+        **({"env": env} if env is not None else {}),
+    )
+
+
+def _merged_results_path(tmp_path: Path) -> Path:
+    return tmp_path / f".agent-harness/runs/{RUN_ID}/MERGED_RESULTS.json"
+
+
+def _merge_refusal(completed: subprocess.CompletedProcess) -> list[str]:
+    """The refusal payload, insisting it is readable JSON rather than a crash."""
+    assert completed.returncode != 0, completed.stdout
+    assert "Traceback" not in completed.stderr, completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["ok"] is False, payload
+    assert payload["wrote"] is None, payload
+    return payload["errors"]
+
+
+def _copy_harness_scripts(tmp_path: Path, *names: str) -> Path:
+    """Copy scripts into the fixture so `root()` cannot fall back to the real repo.
+
+    `_harness.root()` degrades to the script's own `parents[2]` when git is
+    unavailable, which for the installed scripts is the LIVE repository. Any
+    fixture that removes git therefore has to run a copy, or it validates -- and
+    could write to -- the real tree.
+    """
+    scripts = tmp_path / ".agent-harness" / "scripts"
+    scripts.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        (scripts / name).write_bytes((HARNESS_SCRIPTS / name).read_bytes())
+    return scripts
+
+
+def test_merge_refuses_an_unattributed_result(tmp_path: Path) -> None:
+    """The reported defect: unattributed bytes reaching MERGED_RESULTS.json."""
+
+    _admitted_active_run(tmp_path)
+    merged = _merge_results(tmp_path)
+    assert merged.returncode == 0, merged.stdout + merged.stderr
+    baseline = _merged_results_path(tmp_path).read_bytes()
+    payload = json.loads(baseline.decode("utf-8"))
+    assert payload["result_count"] == 1
+    assert payload["attribution"]["results"] == [
+        {
+            "assignment_id": ASSIGNMENT_ID,
+            "sha256": "sha256:"
+            + hashlib.sha256((tmp_path / RESULT_PATH).read_bytes()).hexdigest(),
+            "attribution": "attributed",
+        }
+    ], payload["attribution"]
+
+    smuggled = tmp_path / f".agent-harness/runs/{RUN_ID}/results/A-SMUGGLED.json"
+    write_json(smuggled, {"schema_version": 2, "status": "pass"})
+    errors = _merge_refusal(_merge_results(tmp_path))
+    assert any(
+        "A-SMUGGLED" in error and "'unattributed'" in error for error in errors
+    ), errors
+    assert _merged_results_path(tmp_path).read_bytes() == baseline, (
+        "a refused merge must leave the previous output untouched, not replace "
+        "it with a weaker one"
+    )
+
+
+def test_merge_refuses_a_still_pending_result(tmp_path: Path) -> None:
+    """A carve-out that keeps a live run unwedged must not survive into the merge.
+
+    Validation runs continuously during a run, so it has to tolerate the window
+    between the artifact being written and SubagentStop consuming the receipt.
+    Merging is an operator step whose output feeds adjudication, and the wait is
+    one Stop dispatch -- so refusing wedges nothing, which the second half here
+    shows by simply letting the agent stop.
+    """
+
+    version, token, _ = _in_flight_second_agent(tmp_path)
+    assert _validate(tmp_path)["ok"] is True
+    assert _validate(tmp_path)["pending_result_count"] == 1
+
+    errors = _merge_refusal(_merge_results(tmp_path))
+    assert any(
+        SECOND_ASSIGNMENT_ID in error and "'pending'" in error for error in errors
+    ), errors
+    assert not _merged_results_path(tmp_path).exists()
+
+    write_lease(
+        tmp_path,
+        version,
+        agent_id="agent-fixture-2",
+        assignment_ids=(ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID),
+    )
+    accepted = run_stop_hook(
+        tmp_path,
+        stop_event(
+            version,
+            assignment_id=SECOND_ASSIGNMENT_ID,
+            proof=token,
+            agent_id="agent-fixture-2",
+        ),
+    )
+    assert accepted.stdout == "", accepted.stdout
+    merged = _merge_results(tmp_path)
+    assert merged.returncode == 0, merged.stdout + merged.stderr
+    payload = json.loads(_merged_results_path(tmp_path).read_text(encoding="utf-8"))
+    assert payload["result_count"] == 2
+    assert sorted(
+        entry["assignment_id"] for entry in payload["attribution"]["results"]
+    ) == sorted([ASSIGNMENT_ID, SECOND_ASSIGNMENT_ID])
+    assert {
+        entry["attribution"] for entry in payload["attribution"]["results"]
+    } == {"attributed"}
+
+
+def test_merge_follows_a_declared_supersession(tmp_path: Path) -> None:
+    """Superseded bytes must not keep being merged after a declared reopen.
+
+    The merge reads the same attribution pass the validator does, so the digest
+    it records has to move with the last consume row -- otherwise the durable
+    artifact the adjudicator reads would still describe the replaced bytes.
+    """
+
+    version = _admitted_active_run(tmp_path)
+    assert _merge_results(tmp_path).returncode == 0
+    first = json.loads(_merged_results_path(tmp_path).read_text(encoding="utf-8"))
+    first_sha = first["attribution"]["results"][0]["sha256"]
+
+    _edit_admitted_result(tmp_path, version)
+    assert _validate(tmp_path)["ok"] is False
+    assert _merge_refusal(_merge_results(tmp_path))
+
+    reopened = _admit(
+        tmp_path,
+        ASSIGNMENT_ID,
+        "agent-fixture",
+        "--reopen",
+        "--reason",
+        "first agent died before stopping",
+    )
+    assert reopened.returncode == 0, reopened.stderr
+    accepted = run_stop_hook(
+        tmp_path, stop_event(version, proof=_token_of(reopened))
+    )
+    assert accepted.stdout == "", accepted.stdout
+    assert _validate(tmp_path)["ok"] is True
+
+    merged = _merge_results(tmp_path)
+    assert merged.returncode == 0, merged.stdout + merged.stderr
+    second = json.loads(_merged_results_path(tmp_path).read_text(encoding="utf-8"))
+    second_sha = second["attribution"]["results"][0]["sha256"]
+    assert second_sha != first_sha
+    assert second_sha == "sha256:" + hashlib.sha256(
+        (tmp_path / RESULT_PATH).read_bytes()
+    ).hexdigest()
+    assert second["result_count"] == 1
+    assert second["errors"] == [], (
+        "the retained `errors` list is empty by construction now; anything that "
+        "would land in it refuses the merge instead"
+    )
+
+
+def test_merge_fails_closed_when_git_is_unavailable(tmp_path: Path) -> None:
+    """No git means no integrity evidence, and merging is not exempt from that.
+
+    The scripts are copied into the fixture for the reason `_copy_harness_scripts`
+    records: without git, `_harness.root()` resolves to the real repository.
+    """
+
+    _admitted_active_run(tmp_path)
+    assert _merge_results(tmp_path).returncode == 0
+    baseline = _merged_results_path(tmp_path).read_bytes()
+    scripts = _copy_harness_scripts(
+        tmp_path, "merge_results.py", "validate_harness.py", "_harness.py"
+    )
+
+    completed = _merge_results(
+        tmp_path,
+        script=scripts / "merge_results.py",
+        env={"PATH": str(tmp_path / "no-such-bin")},
+    )
+    errors = _merge_refusal(completed)
+    assert any("git is required for validation" in error for error in errors), errors
+    assert json.loads(completed.stdout)["run_id"] == RUN_ID, (
+        "the refusal must be about the fixture run, not the live repository"
+    )
+    assert _merged_results_path(tmp_path).read_bytes() == baseline
+
+
+def test_merge_fails_closed_on_a_garbage_admission_ledger(tmp_path: Path) -> None:
+    """An unparseable ledger line is what would vouch for these bytes."""
+
+    _admitted_active_run(tmp_path)
+    assert _merge_results(tmp_path).returncode == 0
+    baseline = _merged_results_path(tmp_path).read_bytes()
+
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.write_text(
+        ledger.read_text(encoding="utf-8") + "[1, 2, 3]\n", encoding="utf-8"
+    )
+    errors = _merge_refusal(_merge_results(tmp_path))
+    assert any(
+        "Admission ledger line is not an object" in error for error in errors
+    ), errors
+    assert _merged_results_path(tmp_path).read_bytes() == baseline
+
+
+def test_merge_reports_an_unreadable_result_artifact_instead_of_crashing(
+    tmp_path: Path,
+) -> None:
+    """A crash is fail-closed but unreadable: stdout empty, JSON unparseable.
+
+    Every caller of this script parses its stdout, so an artifact that cannot be
+    read has to come out as a refusal payload naming the file, not as a
+    traceback (the D-070 F-R5-08 class).
+    """
+
+    _admitted_active_run(tmp_path)
+    assert _merge_results(tmp_path).returncode == 0
+    baseline = _merged_results_path(tmp_path).read_bytes()
+
+    victim = tmp_path / RESULT_PATH
+    victim.chmod(0o000)
+    try:
+        completed = _merge_results(tmp_path)
+    finally:
+        victim.chmod(0o600)
+    errors = _merge_refusal(completed)
+    assert any(
+        "could not be read (PermissionError)" in error and ASSIGNMENT_ID in error
+        for error in errors
+    ), errors
+    assert any("'unreadable'" in error for error in errors), errors
+    assert _merged_results_path(tmp_path).read_bytes() == baseline
+    # And the tree merges again once the artifact is readable, so the refusal
+    # tracked the cause rather than latching.
+    assert _merge_results(tmp_path).returncode == 0

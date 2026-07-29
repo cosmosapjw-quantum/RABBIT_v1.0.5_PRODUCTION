@@ -1,0 +1,411 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-review-r6",
+  "assignment_id": "A-D067-R6-REGRESSION",
+  "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+  "agent_id": "r6-regression",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d067-review-r6",
+    "assignment_id": "A-D067-R6-REGRESSION",
+    "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:dc283d024d2640f3c594fa847a164e01c1e32f63f9dab1c207c8f745fcd0c568",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-REGRESSION.json",
+  "started_at": "2026-07-29T09:53:41.207Z",
+  "completed_at": "2026-07-29T11:17:27.457Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "pytest": "9.0.3 (venv/bin/python -m pytest)",
+    "git": "2.43.0",
+    "harness_test_suite": "74 passed (unmodified .agent-harness/tests/test_hooks.py in the sandbox clone; confirmed green before and after every attack in this round)"
+  },
+  "commands": [
+    "git clone --local <repo> scratchpad/repo   # isolated attack sandbox, HEAD 91ee741, byte-identical to the real repo",
+    "git log --oneline -30 -- .agent-harness/scripts/validate_harness.py .agent-harness/scripts/admit_agent.py .codex/hooks/subagent_stop_validate.py .agent-harness/tests/test_hooks.py",
+    "git diff d94270f^ d94270f -- .agent-harness/scripts/validate_harness.py .agent-harness/scripts/admit_agent.py .codex/hooks/subagent_stop_validate.py .agent-harness/tests/test_hooks.py   # the round-5 fix pass itself, isolated from the surrounding docs/context commits",
+    "git diff a3ead1c 91ee741 --stat   # wider window: confirms only e6ddbd4 (scrubber, unrelated) and 91ee741 (C5 canary, test/docs-only) surround d94270f",
+    "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py   # 74 passed, baseline and after every attack",
+    "venv/bin/python scratchpad/r6_attacks/attack_A_cross_run_binding.py   # F-R6-01, refuted",
+    "venv/bin/python scratchpad/r6_attacks/attack_C_reopen_refreshes_clock.py   # F-R6-02, CONFIRMED",
+    "bash scratchpad/r6_attacks/attack_B_manifest_partial_edits.sh   # F-R6-03, refuted, against real committed manifest/SSOT_FACTS/prose bytes in the sandbox",
+    "venv/bin/python scratchpad/r6_attacks/attack_D_active_run_clean_error.py   # F-R6-04, refuted",
+    "venv/bin/python scratchpad/r6_attacks/attack_E_mutation_newest7.py   # F-R6-05, 7/7 mutants killed",
+    "venv/bin/python scratchpad/r6_attacks/attack_F_mutation_sample_other9.py   # F-R6-06, 7/7 mutants killed",
+    "venv/bin/python scratchpad/r6_attacks/attack_G_reattack_closed_items.py   # F-R6-07..F-R6-10",
+    "venv/bin/python scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py   # F-R6-11, F-R6-12, refuted",
+    "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py -k 'test_undeclared_second_consume_is_refused or test_declared_reopen_licenses_a_second_consume or test_reopen_row_must_match_the_digest_it_claims_to_supersede or test_concurrent_stops_consume_receipt_once or test_symlinked_result_path_is_rejected or test_subagentstop_blocks_same_run_assignment_substitution or test_reopen_cannot_clear_the_tamper_detector or test_planted_claim_cannot_skip_attribution or test_admission_bound_to_expected_agent_id'   # F-R6-13, 9/9 passed on current bytes; these functions are UNCHANGED by the round-5 diff",
+    "git status --porcelain   # both the real repo and the sandbox clone confirmed clean before and after every attack",
+    "--- resubmission after a real blocked Stop on the first HARNESS_RESULT ---",
+    "cat .agent-harness/leases/r6-regression.json   # confirmed real, schema-1 lease sealing both A-D067-R6-OBLIGATIONS and A-D067-R6-REGRESSION digests for agent_id r6-regression, created_at 2026-07-29T10:18:38+00:00, matching ADMISSIONS.jsonl's mint timestamps for both",
+    "cat .agent-harness/runs/run-20260729-f10-d067-review-r6/raw_logs/stop_event_r6-regression.json /raw_logs/stop_out_r6-regression.json   # confirmed a real Stop dispatch and a real block on this run's own first HARNESS_RESULT",
+    "python3 -c \"import hashlib; print('sha256:'+hashlib.sha256(b'sha256:fedd3c082476cbe220bc0d81a2971f8d8bfb88fa29cb3072d8c459aa49f06dc7').hexdigest())\"   # matches the scrubbed admission_proof digest in the captured stop_event AND the receipt's token_digest exactly -- confirms the captured event is a genuine (scrub_admission_proof.py-scrubbed) record of my own real submission, not a fabricated prop",
+    "python3 -c \"from _harness import validate_result_contract; ...\"   # ran the REAL validator against my REAL result file directly; reproduced exactly the same 2 errors and no others, independent of the coordinator's quoted text",
+    "corrected spawn_contract.subagent_start_injected/subagent_start_preflight to true/'PASS' to match the independently-verified real lease; re-ran validate_result_contract, 0 errors"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/lib.py",
+      "sha256": "sha256:18a3057f093c587b05e937a3ea53c71a565ffae61c709a96e83ae128bad7e9d7",
+      "kind": "shared attack-fixture library, reuses test_hooks.py's own helpers; scratchpad only"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_A_cross_run_binding.py",
+      "sha256": "sha256:f6fe071f98933e58a95a675bbef6e0ec0ac556d65ce16f107fd8e193fc337285",
+      "kind": "F-R6-01 repro; scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_C_reopen_refreshes_clock.py",
+      "sha256": "sha256:680cd2a0f9b456a8150965ee26dbec51564cec308f358f45a0acda60bd744721",
+      "kind": "F-R6-02 repro (CONFIRMED gap); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_B_manifest_partial_edits.sh",
+      "sha256": "sha256:d5a0f5b33fe2dcdd027b111b0c556dfe78335f9188a7cf0c428660784422fb3e",
+      "kind": "F-R6-03 direct attack against real committed manifest/SSOT_FACTS.json/validate_harness.py/VALIDATION_LEDGER.md bytes in the sandbox clone; self-restoring via git checkout, verified via git status before/after each section"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_D_active_run_clean_error.py",
+      "sha256": "sha256:8044b36f1bc501fc0b602b7d08792dcf192eab039af71f14c92834a78b56058c",
+      "kind": "F-R6-04 repro; scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_E_mutation_newest7.py",
+      "sha256": "sha256:b7fa3971d794ad3619da61c4aeb71108e66958b855ded1b313f249d428da5543",
+      "kind": "F-R6-05 mutation-testing harness for the 7 newest (agent-binding-guard) fixtures; mutates+restores the sandbox clone's real admit_agent.py/subagent_stop_validate.py via git checkout, real repo untouched"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_F_mutation_sample_other9.py",
+      "sha256": "sha256:a4071bb647a96f7b99f1d637115b6a9045503ac64e7d143792719f0e9808b116",
+      "kind": "F-R6-06 mutation-testing harness for a 7-fixture sample of the other 9 new fixtures (manifest pin, 24h carve-out, clean ACTIVE_RUN error); mutates+restores validate_harness.py via git checkout"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py",
+      "sha256": "sha256:9b0fadbf6ed96bc2a36178e52e2f54ec8459caadfab6b9afb5dba46c04b155b1",
+      "kind": "F-R6-07..F-R6-10 repros (symlinked run dir, leaked token vs pinned agent_id, decoy pointer with no lease at all, real concurrent O_EXCL races); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py",
+      "sha256": "sha256:d9f0cb6ea6da5b825227fcd1100ece477afe0929edd3b1f1c63c939e82cf63c8",
+      "kind": "F-R6-11/F-R6-12 repros (planted claim file, same-run assignment substitution); scratchpad only, no repo mutation"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-R6-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "REFUTED: the one-agent-one-assignment guard (D-065 obligation 1, both halves -- admit_agent.py's other_assignment_bound_to_agent and subagent_stop_validate.py's conflicting_agent_assignment) does not wedge an agent legitimately reused across two DIFFERENT runs. Built two independent, real run directories (run-alpha, run-beta) under one harness tree, each registering assignment A-HOOK-FIXTURE. Using the REAL admit_agent.py CLI and the REAL subagent_stop_validate.py hook (not fixture stand-ins), agent_id 'agent-x' was minted for and consumed its own assignment in run-alpha, then -- with ACTIVE_RUN repointed -- minted for and consumed its own assignment in run-beta, with no interference in either direction. Both guards read exclusively per-run state (.agent-harness/admissions/<run_id>/ and <run_dir>/ADMISSIONS.jsonl), so cross-run reuse of one agent_id was never actually at risk; this closes the specific false-positive scenario the assignment named that the shipped 74-test suite does not exercise (all 7 new agent-binding fixtures use a single hardcoded RUN_ID).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py#L123-L204 (other_assignment_bound_to_agent, scoped to harness/admissions/<run_id>)",
+        ".codex/hooks/subagent_stop_validate.py#L41-L83 (conflicting_agent_assignment, scoped to <run_dir>/ADMISSIONS.jsonl)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_A_cross_run_binding.py"
+      ],
+      "evidence_fingerprint": "sha256:f6fe071f98933e58a95a675bbef6e0ec0ac556d65ce16f107fd8e193fc337285",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_A_cross_run_binding.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "CONFIRMED, real gap introduced by round 5's own fix: the PENDING_ADMISSION_MAX_AGE_HOURS=24 ceiling that F-R5-04's remedy states 'turns \"for ever\" into a bound' is not actually a hard bound on how long an unattributed, never-Stop-validated result can be tolerated -- it is only a bound on a SINGLE unrefreshed admission. admit_agent.py's receipt construction unconditionally sets `\"created_at\": utc_now()` on every mint, first OR reopened (main(), receipt dict literal), with no special-case for reopening a receipt that is still 'open' (never consumed). Reproduced two ways: (C1, unit-level) validate_harness.pending_carve_out_refusal is a pure function of receipt['created_at']; a 30h-old receipt is refused, and the identical receipt with only created_at bumped to 'now' is excused. (C2, end-to-end, real CLI, no hand-forged bytes on the exploit step itself) minted a real receipt via admit_agent.py, wrote a schema-valid but never-independently-verified RESULT_ENVELOPE next to it (an agent that never calls Stop), backdated created_at by 30h to simulate a day passing (the only hand-edited byte in the whole attack, standing in for wall-clock time that cannot be fast-forwarded), confirmed real validate_harness.py correctly refuses the carve-out (ok:false, 'past the 24h in-flight ceiling'), then ran the real, single, documented `admit_agent.py --reopen --reason \"still working, just checking in\"` -- touching no result byte and never dispatching Stop -- after which real validate_harness.py reports ok:true again (pending_result_count=1) over the exact same never-consumed artifact. This is reachable from the SAME operator-level trust F-R5-04's own writeup already relied on ('admit_agent.py is the documented, intended interface, run legitimately'), not the excluded same-OS-user residual: nothing about --reopen requires forging a receipt, a ledger row, or a result byte, and the reopen IS recorded (auditable) in ADMISSIONS.jsonl as an ordinary 'reopened' row -- but validate_harness.py does not flag a pattern of repeated reopens with zero intervening consumes as anomalous, so the audit trail exists without anything actually enforcing the stated bound. An operator (or, more concerningly, any automation/cron that calls admit_agent.py --reopen on a timer 'to keep long-running agents from expiring') defeats the 24h ceiling completely and indefinitely.",
+      "assumptions_used": [
+        "Running `admit_agent.py --reopen` is within the documented, intended parent/operator interface, at the same trust level F-R5-04's own finding already relies on to argue that leaving a receipt open without stopping does not require the excluded same-OS-user residual; this finding shows that same interface also defeats F-R5-04's own remedy for that gap.",
+        "Backdating created_at by editing the receipt JSON directly is used only to simulate 30 real hours elapsing (there is no other way to fast-forward wall-clock time in a test), not as the exploit primitive itself -- the exploit primitive is the unmodified --reopen call, which touches no bytes by hand at all."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py#L337-L349 (receipt = {..., \"created_at\": utc_now()}, unconditional regardless of `prior is not None`)",
+        ".agent-harness/scripts/validate_harness.py#L399-L482 (pending_carve_out_refusal, age computed solely from receipt['created_at'])",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_C_reopen_refreshes_clock.py"
+      ],
+      "evidence_fingerprint": "sha256:680cd2a0f9b456a8150965ee26dbec51564cec308f358f45a0acda60bd744721",
+      "counterevidence_refs": [
+        "The reopen is truthfully recorded in the append-only ADMISSIONS.jsonl ledger every time (event: 'reopened', with a reason string), so this is a detectable-after-the-fact laundering pattern, not an invisible one -- an auditor scanning for assignments with N reopens and 0 consumes would find it. No code currently performs that scan."
+      ],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_C_reopen_refreshes_clock.py"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether the fix should be 'created_at is preserved across a reopen of a still-open (never consumed) receipt' or 'validate_harness flags N reopens since the last consume as an error past some threshold' is a design call for the D-070+ adjudicator, not decided here."
+      ]
+    },
+    {
+      "finding_id": "F-R6-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "REFUTED, robustly, against the real committed bytes: the legacy-manifest laundering channel round 5 closed (entry_count cross-checked by check_ssot_consistency.py, canonical digest pinned as LEGACY_MANIFEST_PINNED_SHA256 in validate_harness.py) genuinely requires coordinated edits across every surface it claims to, not merely the ones that happen to be cheapest. Four escalating partial-edit attempts were run directly against the real, currently-committed LEGACY_RESULTS_MANIFEST.json/SSOT_FACTS.json/validate_harness.py/VALIDATION_LEDGER.md in the sandbox clone, each restored via `git checkout --` and confirmed byte-clean before the next: T1 (SSOT_FACTS.json's declared count alone, nothing else) -- caught by both validate_harness.py (declared-vs-manifest mismatch) and check_ssot_consistency.py independently. T2 (self-consistent manifest growth: entry_count + one fabricated entry, digest constant/SSOT_FACTS/prose all left alone) -- caught three ways at once: git-porcelain 'modified after commit', the count-vs-SSOT_FACTS mismatch, AND the digest mismatch. T3 (manifest + the LEGACY_MANIFEST_PINNED_SHA256 digest constant updated together, a genuinely self-consistent pair, SSOT_FACTS/prose untouched) -- still caught by the count-vs-SSOT_FACTS mismatch and the SSOT prose check. T4 (three surfaces aligned: manifest + digest constant + SSOT_FACTS.json value, leaving only VALIDATION_LEDGER.md's prose stale) -- still caught, twice over, by check_ssot_consistency.py's role='current' check on VALIDATION_LEDGER.md AND independently by its role='frozen' check on FROZEN_DECISIONS.md (which needed no edit at all to correctly reject the mismatch, because check_ssot_consistency.py resolves the frozen row's expected value from SSOT_FACTS.json's own as_of_commit bookkeeping, not from the file being touched). Every attempt short of touching validate_harness.py's LEGACY_MANIFEST_PINNED_SHA256 constant itself, SSOT_FACTS.json's declared value, AND VALIDATION_LEDGER.md's prose together was caught by at least one independent surface; the digest constant is, as documented, a plain Python literal editable in the same commit as everything else -- but that is exactly the disclosed, out-of-scope same-OS-user residual (an agent deliberately writing outside its declared result path can edit the validator script that checks it), not a shortcut around it.",
+      "assumptions_used": [
+        "The residual boundary matches the assignment's stated scope: editing validate_harness.py's own source (the checking code itself) to make it agree with a forgery is the disclosed, excluded same-OS-user residual, not a new bypass, because it requires the same unrestricted repo-write capability that residual already concedes."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py#L275-L396 (canonical_legacy_digest, declared_legacy_entry_count, check_legacy_manifest_pin)",
+        ".agent-harness/scripts/check_ssot_consistency.py#L1063-L1239 (check_facts, generic fact-vs-prose engine; confirmed it is data-driven from SSOT_FACTS.json rather than hardcoding 'legacy', which a naive grep for 'legacy' in that file misses)",
+        ".agent-harness/context/SSOT_FACTS.json#L67-L96 (legacy_results_manifest_entry_count fact and its 3 assertion sites: manifest self, VALIDATION_LEDGER.md role=current, FROZEN_DECISIONS.md role=frozen pinned_to_commit=a1cdd8a)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_B_manifest_partial_edits.sh"
+      ],
+      "evidence_fingerprint": "sha256:d5a0f5b33fe2dcdd027b111b0c556dfe78335f9188a7cf0c428660784422fb3e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "bash /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_B_manifest_partial_edits.sh"
+      ],
+      "confidence": 0.92,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: the round-5 fix for F-R5-08 (ACTIVE_RUN naming a nonexistent run directory now yields a clean {\"ok\": false, \"errors\": [...]} instead of an unhandled traceback) does not swallow anything else main() would otherwise have reported. With ACTIVE_RUN pointed at 'run-does-not-exist' AND a second, completely unrelated, real run directory on disk holding a fabricated, unattributed result, validate_harness.py's stdout was still clean JSON (empty stderr, no traceback) and BOTH the ACTIVE_RUN error and the unrelated forward-sweep 'not attributed' finding for the other run were present in the same errors list. A negative control (broken ACTIVE_RUN, no other run directory present) confirmed no phantom 'not attributed' errors appear when there is genuinely nothing else wrong. The `if active and not (...).is_dir(): ... elif active: ...` branch structure correctly short-circuits only the RUN_PLAN/assignment-registration checks that would otherwise crash on a nonexistent run_dir, while every check outside that block (git porcelain, admission receipts, the global forward sweep, legacy manifest, SSOT consistency) still runs unconditionally.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py#L631-L677 (if active and not (...).is_dir(): errors.append(...) / elif active: ... structure)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_D_active_run_clean_error.py"
+      ],
+      "evidence_fingerprint": "sha256:8044b36f1bc501fc0b602b7d08792dcf192eab039af71f14c92834a78b56058c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_D_active_run_clean_error.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The 7 newest fixtures (the agent-binding-guard tests added by the round-5 fix pass -- test_admit_agent_refuses_second_assignment_for_same_agent_id, test_admit_agent_reopen_same_assignment_is_exempt_from_the_binding_guard, test_admit_agent_binding_guard_allows_distinct_agent_ids, test_admit_agent_binding_guard_fails_closed_on_unreadable_sibling_receipt, test_subagentstop_blocks_agent_id_already_consumed_a_different_assignment, test_subagentstop_ledger_conflict_check_ignores_same_assignment_restop, test_subagentstop_fails_closed_on_unreadable_admission_ledger) are not vacuous. For each, exactly the guard clause its own docstring claims to cover was disabled with a single targeted mutation in the sandbox clone's REAL admit_agent.py / subagent_stop_validate.py, then only that fixture's pytest node was run against the mutated file: all 7 mutants were killed. Every mutated file was restored via `git checkout --` immediately after and confirmed byte-identical (git status --porcelain empty) before the next mutation.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py#L2830-L3142 (the 7 newest fixtures)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_E_mutation_newest7.py"
+      ],
+      "evidence_fingerprint": "sha256:b7fa3971d794ad3619da61c4aeb71108e66958b855ded1b313f249d428da5543",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_E_mutation_newest7.py   # 7/7 KILLED"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "A 7-fixture sample of the OTHER 9 round-5 fixtures (test_legacy_manifest_pin_survives_a_commit, test_legacy_manifest_pin_cannot_be_dropped_by_deleting_its_declaration, test_open_admission_carve_out_lapses_when_the_admission_is_stale, test_open_admission_carve_out_needs_a_registered_assignment, test_open_admission_carve_out_is_bound_to_the_active_run, test_missing_active_run_directory_is_a_clear_error, test_unusable_active_run_plan_is_a_clear_error) is likewise not vacuous: the same one-mutation-per-fixture technique against validate_harness.py killed all 7. The remaining 2 of the 16 new fixtures (test_repository_legacy_manifest_pin_is_self_consistent, test_uncommitted_legacy_manifest_edit_or_deletion_is_an_error) were not separately mutation-tested in this round for time; the whole suite of 74 was confirmed green before and after every mutation and every attack, so they were at minimum exercised as unmodified regression coverage throughout.",
+      "assumptions_used": [
+        "The 2 fixtures not individually mutation-tested are assumed not-yet-independently-verified-load-bearing rather than confirmed either way; this is stated as an explicit gap, not folded into the pass verdict for the ones that were tested."
+      ],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py#L1820-L2789 (the other new fixtures)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_F_mutation_sample_other9.py"
+      ],
+      "evidence_fingerprint": "sha256:a4071bb647a96f7b99f1d637115b6a9045503ac64e7d143792719f0e9808b116",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_F_mutation_sample_other9.py   # 7/7 KILLED"
+      ],
+      "confidence": 0.75,
+      "unresolved": [
+        "test_repository_legacy_manifest_pin_is_self_consistent and test_uncommitted_legacy_manifest_edit_or_deletion_is_an_error were not individually mutation-tested this round."
+      ]
+    },
+    {
+      "finding_id": "F-R6-07",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: a new angle on the forward-sweep re-attack -- a SYMLINKED RUN DIRECTORY under .agent-harness/runs/ (as opposed to the already-covered symlinked result FILE), pointing entirely outside the repository and containing a fabricated result -- is still caught. run_dirs()'s `harness.glob(\"runs/*\")` filtered by `p.is_dir()` follows the symlink (Python's Path.is_dir() resolves symlinks by default), so the fabricated result inside it is enumerated by result_files() and correctly reported as 'not attributed' by the forward sweep.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py#L103-L115 (run_dirs, result_files)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py (g1_symlinked_run_directory)"
+      ],
+      "evidence_fingerprint": "sha256:9b0fadbf6ed96bc2a36178e52e2f54ec8459caadfab6b9afb5dba46c04b155b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py"
+      ],
+      "confidence": 0.85,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-08",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: a leaked admission_proof token replayed by an agent_id different from the receipt's pinned expected_agent_id is blocked ('Admission receipt for ... was minted for agent ..., not ...'), independent of the shipped test_admission_bound_to_expected_agent_id fixture, reproduced against the real hook with a fresh scenario.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L318-L324 (expected_agent_id enforcement)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py (g2_leaked_token_wrong_agent)"
+      ],
+      "evidence_fingerprint": "sha256:9b0fadbf6ed96bc2a36178e52e2f54ec8459caadfab6b9afb5dba46c04b155b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-09",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: a harder variant of the decoy-pointer scenario than the shipped D-058 fixtures cover -- ACTIVE_RUN pointed at an unrelated decoy run for an agent that was given NO Start-time lease AT ALL (as opposed to a lease that was sealed and then the pointer moved) -- is blocked with 'No Start-time run lease exists for this agent ... Refusing to fall back to the mutable ACTIVE_RUN pointer.' Confirms D-067's removal of the ACTIVE_RUN fallback holds for the strictly worse case of a completely absent lease, not only a stale one.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L183-L205 (no-lease / no-ACTIVE_RUN-fallback branch)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py (g3_decoy_pointer_no_lease_at_all)"
+      ],
+      "evidence_fingerprint": "sha256:9b0fadbf6ed96bc2a36178e52e2f54ec8459caadfab6b9afb5dba46c04b155b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-10",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: 8 REAL, genuinely concurrent OS processes (subprocess.Popen, not serialized subprocess.run) racing SubagentStop for the same admitted receipt under the SAME agent_id produced exactly ONE 'consumed' row in the append-only ledger. All 8 processes returned empty stdout (accept), which is correct: 1 was the real O_EXCL winner and 7 were legitimate idempotent re-stop replays of that same agent's own already-consumed, byte-unchanged result (the documented resumed-agent exception) -- not 8 independent double-spends. A second variant racing TWO DIFFERENT agent_ids against a single token-only (--agent-id-unknown-style, unpinned) leaked receipt did not produce a usable race outcome in this attempt: both agents were blocked on an unrelated RESULT_ENVELOPE agent_id-mismatch (the shared result artifact's declared agent_id could only match one candidate), so the O_EXCL exclusivity property itself was not exercised by that variant -- reported as a fixture limitation, not a finding either way.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L454-L491 (O_EXCL claim + idempotent-re-stop path)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py (g4_real_concurrent_o_excl_race, g4b_real_race_two_agents_one_leaked_unpinned_token)"
+      ],
+      "evidence_fingerprint": "sha256:9b0fadbf6ed96bc2a36178e52e2f54ec8459caadfab6b9afb5dba46c04b155b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_G_reattack_closed_items.py"
+      ],
+      "confidence": 0.8,
+      "unresolved": [
+        "A cleaner two-different-agents-race-one-unpinned-token reproduction (distinct declared result artifacts per candidate agent, or racing at the O_EXCL layer directly rather than through two full HARNESS_RESULT envelopes) would be needed to positively exercise that specific sub-case; not completed this round."
+      ]
+    },
+    {
+      "finding_id": "F-R6-11",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED, independent variant: a claim file planted ahead of a legitimate agent's FIRST real stop (receipt genuinely still 'open', nothing has consumed it yet), naming an unrelated holder string, is blocked ('already claimed by some-other-agent-entirely; refusing a concurrent second consume'), and the receipt is left 'open' (not silently marked consumed). This differs from the shipped test_planted_claim_cannot_skip_attribution in exercising the pre-first-stop case explicitly.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L457-L491 (O_EXCL claim + holder mismatch block)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py (h1_planted_claim)"
+      ],
+      "evidence_fingerprint": "sha256:d9f0cb6ea6da5b825227fcd1100ece477afe0929edd3b1f1c63c939e82cf63c8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-12",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED: an agent admitted and Start-leased only for assignment A-HOOK-FIXTURE, presenting its own valid token but a byte-valid HARNESS_RESULT/result artifact for sibling assignment A-HOOK-FIXTURE-2 registered in the same run, is blocked ('was not registered when this agent started (missing from the Start-time lease)'). Independent reproduction of the same-run substitution defect class using the real lease-sealing mechanism rather than the shipped fixture.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L249-L264 (lease-sealed assignment_digests check)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py (h2_same_run_substitution)"
+      ],
+      "evidence_fingerprint": "sha256:d9f0cb6ea6da5b825227fcd1100ece477afe0929edd3b1f1c63c939e82cf63c8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r6_attacks/attack_H_planted_claim_and_same_run_substitution.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R6-13",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Declared-reopened supersession (check_declared_supersession), the O_EXCL single-consume mechanism, and the symlinked-result-path rejection are all UNCHANGED by the round-5 diff (git diff d94270f^ d94270f confines its edits to: the legacy-manifest pin machinery, the pending-carve-out age bound, the ACTIVE_RUN clean-error branch in validate_harness.py, the agent-binding guard in admit_agent.py, and its Stop-time backstop in subagent_stop_validate.py -- check_declared_supersession's body, the O_EXCL claim block, and the symlink-result-path check are byte-identical to their pre-round-5 state). Since a regression by definition requires the round-5 diff to have touched the affected code, these were not independently re-attacked from scratch this round; instead the 9 shipped regression tests covering them (test_undeclared_second_consume_is_refused, test_declared_reopen_licenses_a_second_consume, test_reopen_row_must_match_the_digest_it_claims_to_supersede, test_concurrent_stops_consume_receipt_once, test_symlinked_result_path_is_rejected, test_subagentstop_blocks_same_run_assignment_substitution, test_reopen_cannot_clear_the_tamper_detector, test_planted_claim_cannot_skip_attribution, test_admission_bound_to_expected_agent_id) were confirmed passing on the current, post-round-5 bytes, and two of that group (planted claim, same-run substitution) were additionally re-attacked independently and black-box in F-R6-11/F-R6-12 above.",
+      "assumptions_used": [
+        "A function or code path byte-identical across d94270f^ and d94270f cannot itself be a round-5 regression; a regression introduced by round 5 must live in code the round-5 diff actually changed. This does not rule out a round-5 change to a NEIGHBORING function altering the effective behavior of unchanged code (F-R6-02's finding is exactly that shape, in a different function), so this reasoning was not applied uncritically -- F-R6-02 was found precisely because created_at is read by unchanged pending_carve_out_refusal logic but written by round-5-touched admit_agent.py."
+      ],
+      "evidence_refs": [
+        "git diff d94270f^ d94270f -- .agent-harness/scripts/validate_harness.py .agent-harness/scripts/admit_agent.py .codex/hooks/subagent_stop_validate.py .agent-harness/tests/test_hooks.py",
+        ".agent-harness/scripts/validate_harness.py#L149-L192 (check_declared_supersession, absent from the round-5 diff)"
+      ],
+      "evidence_fingerprint": "sha256:dc283d024d2640f3c594fa847a164e01c1e32f63f9dab1c207c8f745fcd0c568",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py -k 'test_undeclared_second_consume_is_refused or test_declared_reopen_licenses_a_second_consume or test_reopen_row_must_match_the_digest_it_claims_to_supersede or test_concurrent_stops_consume_receipt_once or test_symlinked_result_path_is_rejected or test_subagentstop_blocks_same_run_assignment_substitution or test_reopen_cannot_clear_the_tamper_detector or test_planted_claim_cannot_skip_attribution or test_admission_bound_to_expected_agent_id'   # 9 passed"
+      ],
+      "confidence": 0.85,
+      "unresolved": []
+    }
+    ,
+    {
+      "finding_id": "F-R6-14",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "inconclusive",
+      "severity": "low",
+      "statement": "Incidental finding from correcting this envelope, reported for completeness: this result was first submitted with spawn_contract.subagent_start_injected=false and subagent_start_preflight='NOT_APPLICABLE (LOCAL-ADAPT...)', reflecting that I personally never observed a SubagentStart hook dispatch for this invocation. The Stop hook blocked it: 'expected True, got False' / 'expected \\'PASS\\', got ...'. Before correcting, I independently verified rather than took the coordinator's word: (1) .agent-harness/leases/r6-regression.json is a real, schema-1 lease sealing both this run's assignment digests for agent_id r6-regression, created_at 2026-07-29T10:18:38Z, matching ADMISSIONS.jsonl's mint timestamps; (2) the raw_logs/stop_event_r6-regression.json capture of my actual first HARNESS_RESULT carries admission_proof as sha256:fedd3c08...  which is exactly sha256(<my real raw admission token>) and exactly the receipt's own token_digest -- consistent only with scrub_admission_proof.py's documented behavior of replacing a raw token with its digest in a captured BLOCKED stop's retained evidence, not with a fabricated event; (3) running the real validate_result_contract() directly against my real result file reproduced exactly these 2 errors and no others. On that basis the correction is a genuine fix to a factual error in my own self-attestation, not capitulation to unverified pressure. Separately, and this is the part worth recording: validate_result_contract() does not derive its 'expected True'/'expected PASS' from the lease file, the raw_logs capture, or any other Start-time evidence at all -- .agent-harness/scripts/_harness.py's validate_result_contract() hardcodes `expected_spawn = {..., \"subagent_start_injected\": True, \"subagent_start_preflight\": \"PASS\", ...}` as fixed literals, checked only for equality against whatever the agent writes. An agent for which SubagentStart genuinely never ran (no lease at all) would be rejected anyway, but for an entirely different, independently-enforced reason -- subagent_stop_validate.py's own separate lease-existence check, which I attacked directly and successfully in F-R6-09 (no-lease-at-all is blocked) -- not because this contract field was cross-checked against reality. These two fields are therefore self-attested and unverified by the contract layer in isolation; they are not a security control on their own, and this repo's real security control (the lease/receipt/token binding) does not depend on them. Verdict is 'inconclusive' rather than 'fail' because no exploitable gap was demonstrated -- an agent that lies on these two fields while genuinely lacking a lease is still caught by the independent lease check -- and because whether an unconditional literal expectation here is a documentation gap or intentional (the fields may exist purely so a human/adjudicator reading a result JSON can see a claimed Start outcome) is a design question, not decided here.",
+      "assumptions_used": [
+        "The digest match (sha256 of my own actual raw admission token equals both the receipt's token_digest and the scrubbed raw_logs capture's admission_proof) is treated as strong evidence the captured stop event and block are genuine records of my own real first submission, consistent with scrub_admission_proof.py's documented purpose, rather than independently re-verifying the scrubber's own source in this pass."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/_harness.py#L320-L349 (validate_result_contract, expected_spawn literal dict)",
+        ".agent-harness/leases/r6-regression.json",
+        ".agent-harness/runs/run-20260729-f10-d067-review-r6/raw_logs/stop_event_r6-regression.json",
+        ".agent-harness/runs/run-20260729-f10-d067-review-r6/raw_logs/stop_out_r6-regression.json",
+        ".agent-harness/admissions/run-20260729-f10-d067-review-r6/A-D067-R6-REGRESSION.json"
+      ],
+      "evidence_fingerprint": "sha256:4b4cde487d91b58bf62ddb05232ff68318535bcba4d24b9ebf029ea6aa4c5372",
+      "counterevidence_refs": [
+        "The actual security-relevant binding (which agent_id may consume which assignment) is enforced independently by the lease existence/content check and the admission receipt/token_digest check, both of which I attacked directly elsewhere in this report (F-R6-01, F-R6-08, F-R6-09, F-R6-13) and found to hold; this field pair is not those controls."
+      ],
+      "reproduction": [
+        "cat .agent-harness/leases/r6-regression.json",
+        "python3 -c \"import hashlib; print('sha256:'+hashlib.sha256(b'sha256:fedd3c082476cbe220bc0d81a2971f8d8bfb88fa29cb3072d8c459aa49f06dc7').hexdigest())\"",
+        "python3 -c \"import sys,json,hashlib; sys.path.insert(0,'.agent-harness/scripts'); from _harness import validate_result_contract; ...\""
+      ],
+      "confidence": 0.7,
+      "unresolved": [
+        "Whether subagent_start_injected/subagent_start_preflight should be derived from real lease evidence rather than hardcoded literals is a design question for whoever owns the harness contract next, not decided here."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-REGRESSION.json"
+  ]
+}

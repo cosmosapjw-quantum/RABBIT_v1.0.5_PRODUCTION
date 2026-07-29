@@ -18,6 +18,7 @@ import sys
 from collections.abc import Iterator
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import NamedTuple
 
 from _harness import (
     active_run_id,
@@ -94,6 +95,25 @@ LEGACY_MANIFEST_PINNED_SHA256 = (
 # directory the receipt sat in. The carve-out is now bounded to an admission
 # that can still plausibly be IN FLIGHT -- see pending_carve_out_refusal.
 PENDING_ADMISSION_MAX_AGE_HOURS = 24
+
+# How a result artifact came to be trusted. Exactly two verdicts mean "a durable
+# record vouches for these exact bytes":
+ATTRIBUTED = "attributed"  # a consumed ADMISSIONS.jsonl row whose digest matches
+LEGACY_PINNED = "legacy-pinned"  # pinned by LEGACY_RESULTS_MANIFEST.json
+# ...and everything else is a reason not to trust them.
+LEDGER_DIGEST_MISMATCH = "ledger-digest-mismatch"
+LEGACY_DIGEST_MISMATCH = "legacy-digest-mismatch"
+PENDING = "pending"  # open receipt, still inside the in-flight carve-out
+CARVE_OUT_REFUSED = "carve-out-refused"
+UNATTRIBUTED = "unattributed"
+UNREADABLE = "unreadable"
+# D-070 round-6 review, finding 2. merge_results.py globbed results/*.json and
+# merged whatever it found, so unattributed or still-pending bytes reached
+# MERGED_RESULTS.json while this validator reported green -- a second, unguarded
+# path to treating a result as real. It now imports this set and
+# collect_result_attribution below rather than restating the rule, so the merge
+# gate and the validator cannot drift apart.
+MERGEABLE_ATTRIBUTION = frozenset({ATTRIBUTED, LEGACY_PINNED})
 
 
 def sha256_of(path: Path) -> str:
@@ -189,6 +209,76 @@ def check_declared_supersession(run_name: str, rows: list[dict]) -> list[str]:
                     )
             last_consume[aid] = row
             reopens_since_consume[aid] = []
+    return errors
+
+
+def check_one_agent_one_assignment(run_name: str, rows: list[dict]) -> list[str]:
+    """One spawned ``agent_id`` consumes at most one assignment per run.
+
+    D-065 obligation 1, round-6. admit_agent.py refuses to mint a second receipt
+    for an agent that already holds one, and subagent_stop_validate.py refuses to
+    consume it -- but neither left a DETECTOR behind. The Stop-time guard read
+    the ledger without a lock over the append that follows, and the O_EXCL claim
+    file is keyed per assignment, so two concurrent stops by one agent on two
+    assignments took two different claims and raced: both were admitted in 126 of
+    200 measured trials on pristine bytes, and the resulting tree validated
+    ``ok: true`` in 200 of 200. A live guard that is bypassed leaves no trace
+    unless something reads the record afterwards. The ledger already says who
+    consumed what, so the violation is visible after the fact -- whether the race
+    was won, lost, or the guard was never there.
+
+    Walking the append-only rows in order, an agent is bound to the FIRST
+    assignment it consumes. A later consume of a DIFFERENT assignment by the same
+    agent is an error unless the binding was released in between by an
+    ``admit_agent.py --reopen`` row for the assignment that agent holds, naming
+    it in ``superseded_consumed_by_agent_id`` and carrying a reason. That is the
+    same declared-supersession gesture check_declared_supersession requires, read
+    for a different question: there, may these bytes be replaced; here, is this
+    agent free to be bound somewhere else. An undeclared reopen, one naming
+    another agent, or one for another assignment releases nothing.
+
+    Re-consuming the SAME assignment is deliberately not this check's business: a
+    resumed agent re-stopping is ordinary, and whether a second consume is
+    licensed at all is check_declared_supersession's question, asked of the same
+    rows. A consume row with no ``agent_id`` is an error here, because an
+    unattributable consume cannot be shown NOT to be a second one.
+    """
+    errors: list[str] = []
+    bound: dict[str, str] = {}
+    for row in rows:
+        event = row.get("event")
+        assignment_id = str(row.get("assignment_id"))
+        if event == "reopened":
+            released_agent = str(row.get("superseded_consumed_by_agent_id") or "")
+            reason = str(row.get("reason") or "").strip()
+            if (
+                released_agent
+                and reason
+                and bound.get(released_agent) == assignment_id
+            ):
+                del bound[released_agent]
+        elif event == "consumed":
+            agent_id = str(row.get("agent_id") or "")
+            if not agent_id:
+                errors.append(
+                    "Admission ledger records a consume with no agent_id: "
+                    f"{run_name}/{assignment_id}. An unattributable consume "
+                    "cannot be shown not to be a second one for an agent that "
+                    "already holds an assignment."
+                )
+                continue
+            held = bound.get(agent_id)
+            if held is not None and held != assignment_id:
+                errors.append(
+                    f"Admission ledger records agent {agent_id!r} consuming two "
+                    f"assignments in run {run_name}: {held} and then "
+                    f"{assignment_id}, with no declared release between them. One "
+                    "agent_id binds to one assignment per run (D-065 obligation "
+                    "1); releasing it takes an admit_agent.py --reopen --reason "
+                    f"'...' row for {held} naming that agent."
+                )
+                continue
+            bound[agent_id] = assignment_id
     return errors
 
 
@@ -396,6 +486,48 @@ def check_legacy_manifest_pin(
     return legacy_status, errors
 
 
+def open_admission_chain_start(rows: list[dict], assignment_id: str) -> str | None:
+    """When the assignment's currently-OPEN admission chain was first minted.
+
+    D-070 round-6 review, finding F-R6-02. The in-flight ceiling used to be
+    measured from the receipt's own ``created_at``, and ``admit_agent.py`` writes
+    ``"created_at": utc_now()`` unconditionally on every mint, ``--reopen``
+    included. One documented, non-forged reopen therefore reset the clock on the
+    exact same never-verified bytes, and could do so indefinitely: the ceiling
+    was not a bound. The append-only ledger is the record that survives into
+    committed evidence, so the age is taken from it instead.
+
+    A *chain* is the run of mint rows for one assignment that no consume row has
+    closed yet:
+
+    * a ``minted``/``reopened`` row arriving when no chain is open STARTS one,
+      and its ``at`` is what the ceiling is measured from;
+    * a further ``minted``/``reopened`` row arriving while a chain is still open
+      is a re-mint of an admission that was NEVER consumed -- the abuse -- so the
+      first timestamp is kept and the clock does not restart;
+    * a ``consumed`` row CLOSES the chain. A reopen after it supersedes bytes
+      that really were admitted, which is a declared supersession
+      (check_declared_supersession makes it name the digest it replaces) and a
+      legitimate fresh admission, so the next mint starts a new chain whose clock
+      legitimately starts over.
+
+    Returns None when no chain is open: no mint row at all, or the last event for
+    this assignment was a consume. ``admit_agent.py`` appends the ledger row
+    *before* writing the receipt, so an open receipt in that state is left-over
+    or planted rather than in flight, and the caller refuses the carve-out.
+    """
+    started: str | None = None
+    for row in rows:
+        if str(row.get("assignment_id")) != assignment_id:
+            continue
+        event = row.get("event")
+        if event == "consumed":
+            started = None
+        elif event in ("minted", "reopened") and started is None:
+            started = str(row.get("at") or "")
+    return started
+
+
 def pending_carve_out_refusal(
     harness: Path,
     run_name: str,
@@ -403,6 +535,7 @@ def pending_carve_out_refusal(
     receipt: dict,
     active: str | None,
     now: datetime,
+    ledger_rows: list[dict] | None,
 ) -> str | None:
     """Why this open receipt does NOT excuse a result, or None when it does.
 
@@ -421,21 +554,33 @@ def pending_carve_out_refusal(
       receipt cannot be moved to cover a different artifact.
     * the assignment must still be registered in the active run. Nothing can be
       in flight for an assignment the run does not have.
-    * the admission must be younger than PENDING_ADMISSION_MAX_AGE_HOURS. This
-      is what turns "for ever" into a bound, and the exact claim is narrow: one
-      admission excuses one artifact for at most that long, and extending it
-      means running admit_agent.py --reopen --reason '...', which writes a
-      declared supersession row onto the append-only ledger. The ceiling sits
-      far above any real write-to-stop window -- the artifact is written
-      immediately before the stop, and only a blocked stop being retried holds
-      it open -- so an agent genuinely in flight is not wedged by it. An agent
-      sitting on an unadmitted artifact for over a day is not in flight, and
-      saying so is the point.
+    * the admission must be younger than PENDING_ADMISSION_MAX_AGE_HOURS on BOTH
+      surfaces that date it: the receipt's own ``created_at``, and the first
+      mint of its currently-open chain on the append-only ledger. This is what
+      turns "for ever" into a bound. The ceiling sits far above any real
+      write-to-stop window -- the artifact is written immediately before the
+      stop, and only a blocked stop being retried holds it open -- so an agent
+      genuinely in flight is not wedged by it. An agent sitting on an unadmitted
+      artifact for over a day is not in flight, and saying so is the point.
+
+    Reading BOTH timestamps is D-070 round-6 finding F-R6-02, and the two are
+    load-bearing in opposite directions. The receipt bound catches a receipt
+    back-dated or forward-dated against its ledger. The ledger bound catches the
+    reported defect: admit_agent.py stamps ``created_at`` afresh on every mint,
+    ``--reopen`` included, so one documented, non-forged reopen used to reset
+    the ceiling on the same never-verified bytes, indefinitely. Because a
+    refusal is returned when EITHER surface is out of bounds, the rule is
+    strictly narrower than the one it replaces -- nothing that was refused
+    before is excused now -- and the only thing that legitimately restarts the
+    clock is a consume, i.e. bytes actually being admitted. See
+    open_admission_chain_start for why a reopen after a genuine consume still
+    starts a fresh chain, and a reopen of a never-consumed receipt does not.
 
     This does not make an unattributed result safe and does not claim to: while
     the carve-out holds, the bytes are tolerated, not verified. What changes is
     that the tolerance is scoped to one run, tied to a registered assignment,
-    capped in time, and reported with its digest and a count.
+    capped in time against a record the holder cannot refresh, and reported with
+    its digest and a count.
     """
     if active is None or run_name != active:
         return (
@@ -475,9 +620,53 @@ def pending_carve_out_refusal(
         return (
             f"its open admission receipt has been open for {age.total_seconds() / 3600:.1f}h, "
             f"past the {PENDING_ADMISSION_MAX_AGE_HOURS}h in-flight ceiling. Let "
-            "the agent stop, delete the artifact, or re-admit with admit_agent.py "
-            "--reopen --reason '...', which records the supersession on the "
-            "append-only ledger"
+            "the agent stop and consume the admission, or delete the artifact"
+        )
+    # The ledger half of the bound (F-R6-02). Everything above reads the receipt,
+    # which the holder can re-mint; this reads the append-only record, which it
+    # cannot.
+    if ledger_rows is None:
+        return (
+            "its run has no readable admission ledger, so the first mint of its "
+            "admission chain -- which is what the in-flight ceiling is measured "
+            "from -- cannot be established"
+        )
+    chain_raw = open_admission_chain_start(ledger_rows, assignment_id)
+    if chain_raw is None:
+        return (
+            "the append-only admission ledger records no OPEN mint for it: either "
+            "there is no mint row at all, or its last ledger event is a consume. "
+            "admit_agent.py appends the ledger row before it writes the receipt, "
+            "so an open receipt in that state is left-over or planted rather than "
+            "in flight"
+        )
+    try:
+        chain_start = datetime.fromisoformat(chain_raw)
+    except ValueError:
+        chain_start = None
+    if chain_start is None or chain_start.tzinfo is None:
+        return (
+            "the admission ledger row that opened its admission chain carries no "
+            f"parseable UTC timestamp ({chain_raw!r}), so how long that chain has "
+            "been open cannot be established"
+        )
+    chain_age = now - chain_start
+    if chain_age < timedelta(0):
+        return (
+            f"the admission ledger row that opened its admission chain is dated "
+            f"{chain_raw}, in the future; the carve-out cannot be extended by "
+            "dating a mint forward"
+        )
+    if chain_age > timedelta(hours=PENDING_ADMISSION_MAX_AGE_HOURS):
+        return (
+            "its admission chain has been open since "
+            f"{chain_raw} ({chain_age.total_seconds() / 3600:.1f}h), past the "
+            f"{PENDING_ADMISSION_MAX_AGE_HOURS}h in-flight ceiling. The ceiling is "
+            "measured from the FIRST mint of the chain on the append-only ledger, "
+            "not from the receipt's created_at, which admit_agent.py rewrites on "
+            "every mint including --reopen: re-minting a receipt that was never "
+            "consumed does not restart the clock. Let the agent stop and consume "
+            "the admission, or delete the artifact"
         )
     return None
 
@@ -589,6 +778,316 @@ def emit_legacy_manifest(repo: Path, force: bool) -> None:
             },
             indent=2,
         )
+    )
+
+
+class AttributionReport(NamedTuple):
+    """What every result artifact on disk is attributed by, and why not."""
+
+    errors: list[str]
+    open_admissions: list[str]
+    pending_results: list[dict[str, str]]
+    legacy_status: str
+    # (run_id, assignment_id) -> one of the verdict constants above. Only
+    # MERGEABLE_ATTRIBUTION members mean a durable record vouches for the bytes.
+    status: dict[tuple[str, str], str]
+    # The digest each verdict was reached about, so a caller that re-reads the
+    # file can prove it is looking at the same bytes this pass judged.
+    digest: dict[tuple[str, str], str]
+
+
+def collect_result_attribution(
+    repo: Path,
+    harness: Path,
+    *,
+    active: str | None,
+    now: datetime,
+) -> AttributionReport:
+    """Decide, for every result artifact on disk, what vouches for its bytes.
+
+    This is the single implementation of the attribution rule. ``main`` folds its
+    errors into the validator's verdict; ``merge_results.py`` imports it and
+    refuses to merge anything whose verdict is not in MERGEABLE_ATTRIBUTION
+    (D-070 round-6 review, finding 2 -- the merge used to glob ``results/*.json``
+    and reduce whatever it found, so a still-pending or wholly unattributed
+    artifact reached MERGED_RESULTS.json while this validator reported green).
+    Both callers therefore enforce the same rule by construction, which a second
+    implementation could not guarantee.
+
+    The rule: every result artifact is attributed by a consumed ledger row whose
+    digest matches, or pinned by the legacy manifest with a matching digest, or
+    belongs to an admitted agent that has not stopped yet. Nothing else passes.
+    """
+    errors: list[str] = []
+    open_admissions: list[str] = []
+    open_receipts: dict[tuple[str, str], dict] = {}
+    consumed: dict[tuple[str, str], dict] = {}
+    status: dict[tuple[str, str], str] = {}
+    digest: dict[tuple[str, str], str] = {}
+    for path in sorted((harness / "admissions").glob("*/*.json")):
+        if path.name.startswith(".tmp."):
+            continue
+        try:
+            receipt = load_json(path)
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+            errors.append(f"Admission receipt is unreadable: {path.relative_to(repo)}")
+            continue
+        if not isinstance(receipt, dict):
+            errors.append(f"Admission receipt is not an object: {path.relative_to(repo)}")
+            continue
+        state = str(receipt.get("state"))
+        if state == "open":
+            open_admissions.append(f"{path.parent.name}/{path.stem}")
+            open_receipts[(path.parent.name, path.stem)] = receipt
+        elif state == "consumed":
+            consumed[(path.parent.name, path.stem)] = receipt
+
+    # Every result in the active run must be attributable: a consumed receipt
+    # whose recorded digest still matches the bytes on disk. This is what
+    # detects a fabricated or post-hoc edited result artifact, which the
+    # git-porcelain check in main cannot see for an untracked new file
+    # (D-067 review F-D067-08).
+    pending_results: list[dict[str, str]] = []
+    if active:
+        for result_path in sorted((harness / "runs" / active / "results").glob("*.json")):
+            receipt = consumed.get((active, result_path.stem))
+            if receipt is None:
+                if (active, result_path.stem) in open_receipts:
+                    # The agent may still be in flight. Whether that actually
+                    # excuses these bytes is decided in exactly one place, the
+                    # forward sweep below, so the carve-out cannot be granted
+                    # here and bounded there (D-070 round-5 review F-R5-04).
+                    continue
+                errors.append(
+                    "Result artifact has no admission receipt at all: "
+                    f"{result_path.relative_to(repo)}"
+                )
+                continue
+            try:
+                result_sha = sha256_of(result_path)
+            except OSError as exc:
+                # An artifact whose bytes cannot be read cannot be reconciled
+                # against the digest that admitted it. Reported, not raised: a
+                # crash is fail-closed but unreadable, and every caller that
+                # parses this script's JSON sees an empty stdout (the
+                # D-070 F-R5-08 class).
+                errors.append(
+                    f"Result artifact could not be read ({exc.__class__.__name__}): "
+                    f"{result_path.relative_to(repo)}"
+                )
+                continue
+            if str(receipt.get("result_sha256")) != result_sha:
+                errors.append(
+                    "Result artifact changed after it was admitted: "
+                    f"{result_path.relative_to(repo)}"
+                )
+
+    # The receipts above are gitignored working state; the record that survives
+    # into committed evidence is the per-run append-only ledger. Cross-check them
+    # against each other, so a consumed receipt with no ledger line -- or a
+    # ledger line contradicting the receipt -- is visible (round-2 review F-7).
+    attributed: dict[tuple[str, str], dict] = {}
+    # Rows are kept per run for the in-flight ceiling below, which is measured
+    # from the ledger and not from the receipt (F-R6-02). A run whose ledger is
+    # missing, unreadable, or carries a malformed line gets no entry at all, so
+    # the carve-out is refused rather than granted on an unparsed record.
+    ledger_rows_by_run: dict[str, list[dict]] = {}
+    for run_dir in run_dirs(harness):
+        ledger_path = run_dir / "ADMISSIONS.jsonl"
+        run_receipts = {
+            aid: receipt for (run, aid), receipt in consumed.items() if run == run_dir.name
+        }
+        if not ledger_path.is_file():
+            errors.extend(
+                f"Consumed receipt has no admission ledger: {run_dir.name}/{aid}"
+                for aid in sorted(run_receipts)
+            )
+            continue
+        rows, ledger_errors = read_ledger(ledger_path)
+        errors.extend(ledger_errors)
+        if not ledger_errors:
+            ledger_rows_by_run[run_dir.name] = rows
+        # Every consume row is retained, not just the last one: collapsing them
+        # is what let a second consume quietly overwrite the digest the first had
+        # permanently pinned (D-067 round-4 review, defect 2).
+        errors.extend(check_declared_supersession(run_dir.name, rows))
+        # The other question the same rows answer: not "may these bytes be
+        # replaced" but "did one agent consume two assignments" (D-065
+        # obligation 1, round-6). Both are read from the append-only record, so
+        # a live guard that was raced or bypassed is still caught here.
+        errors.extend(check_one_agent_one_assignment(run_dir.name, rows))
+        ledger_consumed: dict[str, dict] = {}
+        for ledger_row in rows:
+            if ledger_row.get("event") == "consumed":
+                ledger_consumed[str(ledger_row.get("assignment_id"))] = ledger_row
+        attributed.update(
+            ((run_dir.name, aid), row) for aid, row in ledger_consumed.items()
+        )
+        # Reverse reconciliation, ledger -> result. The receipt-driven check above
+        # is defeated by `admit_agent.py --reopen`, which replaces a consumed
+        # receipt with an open one and so demotes an edited artifact to merely
+        # "pending" (D-067 round-3 review F-R3-10). The ledger is append-only, so
+        # a consume row is a permanent statement about specific bytes: once an
+        # assignment has been admitted, its result may never differ from the last
+        # row recorded for it, whatever the receipt now says.
+        for aid, row in sorted(ledger_consumed.items()):
+            result_file = run_dir / "results" / f"{aid}.json"
+            if not result_file.is_file():
+                errors.append(
+                    "Admitted result artifact is missing: "
+                    f"{run_dir.name}/{aid}"
+                )
+                continue
+            try:
+                ledger_sha = sha256_of(result_file)
+            except OSError as exc:
+                status[(run_dir.name, aid)] = UNREADABLE
+                errors.append(
+                    f"Admitted result artifact could not be read "
+                    f"({exc.__class__.__name__}): {run_dir.name}/{aid}"
+                )
+                continue
+            digest[(run_dir.name, aid)] = ledger_sha
+            if str(row.get("result_sha256")) != ledger_sha:
+                status[(run_dir.name, aid)] = LEDGER_DIGEST_MISMATCH
+                errors.append(
+                    "Result artifact differs from the bytes recorded in the "
+                    f"admission ledger: {run_dir.name}/{aid}"
+                )
+            else:
+                status[(run_dir.name, aid)] = ATTRIBUTED
+
+        for aid, receipt in sorted(run_receipts.items()):
+            row = ledger_consumed.get(aid)
+            if row is None:
+                errors.append(
+                    f"Consumed receipt has no ledger entry: {run_dir.name}/{aid}"
+                )
+                continue
+            for field in ("result_sha256", "token_digest"):
+                if str(row.get(field)) != str(receipt.get(field)):
+                    errors.append(
+                        f"Admission ledger disagrees with the receipt on {field}: "
+                        f"{run_dir.name}/{aid}"
+                    )
+            if str(row.get("agent_id")) != str(receipt.get("consumed_by_agent_id")):
+                errors.append(
+                    "Admission ledger disagrees with the receipt on the writing "
+                    f"agent: {run_dir.name}/{aid}"
+                )
+
+    # The legacy manifest is the other half of the attribution rule, so it needs
+    # the same append-only treatment as retained run evidence: once committed,
+    # editing it to bless an extra file, or deleting it, is itself an error.
+    errors.extend(
+        git_porcelain_errors(repo, LEGACY_MANIFEST_REL, "Legacy results manifest")
+    )
+    legacy_index, legacy_status, legacy_errors = load_legacy_manifest(repo)
+    errors.extend(legacy_errors)
+    if legacy_status.startswith("ok"):
+        # The git check above only binds a *tracked* manifest: an untracked one
+        # shows as `??` and is tolerated, exactly as a new run directory is. Say
+        # so out loud rather than letting an uncommitted pin read as a sealed
+        # one -- while the manifest is uncommitted, an added entry leaves no git
+        # trace.
+        tracked, failure = git_tracked(repo, LEGACY_MANIFEST_REL)
+        if failure:
+            errors.append(
+                "Could not determine whether the legacy results manifest is "
+                f"tracked ({failure}); git is required for "
+                "validation."
+            )
+        elif not tracked:
+            legacy_status += "; UNCOMMITTED, so the pin is not yet git-bound"
+    # ...and being tracked is not enough either, because `git commit` clears the
+    # porcelain check. The manifest's own identity is cross-checked against the
+    # declared count and the pinned digest; see LEGACY_MANIFEST_PINNED_SHA256.
+    legacy_status, pin_errors = check_legacy_manifest_pin(
+        repo, legacy_index, legacy_status
+    )
+    errors.extend(pin_errors)
+
+    # Forward reconciliation, result -> attribution, across EVERY run directory.
+    # Everything above walks from a record to the file it names, so a file that
+    # no record names was invisible: a wholly fabricated result dropped into a
+    # non-active run's results/ left the validator reporting ok (D-067 round-4
+    # review, defect 1). `.agent-harness/runs/` is gitignored in full, so the
+    # porcelain check in main cannot see it either -- such a file produces no git
+    # status entry at all, not even `??`.
+    for run_name, assignment_id, result_path in result_files(harness):
+        key = (run_name, assignment_id)
+        if key in attributed:
+            # Digest already reconciled by the ledger -> result loop above.
+            continue
+        try:
+            result_digest = sha256_of(result_path)
+        except OSError as exc:
+            status[key] = UNREADABLE
+            errors.append(
+                f"Result artifact could not be read ({exc.__class__.__name__}): "
+                f"{run_name}/{assignment_id}"
+            )
+            continue
+        digest[key] = result_digest
+        pinned = legacy_index.get(key)
+        if pinned is not None:
+            if pinned != result_digest:
+                status[key] = LEGACY_DIGEST_MISMATCH
+                errors.append(
+                    "Legacy result artifact changed since the legacy manifest "
+                    f"pinned it: {run_name}/{assignment_id}"
+                )
+            else:
+                status[key] = LEGACY_PINNED
+            continue
+        open_receipt = open_receipts.get(key)
+        if open_receipt is not None:
+            # An admitted agent that has written its artifact but not stopped.
+            # Reported rather than errored so a live run is not wedged
+            # (D-067 round-2 review F-12) -- but only while the admission can
+            # still plausibly be in flight (D-070 round-5 review F-R5-04) and
+            # only while the chain that admission belongs to is itself young
+            # (D-070 round-6 review F-R6-02).
+            refusal = pending_carve_out_refusal(
+                harness,
+                run_name,
+                assignment_id,
+                open_receipt,
+                active,
+                now,
+                ledger_rows_by_run.get(run_name),
+            )
+            if refusal is None:
+                status[key] = PENDING
+                pending_results.append(
+                    {
+                        "run_id": run_name,
+                        "assignment_id": assignment_id,
+                        "sha256": result_digest,
+                        "receipt_created_at": str(open_receipt.get("created_at") or ""),
+                    }
+                )
+                continue
+            status[key] = CARVE_OUT_REFUSED
+            errors.append(
+                "Result artifact is not attributed: the open-admission carve-out "
+                f"is refused for {run_name}/{assignment_id} ({result_digest}) "
+                f"because {refusal}."
+            )
+            continue
+        status[key] = UNATTRIBUTED
+        errors.append(
+            "Result artifact is not attributed: no consumed admission ledger row "
+            "and no legacy manifest entry for "
+            f"{run_name}/{assignment_id} ({result_digest})."
+        )
+    return AttributionReport(
+        errors=errors,
+        open_admissions=open_admissions,
+        pending_results=pending_results,
+        legacy_status=legacy_status,
+        status=status,
+        digest=digest,
     )
 
 
@@ -723,8 +1222,21 @@ def main() -> None:
             if not assignment_path.is_file():
                 errors.append(f"Result has no registered assignment: {result_path.name}")
                 continue
-            assignment = load_json(assignment_path)
-            result = load_json(result_path)
+            try:
+                assignment = load_json(assignment_path)
+                result = load_json(result_path)
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                # Reported, not raised. An unreadable result artifact used to
+                # come out of here as a traceback with an empty stdout, so every
+                # caller that parses this script's JSON saw a crash rather than a
+                # verdict -- the D-070 F-R5-08 class, closed there for ACTIVE_RUN
+                # and left open here. The bytes are still refused: attribution
+                # below reports the same file as unreadable.
+                errors.append(
+                    "Result or its registered assignment is unreadable or invalid "
+                    f"JSON ({exc.__class__.__name__}): {result_path.name}"
+                )
+                continue
             result_errors = validate_result_contract(
                 result,
                 assignment,
@@ -745,221 +1257,17 @@ def main() -> None:
     errors.extend(
         git_porcelain_errors(repo, ".agent-harness/runs", "Tracked run evidence")
     )
-    # The legacy manifest is the other half of the attribution rule, so it needs
-    # the same append-only treatment: once committed, editing it to bless an
-    # extra file, or deleting it, is itself an error.
-    errors.extend(
-        git_porcelain_errors(repo, LEGACY_MANIFEST_REL, "Legacy results manifest")
+    # Attribution -- which result artifacts a durable record vouches for -- is
+    # computed by one shared pass, so merge_results.py gates on exactly the rule
+    # this validator enforces instead of a second copy of it that could drift
+    # (D-070 round-6 review, finding 2).
+    attribution = collect_result_attribution(
+        repo, harness, active=active, now=datetime.now(timezone.utc)
     )
-
-    open_admissions: list[str] = []
-    open_receipts: dict[tuple[str, str], dict] = {}
-    consumed: dict[tuple[str, str], dict] = {}
-    for path in sorted((harness / "admissions").glob("*/*.json")):
-        if path.name.startswith(".tmp."):
-            continue
-        try:
-            receipt = load_json(path)
-        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
-            errors.append(f"Admission receipt is unreadable: {path.relative_to(repo)}")
-            continue
-        if not isinstance(receipt, dict):
-            errors.append(f"Admission receipt is not an object: {path.relative_to(repo)}")
-            continue
-        state = str(receipt.get("state"))
-        if state == "open":
-            open_admissions.append(f"{path.parent.name}/{path.stem}")
-            open_receipts[(path.parent.name, path.stem)] = receipt
-        elif state == "consumed":
-            consumed[(path.parent.name, path.stem)] = receipt
-
-    # Every result in the active run must be attributable: a consumed receipt
-    # whose recorded digest still matches the bytes on disk. This is what
-    # detects a fabricated or post-hoc edited result artifact, which the
-    # git-porcelain check above cannot see for an untracked new file
-    # (D-067 review F-D067-08).
-    pending_results: list[dict[str, str]] = []
-    if active:
-        for result_path in sorted((harness / "runs" / active / "results").glob("*.json")):
-            receipt = consumed.get((active, result_path.stem))
-            if receipt is None:
-                if (active, result_path.stem) in open_receipts:
-                    # The agent may still be in flight. Whether that actually
-                    # excuses these bytes is decided in exactly one place, the
-                    # forward sweep below, so the carve-out cannot be granted
-                    # here and bounded there (D-070 round-5 review F-R5-04).
-                    continue
-                errors.append(
-                    "Result artifact has no admission receipt at all: "
-                    f"{result_path.relative_to(repo)}"
-                )
-                continue
-            result_sha = "sha256:" + hashlib.sha256(result_path.read_bytes()).hexdigest()
-            if str(receipt.get("result_sha256")) != result_sha:
-                errors.append(
-                    "Result artifact changed after it was admitted: "
-                    f"{result_path.relative_to(repo)}"
-                )
-
-    # The receipts above are gitignored working state; the record that survives
-    # into committed evidence is the per-run append-only ledger. Cross-check them
-    # against each other, so a consumed receipt with no ledger line -- or a
-    # ledger line contradicting the receipt -- is visible (round-2 review F-7).
-    attributed: dict[tuple[str, str], dict] = {}
-    for run_dir in run_dirs(harness):
-        ledger_path = run_dir / "ADMISSIONS.jsonl"
-        run_receipts = {
-            aid: receipt for (run, aid), receipt in consumed.items() if run == run_dir.name
-        }
-        if not ledger_path.is_file():
-            errors.extend(
-                f"Consumed receipt has no admission ledger: {run_dir.name}/{aid}"
-                for aid in sorted(run_receipts)
-            )
-            continue
-        rows, ledger_errors = read_ledger(ledger_path)
-        errors.extend(ledger_errors)
-        # Every consume row is retained, not just the last one: collapsing them
-        # is what let a second consume quietly overwrite the digest the first had
-        # permanently pinned (D-067 round-4 review, defect 2).
-        errors.extend(check_declared_supersession(run_dir.name, rows))
-        ledger_consumed: dict[str, dict] = {}
-        for ledger_row in rows:
-            if ledger_row.get("event") == "consumed":
-                ledger_consumed[str(ledger_row.get("assignment_id"))] = ledger_row
-        attributed.update(
-            ((run_dir.name, aid), row) for aid, row in ledger_consumed.items()
-        )
-        # Reverse reconciliation, ledger -> result. The receipt-driven check above
-        # is defeated by `admit_agent.py --reopen`, which replaces a consumed
-        # receipt with an open one and so demotes an edited artifact to merely
-        # "pending" (D-067 round-3 review F-R3-10). The ledger is append-only, so
-        # a consume row is a permanent statement about specific bytes: once an
-        # assignment has been admitted, its result may never differ from the last
-        # row recorded for it, whatever the receipt now says.
-        for aid, row in sorted(ledger_consumed.items()):
-            result_file = run_dir / "results" / f"{aid}.json"
-            if not result_file.is_file():
-                errors.append(
-                    "Admitted result artifact is missing: "
-                    f"{run_dir.name}/{aid}"
-                )
-                continue
-            ledger_sha = "sha256:" + hashlib.sha256(result_file.read_bytes()).hexdigest()
-            if str(row.get("result_sha256")) != ledger_sha:
-                errors.append(
-                    "Result artifact differs from the bytes recorded in the "
-                    f"admission ledger: {run_dir.name}/{aid}"
-                )
-
-        for aid, receipt in sorted(run_receipts.items()):
-            row = ledger_consumed.get(aid)
-            if row is None:
-                errors.append(
-                    f"Consumed receipt has no ledger entry: {run_dir.name}/{aid}"
-                )
-                continue
-            for field in ("result_sha256", "token_digest"):
-                if str(row.get(field)) != str(receipt.get(field)):
-                    errors.append(
-                        f"Admission ledger disagrees with the receipt on {field}: "
-                        f"{run_dir.name}/{aid}"
-                    )
-            if str(row.get("agent_id")) != str(receipt.get("consumed_by_agent_id")):
-                errors.append(
-                    "Admission ledger disagrees with the receipt on the writing "
-                    f"agent: {run_dir.name}/{aid}"
-                )
-
-    # Forward reconciliation, result -> attribution, across EVERY run directory.
-    # Everything above walks from a record to the file it names, so a file that
-    # no record names was invisible: a wholly fabricated result dropped into a
-    # non-active run's results/ left the validator reporting ok (D-067 round-4
-    # review, defect 1). `.agent-harness/runs/` is gitignored in full, so the
-    # porcelain check above cannot see it either -- such a file produces no git
-    # status entry at all, not even `??`.
-    #
-    # The rule: every result artifact is attributed by a consumed ledger row
-    # whose digest matches, or pinned by the legacy manifest with a matching
-    # digest, or belongs to an admitted agent that has not stopped yet. Nothing
-    # else passes.
-    legacy_index, legacy_status, legacy_errors = load_legacy_manifest(repo)
-    errors.extend(legacy_errors)
-    if legacy_status.startswith("ok"):
-        # The git check above only binds a *tracked* manifest: an untracked one
-        # shows as `??` and is tolerated, exactly as a new run directory is. Say
-        # so out loud rather than letting an uncommitted pin read as a sealed
-        # one -- while the manifest is uncommitted, an added entry leaves no git
-        # trace.
-        tracked, failure = git_tracked(repo, LEGACY_MANIFEST_REL)
-        if failure:
-            errors.append(
-                "Could not determine whether the legacy results manifest is "
-                f"tracked ({failure}); git is required for "
-                "validation."
-            )
-        elif not tracked:
-            legacy_status += "; UNCOMMITTED, so the pin is not yet git-bound"
-    # ...and being tracked is not enough either, because `git commit` clears the
-    # porcelain check. The manifest's own identity is cross-checked against the
-    # declared count and the pinned digest; see LEGACY_MANIFEST_PINNED_SHA256.
-    legacy_status, pin_errors = check_legacy_manifest_pin(
-        repo, legacy_index, legacy_status
-    )
-    errors.extend(pin_errors)
-
-    now = datetime.now(timezone.utc)
-    for run_name, assignment_id, result_path in result_files(harness):
-        key = (run_name, assignment_id)
-        if key in attributed:
-            # Digest already reconciled by the ledger -> result loop above.
-            continue
-        try:
-            result_digest = sha256_of(result_path)
-        except OSError as exc:
-            errors.append(
-                f"Result artifact could not be read ({exc.__class__.__name__}): "
-                f"{run_name}/{assignment_id}"
-            )
-            continue
-        pinned = legacy_index.get(key)
-        if pinned is not None:
-            if pinned != result_digest:
-                errors.append(
-                    "Legacy result artifact changed since the legacy manifest "
-                    f"pinned it: {run_name}/{assignment_id}"
-                )
-            continue
-        open_receipt = open_receipts.get(key)
-        if open_receipt is not None:
-            # An admitted agent that has written its artifact but not stopped.
-            # Reported rather than errored so a live run is not wedged
-            # (D-067 round-2 review F-12) -- but only while the admission can
-            # still plausibly be in flight (D-070 round-5 review F-R5-04).
-            refusal = pending_carve_out_refusal(
-                harness, run_name, assignment_id, open_receipt, active, now
-            )
-            if refusal is None:
-                pending_results.append(
-                    {
-                        "run_id": run_name,
-                        "assignment_id": assignment_id,
-                        "sha256": result_digest,
-                        "receipt_created_at": str(open_receipt.get("created_at") or ""),
-                    }
-                )
-                continue
-            errors.append(
-                "Result artifact is not attributed: the open-admission carve-out "
-                f"is refused for {run_name}/{assignment_id} ({result_digest}) "
-                f"because {refusal}."
-            )
-            continue
-        errors.append(
-            "Result artifact is not attributed: no consumed admission ledger row "
-            "and no legacy manifest entry for "
-            f"{run_name}/{assignment_id} ({result_digest})."
-        )
+    errors.extend(attribution.errors)
+    open_admissions = attribution.open_admissions
+    pending_results = attribution.pending_results
+    legacy_status = attribution.legacy_status
 
     # D-070: SSOT semantic consistency. The structural hashes above prove the
     # context files are unchanged since the pack was built; they say nothing

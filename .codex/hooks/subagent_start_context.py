@@ -23,21 +23,31 @@ more than one receipt claims the same `expected_agent_id` -- IS a hard Start
 failure, because in each of those cases something concrete and identifiable
 went wrong for this specific agent_id, and staying silent about it is exactly
 the failure mode the round-4 review flagged. Silence must never be the
-permissive default: whichever of the two states holds, this hook says so, in
-the injected context, load-bearing in `Hook preflight: PASS|FAIL`.
+permissive default: whichever state holds, this hook says so, in the injected
+context, load-bearing in `Hook preflight: PASS|FAIL`.
 
-Concretely, at Start this hook scans `.agent-harness/admissions/<ACTIVE_RUN>/`
-(read-only -- it never claims, locks, or mutates a receipt; consumption stays
-at Stop, under the `O_EXCL` claim in subagent_stop_validate.py) for receipts
-whose `expected_agent_id` equals this event's `agent_id`:
+ROUND-6 CORRECTION (obligation 2, still NOT DISCHARGED): the two states above
+were argued to be exhaustive on the theory that Start "receives only agent_id
+and agent_type ... never any statement of the parent's intent," so a failed
+mint and a legitimately unregistered helper agent were "indistinguishable from
+inside the hook" (docs/audit/BD622_D067_admission_binding_2026-07-29.md S2).
+That is false. `admit_agent.py` writes the run's `ADMISSIONS.jsonl` ledger
+*before* it writes the receipt file (see the "Ledger first, receipt second"
+comment there); a `minted` (or `reopened`) row carries `expected_agent_id`,
+and Start can read it just as it reads receipts. Reproduced: `chmod 0o500` on
+`.agent-harness/admissions/<run>/` leaves the ledger append succeeding (it
+lives under `.agent-harness/runs/<run>/`, a different directory) while the
+receipt write fails, so a `minted` row survives with no receipt on disk. Before
+this correction, `list_admission_matches` found zero files and this hook
+reported "none found" / PASS -- exactly the obligation-2 case, passing.
+
+The rule therefore has THREE states, not two:
 
   * No active run, no agent_id, or an agent_id that fails the same safe-key
     regex the run lease uses -> the check is skipped and reported as "not
     checked", mirroring the existing lease behaviour for the same inputs
     exactly. A deliberate no-op, not a silent one: the reason is always
     printed.
-  * Directory missing (no receipts minted yet in this run) or present with
-    zero matches for this agent_id -> reported as "none found", not fatal.
   * Exactly one matching receipt, state "open", its own `run_id` field equal
     to the active run -> reported as admitted, not fatal.
   * Exactly one matching receipt but state != "open", or its `run_id` field
@@ -50,12 +60,40 @@ whose `expected_agent_id` equals this event's `agent_id`:
     folded in too, deliberately: this hook cannot prove that an unparseable
     file was not meant for this agent_id, and an unprovable negative must not
     default to PASS. Ambiguity is a FAIL, not a skip.
+  * Zero matching receipt FILES (directory missing, empty, or no match for
+    this agent_id) -- this is where the two prior states above used to
+    collapse into one. Now the run's admission LEDGER is consulted:
+      - the ledger does not exist, or exists and names no `minted`/`reopened`
+        row for this `agent_id` whose assignment was never later `consumed`
+        -> genuinely "none found", not fatal. This is the case the old
+        two-state rule was right about: most spawned agents hold no
+        registered assignment at all.
+      - the ledger's *latest* `minted`/`reopened` row for some assignment
+        names this `agent_id`, and no `consumed` row for that assignment
+        follows it -> the parent minted (or attempted to remint) a receipt for
+        this exact agent and it never became usable -- hard FAIL. This is the
+        obligation-2 case: a failed mint is no longer indistinguishable from
+        an unregistered helper.
+      - the ledger itself cannot be read, or any line in it cannot be parsed
+        as a JSON object -> hard FAIL, same "unprovable negative" logic as an
+        unparseable receipt file above. A malformed ledger line is never
+        silently dropped.
+    A `reopened` row is a later, more specific statement about the same
+    assignment than an earlier `minted` row, so it supersedes that row for
+    this purpose regardless of which agent either one names -- mirrors
+    `admit_agent.py`'s own "ledger first, receipt second" replace semantics.
+    A `consumed` row proves a receipt *did* exist on disk at some point (Stop
+    only writes it after successfully claiming and validating an admission
+    file), so its presence must never be read back as a failure -- that would
+    resurrect a closed, successful admission as a phantom Start failure.
 
 This mirrors, but does not duplicate the authority of, subagent_stop_validate.py.
 Start reports what it can see before the agent has produced a result (there is
 no HARNESS_RESULT envelope yet to check `admission_proof` against); Stop still
 performs the authoritative token/attribution check and the single-use consume.
-Start must never contradict Stop's later verdict, so it only reads.
+Start must never contradict Stop's later verdict, so it only reads -- the
+ledger consultation above is a read of an append-only file, same as the
+receipt scan; it never claims, locks, or mutates anything.
 """
 from __future__ import annotations
 
@@ -186,6 +224,75 @@ def list_admission_matches(
     return matches, errors
 
 
+def read_admission_ledger(ledger_path: Path) -> tuple[list[dict[str, Any]], list[str]]:
+    """Parse the run's append-only admission ledger into ordered rows.
+
+    Read-only, mirrors ``list_admission_matches``: fails closed on any garbage
+    rather than skipping it, because a malformed line cannot be proven
+    irrelevant to the ``agent_id`` being checked (round-6 finding -- see the
+    module docstring). A missing ledger is not an error: it means nothing has
+    ever been minted in this run, which callers must check for separately via
+    ``ledger_path.is_file()`` before treating a read failure as fatal.
+    """
+    rows: list[dict[str, Any]] = []
+    errors: list[str] = []
+    try:
+        raw = ledger_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"admission ledger is unreadable ({exc.__class__.__name__})")
+        return rows, errors
+    for number, line in enumerate(raw.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            errors.append(f"admission ledger line {number} is malformed")
+            continue
+        if not isinstance(row, dict):
+            errors.append(f"admission ledger line {number} is not an object")
+            continue
+        rows.append(row)
+    return rows, errors
+
+
+def orphaned_mint_assignment_ids(ledger_rows: list[dict[str, Any]], agent_id: str) -> list[str]:
+    """Assignments whose latest recorded mint named ``agent_id`` but never shipped a receipt.
+
+    Walks the ledger in file order (append-only, so this is chronological) and
+    keeps, per ``assignment_id``, only the most recent ``minted``/``reopened``
+    row -- a ``reopened`` row is a later and more specific statement about the
+    same assignment, so it supersedes an earlier ``minted`` row regardless of
+    which agent either one names. A ``consumed`` row for that assignment seen
+    anywhere after such a row proves a receipt file did exist at some point
+    (``subagent_stop_validate.py`` only appends ``consumed`` after claiming and
+    validating an on-disk admission file), so it clears the assignment: a
+    legitimately consumed admission must never be resurrected as a failure.
+
+    Returns the sorted assignment_ids whose latest mint/reopen names
+    ``agent_id`` and was never followed by a matching consume -- i.e. the
+    parent recorded intent to admit this exact agent and the mint did not
+    result in a usable receipt (round-6 finding, D-065 obligation 2).
+    """
+    latest_agent: dict[str, str] = {}
+    consumed: dict[str, bool] = {}
+    for row in ledger_rows:
+        assignment_id = str(row.get("assignment_id") or "")
+        if not assignment_id:
+            continue
+        event = row.get("event")
+        if event in ("minted", "reopened"):
+            latest_agent[assignment_id] = str(row.get("expected_agent_id") or "")
+            consumed[assignment_id] = False
+        elif event == "consumed" and assignment_id in latest_agent:
+            consumed[assignment_id] = True
+    return sorted(
+        assignment_id
+        for assignment_id, expected in latest_agent.items()
+        if expected == agent_id and not consumed.get(assignment_id, False)
+    )
+
+
 def describe_admission_receipt(
     harness: Path, active_run: str, agent_id: str
 ) -> tuple[str, list[str]]:
@@ -193,10 +300,11 @@ def describe_admission_receipt(
 
     Returns ``(note, errors)``. ``note`` is always non-empty and always goes
     into the injected context (visibility is unconditional); ``errors`` feeds
-    the same ``start_errors`` list the run-identity lease uses, so an unusable
-    or ambiguous receipt is load-bearing in ``Hook preflight: PASS|FAIL`` the
-    same way a lease-write failure already is. See the module docstring for
-    the admitted / unusable / absent rule.
+    the same ``start_errors`` list the run-identity lease uses, so an unusable,
+    ambiguous, or orphaned-mint receipt state is load-bearing in
+    ``Hook preflight: PASS|FAIL`` the same way a lease-write failure already
+    is. See the module docstring for the admitted / unusable / absent /
+    orphaned-mint rule.
     """
     if not ADMISSION_KEY_RE.fullmatch(agent_id or ""):
         return "not checked (agent_id is not a safe admission key)", []
@@ -210,6 +318,38 @@ def describe_admission_receipt(
             [f"admission receipt state for agent_id={agent_id!r} is ambiguous: {detail}"],
         )
     if not matches:
+        # Round-6 finding: zero receipt FILES for this agent_id is not, by
+        # itself, proof that none was ever intended. Consult the ledger before
+        # calling this "none found" -- see the module docstring for the rule.
+        ledger_path = harness / "runs" / active_run / "ADMISSIONS.jsonl"
+        if ledger_path.is_file():
+            ledger_rows, ledger_errors = read_admission_ledger(ledger_path)
+            if ledger_errors:
+                detail = "; ".join(ledger_errors)
+                return (
+                    f"AMBIGUOUS (admission ledger for run {active_run!r} {detail})",
+                    [
+                        f"admission ledger for run {active_run!r} is unreadable or "
+                        f"malformed ({detail}); whether a mint for agent_id="
+                        f"{agent_id!r} was ever intended cannot be ruled out"
+                    ],
+                )
+            orphaned = orphaned_mint_assignment_ids(ledger_rows, agent_id)
+            if orphaned:
+                assignment_list = ", ".join(orphaned)
+                return (
+                    f"MINT FAILED (admission ledger records a minted/reopened "
+                    f"row for agent_id={agent_id!r} naming assignment(s) "
+                    f"{assignment_list} in run {active_run!r}, but no usable "
+                    "receipt exists on disk)",
+                    [
+                        f"admission ledger shows the parent intended to admit "
+                        f"agent_id={agent_id!r} for assignment(s) "
+                        f"{assignment_list} in run {active_run!r}, but the mint "
+                        "did not produce a usable receipt (missing, or "
+                        "overwritten by a failed reopen)"
+                    ],
+                )
         return (
             f"none found for agent_id={agent_id!r} in run {active_run!r} "
             "(not every spawned agent holds a registered assignment; if this "

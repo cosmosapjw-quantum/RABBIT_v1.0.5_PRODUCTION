@@ -106,7 +106,8 @@ rather than exempted; and a second consume row is admissible only when a declare
 sits between them. Start now also checks the admission receipt, closing the half
 of obligation 2 that was never implemented. A fresh overlapping-run canary (C4)
 was run on the post-`96089f0` bytes, but round 5 then rejected its attestation —
-see the round-5 correction below. Hook fixtures went 39 → 74.
+see the round-5 correction below. Hook fixtures went 39 → 102. Round 6 then failed again on all four obligations bar the
+canary; its fixes and the retraction above are recorded in the round-6 correction.
 
 The lesson is recorded here rather than only in the fix: **this report asserted as
 settled two properties the code did not have, after three review rounds had already
@@ -163,16 +164,45 @@ The **lease** half is fully met: a lease-write `OSError` yields
 `Hook preflight: FAIL`, no lease is recorded, and Stop then blocks. Fixture- and
 canary-attested.
 
-The **receipt** half cannot be fully met at Start, because a mint failure and a
-legitimately unregistered agent are indistinguishable from inside the hook. Start
-receives only `agent_id` and `agent_type` — never the spawn prompt, and never any
-statement of the parent's intent (frozen rows D-031/D-032). "No receipt for this
-agent" is therefore ambiguous: it is what a failed `admit_agent.py` looks like,
-and equally what every unregistered helper agent looks like. Making absence fatal
-would hard-fail every helper spawn; making it silent would hide a mint failure.
-The implemented rule takes the middle: absence is **reported in the injected
-context and in the transcript** but is not fatal, while a receipt that exists and
-is unusable — `consumed`, wrong run, malformed, or ambiguous — is a hard FAIL.
+> **RETRACTED at round 6.** The paragraph below was wrong, and the error was
+> mine. It is kept, struck, rather than deleted, because this record's failure
+> mode has three times been a claim that outran the code, and quietly rewriting
+> the claim would hide the fourth instance.
+>
+> ~~The **receipt** half cannot be fully met at Start, because a mint failure and
+> a legitimately unregistered agent are indistinguishable from inside the hook.
+> Start receives only `agent_id` and `agent_type` — never the spawn prompt, and
+> never any statement of the parent's intent (frozen rows D-031/D-032).~~
+>
+> **Why it is false.** `admit_agent.py` writes **ledger first, receipt second**
+> (deliberately, so a failed mint leaves no orphan receipt). A `minted` row in
+> `.agent-harness/runs/<run>/ADMISSIONS.jsonl` carries `expected_agent_id` —
+> verified against a live row, whose keys are `assignment_id`,
+> `assignment_sha256`, `at`, `event`, `expected_agent_id`, `reopened`, `run_id`,
+> `token_digest`. So when a receipt write fails, the ledger retains a durable,
+> machine-readable statement of the parent's intent to admit that exact
+> `agent_id`, sitting in the run directory that Start can read. The two states
+> are distinguishable, and the ordering that makes them distinguishable was
+> introduced by this very slice.
+>
+> Round 6 reproduced the consequence: `chmod 0o500` on `admissions/<run>/` →
+> `admit_agent.py` exits 1, no receipt on disk, orphan `minted` row → Start
+> reported `Admission receipt: none found` and **`Hook preflight: PASS`**. That
+> is exactly the case obligation 2 names, and Start passed it. No assumption
+> about dispatch mode is needed, so the deployment-specific argument recorded
+> below does not rescue it either.
+
+Start now distinguishes **three** states rather than two:
+
+- **no ledger row naming this `agent_id`** → "none found", reported but NOT
+  fatal. Unregistered helper agents genuinely exist, and this is the case the
+  non-fatal rule was always right about.
+- **a `minted` row names this `agent_id` but no usable receipt exists** → the
+  parent intended to admit this agent and the mint did not complete. **Hard
+  FAIL.** This is the obligation-2 case, and it is now enforced rather than
+  argued away.
+- **receipt present** → unchanged: `open` and correctly bound passes;
+  `consumed`, wrong run, malformed, or ambiguous is a hard FAIL.
 
 Two compensating controls carry the rest, and they are where the obligation is
 actually satisfied:
@@ -240,7 +270,7 @@ modifications; two false claims in the `admit_agent.py` docstring about token
 secrecy; and a concurrency test that ran nothing concurrently because
 `communicate()` in a loop serialises the children.
 
-Tests: **74 pass** (was 12), including same-run substitution, receipt-write
+Tests: **102 pass** (was 12), including same-run substitution, receipt-write
 failure, lease-write failure, planted claim, replayed receipt, changed-bytes
 re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
 idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper

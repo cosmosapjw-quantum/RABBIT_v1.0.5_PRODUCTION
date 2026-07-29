@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import hmac
 import json
@@ -9,6 +10,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from _common import lease_path, load_json, read_stdin_json, repo_root, write_json_atomic
 
@@ -16,6 +18,7 @@ HARNESS_SCRIPTS = Path(__file__).resolve().parents[2] / ".agent-harness" / "scri
 sys.path.insert(0, str(HARNESS_SCRIPTS))
 
 from _harness import (  # noqa: E402
+    ADMISSION_KEY_RE,
     admission_path,
     assignment_runtime_agent_type,
     token_digest,
@@ -38,6 +41,103 @@ def block(reason: str) -> None:
     print(json.dumps({"decision": "block", "reason": reason}, ensure_ascii=False))
 
 
+# Per-(run, agent_id) mutual-exclusion lock. Dot-prefixed *and* carrying a
+# non-".json" suffix, so both receipt scanners skip it twice over --
+# admit_agent.other_assignment_bound_to_agent and
+# subagent_start_context.list_admission_matches each `continue` on a leading dot
+# and again on a suffix that is not ".json" -- and validate_harness's
+# `admissions/*/*.json` glob cannot descend into it. It lives under
+# `.agent-harness/admissions/`, which is gitignored in full (.gitignore:64) and
+# is already the home of the per-assignment `.claim` files, so it adds no new
+# untracked path to the working tree.
+AGENT_LOCK_DIRNAME = ".agent-locks"
+
+
+def agent_lock_path(harness: Path, run_id: str, agent_id: str) -> Path | None:
+    """Path of the per-(run, agent) consume lock; None for unsafe path keys."""
+    if not ADMISSION_KEY_RE.fullmatch(run_id or ""):
+        return None
+    if not ADMISSION_KEY_RE.fullmatch(agent_id or ""):
+        return None
+    return harness / "admissions" / run_id / AGENT_LOCK_DIRNAME / f"{agent_id}.lock"
+
+
+def acquire_agent_lock(lock_file: Path, agent_id: str) -> tuple[int | None, str]:
+    """Take the exclusive per-agent consume lock, or say why not.
+
+    D-065 obligation 1 (round-6 finding): the round-5 fix put
+    ``conflicting_agent_assignment`` -- a plain ledger *read* -- in front of a
+    consume whose only atomic primitive was the per-*assignment* ``O_EXCL``
+    claim. Two assignments take two different claim files, so one ``agent_id``
+    stopping twice concurrently was excluded by nothing at all: a textbook
+    check-then-act, measured to admit both stops in most trials. This lock is
+    the missing mutual exclusion, and it is keyed on the thing the obligation is
+    about -- the ``agent_id`` -- so the read and the act it guards cannot be
+    interleaved by another stop of the same agent.
+
+    ``flock`` rather than a second ``O_EXCL`` file, deliberately:
+
+    * The kernel releases it when the descriptor closes or the process dies.
+      "Released on every failure path" therefore holds structurally, including
+      the paths that are a crash rather than a ``return`` -- there is no
+      unlink step that a future edit could forget, and no stale lock can wedge
+      an ``agent_id`` for the rest of a run.
+    * ``LOCK_NB`` makes it a *try*-lock: contention fails immediately instead of
+      waiting. Nothing in the consume path ever blocks on a lock, so there is no
+      hold-and-wait and deadlock is impossible by construction. The ordering is
+      nonetheless fixed and one-way -- agent lock first, then the per-assignment
+      ``O_EXCL`` claim -- so two stops can never take the two locks in opposite
+      orders even if a future change made either of them blocking.
+
+    The lock is *not* the record of the binding; the append-only ledger is. It
+    is released at the end of every stop, including a successful one, which is
+    what keeps the idempotent re-stop path alive: a resumed agent re-stopping on
+    its own assignment simply takes the free lock again and is then admitted by
+    the unchanged-bytes check inside.
+
+    Returns ``(fd, error)``:
+      * ``(fd, "")``    -- held; the caller must close ``fd`` to release it.
+      * ``(None, "")``  -- another stop for this ``agent_id`` holds it right now.
+      * ``(None, msg)`` -- the lock could not be evaluated. Fails closed: an
+        unusable lock directory is an error, never a skip, because skipping it
+        reopens exactly the window this closes.
+    """
+    directory = lock_file.parent
+    if directory.is_symlink():
+        return None, "the agent lock directory is a symlink"
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        return None, (
+            f"the agent lock directory could not be created ({exc.__class__.__name__})"
+        )
+    try:
+        fd = os.open(lock_file, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    except OSError as exc:
+        # O_NOFOLLOW turns a planted symlink at the lock path into ELOOP here
+        # rather than into a lock taken on some other file.
+        return None, f"the agent lock could not be opened ({exc.__class__.__name__})"
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        os.close(fd)
+        return None, ""
+    except OSError as exc:
+        os.close(fd)
+        return None, f"the agent lock could not be taken ({exc.__class__.__name__})"
+    try:
+        # Diagnostic only. Nothing ever reads this back to make a decision --
+        # the lock is the flock on the descriptor, not the bytes in the file --
+        # but a failed write means the directory is not usable for the ledger
+        # append either, so it fails closed rather than being ignored.
+        os.ftruncate(fd, 0)
+        os.write(fd, f"{agent_id} pid={os.getpid()}\n".encode("utf-8"))
+    except OSError as exc:
+        os.close(fd)
+        return None, f"the agent lock could not be written ({exc.__class__.__name__})"
+    return fd, ""
+
+
 def conflicting_agent_assignment(
     ledger_path: Path, agent_id: str, assignment_id: str
 ) -> tuple[str, str]:
@@ -51,6 +151,14 @@ def conflicting_agent_assignment(
     A consume row for the SAME assignment_id is not a conflict: that is the
     idempotent re-stop path a resumed agent relies on, handled separately by
     the admission-receipt state check below.
+
+    This read is only sound because its caller holds the per-(run, agent_id)
+    lock across both it and the consume that follows (D-065 obligation 1,
+    round-6 finding). On its own it is a check-then-act: two concurrent stops by
+    one agent_id both read "no conflict" and both then consumed, because the
+    only atomic step downstream is keyed on the *assignment*, and two
+    assignments take two different claim files. Do not call this outside
+    ``acquire_agent_lock``.
 
     Returns ``(conflicting_assignment_id, error)``. A missing ledger is not an
     error -- nothing has been consumed yet in this run. An unreadable or
@@ -206,6 +314,83 @@ def main() -> None:
 
     run_dir = harness / "runs" / bound_run
 
+    # Everything from here on is the consume path, and all of it runs while this
+    # process holds the per-(run, agent_id) lock -- acquired BEFORE the ledger
+    # conflict check it guards, released on every exit from the guarded region
+    # (D-065 obligation 1, round-6 finding). See acquire_agent_lock for why this
+    # is an flock try-lock and why the ordering against the per-assignment
+    # O_EXCL claim cannot deadlock.
+    lock_file = agent_lock_path(harness, bound_run, event_agent_id)
+    if lock_file is None:
+        block(
+            "Bound run id or agent id is not a safe agent-lock path key, so this "
+            "agent's consume cannot be serialised against a concurrent stop."
+        )
+        return
+    lock_fd, lock_error = acquire_agent_lock(lock_file, event_agent_id)
+    if lock_error:
+        block(
+            f"The agent consume lock for {event_agent_id!r} in run {bound_run!r} "
+            f"could not be acquired: {lock_error}. Refusing to consume an "
+            "admission receipt without the mutual exclusion that binds one "
+            "agent_id to one assignment (D-065 obligation 1)."
+        )
+        return
+    if lock_fd is None:
+        block(
+            f"Another SubagentStop for agent_id {event_agent_id!r} is inside the "
+            f"consume path for run {bound_run!r} right now. One agent_id may "
+            "consume at most one assignment per run (D-065 obligation 1), so "
+            "concurrent stops by one agent are serialised rather than "
+            "interleaved. Retry this stop once the other has finished."
+        )
+        return
+    try:
+        consume_under_agent_lock(
+            event=event,
+            root=root,
+            harness=harness,
+            lease=lease,
+            lease_file=lease_file,
+            event_agent_id=event_agent_id,
+            bound_run=bound_run,
+            run_dir=run_dir,
+            assignment_id=assignment_id,
+            envelope=envelope,
+        )
+    finally:
+        # Closing the descriptor is what releases the flock, so every exit from
+        # the guarded region -- return, block, or exception -- releases it. The
+        # lock *file* is deliberately left in place: unlinking a flocked path
+        # lets a racing process create a different inode under the same name and
+        # believe it holds the same lock.
+        os.close(lock_fd)
+
+
+def consume_under_agent_lock(
+    *,
+    event: dict[str, Any],
+    root: Path,
+    harness: Path,
+    # Never None: main() blocks and returns when the Start-time lease is absent,
+    # so the run identity is already proven by the time this is called. The
+    # `lease is not None` guards inside the body are left as they were rather
+    # than pruned, to keep this a pure extraction of the round-5 revision.
+    lease: dict[str, Any],
+    lease_file: Path,
+    event_agent_id: str,
+    bound_run: str,
+    run_dir: Path,
+    assignment_id: str,
+    envelope: dict[str, Any],
+) -> None:
+    """The guarded region: verify the binding, then consume the receipt.
+
+    Split out of ``main`` for one reason only -- so the per-agent lock can wrap
+    the whole check-then-act sequence in a single ``try/finally`` instead of
+    every one of the ~20 ``block(); return`` paths inside it having to remember
+    to release. The body is otherwise unchanged from the round-5 revision.
+    """
     # Exact agent-to-assignment binding, the ledger half (D-065 obligation 1,
     # round-5 finding). admit_agent.py now refuses to mint a second receipt for
     # the same agent_id naming a different assignment, but that is a mint-time
