@@ -3322,6 +3322,25 @@ def _mint_with_unwritable_receipt_dir(
         admissions.chmod(0o700)
 
 
+def _mint_unbound_with_unwritable_receipt_dir(
+    tmp_path: Path, assignment_id: str = ASSIGNMENT_ID, *extra: str
+) -> subprocess.CompletedProcess:
+    """`_mint_with_unwritable_receipt_dir` in `--agent-id-unknown` mode.
+
+    The round-7 second reproduction. The surviving ledger row carries
+    `expected_agent_id: ""` by construction, so nothing keyed on that field can
+    ever match it -- which is how this shape stayed reachable after round 6
+    closed the agent-bound one.
+    """
+    admissions = _admissions_dir(tmp_path)
+    admissions.mkdir(parents=True, exist_ok=True)
+    admissions.chmod(0o500)
+    try:
+        return _admit_unbound(tmp_path, assignment_id, *extra)
+    finally:
+        admissions.chmod(0o700)
+
+
 def test_admit_agent_fails_closed_when_the_receipt_cannot_be_written(
     tmp_path: Path,
 ) -> None:
@@ -4479,6 +4498,219 @@ def test_subagentstart_fails_on_a_malformed_admission_ledger_line(
     assert "line 1 is not an object" in bootstrap_line(
         context, "Admission receipt: "
     )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert version
+
+
+# ---------------------------------------------------------------------------
+# D-065 obligation 2, round-7 correction. Round 6 stated the fatal condition as
+# universal -- "the ledger's latest minted/reopened row for some assignment
+# names this agent_id, and no consumed row follows" -- and then implemented it
+# inside `if not matches:`, so it was only ever evaluated for an agent with NO
+# receipt file at all. Two shapes walked past it, and both are fixtured here.
+# ---------------------------------------------------------------------------
+
+
+def test_subagentstart_hard_fails_when_a_valid_receipt_masks_an_orphaned_mint(
+    tmp_path: Path, capsys
+) -> None:
+    """Round-7 reproduction 1: one good receipt suppressed the whole check.
+
+    Mint A for agent G fails its receipt write, leaving an orphan `minted` row.
+    Mint B for the SAME agent G then succeeds, because `admit_agent.py`'s
+    mint-time guard scans receipt FILES and A's never landed -- asserted below,
+    because if that guard ever starts catching this the masking shape stops
+    being constructible and this fixture should be re-derived, not deleted.
+    Round-6 Start then reported `open, bound to A-HOOK-FIXTURE-2` and PASS.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+
+    orphaned = _mint_with_unwritable_receipt_dir(tmp_path)
+    assert orphaned.returncode != 0, orphaned.stdout
+    assert not _receipt_path(tmp_path, ASSIGNMENT_ID).exists()
+
+    add_second_assignment(tmp_path, SECOND_ASSIGNMENT_ID)
+    second = _admit(tmp_path, SECOND_ASSIGNMENT_ID, "agent-fixture")
+    assert second.returncode == 0, (
+        "the mint-time guard keys on receipt files, so the orphaned mint for "
+        f"{ASSIGNMENT_ID} does not stop a second mint for the same agent: "
+        + second.stderr
+    )
+    assert _receipt_path(tmp_path, SECOND_ASSIGNMENT_ID).is_file()
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: MINT FAILED" in admission, admission
+    assert f"assignment(s) {ASSIGNMENT_ID} in run" in admission, admission
+    assert repr(SECOND_ASSIGNMENT_ID) in admission, admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert "did not produce a usable receipt" in preflight, preflight
+    assert "different assignment" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    # The lease and the second receipt are both healthy, so the FAIL is carried
+    # by the orphaned mint alone.
+    assert f"Run lease: recorded for run {RUN_ID}" in context
+
+    # The control that makes the assertions above mean something: consume the
+    # orphaned assignment and the very same tree -- same two assignments, same
+    # open receipt for the second -- is a PASS. Only the orphan row is fatal.
+    _write_ledger_rows(
+        tmp_path,
+        _ledger_rows(tmp_path)
+        + [
+            {
+                "event": "consumed",
+                "run_id": RUN_ID,
+                "assignment_id": ASSIGNMENT_ID,
+                "agent_id": "agent-fixture",
+                "at": "2026-07-29T00:00:00+00:00",
+            }
+        ],
+    )
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: open, bound to assignment" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+    assert version
+
+
+def test_subagentstart_passes_when_the_open_mint_is_the_receipt_it_holds(
+    tmp_path: Path, capsys
+) -> None:
+    """The false-positive control that decides whether the universal check is usable.
+
+    Every open receipt has an unconsumed `minted` row behind it -- that is what
+    a healthy in-flight admission looks like. Evaluating "an unconsumed mint
+    names this agent" on every path without qualifying it by WHICH assignment
+    would therefore fail every properly admitted agent, i.e. exactly the case
+    obligation 2's PASS arm exists for. Only a mint for an assignment other
+    than the one whose receipt admits this agent counts.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    assert _admit(tmp_path, ASSIGNMENT_ID, "agent-fixture").returncode == 0
+    rows = [(row["event"], row["expected_agent_id"]) for row in _ledger_rows(tmp_path)]
+    assert rows == [("minted", "agent-fixture")], rows
+    assert not any(row["event"] == "consumed" for row in _ledger_rows(tmp_path)), (
+        "the mint must still be open, or this control proves nothing"
+    )
+
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: open, bound to assignment" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    # Control: the same open row against a receipt for a DIFFERENT assignment is
+    # the round-7 finding, so the PASS above is the same-assignment rule and not
+    # the check failing to run.
+    receipt = _receipt_path(tmp_path, ASSIGNMENT_ID)
+    moved = json.loads(receipt.read_text(encoding="utf-8"))
+    moved["assignment_id"] = SECOND_ASSIGNMENT_ID
+    receipt.rename(_receipt_path(tmp_path, SECOND_ASSIGNMENT_ID))
+    write_json(_receipt_path(tmp_path, SECOND_ASSIGNMENT_ID), moved)
+
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: MINT FAILED" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert version
+
+
+def test_subagentstart_hard_fails_on_an_unattributable_token_only_mint(
+    tmp_path: Path, capsys
+) -> None:
+    """Round-7 reproduction 2: `--agent-id-unknown` orphans were unreachable.
+
+    The mode writes `expected_agent_id: ""`, so a check keyed on that field can
+    never match one, and round 6 documented the exemption nowhere. No sound
+    agent key exists for these rows -- at mint time the agent does not exist yet
+    -- so the row is checked at RUN scope and both the note and the error say,
+    in as many words, that the hook cannot tell whose mint it was.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    minted = _mint_unbound_with_unwritable_receipt_dir(
+        tmp_path, ASSIGNMENT_ID, "--reason", "the runtime assigns agent ids"
+    )
+    assert minted.returncode != 0, minted.stdout
+    assert not _receipt_path(tmp_path, ASSIGNMENT_ID).exists()
+    row = _ledger_rows(tmp_path)[-1]
+    assert row["expected_agent_id"] == "", row
+    assert row["agent_binding"] == "token-only", row
+
+    context, output = run_start_hook(tmp_path, capsys)
+    admission = bootstrap_line(context, "Admission receipt: ")
+    assert "Admission receipt: MINT FAILED" in admission, admission
+    assert "token-only (--agent-id-unknown)" in admission, admission
+    assert f"cannot tell whether agent_id={'agent-fixture'!r}" in admission, admission
+    preflight = bootstrap_line(context, "Hook preflight: ")
+    assert preflight.startswith("Hook preflight: FAIL"), preflight
+    assert "names no expected_agent_id" in preflight, preflight
+    assert "--expect-agent-id" in preflight, preflight
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+
+    # The over-breadth is deliberate and is fixtured as such rather than left to
+    # be discovered: with no agent named on the row, the FAIL cannot be narrowed
+    # to one agent, so every agent starting into this run gets it. This is not
+    # the unregistered-helper case -- that one is a HEALTHY ledger naming other
+    # agents (see the test above it) -- and it clears the moment the mint is
+    # re-run successfully.
+    context, output = run_start_hook(tmp_path, capsys, agent_id="agent-helper")
+    assert "Admission receipt: MINT FAILED" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert f"cannot tell whether agent_id={'agent-helper'!r}" in context
+    assert output["systemMessage"] == START_FAIL_MESSAGE
+    assert version
+
+
+def test_subagentstart_clears_a_token_only_mint_that_produced_a_receipt(
+    tmp_path: Path, capsys
+) -> None:
+    """A token-only mint is only fatal when it left no receipt at all.
+
+    The run-scope arm above would be unusable if it fired on every
+    `--agent-id-unknown` receipt, because the whole point of the mode is that
+    the agent it admits is not known until Stop. The only question a row naming
+    no agent can answer is "did this mint produce a receipt", so a receipt file
+    for that assignment -- whoever it names -- clears it.
+    """
+
+    version, _ = make_harness(tmp_path)
+    _git_init_bare(tmp_path)
+    minted = _admit_unbound(
+        tmp_path, ASSIGNMENT_ID, "--reason", "the runtime assigns agent ids"
+    )
+    assert minted.returncode == 0, minted.stderr
+    receipt = _receipt_path(tmp_path, ASSIGNMENT_ID)
+    assert receipt.is_file()
+    assert json.loads(receipt.read_text(encoding="utf-8"))["expected_agent_id"] == ""
+
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: none found" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "Hook preflight: PASS" in context
+    assert "systemMessage" not in output
+
+    # Control: the receipt file is the only thing separating that PASS from the
+    # reproduction. Remove it and the same ledger row is fatal again.
+    receipt.unlink()
+    context, output = run_start_hook(tmp_path, capsys)
+    assert "Admission receipt: MINT FAILED" in bootstrap_line(
+        context, "Admission receipt: "
+    )
+    assert "token-only (--agent-id-unknown)" in context
     assert output["systemMessage"] == START_FAIL_MESSAGE
     assert version
 

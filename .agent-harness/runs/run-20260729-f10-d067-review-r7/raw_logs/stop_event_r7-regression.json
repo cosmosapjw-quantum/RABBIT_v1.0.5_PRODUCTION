@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r7-regression",
+  "agent_type": "default",
+  "last_assistant_message": "Round-7 regression hunt complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R7-REGRESSION\", \"context_version\": \"29e7be13da55b61ae793ffde7346499c9b48b62fe2b50fe539503c8ec5100a0d\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r7/results/A-D067-R7-REGRESSION.json\", \"admission_proof\": \"sha256:29758d34c8e5181fcd4791bb54a88cb90ce5fa9e611923e1726385f6a3e0a7fe\"}"
+}

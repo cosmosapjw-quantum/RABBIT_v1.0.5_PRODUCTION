@@ -270,7 +270,7 @@ modifications; two false claims in the `admit_agent.py` docstring about token
 secrecy; and a concurrency test that ran nothing concurrently because
 `communicate()` in a loop serialises the children.
 
-Tests: **102 pass** (was 12), including same-run substitution, receipt-write
+Tests: **106 pass** (was 12), including same-run substitution, receipt-write
 failure, lease-write failure, planted claim, replayed receipt, changed-bytes
 re-stop refusal, genuine four-process concurrency, ledger cross-check, scrubber
 idempotence and escaped-payload coverage, `--reopen` failing to clear the tamper
