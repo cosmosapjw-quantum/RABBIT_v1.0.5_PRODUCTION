@@ -24,6 +24,11 @@ linked from canonical docs. Start from these anchors:
   [BD622_D056_independent_trajectory_contract_2026-07-28.md](BD622_D056_independent_trajectory_contract_2026-07-28.md))
 - D-057 adversarial correction of the claimed blocker closeout:
   [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
+- D-065 adversarial audit of the D-058--D-064 remediation:
+  [BD622_D065_remediation_adversarial_audit_2026-07-29.md](BD622_D065_remediation_adversarial_audit_2026-07-29.md)
+- D-066 write-attribution incident on a tracked D-057 evidence artifact
+  (both byte-sets preserved, authenticity open as `Q-ATTRIB-01`):
+  [BD622_D066_write_attribution_incident_2026-07-29.md](BD622_D066_write_attribution_incident_2026-07-29.md)
 - D-058–D-064 remedy DAG completion (lease repair, rebinding, covariance
   r3/r4, trajectory r2/r3, gate reconsideration):
   [BD622_D064_remedy_dag_completion_2026-07-29.md](BD622_D064_remedy_dag_completion_2026-07-29.md)

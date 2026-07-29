@@ -1,6 +1,6 @@
 # Project State
 
-Date: 2026-07-28
+Date: 2026-07-29
 
 ## Current status
 
@@ -46,7 +46,54 @@ programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
 
-## 2026-07-29 D-064 remedy-DAG completion overlay (controlling)
+## 2026-07-29 D-066 durability and lane-grant overlay (controlling)
+
+- D-066 changes no gate. The board remains **6 PASS / 2 FAIL** as adjudicated by
+  D-065. It commits the D-065 audit and its run evidence durably, and records the
+  owner grant of 2026-07-29 authorising three bounded lanes with gate
+  reconsideration reserved for D-070: **D-067** exact parent-authenticated
+  agent-to-assignment admission, **D-068** forward-only cost discipline, **D-069**
+  prospectively frozen trajectory r4.
+- Write-attribution incident: the tracked D-057 artifact
+  `A-D057R5-CROSS-REJECT.json` was overwritten in the working tree at
+  `2026-07-29T00:18:33Z`, inside the D-065 window and outside its main writer.
+  Both byte-sets are preserved — committed `12d17ede` restored to the tracked
+  path, overwrite `1ae3dd15` retained under `.agent-harness/incidents/`.
+  Authenticity is **not** adjudicated and is tracked as `Q-ATTRIB-01`; the harness
+  had no write attribution when the write occurred, which is finding F-D065-01
+  itself. No gate, claim, or evidence key depends on the disputed file alone.
+  Report: `docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md`.
+- Two design facts fix the shape of D-069, both established before any output:
+  the Rust anchor node set is a half-line FD-tuned 48-node rule whose two
+  sub-support nodes carry `8.8e-10` of the energy weight, so a full-domain
+  pointwise sup is not gate-meaningful at N48 class and is replaced by frozen
+  moment and true-weight norms that mask nothing; and `build_independent_grid`
+  exposes `order`/`y_max` publicly, so the `y>24` enclosure and the domain holdout
+  come from a density-matched companion run with **zero** edits to the frozen
+  module `760a7c04`.
+
+## 2026-07-29 D-065 adversarial audit overlay (superseded in scope by D-066)
+
+- D-065 rejects D-064's all-eight-gates terminal claim while preserving its
+  genuine bounded evidence. `C-F10-ROW9-CLOSURE` remains VALIDATED as a
+  specified orientation repair, and `G-F10-COVARIANCE-METROLOGY` remains
+  PASS only for the frozen matched family on module bytes `760a7c04`.
+- `G-F10-INDEPENDENT-FLRW=FAIL`: D-063 is a genuine matched-cell endpoint
+  payload, but it retains no checkpoint full states, evolved `y>24` tail
+  enclosure, or spatial/tail uncertainty holdout; its prior adjudication
+  chronology is impossible.
+- `G-HARNESS-INTEGRITY=FAIL`: D-058 fixes cross-run pointer movement only
+  when a lease is written. The lease binds every assignment in the run
+  rather than one parent-admitted assignment, a controlled same-runtime
+  substitution was accepted, and lease-write failure restores the mutable
+  `ACTIVE_RUN` path. Structural validator PASS and `12/12` fixtures do not
+  cover these lifecycle failures.
+- `G-F10-SCOPE=PASS`; downstream authority remains closed. Anti-inflation
+  verdict is DRIFT (`D-057` parent through D-064: net `+21,384`; no
+  production physics change). Governing report:
+  `docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md`.
+
+## 2026-07-29 D-064 remedy-DAG completion overlay (superseded by D-065)
 
 - The D-057 five-step remedy DAG is complete: D-058 lease repair
   (`G-HARNESS-INTEGRITY` pass), D-059 rebinding, D-060 covariance r3

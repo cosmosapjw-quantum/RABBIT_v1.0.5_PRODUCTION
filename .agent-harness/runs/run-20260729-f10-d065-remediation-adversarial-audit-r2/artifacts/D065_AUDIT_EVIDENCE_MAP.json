@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "audit_subject": "Adversarial verification of the claimed D-058 through D-064 closure of the D-057 remedy DAG",
+  "base_ref": "287588389f1058ba550b41c3c8d616a04a558273",
+  "head_ref": "a0d63a8d0662d03722567bb5bd54d7f1b235e512",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "pre_assignment_non_run_diff_sha256": "8b7ab021c2548ef75a1d2835f25d4743b1d4ff166b562a93e0b933dd761f3350",
+  "pre_assignment_status_porcelain_v2_sha256": "e9756155adeb57a760ac36406a36b487b5edcba15f117e8b4c3380b4067bf601",
+  "pre_existing_dirty_tree": [
+    ".agent-harness/context/CONTEXT_INDEX.json",
+    ".agent-harness/generated/CONTEXT_PACK.md"
+  ],
+  "change_accounting_from_d057": {
+    "files": 93,
+    "added_lines": 16297,
+    "deleted_lines": 75,
+    "net_lines": 16222,
+    "binary_files_deleted": 2,
+    "production_physics_files_changed": 0,
+    "new_audit_oracle_lines": 4320,
+    "warning": "The remedy chain exceeds the controlling greater-than-400-line presumed-drift threshold and must justify validation-blocker movement and duplication."
+  },
+  "binding_gate_claims": [
+    {
+      "gate_id": "G-HARNESS-INTEGRITY",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "claimed_status": "pass",
+      "claimed_evidence": "E-HARNESS-D058-LEASE-CANARY"
+    },
+    {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "claim_id": "C-F10-COVARIANCE-METROLOGY",
+      "claimed_status": "pass",
+      "claimed_evidence": "E-F10-D060-METROLOGY-R3"
+    },
+    {
+      "gate_id": "G-F10-INDEPENDENT-FLRW",
+      "claim_id": "C-F10-INDEPENDENT",
+      "claimed_status": "pass",
+      "claimed_evidence": "E-F10-D061-TRAJECTORY-R2"
+    }
+  ],
+  "shared_inputs": [
+    "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+    "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+    ".agent-harness/context/FROZEN_DECISIONS.md",
+    ".agent-harness/context/SHARED_CONTEXT.md",
+    "docs/harness/CLAIM_LEDGER.md",
+    "docs/harness/VALIDATION_LEDGER.md",
+    "docs/harness/DECISION_LOG.md",
+    "docs/harness/PROJECT_STATE.md"
+  ],
+  "lane_inputs": {
+    "harness": [
+      ".agent-harness/scripts/init_run.py",
+      ".agent-harness/scripts/verify_assignment.py",
+      ".agent-harness/tests/test_hooks.py",
+      ".codex/hooks/_common.py",
+      ".codex/hooks/subagent_start_context.py",
+      ".codex/hooks/subagent_stop_validate.py",
+      ".agent-harness/runs/run-20260728-f10-d058-lease-canary",
+      ".agent-harness/runs/run-20260728-f10-d058-lease-decoy",
+      ".agent-harness/runs/run-20260728-f10-d058-lease-replacement-canary"
+    ],
+    "metrology": [
+      "docs/audit/BD622_D060_covariance_metrology_contract_r3_2026-07-28.md",
+      "docs/audit/BD622_D061_covariance_metrology_contract_r4_2026-07-28.md",
+      "scripts/audit/d060_covariance_metrology_r3_oracle.py",
+      "scripts/audit/d061_covariance_metrology_r4_oracle.py",
+      ".agent-harness/runs/run-20260728-f10-d060-metrology-r3",
+      ".agent-harness/runs/run-20260728-f10-d061-metrology-r4",
+      "src/rabbit/decoupling/_independent_noqke.py"
+    ],
+    "trajectory": [
+      "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md",
+      "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md",
+      "scripts/audit/d062_independent_trajectory_r2.py",
+      "scripts/audit/d063_independent_trajectory_r3.py",
+      ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2",
+      ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3",
+      "src/rabbit/decoupling/_independent_noqke.py"
+    ],
+    "admission": [
+      "git history 287588389f1058ba550b41c3c8d616a04a558273..a0d63a8d0662d03722567bb5bd54d7f1b235e512",
+      "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "bbn_codex_anti_drift_cost_effective_policy.md"
+    ]
+  },
+  "mandatory_adversarial_loop": [
+    "self-discover",
+    "step-back",
+    "metacognitive self-ask",
+    "CoVe",
+    "adversarial self-ask",
+    "CCoT",
+    "PDR"
+  ],
+  "required_reviewer_output": [
+    "strongest acceptance steelman",
+    "strongest rejection steelman",
+    "decisive falsifier",
+    "conditions that would change the verdict",
+    "findings keyed to the assigned stable claim_id",
+    "exact evidence references and reproducible checks"
+  ],
+  "hard_boundaries": [
+    "No production, physics, solver, gate, claim, spec, or shared-document edits by subagents.",
+    "No D-060, D-061, D-062, or D-063 long scientific rerun.",
+    "No W7, B3, T01-T12, GL64, Radau, unblinding, F-11, Bianchi, QKE, public runtime, or production work.",
+    "Blind reviewers must not read sibling result files.",
+    "A preserved FAIL may not be relabelled or deleted.",
+    "Votes do not resolve exact contradictions."
+  ]
+}

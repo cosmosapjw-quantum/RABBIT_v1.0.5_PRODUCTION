@@ -1,0 +1,217 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "assignment_id": "A-D065-SOFTWARE-COST",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "agent_id": "019fab3d-18b0-79d3-a3ee-77cea5b03304",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+    "assignment_id": "A-D065-SOFTWARE-COST",
+    "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d3c23233e09662dfb731cf2851b12b497fd1bc802b82487a0300e503eab60f43",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-SOFTWARE-COST.json",
+  "started_at": "2026-07-29T00:18:57+00:00",
+  "completed_at": "2026-07-29T00:30:13+00:00",
+  "tool_versions": {
+    "python": "3.12.3",
+    "git": "2.43.0",
+    "pytest": "current venv; 12 hook tests passed"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-SOFTWARE-COST.json",
+    "git status --short --branch",
+    "git rev-parse HEAD origin/f10-independent-validation-b3v2",
+    "git log --oneline --decorate --date=iso-strict --pretty=format:'%h %ad %s' --all --since='2026-07-27 00:00:00 +0900' --until='2026-07-30 00:00:00 +0900'",
+    "git diff --numstat b28ea0b^ a0d63a8",
+    "git diff --numstat 2875883^ a0d63a8",
+    "git log --reverse --format='%H %s' --numstat b28ea0b^..a0d63a8",
+    "git diff --no-index --numstat -- scripts/audit/d060_covariance_metrology_r3_oracle.py scripts/audit/d061_covariance_metrology_r4_oracle.py",
+    "git diff --no-index --numstat -- scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py",
+    "diff --unchanged-line-format='%L' --old-line-format='' --new-line-format='' scripts/audit/d060_covariance_metrology_r3_oracle.py scripts/audit/d061_covariance_metrology_r4_oracle.py | wc -l",
+    "diff --unchanged-line-format='%L' --old-line-format='' --new-line-format='' scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py | wc -l",
+    "sha256sum src/rabbit/decoupling/_independent_noqke.py .agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json .agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json .agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+    "jq '{contract,claim_id,module_sha256,verdict,versions,numpy,mpmath,longdouble_eps,checks,failures}' <each D060-D063 report>",
+    "venv/bin/python <recursive JSON leaf-diff check for D060-vs-D061 and D062-vs-D063 reports>",
+    "venv/bin/python <check whether each report JSON occurs verbatim in its stdout log>",
+    "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py",
+    "git diff --check b28ea0b^ a0d63a8"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md",
+      "sha256": "f702135b567b612183dac6042164bd0859c0cc3f7f6cedce9766a6c13f44d4dc"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json",
+      "sha256": "56529e65b59726610e5d484fb37d1460d60153e6af9feba95254c8d21686fad0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+      "sha256": "daf4fc06b8cc3bb5b07a92e436fd95f78cb208a10becaac22c7013e7f2fba9d4"
+    },
+    {
+      "path": "src/rabbit/decoupling/_independent_noqke.py",
+      "sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D065-SW-01",
+      "claim_id": "C-F10C1-ENDPOINT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The D061 and D063 scientific movement is real within the declared matched-resolution scope, not a documentation-only gate flip. The retained module hash is exactly 760a7c04..., the four D060-D063 report hashes match the ledgers, D060->D061 has exactly 17 JSON leaf deltas confined to contract/wall/verdict and the adjudicated N7X gating metadata, and D062->D063 retains the base endpoint and holdout while changing the two declared discriminator domains. D063 records a fresh full endpoint, holdout, block/spectrum checks, coupled-energy check, and two killed sign mutants. No production or Rust physics file changed in D057..HEAD. Acceptance steelman: prospective reissues, immutable FAIL receipts, hashes, pinned libraries/threads, and exact permitted diffs make this materially stronger than D055/D056. Rejection steelman: it remains one platform, same-model authorship, post-failure discriminator redesign, and was not scientifically re-executed in this audit. Status ceiling: VALIDATED only at the recorded N48-class/module-byte scope.",
+      "assumptions_used": [
+        "The retained raw reports are the outputs of the exact hash-pinned scripts identified by their freeze commits.",
+        "A matched-resolution independent-validation claim does not imply continuum, absolute-normalization, production, or public authority.",
+        "A preserved failed contract followed by a newly frozen full rerun may supply evidence, but the changed discriminator domain must remain explicit."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json",
+        ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json",
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+        "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md",
+        "git:8492382",
+        "git:db9d0e3"
+      ],
+      "evidence_fingerprint": "sha256:06cf773a377302b5d31e0067bce52c6ea323921e3eab532231e3011c454d2577",
+      "counterevidence_refs": [
+        "docs/harness/PROJECT_STATE.md",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"
+      ],
+      "reproduction": [
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py .agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json .agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json .agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+        "git diff --no-index --unified=4 -- scripts/audit/d060_covariance_metrology_r3_oracle.py scripts/audit/d061_covariance_metrology_r4_oracle.py",
+        "git diff --no-index --unified=4 -- scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Independent second-platform replay is absent.",
+        "No continuum or absolute-normalization claim is established.",
+        "The 7.5-hour trajectory was not rerun during this software-focused audit."
+      ]
+    },
+    {
+      "finding_id": "F-D065-SW-02",
+      "claim_id": "C-F10-SCOPE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The D064 closeout is not anti-inflation or cost-policy compliant. D057..HEAD touches 148 paths and adds 21469/deletes 85/net +21384 text lines; D058-D064 alone touches 93 paths and adds 16297/deletes 75/net +16222. The latter consists of 10686 tracked-run lines, 4320 scientific audit-script lines, 620 audit-document lines, 401 harness code/test lines, and 192 SSOT/context net lines, with zero production-source lines. The r3/r4 covariance scripts share 1512 exact lines (99.5% of r3); the r2/r3 trajectory scripts share 610 (98.5%); their paired contracts share 109 and 111 exact lines. Four report JSON files totaling 114287 bytes occur verbatim again inside their stdout logs. D064, the validation ledger, and the D058-D064 project-state overlays contain none of the mandatory added/deleted/net/token/BMR/cost lines. Strong acceptance steelman: the chain closes real validation blockers and preserves raw failures. Strong rejection steelman: Git history already preserves superseded scripts/contracts, one result is stored twice, and no deflation or mandatory accounting accompanies repeated >400-line commits. Cost line for this audited chain: added_lines 21469; deleted_lines 85; net_lines +21384; files_touched 148; token_use_exact UNAVAILABLE because no reliable stage counter; runtime_behavior_changed yes for harness and no for production; physics_behavior_changed no; known_blocker_reduced yes; blocker_movement_ratio 0.75 because hard validation blockers closed but no previously impossible production path was created; validation_strengthened yes; cost_effectiveness_verdict DRIFT.",
+      "assumptions_used": [
+        "Git line counts include all text surfaces and exclude the two binary pyc deletions from added/deleted totals.",
+        "Raw failure preservation does not require retaining a full duplicate executable when the exact blob remains in Git history.",
+        "The repository policy applies to scientific validation PRs and docs/run artifacts, not only production source."
+      ],
+      "evidence_refs": [
+        "bbn_codex_anti_drift_cost_effective_policy.md",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+        "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md",
+        "docs/harness/VALIDATION_LEDGER.md",
+        "docs/harness/PROJECT_STATE.md",
+        "git:2875883^..a0d63a8"
+      ],
+      "evidence_fingerprint": "sha256:042ff7016c05eaf374d4f174857be29924abac72d27e1d7b864f4fbd1730682b",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+        ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json"
+      ],
+      "reproduction": [
+        "git diff --numstat 2875883^ a0d63a8",
+        "git diff --numstat b28ea0b^ a0d63a8",
+        "diff --unchanged-line-format='%L' --old-line-format='' --new-line-format='' scripts/audit/d060_covariance_metrology_r3_oracle.py scripts/audit/d061_covariance_metrology_r4_oracle.py | wc -l",
+        "diff --unchanged-line-format='%L' --old-line-format='' --new-line-format='' scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py | wc -l",
+        "rg -n 'added_lines:|deleted_lines:|net_lines:|token_use_exact:|blocker_movement_ratio:|cost_effectiveness_verdict:' docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md docs/harness/VALIDATION_LEDGER.md docs/harness/PROJECT_STATE.md"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Owner must decide whether to deflate historical executable duplicates in one bounded non-scientific commit while retaining hashes and Git refs.",
+        "A canonical one-report output mode should replace JSON duplicated inside stdout."
+      ]
+    },
+    {
+      "finding_id": "F-D065-SW-03",
+      "claim_id": "C-F10-SCOPE",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "D058 fixes the demonstrated ACTIVE_RUN race only when the Start-time lease is successfully written; it is not globally fail-closed. subagent_start_context.py catches lease-write OSError, labels the lease unavailable, and continues with explicit ACTIVE_RUN fallback. subagent_stop_validate.py then binds to the mutable active pointer whenever no lease exists. In addition, the lease seals every assignment registered in the run rather than the single parent-launched assignment, so Stop accepts whichever sealed assignment_id the agent self-declares if the main-side prompt/write audit is absent or wrong. The current 12/12 fixtures pass and correctly cover successful lease, corrupt lease, moved pointer, and assignment tamper, but do not cover lease-write failure or intra-run assignment substitution. Acceptance steelman: the actual D058 live overlapping-run canary recorded a lease and passed its exact target, and parent-side launch admission is the documented VS Code workaround. Rejection steelman: a fail-closed integrity gate cannot silently degrade to the exact mutable-pointer authority that D057 invalidated, and self-attested assignment selection is not automatic assignment binding. Therefore G-HARNESS-INTEGRITY cannot be unconditional PASS; at most the successful-lease path is VALIDATED.",
+      "assumptions_used": [
+        "Fail-closed means a failed mandatory lease write must stop substantive execution rather than re-enable mutable global authority.",
+        "Automatic assignment integrity requires a parent-authenticated agent-to-assignment binding, not only a lease containing all assignment hashes.",
+        "Parent-side manual prompt and write hashing is useful defense but does not make an automatically unenforced path equivalent to hook enforcement."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_start_context.py:105",
+        ".codex/hooks/subagent_start_context.py:140",
+        ".codex/hooks/subagent_stop_validate.py:37",
+        ".codex/hooks/subagent_stop_validate.py:85",
+        ".agent-harness/tests/test_hooks.py:481",
+        "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md:9"
+      ],
+      "evidence_fingerprint": "sha256:f19b8da45771927b174d37fbae1abc0eb630be46cd5f93da39de65fcd1c9186a",
+      "counterevidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md",
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "reproduction": [
+        "nl -ba .codex/hooks/subagent_start_context.py | sed -n '100,160p'",
+        "nl -ba .codex/hooks/subagent_stop_validate.py | sed -n '30,120p'",
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Make lease-write failure a Start preflight error with no ACTIVE_RUN fallback for post-D058 agents.",
+        "Bind one assignment_id and digest to each launched agent in a parent-created lease or signed launch receipt.",
+        "Add negative fixtures for lease-write failure and same-run assignment substitution, then run a live overlapping-main replacement canary."
+      ]
+    },
+    {
+      "finding_id": "F-D065-SW-04",
+      "claim_id": "C-F10C1-ENDPOINT",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The earlier D049 Rust regression receipt is not invalidated by D057-D064 production-code drift because the audited range changes no src/rabbit or Rust production file. It must not, however, be described as a fresh D064 current-tree validation of the new harness and Python audit surfaces. This audit freshly ran only the 12 hook fixtures (PASS in 1.29 s), verified hashes/JSON deltas/whitespace, and skipped the multi-hour scientific replays and full Rust release bundle. The safe claim is retained Rust regression authority plus separately hash-bound D061/D063 evidence, not one monolithic fresh current-tree bundle.",
+      "assumptions_used": [
+        "A regression result remains relevant when its governed executable bytes and dependencies are unchanged.",
+        "New audit and harness code requires its own focused validation rather than retroactive coverage by a Rust release run."
+      ],
+      "evidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md",
+        ".agent-harness/tests/test_hooks.py",
+        "git:b28ea0b^..a0d63a8"
+      ],
+      "evidence_fingerprint": "sha256:1aff2bdb5482e0b1142f2f4137e408687047a2436a9ce41e938f610c07dda201",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md:81"
+      ],
+      "reproduction": [
+        "git diff --name-status b28ea0b^ a0d63a8",
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py",
+        "git diff --check b28ea0b^ a0d63a8"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "A future terminal handoff may choose to rerun the full current-tree bundle, but it is not required to establish that no production physics file changed in this range."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-SOFTWARE-COST.json"
+  ]
+}

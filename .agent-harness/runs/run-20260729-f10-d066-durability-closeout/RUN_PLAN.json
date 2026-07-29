@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260729-f10-d066-durability-closeout",
+  "created_at": "2026-07-29T02:03:16+00:00",
+  "spec_ref": "docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md",
+  "base_ref": "a0d63a8d0662d03722567bb5bd54d7f1b235e512",
+  "head_ref": "HEAD",
+  "context_version": "daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "completed"
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "assignment_id": "A-D065-PHYSICS",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "agent_id": "019fab3e-256d-79c1-968b-683da79834d6",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+    "assignment_id": "A-D065-PHYSICS",
+    "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:08d075daca1915966fb66f15ff0ca9a60401bccc42a07aa173e28e6defb53d99",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-PHYSICS.json",
+  "started_at": "2026-07-29T00:16:45+00:00",
+  "completed_at": "2026-07-29T00:27:43+00:00",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-PHYSICS.json",
+    "PYTHONPATH=src venv/bin/python -m pytest -q -p no:cacheprovider tests/test_independent_noqke_comparator.py",
+    "git diff --unified=40 d22d001..94d0f00 -- src/rabbit/decoupling/_independent_noqke.py tests/test_independent_noqke_comparator.py",
+    "PYTHONPATH=src venv/bin/python -c '<exact event-accounting, S3/CP modulo simultaneous leg-swap, reverse-chart closure checks>'",
+    "PYTHONPATH=src venv/bin/python -c '<low-order asymmetric S3, CP, entropy, and first-law checks>'",
+    "PYTHONPATH=src venv/bin/python scripts/audit/d053_row9_closure_verification.py",
+    "sha256sum src/rabbit/decoupling/_independent_noqke.py tests/test_independent_noqke_comparator.py docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md .agent-harness/runs/run-20260728-f10-d053-row9-closure/raw_logs/e_verification_report.json"
+  ],
+  "artifacts": [
+    {
+      "path": "src/rabbit/decoupling/_independent_noqke.py",
+      "sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a"
+    },
+    {
+      "path": "tests/test_independent_noqke_comparator.py",
+      "sha256": "8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8"
+    },
+    {
+      "path": "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md",
+      "sha256": "7bcfcbda8f9e8e8f6f724d0266239fb932b6b3064ba49b9b90152818e89cff41"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d053-row9-closure/raw_logs/e_verification_report.json",
+      "sha256": "8cfaeb0c26c5abaa9ddcc9cd85252edc7364bf7172c3ca04ea4b173b07f44f8c"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D065-PHYSICS-001",
+      "claim_id": "C-F10-ROW9-CLOSURE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "BOUNDED PASS after the required self-discover, step-back, metacognitive self-ask, CoVe, adversarial self-ask, CCoT, and PDR audit: current module bytes 760a7c04 implement exactly six pair-conversion chart members, one forward/reverse pair for each unordered flavour pair, each at K_t/16. Their combined target-directed coefficient accounting exactly reproduces the frozen 48-row K_t/32 catalogue. Under reversal, K_t=(p1.p4)(p2.p3), the invariant phase-space measure, the Pauli gain-minus-loss factor, and the signed four-leg weak action map to the same continuum contribution, so the two half-weight charts are a consistent Reynolds average rather than a new physical channel. The raw event tuple set is not literally S3/CP closed because one representative is chosen modulo simultaneous incoming and outgoing leg exchange; it is exactly closed under all six flavour permutations and CP after quotienting by that kernel- and sign-preserving exchange. On current HEAD the focused tests pass 3/3, a fresh GL48 E1--E5 execution reproduces the retained report bit-for-bit numerically (e/mu residual 3.525406360939371e-11, single-chart control 1.0000171560718123, mu/tau residual 2.447560236182917e-11, number ratio 6.560719562181335e-17, energy ratio 2.3321774904894606e-15, first-law residual 0, entropy production 9.691739087718254e-18, common-state H-normalized number/energy 5.8980696702487084e-12/1.4820594018942042e-11), and an independent low-order asymmetric check gives self-sector S3 residuals <=1.45e-13, CP <=3.94e-14, positive entropy production, and zero event first-law residual. Strongest PASS steelman: exact source accounting, analytic reversal equivalence, prospective contract, current-byte replay, asymmetric symmetry checks, and the order-one single-chart falsifier jointly identify and remove the discretization-orientation artifact. Strongest FAIL steelman: covariance, conservation, equilibrium null, and entropy sign are invariant under common positive rescaling and can be non-discriminating for a zero or incomplete map; E5 is largely an internal event identity; historical D-053 envelopes remain bound to the old row-6 claim ID; and no repository-independent V-A trace, absolute phase-space normalization, or physical catalogue-completeness proof exists. D-059 correctly handles this by registering a new bounded claim without rewriting history. Therefore C-F10-ROW9-CLOSURE is VALIDATED only as a tested discretization repair on the frozen specified catalogue. It cannot by itself certify absolute normalization, physical catalogue completeness, general-state/continuum correctness, covariance-metrology, trajectory/endpoint authority, production, or public science. Decisive reopen falsifiers are: a missing reverse chart; any coefficient other than 16; failure of exact target-row reconstruction; failure of reversal/sign equivalence; E3/E4 above 1e-10; a conservation, strict-open, entropy-sign, CP, or common-state-null regression; or independent trace/normalization evidence contradicting K_t/32.",
+      "assumptions_used": [
+        "Zero lepton asymmetry: each flavour pair shares one neutrino/antineutrino spectrum.",
+        "Massless diagonal neutrino self-scattering is flavour symmetric on the frozen F-10 catalogue.",
+        "The continuum two-to-two measure is invariant under swapping initial and final charts and under simultaneous 1<->2, 3<->4 leg exchange.",
+        "The frozen K_t/32 target-directed normalization is treated as specified input, not independently validated by this audit.",
+        "The claim ceiling in CLAIM_REGISTRY is binding: bounded orientation-artifact repair only."
+      ],
+      "evidence_refs": [
+        "src/rabbit/decoupling/_independent_noqke.py:554",
+        "src/rabbit/decoupling/_independent_noqke.py:1097",
+        "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md:1",
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md:241",
+        "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md:22",
+        ".agent-harness/context/CLAIM_REGISTRY.jsonl:19",
+        ".agent-harness/runs/run-20260728-f10-d053-row9-closure/raw_logs/e_verification_report.json"
+      ],
+      "evidence_fingerprint": "sha256:005cf1052c795c05d6ca50aa3a3be85b0cccbb3307244de9304bc6f442221fc4",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md:100",
+        ".agent-harness/runs/run-20260728-f10-d053-row9-closure/results/A-ROW9-ADJUDICATION.json",
+        "The audit's low-order zero-pair-conversion probe retained small symmetry residuals, confirming that symmetry/invariant tests alone are not a completeness or normalization proof."
+      ],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python -m pytest -q -p no:cacheprovider tests/test_independent_noqke_comparator.py",
+        "PYTHONPATH=src venv/bin/python scripts/audit/d053_row9_closure_verification.py",
+        "Reconstruct (category,species) coefficients from independent_self_events() and compare exactly with independent_self_reactions(); canonicalize event legs modulo (1,2,3,4)<->(2,1,4,3) and test all S3 flavour permutations plus CP.",
+        "Evaluate the low-order real operator on three unequal flavour scales and compare every permuted self-sector output after applying the same row permutation."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Absolute V-A amplitude and phase-space normalization remain INCONCLUSIVE.",
+        "Physical catalogue completeness beyond the frozen nine-row specification remains INCONCLUSIVE.",
+        "The GL48 sub-cap numerical floor is not decomposed by this static claim; D-060/D-061 metrology is a separate claim.",
+        "Single-platform and same-model-review limitations remain.",
+        "This finding does not decide G-F10-INDEPENDENT-FLRW, G-F10-COVARIANCE-METROLOGY, or G-HARNESS-INTEGRITY."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-PHYSICS.json"
+  ]
+}

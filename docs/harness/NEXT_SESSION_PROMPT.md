@@ -1,6 +1,66 @@
 # Next Session Prompt
 
-## 2026-07-29 D-064 controlling overlay — remedy DAG complete, STOP/PRESERVE
+## 2026-07-29 D-066 controlling overlay — lanes authorised, gates unchanged
+
+The owner granted all three D-065 lanes on 2026-07-29. Execution order is fixed
+and gate reconsideration is reserved for the end:
+
+1. **D-067 harness** — parent-authenticated `agent_id` to one-assignment admission
+   receipt (nonce capability, since `SubagentStart` never sees the spawn prompt);
+   hard Start failure on receipt/lease write error; substitution and write-failure
+   negative fixtures; replacement live overlapping-run canary with unique write
+   attribution.
+2. **D-068 cost discipline** — forward-only: one shared trajectory core module,
+   canonical single-report output, mandatory cost fields. No historical evidence
+   is deleted.
+3. **D-069 trajectory r4** — prospectively frozen: full-domain moment and
+   true-weight spectral norms with nothing masked, full 146-state/`T_gamma`/`t`
+   checkpoint retention, a measured `y>24` enclosure and domain holdout via a
+   density-matched `build_independent_grid(60, 30.0)` companion run, machine
+   timestamps, and a mechanically checked adjudication chronology.
+4. **D-070** — single-writer gate reconsideration only if D-067 and D-069 both
+   PASS, then STOP.
+
+D-066 itself changes no gate: the board stays 6 PASS / 2 FAIL. It records the
+D-065 audit durably, preserves both byte-sets of the overwritten
+`A-D057R5-CROSS-REJECT.json`, and opens `Q-ATTRIB-01`
+(`docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md`).
+
+All D-065 prohibitions stand: no production/physics/solver/Rust edit, no
+modification of `src/rabbit/decoupling/_independent_noqke.py`, and unblinding,
+public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work,
+F-11/Bianchi, and QKE remain closed.
+
+## 2026-07-29 D-065 overlay — superseded in scope by the D-066 lane grant
+
+D-065 adversarially rejects the D-064 all-eight-gates claim.
+
+- PASS: bounded row-9/orientation repair; frozen matched-family covariance
+  metrology; F-10 scope boundary.
+- FAIL: `G-F10-INDEPENDENT-FLRW` (no checkpoint full states, evolved
+  half-line tail enclosure, or spatial/tail uncertainty; inadmissible D-063
+  adjudication chronology).
+- FAIL: `G-HARNESS-INTEGRITY` (same-run assignment substitution accepted;
+  lease-write failure restores mutable `ACTIVE_RUN`).
+- DRIFT: D-057-parent through D-064 net `+21,384` lines with near-duplicate
+  scripts and report/stdout copies; no production physics change.
+
+Preserve all D-058--D-064 successes and failures. Do not modify production
+code, rerun the seven-hour trajectory, unblind, or open W7/B3, T01--T12,
+GL64/Radau, Rust/JAX forward work, F-11/Bianchi, QKE, or public work.
+
+The next session has no automatic implementation authority. It must receive
+an explicit owner decision selecting one bounded lane:
+
+1. exact agent-to-assignment lease remediation plus replacement live canary;
+2. prospective trajectory evidence completion (full checkpoint state,
+   evolved `y>24` enclosure, one spatial holdout, honest adjudication);
+3. evidence deflation without deleting provenance.
+
+Governing report:
+`docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md`.
+
+## 2026-07-29 D-064 overlay — superseded by D-065
 
 **All eight F-10 gates are PASS** on catalogue bytes `760a7c04` at context
 `208c9c60`, closing the D-057 remedy DAG through the corrected evidence
