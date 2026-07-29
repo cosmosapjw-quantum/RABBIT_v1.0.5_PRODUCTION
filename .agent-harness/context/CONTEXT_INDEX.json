@@ -47,7 +47,7 @@
     ".agent-harness/runs/*/results/*",
     ".agent-harness/runs/*/raw_logs/*"
   ],
-  "built_at": "2026-07-29T08:48:43+00:00",
+  "built_at": "2026-07-29T08:49:29+00:00",
   "file_hashes": {
     ".agent-harness/context/SHARED_CONTEXT.md": "36850efd4a61967dc5ea812a9d5d3b1d3dfdb065a7ac5f9c8a65e31975ea205f",
     ".agent-harness/context/SYMBOLS.md": "6d5fbe058c2750ed680ce835e6e03438200b36b16743bf6c1be99649030e096b",

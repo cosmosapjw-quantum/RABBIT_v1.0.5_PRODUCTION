@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
 Context version: `d26ff1802ae7f0686577a935608225e40cb2d6776110356414bd55043d4e6b1d`
-Built at: `2026-07-29T08:48:43+00:00`
+Built at: `2026-07-29T08:49:29+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
