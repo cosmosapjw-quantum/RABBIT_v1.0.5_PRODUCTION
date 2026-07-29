@@ -113,6 +113,46 @@ settled two properties the code did not have, after three review rounds had alre
 passed over it.** That is the D-064 failure mode — the record getting ahead of the
 mechanism — reproduced at smaller scale inside the remedy for it.
 
+### D-070 round-5 correction — the C4 canary attestation was defective
+
+Round 5 (mixed-model, both reviewers FAIL) rejected C4 on its own artifact.
+`ACTIVE_RUN_ATTESTATION_AT_STOP.json` is named for, and self-describes as,
+capture "at the moment of the stop dispatch". It was captured **286 seconds
+early** — immediately after the pointer theft, while the canary agent still had
+five minutes of work left. Attestation `08:41:06Z`, ledger consume `08:45:52Z`.
+Had the pointer been restored in between, C4 would have proved nothing. That is
+the same defect class round 4 rejected C1 for, reproduced inside the artifact
+built to close it.
+
+**C5 replaces it**, run against frozen bytes at commit `d94270f` rather than
+against bytes that could move underneath it:
+
+- `ACTIVE_RUN` read immediately before **and** immediately after the Stop
+  dispatch, in one shell command with no intervening work — a **39 ms** bracket,
+  recorded in `artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json`;
+- the pointer named the decoy at **both** ends, so it cannot have been restored
+  around the consume;
+- accepted under the Start-time lease (`run-...-canary-c5`) while the pointer
+  named `run-...-canary-c5-decoy`, with `expected_agent_id` enforced,
+  `consumed_by_agent_id=d070-canary-c5`, and the result digest pinned in the
+  append-only ledger.
+
+Two honest limits are recorded in the artifact rather than glossed. The receipt
+writes `consumed_at` with `timespec="seconds"`, so a naive containment test
+against nanosecond bounds returns a spurious `False`; the truncated stamp denotes
+an interval, and the correct statement is that bracket and consume fall in the
+same wall second. Second-resolution stamps cannot prove sub-second ordering, and
+the attestation does not claim to — it establishes the *pointer state across the
+dispatch*, which is the property obligation 4 actually asks about.
+
+C5's own subject matter was the two round-5 fixes, verified against the real
+imported functions rather than reimplementations: the open-receipt carve-out
+(six conditions, all AND-ed; non-active runs never excused; 24 h ceiling strict
+at the boundary; missing, naive and future `created_at` all refused) and the
+legacy-manifest pin (three independent surfaces; appending caught by digest and
+count, a same-count entry swap caught by digest alone; deletion caught twice and
+cascading to ~75 `not attributed` errors). C5 returned `pass` on both.
+
 ### Obligation 2 — what Start can and cannot do, stated rather than argued
 
 Round 5 judged obligation 2 ("make receipt/lease creation failure a hard Start
