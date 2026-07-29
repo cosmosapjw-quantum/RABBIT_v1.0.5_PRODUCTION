@@ -1,1 +1,7 @@
-{"hook_event_name": "SubagentStop", "stop_hook_active": false, "agent_id": "r4-correctness", "agent_type": "default", "last_assistant_message": "Round-4 correctness review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R4-CORRECTNESS\", \"context_version\": \"7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-CORRECTNESS.json\", \"admission_proof\": \"wkFwrL3guTWo--ojuwvj1zjyzV-2LwceWLqqf9XJ-Nc\"}"}
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r4-correctness",
+  "agent_type": "default",
+  "last_assistant_message": "Round-4 correctness review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R4-CORRECTNESS\", \"context_version\": \"7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-CORRECTNESS.json\", \"admission_proof\": \"sha256:35435a52a567aeef78c6290765d4f6d8ab2e837b88347e5d8b5032552c01903b\"}"
+}
