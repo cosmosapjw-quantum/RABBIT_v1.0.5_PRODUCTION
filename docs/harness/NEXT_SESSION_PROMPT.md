@@ -1,5 +1,36 @@
 # Next Session Prompt
 
+## 2026-07-29 IN FLIGHT — D-069 r4 integration is running; do not restart it
+
+A ~13 h integration was launched at `2026-07-29T03:49:25Z`, 13 s after its freeze
+commit `0fb94f2`. If this session ended before it finished, the process may still
+be running or may have completed unattended.
+
+- Report (written once per phase): `.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json`
+- Progress log: the sibling `r4_trajectory_stdout.log`
+- Phase order: base → T14 re-derivation → mutants → domain holdout (order 60 /
+  `y_max` 30) → rtol holdout. `verdict` stays `IN_PROGRESS` until all phases land.
+
+**Before doing anything else:** check whether the process is alive
+(`pgrep -af d069_independent_trajectory_r4`) and read the report's `verdict`.
+
+- If `verdict` is `PASS` or `FAIL`: adjudicate it through a registered agent, in
+  a run initialised at the then-current context. The verdict stands as-is; a FAIL
+  is preserved and refitting any band, node mask, or tail proxy is forbidden by
+  the frozen contract.
+- If the process died mid-run: the partial report is evidence of exactly that.
+  Do not silently relaunch — record the interruption, then decide.
+- Confirmed healthy at eval 401: r4 tracks the frozen r3 base run to every
+  printed digit (N=0.1001, T_cm=9.04760 at the same eval index), ~3% faster.
+
+`G-F10-INDEPENDENT-FLRW` and `G-HARNESS-INTEGRITY` are both still **FAIL**. No
+gate has moved in the D-066..D-069 chain. D-070 is the only place a flip may be
+considered, and only on an adjudicator's verdict — not the single writer's.
+
+For the harness lane, the D-067 round-3 review returned **PARTIALLY DISCHARGED**
+and recommended not flipping on those bytes; its three findings were then fixed
+in `07e3507`. A fourth review of the current bytes is the natural input to D-070.
+
 ## 2026-07-29 D-066 controlling overlay — lanes authorised, gates unchanged
 
 The owner granted all three D-065 lanes on 2026-07-29. Execution order is fixed
