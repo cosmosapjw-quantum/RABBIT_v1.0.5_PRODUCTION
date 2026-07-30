@@ -1,0 +1,248 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d070-r4-adjudication",
+  "assignment_id": "A-D070-R4-REFIT-HUNTER",
+  "context_version": "fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c",
+  "agent_id": "r4-refit-hunter",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260730-f10-d070-r4-adjudication",
+    "assignment_id": "A-D070-R4-REFIT-HUNTER",
+    "context_version": "fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:63bda573cc07071a25e554b597a6b0dca32b485819fd28de2084896f805de474",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-REFIT-HUNTER.json",
+  "started_at": "2026-07-30T07:27:32Z",
+  "completed_at": "2026-07-30T07:55:10Z",
+  "tool_versions": {
+    "git": "installed, version not separately queried",
+    "python": "venv/bin/python 3.12.3"
+  },
+  "commands": [
+    "git show -s --format=... 0fb94f2 / ce737a7 / d94270f",
+    "git diff 0fb94f2 ce737a7 -- scripts/audit/d069_independent_trajectory_r4.py scripts/audit/_trajectory_core.py scripts/audit/_f10c2_anchors.py docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md",
+    "git log --oneline --all -- <driver/contract/comparanda files>",
+    "git log --oneline 0fb94f2..ce737a7",
+    "git status --porcelain / git diff HEAD -- <driver files>",
+    "sha256sum r4_trajectory_report.json r4_trajectory_stdout.log (cross-checked against VALIDATION_LEDGER.md hashes)",
+    "stat -c '%Y %y %n' <driver/contract/comparanda files>",
+    "python3: recursive dict-diff of r4['base'] vs r3['base'] vs r2['base']; direct equality checks on endpoint/blocks/residual_rows/spectrum arrays vs r3, r2, D-056",
+    "python3: reconstructed phase timing (base/mutants/domain elapsed, s/eval) from r4_trajectory_stdout.log bracketed timestamps and cross-checked against commit-message figures",
+    "grep -n for 'eval 1:', mutant/domain phase header lines, and '11051' occurrences in the raw report JSON",
+    "date -u +%Y-%m-%dT%H:%M:%SZ at start and completion"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The frozen contract and driver were untouched between freeze commit 0fb94f2 (2026-07-29T03:49:12Z) and containing commit ce737a7 (2026-07-30T07:23:33Z), and remain untouched at current HEAD. `git log --oneline 0fb94f2..ce737a7 -- scripts/audit/d069_independent_trajectory_r4.py scripts/audit/_trajectory_core.py scripts/audit/_f10c2_anchors.py docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md` returns zero commits, and `git diff` over the same range is empty. `git status --porcelain` and `git diff HEAD` on the same paths are also empty (no uncommitted drift). File mtimes on all four files (2026-07-29 12:07:24-12:42:47 +09:00) predate the freeze commit (12:49:12 +09:00) and have survived unchanged through many later commits, which is only possible if git never had to rewrite them on checkout. The frozen module `src/rabbit/decoupling/_independent_noqke.py` hashes to 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a, matching the value pinned in the working notes and embedded as `module_sha256`/`MODULE_SHA256` in the banked report and driver, and the driver checks this hash itself at startup (exiting 30 on mismatch). The freeze commit itself changed only `_trajectory_core.py`'s BLAS thread-pin from `os.environ.setdefault` to hard assignment (6 lines), which is the exact fix the immediately-preceding A-D069-FREEZE-REVIEW blocking finding demanded before any output byte existed; that fix is confirmed still present, correctly ordered before `import numpy`, in the banked driver.",
+      "assumptions_used": [
+        "Local git history in this checkout is complete and not itself rewritten (no evidence of history rewriting was sought beyond standard `git log`/`git diff`; filesystem mtimes are corroborating, not conclusive, evidence per the assignment's own caveat)."
+      ],
+      "evidence_refs": [
+        "git show -s --format='%H %ci %s' 0fb94f2",
+        "git show -s --format='%H %ci %s' ce737a7",
+        "git diff 0fb94f2 ce737a7 -- scripts/audit/d069_independent_trajectory_r4.py scripts/audit/_trajectory_core.py scripts/audit/_f10c2_anchors.py docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md (empty)",
+        "git diff ed7bc49 0fb94f2 -- scripts/audit/_trajectory_core.py (the pre-freeze BLAS pin fix, 6 lines)",
+        "stat -c '%Y %y %n' scripts/audit/d069_independent_trajectory_r4.py scripts/audit/_trajectory_core.py scripts/audit/_f10c2_anchors.py docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md src/rabbit/decoupling/_independent_noqke.py",
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py == 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+        "scripts/audit/d069_independent_trajectory_r4.py:57-60 (hard-assign pins before `import numpy`)"
+      ],
+      "evidence_fingerprint": "sha256:70e61deab4c126969da34ad01a01d050f3e50f08b473d5e1a0ff8cb52f9d3e96",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git diff 0fb94f2 ce737a7 -- scripts/audit/d069_independent_trajectory_r4.py scripts/audit/_trajectory_core.py scripts/audit/_f10c2_anchors.py docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md",
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-002",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Every quantitative claim in the ce737a7 commit message and the 2026-07-30 D-069 EXECUTION row of docs/harness/VALIDATION_LEDGER.md was checked against the retained report/log bytes and reconciles exactly, with the single exception carved out as F-003. Checked and confirmed: report/log sha256 hashes (fbadb3e3.../28c541b3...) equal the ledger's quoted hashes; wall_seconds 64801.9 vs budget 64800.0 (18*3600.0 in the driver) gives an overshoot of 1.9000000000014552s, correctly stated as '1.9 s'; error string 'wall budget: frozen wall budget exceeded' matches report['error'] verbatim; base endpoint N_eff/N_end/t_end_s/evals (3.034054308076679 / 7.936698865363719 / 52678.731916604454 / 3694) match report['base']['endpoint'] exactly; T14 worst |W_nu_rel| 0.0 at N=1/4/7 against 1e-12 matches report['recompute'] exactly, and the '146-component state' figure matches the actual ODE state-vector length (spectral_size 3*48=144 cloglog components + T_gamma + cosmic time = 146, per _trajectory_core.py unpack()/initial_state()) rather than the larger 149-field checkpoint_states row that also carries derived T_cm/occupation; M1_pair_sign mode string and M2_qem_sign max_R_transfer (2.011284806535093, rounds to the commit's 2.011284807) and 'kill level 1.0' (KILL_R_TRANSFER=1.0 in the driver) match exactly; T8c in-support sup 1.5881626368027338e-3 and full-domain sup 2.0800641747316935e-3 match report['base']['spectral']['sup_rel_in_support'/'sup_rel_full_domain'] exactly, and the full-domain figure matches the frozen contract's pre-registered prediction of 'approximately 2.080e-3' (written before any output byte existed, per the freeze commit and the contract file's own text); T13 narrative figures (11051 evaluations -- see F-003 for the one caveat; 13.595 h; N reached 0.1653 of 7.9367 = 2.08%; 'N first reached 0.1628 at eval 351'; '10700 evaluations later'; '0.032% of the target traversed' recomputes exactly as (0.1653-0.1628)/(7.936698865363719-0.1628)*100 = 0.03216%; '13.2 h' recomputes exactly as (64801.9-17397.2)/3600 = 13.168 h) all reconstruct precisely from the stdout log's bracketed elapsed-time trace; cost-model figures (measured 4.4287 s/eval = (64801.9-15860.7)/11051; base 2.6579 s/eval = 9818.2/3694; base 2.727 h = 9818.2/3600; mutants 1.678 h = (15860.7-9818.4)/3600; '2.81x' = 11051/3938 where 3938 = round(5.2*3600/4.754); 'conservative by 7%' = (4.754-4.4287)/4.754 = 6.8%) all reproduce from the same log. The SSOT_FACTS.json hook_fixture_count pin (PENDING_COMMIT -> 7157bbe) matches the actual one-line diff in ce737a7. The '6 PASS / 2 FAIL' board-unchanged claim is consistent because ce737a7 touches no gate-bearing file (only VALIDATION_LEDGER.md, SSOT_FACTS.json, and the two new raw-log files).",
+      "assumptions_used": [
+        "Standard IEEE-754 round-half-to-even semantics for the commit's rounded decimal figures were assumed when reproducing them from full-precision retained values; all reproductions matched under ordinary Python round()."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json (top-level fields; base.endpoint; base.spectral.sup_rel_in_support/sup_rel_full_domain; recompute; mutants; config.wall_budget_seconds)",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log (all 304 bracketed-timestamp lines)",
+        "docs/harness/VALIDATION_LEDGER.md:5 (2026-07-30 D-069 row)",
+        "git show ce737a7 (commit body)",
+        "git show ce737a7 -- .agent-harness/context/SSOT_FACTS.json",
+        "scripts/audit/d069_independent_trajectory_r4.py:101,123 (KILL_R_TRANSFER, WALL_BUDGET_SECONDS)",
+        "scripts/audit/_trajectory_core.py:156-162 (unpack/initial_state -> 146-component y vector)",
+        "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:168-175 (pre-registered ~2.080e-3 prediction, section 7 projected times)"
+      ],
+      "evidence_fingerprint": "sha256:98191cda7b5065f566af5cc71824b5c965cd4f42c0f486b748c45846834de9b0",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sha256sum .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+        "python3 -c \"import json; d=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json')); print(d['wall_seconds']-d['config']['wall_budget_seconds'])\"",
+        "grep -n \"^\\[.*\\] [a-zA-Z_0-9]*:\" .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-003",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The '11051 evaluations' figure for the domain-holdout phase, stated as a specific fact in both the ce737a7 commit message and the VALIDATION_LEDGER.md row, is stated at a precision the retained bytes do not support and is most likely a modest understatement of the true final count. Because the wall-budget TimeoutError fired inside domain-phase run_integration, `report['domain_holdout']` was never assigned (the exception unwinds before that line in main()), so the banked JSON report carries no domain-phase eval count at all: it has no 'domain_holdout' key, and the literal substring '11051' does not appear anywhere in the file except as a coincidental fragment inside two unrelated long decimals (lines 4509 and 8743, e.g. '...105117...'). The only source for '11051' is the stdout log's last periodic progress line, '[ 64718.9s] eval 11051: N=0.1653 ...', which by construction is quantized to multiples of 50 (the driver logs only when stats.evals % 50 == 1). The run continued for a further 83.0 s after that line (64801.9 - 64718.9) before the deadline check in the next RHS call raised TimeoutError, and the measured per-eval cost in that same regime is ~4.42-4.49 s/eval (e.g. (64718.9-15860.7)/11051 = 4.4211 s/eval using the domain-phase start line, or ~4.49 s/eval using recent local windows within the trace). At that rate, roughly 15-20 further complete RHS evaluations most plausibly occurred in the unlogged 83.0 s gap, none of which would appear at a %50 checkpoint, putting the true final count closer to ~11065-11070 than to exactly 11051. Both documents state '11051 evaluations' without any qualifying language ('at least', 'last logged at'), presenting a lower-bound/checkpoint value as if it were the exact terminal count. This does not change the qualitative conclusion (N advances by roughly 2.3e-7 per eval in this stalled regime, so even 20 more evaluations move the reported N by an amount far below the quoted 4-decimal precision) and does not affect any gated verdict, since T13 was never evaluated in this run. It does, however, mean this one specific number in an otherwise scrupulously self-consistent report/commit/ledger triad cannot itself be independently reconstructed to the stated precision from the retained bytes -- precisely the class of defect (a reported number not recoverable from retained state) that the D-065 finding and this run's own T14 predicate were designed to eliminate.",
+      "assumptions_used": [
+        "deadline.check() is called exactly once per RHS invocation, at the top of _trajectory_core.py's rhs() closure, and stats.evals increments once per completed RHS call after that check passes -- confirmed by direct code read, not merely inferred.",
+        "The measured local per-eval cost in the final third of the domain-holdout trace (~4.4-4.5 s/eval) is representative of the unlogged 83.0 s gap immediately following it; there is no evidence of a sudden per-eval slowdown/speedup at that exact boundary, but this is an extrapolation, not a directly retained figure."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json (top-level keys: no 'domain_holdout'; grep -n 11051 hits only lines 4509, 8743, both inside unrelated decimals)",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log (final line: '[  64718.9s] eval 11051: N=0.1653 ...')",
+        "scripts/audit/_trajectory_core.py:71-73 (Deadline.check), :181-198 (rhs(): deadline.check() first, stats.evals += 1, log gated on stats.evals % 50 == 1)",
+        "scripts/audit/d069_independent_trajectory_r4.py:565-587 (main(): domain_solution/domain assignment sequence and the TimeoutError except block that skips it)",
+        "git show ce737a7 (commit body: '11051 evaluations')",
+        "docs/harness/VALIDATION_LEDGER.md:5 ('11051 evaluations')"
+      ],
+      "evidence_fingerprint": "sha256:60679aae23d7c70ef80162dfd42a8a6a22107d1f283d8b3806bb0751e5a5657a",
+      "counterevidence_refs": [
+        "It is conceivable the coordinator observed the true final count directly (e.g. via a debugger or process inspection) through a channel not captured in any retained artifact; no such channel is evidenced, but its absence from the byte record cannot be used to prove it did not exist, only that it is not independently verifiable."
+      ],
+      "reproduction": [
+        "grep -n \"11051\" .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+        "tail -1 .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+        "python3 -c \"print((64801.9-64718.9)); print((64718.9-15860.7)/11051)\""
+      ],
+      "confidence": 0.8,
+      "unresolved": [
+        "The exact true final domain-phase eval count cannot be recovered from any retained artifact; only a plausible range (~11051-11070) can be bounded from the wall-clock gap and measured per-eval cost."
+      ]
+    },
+    {
+      "finding_id": "F-004",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json is consistent with the final banked report and with the no-intervention claim, and is independently corroborated by filesystem mtimes. Its embedded domain_holdout_trace (evals 1-1501, N oscillating 0.1628/0.1813/0.1629 from eval 351 onward) is a strict, uninterrupted prefix of the same stdout log later banked in ce737a7: the trace's timestamps and N values at evals 1, 51, ..., 1501 match r4_trajectory_stdout.log exactly, and the same oscillation-then-crawl pattern continues (N settling near 0.164-0.165) all the way to the final logged eval 11051, consistent with 'not slow, stopped' rather than an artifact of the sampling window chosen for the mid-run note. Its head_commit 'd94270fecedb3b6dca7276f27bae91da348cdf16' is a real, verifiable commit (2026-07-29T10:05:09Z, 'fix(harness): close the round-5 findings...') that landed on this branch 177 seconds before the observation's own recorded_at (2026-07-29T10:08:06Z), confirming ordinary D-070 harness-development work continued in parallel on the branch during the run -- exactly the parallel-axis pattern this project has separately authorized -- without touching any of the four frozen r4 files (independently confirmed in F-001). Strong independent corroboration of 'no intervention': the banked report file's on-disk mtime is 2026-07-30T06:49:28+09:00 = 2026-07-29T21:49:28Z, identical to the second to the report's own internal 'completed_at' field; the banked stdout log's mtime is 2026-07-30T06:48:05+09:00 = 2026-07-29T21:48:05Z, matching started_at (03:49:26Z) + the log's own final elapsed-time bracket (64718.9s) to within the same second (03:49:26 + 64718.9s = 21:48:04.9Z). Two independently-sourced timestamps (git-checkout-surviving filesystem mtimes, on a host whose timezone Asia/Seoul matches the +09:00 offset used throughout) agree with the internal report/log timestamps to the second, which would be very unlikely to occur if either artifact had been edited, regenerated, or backdated after the fact.",
+      "assumptions_used": [
+        "Filesystem mtimes reflect the last write time of the file content and were not reset by an intervening `git checkout`/`touch` that happened to coincidentally reproduce the exact internal timestamps; the second-level agreement across two independently-computed internal quantities (an absolute UTC field and a start+elapsed-seconds sum) makes coincidence very unlikely but is not a formal proof."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json (domain_holdout_trace, head_commit, recorded_at, no_intervention)",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log (evals 1-1501 identical to the trace; continuation through eval 11051)",
+        "git show -s --format='%H %ci %s' d94270f",
+        "stat -c '%y' .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json .../r4_trajectory_stdout.log",
+        "report['started_at'] = 2026-07-29T03:49:26+00:00; report['completed_at'] = 2026-07-29T21:49:28+00:00",
+        "timedatectl (host timezone Asia/Seoul, +0900, matches commit author-date offsets)"
+      ],
+      "evidence_fingerprint": "sha256:65d4a73f9cb450eda1a44d78dfff0b84670e5d2f6da8ac93ba473366a3a17abc",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "diff <(head -32 .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log | tail -31) <(python3 -c \"import json;d=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json'));[print(f'[{r[\\\"t_s\\\"]:9.1f}s] eval {r[\\\"eval\\\"]}: N={r[\\\"N\\\"]:.4f}') for r in d['domain_holdout_trace']]\")",
+        "stat -c '%y' .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-005",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "OPERATOR_OBSERVATION_domain_holdout_stall.json's own 'measured_cost_note' field ('60/30 ran at 4.275 s/eval, against the contract's unbacked assertion of 4.754 s/eval') does not reconstruct from its own embedded domain_holdout_trace. Using the trace's own anchor points -- domain-phase start (t=15860.7s, from the stdout header line, equal to consumed_at_observation_s's frame of reference) through the trace's own final row (t=22542.2s, eval=1501) -- the implied rate is (22542.2-15860.7)/1501 = 4.4514 s/eval, or (22542.2-15865.2)/1500 = 4.4513 s/eval using the first logged eval as the anchor; recent-local-window estimates within the same trace (e.g. eval 951->1501) give ~4.49-4.50 s/eval. None of these reconstructions land near 4.275, and no other derivation basis in the retained trace produces that figure. The eventual full-phase average, correctly computed in the final ce737a7 commit and ledger row as 4.4287 s/eval, is consistent with the trace-derived ~4.45-4.49 s/eval range, which further underscores that 4.275 is the outlier. This is a narrow, low-impact defect: the artifact is explicitly labeled 'OPERATOR_OBSERVATION_NOT_EVIDENCE', its 4.275 figure is not repeated anywhere in the final report, commit message, or ledger row (all of which independently and correctly compute 4.4287 s/eval from the full-phase bytes, per F-002), and it does not affect any T-predicate, gate, or verdict. It is nonetheless a genuine, reproducible internal inconsistency in a document whose stated purpose is honest contemporaneous observation, and it directly answers 'is the OPERATOR_OBSERVATION artifact ... consistent with the final report' with a qualified no on this one sub-field.",
+      "assumptions_used": [
+        "consumed_at_observation_s (22542.2) and the trace's own t_s values share the same time origin as the domain-phase start line in the stdout log (both are elapsed seconds since the driver's own process start); this is the natural reading given consumed_at_observation_s equals the trace's own last t_s exactly."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json (measured_cost_note, budget.consumed_at_observation_s, domain_holdout_trace)",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log:83 ('domain-holdout: BDF integration' header line, t=15860.7s)"
+      ],
+      "evidence_fingerprint": "sha256:223a2b7333fa207c0da85dcaa144fdb28880bfa4a58e8e301b273c536402eab8",
+      "counterevidence_refs": [
+        "An alternative computation basis unavailable in the retained bytes (e.g. an internal EWMA or a window predating the retained trace) could in principle produce 4.275; no such basis could be identified from what is retained."
+      ],
+      "reproduction": [
+        "python3 -c \"print((22542.2-15860.7)/1501); print((22542.2-15865.2)/1500)\""
+      ],
+      "confidence": 0.75,
+      "unresolved": [
+        "The exact derivation the mid-run observer used to arrive at 4.275 s/eval is not retained anywhere and could not be reverse-engineered from the available evidence."
+      ]
+    },
+    {
+      "finding_id": "F-006",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Testing the strongest alternative reading of the wall-budget breach (that the 1.9 s overshoot is a coordinator-favourable framing of a run that was going to fail its gates anyway): the overshoot magnitude itself is fully explained mechanically and is not evidence of favourable tuning. `Deadline.check()` (_trajectory_core.py:61-73) is called exactly once, at the very top of the RHS closure (_trajectory_core.py:182), before any per-eval work; breach-detection latency is therefore bounded by the duration of one full RHS evaluation. At the domain phase's own measured cost (~4.4-4.5 s/eval, F-002/F-003), a 1.9 s overshoot is well under one eval-interval -- an unremarkable, expected consequence of coarse per-eval polling, not a suspiciously precise near-miss. The 'breach is mechanical, never a scientific verdict' framing itself is not post-hoc: it is written verbatim in the frozen contract (docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 7, 'breach is a mechanical exit 20, never a scientific verdict... a breach yields no checks block at all'), committed at 0fb94f2 before the run produced a single output byte, so this is a pre-registered interpretive choice rather than a rationalization invented after seeing the outcome. What the retained evidence CANNOT settle: (i) whether a differently-designed, finer-grained deadline check would have produced a materially different exit point or (in principle) let T13 actually evaluate before the budget ran out -- this is inherent to the chosen once-per-RHS-call check granularity and is not recoverable from the bytes; (ii) a rigorous proof that the domain-holdout companion would never reach its terminal condition given materially more wall-clock time -- the commit's 'not slow, it is stopped' framing is a strong, well-supported extrapolation (net N-drift of only ~2.3e-7 per eval over the final ~10700 evaluations, oscillating rather than trending, which at the observed local rate would require several more orders of magnitude of additional evaluations to close the remaining ~7.77 in N) but it remains an extrapolation from an ~11000-eval sample, not a convergence proof. On balance the retained evidence supports 'this configuration was not going to finish within any practically reachable extension of an 18 h class budget' considerably better than it supports either the literal claim of permanent non-convergence or the alternative hypothesis of favourable framing; neither of the latter two is fully settleable from the bytes alone.",
+      "assumptions_used": [
+        "The per-eval RHS cost in the unobserved final 83.0 s of the run was similar to the measured cost in the preceding hours of the same phase (no retained evidence of a discontinuity, but also none ruling one out)."
+      ],
+      "evidence_refs": [
+        "scripts/audit/_trajectory_core.py:61-73 (Deadline class)",
+        "scripts/audit/_trajectory_core.py:181-183 (deadline.check() as the first statement in rhs())",
+        "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 7 (pre-registered mechanical-breach framing, committed at 0fb94f2 before output)",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json (why_this_may_be_real_information: 'T13 was pre-registered as genuinely unknown')"
+      ],
+      "evidence_fingerprint": "sha256:bee21d1e71fdc38d3a32657aeeee94a031bd27d547a979e15fd21a9f26b0273f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '61,73p;170,222p' scripts/audit/_trajectory_core.py",
+        "sed -n '216,244p' docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md"
+      ],
+      "confidence": 0.7,
+      "unresolved": [
+        "Whether the domain-holdout companion configuration is permanently non-convergent versus merely extremely slow cannot be settled from an ~11000-eval sample; only a much longer or differently-configured run (which the assignment explicitly forbids launching) could close this."
+      ]
+    },
+    {
+      "finding_id": "F-007",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The claim of bitwise identity to the preserved r3, r2 and D-056 base endpoints is TRUE at full float64 precision across the whole retained endpoint block, spectra, blocks and residual rows -- not only across the four scalars (N_eff, N_end, t_end_s, evals) literally quoted in the commit message. A recursive Python dict-diff of r4['base'] against r3['base'] and r2['base'] finds zero VALUE_DIFF entries anywhere in the overlapping keys (the only differences are MISSING_IN_A/MISSING_IN_B entries from keys r4 renamed or added relative to r3/r2, e.g. r4's new 'checkpoint_states'/'spectral'/'setup' vs r3/r2's 'spectrum_sup_rel'/'spectrum_sup_rel_full'/'spectrum_subsupport_nodes'). Direct `==` equality (Python, hence bit-identical) holds between r4 and r3/r2 for: the full 'endpoint' dict (N_eff, N_end, T_cm_end, T_gamma_end, evals, gamma_heating_ratio, t_end_s), 'blocks' (rho_nu, n_e, rho_e, n_x, rho_x, split_ratio), 'residual_rows', 'max_R_total' (6.965641112523105e-05 in all three), 'max_roundoff' (0.0 in all three), 'rejections' (count/final/max/min identical), 'tail_last_node_fraction' (1.2430778875527049e-08 in all three), and all four 48-element spectrum arrays f_e/f_mu/f_tau/grid_nodes. r4's endpoint dict also equals D-056's top-level 'endpoint' dict field-for-field on every key D-056 retained (D-056 lacks only the 'evals' field, which the other two runs have). This is corroborated by identical numpy/scipy versions across r4/r3/r2 (2.4.4/1.17.1) and by the confirmed-correct BLAS single-thread pinning in the banked driver (F-001) -- multi-threaded BLAS would make bit-identical reduction order across independent runs implausible, so the fact that bit-identity does hold is itself indirect evidence the pinning fix is doing its job.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json (base.endpoint, base.blocks, base.residual_rows, base.max_R_total, base.max_roundoff, base.rejections, base.tail_last_node_fraction, base.endpoint_spectrum.{f_e,f_mu,f_tau,grid_nodes}, versions)",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json (same keys)",
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json (same keys)",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json (endpoint)",
+        "git log --oneline --all -- <each comparandum file> (each committed exactly once, on its own dated commit, never touched again)"
+      ],
+      "evidence_fingerprint": "sha256:e39ea56b8c1bd1c3434f3b8a43570562b9e4a4a935d7465838888e28e81b08db",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 -c \"import json; a=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json'))['base']; b=json.load(open('.agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json'))['base']; print(a['endpoint']==b['endpoint'], a['blocks']==b['blocks'], a['residual_rows']==b['residual_rows'], a['endpoint_spectrum']['f_e']==b['endpoint_spectrum']['f_e'])\""
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    }
+  ],
+  "errors": [
+    {
+      "error_id": "E-001",
+      "stage": "SubagentStop (first attempt)",
+      "description": "The first submission of this envelope declared top-level status=pass while simultaneously carrying finding verdicts fail (F-003), fail (F-005), and inconclusive (F-006). The real project SubagentStop hook correctly blocked admission with 'Result artifact violates RESULT_ENVELOPE: status=pass requires every finding verdict to be pass' and the admission receipt was left open. That was a self-inconsistency in the envelope, not a change of substance: none of the seven findings' statements, evidence, or verdicts were altered to produce this correction. The only changes made in response are (1) top-level status corrected from 'pass' to 'fail' -- the honest aggregate given that F-003 and F-005 are verified, reproducible defects (not merely suspicions) and F-006 is a genuine inconclusive on a question the retained bytes cannot fully settle, so a blanket 'pass' misrepresented the audit's own findings; (2) completed_at updated to a fresh real `date -u` stamp captured at the moment of this correction; (3) this error record added. The substantive conclusion is unchanged: no refit, no post-hoc selection, no fabrication, and no gate manipulation were found anywhere in the D-069 r4 banking commit ce737a7; the fail/inconclusive verdicts are confined to two low-materiality precision/sourcing gaps (F-003, F-005) and one epistemically-limited framing question (F-006), none of which move any gate or contradict the mechanical-ERROR characterization.",
+      "recorded_at": "2026-07-30T07:55:10Z"
+    }
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-REFIT-HUNTER.json"
+  ]
+}

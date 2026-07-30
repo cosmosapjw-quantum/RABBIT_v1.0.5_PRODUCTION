@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r4-refit-hunter",
+  "agent_type": "default",
+  "last_assistant_message": "Envelope corrected after the first stop was blocked on the RESULT_ENVELOPE contract.\nHARNESS_RESULT: {\"assignment_id\": \"A-D070-R4-REFIT-HUNTER\", \"context_version\": \"fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-REFIT-HUNTER.json\", \"admission_proof\": \"sha256:ed37acca0186427aa050a700de7c398b55a0a462a53e0d93107b0d488ffdf152\"}"
+}

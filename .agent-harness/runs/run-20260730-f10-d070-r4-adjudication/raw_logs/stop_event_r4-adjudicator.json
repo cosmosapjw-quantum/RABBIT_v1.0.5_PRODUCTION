@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r4-adjudicator",
+  "agent_type": "default",
+  "last_assistant_message": "Adjudication complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D070-R4-ADJUDICATION\", \"context_version\": \"fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json\", \"admission_proof\": \"sha256:939b7a21c867e3fcdbfb240f08938a6234a89415c852bf33bb0ed9aea349de6d\"}"
+}

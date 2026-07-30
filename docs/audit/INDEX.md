@@ -30,6 +30,13 @@ linked from canonical docs. Start from these anchors:
   checkers; mixed-model panel returned 5/5 FAIL and all seven confirmed findings
   were fixed; no gate movement):
   [BD622_D070_evidence_closure_2026-07-29.md](BD622_D070_evidence_closure_2026-07-29.md)
+- D-070 Part B7 adjudication of the D-069 r4 execution (mechanical ERROR on the
+  wall budget, no `checks` block, no gate movement in either direction; the T13
+  companion is measured non-viable by 3-4 orders of magnitude, so F-D065-04
+  items 4 and 5 are undischarged in full and the gate has no available route to
+  PASS on current measurement; reissue not recommended, owner disposition
+  STOP/PRESERVE):
+  [BD622_D070_r4_adjudication_2026-07-30.md](BD622_D070_r4_adjudication_2026-07-30.md)
 - D-069 independent trajectory r4 contract (frozen before any output byte;
   full-domain norms, evolved `y>24` enclosure, domain holdout, recomputable
   checkpoints — execution adjudicated at D-070):
