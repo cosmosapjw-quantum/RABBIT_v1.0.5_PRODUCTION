@@ -120,6 +120,8 @@ def manifest_source(entries: int, declared: int | None = None) -> str:
 def manifest_fact(value: int, json_path: list[str] | None = None) -> dict[str, object]:
     return {
         "fact_id": "manifest_entry_count",
+        # F-DESC-MEASURE-DECOUPLE (round 9): prose must name the measured file.
+        "description": f"Result artifacts pinned by digest in {MANIFEST_FILE}.",
         "measurement": {
             "kind": "json_array_length",
             "path": MANIFEST_FILE,
@@ -154,6 +156,13 @@ def facts_document(
         del prior_35["as_of_commit"]
     fact: dict[str, object] = {
         "fact_id": "hook_fixture_count",
+        # F-DESC-MEASURE-DECOUPLE (round 9): the description must name the file
+        # the measurement actually reads, so prose and measurement cannot
+        # describe different things.
+        "description": (
+            "Focused hook-lifecycle fixtures in "
+            f"{HOOK_MEASUREMENT['path']}."
+        ),
         "measurement": dict(HOOK_MEASUREMENT) if measurement is _DEFAULT else measurement,
         "value": value,
         "as_of_commit": "07e3507",
@@ -1091,3 +1100,156 @@ def test_f_ssot_10_empty_json_path_is_an_error(repo: Path) -> None:
     write(repo / MANIFEST_FILE, manifest_source(3))
     facts_and_measurement(repo, extra_facts=[manifest_fact(3, json_path=[])])
     assert any("non-empty 'json_path'" in m for m in errors_of(repo))
+
+
+# --------------------------------------------------------------------------
+# Round 9 (D-070 Part B9). Six confirmed defects, one negative fixture each.
+# Every one of these must die if its guard is reverted; that is the only thing
+# that makes the guard verified rather than merely present.
+# --------------------------------------------------------------------------
+
+
+def test_f_r9_comma_adjacency_lie_binds_to_its_own_id(repo: Path) -> None:
+    """The round-9 critical finding, as the attack was actually written.
+
+    `ID1` is S1, `ID2` is S2 -- the separator before ID2 is three characters and
+    the one after it is five, so distance-ranking gave ID2 its NEIGHBOUR's
+    status and a plainly false line passed silently.
+
+    The two statuses MUST differ, and the neighbour's must equal ID2's TRUE
+    status. Otherwise mis-binding still lands on a value that contradicts the
+    registry, the checker errors either way, and the fixture proves nothing --
+    which is exactly how the first draft of this test, and the first manual
+    reproduction of the finding, both failed to discriminate. Here both gates
+    are really FAIL, so binding `G-BETA` to its neighbour's FAIL would agree
+    with the registry and pass in silence.
+    """
+    write(repo / ".agent-harness/context/GATE_REGISTRY.json", gate_registry("fail", "fail"))
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `C-LIVE` is VALIDATED.\n- `G-ALPHA` is FAIL, `G-BETA` is PASS.",
+    )
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "")
+    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in errors_of(repo))
+
+
+def test_f_r9_ordinary_two_clause_prose_still_binds_correctly(repo: Path) -> None:
+    """The control the fix must not break.
+
+    `A` remains S1 and `B` is S2 is ordinary English whose spacing is the
+    OPPOSITE of the attack's, so no distance threshold separates the two. Word
+    order does. Both statuses here are true, so the corpus must stay clean.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA` remains FAIL.",
+        "- `G-ALPHA` remains PASS and `G-BETA` is FAIL.",
+    )
+    assert_clean(repo)
+
+
+def test_f_r9_shared_subject_list_still_binds_to_every_member(repo: Path) -> None:
+    """`A` and `B` are both still S -- one token, two ids, both bound."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA` and `G-BETA` are both PASS.\n- `C-LIVE` is VALIDATED.",
+    )
+    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in errors_of(repo))
+
+
+def test_f_r9_regex_matching_nothing_is_an_error_not_the_value_zero(repo: Path) -> None:
+    """`grep -c` prints 0 on no match; moving to Python did not fix that alone."""
+    facts_and_measurement(
+        repo, measurement=dict(HOOK_MEASUREMENT, pattern="^def NOSUCHTHING_"), value=0
+    )
+    messages = errors_of(repo)
+    assert any("matched no lines" in m and "not the value 0" in m for m in messages), messages
+
+
+def test_f_r9_in_tree_symlink_pointing_outside_the_repo_is_refused(repo: Path) -> None:
+    """The path check was about the STRING; containment is about the FILE."""
+    outside = repo.parent / "outside_target.py"
+    write(outside, "def test_planted() -> None:\n    pass\n")
+    planted = repo / ".agent-harness/tests/borrowed.py"
+    planted.symlink_to(outside)
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, path=str(planted.relative_to(repo))), value=1)
+    messages = errors_of(repo)
+    assert any("outside the repository" in m for m in messages), messages
+
+
+def test_f_r9_description_must_name_the_file_the_measurement_reads(repo: Path) -> None:
+    """A fact described as one file may not quietly measure another."""
+    facts_and_measurement(repo, measurement=dict(HOOK_MEASUREMENT, path="LICENSE"))
+    messages = errors_of(repo)
+    assert any("never names that file" in m for m in messages), messages
+
+
+def test_f_r9_frozen_role_cannot_sit_in_a_live_region(repo: Path) -> None:
+    """`role: frozen` is a claim about WHERE the line is, and must be true."""
+    facts_and_measurement(
+        repo,
+        extra_assertions=[
+            {
+                "file": "docs/harness/VALIDATION_LEDGER.md",
+                "line_contains": "seal back-reference",
+                "value_regex": r"(\d+) at the seal",
+                "role": "frozen",
+                "pinned_to_commit": "ed7bc49",
+            }
+        ],
+    )
+    messages = errors_of(repo)
+    assert any("inside a LIVE region" in m for m in messages), messages
+
+
+def test_f_r9_historical_role_in_a_live_row_stays_legal(repo: Path) -> None:
+    """The control for the guard above.
+
+    A live row citing a superseded number ALONGSIDE the commit it held at is
+    ordinary and correct, and is already constrained by the same-line commit
+    test. Only `frozen`, whose entire licence is position, is restricted.
+    """
+    assert_clean(repo)
+
+
+def test_f_r9_a_later_undeclared_section_cannot_demote_the_controlling_overlay(
+    repo: Path,
+) -> None:
+    """Liveness used `newest` over all headings; the tie checks saw only
+    'controlling' ones, so a later plain section silently emptied the overlay."""
+    state = (repo / "docs/harness/PROJECT_STATE.md").read_text(encoding="utf-8")
+    write(
+        repo / "docs/harness/PROJECT_STATE.md",
+        state + "\n## 2099-01-01 appendix\n\nNothing to see here.\n",
+    )
+    messages = errors_of(repo)
+    assert any("silently demotes the controlling overlay" in m for m in messages), messages
+
+
+def test_f_r9_denial_that_agrees_by_accident_does_not_satisfy_coverage(repo: Path) -> None:
+    """NEGATION_RE is a denylist and can never be finished.
+
+    "has no bearing on whether ... VALIDATED" reads to a human as an explicit
+    denial and to the denylist as an assertion -- and because the status it
+    lands on happens to match the registry, it produced no contradiction and
+    silently satisfied the coverage floor for a claim stated nowhere real.
+    Coverage now requires an AFFIRMATIVE connector, so the floor fails loudly
+    instead. The contradiction path deliberately keeps the loose window: failing
+    to catch a lie is the expensive error, and this is the cheap one.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA` remains PASS.\n"
+        "- `C-LIVE` has no bearing on whether the lane is VALIDATED.",
+    )
+    messages = errors_of(repo)
+    assert any(
+        "C-LIVE=VALIDATED is asserted nowhere in any live region" in m for m in messages
+    ), messages

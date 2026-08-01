@@ -202,6 +202,26 @@
      "note": "Cost block of the same report; must carry its as-of commit."
     }
    ]
+  },
+  {
+   "fact_id": "ssot_regression_case_count",
+   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_ssot_consistency.py",
+    "pattern": "^def test_"
+   },
+   "value": 82,
+   "as_of_commit": "PENDING_COMMIT",
+   "assertions": [
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B9",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "current",
+     "note": "Live ledger row for the round-9 fix pass."
+    }
+   ]
   }
  ]
 }

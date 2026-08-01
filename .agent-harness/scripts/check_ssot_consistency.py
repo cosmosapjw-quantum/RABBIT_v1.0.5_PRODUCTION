@@ -313,7 +313,7 @@ import json
 import re
 from datetime import date
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, TypeVar
 
 from _harness import load_json, root
 
@@ -351,6 +351,12 @@ CLAIM_STATUSES = set(STATUS_TOKENS) - {"PASS", "FAIL"}
 
 # How far an id may sit from a status token and still be its subject.
 ASSERTION_WINDOW = 200
+# A token this close AFTER an id is juxtaposed to it, not merely nearest to it:
+# `ID=STATUS` (1), `ID: STATUS` (2), a `| ID | STATUS |` cell. Round 9's
+# F-COMMA-ADJACENCY won by a two-character punctuation margin at gaps of 3 and 5,
+# so this threshold deliberately sits below both: it rescues juxtaposition and
+# rescues nothing that is merely near.
+TIGHT_BINDING_GAP = 2
 # Hard boundaries: a status token never binds across a table cell or a sentence.
 BOUNDARY_RE = re.compile(r"\|| [-]{2} |\. |\.$|; |\? |! |^\s*[-*] ")
 # A cue between an id and its token (or just before the token) means the line
@@ -360,6 +366,45 @@ NEGATION_RE = re.compile(
     r"(?![A-Za-z])",
     re.IGNORECASE,
 )
+
+# Round 9's F-NEGATION-CLOSED-VOCAB. NEGATION_RE is a DENYLIST, and a denylist of
+# ways to say "no" can never be finished: "has no bearing on whether it is PASS"
+# reads to a human as an explicit denial and to the denylist as an assertion, and
+# that false assertion was enough to satisfy the coverage floor for a claim with
+# no real live statement anywhere. Extending the denylist would only move the
+# boundary, so the direction is inverted instead.
+#
+# Contradiction detection keeps the loose window: a line that says something
+# false about a gate is caught however it is phrased, because failing to catch a
+# lie is the expensive error. COVERAGE is different -- it is the claim "this id
+# IS stated somewhere current" -- and it now requires an AFFIRMATIVE connector
+# from the closed list below. The two lists are closed in opposite directions: an
+# unrecognised phrase adds no coverage and the floor fails loudly, whereas an
+# unrecognised phrase used to add coverage silently.
+AFFIRMATIVE_CONNECTORS = frozenset(
+    {
+        "",
+        "is",
+        "are",
+        "was",
+        "were",
+        "remains",
+        "remain",
+        "stays",
+        "stay",
+        "still",
+        "both",
+        "now",
+        "at",
+        "to",
+        "reads",
+        "records",
+        "holds",
+    }
+)
+# Stripped before the remainder is compared: markup, list punctuation, and the
+# ids themselves, so `A` and `B` are both still FAIL reduces to "are both still".
+CONNECTOR_NOISE_RE = re.compile(r"[`*_|=:,;()\[\]-]+")
 
 # One pattern for every decision id: `D-` plus exactly three digits. Five
 # separate hardcoded `D-0\d\d` patterns meant that the first decision numbered
@@ -584,6 +629,35 @@ def overlay_regions(lines: list[str], rel: str, errors: list[str]) -> list[Regio
     known_dates = [value for value in dates.values() if value is not None]
     newest = max(known_dates) if known_dates else None
 
+    # Round 9's F-CONTROLLING-DATE-GAP. Liveness is decided by comparing each
+    # section's date against `newest`, which is computed over EVERY dated
+    # heading -- but the tie/undated checks above only ever looked at headings
+    # that say "controlling". Nothing required the controlling section to
+    # actually BE the newest. Adding one heading dated later, claiming neither
+    # "controlling" nor "superseded", therefore pushed the real controlling
+    # section below `newest` and dropped it out of every live region silently:
+    # the surface still named its controlling overlay, and that overlay was no
+    # longer being read. A section that outranks the controlling one is either a
+    # mistake or an attack, and either way it is not a thing to resolve quietly.
+    if dated_controlling and newest is not None:
+        newest_controlling = max(stamp for _index, stamp in dated_controlling)
+        if newest_controlling < newest:
+            usurpers = "; ".join(
+                sorted(
+                    blocks[index][2].strip()
+                    for index, stamp in dates.items()
+                    if stamp == newest and index not in controlling
+                )
+            )
+            errors.append(
+                f"{rel}: the controlling overlay is dated "
+                f"{newest_controlling.isoformat()} but the file's newest dated section "
+                f"is {newest.isoformat()} ({usurpers}). A later section that claims "
+                "neither 'controlling' nor 'superseded' silently demotes the "
+                "controlling overlay out of every live region. Mark it superseded, or "
+                "make it the controlling overlay."
+            )
+
     regions: list[Region] = []
     for index, (start, end, heading) in enumerate(blocks):
         if heading != "(preamble)" and SUPERSEDED_RE.search(heading):
@@ -793,6 +867,9 @@ def find_board_assertions(
     return found, unresolved
 
 
+_RowT = TypeVar("_RowT", bound=tuple)
+
+
 def split_clauses(line: str) -> list[tuple[int, str]]:
     """Cut a line at hard boundaries; return (offset_in_line, clause_text)."""
     clauses: list[tuple[int, str]] = []
@@ -804,6 +881,143 @@ def split_clauses(line: str) -> list[tuple[int, str]]:
     if position < len(line):
         clauses.append((position, line[position:]))
     return clauses
+
+
+def bind_by_word_order(
+    ids: list[tuple[int, int, str]], tokens: list[tuple[int, int, str]]
+) -> tuple[
+    list[tuple[tuple[int, int], tuple[int, int], str, str]],
+    list[tuple[tuple[int, int], str]],
+]:
+    """Bind ids to status tokens by WORD ORDER, not by character distance.
+
+    Round 9's F-COMMA-ADJACENCY killed the distance heuristic. In
+    ``ID1 is S1, ID2 is S2`` the separator before ID2 is ``, ``+backtick (3
+    characters) and the one after it is backtick+`` is `` (5), so ID2 bound to
+    its NEIGHBOUR's status and a plainly false gate line rode in silently. The
+    margin that decided it was a property of punctuation widths, not of what the
+    sentence said -- and tightening the threshold only moves which punctuation
+    wins. ``ID1 remains S1 and ID2 is S2`` is ordinary English with the opposite
+    spacing, so no distance rule separates the two.
+
+    What separates them is that S1 already has a subject. Every attested form in
+    this corpus writes the status AFTER its id, so this walks the clause in
+    order, gathers each run of consecutive ids into one subject group, and gives
+    that group the FIRST status token that follows it. A token is consumed by
+    the group it belongs to and is never offered to a later id.
+
+    Consequences worth stating:
+
+    * ``A and B are both still FAIL`` -- one group of two, one token: both bind.
+      A run of ids with no token between them is a shared subject.
+    * ``ID1 is S1, ID2 is S2`` -- two groups, two tokens, each to its own.
+    * A group with no token after it falls back to the token immediately before
+      it, which is the only way ``PASS is what ID earned`` can be read.
+
+    ``ASSERTION_WINDOW`` still bounds how far a token may sit from its group.
+    """
+    items: list[tuple[int, int, int, str, bool]] = [
+        (start, end, index, text, True) for index, (start, end, text) in enumerate(ids)
+    ] + [(start, end, -1, text, False) for start, end, text in tokens]
+    items.sort(key=lambda item: item[0])
+
+    groups: list[list[tuple[int, int, str]]] = []
+    order: list[tuple[str, int]] = []  # ("group"|"token", index into groups/tokens)
+    token_at: dict[int, tuple[int, int, str]] = {}
+    for start, end, _index, text, is_id in items:
+        if is_id:
+            if order and order[-1][0] == "group":
+                groups[order[-1][1]].append((start, end, text))
+            else:
+                groups.append([(start, end, text)])
+                order.append(("group", len(groups) - 1))
+        else:
+            token_at[len(order)] = (start, end, text)
+            order.append(("token", len(order)))
+
+    picks: dict[int, tuple[int, int] | None] = {}
+    for position, (kind, index) in enumerate(order):
+        if kind != "group":
+            continue
+        group = groups[index]
+        chosen_at: int | None = None
+        for following in range(position + 1, len(order)):
+            if order[following][0] == "token":
+                if token_at[following][0] - group[-1][1] <= ASSERTION_WINDOW:
+                    chosen_at = following
+                break
+        if chosen_at is None:
+            for preceding in range(position - 1, -1, -1):
+                if order[preceding][0] == "token":
+                    if group[0][0] - token_at[preceding][1] <= ASSERTION_WINDOW:
+                        chosen_at = preceding
+                    break
+        picks[position] = (chosen_at, index) if chosen_at is not None else None
+
+    consumed = {slot for slot, _ in (value for value in picks.values() if value is not None)}
+
+    bound: list[tuple[tuple[int, int], tuple[int, int], str, str]] = []
+    ambiguous: list[tuple[tuple[int, int], str]] = []
+    for position, value in picks.items():
+        if value is None:
+            continue
+        chosen_at, index = value
+        group = groups[index]
+        chosen = token_at[chosen_at]
+        # A token that no group claimed is DANGLING. `- FAIL `G-BETA` PASS` is
+        # genuinely ambiguous and must be reported, not resolved -- but in
+        # `ID1 is FAIL, ID2 is PASS` the FAIL is already ID1's, so it is not
+        # dangling and offers ID2 nothing. That distinction is what separates
+        # honest ambiguity from round 9's F-COMMA-ADJACENCY.
+        for preceding in range(position - 1, -1, -1):
+            if order[preceding][0] != "token":
+                continue
+            neighbour = token_at[preceding]
+            if (
+                preceding not in consumed
+                and neighbour[2] != chosen[2]
+                and group[0][0] - neighbour[1] <= ASSERTION_WINDOW
+            ):
+                for id_start, id_end, identifier in group:
+                    ambiguous.append(
+                        (
+                            (id_start, id_end),
+                            "sits between conflicting status tokens "
+                            + "/".join(sorted({neighbour[2], chosen[2]}))
+                            + " and the earlier one has no subject of its own",
+                        )
+                    )
+            break
+        blocked = {span for span, _why in ambiguous}
+        for id_start, id_end, identifier in group:
+            if (id_start, id_end) in blocked:
+                continue
+            bound.append(((id_start, id_end), (chosen[0], chosen[1]), identifier, chosen[2]))
+    return bound, ambiguous
+
+
+def _affirmative(
+    clause: str,
+    id_span: tuple[int, int],
+    token_span: tuple[int, int],
+    id_regex: re.Pattern[str],
+) -> bool:
+    """True when the text joining an id to its status reads as a plain assertion.
+
+    Only an affirmative binding may satisfy the coverage floor; see
+    ``AFFIRMATIVE_CONNECTORS``. A table cell or `ID=STATUS` reduces to the empty
+    string and qualifies. `A` and `B` are both still FAIL reduces to
+    "are both still" once the ids and markup are stripped. Anything left over --
+    "has no bearing on whether it is" -- does not qualify, without this function
+    needing to know that "no bearing on" means no.
+    """
+    low = min(id_span[1], token_span[1])
+    high = max(id_span[0], token_span[0])
+    between = clause[low:high] if high > low else ""
+    between = id_regex.sub(" ", between)
+    between = CONNECTOR_NOISE_RE.sub(" ", between)
+    words = [word for word in between.lower().split() if word not in {"and", "the", "a"}]
+    return all(word in AFFIRMATIVE_CONNECTORS for word in words)
 
 
 def _negated(clause: str, id_span: tuple[int, int], token_span: tuple[int, int]) -> bool:
@@ -825,49 +1039,40 @@ def find_assertions(
     those are reported rather than guessed at, because a silent skip is exactly
     how an unparsed line becomes an unchecked line.
     """
-    found, unresolved = find_board_assertions(region, id_regex)
+    board, unresolved = find_board_assertions(region, id_regex)
+    # A `| ID | STATUS |` cell is juxtaposition, so it always grants coverage.
+    found: list[tuple[int, str, str, bool]] = [(n, i, s, True) for n, i, s in board]
     for number, line in region.lines:
         for _offset, clause in split_clauses(line):
             ids = [(m.start(), m.end(), m.group(1)) for m in id_regex.finditer(clause)]
             tokens = [(m.start(), m.end(), m.group(1)) for m in STATUS_RE.finditer(clause)]
             if not ids or not tokens:
                 continue
-            for id_start, id_end, identifier in ids:
-                scored = []
-                for token_start, token_end, status in tokens:
-                    if token_start >= id_end:
-                        gap = token_start - id_end
-                    elif token_end <= id_start:
-                        gap = id_start - token_end
-                    else:
-                        gap = 0
-                    scored.append((gap, token_start, token_end, status))
-                scored.sort(key=lambda item: item[0])
-                gap, token_start, token_end, status = scored[0]
-                if gap > ASSERTION_WINDOW:
+            resolved, ambiguous = bind_by_word_order(ids, tokens)
+            for id_span, why in ambiguous:
+                identifier = next(
+                    text for start, end, text in ids if (start, end) == id_span
+                )
+                unresolved.append((number, identifier, why))
+            for id_span, token_span, identifier, status in resolved:
+                if _negated(clause, id_span, token_span):
                     continue
-                rivals = {item[3] for item in scored if item[0] == gap}
-                if len(rivals) > 1:
-                    unresolved.append(
-                        (
-                            number,
-                            identifier,
-                            "sits equidistant between conflicting status tokens "
-                            + "/".join(sorted(rivals)),
-                        )
+                found.append(
+                    (
+                        number,
+                        identifier,
+                        status,
+                        _affirmative(clause, id_span, token_span, id_regex),
                     )
-                    continue
-                if _negated(clause, (id_start, id_end), (token_start, token_end)):
-                    continue
-                found.append((number, identifier, status))
+                )
     # A board row whose cells also read as prose would otherwise be counted
     # twice; the assertion is the same either way.
     return _dedupe(found), _dedupe(unresolved)
 
 
-def _dedupe(rows: list[tuple[int, str, str]]) -> list[tuple[int, str, str]]:
-    seen: set[tuple[int, str, str]] = set()
-    out: list[tuple[int, str, str]] = []
+def _dedupe(rows: list[_RowT]) -> list[_RowT]:
+    seen: set[_RowT] = set()
+    out: list[_RowT] = []
     for row in rows:
         if row in seen:
             continue
@@ -894,7 +1099,7 @@ def check_status_assertions(
             f"{rel}:{number}: cannot resolve what status is asserted for {identifier}: "
             f"it {why}. Rewrite the line so one status binds to one id."
         )
-    for number, identifier, status in assertions:
+    for number, identifier, status, affirmative in assertions:
         checked += 1
         expected = gates.get(identifier, claims.get(identifier))
         if expected is None:
@@ -904,7 +1109,9 @@ def check_status_assertions(
             )
             continue
         if status == expected:
-            covered.add(identifier)
+            # Agreement alone is not coverage: a misparsed denial also "agrees".
+            if affirmative:
+                covered.add(identifier)
             continue
         excused = _matching_exemption(
             exemptions, rel, region, number, identifier, status, expected, errors
@@ -954,7 +1161,7 @@ def _matching_exemption(
             return False
         correcting = Region(rel, region.label, later)
         corrected, _ = find_assertions(correcting, build_id_regex([identifier]))
-        if not any(found_status == expected for _line, _id, found_status in corrected):
+        if not any(found_status == expected for _line, _id, found_status, _aff in corrected):
             errors.append(
                 f"{FACTS_FILE}: the assertion exemption for {rel}:{number} ({identifier}"
                 f"={status}) points at line {later[0][0]} as the correction, but that "
@@ -1060,7 +1267,36 @@ def _measured_path(repo: Path, spec: dict[str, Any], where: str, errors: list[st
             "repository. A measurement reads repository files and nothing else."
         )
         return None
-    return repo / rel
+    target = repo / rel
+    # The spelling check above is about the STRING; containment is about the
+    # FILE. Round 9's F-SYMLINK-ESCAPE separated the two: a syntactically clean
+    # relative path can name an in-tree symlink whose target is outside the
+    # repository, and `read_text` follows it, so the guarantee in this
+    # function's own docstring was true of the path and false of the read.
+    # Resolve both sides and compare the real locations.
+    # Deliberately NON-strict. Resolving symlinks is all this needs; whether the
+    # file exists and can be read is diagnosed by `_read_measured_file`, whose
+    # message names the real problem. A strict resolve here would swallow
+    # "unreadable" and report "does not resolve" for a merely missing file --
+    # still fail-closed, but a worse answer to the question the operator asked.
+    try:
+        real = target.resolve()
+        root = repo.resolve()
+    except (OSError, RuntimeError) as exc:
+        errors.append(
+            f"{FACTS_FILE}: {where} cannot be run: {rel} does not resolve "
+            f"({exc.__class__.__name__}). A measurement that cannot be run is an "
+            "error, never a skip."
+        )
+        return None
+    if real != root and root not in real.parents:
+        errors.append(
+            f"{FACTS_FILE}: {where} names {rel!r}, which resolves to {real} — outside "
+            "the repository. A measurement reads repository files and nothing else, "
+            "and a symlink does not change that."
+        )
+        return None
+    return target
 
 
 def _read_measured_file(path: Path, rel: str, where: str, errors: list[str]) -> str | None:
@@ -1092,7 +1328,27 @@ def _count_lines_matching(
     text = _read_measured_file(path, str(spec["path"]), where, errors)
     if text is None:
         return None
-    return sum(1 for line in text.splitlines() if regex.search(line))
+    count = sum(1 for line in text.splitlines() if regex.search(line))
+    if count == 0:
+        # Round 9's F-REGEX-SILENT-ZERO. Reason 3 in this module's docstring
+        # rejects `grep -c` because it "would report the number zero rather than
+        # an error -- silence presenting as data, which is the failure mode this
+        # whole file exists to refuse." Moving the match into Python did not by
+        # itself fix that: a pattern that compiles but matches nothing was
+        # returning the integer 0, indistinguishable from a legitimate zero.
+        # A counting measurement that finds nothing is a broken measurement.
+        # There is no legitimate zero here to protect -- nobody declares a fact
+        # to assert that a file contains none of something -- so this is an
+        # error, not a warning. (`json_array_length` is deliberately different:
+        # resolving the json_path already proves the array exists, so an empty
+        # array there is measured data, not silence.)
+        errors.append(
+            f"{FACTS_FILE}: {where} matched no lines. {describe_measurement(spec)} "
+            "compiled but found nothing, which is a broken measurement and not the "
+            "value 0. Fix the pattern, or the file it reads."
+        )
+        return None
+    return count
 
 
 def _json_array_length(
@@ -1136,6 +1392,43 @@ def _json_array_length(
         )
         return None
     return len(value)
+
+
+def check_description_names_target(
+    fact_id: str, description: Any, spec: Any, errors: list[str]
+) -> None:
+    """Require a fact's prose to name the file its measurement actually reads.
+
+    Round 9's F-DESC-MEASURE-DECOUPLE: ``description`` was inert prose. Nothing
+    tied it to ``measurement``, so a fact whose description talked about
+    ``test_hooks.py`` could measure ``LICENSE`` and pass, as long as ``value``
+    matched what was really read. The description is what a human reads to
+    decide whether a number means what they think it means, so an unchecked
+    description is not documentation -- it is a second, unverified claim sitting
+    next to a verified one, which is the exact shape this file exists to refuse.
+
+    The check is deliberately weak and mechanical: the measured path must appear
+    somewhere in the description. It cannot prove the prose is *right*, only
+    that it is about the same file. That is enough to stop the substitution,
+    and it stays checkable without parsing English.
+    """
+    if not isinstance(spec, dict):
+        return
+    rel = spec.get("path")
+    if not isinstance(rel, str) or not rel.strip():
+        return
+    if not isinstance(description, str) or not description.strip():
+        errors.append(
+            f"{FACTS_FILE}: fact {fact_id} has no 'description', so nothing states "
+            f"in prose what {rel} is being counted for. Add one that names the file."
+        )
+        return
+    if rel not in description:
+        errors.append(
+            f"{FACTS_FILE}: fact {fact_id} measures {rel!r} but its description never "
+            "names that file, so the prose and the measurement can describe different "
+            "things. Name the measured path in the description."
+        )
 
 
 def measure_fact(
@@ -1311,8 +1604,16 @@ def check_exemptions_used(
         )
 
 
+def live_line_index(regions: list[Region]) -> set[tuple[str, int]]:
+    """Every ``(file, line)`` this run treats as authoritative right now."""
+    return {(region.rel, number) for region in regions for number, _line in region.lines}
+
+
 def check_facts(
-    repo: Path, document: dict[str, Any], errors: list[str]
+    repo: Path,
+    document: dict[str, Any],
+    errors: list[str],
+    live_lines: set[tuple[str, int]] | None = None,
 ) -> tuple[int, dict[str, int]]:
     facts = document.get("facts")
     if not isinstance(facts, list) or not facts:
@@ -1339,6 +1640,9 @@ def check_facts(
         # measured: `prior` entries and `frozen` assertions are pinned to commits
         # that are not this working tree, and re-deriving them here would refresh
         # exactly what the frozen role forbids refreshing.
+        check_description_names_target(
+            fact_id, fact.get("description"), fact.get("measurement"), errors
+        )
         measured, measurement = measure_fact(repo, fact_id, fact.get("measurement"), errors)
         if measured is not None:
             measurements[fact_id] = measured
@@ -1450,6 +1754,37 @@ def check_facts(
                         )
                         continue
                     quoted = " ".join(match.group(0).split())
+                    if (
+                        role == "frozen"
+                        and live_lines is not None
+                        and (rel, number) in live_lines
+                    ):
+                        # Round 9's F-FROZEN-ROLE-SMUGGLE. `role` was a
+                        # free-standing label: nothing tied a row calling itself
+                        # `frozen` to actually sitting somewhere this checker
+                        # treats as no longer authoritative, so a wildly wrong
+                        # number could sit in present-tense prose in a document's
+                        # lead section and be excused by its own label. A frozen
+                        # row's whole justification is that it is pinned to a past
+                        # commit and never refreshed, which is a claim about WHERE
+                        # the line is; the label now has to be true of that.
+                        #
+                        # `historical` is deliberately NOT covered. It means "a
+                        # past value, cited with the commit it held at", and a
+                        # live row citing a superseded number alongside its commit
+                        # is ordinary and correct -- this corpus does it
+                        # constantly. That role is already constrained by the
+                        # `dated` test below, which requires the commit to appear
+                        # on the same line, so its licence is earned by content
+                        # rather than by position.
+                        errors.append(
+                            f"{rel}:{number}: {fact_id} is declared with role 'frozen' "
+                            f"but this line is inside a LIVE region ({quoted!r}). A "
+                            "frozen assertion must sit where it is no longer "
+                            "authoritative; the role is a claim about the line's "
+                            "position, not a licence to ignore it."
+                        )
+                        continue
                     # `priors[value]` is guaranteed non-empty above, so this is a
                     # real substring test and never the vacuous `"" in line`.
                     dated = value != current and value in priors and priors[value] in line
@@ -1722,7 +2057,9 @@ def main() -> None:
                 "need to be stated."
             )
 
-    facts_checked, fact_measurements = check_facts(repo, document, errors)
+    facts_checked, fact_measurements = check_facts(
+        repo, document, errors, live_lines=live_line_index(regions)
+    )
     decisions = check_decision_inventory(repo, errors)
 
     if errors:
