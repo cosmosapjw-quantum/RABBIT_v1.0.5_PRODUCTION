@@ -1,0 +1,310 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260801-f10-d067-review-r10",
+  "assignment_id": "A-D067-R10-BINDER",
+  "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+  "agent_id": "r10-binder",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260801-f10-d067-review-r10",
+    "assignment_id": "A-D067-R10-BINDER",
+    "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e833e5b8e09ebe70ba7eaea2acb0a6f6b294c4eb550fa88389234f4ac44bfac9",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-BINDER.json",
+  "started_at": "2026-08-01T13:59:01Z",
+  "completed_at": "2026-08-01T14:14:03Z",
+  "tool_versions": {
+    "python": "3.12.3 (venv/bin/python)",
+    "git": "2.43.0",
+    "target_head": "32ba566634baa10b40a48bb81ce61b70ff060c0f6",
+    "target_file_sha256": "sha256:1fc026251b5109d0bc07c0c867f17838996fb33830029b84df6f27635aacab5e",
+    "target_blob": "d56657b3efa9c445eddedde0394d9875b3684547"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260801-f10-d067-review-r10/assignments/A-D067-R10-BINDER.json  -> VERIFY: PASS",
+    "git archive HEAD | tar -x -C $SCRATCH/tree   (tracked files only, 27 MB; df / showed 42 GB free at start, 35 GB at end)",
+    "sha256sum .agent-harness/scripts/check_ssot_consistency.py $SCRATCH/tree/.agent-harness/scripts/check_ssot_consistency.py  -> identical 1fc02625...",
+    "venv/bin/python .agent-harness/scripts/check_ssot_consistency.py  -> exit 0, ok:true, status_assertions_checked=25, gates_covered=8 (unmutated HEAD baseline)",
+    "venv/bin/python $SCRATCH/r10_binder_attack.py   (38 end-to-end cases on the attested G-ALPHA=PASS/G-BETA=FAIL fixture corpus)",
+    "venv/bin/python $SCRATCH/r10_batch2.py          (17 further end-to-end cases: dangling decoys, board id cells, id-recognition edges)",
+    "venv/bin/python $SCRATCH/r10_unit_probe.py      (unit-level bind_by_word_order / split_clauses / _negated / _affirmative probes and exact window arithmetic)",
+    "venv/bin/python $SCRATCH/r10_real_plant.py      (8 plants into git-archive copies of the REAL corpus)",
+    "venv/bin/python $SCRATCH/r10_real_board.py      (6 in-place mutations of the REAL live gate board, PROJECT_STATE.md:59-68)",
+    "grep -rn TIGHT_BINDING_GAP --include='*.py' --include='*.md' --include='*.json' .  -> exactly one hit, its own definition"
+  ],
+  "artifacts": [
+    "scratch: /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r10_binder_attack.py",
+    "scratch: .../scratchpad/r10_batch2.py",
+    "scratch: .../scratchpad/r10_unit_probe.py",
+    "scratch: .../scratchpad/r10_real_plant.py",
+    "scratch: .../scratchpad/r10_real_board.py",
+    "scratch: .../scratchpad/r10_results.json",
+    "scratch: .../scratchpad/r10_results_batch2.json",
+    "evidence bundle sha256 (concatenation of the five scripts and two result JSONs, in that order): 004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-R10-BINDER-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The status-board path bypasses BOTH _negated and _affirmative, so a Status cell that a human reads as an explicit denial binds the very token it denies, satisfies the coverage floor, and is reported as agreeing with the registry. Demonstrated in place against the REAL live gate board in docs/harness/PROJECT_STATE.md:59-68 (the controlling overlay, and the only declared status board in the repository): rewriting `| `G-HARNESS-INTEGRITY` | FAIL | ... |` to `| `G-HARNESS-INTEGRITY` | no longer FAIL | ... |` gives exit 0, {\"ok\": true, \"status_assertions_checked\": 25, \"gates_covered\": 8}, zero errors. Identical clean results for `has never been FAIL`, `not FAIL`, `| `G-F10-SCOPE` | no longer PASS |` and `| `G-F10-SCOPE` | anything but PASS |`. The control `| `G-HARNESS-INTEGRITY` | PASS |` is caught (exit 1, 'live surface says G-HARNESS-INTEGRITY=PASS but the gate registry says FAIL'), which isolates the defect to the denial forms. find_board_assertions collects `statuses = {m.group(1) for m in STATUS_RE.finditer(cells[status_column])}`, binds the single member, and find_assertions injects the row as `(n, i, s, True)` -- affirmative True by construction, with no negation test anywhere on that path. This is round 9's F-NEGATION-CLOSED-VOCAB re-opened in the one path the 915e2e4 redesign did not cover, and it is precisely the F-D065-05 shape: the registry says FAIL, the live handoff says the gate no longer fails, and the machine check certifies agreement.",
+      "assumptions_used": [
+        "GATE_REGISTRY.json at HEAD 32ba566 holds G-HARNESS-INTEGRITY=fail and G-F10-SCOPE=pass (read directly).",
+        "docs/harness/PROJECT_STATE.md:59 declares `| Gate | Status | Basis |`, which find_board_assertions recognises as a status board (exactly one id header, exactly one Status header).",
+        "The mutation was applied to a git-archive copy in scratch; the repository was never written."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_real_board.py cases M0-M5",
+        "scratchpad/r10_binder_attack.py cases C1, C2, C3, C5",
+        "scratchpad/r10_real_plant.py cases R4, R5",
+        ".agent-harness/scripts/check_ssot_consistency.py:815-867 (find_board_assertions), :1042-1044 (board rows injected with affirmative=True)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "M0 control: a plain FAIL->PASS flip of the same row IS caught, so the board path is not blind in general.",
+        "J5: a Status cell holding two distinct tokens (`FAIL, not PASS`) is correctly reported unresolved, so only single-token denials pass.",
+        "J4: a third `Notes` column containing `was PASS once` does not leak into the binding."
+      ],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git -C <repo> archive HEAD | tar -x -C $SCRATCH",
+        "sed -i 's/| `G-HARNESS-INTEGRITY` | FAIL |/| `G-HARNESS-INTEGRITY` | no longer FAIL |/' $SCRATCH/docs/harness/PROJECT_STATE.md",
+        "cd $SCRATCH && python3 .agent-harness/scripts/check_ssot_consistency.py; echo $?",
+        "observed: {\"ok\": true, ...\"gates_covered\": 8}, exit 0"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "A negation cue between an id and its FIRST following token discards the id entirely instead of re-binding it, and the later un-negated token in the same clause is never considered -- so a sentence that reads as an affirmative upgrade of a failing gate asserts nothing. Planted into a live region of the REAL docs/harness/PROJECT_STATE.md: `- `G-HARNESS-INTEGRITY` is no longer FAIL but PASS.` gives exit 0, {\"ok\": true, \"status_assertions_checked\": 25, \"gates_covered\": 8}, zero errors, while the control `- `G-HARNESS-INTEGRITY` is PASS.` gives exit 1 with the correct contradiction. Same clean result on the fixture corpus for `is not FAIL but PASS` and `will never be FAIL again, it is PASS`. Unit probe confirms the mechanism: for `` `G-BETA` is no longer FAIL but PASS `` the tokens present are ['FAIL','PASS'] but bind_by_word_order returns exactly one pair, (G-BETA, FAIL), which _negated then drops -- PASS is orphaned and never tested against the registry. find_assertions:1057-1059 does `if _negated(...): continue`, with no fallback to the next unconsumed token. The docstring's justification ('a negation cue ... means the line asserts nothing, so \"is no longer FAIL\" can never be recorded as asserting FAIL') reasons only about the negated token and never about what else the clause says.",
+      "assumptions_used": [
+        "`no longer`, `not` and `never` are members of NEGATION_RE; `but PASS` contains no cue.",
+        "The gate is stated truthfully elsewhere in the corpus, so the coverage floor does not fire -- the realistic attacker edits one surface rather than deleting every mention."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_real_plant.py cases R0 (caught) vs R1 (clean)",
+        "scratchpad/r10_binder_attack.py cases A1, A2, A5 (clean) vs A3, A4 (caught)",
+        "scratchpad/r10_unit_probe.py section '_negated / _affirmative on the successful attacks'",
+        ".agent-harness/scripts/check_ssot_consistency.py:1023-1029 (_negated), :1057-1059 (drop, no re-bind)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "A3 `now reads PASS rather than FAIL` and A4 `is PASS instead of FAIL` ARE caught: when the cue falls after the first token the pair is not negated, so the attack needs the cue before the first token."
+      ],
+      "reproduction": [
+        "append `- `G-HARNESS-INTEGRITY` is no longer FAIL but PASS.` under `## Current status` in a scratch copy",
+        "cd $SCRATCH && python3 .agent-harness/scripts/check_ssot_consistency.py; echo $?",
+        "observed: exit 0, ok:true, errors []"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "BOUNDARY_RE severs a lie from its own detection using ordinary punctuation. Because split_clauses drops any clause that has ids but no tokens (and vice versa), a boundary between an id and the status asserted about it makes the whole statement invisible rather than suspicious. Confirmed against the REAL corpus: `- `G-HARNESS-INTEGRITY` (r10, cf. the note) is PASS.` -> exit 0, ok:true, zero errors (the `. ` in `cf.` splits the line into `` `G-HARNESS-INTEGRITY` (r10, cf `` and `the note) is PASS.`); `- `G-HARNESS-INTEGRITY` -- now PASS after the D-070 repair.` -> exit 0, ok:true. On the fixture corpus the same silence is produced by `, per Sec. 4, is PASS`, `, e.g. under the new binder, is PASS`, `; the recorded status is PASS`, ` at last! Now PASS`, and ` | recorded status PASS`. Every abbreviation a technical handoff normally contains (cf., e.g., i.e., Sec., No., vs., et al.) is a silent detector-disabling device, and the mechanism cuts in the safe direction only for coverage, not for contradiction: a gate stated truthfully anywhere else keeps the floor satisfied while the false sentence stands unchecked. The same rule also silently drops any id whose token sits more than ASSERTION_WINDOW away (measured exactly: forward and backward gaps of 200 bind, 201 does not).",
+      "assumptions_used": [
+        "BOUNDARY_RE = `\\|| [-]{2} |\\. |\\.$|; |\\? |! |^\\s*[-*] ` and cannot distinguish an abbreviation's period from a sentence end.",
+        "find_assertions skips a clause when `not ids or not tokens`, so severance yields silence rather than an unresolved report."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_real_plant.py cases R2, R3",
+        "scratchpad/r10_binder_attack.py cases B1-B7",
+        "scratchpad/r10_unit_probe.py section 'boundary splitter' and 'exact ASSERTION_WINDOW boundary'",
+        ".agent-harness/scripts/check_ssot_consistency.py:361 (BOUNDARY_RE), :873-883 (split_clauses), :1049-1050 (silent skip)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "A decimal without a following space (`at 1.5 is PASS`) does NOT split, and a single hyphen dash (` - `) does not split, so the boundary set is narrower than every dash-like glyph.",
+        "` -- ` currently appears zero times in docs/harness/PROJECT_STATE.md and NEXT_SESSION_PROMPT.md, so that particular idiom is not yet attested next to a gate id in the two overlay surfaces; the abbreviation form needs no new idiom."
+      ],
+      "reproduction": [
+        "append `- `G-HARNESS-INTEGRITY` (r10, cf. the note) is PASS.` under `## Current status` in a scratch copy",
+        "cd $SCRATCH && python3 .agent-harness/scripts/check_ssot_consistency.py; echo $?",
+        "observed: exit 0, ok:true, errors []"
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "bind_by_word_order's own contract is false: the docstring states 'A token is consumed by the group it belongs to and is never offered to a later id', but the backward-fallback loop (lines 949-953) never consults `consumed`, so a single token binds to arbitrarily many later groups. Unit proof: the clause `` `G-ALPHA` is PASS, then `G-BETA`, then `C-LIVE` `` returns [(G-ALPHA,PASS),(G-BETA,PASS),(C-LIVE,PASS)] -- one token, three subjects, two of which sit AFTER it and have no token of their own. End-to-end this turns honest contrastive English into a false accusation against the registry: on the REAL corpus `- `G-HARNESS-INTEGRITY` remains FAIL, unlike `G-F10-SCOPE`.` gives exit 1 with 'live surface says G-F10-SCOPE=FAIL but the gate registry says PASS', and on the fixture `- `G-ALPHA`, unlike `G-BETA`, remains PASS.` gives 'live surface says G-BETA=PASS but the gate registry says FAIL' plus two coverage failures. A third variant crosses the gate/claim kind boundary: `` `G-ALPHA` is PASS, `C-LIVE` is VALIDATED and `G-BETA` follows `` binds the GATE G-BETA to VALIDATED, a status GATE_STATUSES cannot hold. The direction of failure is loud, which is the safe direction, but the rule is wrong in a way the module documents as right, and it makes the commonest way of writing a contrast ('X remains FAIL, unlike Y') unwritable in the handoff.",
+      "assumptions_used": [
+        "`unlike` is not in NEGATION_RE, so the pair is not dropped as negated.",
+        "`consumed` is computed at line 957 and used only by the dangling test at 972-990, never by the fallback selection."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_unit_probe.py section 'consumed-token reuse'",
+        "scratchpad/r10_real_plant.py case R7",
+        "scratchpad/r10_binder_attack.py cases D1, D3, F1",
+        ".agent-harness/scripts/check_ssot_consistency.py:900-903 (docstring claim), :949-953 (fallback ignoring `consumed`)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "D2 `- `G-ALPHA` is PASS, as is `G-BETA`.` is caught correctly -- the same reuse rule is what makes that (genuinely shared) subject work, so the fix is not simply to delete the fallback."
+      ],
+      "reproduction": [
+        "python3 -c \"import sys; sys.path.insert(0,'.agent-harness/scripts'); import check_ssot_consistency as C; r=C.build_id_regex(['G-ALPHA','G-BETA','C-LIVE']); s='`G-ALPHA` is PASS, then `G-BETA`, then `C-LIVE`'; ids=[(m.start(),m.end(),m.group(1)) for m in r.finditer(s)]; tk=[(m.start(),m.end(),m.group(1)) for m in C.STATUS_RE.finditer(s)]; print(C.bind_by_word_order(ids,tk)[0])\"",
+        "observed: three bindings to the single PASS token"
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The closed AFFIRMATIVE_CONNECTORS allowlist fails in both directions on real English. It REFUSES ordinary honest statements -- `- `G-BETA` is currently FAIL.`, `continues to be FAIL`, `has not moved and remains FAIL`, `is effectively FAIL`, `per the registry is FAIL`, and a double-quoted id `The gate \"`G-BETA`\" is FAIL` all bind correctly and agree with the registry, yet each returns affirmative=False, so the gate is reported 'asserted nowhere in any live region' and the run fails (exit 1) when that is the only live statement. It also refuses the module's OWN attested leading-token form: `- Still FAIL for `G-BETA`.` (the docstring at lines 92-95 claims 'FAIL for `G-A`' is read, and the repo's own fixture uses that shape) yields affirmative=False and the same coverage failure. Conversely it ACCEPTS forms a reader takes as no-longer-current: `- `G-BETA` was FAIL.` is clean and grants coverage, as are the non-sentences `- `G-BETA` at FAIL.` and `- `G-BETA` to FAIL.`. The consequence is that the coverage floor -- the mechanism that makes under-detection loud -- fires on honest prose and can be satisfied by past-tense prose, so authors are pushed toward writing whatever the allowlist happens to accept rather than what is true.",
+      "assumptions_used": [
+        "CONNECTOR_NOISE_RE strips ``[`*_|=:,;()\\[\\]-]`` but NOT the double-quote character, which is why a quoted id loses coverage.",
+        "The words `and`, `the`, `a` are discarded before the allowlist test; every other word must be a member."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_binder_attack.py cases E1-E5, D5, F6",
+        "scratchpad/r10_batch2.py cases I1-I4",
+        "scratchpad/r10_unit_probe.py section 'affirmative allowlist on honest prose'",
+        ".agent-harness/scripts/check_ssot_consistency.py:384-407 (allowlist and noise regex), :999-1020 (_affirmative)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "R6 on the real corpus (`is currently FAIL`) does not fail the run, because G-HARNESS-INTEGRITY is stated affirmatively elsewhere; the coverage failure needs the rejected form to be the only live statement.",
+        "The failure direction here is loud (exit 1), not silent."
+      ],
+      "reproduction": [
+        "replace the fixture's `- `G-BETA` remains FAIL.` with `- `G-BETA` is currently FAIL.`",
+        "run the checker -> exit 1, 'G-BETA=FAIL is asserted nowhere in any live region'",
+        "replace it instead with `- `G-BETA` was FAIL.` -> exit 0, gates_covered 2"
+      ],
+      "confidence": 0.96,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The dangling-token rule is invertible in both directions. (a) Suppression: `- FAIL `G-ALPHA` PASS` is correctly reported unresolved, but adding one decoy id whose true status equals the earlier token -- `- `G-BETA` FAIL `G-ALPHA` PASS` -- consumes the dangler, the ambiguity report vanishes, and the run is clean (exit 0, gates_covered 2) with the bare two-token blob counted as affirmative coverage for both gates. The checker's own remedy text ('Rewrite the line so one status binds to one id') is therefore satisfiable by ADDING an id rather than by clarifying anything. (b) False alarm: two ordinary leading-token phrases in one clause, `- Still PASS for `G-ALPHA`, FAIL for `G-BETA`.` -- in which BOTH statements are true -- produce 'cannot resolve what status is asserted for G-ALPHA: it sits between conflicting status tokens FAIL/PASS and the earlier one has no subject of its own', plus two coverage failures, because the forward search takes the NEXT phrase's token in preference to the leading token that is obviously the subject's own.",
+      "assumptions_used": [
+        "In (a) both resulting bindings happen to be correct, so this is a demonstration that the rule is defeatable by construction, not itself a false statement about a gate.",
+        "In (b) the line is honest under the fixture registry (G-ALPHA=PASS, G-BETA=FAIL)."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_batch2.py cases H1 (reported) vs H2, H4 (silent)",
+        "scratchpad/r10_binder_attack.py case D4",
+        ".agent-harness/scripts/check_ssot_consistency.py:938-955 (forward-first selection), :957 (consumed), :972-990 (dangling test)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "H3 `- `G-BETA` FAIL `G-ALPHA` FAIL` is caught, so the decoy cannot be used to smuggle a wrong status past the registry comparison -- it only suppresses the ambiguity report."
+      ],
+      "reproduction": [
+        "fixture line `- FAIL `G-ALPHA` PASS` -> exit 1 unresolved",
+        "fixture line `- `G-BETA` FAIL `G-ALPHA` PASS` -> exit 0, ok:true, gates_covered 2"
+      ],
+      "confidence": 0.93,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-07",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The board path and the prose path disagree on the same row, and the board path binds every id in the id cell regardless of what the cell says about them. `| `G-BETA` (was PASS) | FAIL |` under a `| Gate | Status |` header is read correctly by the board path and simultaneously produces 'live surface says G-BETA=PASS but the gate registry says FAIL' from the prose path -- exit 1 on a row whose Status cell is right. `| `G-ALPHA` (not `G-BETA`) | PASS |` binds BOTH ids to PASS, so an explicit exclusion becomes a false accusation about G-BETA; the board path applies no negation test at all. Adjacent id-recognition defects in the same family: `- The `G-BETA`-tracked work is PASS.` and `- The pre-`G-BETA` era was PASS.` are bound as assertions about the gate (exit 1) because the backtick satisfies the `(?![A-Za-z0-9-])` lookahead, so adjectival and historical uses of an id in backticks cannot be written. Finally the board's unresolved message is ungrammatical -- 'cannot resolve what status is asserted for G-BETA: it its Status cell holds FAIL/PASS' -- because check_status_assertions prefixes 'it ' to a `why` string that the board path writes as a noun phrase while the prose path writes it as a verb phrase.",
+      "assumptions_used": [
+        "`find_board_assertions` runs first and its rows are deduped against prose rows only when the tuples are identical; a board row and a prose row that disagree therefore both survive."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_binder_attack.py cases C4, F7",
+        "scratchpad/r10_batch2.py cases J1, J3, J5, K5",
+        ".agent-harness/scripts/check_ssot_consistency.py:850-865 (id cell binding), :1097-1100 ('it ' prefix), :530-533 (build_id_regex lookarounds)"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "J2 `| `G-ALPHA`, `G-BETA` | PASS |` is caught, and J4 shows a third Notes column does not leak, so cross-cell isolation itself holds."
+      ],
+      "reproduction": [
+        "fixture: replace the honest line with `| Gate | Status |\\n|---|---|\\n| `G-BETA` (was PASS) | FAIL |` -> exit 1, prose-path contradiction on a correct row",
+        "fixture: `| `G-ALPHA` (not `G-BETA`) | PASS |` -> exit 1, false G-BETA=PASS"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-08",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "TIGHT_BINDING_GAP (line 359) is dead. A repository-wide grep over *.py, *.md and *.json returns exactly one hit -- its own definition -- yet it carries a six-line comment asserting a live behaviour ('this threshold deliberately sits below both: it rescues juxtaposition and rescues nothing that is merely near') and cites round 9's F-COMMA-ADJACENCY as the reason for its value. Nothing in bind_by_word_order or anywhere else reads it, and the word-order rule it purports to tune does not use character gaps at all except for the ASSERTION_WINDOW bound. This is a stated fact that diverges from the code, sitting inside the module whose docstring devotes a whole section ('Measured, not asserted') to refusing exactly that pattern; a reviewer checking whether juxtaposition is protected is told it is, by a constant that does nothing.",
+      "assumptions_used": [
+        "The grep excluded venv/ and matched no other extension; a Rust or shell reference would be out of the file's reach anyway."
+      ],
+      "evidence_refs": [
+        "grep -rn TIGHT_BINDING_GAP --include='*.py' --include='*.md' --include='*.json' . -> .agent-harness/scripts/check_ssot_consistency.py:359 only",
+        "scratchpad/r10_unit_probe.py header ('occurrences of TIGHT_BINDING_GAP in source: 1')",
+        ".agent-harness/scripts/check_ssot_consistency.py:354-359"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [
+        "The behaviour the comment describes IS delivered, by a different mechanism: a `| ID | STATUS |` cell and `ID=STATUS` both reduce to the empty connector string and qualify as affirmative. The constant is redundant rather than wrong about the outcome."
+      ],
+      "reproduction": [
+        "grep -rn 'TIGHT_BINDING_GAP' --include='*.py' --include='*.md' --include='*.json' . | grep -v '^./venv'"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R10-BINDER-09",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Attacks that FAILED, with their exact inputs, so the surface is not reported clean by silence. ASSERTION_WINDOW has no off-by-one: measuring gap as token.start - id.end, a forward gap of 200 binds and 201 does not, and a backward gap of 200 binds and 201 does not, matching the `<= ASSERTION_WINDOW` tests at lines 946 and 952 exactly. The following all behaved correctly. Caught (exit 1, correct message): `- `G-BETA` is PASS.`; `- `G-HARNESS-INTEGRITY` is PASS.`; the board flip `| `G-HARNESS-INTEGRITY` | PASS |`; `- `G-BETA` now reads PASS rather than FAIL.`; `- `G-BETA` is PASS instead of FAIL.`; `- `G-ALPHA` is PASS, as is `G-BETA`.`; `- `G-BETA` is FAIL today, `G-BETA` is PASS tomorrow.`; `- `G-BETA` FAIL `G-ALPHA` FAIL`; `| `G-ALPHA`, `G-BETA` | PASS |`. Correctly reported unresolved: `- FAIL `G-ALPHA` PASS`; `| `G-BETA` | |`; `| `G-BETA` | FAIL, not PASS |`. Correctly clean: `- `G-BETA` is FAIL and `G-BETA` stays FAIL.` (id twice); `- `G-BETA` is FAIL, FAIL indeed.` (token twice); `- The gate (`G-BETA`) is FAIL.` (parenthesised id); `- Gate G-BETA is FAIL.` (no backticks); `- `G-BETA` is **FAIL**.`; `- `G-BETA`=FAIL.`; `- `G-BETA`: FAIL.`; `| Gate | Status | Notes |` with `| `G-BETA` | FAIL | was PASS once |` (no leak from a third column); `- `G-BETA` at 1.5 is PASS` does not split on a decimal; `- `G-BETA` - now PASS` does not split on a single hyphen. The unmutated HEAD tree itself is clean: exit 0, status_assertions_checked 25, gates_covered 8, claims_covered 7.",
+      "assumptions_used": [
+        "Every case above was run end-to-end against a freshly built corpus, one mutation per run, so cases cannot contaminate each other."
+      ],
+      "evidence_refs": [
+        "scratchpad/r10_results.json, scratchpad/r10_results_batch2.json (per-case exit code, ok flag, and full error list)",
+        "scratchpad/r10_unit_probe.py section 'exact ASSERTION_WINDOW boundary'"
+      ],
+      "evidence_fingerprint": "sha256:004de976f583a976a90c4790b6339031d1ad85e7e2eef95181e75783cedc95ff",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python $SCRATCH/r10_binder_attack.py",
+        "venv/bin/python $SCRATCH/r10_batch2.py",
+        "venv/bin/python $SCRATCH/r10_unit_probe.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Not probed: interaction of the binder with fenced-code blanking, with the overlay date/controlling rules, or with the facts/measurement machinery -- all outside this assignment's narrow target."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-BINDER.json"
+  ]
+}

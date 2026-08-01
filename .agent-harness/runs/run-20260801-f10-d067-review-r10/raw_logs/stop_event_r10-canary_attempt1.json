@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r10-canary",
+  "agent_type": "default",
+  "last_assistant_message": "Round-10 canary attack complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R10-CANARY\", \"context_version\": \"1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-CANARY.json\", \"admission_proof\": \"sha256:5adba4aecd2b189a9441052a87ac58685de5d5793149e504bdb47f15b494ce4e\"}"
+}

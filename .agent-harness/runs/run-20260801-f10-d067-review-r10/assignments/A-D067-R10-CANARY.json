@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260801-f10-d067-review-r10",
+  "assignment_id": "A-D067-R10-CANARY",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+  "independence_mode": "blind-results",
+  "discovery_mode": "independent",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Round 10, narrow target: .agent-harness/scripts/check_canary_freshness.py at HEAD 32ba566, its wiring into validate_harness.py, and the C7 attestation it certifies. Nothing else. Background: four canaries (C1/C4/C5/C6) died because an attestation outlived the code it attested and nothing checked it. Commit 32ba566 added this detector, which found C5 and C6 stale on its first run, and dispatched a fresh C7 that supersedes both. Your job is to make a stale canary pass, or to make a fresh one fail, and to prove either executably against real unmodified scripts. Attack ideas to exhaust rather than a checklist: the supersedes_canary field is self-asserted by the very artifact whose freshness is in question, so can a stale canary supersede ITSELF, or can two stale canaries supersede each other in a cycle so that neither is ever live, or can a fabricated attestation retire a real one? canary_id() falls back to inferring the id from the run directory name -- can that inference be driven to collide two canaries, or to produce an id that no supersedes_canary can ever name? NON_FILE_DIGESTS excludes result_sha256, assignment_sha256 and token_digest from being treated as attested files, so can a real hook digest be smuggled under one of those names and thereby escape checking? ATTESTED_FILES is a closed map, so what happens to a canary that attests a hook not in it, and is the failure direction right? find_attestations only globs runs/*/artifacts/*.json -- can an attestation be placed where the glob does not reach while still reading to a human as retained evidence? is the check reachable at all when validate_harness runs in a tree with no runs directory, and is that the safe direction? Verify C7 itself against the retained bytes: does the bracket actually contain the consume instant, is the claimed 44.8 ms real, was ACTIVE_RUN really pointing at the decoy, and is the retained BLOCKED first attempt consistent with the story told about it. Report the attacks that FAILED too, with exact inputs.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260801-f10-d067-review-r10/assignments/A-D067-R10-CANARY.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-CANARY.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-CANARY.json",
+  "status": "registered"
+}
