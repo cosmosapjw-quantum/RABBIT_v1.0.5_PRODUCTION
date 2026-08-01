@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260730-f10-d067-review-r9",
+  "created_at": "2026-07-30T07:58:16+00:00",
+  "spec_ref": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+  "base_ref": "main",
+  "head_ref": "f10-independent-validation-b3v2",
+  "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

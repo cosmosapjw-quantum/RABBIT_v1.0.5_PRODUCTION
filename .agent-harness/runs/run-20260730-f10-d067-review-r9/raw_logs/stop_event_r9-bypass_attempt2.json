@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r9-bypass",
+  "agent_type": "default",
+  "last_assistant_message": "Round-9 bypass hunt complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R9-BYPASS\", \"context_version\": \"b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5\", \"status\": \"pass\", \"result_path\": \".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-BYPASS.json\", \"admission_proof\": \"sha256:78b2ea0db44f58691d6fd0725b8dc1e462431fdaf462ba7a1215b9a509c77849\"}"
+}

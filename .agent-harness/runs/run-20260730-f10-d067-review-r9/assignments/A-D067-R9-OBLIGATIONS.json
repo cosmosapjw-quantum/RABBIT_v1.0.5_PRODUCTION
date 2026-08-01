@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d067-review-r9",
+  "assignment_id": "A-D067-R9-OBLIGATIONS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+  "independence_mode": "blind-results",
+  "discovery_mode": "independent",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Round 9. Test whether all four D-065 obligations still hold on the CURRENT bytes at HEAD (4ec13b5), not on the record's claim that they do. Round 8 concluded that all four pass on the code and the record was then brought up to the code; commit 7157bbe (D-070 Part B6) then changed .codex/hooks/subagent_start_context.py by reordering receipt classification ahead of the ledger-error return, and made .agent-harness/scripts/check_ssot_consistency.py execute its declared measurements instead of asserting them in prose. Re-derive each obligation from the code and from executable mutation, never from the audit report. For every obligation state PASS or FAIL and, for each PASS, name the exact fixture or mutation that would fail if the guard were removed -- a guard whose deletion breaks no test is not verified. Pay specific attention to whether the B6 reordering introduced a path where a receipt error and a ledger error can both be present and the wrong one wins, and whether the executable measurement vocabulary can report a number where it should report an error. Run the hook suite yourself with 'venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py' and report the count you observe rather than the count any document declares.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/assignments/A-D067-R9-OBLIGATIONS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-OBLIGATIONS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-OBLIGATIONS.json",
+  "status": "registered"
+}
