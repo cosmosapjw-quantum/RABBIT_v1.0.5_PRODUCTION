@@ -222,6 +222,26 @@
      "note": "Live ledger row for the round-9 fix pass."
     }
    ]
+  },
+  {
+   "fact_id": "canary_regression_case_count",
+   "description": "Regression cases in .agent-harness/tests/test_canary_freshness.py, the detector that closes F-R9-004. Declared so the number is measured rather than remembered -- the same reason the SSOT suite total is declared.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_canary_freshness.py",
+    "pattern": "^def test_"
+   },
+   "value": 10,
+   "as_of_commit": "PENDING_COMMIT",
+   "assertions": [
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B10",
+     "value_regex": "(\\d+) canary regression cases",
+     "role": "current",
+     "note": "Live ledger row for the canary-freshness detector."
+    }
+   ]
   }
  ]
 }

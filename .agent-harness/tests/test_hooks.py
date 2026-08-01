@@ -2391,7 +2391,14 @@ def _repinned_validator(tmp_path: Path, canonical_sha256: str) -> Path:
     """
     scripts = tmp_path / ".agent-harness" / "scripts"
     scripts.mkdir(parents=True, exist_ok=True)
-    (scripts / "_harness.py").write_bytes((HARNESS_SCRIPTS / "_harness.py").read_bytes())
+    # The copied validator resolves its sibling checkers from its OWN directory,
+    # so every checker it shells out to has to come with it. A missing checker is
+    # a hard error there by design -- "skip the check when the checker is absent"
+    # is the fail-open bypass these fixtures exist to forbid -- so the fixture
+    # must supply them rather than the validator learning to tolerate their
+    # absence. Adding a checker to validate_harness.py means adding it here.
+    for sibling in ("_harness.py", "check_ssot_consistency.py", "check_canary_freshness.py"):
+        (scripts / sibling).write_bytes((HARNESS_SCRIPTS / sibling).read_bytes())
     source = (HARNESS_SCRIPTS / "validate_harness.py").read_text(encoding="utf-8")
     pinned = validate_harness.LEGACY_MANIFEST_PINNED_SHA256
     assert source.count(pinned) == 1, "the pinned digest is not a single literal"

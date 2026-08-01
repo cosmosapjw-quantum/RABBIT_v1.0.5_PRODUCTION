@@ -1342,6 +1342,53 @@ def main() -> None:
                     else:
                         errors.extend(f"SSOT: {entry}" for entry in reported)
 
+    # Canary freshness (D-070 Part B10, round-9 finding F-R9-004). Four canaries
+    # died of an attestation that outlived the code it attested, and each time
+    # the remedy was a written rule that the next canary then broke. Nothing
+    # checked it: `grep -rln start_hook_sha256` returned zero .py files. It is
+    # measured here so a stale canary stops the commit instead of waiting to be
+    # noticed by whoever next reads the record.
+    canary = Path(__file__).resolve().parent / "check_canary_freshness.py"
+    canary_status = "not run"
+    if not canary.is_file():
+        errors.append(f"Canary freshness checker is missing: {canary.name}")
+    else:
+        try:
+            completed = subprocess.run(
+                [sys.executable, str(canary)],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except OSError as exc:
+            # Fail closed, exactly as the SSOT check above does.
+            errors.append(
+                "Canary freshness check could not run "
+                f"({exc.__class__.__name__}); it is required for validation."
+            )
+        else:
+            if completed.returncode == 0:
+                canary_status = "ok"
+            else:
+                try:
+                    payload = json.loads(completed.stdout)
+                except json.JSONDecodeError:
+                    errors.append(
+                        "Canary freshness check failed and its output was not "
+                        f"readable JSON (exit {completed.returncode})."
+                    )
+                else:
+                    reported = payload.get("errors")
+                    if not isinstance(reported, list) or not reported:
+                        errors.append(
+                            "Canary freshness check exited "
+                            f"{completed.returncode} but reported no errors; "
+                            "treating the disagreement itself as a failure."
+                        )
+                    else:
+                        errors.extend(f"CANARY: {entry}" for entry in reported)
+
     if errors:
         print(json.dumps({"ok": False, "errors": errors}, indent=2))
         raise SystemExit(1)
@@ -1358,6 +1405,7 @@ def main() -> None:
                 "pending_results": pending_results,
                 "legacy_results_manifest": legacy_status,
                 "ssot_consistency": ssot_status,
+                "canary_freshness": canary_status,
             },
             indent=2,
         )
