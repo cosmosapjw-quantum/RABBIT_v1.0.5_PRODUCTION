@@ -1,6 +1,51 @@
 # Next Session Prompt
 
-## 2026-07-29 IN FLIGHT — D-069 r4 integration is running; do not restart it
+## 2026-08-04 D-074 FREEZE — harness development is closed; read this before anything (controlling)
+
+**The programme is stopped. Nothing in this file authorises work.**
+
+**Current status is the generated board** — `.agent-harness/generated/STATUS_BOARD.md`, rendered from
+the registries and shown in the controlling overlay of `PROJECT_STATE.md`. It is the ONLY authority.
+Nothing else in this repository restates a status, this file included, and a live line that names a
+registry id beside a status token is refused by `check_ssot_consistency.py`.
+
+### What happened, in one paragraph
+
+Two gates were restored to FAIL by the D-065 audit. The trajectory lane ran an 18-hour frozen
+integration that exhausted its wall budget with no scientific predicate evaluated, and D-071 sealed
+that lane on a re-derived measurement: the instrument needs about 3.27e7 further evaluations, roughly
+4.58 years on this host, an ~8,305x miss against its own frozen projection. The harness lane ran
+fourteen adversarial rounds, discharged three of four D-065 obligations under an independent panel,
+falsified the fourth's wording, and then replaced its own status architecture because the prose parser
+had been defeated seven consecutive times. D-074 froze it. **No gate moved in any of it.**
+
+### If you are picking this up
+
+1. **Do not start harness work.** D-074 lists the only five conditions that reopen it, and "I found a
+   guard that could be stronger" is not among them.
+2. **Do not reissue the trajectory run.** D-071's reopen conditions require a materially new method
+   with a prospectively sealed contract and a bounded discriminator projecting completion inside the
+   existing budget. Generic optimization, faster hardware and a larger budget are explicitly excluded.
+3. **Two owner decisions are open and are not a writer's to make:** whether to revise D-065
+   obligation 2 to match measured behaviour (`SubagentStart` has no non-zero exit path for any input,
+   so the effect is fail-closed but the literal wording is unmet), and whether to correct
+   `G-HARNESS-INTEGRITY.pass_condition`, which requires an "exact four-line prompt" while `AGENTS.md`
+   mandates five fields including `ADMISSION_TOKEN`.
+4. **If you change a gate's status**, it must arrive with an accepted evidence package under
+   `.agent-harness/evidence/` whose contract is provably frozen before its inputs. A hand edit is
+   refused.
+
+### The limits that are not work items
+
+Shared OS user, so any repo-local artifact is forgeable — canary C13 depends on this to construct its
+input. **Operator and decision independence is absent**: every reviewer in this chain was spawned,
+prompted, admitted and recorded by the writer under review, and no receipt makes a judgment
+independent. One host, one filesystem. False semantic prose carrying no registry id is not detected
+anywhere. Cited evidence is not proved to support its claim. These are recorded, not scheduled.
+
+Read `docs/audit/BD622_D074_harness_freeze_2026-08-04.md` before proposing anything.
+
+## 2026-07-29 IN FLIGHT — D-069 r4 integration is running; do not restart it (superseded by D-071)
 
 A ~13 h integration was launched at `2026-07-29T03:49:25Z`, 13 s after its freeze
 commit `0fb94f2`. If this session ended before it finished, the process may still
