@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import hashlib
 import sys
 from pathlib import Path
 
@@ -37,6 +38,7 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[2]
 CHECKER = REPO / ".agent-harness" / "scripts" / "check_ssot_consistency.py"
+sys.path.insert(0, str(REPO / ".agent-harness" / "scripts"))
 
 # The round-11 refusal (D-070 Part B15). A live hard segment that names a
 # registry id and also carries a bare status token is rejected without being
@@ -69,8 +71,13 @@ def gate_registry(alpha: str = "pass", beta: str = "fail") -> str:
         {
             "schema_version": 1,
             "gates": [
-                {"gate_id": "G-ALPHA", "status": alpha},
-                {"gate_id": "G-BETA", "status": beta},
+                # Both carry a legacy basis and no package: the fixture corpus's
+                # statuses predate the evidence-package requirement, exactly as
+                # the real registry's eight do. The rule is on MOVEMENT.
+                {"gate_id": "G-ALPHA", "status": alpha,
+                 "status_package": None, "status_basis_legacy": "fixture standing status"},
+                {"gate_id": "G-BETA", "status": beta,
+                 "status_package": None, "status_basis_legacy": "fixture standing status"},
             ],
         },
         indent=2,
@@ -1015,6 +1022,25 @@ def commit_board(repo: Path) -> None:
 
 
 BOARD = ".agent-harness/generated/STATUS_BOARD.md"
+from pathlib import Path as pathlib_Path  # noqa: E402
+from check_ssot_consistency import manifest_digest as C_manifest_digest  # noqa: E402
+
+
+def rebuild_board(repo: Path) -> None:
+    """Re-render the board after a registry edit, as the generator would."""
+    import subprocess
+
+    subprocess.run([sys.executable, str(REPO / ".agent-harness/scripts/build_status_board.py")],
+                   cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "add", "-f", ".agent-harness/generated/STATUS_BOARD.md"],
+                   cwd=repo, check=True, capture_output=True)
+    artifact = (repo / ".agent-harness/generated/STATUS_BOARD.md").read_text(encoding="utf-8")
+    block = artifact[artifact.index(BOARD_BEGIN): artifact.index(BOARD_END) + len(BOARD_END)]
+    state = repo / "docs/harness/PROJECT_STATE.md"
+    text = state.read_text(encoding="utf-8")
+    write(state, text[:text.index(BOARD_BEGIN)] + block + text[text.index(BOARD_END) + len(BOARD_END):])
+
+
 BOARD_PLACEHOLDER = "<!-- BOARD GOES HERE -->"
 BOARD_BEGIN = "<!-- BEGIN GENERATED STATUS BOARD -->"
 BOARD_END = "<!-- END GENERATED STATUS BOARD -->"
@@ -1123,3 +1149,114 @@ def test_d073_coverage_is_an_identity_not_a_floor(repo: Path) -> None:
     """
     payload = assert_clean(repo)
     assert payload["board_rows"] == payload["gates"] + payload["claims"], payload
+
+
+# --------------------------------------------------------------------------
+# D-073 commits 7-8 -- evidence packages and the gate-movement ratchet.
+#
+# The generated board made a status impossible to MISSTATE. It did not make one
+# impossible to CHANGE without evidence. A package is the closed record a change
+# has to arrive with; the ratchet is what refuses a change without one.
+# --------------------------------------------------------------------------
+
+
+def evidence_package(repo: Path, **over: object) -> pathlib_Path:
+    """A well-formed package for G-BETA, with every relation satisfied."""
+    import subprocess
+
+    inputs = [{"path": HOOK_FIXTURE_FILE,
+               "sha256": hashlib.sha256((repo / HOOK_FIXTURE_FILE).read_bytes()).hexdigest()}]
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                          text=True, check=True).stdout.strip()
+    doc = {
+        "schema_version": 1, "artifact_class": "EVIDENCE_PACKAGE", "package_id": "P-BETA",
+        "input_commit": head, "input_files": inputs,
+        "input_tree_sha256": C_manifest_digest(inputs),
+        "contract_path": "docs/audit/contract.md", "contract_sha256": "0" * 64,
+        "contract_frozen_at_commit": head,
+        "commands": [{"argv": ["true"], "cwd": ".", "exit_code": 0,
+                      "started_utc": "2026-08-04T00:00:00Z", "finished_utc": "2026-08-04T00:00:01Z"}],
+        "results": [], "gate_id": "G-BETA", "implies_status": "FAIL",
+        "implication": "the measurement did not clear the gate",
+        "process_class": "self_measured", "reviewers": [],
+        "limitations": ["one host, one trial"], "sealed_commit": "PENDING_COMMIT",
+    }
+    doc.update(over)
+    path = repo / ".agent-harness/evidence" / f"{doc['package_id']}.json"
+    write(path, json.dumps(doc, indent=1))
+    subprocess.run(["git", "add", "-f", str(path.relative_to(repo))], cwd=repo,
+                   check=True, capture_output=True)
+    return path
+
+
+def test_d073_a_gate_may_not_move_without_a_package(repo: Path) -> None:
+    """The rule the packages exist for: a status change needs a record."""
+    git_repo_for_board(repo)
+    commit_board(repo)
+    write(repo / ".agent-harness/context/GATE_REGISTRY.json", gate_registry("pass", "pass"))
+    rebuild_board(repo)
+    errors = errors_of(repo)
+    assert any("moved from fail to pass with no status_package" in m for m in errors), errors
+
+
+def test_d073_a_gate_that_does_not_move_needs_no_package(repo: Path) -> None:
+    """The control, and the bootstrap: eight standing statuses predate the rule.
+
+    Back-filling packages for statuses set weeks ago would be fabricating
+    records, which is the class this chain keeps catching. The rule is on
+    MOVEMENT; standing state carries an explicit legacy basis instead.
+    """
+    git_repo_for_board(repo)
+    commit_board(repo)
+    assert_clean(repo)
+
+
+def test_d073_evidence_backing_is_a_ratchet(repo: Path) -> None:
+    """Once a gate has a package, it may never go back to having none."""
+    import subprocess
+
+    git_repo_for_board(repo)
+    commit_board(repo)          # a package names a commit, so one must exist
+    evidence_package(repo)
+    registry = json.loads((repo / ".agent-harness/context/GATE_REGISTRY.json").read_text())
+    for g in registry["gates"]:
+        if g["gate_id"] == "G-BETA":
+            g["status_package"] = "P-BETA"
+    write(repo / ".agent-harness/context/GATE_REGISTRY.json", json.dumps(registry, indent=2))
+    rebuild_board(repo)
+    commit_board(repo)
+    for g in registry["gates"]:
+        if g["gate_id"] == "G-BETA":
+            g["status_package"] = None
+    write(repo / ".agent-harness/context/GATE_REGISTRY.json", json.dumps(registry, indent=2))
+    rebuild_board(repo)
+    assert any("does not come off" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_d073_a_contract_frozen_after_its_inputs_is_refused(repo: Path) -> None:
+    """The anti-refitting rule, mechanised.
+
+    D-069 required a contract frozen before any output byte, and that has rested
+    on prose and a timestamp in a report ever since. A contract sealed after its
+    own measurement cannot constrain it, and ancestry says so.
+    """
+    import subprocess
+
+    git_repo_for_board(repo)
+    commit_board(repo)
+    first = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                           text=True, check=True).stdout.strip()
+    write(repo / "later.txt", "a later commit\n")
+    commit_board(repo)
+    later = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                           text=True, check=True).stdout.strip()
+    evidence_package(repo, input_commit=first, contract_frozen_at_commit=later)
+    assert any("not frozen before the inputs" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_d073_a_package_with_no_limitations_is_refused(repo: Path) -> None:
+    """A package with no stated limits is a claim, not evidence."""
+    git_repo_for_board(repo)
+    commit_board(repo)
+    evidence_package(repo, limitations=[])
+    assert any("limitations" in m for m in errors_of(repo)), errors_of(repo)

@@ -309,6 +309,7 @@ Fail closed: an unreadable or unparseable input is an error, never a skip.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -798,7 +799,33 @@ BOARD_BEGIN = "<!-- BEGIN GENERATED STATUS BOARD -->"
 BOARD_END = "<!-- END GENERATED STATUS BOARD -->"
 
 
-def render_board(gates: dict[str, str], claims: dict[str, str]) -> str:
+def gate_basis(repo: Path) -> dict[str, str]:
+    """The Basis cell for each gate: its package's implication, else the legacy line.
+
+    Generated like everything else on the board. A gate whose status predates the
+    evidence-package requirement carries `status_basis_legacy`; one moved under
+    the requirement carries its package's `implication`. Neither is hand-written
+    into the board, so the Basis column cannot drift from the registry the way
+    the old hand-written one did -- it still said "fail-open lease-write
+    fallback" nine months after D-067 replaced that mechanism.
+    """
+    try:
+        registry = loads_strict((repo / GATE_REGISTRY).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    basis: dict[str, str] = {}
+    for entry in registry.get("gates", []):
+        gate_id = entry.get("gate_id")
+        if not gate_id:
+            continue
+        basis[gate_id] = str(entry.get("status_basis_legacy") or "")
+    return basis
+
+def render_board(
+    gates: dict[str, str],
+    claims: dict[str, str],
+    basis: dict[str, str] | None = None,
+) -> str:
     """The board, as a pure function of the two registries.
 
     Sorted by id so the bytes do not depend on registry ordering, and carrying
@@ -810,8 +837,11 @@ def render_board(gates: dict[str, str], claims: dict[str, str]) -> str:
     registry stores ``"fail"`` and the board shows ``FAIL``; normalising here
     means a registry casing change cannot silently alter the board's bytes.
     """
-    lines = [BOARD_BEGIN, "", "| Gate | Status |", "|---|---|"]
-    lines += [f"| `{gate}` | {status.upper()} |" for gate, status in sorted(gates.items())]
+    lines = [BOARD_BEGIN, "", "| Gate | Status | Basis |", "|---|---|---|"]
+    lines += [
+        f"| `{gate}` | {status.upper()} | {(basis or {}).get(gate, '')} |"
+        for gate, status in sorted(gates.items())
+    ]
     lines += ["", "| Claim | Status |", "|---|---|"]
     lines += [f"| `{claim}` | {status.upper()} |" for claim, status in sorted(claims.items())]
     lines += ["", BOARD_END]
@@ -845,6 +875,222 @@ def extract_board(text: str, rel: str, errors: list[str]) -> str | None:
         return None
     return text[start : stop + len(BOARD_END)] + "\n"
 
+
+# --------------------------------------------------------------------------
+# Evidence packages (D-073 commits 7-8).
+#
+# A gate's status was a hand-edited JSON field. The generated board made it
+# impossible to MISSTATE a status, but not to CHANGE one without evidence. A
+# package is the closed record a change has to come with: what was measured, at
+# which commit, under which contract, producing which bytes, reviewed by whom,
+# and with which limitations. The checker proves the package is well-formed,
+# tracked, and anchored in accepted history. It does NOT prove the conclusion is
+# right -- `implies_status` is asserted by whoever wrote the package, and that is
+# stated here rather than implied.
+# --------------------------------------------------------------------------
+
+EVIDENCE_ROOT = ".agent-harness/evidence"
+PACKAGE_CLASS = "EVIDENCE_PACKAGE"
+PACKAGE_KEYS = {
+    "schema_version", "artifact_class", "package_id",
+    "input_commit", "input_files", "input_tree_sha256",
+    "contract_path", "contract_sha256", "contract_frozen_at_commit",
+    "commands", "results",
+    "gate_id", "implies_status", "implication",
+    "process_class", "reviewers", "limitations", "sealed_commit",
+}
+PROCESS_CLASSES = {"adversarial_panel", "registered_single_reviewer", "self_measured"}
+
+
+def manifest_digest(entries: list[dict[str, Any]]) -> str:
+    """sha256 over `path\0sha256\0` for each input, in declared order.
+
+    A digest over the MANIFEST, not over a checkout. `hash_files` reads the
+    working tree, so defining this as a tree hash would produce a number nothing
+    can recompute against history -- which is the `head_commit` failure repeating
+    in a new field. This form is recomputable from the package alone, with no git
+    and no checkout, so it cannot disagree with `input_files` unnoticed.
+    """
+    blob = b"".join(
+        str(e.get("path", "")).encode() + b"\0" + str(e.get("sha256", "")).encode() + b"\0"
+        for e in entries
+    )
+    return hashlib.sha256(blob).hexdigest()
+
+
+def check_evidence_packages(
+    repo: Path, gates: dict[str, str], errors: list[str]
+) -> dict[str, dict[str, Any]]:
+    """Validate every package and return the accepted ones by package_id."""
+    accepted: dict[str, dict[str, Any]] = {}
+    root_dir = repo / EVIDENCE_ROOT
+    if not root_dir.is_dir():
+        return accepted
+    for path in sorted(root_dir.glob("*.json")):
+        rel = str(path.relative_to(repo))
+        try:
+            doc = loads_strict(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            errors.append(f"{rel}: unreadable or ambiguous JSON ({exc.__class__.__name__}).")
+            continue
+        if not isinstance(doc, dict) or doc.get("artifact_class") != PACKAGE_CLASS:
+            errors.append(f"{rel}: not an {PACKAGE_CLASS}; this directory holds nothing else.")
+            continue
+        problems: list[str] = []
+        unknown = sorted(set(doc) - PACKAGE_KEYS)
+        if unknown:
+            problems.append(f"unknown keys {unknown}")
+        for key in sorted(PACKAGE_KEYS - set(doc)):
+            problems.append(f"missing required key {key!r}")
+        if doc.get("schema_version") != 1:
+            problems.append(f"schema_version {doc.get('schema_version')!r}, expected 1")
+        if doc.get("package_id") != path.stem:
+            problems.append(f"package_id {doc.get('package_id')!r} does not match the filename")
+        if doc.get("gate_id") not in gates:
+            problems.append(f"gate_id {doc.get('gate_id')!r} has no row in the gate registry")
+        if str(doc.get("implies_status", "")).upper() not in GATE_STATUSES:
+            problems.append(f"implies_status {doc.get('implies_status')!r} is not a gate status")
+        if doc.get("process_class") not in PROCESS_CLASSES:
+            problems.append(f"process_class {doc.get('process_class')!r} is not a declared class")
+        if not doc.get("limitations"):
+            problems.append("'limitations' is empty; a package with no stated limits is a claim, "
+                            "not evidence")
+        if not is_tracked(repo, rel):
+            problems.append("git does not track this package, so a fresh checkout would not "
+                            "receive the record a gate's status rests on")
+        if problems:
+            errors.append(f"{rel}: " + "; ".join(problems) + ".")
+            continue
+
+        inputs = doc["input_files"]
+        if manifest_digest(inputs) != doc["input_tree_sha256"]:
+            errors.append(f"{rel}: input_tree_sha256 does not match input_files.")
+            continue
+        commit = str(doc["input_commit"])
+        if not _is_ancestor(repo, commit, "HEAD"):
+            errors.append(
+                f"{rel}: input_commit {commit[:12]} is not an ancestor of HEAD. An amended or "
+                "rebased-away commit is still readable through `git show`, so this is the only "
+                "check that sees it has left accepted history."
+            )
+            continue
+        if not _is_ancestor(repo, str(doc["contract_frozen_at_commit"]), commit):
+            errors.append(
+                f"{rel}: the contract was not frozen before the inputs were measured. This is the "
+                "anti-refitting property, mechanised: a contract sealed after its own measurement "
+                "cannot constrain it."
+            )
+            continue
+        for entry in inputs:
+            blob = _git_blob(repo, commit, str(entry["path"]))
+            if blob is None:
+                errors.append(f"{rel}: {entry['path']} does not exist at {commit[:12]}.")
+                continue
+            if hashlib.sha256(blob).hexdigest() != str(entry["sha256"]):
+                errors.append(
+                    f"{rel}: {entry['path']} at {commit[:12]} does not hash to the declared value."
+                )
+        sealed = str(doc["sealed_commit"])
+        if sealed != "PENDING_COMMIT" and not _is_ancestor(repo, commit, sealed):
+            errors.append(f"{rel}: sealed_commit {sealed[:12]} does not descend from input_commit.")
+        accepted[doc["package_id"]] = doc
+    return accepted
+
+
+def _is_ancestor(repo: Path, commit: str, of: str) -> bool:
+    done = _run_git(repo, "merge-base", "--is-ancestor", commit, of)
+    return done is not None and done.returncode == 0
+
+
+def _git_blob(repo: Path, commit: str, rel: str) -> bytes | None:
+    try:
+        done = subprocess.run(["git", "show", f"{commit}:{rel}"], cwd=repo,
+                              capture_output=True, check=False)
+    except OSError:
+        return None
+    return done.stdout if done.returncode == 0 else None
+
+
+def _run_git(repo: Path, *args: str) -> subprocess.CompletedProcess[str] | None:
+    try:
+        return subprocess.run(["git", *args], cwd=repo, capture_output=True,
+                              text=True, check=False)
+    except OSError:
+        return None
+
+
+def check_gate_status_movement(
+    repo: Path, packages: dict[str, dict[str, Any]], errors: list[str]
+) -> None:
+    """A gate's status may only CHANGE with an accepted package behind it.
+
+    The rule is on MOVEMENT, not on standing state. Eight gates hold statuses set
+    weeks ago; back-filling eight packages for them would be fabricating records,
+    which is the class this chain keeps catching. So each gate carries either a
+    `status_package` or an explicit `status_basis_legacy`, and the ratchet below
+    compares the working tree against `git show HEAD:` -- a status that moves
+    without a package is refused, and a gate that has once had a package may
+    never return to `null`.
+
+    Claims are deliberately out of scope: twenty-one packages, fourteen of them
+    for sealed history, would mostly be fiction. Claims appear on the generated
+    board, which is where their integrity comes from.
+    """
+    previous_raw = _git_blob(repo, "HEAD", GATE_REGISTRY)
+    if previous_raw is None:
+        return
+    try:
+        previous = {
+            g["gate_id"]: g for g in loads_strict(previous_raw.decode("utf-8")).get("gates", [])
+        }
+    except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
+        return
+    try:
+        current = loads_strict((repo / GATE_REGISTRY).read_text(encoding="utf-8")).get("gates", [])
+    except (OSError, json.JSONDecodeError):
+        return
+    for entry in current:
+        gate_id = entry.get("gate_id")
+        package_id = entry.get("status_package")
+        was = previous.get(gate_id, {})
+        if package_id is None:
+            if not str(entry.get("status_basis_legacy") or "").strip():
+                errors.append(
+                    f"{GATE_REGISTRY}: {gate_id} has neither a status_package nor a "
+                    "status_basis_legacy. One or the other is required: a status with no record "
+                    "behind it and no statement that it predates the requirement is a status "
+                    "nobody can account for."
+                )
+            if was.get("status_package") is not None:
+                errors.append(
+                    f"{GATE_REGISTRY}: {gate_id} previously had status_package "
+                    f"{was['status_package']!r} and now has none. Evidence backing is a ratchet; "
+                    "it does not come off."
+                )
+            if was and was.get("status") != entry.get("status"):
+                errors.append(
+                    f"{GATE_REGISTRY}: {gate_id} moved from {was.get('status')} to "
+                    f"{entry.get('status')} with no status_package. A gate may only change status "
+                    "with an accepted evidence package naming it."
+                )
+            continue
+        package = packages.get(package_id)
+        if package is None:
+            errors.append(
+                f"{GATE_REGISTRY}: {gate_id} names status_package {package_id!r}, which is not an "
+                "accepted package."
+            )
+            continue
+        if package["gate_id"] != gate_id:
+            errors.append(
+                f"{GATE_REGISTRY}: {gate_id} names package {package_id!r}, but that package is "
+                f"about {package['gate_id']}."
+            )
+        if str(package["implies_status"]).upper() != str(entry.get("status", "")).upper():
+            errors.append(
+                f"{GATE_REGISTRY}: {gate_id} is {entry.get('status')} but its package implies "
+                f"{package['implies_status']}."
+            )
 
 def check_no_status_beside_an_id(
     repo: Path,
@@ -910,7 +1156,7 @@ def check_generated_board(
     the registries and this fails, without anyone having to notice a missing
     line in a table.
     """
-    expected = render_board(gates, claims)
+    expected = render_board(gates, claims, gate_basis(repo))
     rows = len(gates) + len(claims)
 
     artifact = read_text(repo, BOARD_ARTIFACT, errors)
@@ -1700,6 +1946,8 @@ def main() -> None:
         id_regex = build_id_regex(list(gates) + list(claims))
         board_rows = check_generated_board(repo, gates, claims, regions, errors)
         check_no_status_beside_an_id(repo, regions, id_regex, errors)
+        packages = check_evidence_packages(repo, gates, errors)
+        check_gate_status_movement(repo, packages, errors)
 
     facts_checked, fact_measurements = check_facts(
         repo, document, errors, live_lines=live_line_index(regions)

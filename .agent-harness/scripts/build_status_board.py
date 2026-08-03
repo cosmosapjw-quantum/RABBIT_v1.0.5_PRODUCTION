@@ -39,6 +39,7 @@ that could itself go stale.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -48,6 +49,7 @@ if str(HARNESS_SCRIPTS) not in sys.path:
 
 from check_ssot_consistency import (  # noqa: E402
     BOARD_ARTIFACT,
+    GATE_REGISTRY,
     load_claims,
     load_gates,
     render_board,
@@ -68,7 +70,12 @@ def main() -> None:
         print("build_status_board: no gates; refusing to render an empty board.", file=sys.stderr)
         raise SystemExit(1)
 
-    body = render_board(gates, claims)
+    registry = json.loads((repo / GATE_REGISTRY).read_text(encoding="utf-8"))
+    basis = {
+        g["gate_id"]: str(g.get("status_basis_legacy") or "")
+        for g in registry.get("gates", [])
+    }
+    body = render_board(gates, claims, basis)
     target = repo / BOARD_ARTIFACT
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(

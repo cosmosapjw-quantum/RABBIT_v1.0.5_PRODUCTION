@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `04771d5347e285effc32ae207cd46700f3c68ba7526750bac4a02f854313cf9d`
-Built at: `2026-08-03T22:13:37+00:00`
+Context version: `7c5c5bc639bed3db09a5c6450592929d6d31e8b8d92dc59e47e6d30acb014888`
+Built at: `2026-08-03T22:21:46+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -268,7 +268,7 @@ Agents must not silently reopen a frozen decision. A proposed reversal is a meta
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
+SHA-256: `9eb809b0243886ca3a890ad09f1ce1e3b29e35bf022062f5f1f7f149c2c251f4`
 
 {
   "schema_version": 1,
@@ -287,7 +287,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "Worst declared profile residual < 2.1%, auxiliary references agree < 3e-8, conservation <= 1.79e-14, domain loss <= 7.61e-5, and focused current-tree tests pass.",
       "fail_condition": "Any threshold is missed, the selected rule changes, or a required focused test fails.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "D-004/D-014: frozen direct and five-profile envelope"
     },
     {
       "gate_id": "G-F10C1-REGRESSION",
@@ -302,7 +304,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "All listed commands execute successfully on the retained tree; no undefined report references/citations or fatal LaTeX errors; edited pages visually clean.",
       "fail_condition": "Any required command fails or is skipped at final F-10C1 closeout.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "retained tree passes its frozen regression set"
     },
     {
       "gate_id": "G-F10-PERFORMANCE",
@@ -318,7 +322,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "A retained change meets the controlling whole-endpoint threshold and preserves the frozen physics/solver gates.",
       "fail_condition": "Only segment speedup is shown, whole-endpoint movement is sub-threshold, or correctness/memory regressions make the candidate unacceptable.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "measured whole-endpoint reduction, closed with its profile"
     },
     {
       "gate_id": "G-F10-CATALOGUE",
@@ -333,7 +339,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "Rows 1-9 and every folded subfamily execute and pass normalization, equilibrium/null, conservation, entropy, scaling, response, and coupled first-law tests.",
       "fail_condition": "Any row or folded subfamily is absent or any required rowwise test fails.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "nine rows execute with rowwise invariants at module bytes 760a7c04"
     },
     {
       "gate_id": "G-F10-INDEPENDENT-FLRW",
@@ -374,7 +382,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
           ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
           "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
         ]
-      }
+      },
+      "status_package": null,
+      "status_basis_legacy": "D-065 restored FAIL; D-071 closed the lane on current measurement"
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",
@@ -395,7 +405,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
       "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "D-065 upholds it only on the frozen matched family and module bytes"
     },
     {
       "gate_id": "G-F10-SCOPE",
@@ -410,7 +422,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "Assignments and retained changes remain within F-10; F-11 stays OWNER-PAUSED and forbidden claims remain explicit.",
       "fail_condition": "Any current assignment or retained change opens F-11/QKE/public-production work without new owner authority.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "the F-10 fence holds and downstream authority is closed"
     },
     {
       "gate_id": "G-HARNESS-INTEGRITY",
@@ -431,7 +445,9 @@ SHA-256: `3d62651ce6bfe8376ae64f9df262f4475bcc4dd48b06462a2e6c7f9e9a33aa42`
       "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, exact four-line prompt, and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
       "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "fail"
+      "status": "fail",
+      "status_package": null,
+      "status_basis_legacy": "D-065 restored FAIL; obligations 1, 3 and 4 adjudicated discharged at round 13, obligation 2 wording falsified"
     }
   ]
 }

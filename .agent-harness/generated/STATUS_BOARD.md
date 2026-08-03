@@ -8,16 +8,16 @@ anywhere else: prose about a status is not checked and has been wrong before.
 
 <!-- BEGIN GENERATED STATUS BOARD -->
 
-| Gate | Status |
-|---|---|
-| `G-F10-CATALOGUE` | PASS |
-| `G-F10-COVARIANCE-METROLOGY` | PASS |
-| `G-F10-INDEPENDENT-FLRW` | FAIL |
-| `G-F10-PERFORMANCE` | PASS |
-| `G-F10-SCOPE` | PASS |
-| `G-F10C1-RADIAL` | PASS |
-| `G-F10C1-REGRESSION` | PASS |
-| `G-HARNESS-INTEGRITY` | FAIL |
+| Gate | Status | Basis |
+|---|---|---|
+| `G-F10-CATALOGUE` | PASS | nine rows execute with rowwise invariants at module bytes 760a7c04 |
+| `G-F10-COVARIANCE-METROLOGY` | PASS | D-065 upholds it only on the frozen matched family and module bytes |
+| `G-F10-INDEPENDENT-FLRW` | FAIL | D-065 restored FAIL; D-071 closed the lane on current measurement |
+| `G-F10-PERFORMANCE` | PASS | measured whole-endpoint reduction, closed with its profile |
+| `G-F10-SCOPE` | PASS | the F-10 fence holds and downstream authority is closed |
+| `G-F10C1-RADIAL` | PASS | D-004/D-014: frozen direct and five-profile envelope |
+| `G-F10C1-REGRESSION` | PASS | retained tree passes its frozen regression set |
+| `G-HARNESS-INTEGRITY` | FAIL | D-065 restored FAIL; obligations 1, 3 and 4 adjudicated discharged at round 13, obligation 2 wording falsified |
 
 | Claim | Status |
 |---|---|

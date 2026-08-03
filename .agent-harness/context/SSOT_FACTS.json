@@ -101,14 +101,14 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-073 commit 5",
+     "line_contains": "D-073 commits 7-8",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
      "note": "Live ledger row for the strict-JSON repair that added the fixtures."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-073 commit 5",
+     "line_contains": "D-073 commits 7-8",
      "value_regex": "Hooks `(\\d+)/\\d+`",
      "role": "current",
      "note": "Result cell of the same live row."
@@ -158,18 +158,23 @@
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 56,
-   "as_of_commit": "9760a8c",
+   "value": 61,
+   "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-073 commit 5",
+     "line_contains": "D-073 commits 7-8",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."
     }
    ],
    "prior": [
+    {
+     "value": 56,
+     "as_of_commit": "736e862",
+     "note": "D-073 commit 6, before the evidence-package fixtures."
+    },
     {
      "value": 108,
      "as_of_commit": "9ce5f73",
@@ -220,7 +225,7 @@
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-073 commit 5",
+     "line_contains": "D-073 commits 7-8",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."

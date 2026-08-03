@@ -2,10 +2,10 @@
  "schema_version": 1,
  "purpose": "The mutation battery, in the repository instead of a scratch directory. This project's standard of proof is that a guard whose deletion breaks no test is not verified -- and rounds 9 through 13 applied it by hand, in /tmp, from scripts deleted with the session, so every 'N of N mutation-verified' row in the ledger cites evidence nobody can re-derive. test_mutation_gate.py runs these entries as part of the suite: each removes exactly one guard and requires the named fixtures to go red.",
  "declared_guard_sites": {
-  ".agent-harness/scripts/check_ssot_consistency.py": 87,
+  ".agent-harness/scripts/check_ssot_consistency.py": 102,
   ".agent-harness/scripts/check_canary_freshness.py": 26
  },
- "coverage_gap": "These entries cover 15 guards against 113 error-raising sites in the two checkers. NOT full coverage, and it does not claim to be. `required_ids` names the subset that may never lose its mutation -- the guards that can change canonical gate state, admit or substitute evidence, authorise a retirement, or bind provenance. The site count FELL at D-073 commit 5 when the prose parser was deleted. The ratchet catches growth; a fall is expected exactly when guards are removed on purpose, and restating the declaration is how that removal is made deliberate rather than quiet.",
+ "coverage_gap": "These entries cover 19 guards against 128 error-raising sites in the two checkers. NOT full coverage, and it does not claim to be. `required_ids` names the subset that may never lose its mutation -- the guards that can change canonical gate state, admit or substitute evidence, authorise a retirement, or bind provenance. The site count FELL at D-073 commit 5 when the prose parser was deleted and ROSE again at commits 7-8 with the evidence packages; the ratchet catches both, and restating the declaration is how a change is made deliberate rather than quiet.",
  "required_ids": [
   "M-STRICT-JSON",
   "M-CANARY-AMBIGUOUS",
@@ -20,7 +20,11 @@
   "M-BOARD-EQUALITY",
   "M-BOARD-SINGLE-BLOCK",
   "M-BOARD-TRACKED",
-  "M-SSOT-COLOCATION"
+  "M-SSOT-COLOCATION",
+  "M-PKG-MOVEMENT",
+  "M-PKG-RATCHET",
+  "M-PKG-CONTRACT-FIRST",
+  "M-PKG-LIMITATIONS"
  ],
  "mutations": [
   {
@@ -176,6 +180,46 @@
     ".agent-harness/tests/test_ssot_consistency.py::test_f_ssot_02_undated_standing_section_is_scanned"
    ],
    "why": "The one piece of the old machinery that survives, and only because it decides nothing: it refuses a registry id and a status token on the same live line rather than working out which belongs to which. Every historical defeat was a defeat of BINDING; this never binds."
+  },
+  {
+   "id": "M-PKG-MOVEMENT",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "            if was and was.get(\"status\") != entry.get(\"status\"):",
+   "replacement": "            if False:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_d073_a_gate_may_not_move_without_a_package"
+   ],
+   "why": "The rule the packages exist for. Without it a gate's status is a hand-edited JSON field again, and the generated board would faithfully render a change nobody accounted for."
+  },
+  {
+   "id": "M-PKG-RATCHET",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "            if was.get(\"status_package\") is not None:",
+   "replacement": "            if False:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_d073_evidence_backing_is_a_ratchet"
+   ],
+   "why": "Evidence backing must not come off once a gate has it."
+  },
+  {
+   "id": "M-PKG-CONTRACT-FIRST",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        if not _is_ancestor(repo, str(doc[\"contract_frozen_at_commit\"]), commit):",
+   "replacement": "        if False:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_d073_a_contract_frozen_after_its_inputs_is_refused"
+   ],
+   "why": "The anti-refitting property, mechanised. D-069 required a contract frozen before any output byte and it has rested on prose ever since; ancestry makes it checkable."
+  },
+  {
+   "id": "M-PKG-LIMITATIONS",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        if not doc.get(\"limitations\"):",
+   "replacement": "        if False:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_d073_a_package_with_no_limitations_is_refused"
+   ],
+   "why": "A package with no stated limits is a claim, not evidence."
   }
  ]
 }
