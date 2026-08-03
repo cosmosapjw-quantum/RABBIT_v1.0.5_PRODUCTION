@@ -1253,3 +1253,144 @@ def test_f_r9_denial_that_agrees_by_accident_does_not_satisfy_coverage(repo: Pat
     assert any(
         "C-LIVE=VALIDATED is asserted nowhere in any live region" in m for m in messages
     ), messages
+
+
+# --------------------------------------------------------------------------
+# Round 10 (D-070 Part B12). The panel found the B9 binder broken in the paths
+# B9 never covered. One negative fixture per repair; each must die on revert.
+# --------------------------------------------------------------------------
+
+
+def test_f_r10_board_status_cell_must_be_a_bare_status(repo: Path) -> None:
+    """The panel's first critical finding.
+
+    Board rows were injected marked affirmative by construction, so they were
+    the one path running through NEITHER `_negated` NOR `_affirmative`. A
+    denial in the Status cell gave exit 0, ok:true, and still counted the gate
+    as covered. A Status COLUMN holds a status, not a sentence about one.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "| Gate | Status |\n|---|---|\n| `G-ALPHA` | PASS |\n"
+        "| `G-BETA` | no longer FAIL |\n| `C-LIVE` | VALIDATED |\n",
+    )
+    messages = errors_of(repo)
+    assert any("rather than the bare status" in m for m in messages), messages
+
+
+def test_f_r10_board_bare_status_still_passes(repo: Path) -> None:
+    """Control: markup around the token is still a bare status."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "| Gate | Status |\n|---|---|\n| `G-ALPHA` | **PASS** |\n"
+        "| `G-BETA` | `FAIL` |\n| `C-LIVE` | VALIDATED |\n",
+    )
+    assert_clean(repo)
+
+
+def test_f_r10_negation_rebinds_instead_of_dropping_the_id(repo: Path) -> None:
+    """`is no longer FAIL but PASS` left PASS orphaned and never tested.
+
+    G-BETA is FAIL in the fixture registry, so the trailing PASS is a live
+    false statement and must be reported. Dropping the id at the negated first
+    candidate exited 0.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA` remains FAIL.",
+        "- `G-BETA` is no longer PASS but PASS.",
+    )
+    messages = errors_of(repo)
+    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in messages), messages
+
+
+def test_f_r10_supported_denial_is_still_suppressed(repo: Path) -> None:
+    """Control: re-binding must not turn a real denial into an assertion."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA` remains FAIL.",
+        "- `G-BETA` is not PASS.\n- `G-BETA` remains FAIL.",
+    )
+    assert_clean(repo)
+
+
+def test_f_r10_an_abbreviation_cannot_sever_a_lie_from_its_detection(repo: Path) -> None:
+    """`. ` fires inside `cf.`, `Sec.` and `e.g.`.
+
+    Under one boundary tier the false split left a clause holding ids and no
+    tokens, which was skipped in SILENCE -- every abbreviation in a technical
+    handoff was a detector-disabling device.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA` remains FAIL.",
+        "- `G-BETA` (r10, cf. the appendix) is PASS.",
+    )
+    messages = errors_of(repo)
+    # Reported, not silently skipped, and the id gets no coverage either -- both
+    # halves matter, because a silent skip is how the lie used to travel.
+    assert any(
+        "cannot resolve what status is asserted for G-BETA" in m
+        and "has no subject of its own" in m
+        for m in messages
+    ), messages
+    assert any("G-BETA" in m and "asserted nowhere" in m for m in messages), messages
+
+
+def test_f_r10_a_sentence_end_still_breaks_the_subject_group(repo: Path) -> None:
+    """Soft boundaries must keep separating subjects, or the abbreviation fix
+    would turn two sentences into one shared subject."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- We reviewed `G-ALPHA`. Separately, `C-LIVE` is VALIDATED.\n- `G-ALPHA` is PASS.",
+    )
+    assert_clean(repo)
+
+
+def test_f_r10_a_group_does_not_steal_a_token_from_a_previous_sentence(repo: Path) -> None:
+    """The backward fallback used to reach across a sentence end and take a
+    token whose subject is not a registry id at all, reporting a false
+    contradiction. A group with no token in its own sentence asserts nothing."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- Something unrelated is VALIDATED. We also reviewed `G-ALPHA`.\n"
+        "- `G-ALPHA` is PASS.\n- `C-LIVE` is VALIDATED.",
+    )
+    assert_clean(repo)
+
+
+def test_f_r10_affirmative_requires_a_present_tense_copula(repo: Path) -> None:
+    """The flat allowlist accepted `was FAIL` -- past tense is not a claim
+    about now -- so a superseded status could satisfy the coverage floor."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA` remains PASS.\n- `C-LIVE` was VALIDATED.",
+    )
+    messages = errors_of(repo)
+    assert any(
+        "C-LIVE=VALIDATED is asserted nowhere in any live region" in m for m in messages
+    ), messages
+
+
+def test_f_r10_honest_present_tense_hedges_still_grant_coverage(repo: Path) -> None:
+    """Control: the copula rule must not fail the floor on true prose."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA` is currently PASS.\n- `C-LIVE` continues to be VALIDATED.",
+    )
+    assert_clean(repo)

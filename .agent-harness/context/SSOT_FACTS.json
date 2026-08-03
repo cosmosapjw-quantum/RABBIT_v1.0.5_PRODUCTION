@@ -211,15 +211,29 @@
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 82,
+   "value": 91,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B9",
+     "line_contains": "D-070 Part B12",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
-     "note": "Live ledger row for the round-9 fix pass."
+     "note": "Live ledger row for the round-10 repair."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B9",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "historical",
+     "note": "The B9 row records the count at its own commit; it carries 915e2e4 on the same line."
+    }
+   ],
+   "prior": [
+    {
+     "value": 82,
+     "as_of_commit": "915e2e4",
+     "note": "D-070 Part B9, before the round-10 repair."
     }
    ]
   },
@@ -232,7 +246,7 @@
     "pattern": "^def test_"
    },
    "value": 10,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "32ba566",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",

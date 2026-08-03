@@ -351,14 +351,23 @@ CLAIM_STATUSES = set(STATUS_TOKENS) - {"PASS", "FAIL"}
 
 # How far an id may sit from a status token and still be its subject.
 ASSERTION_WINDOW = 200
-# A token this close AFTER an id is juxtaposed to it, not merely nearest to it:
-# `ID=STATUS` (1), `ID: STATUS` (2), a `| ID | STATUS |` cell. Round 9's
-# F-COMMA-ADJACENCY won by a two-character punctuation margin at gaps of 3 and 5,
-# so this threshold deliberately sits below both: it rescues juxtaposition and
-# rescues nothing that is merely near.
-TIGHT_BINDING_GAP = 2
 # Hard boundaries: a status token never binds across a table cell or a sentence.
-BOUNDARY_RE = re.compile(r"\|| [-]{2} |\. |\.$|; |\? |! |^\s*[-*] ")
+# TWO TIERS, because round 10 showed one tier cannot serve both jobs.
+#
+# HARD: a table cell. Nothing crosses it, ever -- this is what stops a ledger
+# Result cell binding to an id in its Notes cell.
+HARD_BOUNDARY_RE = re.compile(r"\||^\s*[-*] ")
+# SOFT: a sentence end. It breaks SUBJECT GROUPS, so two ids in different
+# sentences are different subjects, but a group may still look across it for its
+# status token. That asymmetry is the round-10 fix for the abbreviation hole:
+# `. ` fires inside `cf.`, `e.g.` and `Sec.`, and under the old single tier that
+# false split left a clause holding ids and no tokens, which was skipped in
+# SILENCE -- every abbreviation in a technical handoff was a detector-disabling
+# device. Now a false split merely separates a group that did not need
+# separating, and the token is still found. No abbreviation list is needed,
+# which is the point: enumerating them would be the same losing game as
+# enumerating ways to say "no".
+SOFT_BOUNDARY_RE = re.compile(r" [-]{2} |\. |\.$|; |\? |! ")
 # A cue between an id and its token (or just before the token) means the line
 # denies the status rather than asserting it: "is no longer FAIL" asserts nothing.
 NEGATION_RE = re.compile(
@@ -381,30 +390,50 @@ NEGATION_RE = re.compile(
 # from the closed list below. The two lists are closed in opposite directions: an
 # unrecognised phrase adds no coverage and the floor fails loudly, whereas an
 # unrecognised phrase used to add coverage silently.
-AFFIRMATIVE_CONNECTORS = frozenset(
+# An assertion needs a COPULA. Round 10 measured the previous flat word set
+# failing in both directions at once: it rejected `is currently FAIL`,
+# `continues to be FAIL` and `is effectively FAIL` -- honest present-tense prose,
+# so the coverage floor failed on true statements -- while accepting `was FAIL`
+# (past tense is not a claim about now) and the bare fragments `at FAIL` and
+# `to FAIL`. A flat set cannot tell an assertion from a mention, because the
+# thing that makes it an assertion is the verb.
+#
+# So the connector must consist ONLY of known words, AND at least one of them
+# must be a present-tense copula -- unless the connector is empty, which is
+# juxtaposition (`ID=STATUS`, a `| ID | STATUS |` cell) and asserts by position.
+# The list is still closed, and still closed in the SAFE direction: an
+# unrecognised word grants no coverage and the floor fails loudly.
+AFFIRMATIVE_COPULAS = frozenset(
+    {"is", "are", "be", "remains", "remain", "stays", "stay", "holds", "reads", "records"}
+)
+# Recognised, and deliberately NOT copulas: a past-tense sentence is a true
+# statement about a past state, not a claim about now, so it may not satisfy a
+# coverage floor that asks where a status is stated CURRENTLY. Listing them here
+# rather than omitting them is what makes the copula requirement do the work --
+# an omitted word is rejected by the membership test and the rule underneath it
+# is never exercised, which is how this guard first shipped unverified.
+PAST_COPULAS = frozenset({"was", "were", "had", "used"})
+AFFIRMATIVE_MODIFIERS = frozenset(
     {
-        "",
-        "is",
-        "are",
-        "was",
-        "were",
-        "remains",
-        "remain",
-        "stays",
-        "stay",
         "still",
         "both",
         "now",
-        "at",
+        "currently",
+        "presently",
+        "effectively",
+        "again",
+        "also",
+        "already",
+        "continues",
+        "continue",
         "to",
-        "reads",
-        "records",
-        "holds",
+        "it",
+        "they",
     }
 )
-# Stripped before the remainder is compared: markup, list punctuation, and the
-# ids themselves, so `A` and `B` are both still FAIL reduces to "are both still".
 CONNECTOR_NOISE_RE = re.compile(r"[`*_|=:,;()\[\]-]+")
+# Markup a Status cell may carry around its token and remain a bare status.
+BOARD_CELL_NOISE_RE = re.compile(r"[`*_\s]+")
 
 # One pattern for every decision id: `D-` plus exactly three digits. Five
 # separate hardcoded `D-0\d\d` patterns meant that the first decision numbered
@@ -861,6 +890,34 @@ def find_board_assertions(
                     unresolved.append((number, identifier, why))
                 continue
             status = statuses.pop()
+            # Round 10, the panel's first critical finding. Board rows used to be
+            # injected straight into the assertion list marked affirmative by
+            # construction, so they were the one path that ran through NEITHER
+            # `_negated` NOR `_affirmative`. Writing `no longer FAIL` into the
+            # Status cell of the real live board gave exit 0, ok:true, and still
+            # counted the gate as COVERED -- round 9's F-NEGATION-CLOSED-VOCAB
+            # surviving in the only place the redesign never looked.
+            #
+            # The fix is not to run the denylist here. A Status COLUMN holds a
+            # status, not a sentence, so the cell must reduce to the token and
+            # nothing else once markup is stripped. That is stronger than any
+            # negation vocabulary and it needs no vocabulary at all: `no longer
+            # FAIL`, `not FAIL`, `anything but PASS` and `FAIL (see note)` are
+            # all refused by the same rule, and refused LOUDLY as unresolved
+            # rather than silently.
+            bare = BOARD_CELL_NOISE_RE.sub("", cells[status_column]).strip()
+            if bare != status:
+                for identifier in identifiers:
+                    unresolved.append(
+                        (
+                            number,
+                            identifier,
+                            f"its Status cell reads {cells[status_column].strip()!r} rather "
+                            f"than the bare status {status!r}. A Status column holds a "
+                            "status, not a sentence about one",
+                        )
+                    )
+                continue
             for identifier in identifiers:
                 found.append((number, identifier, status))
         index = row
@@ -871,10 +928,14 @@ _RowT = TypeVar("_RowT", bound=tuple)
 
 
 def split_clauses(line: str) -> list[tuple[int, str]]:
-    """Cut a line at hard boundaries; return (offset_in_line, clause_text)."""
+    """Cut a line at HARD boundaries only; return (offset_in_line, segment_text).
+
+    Sentence ends no longer cut here. They are reported by ``soft_boundaries``
+    and used to break subject groups, not to wall off detection.
+    """
     clauses: list[tuple[int, str]] = []
     position = 0
-    for boundary in BOUNDARY_RE.finditer(line):
+    for boundary in HARD_BOUNDARY_RE.finditer(line):
         if boundary.start() > position:
             clauses.append((position, line[position : boundary.start()]))
         position = max(position, boundary.end())
@@ -883,50 +944,69 @@ def split_clauses(line: str) -> list[tuple[int, str]]:
     return clauses
 
 
+def soft_boundaries(segment: str) -> list[int]:
+    """Offsets inside one hard segment where a new subject group starts."""
+    return [match.end() for match in SOFT_BOUNDARY_RE.finditer(segment)]
+
+
 def bind_by_word_order(
-    ids: list[tuple[int, int, str]], tokens: list[tuple[int, int, str]]
+    ids: list[tuple[int, int, str]],
+    tokens: list[tuple[int, int, str]],
+    softs: list[int] | None = None,
 ) -> tuple[
-    list[tuple[tuple[int, int], tuple[int, int], str, str]],
+    list[tuple[tuple[int, int], list[tuple[int, int, str]], str]],
     list[tuple[tuple[int, int], str]],
 ]:
     """Bind ids to status tokens by WORD ORDER, not by character distance.
 
     Round 9's F-COMMA-ADJACENCY killed the distance heuristic. In
-    ``ID1 is S1, ID2 is S2`` the separator before ID2 is ``, ``+backtick (3
-    characters) and the one after it is backtick+`` is `` (5), so ID2 bound to
-    its NEIGHBOUR's status and a plainly false gate line rode in silently. The
-    margin that decided it was a property of punctuation widths, not of what the
-    sentence said -- and tightening the threshold only moves which punctuation
-    wins. ``ID1 remains S1 and ID2 is S2`` is ordinary English with the opposite
-    spacing, so no distance rule separates the two.
+    ``ID1 is S1, ID2 is S2`` the separator before ID2 is three characters and
+    the one after it is five, so ID2 took its NEIGHBOUR's status and a plainly
+    false gate line rode in silently. The margin that decided it was a property
+    of punctuation widths, and ``ID1 remains S1 and ID2 is S2`` is ordinary
+    English with the opposite spacing, so no threshold separates them.
 
-    What separates them is that S1 already has a subject. Every attested form in
-    this corpus writes the status AFTER its id, so this walks the clause in
-    order, gathers each run of consecutive ids into one subject group, and gives
-    that group the FIRST status token that follows it. A token is consumed by
-    the group it belongs to and is never offered to a later id.
+    What separates them is that S1 already has a subject. This walks the segment
+    in order, gathers each run of consecutive ids into one subject group, and
+    offers that group the tokens that FOLLOW it, in order.
 
-    Consequences worth stating:
+    Returns ``(bound, ambiguous)``. Each ``bound`` entry carries a LIST of
+    candidate tokens in preference order rather than a single choice, so the
+    caller can skip a negated one and take the next. Round 10 found that
+    dropping the id on negation left ``is no longer FAIL but PASS`` with PASS
+    orphaned and never tested at all -- exit 0 on a live false statement.
 
-    * ``A and B are both still FAIL`` -- one group of two, one token: both bind.
-      A run of ids with no token between them is a shared subject.
-    * ``ID1 is S1, ID2 is S2`` -- two groups, two tokens, each to its own.
-    * A group with no token after it falls back to the token immediately before
-      it, which is the only way ``PASS is what ID earned`` can be read.
+    Group formation and consumption, stated so the code can be checked against
+    it -- round 10 caught this docstring claiming a consumption rule the code
+    did not implement:
 
-    ``ASSERTION_WINDOW`` still bounds how far a token may sit from its group.
+    * a run of ids with no token AND no sentence end between them is ONE
+      subject, so ``A and B are both still S`` binds both;
+    * a sentence end starts a new group even with no token between, so
+      ``A was reviewed. Separately, B is S`` does not make A a subject of S;
+    * a group's candidates are the tokens after it, in order, bounded by
+      ``ASSERTION_WINDOW`` from the group's end;
+    * a group with NO following token may fall back to the token before it, but
+      only if no earlier group already took that token. This is the rule the
+      previous docstring asserted and the previous code omitted.
     """
-    items: list[tuple[int, int, int, str, bool]] = [
-        (start, end, index, text, True) for index, (start, end, text) in enumerate(ids)
-    ] + [(start, end, -1, text, False) for start, end, text in tokens]
+    softs = softs or []
+    items: list[tuple[int, int, str, bool]] = [
+        (start, end, text, True) for start, end, text in ids
+    ] + [(start, end, text, False) for start, end, text in tokens]
     items.sort(key=lambda item: item[0])
 
     groups: list[list[tuple[int, int, str]]] = []
-    order: list[tuple[str, int]] = []  # ("group"|"token", index into groups/tokens)
+    order: list[tuple[str, int]] = []
     token_at: dict[int, tuple[int, int, str]] = {}
-    for start, end, _index, text, is_id in items:
+    for start, end, text, is_id in items:
         if is_id:
-            if order and order[-1][0] == "group":
+            joins = bool(order) and order[-1][0] == "group"
+            if joins:
+                previous_end = groups[order[-1][1]][-1][1]
+                if any(previous_end <= cut <= start for cut in softs):
+                    joins = False
+            if joins:
                 groups[order[-1][1]].append((start, end, text))
             else:
                 groups.append([(start, end, text)])
@@ -935,65 +1015,124 @@ def bind_by_word_order(
             token_at[len(order)] = (start, end, text)
             order.append(("token", len(order)))
 
-    picks: dict[int, tuple[int, int] | None] = {}
+    following: dict[int, list[int]] = {}
+    for position, (kind, index) in enumerate(order):
+        if kind != "group":
+            continue
+        group_end = groups[index][-1][1]
+        # Candidates stay inside the group's OWN sentence. Letting them leak
+        # across a sentence end made `We reviewed `G-A`. Separately, `G-B` is
+        # FAIL.` bind G-A to FAIL and report a false contradiction (round 10).
+        # The abbreviation hole is already closed by the two-tier boundary: a
+        # false cut at `cf.` or `Sec.` separates a group from a PREVIOUS id, not
+        # from its own following token, so nothing here needs to cross.
+        following[position] = [
+            slot
+            for slot in range(position + 1, len(order))
+            if order[slot][0] == "token"
+            and token_at[slot][0] - group_end <= ASSERTION_WINDOW
+            and not any(group_end <= cut <= token_at[slot][0] for cut in softs)
+        ]
+
+    claimed = {slots[0] for slots in following.values() if slots}
+
+    bound: list[tuple[tuple[int, int], list[tuple[int, int, str]], str]] = []
+    ambiguous: list[tuple[tuple[int, int], str]] = []
     for position, (kind, index) in enumerate(order):
         if kind != "group":
             continue
         group = groups[index]
-        chosen_at: int | None = None
-        for following in range(position + 1, len(order)):
-            if order[following][0] == "token":
-                if token_at[following][0] - group[-1][1] <= ASSERTION_WINDOW:
-                    chosen_at = following
-                break
-        if chosen_at is None:
+        candidates = [token_at[slot] for slot in following[position]]
+        if not candidates:
             for preceding in range(position - 1, -1, -1):
-                if order[preceding][0] == "token":
-                    if group[0][0] - token_at[preceding][1] <= ASSERTION_WINDOW:
-                        chosen_at = preceding
+                if order[preceding][0] != "token":
+                    continue
+                if preceding in claimed:
+                    break  # already has a subject; never stolen
+                # ...and it must be in this group's own sentence. Round 10:
+                # `We reviewed `G-A`. Separately, `G-B` is FAIL.` had G-A reach
+                # back across the sentence end and take `PROPOSED` from
+                # "B3-v2/W7 remains `PROPOSED / DESIGN ONLY`." -- a token whose
+                # subject is simply not a registry id -- and report a false
+                # contradiction. A group with no token in its own sentence
+                # asserts nothing, which is the honest reading.
+                if any(
+                    token_at[preceding][1] <= cut <= group[0][0] for cut in softs
+                ):
                     break
-        picks[position] = (chosen_at, index) if chosen_at is not None else None
-
-    consumed = {slot for slot, _ in (value for value in picks.values() if value is not None)}
-
-    bound: list[tuple[tuple[int, int], tuple[int, int], str, str]] = []
-    ambiguous: list[tuple[tuple[int, int], str]] = []
-    for position, value in picks.items():
-        if value is None:
+                if group[0][0] - token_at[preceding][1] <= ASSERTION_WINDOW:
+                    candidates = [token_at[preceding]]
+                break
+        if not candidates:
+            # No token in this group's own sentence. Usually that is honest --
+            # `We reviewed `G-A`. Separately, `G-B` is FAIL.` says nothing about
+            # G-A. But if a token later in the same segment belongs to NOBODY,
+            # the sentence split that separated them is suspect, and a false
+            # split at `cf.` or `Sec.` used to leave a clause of ids and no
+            # tokens that was skipped in SILENCE. Report it instead. This needs
+            # no abbreviation list: what matters is whether the orphaned token
+            # has a subject of its own, not why the split happened.
+            orphan = next(
+                (
+                    token_at[slot][2]
+                    for slot in range(position + 1, len(order))
+                    if order[slot][0] == "token"
+                    and slot not in claimed
+                    and token_at[slot][0] - group[-1][1] <= ASSERTION_WINDOW
+                ),
+                None,
+            )
+            if orphan is not None:
+                for id_start, id_end, _identifier in group:
+                    ambiguous.append(
+                        (
+                            (id_start, id_end),
+                            f"is separated from the status {orphan} by a sentence break, "
+                            "and that status has no subject of its own",
+                        )
+                    )
             continue
-        chosen_at, index = value
-        group = groups[index]
-        chosen = token_at[chosen_at]
-        # A token that no group claimed is DANGLING. `- FAIL `G-BETA` PASS` is
-        # genuinely ambiguous and must be reported, not resolved -- but in
-        # `ID1 is FAIL, ID2 is PASS` the FAIL is already ID1's, so it is not
-        # dangling and offers ID2 nothing. That distinction is what separates
-        # honest ambiguity from round 9's F-COMMA-ADJACENCY.
+        # A token no group claimed is DANGLING. `- FAIL `G-BETA` PASS` is
+        # genuinely ambiguous and is reported; in `ID1 is FAIL, ID2 is PASS` the
+        # FAIL already belongs to ID1, so it is not dangling and offers ID2
+        # nothing. That distinction separates honest ambiguity from the attack.
+        #
+        # The competitor must also be in the SAME SENTENCE. Round 10 found this
+        # rule firing on honest prose, and the corpus shows why: plenty of status
+        # words belong to subjects that are not registry ids at all -- the live
+        # milestone bullet says "B3-v2/W7 remains `PROPOSED / DESIGN ONLY`."
+        # right before naming two gates. `PROPOSED` is claimed by no GROUP, but
+        # it is not dangling in any meaningful sense; it simply has a subject
+        # this checker does not track. A token in a previous sentence is not
+        # competing for this sentence's subject, so only a same-sentence
+        # competitor can make a line ambiguous.
+        blocked = False
         for preceding in range(position - 1, -1, -1):
             if order[preceding][0] != "token":
                 continue
             neighbour = token_at[preceding]
+            same_sentence = not any(neighbour[1] <= cut <= group[0][0] for cut in softs)
             if (
-                preceding not in consumed
-                and neighbour[2] != chosen[2]
+                preceding not in claimed
+                and same_sentence
+                and neighbour[2] != candidates[0][2]
                 and group[0][0] - neighbour[1] <= ASSERTION_WINDOW
             ):
-                for id_start, id_end, identifier in group:
-                    ambiguous.append(
-                        (
-                            (id_start, id_end),
-                            "sits between conflicting status tokens "
-                            + "/".join(sorted({neighbour[2], chosen[2]}))
-                            + " and the earlier one has no subject of its own",
-                        )
-                    )
+                blocked = True
             break
-        blocked = {span for span, _why in ambiguous}
+        if blocked:
+            for id_start, id_end, _identifier in group:
+                ambiguous.append(
+                    (
+                        (id_start, id_end),
+                        "sits between conflicting status tokens and the earlier one "
+                        "has no subject of its own",
+                    )
+                )
+            continue
         for id_start, id_end, identifier in group:
-            if (id_start, id_end) in blocked:
-                continue
-            bound.append(((id_start, id_end), (chosen[0], chosen[1]), identifier, chosen[2]))
-    return bound, ambiguous
+            bound.append(((id_start, id_end), candidates, identifier))
+    return [(span, cands, name) for span, cands, name in bound], ambiguous
 
 
 def _affirmative(
@@ -1017,15 +1156,36 @@ def _affirmative(
     between = id_regex.sub(" ", between)
     between = CONNECTOR_NOISE_RE.sub(" ", between)
     words = [word for word in between.lower().split() if word not in {"and", "the", "a"}]
-    return all(word in AFFIRMATIVE_CONNECTORS for word in words)
+    if not words:
+        return True  # juxtaposition: `ID=STATUS`, a table cell
+    known = AFFIRMATIVE_COPULAS | AFFIRMATIVE_MODIFIERS | PAST_COPULAS
+    if not all(word in known for word in words):
+        return False
+    return any(word in AFFIRMATIVE_COPULAS for word in words)
 
 
 def _negated(clause: str, id_span: tuple[int, int], token_span: tuple[int, int]) -> bool:
-    """True when a cue between (or just before) the pair denies the status."""
+    """True when a cue between (or just before) the pair denies the status.
+
+    The lead window stops at any INTERVENING status token. Round 10: in
+    `is no longer FAIL but PASS` the cue "no longer" sits within thirty
+    characters of PASS, so PASS was judged negated too, both candidates were
+    discarded, and the live false statement exited 0 having been read by
+    nothing. A cue separated from this token by another status token is that
+    other token's cue, not this one's.
+    """
     low = min(id_span[1], token_span[1])
     high = max(id_span[0], token_span[0])
-    between = clause[low:high] if high > low else ""
-    lead = clause[max(0, token_span[0] - 30) : token_span[0]]
+    # Both windows stop at an INTERVENING status token. `is no longer FAIL but
+    # PASS` puts the cue between the id and PASS *and* within thirty characters
+    # of it, so PASS was judged negated too, both candidates were discarded, and
+    # the live false statement exited 0 having been read by nothing. A cue
+    # separated from this token by another status token is that token's cue.
+    barrier = 0
+    for earlier in STATUS_RE.finditer(clause[:token_span[0]]):
+        barrier = max(barrier, earlier.end())
+    between = clause[max(low, barrier) : high] if high > max(low, barrier) else ""
+    lead = clause[max(token_span[0] - 30, barrier) : token_span[0]]
     return bool(NEGATION_RE.search(between) or NEGATION_RE.search(lead))
 
 
@@ -1048,23 +1208,32 @@ def find_assertions(
             tokens = [(m.start(), m.end(), m.group(1)) for m in STATUS_RE.finditer(clause)]
             if not ids or not tokens:
                 continue
-            resolved, ambiguous = bind_by_word_order(ids, tokens)
+            resolved, ambiguous = bind_by_word_order(
+                ids, tokens, soft_boundaries(clause)
+            )
             for id_span, why in ambiguous:
                 identifier = next(
                     text for start, end, text in ids if (start, end) == id_span
                 )
                 unresolved.append((number, identifier, why))
-            for id_span, token_span, identifier, status in resolved:
-                if _negated(clause, id_span, token_span):
-                    continue
-                found.append(
-                    (
-                        number,
-                        identifier,
-                        status,
-                        _affirmative(clause, id_span, token_span, id_regex),
+            for id_span, candidates, identifier in resolved:
+                # Negation withholds ONE candidate, it does not silence the id.
+                # Round 10: `is no longer FAIL but PASS` used to drop the id at
+                # the negated FAIL and leave PASS orphaned and untested, so a
+                # live false statement exited 0. Advance instead.
+                for token_start, token_end, status in candidates:
+                    token_span = (token_start, token_end)
+                    if _negated(clause, id_span, token_span):
+                        continue
+                    found.append(
+                        (
+                            number,
+                            identifier,
+                            status,
+                            _affirmative(clause, id_span, token_span, id_regex),
+                        )
                     )
-                )
+                    break
     # A board row whose cells also read as prose would otherwise be counted
     # twice; the assertion is the same either way.
     return _dedupe(found), _dedupe(unresolved)
