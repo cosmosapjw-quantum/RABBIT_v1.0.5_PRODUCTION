@@ -8,7 +8,7 @@
  "the_structural_cause": "This was not carelessness, it was an impossible field. A canary is dispatched as the last act BEFORE the sealing commit, so at the moment it writes its attestation the commit that will contain its bytes does not exist. `git rev-parse HEAD` therefore returns the PREVIOUS commit, which is structurally the wrong answer, and every canary in this chain that changed a hook would have recorded the same lie. C8 is simply the one where it mattered, because C8 is the canary that ran when the hooks HAD changed.",
  "the_fix": "head_commit is written as PENDING_COMMIT and pinned by a follow-up commit -- exactly the convention SSOT_FACTS.json already uses for a declared fact's as_of_commit. check_canary_freshness.py now verifies it: a concrete hash must contain the attested bytes, and PENDING_COMMIT is legal only in the commit that introduces the attestation, because requiring the pin in that same commit would be unsatisfiable.",
  "method": "Identical to C8: Start dispatched with ACTIVE_RUN naming the canary run so a real lease exists, ACTIVE_RUN repointed to the DECOY, then ONE shell command copies the pointer to a raw file, writes date -u to nanoseconds, dispatches SubagentStop, records its exit status, writes the closing clock, copies the pointer again, and copies ADMISSIONS.jsonl on both sides.",
- "head_commit": "PENDING_COMMIT",
+ "head_commit": "b62343e1504ade094ca71ef35f16ecda37c7fb38",
  "start_hook_sha256": "8b28351235d32bb74c7bb84ee32acf910f2bccb4eef993bfbf86baecc6522d17",
  "stop_hook_sha256": "79eb19fcd35c100b9b0e58e4dc6416fb0e9f840ff860e29da7bdf066107f4bc0",
  "raw_bracket_files": {
@@ -41,5 +41,6 @@
  "consumed_by_agent_id": "d070-canary-c11",
  "consumed_assignment_id": "A-D070-CANARY-C11",
  "result_sha256": "sha256:b56768171e7ff31043ea5b2e7ebecaaeecb19d11509ba122a331aee9e30a5612",
- "what_this_does_not_claim": "Nothing about the shared-OS-user residual. It moves no gate. It also does NOT re-close the second C8 defect (F-R13-04): C8's ledger-pinned envelope cited the un-suffixed attempt-1 files, whose bracket contains no consume. C11 avoids that by construction -- it had no blocked first attempt and its envelope cites the artifact and the ledger rather than a specific attempt's raw files -- but the general guard, that cited evidence must SUPPORT the claim, is not yet written."
+ "what_this_does_not_claim": "Nothing about the shared-OS-user residual. It moves no gate. It also does NOT re-close the second C8 defect (F-R13-04): C8's ledger-pinned envelope cited the un-suffixed attempt-1 files, whose bracket contains no consume. C11 avoids that by construction -- it had no blocked first attempt and its envelope cites the artifact and the ledger rather than a specific attempt's raw files -- but the general guard, that cited evidence must SUPPORT the claim, is not yet written.",
+ "how_this_was_pinned": "Written as PENDING_COMMIT by the canary, because the commit that contains its bytes does not exist while the canary is running. Pinned here by a follow-up that VERIFIED, before writing, that this commit really contains both attested digests -- the same check check_canary_freshness.py now runs on every invocation. Pinning without that verification would reproduce exactly the C8 defect this convention exists to prevent."
 }
