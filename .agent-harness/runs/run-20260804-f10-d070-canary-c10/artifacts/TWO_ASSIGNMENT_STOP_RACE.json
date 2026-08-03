@@ -42,5 +42,10 @@
  "consumed_assignment_id": "A-D070-C10-A",
  "result_sha256": "sha256:debcca06e846f6c1f70ae50d524aa409d10a9371cff8cad9b972fa8746fe5ee9",
  "resolution_limit": "Two processes, one trial, one filesystem. Not a proof of atomicity.",
- "what_this_does_not_claim": "Nothing about the shared-OS-user residual -- this canary DEPENDS on it to construct its input. It moves no gate."
+ "what_this_does_not_claim": "Nothing about the shared-OS-user residual -- this canary DEPENDS on it to construct its input. It moves no gate.",
+ "refused_result_artifact": {
+  "path": ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-B.json",
+  "sha256": "sha256:9297a0aa77c337c5f2326f84eab66afcfe2bc9bb78c022cbf6d679276164df67",
+  "why_it_is_not_retained": "Slot B's envelope was the losing side of the race: its stop was refused by the per-agent flock, so it was never admitted, and its FORGED receipt stays open. Same reasoning as C9's refused artifact -- the digest and the ledger's `minted` row preserve the fact; the unattributed file is cleared."
+ }
 }
