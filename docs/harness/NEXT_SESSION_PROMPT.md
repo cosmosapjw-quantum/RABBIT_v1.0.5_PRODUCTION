@@ -23,7 +23,7 @@ be running or may have completed unattended.
 - Confirmed healthy at eval 401: r4 tracks the frozen r3 base run to every
   printed digit (N=0.1001, T_cm=9.04760 at the same eval index), ~3% faster.
 
-`G-F10-INDEPENDENT-FLRW` and `G-HARNESS-INTEGRITY` are both still **FAIL**. No
+`G-F10-INDEPENDENT-FLRW=FAIL` and `G-HARNESS-INTEGRITY=FAIL`, both still. No
 gate has moved in the D-066..D-069 chain. D-070 is the only place a flip may be
 considered, and only on an adjudicator's verdict — not the single writer's.
 
@@ -632,7 +632,7 @@ implement or physically execute this design.
 
 D-028 and D-029 forbid changing the norm/cap, post-hoc mu-tau averaging, swapped-event
 or orientation averaging, reduction retries, GL64, Radau, trajectory,
-endpoint, and RABBIT unblinding. `G-F10-INDEPENDENT-FLRW` remains **FAIL**.
+endpoint, and RABBIT unblinding. `G-F10-INDEPENDENT-FLRW=FAIL` remains.
 
 Only an explicit owner instruction backed by materially new numerical evidence
 may open a fresh registered blind design. Such a design must be prospective:

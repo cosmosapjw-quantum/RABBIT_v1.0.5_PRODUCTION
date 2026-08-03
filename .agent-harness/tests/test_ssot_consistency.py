@@ -38,6 +38,14 @@ import pytest
 REPO = Path(__file__).resolve().parents[2]
 CHECKER = REPO / ".agent-harness" / "scripts" / "check_ssot_consistency.py"
 
+# The round-11 refusal (D-070 Part B15). A live hard segment that names a
+# registry id and also carries a bare status token is rejected without being
+# read. The scope is the segment, not the sentence: see the checker's SENTENCE
+# tier note for the abbreviation fixture that killed the sentence-scoped one. Tests
+# match on this fragment rather than the whole message so the wording can be
+# improved without silently loosening what is being asserted.
+REFUSED = "appears beside the bare status"
+
 
 def decision_id(number: int) -> str:
     """Build a fixture decision id without writing one as a literal."""
@@ -219,8 +227,8 @@ The programme narrative carries no gate id.
 
 ## 2026-07-29 {early} overlay (controlling)
 
-- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.
-- `G-BETA` remains FAIL.
+- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.
+- `G-BETA=FAIL` remains.
 
 ## 2026-07-28 {early} predecessor overlay (superseded by the overlay above)
 
@@ -383,7 +391,7 @@ def test_f_ssot_01_flipping_gates_and_deleting_the_prose_is_caught(repo: Path) -
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
         "- The board is unchanged.",
     )
     messages = errors_of(repo)
@@ -395,7 +403,7 @@ def test_f_ssot_01_zero_assertions_anywhere_is_an_error(repo: Path) -> None:
     for rel, old, new in (
         (
             "docs/harness/PROJECT_STATE.md",
-            "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+            "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
             "- The board is unchanged.",
         ),
     ):
@@ -405,7 +413,7 @@ def test_f_ssot_01_zero_assertions_anywhere_is_an_error(repo: Path) -> None:
 
 
 def test_f_ssot_01_gate_with_no_coverage_is_named(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "- Nothing here.")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- Nothing here.")
     messages = errors_of(repo)
     assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages)
     assert not any("G-ALPHA" in m for m in messages)
@@ -455,7 +463,7 @@ def test_f_ssot_02_undated_standing_section_is_scanned(repo: Path) -> None:
         repo,
         "docs/harness/PROJECT_STATE.md",
         "This undated standing section is live and is scanned.",
-        "For the avoidance of doubt `G-BETA` is PASS.",
+        "For the avoidance of doubt `G-BETA=PASS`.",
     )
     messages = errors_of(repo)
     assert any("PROJECT_STATE.md" in m and "G-BETA=PASS" in m and "registry says FAIL" in m for m in messages)
@@ -466,14 +474,14 @@ def test_f_ssot_02_standing_section_of_the_prompt_is_scanned(repo: Path) -> None
         repo,
         "docs/harness/NEXT_SESSION_PROMPT.md",
         "This undated standing section is live and is scanned.",
-        "The gate `G-ALPHA` is FAIL.",
+        "The gate `G-ALPHA=FAIL`.",
     )
     messages = errors_of(repo)
     assert any("NEXT_SESSION_PROMPT.md" in m and "G-ALPHA=FAIL" in m for m in messages)
 
 
 def test_f_ssot_02_preamble_is_scanned(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "# Project State\n", "# Project State\n\n`G-BETA` is PASS.\n")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "# Project State\n", "# Project State\n\n`G-BETA=PASS`.\n")
     assert any("G-BETA=PASS" in m for m in errors_of(repo))
 
 
@@ -525,27 +533,37 @@ def test_f_ssot_03_frozen_assertion_without_its_pin_is_an_error(repo: Path) -> N
 # --------------------------------------------------------------------------
 
 
-def test_f_ssot_04_negation_never_asserts_the_negated_status(repo: Path) -> None:
-    """"is no longer FAIL" must not be recorded as asserting FAIL."""
+def test_f_ssot_04_negation_is_refused_rather_than_interpreted(repo: Path) -> None:
+    """"is no longer PASS" is no longer READ at all -- it is refused.
+
+    The old rule was "a denial must not be recorded as asserting the status",
+    and it needed a denylist of ways to say no. Round 11 withdrew the denylist:
+    the sentence is rejected for putting a bare status token beside a gate id,
+    without deciding what it means. The two things that must both hold are that
+    the line is reported, and that it is NOT recorded as an assertion of PASS.
+    """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-BETA` remains FAIL.",
-        "- `G-BETA` is no longer PASS.\n- `G-BETA` remains FAIL.",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA` is no longer PASS.\n- `G-BETA=FAIL` remains.",
     )
-    assert_clean(repo)
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
+    assert not any("G-BETA=PASS but the gate registry" in m for m in messages), messages
 
 
 def test_f_ssot_04_negated_mention_does_not_satisfy_coverage(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "- `G-BETA` is no longer FAIL.")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA` is no longer FAIL.")
     messages = errors_of(repo)
     assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages)
 
 
-def test_f_ssot_04_status_before_the_id_is_read(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "- Still PASS for `G-BETA`.")
+def test_f_ssot_04_status_before_the_id_is_refused(repo: Path) -> None:
+    """Backward order was a binding rule; now it is simply not a legal form."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- Still PASS for `G-BETA`.")
     messages = errors_of(repo)
-    assert any("G-BETA=PASS" in m and "registry says FAIL" in m for m in messages)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
 def test_f_ssot_04_status_board_table_is_read(repo: Path) -> None:
@@ -553,7 +571,7 @@ def test_f_ssot_04_status_board_table_is_read(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
         "| Gate | Status |\n|---|---|\n| `G-ALPHA` | PASS |\n| `G-BETA` | PASS |\n| `C-LIVE` | VALIDATED |\n",
     )
     messages = errors_of(repo)
@@ -572,9 +590,9 @@ def test_f_ssot_04_plain_table_row_does_not_bind_across_cells(repo: Path) -> Non
 
 
 def test_f_ssot_04_conflicting_equidistant_tokens_are_reported_not_skipped(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "- FAIL `G-BETA` PASS\n- `G-BETA` remains FAIL.")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- FAIL `G-BETA` PASS\n- `G-BETA=FAIL` remains.")
     messages = errors_of(repo)
-    assert any("cannot resolve what status is asserted for G-BETA" in m for m in messages)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
 # --------------------------------------------------------------------------
@@ -634,7 +652,7 @@ def test_f_ssot_08_newer_overlay_appended_at_the_end_is_authoritative(repo: Path
     path = repo / "docs/harness/PROJECT_STATE.md"
     path.write_text(
         path.read_text(encoding="utf-8")
-        + "\n## 2026-07-31 newest overlay (controlling)\n\n- `G-BETA` is PASS.\n",
+        + "\n## 2026-07-31 newest overlay (controlling)\n\n- `G-BETA=PASS`.\n",
         encoding="utf-8",
     )
     messages = errors_of(repo)
@@ -757,16 +775,24 @@ def test_f_ssot_09_mention_is_not_enough_above_the_strict_floor(repo: Path) -> N
 # --------------------------------------------------------------------------
 
 
-def test_no_regress_registry_versus_prose_divergence_is_detected(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "- `G-BETA` remains PASS.")
+def test_no_regress_registry_versus_declaration_divergence_is_detected(repo: Path) -> None:
+    """A false STRUCTURAL statement is still a contradiction, not a refusal."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA=PASS` remains.")
     messages = errors_of(repo)
-    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in messages)
+    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in messages), messages
+
+
+def test_no_regress_registry_versus_prose_divergence_is_refused(repo: Path) -> None:
+    """The same lie in prose is refused instead. Either way it cannot survive."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA` remains PASS.")
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
 def test_no_regress_claim_divergence_is_detected(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "`C-LIVE` is VALIDATED", "`C-LIVE` is PROPOSED")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "`C-LIVE=VALIDATED`", "`C-LIVE=PROPOSED`")
     messages = errors_of(repo)
-    assert any("C-LIVE=PROPOSED but the claim registry says VALIDATED" in m for m in messages)
+    assert any("C-LIVE=PROPOSED but the claim registry says VALIDATED" in m for m in messages), messages
 
 
 def test_no_regress_frozen_row_must_not_be_refreshed(repo: Path) -> None:
@@ -875,7 +901,7 @@ def test_no_regress_unreadable_input_is_an_error(repo: Path) -> None:
 
 EXEMPTION = {
     "file": "docs/harness/PROJECT_STATE.md",
-    "line_contains": "the grant left `G-BETA` PASS",
+    "line_contains": "the grant left `G-BETA=PASS`",
     "id": "G-BETA",
     "asserted_status": "PASS",
     "superseded_by_line_contains": "the later review restored it",
@@ -883,12 +909,15 @@ EXEMPTION = {
 }
 
 
-def _plant_narrative(repo: Path, correction: str = "- Then the later review restored it: `G-BETA` FAIL.") -> None:
+def _plant_narrative(
+    repo: Path,
+    correction: str = "- Then the later review restored it: `G-BETA=FAIL`.",
+) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
         "This undated standing section is live and is scanned.",
-        "- At the time the grant left `G-BETA` PASS.\n%s" % correction,
+        "- At the time the grant left `G-BETA=PASS`.\n%s" % correction,
     )
 
 
@@ -906,7 +935,7 @@ def test_exemption_cannot_excuse_an_uncorrected_contradiction(repo: Path) -> Non
 
 
 def test_exemption_whose_correction_asserts_the_wrong_status_is_an_error(repo: Path) -> None:
-    _plant_narrative(repo, correction="- Then the later review restored it: `G-BETA` VALIDATED.")
+    _plant_narrative(repo, correction="- Then the later review restored it: `G-BETA=VALIDATED`.")
     write(repo / ".agent-harness/context/SSOT_FACTS.json", facts_document(exemptions=[EXEMPTION]))
     messages = errors_of(repo)
     assert any("does not assert G-BETA=FAIL" in m for m in messages)
@@ -1146,38 +1175,62 @@ def test_f_r9_comma_adjacency_lie_binds_to_its_own_id(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
-        "- `C-LIVE` is VALIDATED.\n- `G-ALPHA` is FAIL, `G-BETA` is PASS.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
+        "- `C-LIVE=VALIDATED`.\n- `G-ALPHA` is FAIL, `G-BETA=PASS`.",
     )
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA` remains FAIL.", "")
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "")
     assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in errors_of(repo))
 
 
-def test_f_r9_ordinary_two_clause_prose_still_binds_correctly(repo: Path) -> None:
-    """The control the fix must not break.
+def test_f_r9_ordinary_two_clause_declaration_stays_clean(repo: Path) -> None:
+    """Two true statements on one line, in the structural form, stay clean.
 
-    `A` remains S1 and `B` is S2 is ordinary English whose spacing is the
-    OPPOSITE of the attack's, so no distance threshold separates the two. Word
-    order does. Both statuses here are true, so the corpus must stay clean.
+    F-COMMA-ADJACENCY was the round-9 defect where `ID1 is S1, ID2 is S2` let
+    ID2 take its NEIGHBOUR's status because the separator widths decided it.
+    ``ID=STATUS`` removes the question: there is no separator to measure.
     """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-BETA` remains FAIL.",
-        "- `G-ALPHA` remains PASS and `G-BETA` is FAIL.",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-ALPHA=PASS` remains and `G-BETA=FAIL` also.",
     )
     assert_clean(repo)
 
 
-def test_f_r9_shared_subject_list_still_binds_to_every_member(repo: Path) -> None:
-    """`A` and `B` are both still S -- one token, two ids, both bound."""
+def test_f_r9_ordinary_two_clause_prose_is_now_refused(repo: Path) -> None:
+    """The measured cost of the round-11 inversion, pinned rather than implied.
+
+    This input is TRUE in both clauses and used to pass. It is now an error,
+    because the checker no longer decides what a sentence means. Refusing four
+    honest sentences corpus-wide was the price of the six-string bypass family
+    dying; if that price ever rises, this fixture is where it shows up.
+    """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
-        "- `G-ALPHA` and `G-BETA` are both PASS.\n- `C-LIVE` is VALIDATED.",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-ALPHA` remains PASS and `G-BETA` is FAIL.",
     )
-    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in errors_of(repo))
+    messages = errors_of(repo)
+    assert any(REFUSED in m for m in messages), messages
+
+
+def test_f_r9_shared_subject_list_lie_is_still_caught(repo: Path) -> None:
+    """`A` and `B` are both PASS is a lie about B, and must not survive.
+
+    Under the binder this needed a subject-group rule so one token could reach
+    two ids. It now needs no rule at all: the sentence names a gate beside a
+    bare token, which is refused before anyone asks who the token belongs to.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
+        "- `G-ALPHA` and `G-BETA` are both PASS.\n- `C-LIVE=VALIDATED`.",
+    )
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
 def test_f_r9_regex_matching_nothing_is_an_error_not_the_value_zero(repo: Path) -> None:
@@ -1269,7 +1322,7 @@ def test_f_r9_denial_that_agrees_by_accident_does_not_satisfy_coverage(repo: Pat
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
         "- `G-ALPHA` remains PASS.\n"
         "- `C-LIVE` has no bearing on whether the lane is VALIDATED.",
     )
@@ -1296,7 +1349,7 @@ def test_f_r10_board_status_cell_must_be_a_bare_status(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
         "| Gate | Status |\n|---|---|\n| `G-ALPHA` | PASS |\n"
         "| `G-BETA` | no longer FAIL |\n| `C-LIVE` | VALIDATED |\n",
     )
@@ -1309,7 +1362,7 @@ def test_f_r10_board_bare_status_still_passes(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.\n- `G-BETA` remains FAIL.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
         "| Gate | Status |\n|---|---|\n| `G-ALPHA` | **PASS** |\n"
         "| `G-BETA` | `FAIL` |\n| `C-LIVE` | VALIDATED |\n",
     )
@@ -1326,22 +1379,29 @@ def test_f_r10_negation_rebinds_instead_of_dropping_the_id(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-BETA` remains FAIL.",
+        "- `G-BETA=FAIL` remains.",
         "- `G-BETA` is no longer PASS but PASS.",
     )
     messages = errors_of(repo)
-    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in messages), messages
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
-def test_f_r10_supported_denial_is_still_suppressed(repo: Path) -> None:
-    """Control: re-binding must not turn a real denial into an assertion."""
+def test_f_r10_a_true_denial_is_refused_not_accepted(repo: Path) -> None:
+    """`G-BETA is not PASS` is TRUE, and is refused anyway.
+
+    That is the point of the inversion. Deciding this sentence is honest means
+    deciding that `not` denies -- and `is not only PASS`, `is not merely PASS`
+    and `is not just PASS` are the same three characters AFFIRMING. No reader
+    of `not` can tell those apart; a reader of structure never has to.
+    """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-BETA` remains FAIL.",
-        "- `G-BETA` is not PASS.\n- `G-BETA` remains FAIL.",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA` is not PASS.\n- `G-BETA=FAIL` remains.",
     )
-    assert_clean(repo)
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
 
 def test_f_r10_an_abbreviation_cannot_sever_a_lie_from_its_detection(repo: Path) -> None:
@@ -1354,17 +1414,15 @@ def test_f_r10_an_abbreviation_cannot_sever_a_lie_from_its_detection(repo: Path)
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-BETA` remains FAIL.",
+        "- `G-BETA=FAIL` remains.",
         "- `G-BETA` (r10, cf. the appendix) is PASS.",
     )
     messages = errors_of(repo)
     # Reported, not silently skipped, and the id gets no coverage either -- both
-    # halves matter, because a silent skip is how the lie used to travel.
-    assert any(
-        "cannot resolve what status is asserted for G-BETA" in m
-        and "has no subject of its own" in m
-        for m in messages
-    ), messages
+    # halves matter, because a silent skip is how the lie used to travel. The
+    # abbreviation splits the sentence; a narrower scope still forbids what the
+    # wider one forbade, so no abbreviation list is needed to close this.
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
     assert any("G-BETA" in m and "asserted nowhere" in m for m in messages), messages
 
 
@@ -1374,22 +1432,48 @@ def test_f_r10_a_sentence_end_still_breaks_the_subject_group(repo: Path) -> None
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
-        "- We reviewed `G-ALPHA`. Separately, `C-LIVE` is VALIDATED.\n- `G-ALPHA` is PASS.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
+        "- We reviewed `G-ALPHA`. Separately, `C-LIVE=VALIDATED`.\n- `G-ALPHA=PASS`.",
     )
     assert_clean(repo)
 
 
-def test_f_r10_a_group_does_not_steal_a_token_from_a_previous_sentence(repo: Path) -> None:
-    """The backward fallback used to reach across a sentence end and take a
-    token whose subject is not a registry id at all, reporting a false
-    contradiction. A group with no token in its own sentence asserts nothing."""
+def test_f_r10_an_unrelated_token_beside_an_id_is_refused_not_bound(repo: Path) -> None:
+    """The backward fallback is gone, and so is the false contradiction it made.
+
+    The round-10 defect was that `G-ALPHA` reached back across a sentence end
+    and took `VALIDATED` from a subject that was not a registry id, reporting a
+    contradiction that did not exist. Nothing binds by distance now, so no
+    false contradiction is possible -- but the segment is still REFUSED, and
+    that is the deliberate trade. A bare status token beside a gate id is not
+    interpreted in either direction; it is sent back to be written properly.
+    """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
         "- Something unrelated is VALIDATED. We also reviewed `G-ALPHA`.\n"
-        "- `G-ALPHA` is PASS.\n- `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA=PASS`.\n- `C-LIVE=VALIDATED`.",
+    )
+    messages = errors_of(repo)
+    assert any("G-ALPHA" in m and REFUSED in m for m in messages), messages
+    # ...and specifically NOT the round-10 false contradiction.
+    assert not any("G-ALPHA=VALIDATED" in m for m in messages), messages
+
+
+def test_f_r10_a_separate_bullet_keeps_an_unrelated_token_clean(repo: Path) -> None:
+    """The escape hatch, so the refusal is not a demand for silence.
+
+    A bullet is a HARD boundary, so an unrelated status word costs nothing as
+    long as it does not share a segment with a registry id. This is what a
+    writer does instead of arguing with the checker.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
+        "- Something unrelated is VALIDATED.\n- We also reviewed `G-ALPHA`.\n"
+        "- `G-ALPHA=PASS`.\n- `C-LIVE=VALIDATED`.",
     )
     assert_clean(repo)
 
@@ -1400,7 +1484,7 @@ def test_f_r10_affirmative_requires_a_present_tense_copula(repo: Path) -> None:
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
         "- `G-ALPHA` remains PASS.\n- `C-LIVE` was VALIDATED.",
     )
     messages = errors_of(repo)
@@ -1409,15 +1493,23 @@ def test_f_r10_affirmative_requires_a_present_tense_copula(repo: Path) -> None:
     ), messages
 
 
-def test_f_r10_honest_present_tense_hedges_still_grant_coverage(repo: Path) -> None:
-    """Control: the copula rule must not fail the floor on true prose."""
+def test_f_r10_present_tense_hedges_are_refused_with_everything_else(repo: Path) -> None:
+    """The copula rule is withdrawn; tense no longer decides anything.
+
+    It was introduced so `is currently PASS` would grant coverage while
+    `was PASS` would not, and it cost two rounds of argument about which verbs
+    count. Coverage now comes only from a board row or ``ID=STATUS``, so there
+    is no tense to get right.
+    """
     edit(
         repo,
         "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA` remains PASS and `C-LIVE` is VALIDATED.",
+        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
         "- `G-ALPHA` is currently PASS.\n- `C-LIVE` continues to be VALIDATED.",
     )
-    assert_clean(repo)
+    messages = errors_of(repo)
+    assert any("G-ALPHA" in m and REFUSED in m for m in messages), messages
+    assert any("C-LIVE" in m and REFUSED in m for m in messages), messages
 
 
 def test_f_r10_historical_role_cannot_sit_in_a_live_region_either(repo: Path) -> None:
@@ -1453,3 +1545,118 @@ def test_f_r10_historical_role_cannot_sit_in_a_live_region_either(repo: Path) ->
         "declared with role 'historical'" in m and "inside a LIVE region" in m
         for m in messages
     ), messages
+
+
+# --------------------------------------------------------------------------
+# F-R11 -- the bypass family that retired the prose parser (D-070 Part B15).
+#
+# An external audit reported ONE of these (`is not only PASS`). Reproducing it
+# locally found five more, in two mechanisms that no vocabulary distinguishes:
+#
+#   decoy shadowing   a TRUE token earlier in the segment took the id's single
+#                     binding slot, and the false token after it was never read
+#   affirmative "not" `not only/merely/just PASS` AFFIRMS PASS, and every
+#                     denylist of ways to say "no" reads it as a denial
+#
+# Each string below exited 0 against the round-10 checker with the fixture
+# registry saying G-BETA=FAIL. They are parametrised rather than written out
+# as separate tests so that adding a seventh string is one line, not one
+# function -- the previous rounds' habit of hand-writing each case is part of
+# why three fixtures shipped without discriminating.
+# --------------------------------------------------------------------------
+
+
+R11_BYPASS_STRINGS = [
+    pytest.param("- `G-BETA` was FAIL but is now PASS.", id="decoy-was-is-now"),
+    pytest.param("- `G-BETA` is no longer FAIL; it is PASS.", id="decoy-semicolon"),
+    pytest.param("- `G-BETA` is far from FAIL and is PASS.", id="decoy-far-from"),
+    pytest.param("- `G-BETA` is cleared; it is PASS.", id="decoy-pronoun"),
+    pytest.param("- `G-BETA` is not only PASS but also recorded.", id="affirmative-not-only"),
+    pytest.param("- `G-BETA` is not merely PASS but fully closed.", id="affirmative-not-merely"),
+    pytest.param("- `G-BETA` is not just PASS but exemplary.", id="affirmative-not-just"),
+]
+
+
+@pytest.mark.parametrize("sentence", R11_BYPASS_STRINGS)
+def test_f_r11_bypass_string_cannot_reach_a_live_surface(repo: Path, sentence: str) -> None:
+    """Every measured bypass must fail the checker, and none may be read as PASS."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", sentence)
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
+
+
+@pytest.mark.parametrize("sentence", R11_BYPASS_STRINGS)
+def test_f_r11_bypass_string_never_grants_coverage(repo: Path, sentence: str) -> None:
+    """The other half: a refused segment must not satisfy the coverage floor.
+
+    Round 9's F-NEGATION-CLOSED-VOCAB was exactly this -- a misread denial that
+    counted as the one live statement a gate needed. Reporting the line while
+    still counting it as coverage would leave that hole open.
+    """
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", sentence)
+    messages = errors_of(repo)
+    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages), messages
+
+
+def test_f_r11_the_string_an_auditor_committed_to_this_repository(repo: Path) -> None:
+    """The exact bytes an external auditor left in a commit on this branch.
+
+    Recorded verbatim because it was a real write to the real branch ref, not a
+    hypothetical: it is the only bypass in this family that was ever committed.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "Current correction: `G-BETA` was **FAIL** but is now **PASS**.",
+    )
+    messages = errors_of(repo)
+    assert any("G-BETA" in m and REFUSED in m for m in messages), messages
+
+
+def test_f_r11_a_false_structural_declaration_is_still_a_contradiction(repo: Path) -> None:
+    """Refusal must not become the only outcome: a legal FORM stating a false
+    status is reported as the contradiction it is, naming both values."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA=PASS` now.")
+    messages = errors_of(repo)
+    assert any("G-BETA=PASS but the gate registry says FAIL" in m for m in messages), messages
+
+
+@pytest.mark.parametrize(
+    "form",
+    [
+        pytest.param("`G-BETA=FAIL`", id="backticked"),
+        pytest.param("**G-BETA=FAIL**", id="bold"),
+        pytest.param("G-BETA=FAIL", id="bare"),
+        pytest.param("`G-BETA` = `FAIL`", id="spaced-and-split-markup"),
+    ],
+)
+def test_f_r11_markup_around_the_equals_is_not_grammar(repo: Path, form: str) -> None:
+    """The corpus writes the structural form several ways; all must be read.
+
+    If markup decided whether a declaration counted, then markup would be a
+    detector-disabling device -- which is precisely what `**FAIL**` was under
+    the old board-cell rule before round 10 forced the cell to reduce to a
+    bare token.
+    """
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", f"- {form} remains.")
+    assert_clean(repo)
+
+
+def test_f_r11_a_misspelt_id_does_not_satisfy_the_floor_for_the_real_one(repo: Path) -> None:
+    """An id the registries do not contain is INVISIBLE, and that is stated.
+
+    Both regexes are built from the registry, so `G-BET=PASS` matches neither
+    the structural form nor the bare-id scan: it is not reported, and it never
+    was. Writing a test that asserted otherwise would have been a fixture that
+    documents a guard nobody wrote.
+
+    What actually protects the corpus here is the coverage floor. A misspelling
+    cannot stand in for the gate it resembles, because the real gate still has
+    to be asserted somewhere live, and this pins that -- the floor is the guard,
+    so the floor is what gets the fixture.
+    """
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BET=FAIL` remains.")
+    messages = errors_of(repo)
+    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages), messages
+    assert not any("G-BET=" in m and "G-BETA" not in m for m in messages), messages

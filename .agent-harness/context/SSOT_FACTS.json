@@ -205,24 +205,29 @@
   },
   {
    "fact_id": "ssot_regression_case_count",
-   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered.",
+   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered. The count is `def test_` lines, so a parametrised case counts once however many inputs it carries -- the B15 bypass family is seven inputs across two definitions.",
    "measurement": {
     "kind": "count_lines_matching",
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 92,
+   "value": 101,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B14",
+     "line_contains": "D-070 Part B15",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
-     "note": "Live ledger row for the historical-role repair."
+     "note": "Live ledger row for the structural-assertion rewrite."
     }
    ],
    "prior": [
+    {
+     "value": 92,
+     "as_of_commit": "1d62b31",
+     "note": "D-070 Part B14. This is the value the B14 row was committed with; it is cited there with its commit, not refreshed."
+    },
     {
      "value": 91,
      "as_of_commit": "a6965dd",

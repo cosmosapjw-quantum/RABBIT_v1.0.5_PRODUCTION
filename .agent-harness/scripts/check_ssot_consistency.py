@@ -349,89 +349,20 @@ STATUS_RE = re.compile(r"(?<![A-Za-z0-9_-])(" + "|".join(STATUS_TOKENS) + r")(?!
 GATE_STATUSES = {"PASS", "FAIL"}
 CLAIM_STATUSES = set(STATUS_TOKENS) - {"PASS", "FAIL"}
 
-# How far an id may sit from a status token and still be its subject.
-ASSERTION_WINDOW = 200
-# Hard boundaries: a status token never binds across a table cell or a sentence.
-# TWO TIERS, because round 10 showed one tier cannot serve both jobs.
-#
-# HARD: a table cell. Nothing crosses it, ever -- this is what stops a ledger
-# Result cell binding to an id in its Notes cell.
+# A table cell. Nothing crosses it, ever -- this is what stops a ledger Result
+# cell binding to an id in its Notes cell.
 HARD_BOUNDARY_RE = re.compile(r"\||^\s*[-*] ")
-# SOFT: a sentence end. It breaks SUBJECT GROUPS, so two ids in different
-# sentences are different subjects, but a group may still look across it for its
-# status token. That asymmetry is the round-10 fix for the abbreviation hole:
-# `. ` fires inside `cf.`, `e.g.` and `Sec.`, and under the old single tier that
-# false split left a clause holding ids and no tokens, which was skipped in
-# SILENCE -- every abbreviation in a technical handoff was a detector-disabling
-# device. Now a false split merely separates a group that did not need
-# separating, and the token is still found. No abbreviation list is needed,
-# which is the point: enumerating them would be the same losing game as
-# enumerating ways to say "no".
-SOFT_BOUNDARY_RE = re.compile(r" [-]{2} |\. |\.$|; |\? |! ")
-# A cue between an id and its token (or just before the token) means the line
-# denies the status rather than asserting it: "is no longer FAIL" asserts nothing.
-NEGATION_RE = re.compile(
-    r"(?<![A-Za-z])(no longer|not|never|n't|rather than|instead of|neither|nor|no more)"
-    r"(?![A-Za-z])",
-    re.IGNORECASE,
-)
-
-# Round 9's F-NEGATION-CLOSED-VOCAB. NEGATION_RE is a DENYLIST, and a denylist of
-# ways to say "no" can never be finished: "has no bearing on whether it is PASS"
-# reads to a human as an explicit denial and to the denylist as an assertion, and
-# that false assertion was enough to satisfy the coverage floor for a claim with
-# no real live statement anywhere. Extending the denylist would only move the
-# boundary, so the direction is inverted instead.
+# NO sentence tier. Round 11 first scoped the refusal below to the sentence and
+# the round-10 abbreviation fixture killed it within the hour: `. ` fires inside
+# `cf.`, so ``G-BETA` (r10, cf. the appendix) is PASS.` split into a half with
+# the id and a half with the token, and neither half broke the rule. Every
+# repair for that -- an abbreviation list, a capital-letter test -- is a way of
+# reading English, and reading English is what lost this argument four times.
 #
-# Contradiction detection keeps the loose window: a line that says something
-# false about a gate is caught however it is phrased, because failing to catch a
-# lie is the expensive error. COVERAGE is different -- it is the claim "this id
-# IS stated somewhere current" -- and it now requires an AFFIRMATIVE connector
-# from the closed list below. The two lists are closed in opposite directions: an
-# unrecognised phrase adds no coverage and the floor fails loudly, whereas an
-# unrecognised phrase used to add coverage silently.
-# An assertion needs a COPULA. Round 10 measured the previous flat word set
-# failing in both directions at once: it rejected `is currently FAIL`,
-# `continues to be FAIL` and `is effectively FAIL` -- honest present-tense prose,
-# so the coverage floor failed on true statements -- while accepting `was FAIL`
-# (past tense is not a claim about now) and the bare fragments `at FAIL` and
-# `to FAIL`. A flat set cannot tell an assertion from a mention, because the
-# thing that makes it an assertion is the verb.
-#
-# So the connector must consist ONLY of known words, AND at least one of them
-# must be a present-tense copula -- unless the connector is empty, which is
-# juxtaposition (`ID=STATUS`, a `| ID | STATUS |` cell) and asserts by position.
-# The list is still closed, and still closed in the SAFE direction: an
-# unrecognised word grants no coverage and the floor fails loudly.
-AFFIRMATIVE_COPULAS = frozenset(
-    {"is", "are", "be", "remains", "remain", "stays", "stay", "holds", "reads", "records"}
-)
-# Recognised, and deliberately NOT copulas: a past-tense sentence is a true
-# statement about a past state, not a claim about now, so it may not satisfy a
-# coverage floor that asks where a status is stated CURRENTLY. Listing them here
-# rather than omitting them is what makes the copula requirement do the work --
-# an omitted word is rejected by the membership test and the rule underneath it
-# is never exercised, which is how this guard first shipped unverified.
-PAST_COPULAS = frozenset({"was", "were", "had", "used"})
-AFFIRMATIVE_MODIFIERS = frozenset(
-    {
-        "still",
-        "both",
-        "now",
-        "currently",
-        "presently",
-        "effectively",
-        "again",
-        "also",
-        "already",
-        "continues",
-        "continue",
-        "to",
-        "it",
-        "they",
-    }
-)
-CONNECTOR_NOISE_RE = re.compile(r"[`*_|=:,;()\[\]-]+")
+# The scope is therefore the HARD segment, with no subdivision. Nothing is
+# gained by splitting it: a structural pair is masked together with its own id,
+# so a segment written correctly leaves nothing behind to trip the rule. That
+# was measured at zero refusals across the live corpus.
 # Markup a Status cell may carry around its token and remain a bare status.
 BOARD_CELL_NOISE_RE = re.compile(r"[`*_\s]+")
 
@@ -560,6 +491,39 @@ def build_id_regex(ids: list[str]) -> re.Pattern[str]:
     ordered = sorted(ids, key=len, reverse=True)
     joined = "|".join(re.escape(value) for value in ordered)
     return re.compile(r"(?<![A-Za-z0-9-])(" + joined + r")(?![A-Za-z0-9-])")
+
+
+def build_structured_regex(ids: list[str]) -> re.Pattern[str]:
+    """The ONE form in which a live surface may assert a status: ``ID=STATUS``.
+
+    Round 11 (D-070 Part B15) retired the prose parser that used to read these
+    assertions out of English. It had lost the same argument four times --
+    negation cues, affirmative connectors, historicity, and finally decoy
+    tokens -- and each loss shipped as a live false statement that exited 0.
+    The measured bypass family was:
+
+        `G-X was FAIL but is now PASS.`      a true token first shadows the lie
+        `G-X is no longer FAIL; it is PASS.`               same, across a `;`
+        `G-X is far from FAIL and is PASS.`                same, one clause
+        `G-X is not only PASS.`             `not` read as denial of an AFFIRMATION
+        `G-X is not merely PASS.`                                     likewise
+        `G-X is not just PASS.`                                       likewise
+
+    No vocabulary fixes that, because the first three contain no vocabulary at
+    all -- they exploit the binder giving each id exactly one token and leaving
+    the rest of the sentence unread. The fix is to stop reading the sentence.
+
+    ``ID=STATUS`` glues the subject to its status by position, so word order,
+    distance, clause splitting, negation and tense cannot separate them. Markup
+    around the ``=`` is tolerated because the corpus writes both
+    ```G-A=PASS``` and ```G-A` = `PASS```; markup is not grammar.
+    """
+    ordered = sorted(ids, key=len, reverse=True)
+    joined = "|".join(re.escape(value) for value in ordered)
+    return re.compile(
+        r"(?<![A-Za-z0-9-])(" + joined + r")"
+        r"[`*_\s]*=[`*_\s]*(" + "|".join(STATUS_TOKENS) + r")(?![A-Za-z0-9_-])"
+    )
 
 
 # --------------------------------------------------------------------------
@@ -930,8 +894,9 @@ _RowT = TypeVar("_RowT", bound=tuple)
 def split_clauses(line: str) -> list[tuple[int, str]]:
     """Cut a line at HARD boundaries only; return (offset_in_line, segment_text).
 
-    Sentence ends no longer cut here. They are reported by ``soft_boundaries``
-    and used to break subject groups, not to wall off detection.
+    This is the ONLY scope. Sentence ends do not cut, deliberately: see the
+    SENTENCE tier note above the boundary constants for the abbreviation
+    fixture that killed the sentence-scoped version.
     """
     clauses: list[tuple[int, str]] = []
     position = 0
@@ -944,298 +909,52 @@ def split_clauses(line: str) -> list[tuple[int, str]]:
     return clauses
 
 
-def soft_boundaries(segment: str) -> list[int]:
-    """Offsets inside one hard segment where a new subject group starts."""
-    return [match.end() for match in SOFT_BOUNDARY_RE.finditer(segment)]
-
-
-def bind_by_word_order(
-    ids: list[tuple[int, int, str]],
-    tokens: list[tuple[int, int, str]],
-    softs: list[int] | None = None,
-) -> tuple[
-    list[tuple[tuple[int, int], list[tuple[int, int, str]], str]],
-    list[tuple[tuple[int, int], str]],
-]:
-    """Bind ids to status tokens by WORD ORDER, not by character distance.
-
-    Round 9's F-COMMA-ADJACENCY killed the distance heuristic. In
-    ``ID1 is S1, ID2 is S2`` the separator before ID2 is three characters and
-    the one after it is five, so ID2 took its NEIGHBOUR's status and a plainly
-    false gate line rode in silently. The margin that decided it was a property
-    of punctuation widths, and ``ID1 remains S1 and ID2 is S2`` is ordinary
-    English with the opposite spacing, so no threshold separates them.
-
-    What separates them is that S1 already has a subject. This walks the segment
-    in order, gathers each run of consecutive ids into one subject group, and
-    offers that group the tokens that FOLLOW it, in order.
-
-    Returns ``(bound, ambiguous)``. Each ``bound`` entry carries a LIST of
-    candidate tokens in preference order rather than a single choice, so the
-    caller can skip a negated one and take the next. Round 10 found that
-    dropping the id on negation left ``is no longer FAIL but PASS`` with PASS
-    orphaned and never tested at all -- exit 0 on a live false statement.
-
-    Group formation and consumption, stated so the code can be checked against
-    it -- round 10 caught this docstring claiming a consumption rule the code
-    did not implement:
-
-    * a run of ids with no token AND no sentence end between them is ONE
-      subject, so ``A and B are both still S`` binds both;
-    * a sentence end starts a new group even with no token between, so
-      ``A was reviewed. Separately, B is S`` does not make A a subject of S;
-    * a group's candidates are the tokens after it, in order, bounded by
-      ``ASSERTION_WINDOW`` from the group's end;
-    * a group with NO following token may fall back to the token before it, but
-      only if no earlier group already took that token. This is the rule the
-      previous docstring asserted and the previous code omitted.
-    """
-    softs = softs or []
-    items: list[tuple[int, int, str, bool]] = [
-        (start, end, text, True) for start, end, text in ids
-    ] + [(start, end, text, False) for start, end, text in tokens]
-    items.sort(key=lambda item: item[0])
-
-    groups: list[list[tuple[int, int, str]]] = []
-    order: list[tuple[str, int]] = []
-    token_at: dict[int, tuple[int, int, str]] = {}
-    for start, end, text, is_id in items:
-        if is_id:
-            joins = bool(order) and order[-1][0] == "group"
-            if joins:
-                previous_end = groups[order[-1][1]][-1][1]
-                if any(previous_end <= cut <= start for cut in softs):
-                    joins = False
-            if joins:
-                groups[order[-1][1]].append((start, end, text))
-            else:
-                groups.append([(start, end, text)])
-                order.append(("group", len(groups) - 1))
-        else:
-            token_at[len(order)] = (start, end, text)
-            order.append(("token", len(order)))
-
-    following: dict[int, list[int]] = {}
-    for position, (kind, index) in enumerate(order):
-        if kind != "group":
-            continue
-        group_end = groups[index][-1][1]
-        # Candidates stay inside the group's OWN sentence. Letting them leak
-        # across a sentence end made `We reviewed `G-A`. Separately, `G-B` is
-        # FAIL.` bind G-A to FAIL and report a false contradiction (round 10).
-        # The abbreviation hole is already closed by the two-tier boundary: a
-        # false cut at `cf.` or `Sec.` separates a group from a PREVIOUS id, not
-        # from its own following token, so nothing here needs to cross.
-        following[position] = [
-            slot
-            for slot in range(position + 1, len(order))
-            if order[slot][0] == "token"
-            and token_at[slot][0] - group_end <= ASSERTION_WINDOW
-            and not any(group_end <= cut <= token_at[slot][0] for cut in softs)
-        ]
-
-    claimed = {slots[0] for slots in following.values() if slots}
-
-    bound: list[tuple[tuple[int, int], list[tuple[int, int, str]], str]] = []
-    ambiguous: list[tuple[tuple[int, int], str]] = []
-    for position, (kind, index) in enumerate(order):
-        if kind != "group":
-            continue
-        group = groups[index]
-        candidates = [token_at[slot] for slot in following[position]]
-        if not candidates:
-            for preceding in range(position - 1, -1, -1):
-                if order[preceding][0] != "token":
-                    continue
-                if preceding in claimed:
-                    break  # already has a subject; never stolen
-                # ...and it must be in this group's own sentence. Round 10:
-                # `We reviewed `G-A`. Separately, `G-B` is FAIL.` had G-A reach
-                # back across the sentence end and take `PROPOSED` from
-                # "B3-v2/W7 remains `PROPOSED / DESIGN ONLY`." -- a token whose
-                # subject is simply not a registry id -- and report a false
-                # contradiction. A group with no token in its own sentence
-                # asserts nothing, which is the honest reading.
-                if any(
-                    token_at[preceding][1] <= cut <= group[0][0] for cut in softs
-                ):
-                    break
-                if group[0][0] - token_at[preceding][1] <= ASSERTION_WINDOW:
-                    candidates = [token_at[preceding]]
-                break
-        if not candidates:
-            # No token in this group's own sentence. Usually that is honest --
-            # `We reviewed `G-A`. Separately, `G-B` is FAIL.` says nothing about
-            # G-A. But if a token later in the same segment belongs to NOBODY,
-            # the sentence split that separated them is suspect, and a false
-            # split at `cf.` or `Sec.` used to leave a clause of ids and no
-            # tokens that was skipped in SILENCE. Report it instead. This needs
-            # no abbreviation list: what matters is whether the orphaned token
-            # has a subject of its own, not why the split happened.
-            orphan = next(
-                (
-                    token_at[slot][2]
-                    for slot in range(position + 1, len(order))
-                    if order[slot][0] == "token"
-                    and slot not in claimed
-                    and token_at[slot][0] - group[-1][1] <= ASSERTION_WINDOW
-                ),
-                None,
-            )
-            if orphan is not None:
-                for id_start, id_end, _identifier in group:
-                    ambiguous.append(
-                        (
-                            (id_start, id_end),
-                            f"is separated from the status {orphan} by a sentence break, "
-                            "and that status has no subject of its own",
-                        )
-                    )
-            continue
-        # A token no group claimed is DANGLING. `- FAIL `G-BETA` PASS` is
-        # genuinely ambiguous and is reported; in `ID1 is FAIL, ID2 is PASS` the
-        # FAIL already belongs to ID1, so it is not dangling and offers ID2
-        # nothing. That distinction separates honest ambiguity from the attack.
-        #
-        # The competitor must also be in the SAME SENTENCE. Round 10 found this
-        # rule firing on honest prose, and the corpus shows why: plenty of status
-        # words belong to subjects that are not registry ids at all -- the live
-        # milestone bullet says "B3-v2/W7 remains `PROPOSED / DESIGN ONLY`."
-        # right before naming two gates. `PROPOSED` is claimed by no GROUP, but
-        # it is not dangling in any meaningful sense; it simply has a subject
-        # this checker does not track. A token in a previous sentence is not
-        # competing for this sentence's subject, so only a same-sentence
-        # competitor can make a line ambiguous.
-        blocked = False
-        for preceding in range(position - 1, -1, -1):
-            if order[preceding][0] != "token":
-                continue
-            neighbour = token_at[preceding]
-            same_sentence = not any(neighbour[1] <= cut <= group[0][0] for cut in softs)
-            if (
-                preceding not in claimed
-                and same_sentence
-                and neighbour[2] != candidates[0][2]
-                and group[0][0] - neighbour[1] <= ASSERTION_WINDOW
-            ):
-                blocked = True
-            break
-        if blocked:
-            for id_start, id_end, _identifier in group:
-                ambiguous.append(
-                    (
-                        (id_start, id_end),
-                        "sits between conflicting status tokens and the earlier one "
-                        "has no subject of its own",
-                    )
-                )
-            continue
-        for id_start, id_end, identifier in group:
-            bound.append(((id_start, id_end), candidates, identifier))
-    return [(span, cands, name) for span, cands, name in bound], ambiguous
-
-
-def _affirmative(
-    clause: str,
-    id_span: tuple[int, int],
-    token_span: tuple[int, int],
-    id_regex: re.Pattern[str],
-) -> bool:
-    """True when the text joining an id to its status reads as a plain assertion.
-
-    Only an affirmative binding may satisfy the coverage floor; see
-    ``AFFIRMATIVE_CONNECTORS``. A table cell or `ID=STATUS` reduces to the empty
-    string and qualifies. `A` and `B` are both still FAIL reduces to
-    "are both still" once the ids and markup are stripped. Anything left over --
-    "has no bearing on whether it is" -- does not qualify, without this function
-    needing to know that "no bearing on" means no.
-    """
-    low = min(id_span[1], token_span[1])
-    high = max(id_span[0], token_span[0])
-    between = clause[low:high] if high > low else ""
-    between = id_regex.sub(" ", between)
-    between = CONNECTOR_NOISE_RE.sub(" ", between)
-    words = [word for word in between.lower().split() if word not in {"and", "the", "a"}]
-    if not words:
-        return True  # juxtaposition: `ID=STATUS`, a table cell
-    known = AFFIRMATIVE_COPULAS | AFFIRMATIVE_MODIFIERS | PAST_COPULAS
-    if not all(word in known for word in words):
-        return False
-    return any(word in AFFIRMATIVE_COPULAS for word in words)
-
-
-def _negated(clause: str, id_span: tuple[int, int], token_span: tuple[int, int]) -> bool:
-    """True when a cue between (or just before) the pair denies the status.
-
-    The lead window stops at any INTERVENING status token. Round 10: in
-    `is no longer FAIL but PASS` the cue "no longer" sits within thirty
-    characters of PASS, so PASS was judged negated too, both candidates were
-    discarded, and the live false statement exited 0 having been read by
-    nothing. A cue separated from this token by another status token is that
-    other token's cue, not this one's.
-    """
-    low = min(id_span[1], token_span[1])
-    high = max(id_span[0], token_span[0])
-    # Both windows stop at an INTERVENING status token. `is no longer FAIL but
-    # PASS` puts the cue between the id and PASS *and* within thirty characters
-    # of it, so PASS was judged negated too, both candidates were discarded, and
-    # the live false statement exited 0 having been read by nothing. A cue
-    # separated from this token by another status token is that token's cue.
-    barrier = 0
-    for earlier in STATUS_RE.finditer(clause[:token_span[0]]):
-        barrier = max(barrier, earlier.end())
-    between = clause[max(low, barrier) : high] if high > max(low, barrier) else ""
-    lead = clause[max(token_span[0] - 30, barrier) : token_span[0]]
-    return bool(NEGATION_RE.search(between) or NEGATION_RE.search(lead))
-
-
 def find_assertions(
-    region: Region, id_regex: re.Pattern[str]
+    region: Region,
+    id_regex: re.Pattern[str],
+    structured_regex: re.Pattern[str],
 ) -> tuple[list[tuple[int, str, str]], list[tuple[int, str, str]]]:
     """Return (assertions, unresolved) for one region.
 
-    ``assertions`` is (line_number, id, status). ``unresolved`` is
-    (line_number, id, why) for ids that sit between conflicting status tokens:
-    those are reported rather than guessed at, because a silent skip is exactly
-    how an unparsed line becomes an unchecked line.
+    ``assertions`` is (line_number, id, status), drawn from exactly two forms:
+
+    * a board table row, where the Status cell reduces to a bare token, and
+    * ``ID=STATUS``, which binds by position.
+
+    ``unresolved`` is (line_number, id, why) for a sentence that names a
+    registry id and also carries a bare status token outside those two forms.
+    Such a sentence is NOT parsed and NOT guessed at -- it is an error. That is
+    the round-11 inversion: the old checker tried to decide whether prose
+    asserted a status, and every version of that decision was wrong in the
+    fail-open direction. Refusing prose is wrong only in the fail-closed
+    direction, and the measured cost of refusing it across this whole corpus
+    was four sentences, each of which was rewritten into ``ID=STATUS``.
     """
     board, unresolved = find_board_assertions(region, id_regex)
-    # A `| ID | STATUS |` cell is juxtaposition, so it always grants coverage.
-    found: list[tuple[int, str, str, bool]] = [(n, i, s, True) for n, i, s in board]
+    found: list[tuple[int, str, str]] = list(board)
     for number, line in region.lines:
-        for _offset, clause in split_clauses(line):
-            ids = [(m.start(), m.end(), m.group(1)) for m in id_regex.finditer(clause)]
-            tokens = [(m.start(), m.end(), m.group(1)) for m in STATUS_RE.finditer(clause)]
-            if not ids or not tokens:
+        for _offset, segment in split_clauses(line):
+            # Consume every structural pair FIRST. Masking removes the id along
+            # with its status, which is why a fully structural segment leaves
+            # nothing bare behind and needs no exception.
+            masked = list(segment)
+            for pair in structured_regex.finditer(segment):
+                found.append((number, pair.group(1), pair.group(2)))
+                masked[pair.start() : pair.end()] = " " * (pair.end() - pair.start())
+            residue = "".join(masked)
+            tokens = sorted({m.group(1) for m in STATUS_RE.finditer(residue)})
+            if not tokens:
                 continue
-            resolved, ambiguous = bind_by_word_order(
-                ids, tokens, soft_boundaries(clause)
-            )
-            for id_span, why in ambiguous:
-                identifier = next(
-                    text for start, end, text in ids if (start, end) == id_span
-                )
-                unresolved.append((number, identifier, why))
-            for id_span, candidates, identifier in resolved:
-                # Negation withholds ONE candidate, it does not silence the id.
-                # Round 10: `is no longer FAIL but PASS` used to drop the id at
-                # the negated FAIL and leave PASS orphaned and untested, so a
-                # live false statement exited 0. Advance instead.
-                for token_start, token_end, status in candidates:
-                    token_span = (token_start, token_end)
-                    if _negated(clause, id_span, token_span):
-                        continue
-                    found.append(
-                        (
-                            number,
-                            identifier,
-                            status,
-                            _affirmative(clause, id_span, token_span, id_regex),
-                        )
+            for match in id_regex.finditer(residue):
+                unresolved.append(
+                    (
+                        number,
+                        match.group(1),
+                        f"appears beside the bare status "
+                        f"{'/'.join(tokens)} outside a board row or an "
+                        f"ID=STATUS form",
                     )
-                    break
-    # A board row whose cells also read as prose would otherwise be counted
-    # twice; the assertion is the same either way.
+                )
     return _dedupe(found), _dedupe(unresolved)
 
 
@@ -1255,6 +974,7 @@ def check_status_assertions(
     gates: dict[str, str],
     claims: dict[str, str],
     id_regex: re.Pattern[str],
+    structured_regex: re.Pattern[str],
     exemptions: list[dict[str, Any]],
     errors: list[str],
 ) -> tuple[int, set[str]]:
@@ -1262,13 +982,15 @@ def check_status_assertions(
     rel = region.rel
     checked = 0
     covered: set[str] = set()
-    assertions, unresolved = find_assertions(region, id_regex)
+    assertions, unresolved = find_assertions(region, id_regex, structured_regex)
     for number, identifier, why in unresolved:
         errors.append(
-            f"{rel}:{number}: cannot resolve what status is asserted for {identifier}: "
-            f"it {why}. Rewrite the line so one status binds to one id."
+            f"{rel}:{number}: {identifier} {why}. A live surface may state a status "
+            f"only as `{identifier}=<STATUS>` or as a board table row; prose around a "
+            "status token is not parsed, because every version of that parser has let "
+            "a false gate statement through."
         )
-    for number, identifier, status, affirmative in assertions:
+    for number, identifier, status in assertions:
         checked += 1
         expected = gates.get(identifier, claims.get(identifier))
         if expected is None:
@@ -1278,9 +1000,10 @@ def check_status_assertions(
             )
             continue
         if status == expected:
-            # Agreement alone is not coverage: a misparsed denial also "agrees".
-            if affirmative:
-                covered.add(identifier)
+            # Both surviving forms bind by POSITION, so agreement is coverage.
+            # The old "agreement is not coverage" caveat existed only because a
+            # misparsed denial could agree by accident; nothing is parsed now.
+            covered.add(identifier)
             continue
         excused = _matching_exemption(
             exemptions, rel, region, number, identifier, status, expected, errors
@@ -1329,8 +1052,12 @@ def _matching_exemption(
             )
             return False
         correcting = Region(rel, region.label, later)
-        corrected, _ = find_assertions(correcting, build_id_regex([identifier]))
-        if not any(found_status == expected for _line, _id, found_status, _aff in corrected):
+        corrected, _ = find_assertions(
+            correcting,
+            build_id_regex([identifier]),
+            build_structured_regex([identifier]),
+        )
+        if not any(found_status == expected for _line, _id, found_status in corrected):
             errors.append(
                 f"{FACTS_FILE}: the assertion exemption for {rel}:{number} ({identifier}"
                 f"={status}) points at line {later[0][0]} as the correction, but that "
@@ -2195,9 +1922,10 @@ def main() -> None:
     regions = collect_regions(repo, errors)
     if gates or claims:
         id_regex = build_id_regex(list(gates) + list(claims))
+        structured_regex = build_structured_regex(list(gates) + list(claims))
         for region in regions:
             checked, region_covered = check_status_assertions(
-                region, gates, claims, id_regex, exemptions, errors
+                region, gates, claims, id_regex, structured_regex, exemptions, errors
             )
             assertions_checked += checked
             covered |= region_covered

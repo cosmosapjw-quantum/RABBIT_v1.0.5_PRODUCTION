@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35`
-Built at: `2026-08-03T09:55:33+00:00`
+Context version: `23eb3d3d2595a5f7d1750061b9bb75abe08b23fd8ffba5a861b88159938bfcab`
+Built at: `2026-08-03T13:14:43+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,14 +9,14 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `0f5085e66947ce2908d73a54108b83e5d80ce511339db45b3c3b5b6dda236ccb`
+SHA-256: `b79aa53c74481bc7a62d903c62ddff2e4379a3ccd54cd5a8aa32eeb211e3046e`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
 ## Project objective
 
 - Scientific objective: complete and validate the crate-private Rust-first collision-coupled isotropic neutrino Boltzmann FLRW endpoint through F-10, then stop.
-- Current milestone: F-10C2 implements the frozen nine-row catalogue and the D-053 private comparator carries a bounded-validated 27-event orientation-artifact repair; absolute physical normalization/catalogue completeness remains `INCONCLUSIVE`. D-065 independently upholds `G-F10-COVARIANCE-METROLOGY=PASS` only on the frozen matched family/module bytes, but rejects D-064's all-eight-gates closeout: `G-F10-INDEPENDENT-FLRW=FAIL` (no evolved half-line tail enclosure, checkpoint full states, or spatial/tail uncertainty) and `G-HARNESS-INTEGRITY=FAIL` (no exact agent-to-assignment binding; lease-write fallback is fail-open). `G-F10C1-REGRESSION` and `G-F10-SCOPE` remain `PASS`. B3-v2/W7 remains `PROPOSED / DESIGN ONLY`.
+- Current milestone: F-10C2 implements the frozen nine-row catalogue and the D-053 private comparator carries a bounded-validated 27-event orientation-artifact repair; absolute physical normalization/catalogue completeness remains `INCONCLUSIVE`. D-065 independently upholds `G-F10-COVARIANCE-METROLOGY=PASS` only on the frozen matched family/module bytes, but rejects D-064's all-eight-gates closeout: `G-F10-INDEPENDENT-FLRW=FAIL` (no evolved half-line tail enclosure, checkpoint full states, or spatial/tail uncertainty) and `G-HARNESS-INTEGRITY=FAIL` (no exact agent-to-assignment binding; lease-write fallback is fail-open). `G-F10C1-REGRESSION=PASS` and `G-F10-SCOPE=PASS` remain. B3-v2/W7 remains `PROPOSED / DESIGN ONLY`.
 - D-065 controlling audit: D-063's hashes, completed-catalogue endpoint arithmetic, block values, coupled-energy residuals, and sign-mutant response are genuine matched-cell supporting evidence, but its prior adjudication chronology is inadmissible and its retained evidence is insufficient for the unchanged full-spectral gate. D-058 validly fixes cross-run `ACTIVE_RUN` movement on the successful-lease path, but a controlled negative proves same-run assignment substitution is accepted. STOP/PRESERVE. Report: `docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md`.
 - Owner disposition: D-039 selects **STOP/PRESERVE** after D-038. The optional final design cycle is frozen without activation. Corrected external prompt audit R3 `a424e9c9` passes only the read-only request contract; neither its request nor any returned proposal grants repository, design-cycle, numerical, implementation, or endpoint authority.
 - Owner disposition: D-040's read-only current/legacy JAX and primary-literature survey is complete. Registered adjudication `d7d34e41` excludes conventional DSMC from future Bianchi primary, precision, covariance/derivative, and endpoint-authority lanes; only a separately authorized bounded stochastic cross-check remains `PROPOSED`. The no-stress Type-I shear norm is `DERIVED` monotone on its physical branch, while coupled oscillatory shear remains `SPECULATIVE`. Legacy JAX supplies formula/mechanism clues only, not restoration or promotion authority. D-039 remains controlling for all execution and implementation.
