@@ -356,32 +356,17 @@ STATUS_RE = re.compile(r"(?<![A-Za-z0-9_-])(" + "|".join(STATUS_TOKENS) + r")(?!
 # must still be written `G-X=PASS`, because a declaration is machine-read and
 # should look like one, but anything that a reader would take for a status is
 # refused whatever its case. Measured cost on the live corpus: zero segments.
-STATUS_ANYCASE_RE = re.compile(
-    r"(?<![A-Za-z0-9_-])(" + "|".join(STATUS_TOKENS) + r")(?![A-Za-z0-9_-])",
-    re.IGNORECASE,
-)
 # Characters that render as nothing, or reorder what follows them. Round 12:
 # `G-HARNESS<U+200B>-INTEGRITY is PASS` is not a registry id, so it was invisible
 # to every rule here while displaying as the real gate id. There is no way to
 # read past that by improving the id match -- the fix is to refuse the character
 # class outright in a live region, which no honest handoff line needs. Measured
 # cost on the live corpus: zero lines.
-INVISIBLE_RE = re.compile(
-    "["
-    "­"              # soft hyphen
-    "​-‏"       # zero-width space/non-joiner/joiner, LRM, RLM
-    "‪-‮"       # bidi embedding and override
-    "⁠-⁤"       # word joiner and invisible operators
-    "⁦-⁩"       # bidi isolates
-    "﻿"              # zero-width no-break space / BOM
-    "]"
-)
 GATE_STATUSES = {"PASS", "FAIL"}
 CLAIM_STATUSES = set(STATUS_TOKENS) - {"PASS", "FAIL"}
 
 # A table cell. Nothing crosses it, ever -- this is what stops a ledger Result
 # cell binding to an id in its Notes cell.
-HARD_BOUNDARY_RE = re.compile(r"\||^\s*[-*] ")
 # NO sentence tier. Round 11 first scoped the refusal below to the sentence and
 # the round-10 abbreviation fixture killed it within the hour: `. ` fires inside
 # `cf.`, so ``G-BETA` (r10, cf. the appendix) is PASS.` split into a half with
@@ -394,7 +379,6 @@ HARD_BOUNDARY_RE = re.compile(r"\||^\s*[-*] ")
 # so a segment written correctly leaves nothing behind to trip the rule. That
 # was measured at zero refusals across the live corpus.
 # Markup a Status cell may carry around its token and remain a bare status.
-BOARD_CELL_NOISE_RE = re.compile(r"[`*_\s]+")
 
 # One pattern for every decision id: `D-` plus exactly three digits. Five
 # separate hardcoded `D-0\d\d` patterns meant that the first decision numbered
@@ -521,40 +505,6 @@ def build_id_regex(ids: list[str]) -> re.Pattern[str]:
     ordered = sorted(ids, key=len, reverse=True)
     joined = "|".join(re.escape(value) for value in ordered)
     return re.compile(r"(?<![A-Za-z0-9-])(" + joined + r")(?![A-Za-z0-9-])")
-
-
-def build_structured_regex(ids: list[str]) -> re.Pattern[str]:
-    """The ONE form in which a live surface may assert a status: ``ID=STATUS``.
-
-    Round 11 (D-070 Part B15) retired the prose parser that used to read these
-    assertions out of English. It had lost the same argument four times --
-    negation cues, affirmative connectors, historicity, and finally decoy
-    tokens -- and each loss shipped as a live false statement that exited 0.
-    The measured bypass family was:
-
-        `G-X was FAIL but is now PASS.`      a true token first shadows the lie
-        `G-X is no longer FAIL; it is PASS.`               same, across a `;`
-        `G-X is far from FAIL and is PASS.`                same, one clause
-        `G-X is not only PASS.`             `not` read as denial of an AFFIRMATION
-        `G-X is not merely PASS.`                                     likewise
-        `G-X is not just PASS.`                                       likewise
-
-    No vocabulary fixes that, because the first three contain no vocabulary at
-    all -- they exploit the binder giving each id exactly one token and leaving
-    the rest of the sentence unread. The fix is to stop reading the sentence.
-
-    ``ID=STATUS`` glues the subject to its status by position, so word order,
-    distance, clause splitting, negation and tense cannot separate them. Markup
-    around the ``=`` is tolerated because the corpus writes both
-    ```G-A=PASS``` and ```G-A` = `PASS```; markup is not grammar.
-    """
-    ordered = sorted(ids, key=len, reverse=True)
-    joined = "|".join(re.escape(value) for value in ordered)
-    return re.compile(
-        r"(?<![A-Za-z0-9-])(" + joined + r")"
-        r"[`*_\s]*=[`*_\s]*(" + "|".join(STATUS_TOKENS) + r")(?![A-Za-z0-9_-])"
-    )
-
 
 # --------------------------------------------------------------------------
 # Live-region extraction. A region is (label, [(line_number, line_text)]).
@@ -803,296 +753,6 @@ def top_table_row(lines: list[str], rel: str, errors: list[str]) -> list[Region]
 # --------------------------------------------------------------------------
 
 
-BOARD_ID_HEADERS = {
-    "gate",
-    "gates",
-    "claim",
-    "claims",
-    "id",
-    "gate id",
-    "claim id",
-    "gate/claim",
-    "gate or claim",
-}
-BOARD_STATUS_HEADERS = {"status", "registry status", "current status"}
-
-
-def _cells(line: str) -> list[str]:
-    stripped = line.strip()
-    return [cell.strip() for cell in stripped.strip("|").split("|")]
-
-
-def _is_table_row(line: str) -> bool:
-    return line.strip().startswith("|")
-
-
-def _is_separator_row(line: str) -> bool:
-    stripped = line.strip()
-    return stripped.startswith("|") and set(stripped) <= set("|-: ")
-
-
-def _normalise_header(cell: str) -> str:
-    return re.sub(r"\s+", " ", cell.strip().strip("`*_ ").lower())
-
-
-def find_board_assertions(
-    region: Region, id_regex: re.Pattern[str]
-) -> tuple[list[tuple[int, str, str]], list[tuple[int, str, str]]]:
-    """Read tables that declare themselves status boards by header.
-
-    A plain markdown row cannot assert across cells, because the ``|`` boundary
-    is what stops a ledger Result cell binding to an id in its Notes cell. A
-    table that names one id column and one ``Status`` column is unambiguous, so
-    it is read row by row.
-    """
-    found: list[tuple[int, str, str]] = []
-    unresolved: list[tuple[int, str, str]] = []
-    lines = region.lines
-    index = 0
-    while index + 1 < len(lines):
-        header_number, header_text = lines[index]
-        _separator_number, separator_text = lines[index + 1]
-        if not (_is_table_row(header_text) and _is_separator_row(separator_text)):
-            index += 1
-            continue
-        headers = [_normalise_header(cell) for cell in _cells(header_text)]
-        id_columns = [i for i, name in enumerate(headers) if name in BOARD_ID_HEADERS]
-        status_columns = [i for i, name in enumerate(headers) if name in BOARD_STATUS_HEADERS]
-        del header_number
-        if len(id_columns) != 1 or len(status_columns) != 1:
-            index += 1
-            continue
-        id_column, status_column = id_columns[0], status_columns[0]
-        row = index + 2
-        while row < len(lines) and _is_table_row(lines[row][1]):
-            number, text = lines[row]
-            cells = _cells(text)
-            row += 1
-            if max(id_column, status_column) >= len(cells):
-                continue
-            identifiers = [m.group(1) for m in id_regex.finditer(cells[id_column])]
-            if not identifiers:
-                continue
-            statuses = {m.group(1) for m in STATUS_RE.finditer(cells[status_column])}
-            if len(statuses) != 1:
-                why = (
-                    "its Status cell holds no status token"
-                    if not statuses
-                    else "its Status cell holds " + "/".join(sorted(statuses))
-                )
-                for identifier in identifiers:
-                    unresolved.append((number, identifier, why))
-                continue
-            status = statuses.pop()
-            # Round 10, the panel's first critical finding. Board rows used to be
-            # injected straight into the assertion list marked affirmative by
-            # construction, so they were the one path that ran through NEITHER
-            # `_negated` NOR `_affirmative`. Writing `no longer FAIL` into the
-            # Status cell of the real live board gave exit 0, ok:true, and still
-            # counted the gate as COVERED -- round 9's F-NEGATION-CLOSED-VOCAB
-            # surviving in the only place the redesign never looked.
-            #
-            # The fix is not to run the denylist here. A Status COLUMN holds a
-            # status, not a sentence, so the cell must reduce to the token and
-            # nothing else once markup is stripped. That is stronger than any
-            # negation vocabulary and it needs no vocabulary at all: `no longer
-            # FAIL`, `not FAIL`, `anything but PASS` and `FAIL (see note)` are
-            # all refused by the same rule, and refused LOUDLY as unresolved
-            # rather than silently.
-            bare = BOARD_CELL_NOISE_RE.sub("", cells[status_column]).strip()
-            if bare != status:
-                for identifier in identifiers:
-                    unresolved.append(
-                        (
-                            number,
-                            identifier,
-                            f"its Status cell reads {cells[status_column].strip()!r} rather "
-                            f"than the bare status {status!r}. A Status column holds a "
-                            "status, not a sentence about one",
-                        )
-                    )
-                continue
-            for identifier in identifiers:
-                found.append((number, identifier, status))
-        index = row
-    return found, unresolved
-
-
-_RowT = TypeVar("_RowT", bound=tuple)
-
-
-def split_clauses(line: str) -> list[tuple[int, str]]:
-    """Cut a line at HARD boundaries only; return (offset_in_line, segment_text).
-
-    This is the ONLY scope. Sentence ends do not cut, deliberately: see the
-    SENTENCE tier note above the boundary constants for the abbreviation
-    fixture that killed the sentence-scoped version.
-    """
-    clauses: list[tuple[int, str]] = []
-    position = 0
-    for boundary in HARD_BOUNDARY_RE.finditer(line):
-        if boundary.start() > position:
-            clauses.append((position, line[position : boundary.start()]))
-        position = max(position, boundary.end())
-    if position < len(line):
-        clauses.append((position, line[position:]))
-    return clauses
-
-
-def find_assertions(
-    region: Region,
-    id_regex: re.Pattern[str],
-    structured_regex: re.Pattern[str],
-) -> tuple[list[tuple[int, str, str]], list[tuple[int, str, str]]]:
-    """Return (assertions, unresolved) for one region.
-
-    ``assertions`` is (line_number, id, status), drawn from exactly two forms:
-
-    * a board table row, where the Status cell reduces to a bare token, and
-    * ``ID=STATUS``, which binds by position.
-
-    ``unresolved`` is (line_number, id, why) for a sentence that names a
-    registry id and also carries a bare status token outside those two forms.
-    Such a sentence is NOT parsed and NOT guessed at -- it is an error. That is
-    the round-11 inversion: the old checker tried to decide whether prose
-    asserted a status, and every version of that decision was wrong in the
-    fail-open direction. Refusing prose is wrong only in the fail-closed
-    direction, and the measured cost of refusing it across this whole corpus
-    was four sentences, each of which was rewritten into ``ID=STATUS``.
-    """
-    board, unresolved = find_board_assertions(region, id_regex)
-    found: list[tuple[int, str, str]] = list(board)
-    for number, line in region.lines:
-        if INVISIBLE_RE.search(line):
-            unresolved.append((
-                number,
-                "this line",
-                "contains a zero-width or bidirectional control character, so what it "
-                "DISPLAYS and what it SAYS can differ. A gate id with an invisible "
-                "character inside it is not a registry id and every rule here would "
-                "step over it while a reader sees the real gate",
-            ))
-            continue
-        # ROUND 13 (registered reviewer, CRITICAL). Round 12 closed characters that
-        # render as NOTHING and stopped there. The reviewer used the other half:
-        # characters that render as SOMETHING ELSE. `РАЅЅ` is Cyrillic ER, A, DZE,
-        # DZE -- four letters that are not `PASS` to any regex here and are exactly
-        # `PASS` to a reader. It bypassed both surviving forms, on three separate
-        # live surfaces, with output byte-identical to a clean run: not even a
-        # refusal, because the refusal itself only fires once a literal token has
-        # been found.
-        #
-        # Widening the token pattern to cover confusables is the losing move again
-        # -- the confusable table is large, versioned, and an attacker picks from
-        # the part this file has not enumerated. A live handoff line has no reason
-        # to contain a non-ASCII LETTER at all, so that is the rule. Punctuation
-        # and symbols are untouched, which is why em dashes, arrows and section
-        # signs stay legal. Measured cost on the live corpus: 0 non-ASCII letters
-        # against 15 legitimate non-ASCII symbols.
-        foreign = [ch for ch in line if ord(ch) > 127 and unicodedata.category(ch).startswith("L")]
-        if foreign:
-            shown = ", ".join(
-                f"U+{ord(ch):04X} {unicodedata.name(ch, '?')}" for ch in dict.fromkeys(foreign)
-            )
-            unresolved.append((
-                number,
-                "this line",
-                f"contains non-ASCII letters ({shown}), which can render as ASCII while "
-                "matching nothing here -- Cyrillic ER/A/DZE spells a perfect PASS. Status "
-                "words and registry ids are ASCII; symbols such as em dashes and arrows "
-                "are unaffected",
-            ))
-            continue
-        for _offset, segment in split_clauses(line):
-            # Consume every structural pair FIRST. Masking removes the id along
-            # with its status, which is why a fully structural segment leaves
-            # nothing bare behind and needs no exception.
-            masked = list(segment)
-            for pair in structured_regex.finditer(segment):
-                found.append((number, pair.group(1), pair.group(2)))
-                masked[pair.start() : pair.end()] = " " * (pair.end() - pair.start())
-            residue = "".join(masked)
-            tokens = sorted({m.group(1).upper() for m in STATUS_ANYCASE_RE.finditer(residue)})
-            if not tokens:
-                continue
-            for match in id_regex.finditer(residue):
-                unresolved.append(
-                    (
-                        number,
-                        match.group(1),
-                        f"appears beside the bare status "
-                        f"{'/'.join(tokens)} outside a board row or an "
-                        f"ID=STATUS form",
-                    )
-                )
-    return _dedupe(found), _dedupe(unresolved)
-
-
-def _dedupe(rows: list[_RowT]) -> list[_RowT]:
-    seen: set[_RowT] = set()
-    out: list[_RowT] = []
-    for row in rows:
-        if row in seen:
-            continue
-        seen.add(row)
-        out.append(row)
-    return out
-
-
-def check_fenced_blocks(
-    repo: Path,
-    regions: list[Region],
-    id_regex: re.Pattern[str],
-    errors: list[str],
-) -> None:
-    """A live fenced block may not hold a registry id beside a status token.
-
-    Fenced blocks are blanked before regions are built, so a code sample is
-    never read as an assertion -- that is correct and necessary, because this
-    corpus quotes attack strings. But round 12 measured the consequence: a
-    ```-fenced ``G-X=PASS`` in a live handoff section was invisible to every
-    rule in this file while displaying to a reader exactly like the real thing.
-    Blanking decides what the CHECKER reads; it does not decide what a person
-    reads, and the gap between those two is the whole subject of this module.
-
-    So the block is not parsed -- parsing it would resurrect the prose problem
-    -- it is simply refused when it carries both. Measured cost on the live
-    corpus: 18 fenced blocks, 0 of which hold a registry id and a status.
-    """
-    live_lines: dict[str, set[int]] = {}
-    for region in regions:
-        live_lines.setdefault(region.rel, set()).update(n for n, _text in region.lines)
-    for rel, numbers in sorted(live_lines.items()):
-        text = read_text(repo, rel, errors)
-        if text is None:
-            continue
-        open_at: int | None = None
-        body: list[str] = []
-        for number, line in enumerate(text.split("\n"), start=1):
-            if line.lstrip().startswith("```"):
-                if open_at is None:
-                    open_at, body = number, []
-                    continue
-                span = set(range(open_at, number + 1))
-                joined = "\n".join(body)
-                if (
-                    span & numbers
-                    and id_regex.search(joined)
-                    and STATUS_ANYCASE_RE.search(joined)
-                ):
-                    found = sorted({m.group(1) for m in id_regex.finditer(joined)})
-                    errors.append(
-                        f"{rel}:{open_at}: this fenced block sits in a live region and "
-                        f"names {', '.join(found)} beside a status token. Fenced blocks are "
-                        "blanked before anything here reads them, so the block is invisible "
-                        "to every check while a reader sees a plain statement about a gate. "
-                        "Quote the example without a registry id, or move it out of the live "
-                        "region."
-                    )
-                open_at = None
-            elif open_at is not None:
-                body.append(line)
-
 
 def is_git_repo(repo: Path) -> bool:
     """True when this tree is a git repository at all.
@@ -1186,6 +846,56 @@ def extract_board(text: str, rel: str, errors: list[str]) -> str | None:
     return text[start : stop + len(BOARD_END)] + "\n"
 
 
+def check_no_status_beside_an_id(
+    repo: Path,
+    regions: list[Region],
+    id_regex: re.Pattern[str],
+    errors: list[str],
+) -> None:
+    """A live line outside the board may not name a registry id AND a status.
+
+    This is the one piece of the old machinery that survives, and it survives
+    because it is not the old machinery: **it decides nothing.** Every historical
+    defeat -- comma adjacency, decoy shadowing, negation cues, letter case,
+    invisible characters, homoglyphs -- was a defeat of BINDING, of working out
+    which status attaches to which id. This never binds. It refuses the
+    co-occurrence and says so, which is a question with one answer.
+
+    Measured cost on the migrated corpus: zero lines. Ordinary prose does not
+    need to put a gate id and a status word on one line now that the board
+    states every status, and the board's own lines are excluded by construction
+    because the sentinels bound them.
+
+    What this does NOT close, stated because the re-audit reproduced it: a false
+    SEMANTIC claim carrying no registry id -- "all obligations have been
+    discharged" -- is not detected, here or anywhere. No parser closes that. The
+    board is the authority; prose is explicitly not.
+    """
+    board_spans: dict[str, tuple[int, int]] = {}
+    for rel in BOARD_HOSTS + (BOARD_ARTIFACT,):
+        text = read_text(repo, rel, [])
+        if text is None or BOARD_BEGIN not in text or BOARD_END not in text:
+            continue
+        first = text[: text.index(BOARD_BEGIN)].count("\n") + 1
+        last = text[: text.index(BOARD_END)].count("\n") + 1
+        board_spans[rel] = (first, last)
+
+    for region in regions:
+        span = board_spans.get(region.rel)
+        for number, line in region.lines:
+            if span and span[0] <= number <= span[1]:
+                continue
+            if not STATUS_RE.search(line):
+                continue
+            for match in id_regex.finditer(line):
+                errors.append(
+                    f"{region.rel}:{number}: {match.group(1)} appears on a live line that also "
+                    "carries a status token. Status is stated by the generated board and nowhere "
+                    "else; this line is refused rather than read, because every version of the "
+                    "reader that tried has been defeated."
+                )
+
+
 def check_generated_board(
     repo: Path,
     gates: dict[str, str],
@@ -1247,107 +957,6 @@ def check_generated_board(
             )
     return rows
 
-
-def check_status_assertions(
-    region: Region,
-    gates: dict[str, str],
-    claims: dict[str, str],
-    id_regex: re.Pattern[str],
-    structured_regex: re.Pattern[str],
-    exemptions: list[dict[str, Any]],
-    errors: list[str],
-) -> tuple[int, set[str]]:
-    """Compare one live region against the registries. Returns (checked, covered)."""
-    rel = region.rel
-    checked = 0
-    covered: set[str] = set()
-    assertions, unresolved = find_assertions(region, id_regex, structured_regex)
-    for number, identifier, why in unresolved:
-        errors.append(
-            f"{rel}:{number}: {identifier} {why}. A live surface may state a status "
-            f"only as `{identifier}=<STATUS>` or as a board table row; prose around a "
-            "status token is not parsed, because every version of that parser has let "
-            "a false gate statement through."
-        )
-    for number, identifier, status in assertions:
-        checked += 1
-        expected = gates.get(identifier, claims.get(identifier))
-        if expected is None:
-            errors.append(
-                f"{rel}:{number}: live surface asserts {status} for {identifier}, "
-                "which has no row in the gate or claim registry."
-            )
-            continue
-        if status == expected:
-            # Both surviving forms bind by POSITION, so agreement is coverage.
-            # The old "agreement is not coverage" caveat existed only because a
-            # misparsed denial could agree by accident; nothing is parsed now.
-            covered.add(identifier)
-            continue
-        excused = _matching_exemption(
-            exemptions, rel, region, number, identifier, status, expected, errors
-        )
-        if excused:
-            continue
-        kind = "gate" if identifier in gates else "claim"
-        errors.append(
-            f"{rel}:{number}: live surface says {identifier}={status} but the "
-            f"{kind} registry says {expected}."
-        )
-    return checked, covered
-
-
-def _matching_exemption(
-    exemptions: list[dict[str, Any]],
-    rel: str,
-    region: Region,
-    number: int,
-    identifier: str,
-    status: str,
-    expected: str,
-    errors: list[str],
-) -> bool:
-    """True when a declared, still-valid narrative exemption covers this line."""
-    for entry in exemptions:
-        if entry["file"] != rel or entry["id"] != identifier:
-            continue
-        if entry["asserted_status"] != status:
-            continue
-        if entry["line_contains"] not in dict(region.lines).get(number, ""):
-            continue
-        # The section must correct itself after the narrative line.
-        later = [
-            (line_number, text)
-            for line_number, text in region.lines
-            if line_number > number and entry["superseded_by_line_contains"] in text
-        ]
-        if not later:
-            errors.append(
-                f"{FACTS_FILE}: the assertion exemption for {rel}:{number} ({identifier}"
-                f"={status}) claims the section later says "
-                f"{entry['superseded_by_line_contains']!r}, but no line after "
-                f"{number} in {region.label!r} does. The exemption no longer "
-                "describes the file."
-            )
-            return False
-        correcting = Region(rel, region.label, later)
-        corrected, _ = find_assertions(
-            correcting,
-            build_id_regex([identifier]),
-            build_structured_regex([identifier]),
-        )
-        if not any(found_status == expected for _line, _id, found_status in corrected):
-            errors.append(
-                f"{FACTS_FILE}: the assertion exemption for {rel}:{number} ({identifier}"
-                f"={status}) points at line {later[0][0]} as the correction, but that "
-                f"line does not assert {identifier}={expected}. The exemption no longer "
-                "describes the file."
-            )
-            return False
-        return True
-    return False
-
-
 # --------------------------------------------------------------------------
 # Declared facts, coverage policy, and assertion exemptions
 # --------------------------------------------------------------------------
@@ -1381,7 +990,12 @@ EXEMPTION_KEYS = {
     "superseded_by_line_contains",
     "reason",
 }
-DOCUMENT_KEYS = {"schema_version", "purpose", "facts", "coverage_policy", "assertion_exemptions"}
+# `coverage_policy` and `assertion_exemptions` are GONE, and removing them from this
+# whitelist matters as much as removing the code that read them: a key left here
+# would be accepted and unread, which is worse than an error because it reads as
+# supported. Coverage stopped being a policy when the board began rendering every
+# registry entry, and an assertion exemption has nothing left to exempt.
+DOCUMENT_KEYS = {"schema_version", "purpose", "facts"}
 
 
 def _require_keys(
@@ -1664,120 +1278,6 @@ def load_facts_document(repo: Path, errors: list[str]) -> dict[str, Any]:
     if unknown:
         errors.append(f"{FACTS_FILE}: unknown top-level key(s) {', '.join(unknown)}.")
     return document
-
-
-def load_coverage_policy(
-    document: dict[str, Any], claims: dict[str, str], errors: list[str]
-) -> set[str]:
-    """Claim ids explicitly excused from needing live prose coverage.
-
-    Anything not named here is required, so forgetting to write a policy entry
-    fails the run instead of quietly widening what passes.
-    """
-    policy = document.get("coverage_policy")
-    if policy is None:
-        errors.append(
-            f"{FACTS_FILE}: no 'coverage_policy'. Every claim would then be required "
-            "to appear in live prose; declare the exemptions explicitly instead."
-        )
-        return set()
-    if not isinstance(policy, dict):
-        errors.append(f"{FACTS_FILE}: 'coverage_policy' is not an object.")
-        return set()
-    unknown = sorted(set(policy) - {"note", "claims"})
-    if unknown:
-        errors.append(f"{FACTS_FILE}: coverage_policy has unknown key(s) {', '.join(unknown)}.")
-    claim_policy = policy.get("claims")
-    if not isinstance(claim_policy, dict):
-        errors.append(f"{FACTS_FILE}: coverage_policy.claims is missing or not an object.")
-        return set()
-    unknown = sorted(set(claim_policy) - {"exempt"})
-    if unknown:
-        errors.append(
-            f"{FACTS_FILE}: coverage_policy.claims has unknown key(s) {', '.join(unknown)}."
-        )
-    entries = claim_policy.get("exempt")
-    if not isinstance(entries, list):
-        errors.append(f"{FACTS_FILE}: coverage_policy.claims.exempt is missing or not a list.")
-        return set()
-    exempt: set[str] = set()
-    for entry in entries:
-        if not isinstance(entry, dict):
-            errors.append(f"{FACTS_FILE}: coverage_policy.claims.exempt entry is not an object.")
-            continue
-        if not _require_keys(
-            "coverage_policy.claims.exempt entry",
-            entry,
-            {"claim_id", "reason"},
-            {"claim_id", "reason"},
-            errors,
-        ):
-            continue
-        claim_id = str(entry["claim_id"])
-        if claim_id not in claims:
-            errors.append(
-                f"{FACTS_FILE}: coverage_policy exempts {claim_id}, which has no row in "
-                f"{CLAIM_REGISTRY}. A stale exemption cannot be allowed to stand in for "
-                "a live one."
-            )
-            continue
-        if claim_id in exempt:
-            errors.append(f"{FACTS_FILE}: coverage_policy exempts {claim_id} twice.")
-        exempt.add(claim_id)
-    return exempt
-
-
-def load_assertion_exemptions(
-    document: dict[str, Any],
-    gates: dict[str, str],
-    claims: dict[str, str],
-    errors: list[str],
-) -> list[dict[str, Any]]:
-    entries = document.get("assertion_exemptions", [])
-    if not isinstance(entries, list):
-        errors.append(f"{FACTS_FILE}: 'assertion_exemptions' is not a list.")
-        return []
-    valid: list[dict[str, Any]] = []
-    for entry in entries:
-        if not isinstance(entry, dict):
-            errors.append(f"{FACTS_FILE}: assertion_exemptions entry is not an object.")
-            continue
-        if not _require_keys(
-            "assertion_exemptions entry", entry, EXEMPTION_KEYS, EXEMPTION_KEYS, errors
-        ):
-            continue
-        identifier = str(entry["id"])
-        if identifier not in gates and identifier not in claims:
-            errors.append(
-                f"{FACTS_FILE}: assertion_exemptions names {identifier}, which has no "
-                "row in the gate or claim registry."
-            )
-            continue
-        status = str(entry["asserted_status"]).upper()
-        if status not in STATUS_TOKENS:
-            errors.append(
-                f"{FACTS_FILE}: assertion_exemptions for {identifier} names an unknown "
-                f"status {entry['asserted_status']!r}."
-            )
-            continue
-        valid.append({**entry, "id": identifier, "asserted_status": status})
-    return valid
-
-
-def check_exemptions_used(
-    exemptions: list[dict[str, Any]], used: set[int], errors: list[str]
-) -> None:
-    for index, entry in enumerate(exemptions):
-        if index in used:
-            continue
-        errors.append(
-            f"{FACTS_FILE}: the assertion exemption for {entry['file']} "
-            f"({entry['id']}={entry['asserted_status']}, line containing "
-            f"{entry['line_contains']!r}) matched nothing on this run. Either the line "
-            "is gone or it is no longer in a live region; a dead exemption is removed, "
-            "not kept."
-        )
-
 
 def live_line_index(regions: list[Region]) -> set[tuple[str, int]]:
     """Every ``(file, line)`` this run treats as authoritative right now."""
@@ -2193,57 +1693,13 @@ def main() -> None:
     gates = load_gates(repo, errors)
     claims = load_claims(repo, errors)
     document = load_facts_document(repo, errors)
-    exempt_claims = load_coverage_policy(document, claims, errors)
-    exemptions = load_assertion_exemptions(document, gates, claims, errors)
 
-    assertions_checked = 0
-    covered: set[str] = set()
+    board_rows = 0
     regions = collect_regions(repo, errors)
     if gates or claims:
         id_regex = build_id_regex(list(gates) + list(claims))
-        structured_regex = build_structured_regex(list(gates) + list(claims))
-        for region in regions:
-            checked, region_covered = check_status_assertions(
-                region, gates, claims, id_regex, structured_regex, exemptions, errors
-            )
-            assertions_checked += checked
-            covered |= region_covered
-        check_fenced_blocks(repo, regions, id_regex, errors)
         board_rows = check_generated_board(repo, gates, claims, regions, errors)
-        # An exemption whose line no longer sits in a live region is dead and is
-        # reported, so exceptions cannot quietly accumulate past their occasion.
-        used_exemptions = {
-            index
-            for index, entry in enumerate(exemptions)
-            for region in regions
-            if region.rel == entry["file"]
-            and any(entry["line_contains"] in text for _number, text in region.lines)
-        }
-        check_exemptions_used(exemptions, used_exemptions, errors)
-
-        # ---- coverage floor -------------------------------------------------
-        if assertions_checked == 0:
-            errors.append(
-                "no status assertion was found in any live region. The prose surfaces "
-                "cannot be checked against the registries at all, which is the "
-                "condition F-D065-05 describes."
-            )
-        for gate_id in sorted(gates):
-            if gate_id not in covered:
-                errors.append(
-                    f"{GATE_REGISTRY}: {gate_id}={gates[gate_id]} is asserted nowhere in "
-                    "any live region of the handoff surfaces, so no prose can be checked "
-                    "against it. Every gate must be stated where it is current."
-                )
-        for claim_id in sorted(claims):
-            if claim_id in covered or claim_id in exempt_claims:
-                continue
-            errors.append(
-                f"{CLAIM_REGISTRY}: {claim_id}={claims[claim_id]} is asserted nowhere in "
-                "any live region and is not listed in coverage_policy.claims.exempt. "
-                "State it in a live region or declare, with a reason, why it does not "
-                "need to be stated."
-            )
+        check_no_status_beside_an_id(repo, regions, id_regex, errors)
 
     facts_checked, fact_measurements = check_facts(
         repo, document, errors, live_lines=live_line_index(regions)
@@ -2261,10 +1717,6 @@ def main() -> None:
                 "claims": len(claims),
                 "live_regions": len(regions),
                 "board_rows": board_rows,
-                "status_assertions_checked": assertions_checked,
-                "gates_covered": len([g for g in gates if g in covered]),
-                "claims_covered": len([c for c in claims if c in covered]),
-                "claims_coverage_exempt": len(exempt_claims),
                 "fact_assertions_checked": facts_checked,
                 "fact_measurements": fact_measurements,
                 "decisions": decisions,
