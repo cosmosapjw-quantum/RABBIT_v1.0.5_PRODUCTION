@@ -279,8 +279,8 @@ VALIDATION_LEDGER = """# Validation Ledger
 
 | Date | Command/check | Result | Notes |
 |---|---|---|---|
-| 2026-07-29 | seal back-reference: 35 at the seal `ed7bc49` | recorded | none |
-| 2026-07-28 | an older row | recorded | none |
+| 2026-07-29 | the current row | recorded | none |
+| 2026-07-28 | seal back-reference: 35 at the seal `ed7bc49` | recorded | none |
 """
 
 FROZEN_DECISIONS = """# Frozen Decisions
@@ -565,8 +565,8 @@ def test_f_ssot_04_plain_table_row_does_not_bind_across_cells(repo: Path) -> Non
     edit(
         repo,
         "docs/harness/VALIDATION_LEDGER.md",
-        "| 2026-07-29 | seal back-reference: 35 at the seal `ed7bc49` | recorded | none |",
-        "| 2026-07-29 | seal back-reference: 35 at the seal `ed7bc49` | PASS | `G-BETA` was the subject |",
+        "| 2026-07-29 | the current row | recorded | none |",
+        "| 2026-07-29 | the current row | PASS | `G-BETA` was the subject |",
     )
     assert_clean(repo)
 
@@ -681,7 +681,12 @@ def test_f_ssot_08_unparseable_heading_date_is_an_error(repo: Path) -> None:
 
 
 def test_f_ssot_08_newer_ledger_row_below_the_top_row_is_an_error(repo: Path) -> None:
-    edit(repo, "docs/harness/VALIDATION_LEDGER.md", "| 2026-07-28 | an older row", "| 2026-07-30 | an older row")
+    edit(
+        repo,
+        "docs/harness/VALIDATION_LEDGER.md",
+        "| 2026-07-28 | seal back-reference",
+        "| 2026-07-30 | seal back-reference",
+    )
     messages = errors_of(repo)
     assert any("sits below the top row" in m for m in messages)
 
@@ -781,27 +786,40 @@ def test_no_regress_frozen_row_at_its_pinned_value_is_accepted(repo: Path) -> No
 
 
 def test_no_regress_self_contradiction_in_one_file(repo: Path) -> None:
-    """One file asserting two undated values for one fact cannot be resolved."""
+    """One file asserting two undated values for one fact cannot be resolved.
+
+    Both citations sit in OLDER ledger rows, outside the live top-row region.
+    A `historical` assertion may no longer sit in a live region at all, so this
+    check is exercised where superseded numbers actually belong.
+    """
     write(
         repo / ".agent-harness/context/SSOT_FACTS.json",
         facts_document(
             extra_assertions=[
                 {
-                    "file": ".agent-harness/context/SHARED_CONTEXT.md",
-                    "line_contains": "second count",
+                    "file": "docs/harness/VALIDATION_LEDGER.md",
+                    "line_contains": "first back-reference",
                     "value_regex": r"(\d+) hook fixtures",
                     "role": "historical",
-                }
+                },
+                {
+                    "file": "docs/harness/VALIDATION_LEDGER.md",
+                    "line_contains": "second back-reference",
+                    "value_regex": r"(\d+) hook fixtures",
+                    "role": "historical",
+                },
             ]
         ),
     )
-    path = repo / ".agent-harness/context/SHARED_CONTEXT.md"
+    path = repo / "docs/harness/VALIDATION_LEDGER.md"
     path.write_text(
-        path.read_text(encoding="utf-8") + "\nThe second count says 12 hook fixtures.\n",
+        path.read_text(encoding="utf-8")
+        + "| 2026-07-27 | first back-reference: 35 hook fixtures | recorded | none |\n"
+        + "| 2026-07-26 | second back-reference: 12 hook fixtures | recorded | none |\n",
         encoding="utf-8",
     )
     messages = errors_of(repo)
-    assert any("conflicting undated values" in m for m in messages)
+    assert any("conflicting undated values" in m for m in messages), messages
 
 
 def test_no_regress_stale_fact_declaration_is_an_error(repo: Path) -> None:
@@ -1196,12 +1214,18 @@ def test_f_r9_frozen_role_cannot_sit_in_a_live_region(repo: Path) -> None:
         extra_assertions=[
             {
                 "file": "docs/harness/VALIDATION_LEDGER.md",
-                "line_contains": "seal back-reference",
+                "line_contains": "the current row",
                 "value_regex": r"(\d+) at the seal",
                 "role": "frozen",
                 "pinned_to_commit": "ed7bc49",
             }
         ],
+    )
+    edit(
+        repo,
+        "docs/harness/VALIDATION_LEDGER.md",
+        "| 2026-07-29 | the current row | recorded | none |",
+        "| 2026-07-29 | the current row: 35 at the seal `ed7bc49` | recorded | none |",
     )
     messages = errors_of(repo)
     assert any("inside a LIVE region" in m for m in messages), messages
@@ -1394,3 +1418,38 @@ def test_f_r10_honest_present_tense_hedges_still_grant_coverage(repo: Path) -> N
         "- `G-ALPHA` is currently PASS.\n- `C-LIVE` continues to be VALIDATED.",
     )
     assert_clean(repo)
+
+
+def test_f_r10_historical_role_cannot_sit_in_a_live_region_either(repo: Path) -> None:
+    """Round 10 disproved the published justification for exempting it.
+
+    The `dated` test is a bare substring search for the commit ANYWHERE on the
+    line, so a present-tense sentence with a parenthesised hash -- using only a
+    legitimately declared prior -- passed the unmutated checker at exit 0. A
+    parenthesised hash does not make a sentence read as history to anyone, so
+    the rule is positional again, which is checkable.
+    """
+    write(
+        repo / ".agent-harness/context/SSOT_FACTS.json",
+        facts_document(
+            extra_assertions=[
+                {
+                    "file": ".agent-harness/context/SHARED_CONTEXT.md",
+                    "line_contains": "actually",
+                    "value_regex": r"(\d+) hook fixtures",
+                    "role": "historical",
+                }
+            ]
+        ),
+    )
+    path = repo / ".agent-harness/context/SHARED_CONTEXT.md"
+    path.write_text(
+        path.read_text(encoding="utf-8")
+        + "\nThere are 35 hook fixtures actually (ed7bc49).\n",
+        encoding="utf-8",
+    )
+    messages = errors_of(repo)
+    assert any(
+        "declared with role 'historical'" in m and "inside a LIVE region" in m
+        for m in messages
+    ), messages

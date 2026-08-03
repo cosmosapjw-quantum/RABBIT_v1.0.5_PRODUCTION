@@ -1924,7 +1924,7 @@ def check_facts(
                         continue
                     quoted = " ".join(match.group(0).split())
                     if (
-                        role == "frozen"
+                        role != "current"
                         and live_lines is not None
                         and (rel, number) in live_lines
                     ):
@@ -1938,19 +1938,29 @@ def check_facts(
                         # commit and never refreshed, which is a claim about WHERE
                         # the line is; the label now has to be true of that.
                         #
-                        # `historical` is deliberately NOT covered. It means "a
-                        # past value, cited with the commit it held at", and a
-                        # live row citing a superseded number alongside its commit
-                        # is ordinary and correct -- this corpus does it
-                        # constantly. That role is already constrained by the
-                        # `dated` test below, which requires the commit to appear
-                        # on the same line, so its licence is earned by content
-                        # rather than by position.
+                        # `historical` is covered too, and the narrowing that
+                        # exempted it is WITHDRAWN. It was justified in the record
+                        # by the claim that the `dated` test below already
+                        # constrains such rows, "earning its licence by content
+                        # rather than by position". Round 10 disproved that: the
+                        # `dated` test is a bare substring search for the commit
+                        # ANYWHERE on the line, so "There are 35 hook tests
+                        # actually (ed7bc49)" -- present-tense prose in an
+                        # always-live region, using only a legitimately declared
+                        # prior -- passed the unmutated checker at exit 0. A
+                        # parenthesised hash does not make a sentence read as
+                        # history to anyone.
+                        #
+                        # There is no vocabulary that separates a past-tense
+                        # citation from a present-tense claim reliably, and this
+                        # file has now lost that argument three times. So the rule
+                        # is positional again, which is checkable: a superseded
+                        # number is cited where superseded things live.
                         errors.append(
-                            f"{rel}:{number}: {fact_id} is declared with role 'frozen' "
+                            f"{rel}:{number}: {fact_id} is declared with role {role!r} "
                             f"but this line is inside a LIVE region ({quoted!r}). A "
-                            "frozen assertion must sit where it is no longer "
-                            "authoritative; the role is a claim about the line's "
+                            "frozen or historical assertion must sit where it is no "
+                            "longer authoritative; the role is a claim about the line's "
                             "position, not a licence to ignore it."
                         )
                         continue
