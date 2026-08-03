@@ -211,6 +211,44 @@ def receipt_backing(repo: Path, rel: str, canary: str, document: dict[str, Any])
     return errors
 
 
+def _supersession_cycles(declares: dict[str, set[str]]) -> list[list[str]]:
+    """Every directed cycle in the supersession graph, shortest first.
+
+    Round 11: the previous rule compared each pair and caught `A <-> B` only.
+    `C1 -> C2 -> C3 -> C1` passed with `ok: true` and reported ALL THREE as
+    superseded, so three canaries retired each other into invisibility and the
+    checker announced the survivors as if nothing were missing. Pairwise
+    comparison cannot see that; a graph walk sees it at every length, and there
+    is no length at which a cycle is legitimate.
+    """
+    colour: dict[str, int] = {}
+    cycles: list[list[str]] = []
+
+    def visit(node: str, path: list[str]) -> None:
+        colour[node] = 1  # grey: on the current path
+        for nxt in sorted(declares.get(node, ())):
+            if colour.get(nxt) == 1:
+                bare = path[path.index(nxt):]
+                # Rotate to start at the smallest id so the MESSAGE is stable
+                # whichever node the walk happened to enter from. There is no
+                # de-duplication here and none is needed: a node is visited at
+                # most once, so each back edge is examined at most once, so one
+                # cycle cannot be reported twice. A `seen` set was written here
+                # first and the mutation battery proved it dead -- it survived
+                # its own removal, which is this project's definition of a guard
+                # that is not a guard.
+                spin = bare.index(min(bare))
+                cycles.append(bare[spin:] + bare[:spin] + [min(bare)])
+            elif colour.get(nxt) is None:
+                visit(nxt, path + [nxt])
+        colour[node] = 2  # black: finished
+
+    for start in sorted(declares):
+        if colour.get(start) is None:
+            visit(start, [start])
+    return sorted(cycles, key=lambda c: (len(c), c))
+
+
 def superseded_ids(
     attestations: list[tuple[str, dict[str, Any]]], authorised: set[str]
 ) -> tuple[set[str], list[str]]:
@@ -232,14 +270,12 @@ def superseded_ids(
             raw = [raw]
         if mine is not None and isinstance(raw, list):
             declares.setdefault(mine, set()).update(str(item) for item in raw)
-    for mine, names in sorted(declares.items()):
-        for other in sorted(names):
-            if mine in declares.get(other, set()):
-                errors.append(
-                    f"canaries {mine} and {other} retire each other. A cycle leaves both "
-                    "unreachable by the freshness check while both still read as "
-                    "authoritative; supersession must run one way, newest last."
-                )
+    for cycle in _supersession_cycles(declares):
+        errors.append(
+            f"canaries {' -> '.join(cycle)} form a supersession cycle. A cycle leaves "
+            "every canary in it unreachable by the freshness check while all of them "
+            "still read as authoritative; supersession must run one way, newest last."
+        )
     for rel, document in attestations:
         mine = canary_id(rel, document)
         declared = document.get("supersedes_canary")
@@ -268,6 +304,49 @@ def superseded_ids(
 POLICY_FILE = ".agent-harness/context/CANARY_POLICY.json"
 
 
+def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str] | None:
+    try:
+        return subprocess.run(
+            ["git", *args], cwd=repo, capture_output=True, text=True, check=False
+        )
+    except OSError:
+        return None
+
+
+def is_git_repo(repo: Path) -> bool:
+    done = _git(repo, "rev-parse", "--git-dir")
+    return done is not None and done.returncode == 0
+
+
+def is_tracked(repo: Path, rel: str) -> bool:
+    done = _git(repo, "ls-files", "--error-unmatch", "--", rel)
+    return done is not None and done.returncode == 0
+
+
+def retained_evidence(repo: Path, rel: str, document: dict[str, Any]) -> list[str]:
+    """The files that must survive a fresh clone for this canary to be evidence.
+
+    ``.gitignore`` excludes ``/.agent-harness/runs/`` wholesale and canary
+    directories are force-added one at a time. Round 11 measured the
+    consequence: a canary written but never ``git add -f``-ed satisfied a
+    declared floor of 1, so a working tree reported ok while every other
+    checkout of the same commit held no canary evidence at all. The floor was
+    counting files on one disk, not evidence in the repository.
+
+    The attestation alone is not enough. Its receipt row and the result that row
+    pins are what make it checkable, so all three must be retained or the next
+    checkout inherits an attestation it cannot verify.
+    """
+    files = [rel]
+    run_id = str(document.get("canary_lease_run_id") or "").strip()
+    assignment = str(document.get("consumed_assignment_id") or "").strip()
+    if run_id:
+        files.append(f"{RUNS_ROOT}/{run_id}/ADMISSIONS.jsonl")
+        if assignment:
+            files.append(f"{RUNS_ROOT}/{run_id}/results/{assignment}.json")
+    return files
+
+
 def required_live(repo: Path, errors: list[str]) -> int:
     """How many live canaries this tree must retain, from its declaration.
 
@@ -278,26 +357,36 @@ def required_live(repo: Path, errors: list[str]) -> int:
     """
     path = repo / POLICY_FILE
     if not path.is_file():
-        try:
-            tracked = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", POLICY_FILE],
-                cwd=repo,
-                capture_output=True,
-                text=True,
-                check=False,
-            ).returncode == 0
-        except OSError as exc:
+        if _git(repo, "rev-parse", "--git-dir") is None:
             errors.append(
-                f"{POLICY_FILE} is absent and git could not be consulted "
-                f"({exc.__class__.__name__}); the canary policy cannot be established."
+                f"{POLICY_FILE} is absent and git could not be consulted; the canary "
+                "policy cannot be established."
             )
             return 0
-        if tracked:
+        if is_tracked(repo, POLICY_FILE):
             errors.append(
                 f"{POLICY_FILE} is tracked in git but missing from the working tree; the "
                 "canary floor cannot be lowered by deleting its declaration."
             )
         return 0
+    # The declaration EXISTS. Round 11: the tracked-deletion guard above ran only
+    # on the absent branch, so removing the tracked declaration from the index
+    # and leaving an untracked `min_live: 0` in its place lowered the floor to
+    # zero with no error at all -- the file was present, so nothing asked where
+    # it came from. A declaration that a fresh clone will not receive is not a
+    # declaration; it is a local opinion.
+    if not is_git_repo(repo):
+        errors.append(
+            f"{POLICY_FILE} declares retained canary evidence, but this tree is not a git "
+            "repository, so no retention claim about it can be checked. The declaration "
+            "belongs in a tracked file or not at all."
+        )
+    elif not is_tracked(repo, POLICY_FILE):
+        errors.append(
+            f"{POLICY_FILE} exists but git does not track it, so the floor it declares "
+            "would vanish on a fresh checkout. An untracked declaration cannot lower or "
+            "raise the floor for anyone but this working tree."
+        )
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -330,7 +419,12 @@ def check(repo: Path) -> list[str]:
     retired, supersession_errors = superseded_ids(attestations, authorised)
     errors.extend(supersession_errors)
 
-    live_count = 0
+    # Ids that count toward the floor, and the file each was counted from. A SET,
+    # because round 11 measured two attestations declaring the same canary id
+    # satisfying a declared floor of two: the checker reported `live: [C1, C1]`
+    # and called it clean. One canary duplicated is one canary.
+    countable: dict[str, str] = {}
+    duplicated: dict[str, list[str]] = {}
     for rel, document in attestations:
         canary = canary_id(rel, document)
         if canary is None:
@@ -342,7 +436,10 @@ def check(repo: Path) -> list[str]:
             continue
         if canary in retired:
             continue
-        live_count += 1
+        if canary in countable:
+            duplicated.setdefault(canary, [countable[canary]]).append(rel)
+        else:
+            countable[canary] = rel
         # A live canary must be backed. A retired one need not be re-checked --
         # it is history, and its replacement carries the obligation.
         errors.extend(backing_errors.get(rel, []))
@@ -394,11 +491,40 @@ def check(repo: Path) -> list[str]:
     # `/.agent-harness/runs/` wholesale and only specific canary directories are
     # force-added, so a checkout that misses them found NO attestations and
     # reported ok -- the detector's own default was fail-open (round 10).
-    minimum = required_live(repo, errors)
-    if live_count < minimum:
+    for canary, wheres in sorted(duplicated.items()):
         errors.append(
-            f"{RUNS_ROOT}: {live_count} live canary attestation(s) found, at least "
-            f"{minimum} required. Zero is not 'clean' -- run directories are "
+            f"canary {canary} is attested by {len(wheres)} live files "
+            f"({', '.join(sorted(wheres))}). Two files claiming one canary id make it "
+            "ambiguous which bytes are the evidence, and they counted twice toward the "
+            "live floor. Give each canary its own id, or retire one by supersession."
+        )
+
+    minimum = required_live(repo, errors)
+    # Only RETAINED evidence counts. A canary that a fresh clone will not receive
+    # cannot discharge a floor that exists precisely because run directories are
+    # gitignored -- counting it reproduces the fail-open default the floor was
+    # written to close, one level up.
+    if minimum and is_git_repo(repo):
+        for canary in sorted(countable):
+            rel = countable[canary]
+            document = next(doc for where, doc in attestations if where == rel)
+            missing = [
+                path for path in retained_evidence(repo, rel, document)
+                if not is_tracked(repo, path)
+            ]
+            if missing:
+                del countable[canary]
+                errors.append(
+                    f"{rel}: canary {canary} does not count toward the live floor "
+                    f"because git does not track {', '.join(missing)}. "
+                    f"{RUNS_ROOT} is gitignored wholesale, so this evidence exists on "
+                    "this disk and nowhere else. Force-add it, or it is not retained."
+                )
+
+    if len(countable) < minimum:
+        errors.append(
+            f"{RUNS_ROOT}: {len(countable)} live retained canary attestation(s) found, at "
+            f"least {minimum} required. Zero is not 'clean' -- run directories are "
             "gitignored and force-added individually, so a missing attestation looks "
             "exactly like a passing check. Retain one, or dispatch one."
         )

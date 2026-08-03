@@ -5360,3 +5360,63 @@ def test_merge_reports_an_unreadable_result_artifact_instead_of_crashing(
     # And the tree merges again once the artifact is readable, so the refusal
     # tracked the cause rather than latching.
     assert _merge_results(tmp_path).returncode == 0
+
+
+# --------------------------------------------------------------------------
+# F-R11 -- duplicate object keys in evidence-bearing JSON (D-070 Part B16).
+#
+# `json.loads` keeps the LAST value for a repeated key and says nothing. An
+# envelope carrying `assignment_id` twice therefore presents one identity to
+# this harness and another to any reader that keeps the first -- jq, a JSON5
+# parser, or a human reading top to bottom. The whole admission mechanism is an
+# argument about which agent produced which result, so a document that answers
+# that differently depending on the parser is not evidence.
+# --------------------------------------------------------------------------
+
+
+def test_f_r11_duplicate_assignment_id_in_the_envelope_is_refused(tmp_path: Path) -> None:
+    """The wrong id comes FIRST and the registered one second, so the stdlib
+    parser resolves to the value that passes every downstream check."""
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version)
+    event = stop_event(version)
+    honest = json.loads(event["last_assistant_message"].split("HARNESS_RESULT: ", 1)[1])
+    body = json.dumps(honest)
+    smuggled = '{"assignment_id": "A-NOT-REGISTERED", ' + body[1:]
+    assert smuggled.count('"assignment_id"') == 2, smuggled
+    assert json.loads(smuggled)["assignment_id"] == ASSIGNMENT_ID  # last wins
+    event["last_assistant_message"] = "HARNESS_RESULT: " + smuggled
+    done = run_stop_hook(tmp_path, event)
+    assert json.loads(done.stdout)["decision"] == "block", done.stdout
+
+
+def test_f_r11_the_same_envelope_without_the_duplicate_is_accepted(tmp_path: Path) -> None:
+    """The discriminator. Without this control the test above would pass even
+    if the hook had simply started refusing every envelope."""
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version)
+    done = run_stop_hook(tmp_path, stop_event(version))
+    assert json.loads(done.stdout or "{}").get("decision") != "block", done.stdout
+
+
+def test_f_r11_duplicate_keys_in_an_admissions_row_are_refused(tmp_path: Path) -> None:
+    """The ledger is append-only evidence and is parsed the same strict way."""
+    version, _ = make_harness(tmp_path)
+    assignment_hash = assignment_sha256(tmp_path)
+    write_json(tmp_path / RESULT_PATH, valid_result(version, assignment_hash))
+    write_lease(tmp_path, version)
+    write_admission(tmp_path, version)
+    ledger = tmp_path / f".agent-harness/runs/{RUN_ID}/ADMISSIONS.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(
+        '{"event": "minted", "event": "consumed", "assignment_id": "%s"}\n' % ASSIGNMENT_ID,
+        encoding="utf-8",
+    )
+    done = run_stop_hook(tmp_path, stop_event(version))
+    assert json.loads(done.stdout)["decision"] == "block", done.stdout

@@ -19,6 +19,7 @@ sys.path.insert(0, str(HARNESS_SCRIPTS))
 
 from _harness import (  # noqa: E402
     ADMISSION_KEY_RE,
+    loads_strict,
     admission_path,
     assignment_runtime_agent_type,
     token_digest,
@@ -177,7 +178,7 @@ def conflicting_agent_assignment(
         if not line.strip():
             continue
         try:
-            row = json.loads(line)
+            row = loads_strict(line)
         except json.JSONDecodeError:
             return "", f"line {number} is malformed"
         if not isinstance(row, dict):
@@ -263,7 +264,7 @@ def main() -> None:
         return
 
     try:
-        envelope = json.loads(match.group(1))
+        envelope = loads_strict(match.group(1))
     except json.JSONDecodeError:
         block("HARNESS_RESULT is not valid single-line JSON. Correct it before stopping.")
         return
@@ -422,7 +423,7 @@ def consume_under_agent_lock(
     assignment_path = run_dir / "assignments" / f"{assignment_id}.json"
     try:
         assignment_raw = assignment_path.read_bytes()
-        assignment = json.loads(assignment_raw.decode("utf-8"))
+        assignment = loads_strict(assignment_raw.decode("utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         assignment = None
     if not isinstance(assignment, dict):
@@ -604,7 +605,7 @@ def consume_under_agent_lock(
     # digest must describe the same bytes (D-067 round-2 review F-14).
     try:
         result_raw = resolved.read_bytes()
-        result = json.loads(result_raw.decode("utf-8"))
+        result = loads_strict(result_raw.decode("utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         result = None
     if not isinstance(result, dict):

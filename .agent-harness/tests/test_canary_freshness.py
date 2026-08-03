@@ -190,7 +190,7 @@ def test_f_r10_two_canaries_cannot_retire_each_other(repo: Path) -> None:
     attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
     write(repo / START_HOOK, "# hostile edit\n")
     errors = C.check(repo)
-    assert any("retire each other" in m for m in errors), errors
+    assert any("supersession cycle" in m for m in errors), errors
 
 
 def test_f_r10_an_attestation_must_name_a_real_consumed_row(repo: Path) -> None:
@@ -227,7 +227,7 @@ def test_f_r10_an_attestation_hidden_deeper_is_still_found(repo: Path) -> None:
 def test_f_r10_zero_live_canaries_is_an_error_where_one_is_declared(repo: Path) -> None:
     """runs/ is gitignored wholesale, so a missing attestation looked like a pass."""
     write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
-    assert any("live canary attestation" in m for m in C.check(repo))
+    assert any("live retained canary attestation" in m for m in C.check(repo))
 
 
 def test_f_r10_a_tree_declaring_no_canary_policy_needs_no_canary(repo: Path) -> None:
@@ -251,3 +251,138 @@ def test_f_r10_deleting_the_policy_cannot_lower_the_floor(repo: Path) -> None:
     )
     (repo / C.POLICY_FILE).unlink()
     assert any("cannot be lowered by deleting" in m for m in C.check(repo))
+
+
+# --------------------------------------------------------------------------
+# F-R11 -- the four canary defects an external audit reported and a local
+# reproduction confirmed (D-070 Part B16).
+#
+# Every one of them made the checker report `ok: true` on a tree whose canary
+# evidence was absent, duplicated, or mutually retired into invisibility. The
+# three-node cycle is the worst of them: the checker printed `live: [C4]` and
+# exited 0 while C1, C2 and C3 had retired each other out of the record.
+# --------------------------------------------------------------------------
+
+
+def git_repo(repo: Path) -> None:
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@t"], cwd=repo, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=repo, check=True)
+    write(repo / ".gitignore", "/.agent-harness/runs/\n")
+
+
+def commit_all(repo: Path, *force: Path) -> None:
+    import subprocess
+
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    for path in force:
+        subprocess.run(["git", "add", "-f", str(path.relative_to(repo))],
+                       cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "x"], cwd=repo, check=True, capture_output=True)
+
+
+def retained(repo: Path, run: str) -> list[Path]:
+    """Every file a canary needs force-added, since runs/ is gitignored."""
+    base = repo / ".agent-harness/runs" / run
+    return [base / "artifacts/ATTESTATION.json", base / "ADMISSIONS.jsonl",
+            base / "results/A-CANARY.json"]
+
+
+def test_f_r11_three_node_supersession_cycle_is_refused(repo: Path) -> None:
+    """C1 -> C2 -> C3 -> C1 passed, reporting all three as superseded.
+
+    The independent C4 matters: without it the floor would fail anyway and the
+    case would prove nothing about the graph. Round 9 lost three fixtures to
+    exactly that mistake, so the discriminator is built in.
+    """
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1", supersedes_canary=["C2"]))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C3"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C1"]))
+    attest(repo, "run-d-canary-c4", fresh(repo, canary="C4"))
+    errors = C.check(repo)
+    assert any("supersession cycle" in m for m in errors), errors
+    assert any("C1" in m and "C2" in m and "C3" in m for m in errors), errors
+
+
+def test_f_r11_each_distinct_cycle_is_reported_exactly_once(repo: Path) -> None:
+    """One error per cycle -- not one per rotation, and not one for two cycles.
+
+    Two INDEPENDENT cycles are used rather than one, because a single cycle
+    cannot distinguish "reported once" from "reported once per graph": the walk
+    visits each node at most once, so one cycle is structurally incapable of
+    being reported twice. A fixture built on one cycle passed with the
+    de-duplication removed, which is how the dead `seen` set was found.
+    """
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1", supersedes_canary=["C2"]))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C1"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C4"]))
+    attest(repo, "run-d-canary-c4", fresh(repo, canary="C4", supersedes_canary=["C3"]))
+    attest(repo, "run-e-canary-c9", fresh(repo, canary="C9"))
+    reported = [m for m in C.check(repo) if "supersession cycle" in m]
+    assert len(reported) == 2, reported
+    assert any("C1 -> C2 -> C1" in m for m in reported), reported
+    assert any("C3 -> C4 -> C3" in m for m in reported), reported
+
+
+def test_f_r11_an_acyclic_chain_is_still_legal(repo: Path) -> None:
+    """The control the cycle fix must not break: C3 -> C2 -> C1 is a normal
+    replacement history and retires two canaries without complaint."""
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C1"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C2"]))
+    assert C.check(repo) == []
+
+
+def test_f_r11_two_files_claiming_one_canary_id_do_not_count_twice(repo: Path) -> None:
+    """`live: [C1, C1]` satisfied a declared floor of two and reported clean."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 2}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    attest(repo, "run-b-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo, *retained(repo, "run-a-canary-c1"), *retained(repo, "run-b-canary-c1"))
+    errors = C.check(repo)
+    assert any("is attested by 2 live files" in m for m in errors), errors
+    assert any("live retained canary attestation" in m for m in errors), errors
+
+
+def test_f_r11_untracked_canary_evidence_does_not_satisfy_the_floor(repo: Path) -> None:
+    """runs/ is gitignored, so an attestation nobody force-added exists on ONE
+    disk. Counting it reproduces the fail-open default the floor was written
+    to close, one level up."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo)  # deliberately NOT force-adding the run directory
+    errors = C.check(repo)
+    assert any("does not count toward the live floor" in m for m in errors), errors
+    assert any("live retained canary attestation" in m for m in errors), errors
+
+
+def test_f_r11_tracked_canary_evidence_does_satisfy_the_floor(repo: Path) -> None:
+    """The control: the same canary, force-added, is clean. Without this the
+    test above would pass even if the floor rejected everything."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo, *retained(repo, "run-a-canary-c1"))
+    assert C.check(repo) == []
+
+
+def test_f_r11_an_untracked_policy_cannot_replace_the_tracked_one(repo: Path) -> None:
+    """The tracked-deletion guard ran only on the ABSENT branch, so removing the
+    declaration from the index and leaving an untracked `min_live: 0` in its
+    place lowered the floor to zero with no error at all."""
+    import subprocess
+
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    commit_all(repo)
+    subprocess.run(["git", "rm", "--cached", "-q", C.POLICY_FILE], cwd=repo,
+                   check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "untrack"], cwd=repo, check=True, capture_output=True)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 0}))
+    errors = C.check(repo)
+    assert any("git does not track it" in m for m in errors), errors

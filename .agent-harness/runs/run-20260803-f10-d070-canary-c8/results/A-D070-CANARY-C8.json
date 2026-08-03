@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260803-f10-d070-canary-c8",
+  "assignment_id": "A-D070-CANARY-C8",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "agent_id": "d070-canary-c8",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260803-f10-d070-canary-c8",
+    "assignment_id": "A-D070-CANARY-C8",
+    "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ea574c1c401d62dc736f26a86c69663bd5c309b070fbac9bf86cb6545ace0609",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json",
+  "started_at": "2026-08-03T13:36:45Z",
+  "completed_at": "2026-08-03T13:36:45Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)"
+  },
+  "commands": [
+    "one shell command: cp ACTIVE_RUN -> raw file; date -u ns -> raw file; SubagentStop dispatched; cp ACTIVE_RUN -> raw file; date -u ns -> raw file"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D070-C8",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "C8 overlapping-run canary, replacing C7. SubagentStop consumed the receipt for run-20260803-f10-d070-canary-c8 while ACTIVE_RUN named run-20260803-f10-d070-canary-c8-decoy, so admission is bound by the receipt and not by the global run pointer. The difference from C7 is evidentiary, not behavioural: the pointer reads and the nanosecond clocks are RETAINED AS RAW FILES written by the measuring command itself (pointer_before_c8.txt, clock_before_c8.txt, clock_after_c8.txt, pointer_after_c8.txt, ledger_before_c8.jsonl, ledger_after_c8.jsonl), rather than appearing only inside a summary the writer composed afterwards. An external audit classified C7's 44.779 ms bracket as SUMMARY_ONLY for exactly that reason and held D-065 obligation 4 undischarged; this canary is the replacement it asked for. The first dispatch was BLOCKED on a genuine RESULT_ENVELOPE violation (no findings) and is retained as attempt 1 rather than overwritten.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_before_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_after_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_before_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_after_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/ADMISSIONS.jsonl"
+      ],
+      "evidence_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json"
+  ]
+}

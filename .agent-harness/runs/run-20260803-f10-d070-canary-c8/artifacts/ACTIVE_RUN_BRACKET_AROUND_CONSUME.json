@@ -1,0 +1,43 @@
+{
+ "artifact_class": "CANARY_ATTESTATION",
+ "canary": "C8",
+ "supersedes_canary": [
+  "C7"
+ ],
+ "supersedes_reason": "TWO independent reasons, both recorded. (1) STALENESS: this decision edited .codex/hooks/subagent_stop_validate.py to refuse duplicate JSON object keys, so C7's stop_hook_sha256 0533da88 no longer describes the working tree and check_canary_freshness.py reported C7 STALE -- exactly the F-R9-004 class that killed C1, C4, C5 and C6 with nothing detecting it. C7 is NOT edited to hide that; a retained attestation is evidence and is retired by replacement. (2) EVIDENCE: an external audit (F10-AUD-008) classified C7's 44.779 ms bracket as SUMMARY_ONLY, because the pointer values, the nanosecond stamps and the bracket width existed only inside C7's own artifact -- no raw pointer read was retained -- and therefore held D-065 obligation 4 undischarged. That criticism is accepted, not disputed.",
+ "method": "SubagentStart dispatched with ACTIVE_RUN naming the canary run, creating a real Start-time lease. ACTIVE_RUN then repointed to the DECOY run. The measurement is ONE shell command that copies ACTIVE_RUN to a raw file, writes date -u to nanoseconds to a raw file, dispatches SubagentStop, records its exit status, writes the closing clock, copies ACTIVE_RUN again, and copies ADMISSIONS.jsonl before and after. Every element of the bracket below is therefore DERIVED from retained bytes that can be re-read, rather than asserted by the writer.",
+ "what_changed_from_c7": "C7 recorded the same property with the same method, but retained only its conclusion. C8 retains the inputs: pointer_before_c8_attempt2.txt and pointer_after_c8_attempt2.txt hold the literal ACTIVE_RUN bytes, clock_*_attempt2.txt hold the raw date output, stop_exit_c8_attempt2.txt holds the process status that C7 left to inference, and the ledger is copied on both sides of the dispatch. An auditor can recompute the bracket width and the pointer state without trusting this file.",
+ "first_attempt_blocked": "The first dispatch was BLOCKED on a genuine RESULT_ENVELOPE violation: the result carried no findings and omitted its assigned claim_id. That is an honest operator error and its capture is retained as attempt 1 under the retry-safe naming rule (D-070 Part B7), never overwritten by the retry.",
+ "operator_error_recorded": "The receipt was minted once, its token was not captured by the operator, and it was reopened with a stated reason before any dispatch. The 'reopened' row is in ADMISSIONS.jsonl and is not hidden; no dispatch occurred against the first token.",
+ "head_commit": "402238555cbebb56b9ad4d79a77e3dc37e259f42",
+ "start_hook_sha256": "8b28351235d32bb74c7bb84ee32acf910f2bccb4eef993bfbf86baecc6522d17",
+ "stop_hook_sha256": "79eb19fcd35c100b9b0e58e4dc6416fb0e9f840ff860e29da7bdf066107f4bc0",
+ "raw_bracket_files": {
+  "clock_after_c8_attempt2.txt": "sha256:e188267b373abdcc06dc6122110d7aef972ded54a9fdd6d7212863781556c29e",
+  "clock_before_c8_attempt2.txt": "sha256:d6630b1dd1e9a1f0c4b3d2b9e80a71e1404208e71c66d743e473495f50ce2fe5",
+  "ledger_after_c8_attempt2.jsonl": "sha256:84f808c8a00577cfb0142fbbc1f5313c3175c867f39514774770adf3cb3e4536",
+  "ledger_before_c8_attempt2.jsonl": "sha256:31a78eb95f1e0c3af6b38b6fa2faf0bcfd55fd5a7d6fed1e4882e5428ae77557",
+  "pointer_after_c8_attempt2.txt": "sha256:ec8e2a4b62a345637375244b93480364a686f288c07475e6ed72789cc87d6dce",
+  "pointer_before_c8_attempt2.txt": "sha256:ec8e2a4b62a345637375244b93480364a686f288c07475e6ed72789cc87d6dce",
+  "stop_err_c8_attempt2.txt": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stop_exit_c8_attempt2.txt": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+ },
+ "pointer_before_dispatch": "run-20260803-f10-d070-canary-c8-decoy",
+ "captured_before": "2026-08-03T13:37:38.954807151Z",
+ "pointer_after_dispatch": "run-20260803-f10-d070-canary-c8-decoy",
+ "captured_after": "2026-08-03T13:37:38.989499274Z",
+ "bracket_width_seconds": 0.034692,
+ "stop_exit_code": 0,
+ "stop_stdout_bytes": 0,
+ "canary_lease_run_id": "run-20260803-f10-d070-canary-c8",
+ "overlap_held_across_the_whole_bracket": true,
+ "ledger_consumed_at": "2026-08-03T13:37:38+00:00",
+ "ledger_rows_before": 2,
+ "ledger_rows_after": 3,
+ "receipt_state": "consumed",
+ "consumed_by_agent_id": "d070-canary-c8",
+ "consumed_assignment_id": "A-D070-CANARY-C8",
+ "result_sha256": "sha256:b527c2daa61eeac8947d26926d63a9857b934df1361b3c2af19e072662fac225",
+ "resolution_limit": "The ledger writes 'at' with second resolution, so sub-second ORDERING against the bracket is not provable and is not claimed. What the raw bytes establish is the pointer state across the dispatch and the fact that the consumed row appeared between the two ledger copies -- which is what obligation 4 asks.",
+ "what_this_does_not_claim": "This canary shows the pointer did not decide the consume, and that the evidence for that is re-derivable from retained raw bytes. It does NOT address the stated residual that harness and subagents share one OS user, so a deliberately misbehaving agent can still forge repo-local artifacts. It moves no gate."
+}

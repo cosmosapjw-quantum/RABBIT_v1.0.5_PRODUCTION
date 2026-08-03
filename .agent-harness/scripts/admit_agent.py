@@ -119,6 +119,7 @@ from _harness import (
     assignment_runtime_agent_type,
     dump_json_atomic,
     load_json,
+    loads_strict,
     root,
     token_digest,
     utc_now,
@@ -163,7 +164,7 @@ def _read_ledger_rows(ledger_path: Path, purpose: str) -> list[dict]:
         if not line.strip():
             continue
         try:
-            row = json.loads(line)
+            row = loads_strict(line)
         except json.JSONDecodeError:
             fail(f"admission ledger line {number} is malformed; {purpose}")
             return []
@@ -316,7 +317,7 @@ def scan_run_receipts(admissions_dir: Path) -> list[tuple[str, dict]]:
             )
             return []
         try:
-            receipt = json.loads(raw)
+            receipt = loads_strict(raw)
         except json.JSONDecodeError:
             fail(
                 f"admission receipt is not valid JSON: {entry.name}; the "

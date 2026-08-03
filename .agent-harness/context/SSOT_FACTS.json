@@ -111,9 +111,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 108,
-   "as_of_commit": "7157bbe",
+   "value": 111,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 108,
+     "as_of_commit": "7157bbe",
+     "note": "D-070 Part B6. Superseded by B16's three duplicate-key fixtures."
+    },
     {
      "value": 106,
      "as_of_commit": "5c474d0",
@@ -160,39 +165,45 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-067 admission binding",
+     "line_contains": "D-070 Part B16",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
-     "note": "Live ledger row for the D-067 validation."
+     "note": "Live ledger row for the strict-JSON repair that added the fixtures."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B16",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "current",
+     "note": "Result cell of the same live row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "historical",
+     "note": "The D-067 row's own count, now dated: it describes that validation, not the working tree, and cites the commit it held at."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
      "line_contains": "D-067 admission binding",
      "value_regex": "Hooks `(\\d+)/\\d+`",
-     "role": "current",
-     "note": "Result cell of the same ledger row."
+     "role": "historical",
+     "note": "Result cell of the same dated row."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
      "line_contains": "D-067 admission binding",
      "value_regex": "(\\d+) at the D-067 seal",
      "role": "historical",
-     "note": "Dated back-reference inside the live row; must cite its commit."
-    },
-    {
-     "file": ".agent-harness/context/FROZEN_DECISIONS.md",
-     "line_contains": "| D-067 |",
-     "value_regex": "(\\d+) hook fixtures",
-     "role": "frozen",
-     "pinned_to_commit": "ed7bc49",
-     "note": "Frozen row: pinned to the seal-time count, never refreshed."
+     "note": "Dated back-reference; must cite its commit."
     },
     {
      "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
      "line_contains": "Tests:",
      "value_regex": "\\*\\*(\\d+) pass\\*\\*",
-     "role": "current",
-     "note": "Report prose. This is the surface that contradicted itself (F-D065-05 class)."
+     "role": "historical",
+     "note": "Sealed report prose. It describes the D-067 seal, not the working tree; it was 'current' only while the count happened not to have moved."
     },
     {
      "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
@@ -248,18 +259,23 @@
     "path": ".agent-harness/tests/test_canary_freshness.py",
     "pattern": "^def test_"
    },
-   "value": 19,
-   "as_of_commit": "3b2dcc6",
+   "value": 26,
+   "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B13",
+     "line_contains": "D-070 Part B16",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
-     "note": "Live ledger row for the canary trust-model repair."
+     "note": "Live ledger row for the canary-retention repair."
     }
    ],
    "prior": [
+    {
+     "value": 19,
+     "as_of_commit": "3b2dcc6",
+     "note": "D-070 Part B13, before the round-11 retention and cycle repair."
+    },
     {
      "value": 10,
      "as_of_commit": "32ba566",

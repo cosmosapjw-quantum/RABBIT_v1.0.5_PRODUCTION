@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260803-f10-d070-canary-c8",
+  "assignment_id": "A-D070-CANARY-C8",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "C8 overlapping-run canary, replacing C7. Prove SubagentStop consumes on the RECEIPT and not on the ACTIVE_RUN pointer, with the pointer reads and clocks RETAINED AS RAW BYTES written during the measurement rather than summarised afterwards -- the gap an external audit named in C7 (F10-AUD-008), where the 44.779 ms bracket existed only inside the writer's own artifact. Also re-attests the current hook bytes, which C7 no longer describes.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260803-f10-d070-canary-c8/assignments/A-D070-CANARY-C8.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json",
+  "status": "registered"
+}

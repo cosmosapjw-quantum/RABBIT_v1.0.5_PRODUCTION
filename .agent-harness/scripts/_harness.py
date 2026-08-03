@@ -42,8 +42,39 @@ def root() -> Path:
     return here.parents[2]
 
 
+def _no_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    seen: set[str] = set()
+    for key, _value in pairs:
+        if key in seen:
+            raise json.JSONDecodeError(f"duplicate object key {key!r}", "", 0)
+        seen.add(key)
+    return dict(pairs)
+
+
+def loads_strict(text: str) -> Any:
+    """``json.loads`` that REFUSES an object with a repeated key.
+
+    The stdlib parser keeps the last value silently, so
+    ``{"assignment_id": "A-WRONG", ..., "assignment_id": "A-RIGHT"}`` presents
+    one identity to this harness and a different one to any reader that keeps
+    the first -- a jq filter, a JSON5 parser, a human reading top to bottom.
+    Round 11 reproduced an admission envelope carrying two ``assignment_id``
+    keys where the incorrect value came first and the registered one second:
+    the Stop hook accepted it, because by the time any check ran there was only
+    one key left to check.
+
+    Every evidence-bearing document in the admission path is parsed through
+    here: envelope, receipt, assignment, result, and each ADMISSIONS.jsonl row.
+    Ambiguous identity bytes are refused rather than resolved, because the whole
+    mechanism is an argument about which agent wrote which result, and a
+    document that answers that differently depending on the parser is not
+    evidence.
+    """
+    return json.loads(text, object_pairs_hook=_no_duplicate_keys)
+
+
 def load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return loads_strict(path.read_text(encoding="utf-8"))
 
 
 def dump_json(path: Path, value: Any) -> None:
