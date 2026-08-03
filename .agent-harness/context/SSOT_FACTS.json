@@ -165,14 +165,14 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B22",
+     "line_contains": "D-071",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
      "note": "Live ledger row for the strict-JSON repair that added the fixtures."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B22",
+     "line_contains": "D-071",
      "value_regex": "Hooks `(\\d+)/\\d+`",
      "role": "current",
      "note": "Result cell of the same live row."
@@ -227,7 +227,7 @@
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B22",
+     "line_contains": "D-071",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."
@@ -274,7 +274,7 @@
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B22",
+     "line_contains": "D-071",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."

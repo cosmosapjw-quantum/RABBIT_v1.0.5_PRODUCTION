@@ -80,7 +80,29 @@
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
       "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
       "owner": "main",
-      "status": "fail"
+      "status": "fail",
+      "fail_disposition": {
+        "decision": "D-071",
+        "state": "CLOSED_ON_CURRENT_MEASUREMENT",
+        "why": "The D-069 r4 instrument exhausted its 64,800 s frozen wall budget with verdict ERROR and no top-level checks block, so no scientific predicate was evaluated. Re-derived from the retained stdout 28c541b3: the domain holdout set its last new maximum at evaluation 751 and then spent 10,300 evaluations and 45,545 s -- 70% of the whole budget -- without setting another. In the post-drop creep regime it advances at 2.376238e-07 N/eval at 4.42062 s/eval, leaving 7.771399 in N: about 3.27e7 further evaluations and 4.58 years of wall on this host, an ~8,305x miss against the frozen 3,938-evaluation projection. Log rounding alone spans 4.40-4.78 years; model uncertainty is unquantified because no step-size trace, rejection counter or error norm survives; and an unexplained -0.0184 drop in N at evaluation 951 is not modelled at all. The defensible claim is order-of-magnitude impracticality, not a completion date.",
+        "what_is_not_concluded": "Nothing about the underlying physical proposition. r4 evaluated no predicate: evaluate() sits after the wall-budget error handler and is unreachable on the retained path. This closes an INSTRUMENT, not a question. Byte agreement across r4/r3/r2/D-056 is deterministic same-host reproducibility, not independent corroboration.",
+        "reopen_requires_all_of": [
+          "a materially new method -- asymptotic reformulation, rigorous surrogate bound, or analytically constrained domain reduction -- not a faster implementation of this one",
+          "a prospectively sealed contract, frozen before any output byte, as D-069 required",
+          "a bounded discriminator covering the phase that stalled, projecting end-to-end completion inside the existing wall budget with margin, reviewed before implementation"
+        ],
+        "explicitly_not_reopen_conditions": [
+          "generic optimization",
+          "faster hardware or more cores -- a 10x-100x gain does not close an ~8,300x evaluation-count miss, and the retained failure is step-count dominated",
+          "a larger wall budget"
+        ],
+        "withdrawn_by_this_decision": "The D-071 nine-axis robustness envelope (R1-R9), which earlier surfaces forward-reference. Its premise was that an order-60 integration is tractable inside the frozen budget; R5 was order 60 and R6/R7 were 72 and 96. The measurement above disproves the premise, so the plan is retired inside the decision its forward reference pointed at rather than left dangling.",
+        "evidence": [
+          ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+          ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+          "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
+        ]
+      }
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",
