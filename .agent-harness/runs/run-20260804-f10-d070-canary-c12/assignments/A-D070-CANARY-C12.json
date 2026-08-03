@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-canary-c12",
+  "assignment_id": "A-D070-CANARY-C12",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "1e4b41fe3f7d5c8171f0305f0715eb022e92231d1d70c168ce2e89a51d7831bb",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "C12 replaces C9. Re-runs the 24-way concurrent-stop race for D-065 obligation 1, with honest provenance. C9's head_commit named 0aa33cf while C9 was introduced at c63ab3c -- the same wrong-commit citation the round-13 adjudicator found in C8, repeated in two further canaries because git rev-parse HEAD at attestation-writing time is structurally the PREVIOUS commit. C12 declares PENDING_COMMIT and is pinned by a verified follow-up.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c12/assignments/A-D070-CANARY-C12.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c12/results/A-D070-CANARY-C12.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-canary-c12/results/A-D070-CANARY-C12.json",
+  "status": "registered"
+}

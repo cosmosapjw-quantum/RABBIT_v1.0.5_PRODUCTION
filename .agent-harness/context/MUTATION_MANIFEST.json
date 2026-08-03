@@ -3,9 +3,25 @@
  "purpose": "The mutation battery, in the repository instead of a scratch directory. This project's standard of proof is that a guard whose deletion breaks no test is not verified -- and rounds 9 through 13 applied it by hand, in /tmp, from scripts deleted with the session, so every 'N of N mutation-verified' row in the ledger cites evidence nobody can re-derive. test_mutation_gate.py runs these entries as part of the suite: each removes exactly one guard and requires the named fixtures to go red.",
  "declared_guard_sites": {
   ".agent-harness/scripts/check_ssot_consistency.py": 107,
-  ".agent-harness/scripts/check_canary_freshness.py": 24
+  ".agent-harness/scripts/check_canary_freshness.py": 26
  },
- "coverage_gap": "These entries cover 19 guards against 131 error-raising sites in the two checkers, so this is NOT full mutation coverage and does not claim to be. The covered set is the guards added or repaired in rounds 11 to 13, which is where every recent defect was found. The uncovered remainder is mostly older schema and declaration validation whose fixtures predate this manifest. test_guard_site_count_has_not_grown_silently is the ratchet: a new guard changes the measured count and fails the suite until someone either covers it here or restates the declaration deliberately.",
+ "coverage_gap": "These entries cover 21 guards against 133 error-raising sites in the two checkers, so this is NOT full mutation coverage and does not claim to be. `required_ids` names the subset that may never lose its mutation -- the guards that can change canonical gate state, admit or substitute evidence, authorise a retirement, or bind provenance. The rest may come and go with the code they guard. test_guard_site_count_has_not_grown_silently is the ratchet: a new guard changes the measured count and fails the suite until someone either covers it here or restates the declaration deliberately.",
+ "required_ids": [
+  "M-SSOT-REFUSAL",
+  "M-SSOT-REGISTRY-CMP",
+  "M-SSOT-COVERAGE",
+  "M-SSOT-MASK",
+  "M-STRICT-JSON",
+  "M-CANARY-AMBIGUOUS",
+  "M-CANARY-DOC-AUTHORITY",
+  "M-CANARY-CYCLE",
+  "M-CANARY-PROVENANCE",
+  "M-CANARY-TRACKED",
+  "M-CANARY-UNIQUE-ID",
+  "M-CANARY-POLICY-TRACKED",
+  "M-CANARY-ANCESTRY",
+  "M-CANARY-INTRODUCING"
+ ],
  "mutations": [
   {
    "id": "M-SSOT-REFUSAL",
@@ -203,6 +219,26 @@
     ".agent-harness/tests/test_canary_freshness.py::test_f_r13_pending_commit_must_be_pinned_once_head_moves_on"
    ],
    "why": "Attested digests were only ever compared against the WORKING TREE, so a provenance field could name any commit at all. C8 named one where the stop hook still held the value C8 said had gone stale."
+  },
+  {
+   "id": "M-CANARY-ANCESTRY",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "    if not _git_is_ancestor(repo, declared, \"HEAD\"):",
+   "replacement": "    if False:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f10_design_001_a_commit_outside_accepted_history_is_refused"
+   ],
+   "why": "`git show` reads unreachable objects, so an amended-away or rebased-away commit passed blob verification. Only reachability from HEAD sees that it has left accepted history."
+  },
+  {
+   "id": "M-CANARY-INTRODUCING",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "    if introduced and declared != introduced:",
+   "replacement": "    if False:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f10_design_001_a_commit_predating_the_attestation_is_refused"
+   ],
+   "why": "C8's actual defect: a commit that is a genuine ancestor and holds matching blobs, but could not have carried the attestation. Only the introducing-commit relation catches it."
   }
  ]
 }

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260804-f10-d070-canary-c12",
+  "created_at": "2026-08-03T19:18:04+00:00",
+  "spec_ref": "SPEC.md",
+  "base_ref": "main",
+  "head_ref": "HEAD",
+  "context_version": "1e4b41fe3f7d5c8171f0305f0715eb022e92231d1d70c168ce2e89a51d7831bb",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

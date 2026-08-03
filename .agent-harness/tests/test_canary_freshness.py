@@ -583,3 +583,82 @@ def test_f_r13_pending_commit_must_be_pinned_once_head_moves_on(repo: Path) -> N
     write(repo / "unrelated.txt", "a later commit that does not touch the canary\n")
     commit_all(repo)
     assert any("still declares head_commit 'PENDING_COMMIT'" in m for m in C.check(repo)), C.check(repo)
+
+
+# --------------------------------------------------------------------------
+# F10-DESIGN-001 (third-party design re-audit, HIGH). Verifying blobs at a named
+# commit proves only that SOME commit once held those bytes. `git show` reads
+# unreachable objects, so an amended-away or rebased-away commit passed; and
+# nothing tied the named commit to the attestation, so a commit that predated it
+# passed too. The auditor demonstrated all three across 13 synthetic repos.
+# --------------------------------------------------------------------------
+
+
+def test_f10_design_001_a_commit_outside_accepted_history_is_refused(repo: Path) -> None:
+    """An amended-away commit stays readable and must still be refused.
+
+    The discriminator is that the attested digests DO match at the named commit:
+    only the ancestry check can fail this, so it cannot pass for the wrong reason.
+    """
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    orphaned = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                              text=True, check=True).stdout.strip()
+    # Amend: `orphaned` is now unreachable but `git show` still reads it.
+    subprocess.run(["git", "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "--amend", "-m", "amended"], cwd=repo,
+                   check=True, capture_output=True)
+    assert subprocess.run(["git", "cat-file", "-e", orphaned], cwd=repo).returncode == 0, (
+        "precondition: the amended-away commit must still be readable, or this proves nothing")
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = orphaned
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert any("not an ancestor of HEAD" in m for m in errors), errors
+    assert not any("is STALE" in m for m in errors), ("control: digests still match", errors)
+
+
+def test_f10_design_001_a_commit_predating_the_attestation_is_refused(repo: Path) -> None:
+    """C8's actual defect: a commit that could not have carried the attestation.
+
+    The named commit is a genuine ancestor of HEAD and holds matching blobs, so
+    neither the ancestry check nor the digest check can fail it. Only the
+    introducing-commit relation can, which is what makes this discriminating.
+    """
+    import subprocess
+
+    git_repo(repo)
+    write(repo / "unrelated.txt", "a commit that predates the attestation\n")
+    commit_all(repo)
+    earlier = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                             text=True, check=True).stdout.strip()
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit=earlier))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert any("was introduced at" in m for m in errors), errors
+    assert not any("not an ancestor" in m for m in errors), (
+        "the earlier commit IS an ancestor; if that fired, the case proves nothing", errors)
+    assert not any("is STALE" in m for m in errors), ("control: digests still match", errors)
+
+
+def test_f10_design_001_the_introducing_commit_is_accepted(repo: Path) -> None:
+    """The control. Pinning the commit that introduced the attestation is legal,
+    and must stay legal, or the convention is unsatisfiable."""
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    introduced = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                                text=True, check=True).stdout.strip()
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = introduced
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    assert C.check(repo) == []

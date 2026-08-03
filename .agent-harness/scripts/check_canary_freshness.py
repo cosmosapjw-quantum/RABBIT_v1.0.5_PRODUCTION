@@ -310,6 +310,35 @@ def declared_provenance(
             )
         return errors
 
+    # F10-DESIGN-001 (third-party design re-audit, HIGH). Verifying blobs at a
+    # named commit proves only that SOME commit once held those bytes. It does
+    # not prove the commit is in accepted history, and it does not tie the commit
+    # to this attestation. The auditor built thirteen synthetic repositories and
+    # showed the checker accepting a commit that PREDATED the attestation, an
+    # amended-away commit, and a rebased-away commit -- because
+    # `git show <hash>:<path>` succeeds for unreachable objects, and amend and
+    # rebase are ordinary workflows that leave the old object readable.
+    #
+    # Two relations close those three classes, and both are cheap:
+    if not _git_is_ancestor(repo, declared, "HEAD"):
+        errors.append(
+            f"{rel}: canary {canary} declares head_commit {declared[:12]}, which is not an "
+            "ancestor of HEAD. An amended or rebased-away commit stays readable through "
+            "`git show`, so blob verification alone cannot see that it has left accepted "
+            "history. Evidence must name a commit the branch still contains."
+        )
+        return errors
+    introduced = _git_introducing_commit(repo, rel)
+    if introduced and declared != introduced:
+        errors.append(
+            f"{rel}: canary {canary} declares head_commit {declared[:12]}, but this attestation "
+            f"was introduced at {introduced[:12]}. The pin names the commit whose bytes the "
+            "canary measured, which is the commit that first carries the attestation -- not an "
+            "earlier commit that happens to hold the same blobs, and not a later edit. C8 failed "
+            "the other way round: it named an earlier commit and nothing noticed."
+        )
+        return errors
+
     for field, digest in sorted(attested.items()):
         target = ATTESTED_FILES[field]
         blob = _git_show(repo, declared, target)
@@ -331,6 +360,30 @@ def declared_provenance(
             )
     return errors
 
+
+def _git_is_ancestor(repo: Path, commit: str, of: str) -> bool:
+    """True when `commit` is reachable from `of`. Fail-closed on any error.
+
+    This is the check that sees an amended or rebased-away commit. `git show`
+    reads unreachable objects happily, so nothing else in this file could.
+    """
+    done = _git(repo, "merge-base", "--is-ancestor", commit, of)
+    return done is not None and done.returncode == 0
+
+
+def _git_introducing_commit(repo: Path, rel: str) -> str | None:
+    """The commit that first added this path, or None when git cannot say.
+
+    Deliberately the INTRODUCING commit rather than the last-modifying one: the
+    pin itself edits the attestation to replace PENDING_COMMIT with a hash, so
+    the last-modifying commit is the pin and can never equal what the pin names.
+    The introducing commit is the one whose working tree the canary measured.
+    """
+    done = _git(repo, "log", "--diff-filter=A", "--format=%H", "--", rel)
+    if done is None or done.returncode != 0:
+        return None
+    lines = [line.strip() for line in done.stdout.splitlines() if line.strip()]
+    return lines[-1] if lines else None
 
 def _git_last_commit(repo: Path, rel: str) -> str | None:
     done = _git(repo, "log", "-1", "--format=%H", "--", rel)

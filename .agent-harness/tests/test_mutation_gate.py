@@ -84,7 +84,12 @@ def tree() -> Path:
 
 def run_tests(tree: Path, node_ids: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--no-header", *node_ids],
+        # -rf prints one "FAILED <nodeid>" line per failing test, and --tb=no keeps
+        # the output small. Both are required by the FAILED-line check below: -q
+        # alone collapses outcomes into dots and makes a kill indistinguishable
+        # from a collection error.
+        [sys.executable, "-m", "pytest", "-q", "-rf", "--tb=no",
+         "-p", "no:cacheprovider", "--no-header", *node_ids],
         cwd=tree, capture_output=True, text=True,
     )
 
@@ -116,7 +121,24 @@ def test_each_declared_guard_is_killed_by_its_named_fixture(entry: dict, tree: P
         f"{entry['id']}: the named fixtures already fail before the mutation.\n{before.stdout[-1500:]}"
     )
 
-    target.write_text(source.replace(entry["anchor"], entry["replacement"], 1), encoding="utf-8")
+    mutated = source.replace(entry["anchor"], entry["replacement"], 1)
+
+    # F10-DESIGN-002, first half. A mutation that does not COMPILE is a broken
+    # mutation, not a killed guard. The third-party auditor reproduced this: a
+    # replacement of `if status == expected or:` made the checker unimportable,
+    # every named fixture failed for that reason, and the gate recorded a
+    # successful kill. The guard it claimed to verify was never exercised at all.
+    try:
+        compile(mutated, str(target), "exec")
+    except SyntaxError as exc:
+        raise AssertionError(
+            f"{entry['id']}: the MUTATION is broken, not the guard -- the mutated "
+            f"{entry['target']} does not compile ({exc.msg} at line {exc.lineno}). "
+            "A replacement must be valid code that removes one guard, or the fixtures "
+            "fail for a reason that has nothing to do with what is being verified."
+        ) from None
+
+    target.write_text(mutated, encoding="utf-8")
     try:
         after = run_tests(tree, entry["kills"])
     finally:
@@ -125,6 +147,22 @@ def test_each_declared_guard_is_killed_by_its_named_fixture(entry: dict, tree: P
     assert after.returncode != 0, (
         f"{entry['id']}: the guard SURVIVED its own removal -- {', '.join(entry['kills'])} "
         f"still pass with it deleted, so they do not verify it.\nWhy it matters: {entry['why']}"
+    )
+
+    # F10-DESIGN-002, second half, and the part that actually closes it. A
+    # non-zero exit says only "something went wrong". pytest reports a fixture
+    # that FAILED an assertion differently from one that ERRORed during
+    # collection or setup, so requiring every named test to appear as FAILED is
+    # what distinguishes "the guard was missed" from "the run fell over". The
+    # compile check above cannot cover this on its own: a mutation can be
+    # perfectly valid Python and still break an import, a fixture, or a
+    # module-level constant that the named tests need before they ever assert.
+    missing = [node for node in entry["kills"] if f"FAILED {node}" not in after.stdout]
+    assert not missing, (
+        f"{entry['id']}: the guard's removal did not make {', '.join(missing)} FAIL an "
+        "assertion -- the run went non-zero for some other reason (collection error, "
+        "import error, or fixture error). That is a broken mutation reported as a kill, "
+        f"which is what the mutation gate exists to prevent.\n{after.stdout[-1500:]}"
     )
 
 
@@ -169,3 +207,76 @@ def test_manifest_targets_and_fixtures_exist() -> None:
             elif f"def {name}(" not in path.read_text(encoding="utf-8"):
                 problems.append(f"{entry['id']}: fixture {name} is not defined in {rel}")
     assert not problems, "\n".join(problems)
+
+
+# --------------------------------------------------------------------------
+# F10-DESIGN-003 (third-party design re-audit). The manifest had no schema and
+# no coverage identity, so `schema_version: 999` plus an unknown top-level key
+# was accepted silently, and deleting an entry simply reduced parametrisation
+# from 19 cases to 18 with the suite still green. A battery that shrinks without
+# complaining is a battery that can be quietly emptied.
+# --------------------------------------------------------------------------
+
+MANIFEST_KEYS = {
+    "schema_version", "purpose", "declared_guard_sites", "coverage_gap",
+    "required_ids", "mutations",
+}
+ENTRY_KEYS = {"id", "target", "anchor", "replacement", "kills", "why"}
+
+
+def test_manifest_matches_a_closed_schema() -> None:
+    """Unknown keys are an error, not decoration.
+
+    Every declaration file in this harness is closed the same way, for the same
+    reason: a key nothing reads is a key that can carry a false statement
+    indefinitely. `SSOT_FACTS.json` has FACT_KEYS, `check_canary_freshness.py`
+    has ATTESTED_FILES, and this is the same rule for the battery's own manifest.
+    """
+    manifest = load_manifest()
+    problems: list[str] = []
+    if manifest.get("schema_version") != 1:
+        problems.append(f"schema_version is {manifest.get('schema_version')!r}, expected 1")
+    unknown = set(manifest) - MANIFEST_KEYS
+    if unknown:
+        problems.append(f"unknown top-level keys: {sorted(unknown)}")
+    for key in MANIFEST_KEYS:
+        if key not in manifest:
+            problems.append(f"missing required top-level key {key!r}")
+    seen: set[str] = set()
+    for index, entry in enumerate(manifest.get("mutations", [])):
+        where = entry.get("id", f"entry[{index}]")
+        extra = set(entry) - ENTRY_KEYS
+        if extra:
+            problems.append(f"{where}: unknown keys {sorted(extra)}")
+        for key in ENTRY_KEYS:
+            if key not in entry:
+                problems.append(f"{where}: missing required key {key!r}")
+        if not entry.get("kills"):
+            problems.append(f"{where}: 'kills' is empty -- a mutation that names no fixture "
+                            "verifies nothing")
+        if entry.get("id") in seen:
+            problems.append(f"{where}: duplicate id")
+        seen.add(entry.get("id"))
+    assert not problems, "\n".join(problems)
+
+
+def test_every_required_guard_is_still_covered() -> None:
+    """A pinned floor, so the battery cannot be emptied one entry at a time.
+
+    The declared coverage is partial and says so, which means a plain count is
+    not a floor -- 18 of 131 is as 'partial' as 19 of 131. What makes it a floor
+    is naming the guards that may never lose their mutation: the ones that can
+    change canonical gate state, admit or substitute evidence, authorise a
+    retirement, or bind provenance. Everything else may come and go with the
+    code it guards.
+    """
+    manifest = load_manifest()
+    required = set(manifest["required_ids"])
+    present = {entry["id"] for entry in manifest["mutations"]}
+    missing = required - present
+    assert not missing, (
+        f"required mutation entries are gone: {sorted(missing)}. These cover guards that can "
+        "change a gate, admit or substitute evidence, authorise a retirement, or bind "
+        "provenance. Removing one is a deliberate reduction in what this battery proves and "
+        "must be argued in the manifest, not achieved by deleting a line."
+    )
