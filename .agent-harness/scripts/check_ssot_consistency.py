@@ -1133,7 +1133,7 @@ BOARD_ARTIFACT = ".agent-harness/generated/STATUS_BOARD.md"
 # Files that show the board inline. A tuple so a second is possible, shipping
 # with none: every host multiplies the byte-equality surface and reopens the
 # question of which host is live. D-073 commit 2 adds PROJECT_STATE.md.
-BOARD_HOSTS: tuple[str, ...] = ()
+BOARD_HOSTS: tuple[str, ...] = ("docs/harness/PROJECT_STATE.md",)
 BOARD_BEGIN = "<!-- BEGIN GENERATED STATUS BOARD -->"
 BOARD_END = "<!-- END GENERATED STATUS BOARD -->"
 

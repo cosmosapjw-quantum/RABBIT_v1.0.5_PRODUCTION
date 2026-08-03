@@ -230,6 +230,8 @@ The programme narrative carries no gate id.
 - `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.
 - `G-BETA=FAIL` remains.
 
+{board}
+
 ## 2026-07-28 {early} predecessor overlay (superseded by the overlay above)
 
 - `G-BETA` was PASS when this was written.
@@ -304,7 +306,7 @@ FROZEN_DECISIONS = """# Frozen Decisions
 def repo(tmp_path: Path) -> Path:
     """A miniature SSOT corpus in its own git repository."""
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
-    names = {"early": EARLY, "strict": STRICT}
+    names = {"early": EARLY, "strict": STRICT, "board": BOARD_PLACEHOLDER}
     write(tmp_path / ".agent-harness/context/GATE_REGISTRY.json", gate_registry())
     write(tmp_path / ".agent-harness/context/CLAIM_REGISTRY.jsonl", claim_registry())
     write(tmp_path / ".agent-harness/context/SSOT_FACTS.json", facts_document())
@@ -341,6 +343,17 @@ def repo(tmp_path: Path) -> Path:
         ["git", "add", "-f", ".agent-harness/generated/STATUS_BOARD.md"],
         cwd=tmp_path, check=True, capture_output=True,
     )
+    # ...and transclude it into the declared host, inside the controlling
+    # overlay. `PROJECT_STATE.md` is a BOARD_HOST, so a corpus without the block
+    # is a corpus whose controlling section states no status at all -- which the
+    # checker is right to refuse. The block is rendered from THIS corpus's
+    # synthetic registries, not the real ones.
+    artifact = (tmp_path / ".agent-harness/generated/STATUS_BOARD.md").read_text(encoding="utf-8")
+    block = artifact[artifact.index(BOARD_BEGIN) : artifact.index(BOARD_END) + len(BOARD_END)]
+    state = tmp_path / "docs/harness/PROJECT_STATE.md"
+    text = state.read_text(encoding="utf-8")
+    assert BOARD_PLACEHOLDER in text, text
+    write(state, text.replace(BOARD_PLACEHOLDER, block, 1))
     return tmp_path
 
 
@@ -383,8 +396,13 @@ def edit(repo: Path, rel: str, old: str, new: str) -> None:
 
 def test_baseline_fixture_is_clean(repo: Path) -> None:
     payload = assert_clean(repo)
+    # Coverage is now an IDENTITY, not a floor: the generated board renders every
+    # registry entry, so both gates and both claims are always stated. The old
+    # numbers (2 gates, 1 claim) measured how much of the corpus the prose parser
+    # happened to find, which is exactly the thing generation removes.
     assert payload["gates_covered"] == 2
-    assert payload["claims_covered"] == 1
+    assert payload["claims_covered"] == 2
+    assert payload["board_rows"] == 4
     assert payload["claims_coverage_exempt"] == 1
     assert payload["status_assertions_checked"] > 0
     # The declared value was measured, not taken on trust.
@@ -394,53 +412,6 @@ def test_baseline_fixture_is_clean(repo: Path) -> None:
 # --------------------------------------------------------------------------
 # F-SSOT-01 -- coverage floor. Under-detection must fail, not pass.
 # --------------------------------------------------------------------------
-
-
-def test_f_ssot_01_flipping_gates_and_deleting_the_prose_is_caught(repo: Path) -> None:
-    """The original attack: flip both gates and neutralise what mentioned them.
-
-    The earlier checker walked only assertions it found in prose, so deleting
-    the prose left nothing to walk and it reported ok with zero assertions
-    checked.
-    """
-    write(repo / ".agent-harness/context/GATE_REGISTRY.json", gate_registry("pass", "pass"))
-    edit(
-        repo,
-        "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
-        "- The board is unchanged.",
-    )
-    messages = errors_of(repo)
-    assert any("G-ALPHA" in m and "asserted nowhere" in m for m in messages)
-    assert any("G-BETA" in m and "asserted nowhere" in m for m in messages)
-
-
-def test_f_ssot_01_zero_assertions_anywhere_is_an_error(repo: Path) -> None:
-    for rel, old, new in (
-        (
-            "docs/harness/PROJECT_STATE.md",
-            "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.\n- `G-BETA=FAIL` remains.",
-            "- The board is unchanged.",
-        ),
-    ):
-        edit(repo, rel, old, new)
-    messages = errors_of(repo)
-    assert any("no status assertion was found in any live region" in m for m in messages)
-
-
-def test_f_ssot_01_gate_with_no_coverage_is_named(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- Nothing here.")
-    messages = errors_of(repo)
-    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages)
-    assert not any("G-ALPHA" in m for m in messages)
-
-
-def test_f_ssot_01_claim_not_on_the_exempt_list_requires_coverage(repo: Path) -> None:
-    """Silence is never the permissive option: an unlisted claim is required."""
-    write(repo / ".agent-harness/context/SSOT_FACTS.json", facts_document(exempt_claims=[]))
-    messages = errors_of(repo)
-    assert any("C-SEALED=DEPRECATED is asserted nowhere" in m for m in messages)
-
 
 def test_f_ssot_01_coverage_policy_is_mandatory(repo: Path) -> None:
     document = json.loads((repo / ".agent-harness/context/SSOT_FACTS.json").read_text())
@@ -567,13 +538,6 @@ def test_f_ssot_04_negation_is_refused_rather_than_interpreted(repo: Path) -> No
     messages = errors_of(repo)
     assert any("G-BETA" in m and REFUSED in m for m in messages), messages
     assert not any("G-BETA=PASS but the gate registry" in m for m in messages), messages
-
-
-def test_f_ssot_04_negated_mention_does_not_satisfy_coverage(repo: Path) -> None:
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA` is no longer FAIL.")
-    messages = errors_of(repo)
-    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages)
-
 
 def test_f_ssot_04_status_before_the_id_is_refused(repo: Path) -> None:
     """Backward order was a binding rule; now it is simply not a legal form."""
@@ -1323,31 +1287,6 @@ def test_f_r9_a_later_undeclared_section_cannot_demote_the_controlling_overlay(
     messages = errors_of(repo)
     assert any("silently demotes the controlling overlay" in m for m in messages), messages
 
-
-def test_f_r9_denial_that_agrees_by_accident_does_not_satisfy_coverage(repo: Path) -> None:
-    """NEGATION_RE is a denylist and can never be finished.
-
-    "has no bearing on whether ... VALIDATED" reads to a human as an explicit
-    denial and to the denylist as an assertion -- and because the status it
-    lands on happens to match the registry, it produced no contradiction and
-    silently satisfied the coverage floor for a claim stated nowhere real.
-    Coverage now requires an AFFIRMATIVE connector, so the floor fails loudly
-    instead. The contradiction path deliberately keeps the loose window: failing
-    to catch a lie is the expensive error, and this is the cheap one.
-    """
-    edit(
-        repo,
-        "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
-        "- `G-ALPHA` remains PASS.\n"
-        "- `C-LIVE` has no bearing on whether the lane is VALIDATED.",
-    )
-    messages = errors_of(repo)
-    assert any(
-        "C-LIVE=VALIDATED is asserted nowhere in any live region" in m for m in messages
-    ), messages
-
-
 # --------------------------------------------------------------------------
 # Round 10 (D-070 Part B12). The panel found the B9 binder broken in the paths
 # B9 never covered. One negative fixture per repair; each must die on revert.
@@ -1439,7 +1378,12 @@ def test_f_r10_an_abbreviation_cannot_sever_a_lie_from_its_detection(repo: Path)
     # abbreviation splits the sentence; a narrower scope still forbids what the
     # wider one forbade, so no abbreviation list is needed to close this.
     assert any("G-BETA" in m and REFUSED in m for m in messages), messages
-    assert any("G-BETA" in m and "asserted nowhere" in m for m in messages), messages
+    # The second half of this fixture used to require that the abbreviation ALSO
+    # cost G-BETA its coverage. It cannot any more, and that is the migration
+    # working rather than a weakening: the generated board states every gate, so
+    # "asserted nowhere" is unreachable by construction. What still matters --
+    # that the line is REPORTED rather than silently skipped -- is asserted above.
+    assert not any("asserted nowhere" in m for m in messages), messages
 
 
 def test_f_r10_a_sentence_end_still_breaks_the_subject_group(repo: Path) -> None:
@@ -1492,22 +1436,6 @@ def test_f_r10_a_separate_bullet_keeps_an_unrelated_token_clean(repo: Path) -> N
         "- `G-ALPHA=PASS`.\n- `C-LIVE=VALIDATED`.",
     )
     assert_clean(repo)
-
-
-def test_f_r10_affirmative_requires_a_present_tense_copula(repo: Path) -> None:
-    """The flat allowlist accepted `was FAIL` -- past tense is not a claim
-    about now -- so a superseded status could satisfy the coverage floor."""
-    edit(
-        repo,
-        "docs/harness/PROJECT_STATE.md",
-        "- `G-ALPHA=PASS` remains and `C-LIVE=VALIDATED`.",
-        "- `G-ALPHA` remains PASS.\n- `C-LIVE` was VALIDATED.",
-    )
-    messages = errors_of(repo)
-    assert any(
-        "C-LIVE=VALIDATED is asserted nowhere in any live region" in m for m in messages
-    ), messages
-
 
 def test_f_r10_present_tense_hedges_are_refused_with_everything_else(repo: Path) -> None:
     """The copula rule is withdrawn; tense no longer decides anything.
@@ -1600,20 +1528,6 @@ def test_f_r11_bypass_string_cannot_reach_a_live_surface(repo: Path, sentence: s
     messages = errors_of(repo)
     assert any("G-BETA" in m and REFUSED in m for m in messages), messages
 
-
-@pytest.mark.parametrize("sentence", R11_BYPASS_STRINGS)
-def test_f_r11_bypass_string_never_grants_coverage(repo: Path, sentence: str) -> None:
-    """The other half: a refused segment must not satisfy the coverage floor.
-
-    Round 9's F-NEGATION-CLOSED-VOCAB was exactly this -- a misread denial that
-    counted as the one live statement a gate needed. Reporting the line while
-    still counting it as coverage would leave that hole open.
-    """
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", sentence)
-    messages = errors_of(repo)
-    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages), messages
-
-
 def test_f_r11_the_string_an_auditor_committed_to_this_repository(repo: Path) -> None:
     """The exact bytes an external auditor left in a commit on this branch.
 
@@ -1657,26 +1571,6 @@ def test_f_r11_markup_around_the_equals_is_not_grammar(repo: Path, form: str) ->
     """
     edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", f"- {form} remains.")
     assert_clean(repo)
-
-
-def test_f_r11_a_misspelt_id_does_not_satisfy_the_floor_for_the_real_one(repo: Path) -> None:
-    """An id the registries do not contain is INVISIBLE, and that is stated.
-
-    Both regexes are built from the registry, so `G-BET=PASS` matches neither
-    the structural form nor the bare-id scan: it is not reported, and it never
-    was. Writing a test that asserted otherwise would have been a fixture that
-    documents a guard nobody wrote.
-
-    What actually protects the corpus here is the coverage floor. A misspelling
-    cannot stand in for the gate it resembles, because the real gate still has
-    to be asserted somewhere live, and this pins that -- the floor is the guard,
-    so the floor is what gets the fixture.
-    """
-    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BET=FAIL` remains.")
-    messages = errors_of(repo)
-    assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages), messages
-    assert not any("G-BET=" in m and "G-BETA" not in m for m in messages), messages
-
 
 # --------------------------------------------------------------------------
 # F-R12 -- round 12 attacked round 11's own fix and found three more ways for a
@@ -1838,6 +1732,9 @@ def commit_board(repo: Path) -> None:
 
 
 BOARD = ".agent-harness/generated/STATUS_BOARD.md"
+BOARD_PLACEHOLDER = "<!-- BOARD GOES HERE -->"
+BOARD_BEGIN = "<!-- BEGIN GENERATED STATUS BOARD -->"
+BOARD_END = "<!-- END GENERATED STATUS BOARD -->"
 
 
 def build_board(repo: Path) -> None:
@@ -1924,3 +1821,22 @@ def test_d073_a_dropped_row_is_refused(repo: Path) -> None:
     lines = [l for l in path.read_text(encoding="utf-8").split("\n") if "`G-ALPHA`" not in l]
     write(path, "\n".join(lines))
     assert any("does not match what the registries render" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_d073_coverage_is_an_identity_not_a_floor(repo: Path) -> None:
+    """What replaced the coverage floor, and why nine fixtures were retired.
+
+    The floor existed because live status was hand-written and a gate could go
+    unmentioned. Nine fixtures pinned it: that a deleted mention was caught, that
+    a misread denial did not satisfy it, that a past-tense copula did not, and so
+    on. Every one of those is now unreachable, because the board renders EVERY
+    registry entry and a gate cannot be stated nowhere.
+
+    They are retired rather than left passing vacuously, because a fixture that
+    can no longer fail is a fixture that no longer says anything -- and this
+    project has already found six guards that shipped in exactly that condition.
+    What protects the property now is the row-count identity below, plus
+    `test_d073_a_dropped_row_is_refused` for the case where the renderer breaks.
+    """
+    payload = assert_clean(repo)
+    assert payload["board_rows"] == payload["gates_covered"] + payload["claims_covered"], payload

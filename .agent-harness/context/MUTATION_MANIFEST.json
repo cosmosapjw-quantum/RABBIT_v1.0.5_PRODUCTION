@@ -73,9 +73,9 @@
    "anchor": "                found.append((number, pair.group(1), pair.group(2)))",
    "replacement": "                pass",
    "kills": [
-    ".agent-harness/tests/test_ssot_consistency.py::test_baseline_fixture_is_clean"
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r11_a_false_structural_declaration_is_still_a_contradiction"
    ],
-   "why": "Structural declarations are the only coverage source; without them the floor is unsatisfiable."
+   "why": "Collecting structural `ID=STATUS` pairs is what feeds the registry comparison. Its killer used to be the baseline's coverage count; the generated board now satisfies coverage regardless, so the discriminating case is a FALSE structural declaration -- which goes uncaught if the pairs are never collected."
   },
   {
    "id": "M-SSOT-REGISTRY-CMP",

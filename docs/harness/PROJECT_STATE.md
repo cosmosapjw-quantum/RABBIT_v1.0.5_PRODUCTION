@@ -48,36 +48,64 @@ started without a new explicit instruction.
 
 ## 2026-07-29 D-066 durability and lane-grant overlay (controlling)
 
-### Gate board (authoritative statuses restated from GATE_REGISTRY.json)
+### Gate and claim board
 
-Added at D-070. Before this, the controlling overlay said only "the board remains
-6 PASS / 2 FAIL" without naming a single gate, so three gates and seven claims had
-no checkable statement anywhere current. `check_ssot_consistency.py` now requires
-every gate and every non-exempt claim to be stated where it is current, and fails
-closed when one is not.
+**This block is GENERATED from `GATE_REGISTRY.json` and `CLAIM_REGISTRY.jsonl` by
+`.agent-harness/scripts/build_status_board.py`. Do not edit it.** The checker requires it to
+equal a fresh render byte for byte, here and in `.agent-harness/generated/STATUS_BOARD.md`.
 
-| Gate | Status | Basis |
-|---|---|---|
-| `G-F10C1-RADIAL` | PASS | frozen direct/five-profile envelope |
-| `G-F10C1-REGRESSION` | PASS | lint-fixed retained tree |
-| `G-F10-PERFORMANCE` | PASS | measured whole-endpoint reduction |
-| `G-F10-CATALOGUE` | PASS | nine rows execute with rowwise invariants |
-| `G-F10-INDEPENDENT-FLRW` | FAIL | D-065: no evolved tail enclosure, checkpoint full states, or spatial/tail holdout |
-| `G-F10-COVARIANCE-METROLOGY` | PASS | matched family / module-byte ceiling only |
-| `G-F10-SCOPE` | PASS | F-10 fence holds; downstream authority closed |
-| `G-HARNESS-INTEGRITY` | FAIL | D-065: no exact agent-to-assignment binding; fail-open lease-write fallback |
+It replaces two hand-written tables. Those were added at D-070 because the controlling overlay
+previously said only "the board remains 6 PASS / 2 FAIL" without naming a gate, leaving three
+gates and seven claims with no checkable statement anywhere current -- and the machinery that
+then checked the hand-written replacement was defeated seven times running, most recently by
+characters that render as ASCII and match nothing. Generation ends that argument by removing the
+thing being argued about: a status here can now be wrong only by being wrong in the registry.
 
-### Claim board
+All 8 gates and all 21 claims are rendered, not the 8 + 7 the hand tables carried. Restating a
+sealed claim by hand was expensive enough that fourteen were exempted from having to appear;
+generation makes it free, so the exemption list loses its reason to exist and is removed with the
+parser. **No basis column:** a basis is narrative, a generator cannot invent one, and adding a
+registry field to feed it would be net-adding with a six-commit lifetime. It returns from the
+evidence packages, which carry an `implication` line per accepted package.
+
+<!-- BEGIN GENERATED STATUS BOARD -->
+
+| Gate | Status |
+|---|---|
+| `G-F10-CATALOGUE` | PASS |
+| `G-F10-COVARIANCE-METROLOGY` | PASS |
+| `G-F10-INDEPENDENT-FLRW` | FAIL |
+| `G-F10-PERFORMANCE` | PASS |
+| `G-F10-SCOPE` | PASS |
+| `G-F10C1-RADIAL` | PASS |
+| `G-F10C1-REGRESSION` | PASS |
+| `G-HARNESS-INTEGRITY` | FAIL |
 
 | Claim | Status |
 |---|---|
-| `C-F10-INDEPENDENT` | IMPLEMENTED |
-| `C-HARNESS-INTEGRITY` | IMPLEMENTED |
+| `C-F10-B3V2-DESIGN` | PROPOSED |
+| `C-F10-CATALOGUE` | VALIDATED |
 | `C-F10-COVARIANCE-METROLOGY` | VALIDATED |
-| `C-F10-METROLOGY-R3` | VALIDATED |
-| `C-F10-TRAJECTORY-R2` | IMPLEMENTED |
-| `C-F10-SCOPE` | IMPLEMENTED |
 | `C-F10-FULL-AUTHORITY` | FORBIDDEN |
+| `C-F10-INDEPENDENT` | IMPLEMENTED |
+| `C-F10-INDEPENDENT-GALERKIN-M1` | VALIDATED |
+| `C-F10-INDEPENDENT-MAXENT3-DESIGN` | VALIDATED |
+| `C-F10-INDEPENDENT-POINTWISE-M1` | VALIDATED |
+| `C-F10-METROLOGY-R3` | VALIDATED |
+| `C-F10-PERF` | VALIDATED |
+| `C-F10-ROW9-CLOSURE` | VALIDATED |
+| `C-F10-SCOPE` | IMPLEMENTED |
+| `C-F10-TRAJECTORY-R2` | IMPLEMENTED |
+| `C-F10-W3-PARTIAL` | DERIVED |
+| `C-F10-W5-LOCALIZATION` | VALIDATED |
+| `C-F10C1-CACHE` | DEPRECATED |
+| `C-F10C1-ENDPOINT` | IMPLEMENTED |
+| `C-F10C1-N48` | VALIDATED |
+| `C-HARNESS-INTEGRITY` | IMPLEMENTED |
+| `C-R6-ORBIT-CHART` | VALIDATED |
+| `C-R6-ORBIT-CHART-RABBIT-APPLICABILITY` | VALIDATED |
+
+<!-- END GENERATED STATUS BOARD -->
 
 Fourteen further registered claims are closed records whose status is carried by
 their `FROZEN_DECISIONS` row and audit report; they are listed with written
