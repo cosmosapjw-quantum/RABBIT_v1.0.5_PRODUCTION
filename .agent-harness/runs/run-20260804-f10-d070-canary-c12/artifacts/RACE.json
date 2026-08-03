@@ -6,7 +6,7 @@
  ],
  "supersedes_reason": "C9 declared head_commit 0aa33cf while it was introduced at c63ab3c; C10 declared c63ab3c while introduced at 17d0a06. Both are the same defect the round-13 adjudicator found in C8: `git rev-parse HEAD` at attestation-writing time is structurally the PREVIOUS commit, because a canary runs BEFORE its own sealing commit. B22 identified that cause and fixed the convention for C11 -- and did not re-check the two canaries already written. The new introducing-commit guard found them immediately. Their attested hook digests DO match at the commits they name, so their substantive claims held; the citation did not. Retained attestations are evidence and are retired by replacement, never edited.",
  "method": "24 SubagentStop processes released together from one FIFO against ONE open receipt",
- "head_commit": "PENDING_COMMIT",
+ "head_commit": "9f217f28e8e96fbbe21628762252f498a80dc36d",
  "provenance_convention": "Written PENDING_COMMIT because the commit that will contain these bytes does not exist while the canary runs. Pinned by a follow-up that verifies, before writing, that the named commit is an ancestor of HEAD, is the commit that INTRODUCED this attestation, and contains every attested digest. All three are now checked on every invocation.",
  "start_hook_sha256": "8b28351235d32bb74c7bb84ee32acf910f2bccb4eef993bfbf86baecc6522d17",
  "stop_hook_sha256": "79eb19fcd35c100b9b0e58e4dc6416fb0e9f840ff860e29da7bdf066107f4bc0",
@@ -102,5 +102,6 @@
  "consumed_assignment_id": "A-D070-CANARY-C12",
  "result_sha256": "sha256:8e3c9337c0c237dcdbbbed992245432c4b8af884503e5b8c31fb4870b55be373",
  "resolution_limit": "One trial, one filesystem. Not a proof of atomicity; NFS/overlay untested.",
- "what_this_does_not_claim": "Nothing about the shared-OS-user residual -- C13 DEPENDS on it to construct its input. It moves no gate."
+ "what_this_does_not_claim": "Nothing about the shared-OS-user residual -- C13 DEPENDS on it to construct its input. It moves no gate.",
+ "how_this_was_pinned": "Written PENDING_COMMIT by the canary because the commit containing its bytes did not exist while it ran. Pinned by this follow-up, which verified first that the commit is an ancestor of HEAD, is the commit that INTRODUCED this attestation, and contains both attested digests -- the three relations check_canary_freshness.py now enforces on every invocation."
 }
