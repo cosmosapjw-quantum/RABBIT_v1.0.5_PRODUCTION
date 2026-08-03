@@ -311,6 +311,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any, TypeVar
@@ -969,6 +970,36 @@ def find_assertions(
                 "DISPLAYS and what it SAYS can differ. A gate id with an invisible "
                 "character inside it is not a registry id and every rule here would "
                 "step over it while a reader sees the real gate",
+            ))
+            continue
+        # ROUND 13 (registered reviewer, CRITICAL). Round 12 closed characters that
+        # render as NOTHING and stopped there. The reviewer used the other half:
+        # characters that render as SOMETHING ELSE. `РАЅЅ` is Cyrillic ER, A, DZE,
+        # DZE -- four letters that are not `PASS` to any regex here and are exactly
+        # `PASS` to a reader. It bypassed both surviving forms, on three separate
+        # live surfaces, with output byte-identical to a clean run: not even a
+        # refusal, because the refusal itself only fires once a literal token has
+        # been found.
+        #
+        # Widening the token pattern to cover confusables is the losing move again
+        # -- the confusable table is large, versioned, and an attacker picks from
+        # the part this file has not enumerated. A live handoff line has no reason
+        # to contain a non-ASCII LETTER at all, so that is the rule. Punctuation
+        # and symbols are untouched, which is why em dashes, arrows and section
+        # signs stay legal. Measured cost on the live corpus: 0 non-ASCII letters
+        # against 15 legitimate non-ASCII symbols.
+        foreign = [ch for ch in line if ord(ch) > 127 and unicodedata.category(ch).startswith("L")]
+        if foreign:
+            shown = ", ".join(
+                f"U+{ord(ch):04X} {unicodedata.name(ch, '?')}" for ch in dict.fromkeys(foreign)
+            )
+            unresolved.append((
+                number,
+                "this line",
+                f"contains non-ASCII letters ({shown}), which can render as ASCII while "
+                "matching nothing here -- Cyrillic ER/A/DZE spells a perfect PASS. Status "
+                "words and registry ids are ASCII; symbols such as em dashes and arrows "
+                "are unaffected",
             ))
             continue
         for _offset, segment in split_clauses(line):

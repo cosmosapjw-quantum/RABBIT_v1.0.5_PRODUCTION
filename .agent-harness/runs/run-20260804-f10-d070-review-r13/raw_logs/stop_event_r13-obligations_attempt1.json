@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r13-obligations",
+  "agent_type": "default",
+  "last_assistant_message": "HARNESS_RESULT: {\"assignment_id\": \"A-R13-OBLIGATIONS\", \"context_version\": \"8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-OBLIGATIONS.json\", \"admission_proof\": \"sha256:cdb37932b60f9cd722f49890d4d7bb36eb59142227ea8a497f260e0ae5f165cf\"}"
+}

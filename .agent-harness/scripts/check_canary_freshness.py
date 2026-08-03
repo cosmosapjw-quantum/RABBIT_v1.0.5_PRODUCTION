@@ -97,24 +97,37 @@ def find_attestations(
         try:
             document = loads_strict(raw)
         except json.JSONDecodeError:
-            # Strict parsing rejected it. Skipping here would be FAIL-OPEN: an
+            # Strict parsing rejected it. Skipping would be FAIL-OPEN: an
             # attestation with a duplicate key would become invisible, and an
             # invisible attestation cannot be reported stale, so ambiguous bytes
             # would be a way to retire a canary from its own freshness check.
-            # Distinguish "not our JSON" from "ours but ambiguous" by re-reading
-            # permissively -- and report the second.
+            #
+            # ROUND 13 (registered reviewer, CRITICAL). The first version of this
+            # guard re-read the file permissively and reported it only when the
+            # LOOSE parse still said ``artifact_class == CANARY_ATTESTATION``.
+            # That check was worthless, because a loose parse is last-value-wins
+            # and ``artifact_class`` is a key like any other: duplicating it with
+            # a decoy as the final value made the document classify as "not ours"
+            # and vanish with no trace at all -- not counted, not live, not
+            # superseded, no error -- while carrying a hostile hook digest. C9 was
+            # made to disappear that way in a controlled reproduction, exit 0.
+            #
+            # The lesson is exact: the CLASSIFICATION is part of what is ambiguous,
+            # so it cannot be the thing that decides whether to report. Any file
+            # here that a permissive parser accepts and a strict one refuses is an
+            # error, full stop, whatever it claims to be. Measured cost: 0 of 712
+            # JSON files under this root.
             try:
-                loose = json.loads(raw)
+                json.loads(raw)
             except (json.JSONDecodeError, ValueError):
-                continue  # genuinely not parseable JSON; not ours
-            if isinstance(loose, dict) and loose.get("artifact_class") == ARTIFACT_CLASS:
-                errors.append(
-                    f"{path.relative_to(repo)}: this CANARY_ATTESTATION has a repeated "
-                    "object key, so which value is the attestation depends on which "
-                    "parser reads it. Ambiguous evidence is refused, not resolved -- "
-                    "and it is refused LOUDLY, because a document that silently failed "
-                    "to parse would be a canary that cannot be reported stale."
-                )
+                continue  # genuinely not parseable JSON; not ours, never was
+            errors.append(
+                f"{path.relative_to(repo)}: this file has a repeated object key, so what "
+                "it says depends on which parser reads it -- including what it says its "
+                "own artifact_class is. Ambiguous bytes under the runs root are refused "
+                "rather than classified, because a document that silently failed to parse "
+                "would be a canary that can never be reported stale."
+            )
             continue
         if isinstance(document, dict) and document.get("artifact_class") == ARTIFACT_CLASS:
             found.append((str(path.relative_to(repo)), document))
@@ -273,7 +286,7 @@ def _supersession_cycles(declares: dict[str, set[str]]) -> list[list[str]]:
 
 
 def superseded_ids(
-    attestations: list[tuple[str, dict[str, Any]]], authorised: set[str]
+    attestations: list[tuple[str, dict[str, Any]]], authorised_paths: set[str]
 ) -> tuple[set[str], list[str]]:
     """Canary ids retired by another canary, plus errors for illegal retirements.
 
@@ -313,11 +326,21 @@ def superseded_ids(
                 "retire it from its own freshness check. A canary cannot supersede itself."
             )
             names.discard(mine)
-        if mine is None or mine not in authorised:
+        # Authority is held by this DOCUMENT, not by its id. Round 13 (registered
+        # reviewer, F-R13-003): `authorised` used to be a set of ids, so any file
+        # that merely REUSED an already-backed id inherited the right to retire
+        # others -- a sacrificial document borrowing C8's id retired C9 without
+        # carrying a single receipt field of its own. It was caught, but only
+        # because it also collided with the duplicate-id check, which is a
+        # different rule that happens to overlap. Coupling a security property to
+        # an unrelated rule's coverage is how a guard silently stops guarding when
+        # the other rule moves, so the authority is now per (id, attesting file).
+        if mine is None or rel not in authorised_paths:
             errors.append(
                 f"{rel}: canary {mine or '(no id)'} tries to retire "
-                f"{', '.join(sorted(names))} but is not itself backed by a consumed "
-                "admission receipt. Only a canary that really ran may retire another."
+                f"{', '.join(sorted(names))} but THIS attestation is not itself backed by a "
+                "consumed admission receipt. Authority belongs to the document that really "
+                "ran, not to any file that reuses its id."
             )
             continue
         retired.update(names)
@@ -427,7 +450,7 @@ def check(repo: Path) -> list[str]:
 
     # Receipt backing is decided FIRST, because it is what gives a canary the
     # authority to retire another. A file nobody dispatched retires nothing.
-    authorised: set[str] = set()
+    authorised_paths: set[str] = set()
     backing_errors: dict[str, list[str]] = {}
     for rel, document in attestations:
         name = canary_id(rel, document)
@@ -436,9 +459,9 @@ def check(repo: Path) -> list[str]:
         problems = receipt_backing(repo, rel, name, document)
         backing_errors[rel] = problems
         if not problems:
-            authorised.add(name)
+            authorised_paths.add(rel)
 
-    retired, supersession_errors = superseded_ids(attestations, authorised)
+    retired, supersession_errors = superseded_ids(attestations, authorised_paths)
     errors.extend(supersession_errors)
 
     # Ids that count toward the floor, and the file each was counted from. A SET,
@@ -561,7 +584,7 @@ def main() -> None:
     errors = check(repo)
     attestations, _discovery_errors = find_attestations(repo)
     backed = {
-        name
+        rel
         for rel, document in attestations
         for name in [canary_id(rel, document)]
         if name is not None and not receipt_backing(repo, rel, name, document)

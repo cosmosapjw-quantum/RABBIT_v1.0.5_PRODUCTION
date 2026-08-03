@@ -1,0 +1,237 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-review-r13",
+  "assignment_id": "A-R13-OBLIGATIONS",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "agent_id": "r13-obligations",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260804-f10-d070-review-r13",
+    "assignment_id": "A-R13-OBLIGATIONS",
+    "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e3a617e62d9da492acf3f8dcae92ea5ef06b80bcda6471dd5698cb9898846f30",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-OBLIGATIONS.json",
+  "started_at": "2026-08-03T15:56:17Z",
+  "completed_at": "2026-08-03T16:13:34Z",
+  "tool_versions": {
+    "python": "Python 3.12.3 (system python3; venv/bin/python absent)",
+    "git": "git (repo HEAD c63ab3c4ed79d86834edad91543fac9404d45c13)",
+    "sha256": "coreutils sha256sum + hashlib"
+  },
+  "commands": [
+    "sha256sum over all 91 raw files pinned by CONCURRENT_STOP_RACE.json and all 8 pinned by ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+    "python3 recomputation of both clock brackets from the raw date -u nanosecond files",
+    "wc/grep count of consumed rows in the retained and live ADMISSIONS.jsonl for both canaries",
+    "stat -c %.9Y on every race_stop_err_*.txt to measure launch simultaneity independently of the attestation",
+    "git show <commit>:.codex/hooks/*.py | sha256sum at 4022385, 9df6cd4, 0aa33cf and c63ab3c",
+    "git ls-files + git status --porcelain over both canary run directories",
+    "venv-less read of .codex/hooks/subagent_stop_validate.py and subagent_start_context.py consume/lease paths"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-R13-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "D-065 obligation 1 is NOT DISCHARGED by canary C9. Every number in CONCURRENT_STOP_RACE.json re-derives exactly from the retained raw files: 24 out/err/exit triples exist; 19 stdout files are byte-identical 362-byte block payloads (sha256 d497cabf...) carrying the per-(run, agent_id) lock-contention reason; 5 are zero-byte, and they are processes 2, 3, 12, 14 and 19 exactly as claimed; all 24 exits are 0 and all 24 stderr files are empty; ledger_before_race.jsonl holds 1 row (minted) and ledger_after_race.jsonl holds 2 (minted + consumed), so the consumed-row count I counted myself is 1; the bracket recomputes to 1.084853172 s against the attested 1.084853, and the consumed row's 'at' 13:52:49 falls inside it. All 91 pinned raw hashes re-verify with zero mismatches and every raw file is git-tracked and clean. Concurrency is real and I corroborated it independently of the attestation: the 24 stderr redirection files were created within a 3.028 ms window (13:52:49.662488 to .665515) and the whole race completed by .717919, which no writer summary was needed to establish. THE TEST IS NEVERTHELESS NOT DISCRIMINATING FOR THE PROPERTY THE AUDIT NAMED. The entire consume path in subagent_stop_validate.py runs inside the per-(run, agent_id) flock taken at line ~330, BEFORE the ledger conflict read it guards. All 24 processes shared one agent_id and one run_id, hence one lock file, so at most one process was ever inside the region containing the O_EXCL claim. The 19 blocks ARE the flock refusing; the 5 accepted were serialised through it one at a time. The O_EXCL open at line ~645 therefore executed only sequentially, as an existence check on a claim file written by a process that had already exited the guarded region -- never as a race arbiter. Substituting a plainly non-atomic 'if claim_file.exists()' would produce byte-identical output. Answering the adjudication question directly: the run WOULD have differed had the O_EXCL claim been deleted outright (the four idempotent re-stops would have fallen through to the append and produced 5 consumed rows, not 1), so C9 does discriminate against 'no downstream single-use guard at all'; it does NOT discriminate atomic from non-atomic, because the flock removed all concurrency from the only place atomicity could matter. Worse, the configuration with a RECORDED live break is absent: acquire_agent_lock's own docstring states that one agent_id stopping concurrently on TWO DIFFERENT assignments was 'excluded by nothing at all ... measured to admit both stops in most trials', because two assignments take two different claim files. C9's method says 'against ONE open receipt'. The one scenario known to have failed live has still never been rerun live.",
+      "assumptions_used": [
+        "The stop hook bytes at HEAD c63ab3c (sha256 79eb19fc...) are the bytes C9 exercised; I confirmed C9's declared stop_hook_sha256 and start_hook_sha256 both equal the current working-tree files and the files at C9's declared head_commit 0aa33cf, and that no commit touches .codex/hooks/ between 0aa33cf and HEAD."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ledger_before_race.jsonl",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ledger_after_race.jsonl",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/clock_before_race.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/clock_after_race.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_1.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_2.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:8f9aa7be5676fcc5b59baab5a973faf66beb143db51136469984c347803534ba",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_err_1.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_err_19.txt"
+      ],
+      "reproduction": [
+        "python3 -c \"import json;print([json.loads(l)['event'] for l in open('.agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ledger_after_race.jsonl') if l.strip()])\"",
+        "for i in $(seq 1 24); do stat -c%s .agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_$i.json; done | sort | uniq -c",
+        "stat -c '%.9Y' .agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_err_*.txt | sort -n | sed -n '1p;$p'",
+        "sed -n '318,340p;640,660p' .codex/hooks/subagent_stop_validate.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Whether a live one-agent/two-assignment concurrent stop is still reachable at all now that admit_agent.py refuses a second receipt per agent_id. If it is not, the flock guards only hand-written or pre-fix receipts and the obligation should be reworded rather than re-canaried; that call is the owner's, not mine."
+      ]
+    },
+    {
+      "finding_id": "F-R13-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "D-065 obligation 2 is NOT DISCHARGED as worded, and the retained raw files falsify the wording directly rather than leaving it arguable. Re-derived from raw: ob2_control_exit.txt, ob2_leasefail_exit.txt and ob2_nolease_start_exit.txt all contain '0'. The control's injected context reads 'Run lease: recorded for run run-20260803-f10-d070-canary-c9' with 'Hook preflight: PASS' and systemMessage null; both failure dispatches read 'Run lease: NOT RECORDED (PermissionError); SubagentStop will block this agent' with 'Hook preflight: FAIL' and systemMessage 'SubagentStart preflight failed; do not perform substantive work'. ob2_nolease_stop_out.json is a block decision refusing the ACTIVE_RUN fallback, with exit 0. All 15 pinned ob2 hashes re-verify. I confirmed the null result independently of the attestation's 'consumed_rows_after: 1': the LIVE ADMISSIONS.jsonl for the C9 run shows A-D070-OB2 minted at 13:55:21 with no consumed row anywhere, so nothing was admitted. So the EFFECT is genuinely demonstrated on raw bytes. The wording is not. 'Hard Start failure' is falsified by measurement, and by source: grep for sys.exit, os._exit and SystemExit across subagent_start_context.py returns NOTHING -- the hook has no non-zero exit path at all, for any input. What the code calls a hard Start failure is an advisory systemMessage plus a 'Hook preflight: FAIL' string in injected context, both of which a subagent is free to ignore; 100% of enforcement is at Stop. The line the hook carries at the lease-write except branch, 'D-067: a lease that cannot be written is a hard Start failure', is not true of the code beneath it. TWO FURTHER GAPS BEYOND THE WRITER'S OWN CAVEAT, neither disclosed in the attestation. First, the obligation reads 'hard Start failure on RECEIPT/LEASE write error' (SHARED_CONTEXT.md Q-HOOK-01). Only the lease half was dispatched. No receipt-creation or unusable-receipt failure appears anywhere in the retained ob2 evidence, and since no non-zero exit path exists, that half would fail the wording identically. Second, the attestation's attribution argument -- 'a control dispatch with the directory writable leased normally FIRST, so the failure is attributable to the permission change and not to the agent id' -- has no retained timestamped artifact: none of the ob2 event or output files carries a timestamp, no evidence of the chmod itself (a stat or ls of .agent-harness/leases/ either side) was retained, and .agent-harness/leases/ob2-control.json does not exist in the working tree, so 'control_leased_normally: true' rests on the hook's own injected string. Filesystem mtimes do corroborate the order (control 13:54:39.526, leasefail 13:54:39.565, nolease 13:55:21.324) but mtimes are mutable and are pinned by nothing.",
+      "assumptions_used": [
+        "The obligation text I graded against is the Q-HOOK-01 row of .agent-harness/context/SHARED_CONTEXT.md: 'hard Start failure on receipt/lease write error'."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_control_out.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_leasefail_out.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_nolease_start_out.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_nolease_start_exit.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_nolease_stop_out.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/ADMISSIONS.jsonl",
+        ".codex/hooks/subagent_start_context.py"
+      ],
+      "evidence_fingerprint": "sha256:a0834792decd3725df93463c3f4a82a878fe99bf48f20e94f8054333928f3328",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_nolease_stop_out.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_control_out.json"
+      ],
+      "reproduction": [
+        "grep -n 'sys.exit\\|os._exit\\|SystemExit' .codex/hooks/subagent_start_context.py   # returns nothing",
+        "cat .agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/ob2_nolease_start_exit.txt",
+        "grep -c consumed .agent-harness/runs/run-20260803-f10-d070-canary-c9/ADMISSIONS.jsonl",
+        "ls .agent-harness/leases/ | grep ob2   # no ob2-control.json"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Whether the owner intends 'hard Start failure' to mean a non-zero Start exit, or to mean the fail-closed effect. The writer correctly declined to grade this; I record that the literal wording is measured false and that the effect holds for the lease half only. Deciding which reading governs is an owner amendment, not an adjudication."
+      ]
+    },
+    {
+      "finding_id": "F-R13-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The specific evidentiary gap external audit F10-AUD-008 named against C7 -- that the pointer values, nanosecond stamps and bracket width existed only inside the canary's own summary -- IS closed by C8, and I closed it by recomputation rather than by reading the summary. From the raw bytes: pointer_before_c8_attempt2.txt and pointer_after_c8_attempt2.txt are byte-identical 38-byte files reading 'run-20260803-f10-d070-canary-c8-decoy' (same sha256 ec8e2a4b...), while the consume was bound to run-20260803-f10-d070-canary-c8; the two clock files give 13:37:38.954807151Z and 13:37:38.989499274Z, recomputing to a 0.034692287 s bracket against the attested 0.034692; stop_exit_c8_attempt2.txt is '0' with zero-byte stdout and stderr; ledger_before_c8_attempt2.jsonl holds 2 rows (minted, reopened) and ledger_after_c8_attempt2.jsonl holds 3 (+consumed), so the consumed row demonstrably appeared strictly between the two copies -- which is what carries the containment claim, since the ledger 'at' field is only second-resolution and the attestation correctly declines to claim sub-second ordering from it. All 8 pinned bracket hashes re-verify; the result envelope re-hashes to b527c2daa61eeac8947d26926d63a9857b934df1361b3c2af19e072662fac225, exactly the result_sha256 in the single consumed row, so the result-write attribution is unique and digest-bound. All 21 C8 raw files are git-tracked and clean. TWO INDEPENDENT CORROBORATIONS the attestation does not claim and did not need to: the intra-bracket ORDER is recoverable from filesystem mtimes alone (ledger_before .952787, pointer_before .953924, clock_before .954826, stop_exit .988510, clock_after .989524, pointer_after .990572, ledger_after .991726), and each clock file's recorded instant agrees with its own mtime to within 19-25 microseconds, which is not something a retrofitted summary reproduces by accident. STATED LIMIT, not a defect: 'overlapping-main' is realised as a pointer value written by the operator, not as a second concurrently-executing session -- the decoy run directory contains only RUN_PLAN.json and never hosted an agent. The property under test (the global pointer does not decide the consume) is nevertheless the right property and is established. Both disclosed operator artifacts -- the pre-dispatch --reopen with a stated reason, and attempt 1 blocked on a genuine RESULT_ENVELOPE violation and retained rather than overwritten -- are in the ledger and raw files where I could check them, and neither touches the measurement.",
+      "assumptions_used": [
+        "mtime evidence is treated as corroboration only, never as primary proof; every load-bearing number in this finding is recomputed from file CONTENT."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_before_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_after_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_before_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_after_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_before_c8_attempt2.jsonl",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_after_c8_attempt2.jsonl",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/stop_exit_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/stop_err_c8_attempt2.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/ADMISSIONS.jsonl"
+      ],
+      "evidence_fingerprint": "sha256:fe671c2713cb5fbaf469e41b7a75e3af63a9a4fe20a282cfe274b751d9ea5eff",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/stop_out_c8_attempt1.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8-decoy/RUN_PLAN.json"
+      ],
+      "reproduction": [
+        "sha256sum .agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json",
+        "cat .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_before_c8_attempt2.txt .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_after_c8_attempt2.txt",
+        "wc -l .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_before_c8_attempt2.jsonl .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_after_c8_attempt2.jsonl",
+        "stat -c '%y %n' .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/*attempt2* | sort"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Whether 'overlapping-main' requires a genuinely concurrent second session rather than an operator-written pointer value. C8 does not settle that reading; it settles the pointer-versus-lease property."
+      ]
+    },
+    {
+      "finding_id": "F-R13-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "C8's DIGEST-PINNED document cites the wrong bracket, so obligation 4 is carried entirely by a document the ledger does not pin. results/A-D070-CANARY-C8.json is the file whose sha256 the Stop hook wrote into the consumed row; its finding F-D070-C8 names and lists as evidence_refs pointer_before_c8.txt, pointer_after_c8.txt, clock_before_c8.txt, clock_after_c8.txt, ledger_before_c8.jsonl and ledger_after_c8.jsonl -- the UN-SUFFIXED files, which are attempt 1. I checked what attempt 1 was: stop_out_c8_attempt1.json is a block decision ('Result artifact violates RESULT_ENVELOPE: non-error result must contain at least one finding; findings omit assigned claim_ids: C-HARNESS-INTEGRITY; status=pass requires every finding verdict to be pass'), and ledger_after_c8.jsonl still holds only [minted, reopened] -- no consumed row. Its bracket is 13:37:06.974339303Z to 13:37:07.011282762Z. The consume happened 31 seconds later, at 13:37:38, inside the attempt-2 bracket. So the envelope's own sentence, 'SubagentStop consumed the receipt ... while ACTIVE_RUN named ...-decoy', is supported by none of the six files it cites: they bracket a dispatch that consumed nothing. The correct files are named and pinned only in ACTIVE_RUN_BRACKET_AROUND_CONSUME.json, which no ledger row pins. This is not fatal -- the attempt-1 pointer files independently read the same decoy value, the attempt-2 files are git-committed and re-derive perfectly, and I verified them -- but it is the F10-AUD-008 defect class recurring in miniature inside the canary written to escape it: an auditor who follows only the digest-bound document lands on the wrong measurement. Both canaries additionally carry evidence_fingerprint 'sha256:0000...0000', so neither envelope digest-binds any evidence at all, and C9's envelope goes further -- its only finding reads 'PENDING -- written from the measured outcome, not before it' with verdict pass, so the sole ledger-pinned assertion for obligation 1 asserts nothing. The writer documents WHY (a result envelope must exist before the dispatch that consumes it) and that reasoning is sound; the consequence is that for both canaries the tamper-evident anchor and the substantive claim are in different files, and the substantive one is anchored only by git commit c63ab3c / 9df6cd4.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_after_c8.jsonl",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_before_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/clock_after_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/stop_out_c8_attempt1.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/results/A-D070-CANARY-C9.json"
+      ],
+      "evidence_fingerprint": "sha256:cf60843013c8547c9b50c088c3a310bc2072336968a3ca576c26febc8b456aba",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/pointer_before_c8.txt",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json"
+      ],
+      "reproduction": [
+        "python3 -c \"import json;print([json.loads(l)['event'] for l in open('.agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/ledger_after_c8.jsonl') if l.strip()])\"",
+        "cat .agent-harness/runs/run-20260803-f10-d070-canary-c8/raw_logs/stop_out_c8_attempt1.json",
+        "python3 -c \"import json;print(json.load(open('.agent-harness/runs/run-20260803-f10-d070-canary-c8/results/A-D070-CANARY-C8.json'))['findings'][0]['evidence_refs'])\""
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "C8's declared head_commit does not contain the stop-hook bytes C8 attests, and the freshness detector is structurally unable to notice. ACTIVE_RUN_BRACKET_AROUND_CONSUME.json declares head_commit 402238555cbebb56b9ad4d79a77e3dc37e259f42 and stop_hook_sha256 79eb19fc...; `git show 4022385:.codex/hooks/subagent_stop_validate.py | sha256sum` gives 0533da88..., which is precisely the C7 hash that same artifact says went stale. The attested bytes 79eb19fc first enter the tree at 9df6cd4 -- the commit that also introduces C8's own evidence -- because the B16 hook edit was uncommitted working-tree state when C8 ran. So taken at face value the attestation pairs a commit id with a hook hash that commit does not contain, and the only thing tying C8 to 79eb19fc is C8's self-declared field: the SUMMARY_ONLY property again, in the provenance anchor rather than in the bracket. check_canary_freshness.py cannot catch this because it compares declared hashes against the WORKING TREE and never against the declared head_commit; I ran it and it returns ok:true with C8 and C9 live, C5/C6/C7 superseded, which is correct on its own criterion and silent on this one. I ran it against the HEAD c63ab3c bytes of that script, sha256 30d862309cd817fc8ed24d930cc40f8df9c186538b49df0c2b59eb1b5eee9265; a concurrent agent rewrote the file mid-adjudication, so it is cited here by that digest rather than pinned in this finding's fingerprint (see errors[]). C9 is clean by the same test and I verified it: head_commit 0aa33cf contains both hooks at exactly the declared hashes, and `git log 0aa33cf..HEAD -- .codex/hooks/` is empty. The recoverable statement for C8 is therefore not the one it makes but this one: the attested hook bytes are those of 9df6cd4, C8's own sealing commit, and they are unchanged at HEAD c63ab3c.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:d4805f85793a2f4ccdbf50a10d52cb0e39724658efd2ea13f4cebd078f5cc67a",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json"
+      ],
+      "reproduction": [
+        "git show 402238555cbebb56b9ad4d79a77e3dc37e259f42:.codex/hooks/subagent_stop_validate.py | sha256sum",
+        "git show 9df6cd4:.codex/hooks/subagent_stop_validate.py | sha256sum",
+        "git log --oneline 402238555cbebb56b9ad4d79a77e3dc37e259f42..HEAD -- .codex/hooks/",
+        "python3 .agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "inconclusive",
+      "severity": "low",
+      "statement": "Inventory of what still rests only on the writer's summary, as the assignment requires me to say explicitly. (1) The 1-consumer/4-idempotent chronology inside C9's five accepted processes is NOT measured. All five stdout files are zero bytes and all five exits are 0, so nothing in the raw evidence identifies which process consumed or records that the other four took the FileExistsError idempotent branch. It is a sound inference from the code -- that branch is the only path returning silently after a matching digest -- but it is an inference, not a measurement, and the attestation presents it as observed. (2) No launcher script or command text is retained for EITHER canary, so the FIFO barrier for C9 and the single-shell-command bracket for C8 are described in prose only; I corroborated both from mtimes (3.028 ms creation spread for C9's 24 stderr files; monotone intra-bracket ordering for C8) but mtimes are mutable and pinned by nothing. (3) The chmod 500 perturbation behind the obligation-2 measurement has no retained artifact; only the resulting PermissionError string attests it. (4) Three C9 raw files (start_out_c9.json, start_err_c9.txt, start_event_c9.json) and thirteen C8 raw files, including all of attempt 1 and both Start captures, are retained and git-tracked but pinned by no attestation digest. None of these overturns a verdict above; all are recorded so the next reviewer does not have to rediscover them.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_2.json",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_19.json"
+      ],
+      "evidence_fingerprint": "sha256:9dbd5309811d98e1d411e08ddedf0da007c1b354a1ba80e0e0c513e557f2314e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "for i in 2 3 12 14 19; do stat -c '%s %n' .agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs/race_stop_out_$i.json; done",
+        "ls .agent-harness/runs/run-20260803-f10-d070-canary-c9/raw_logs | wc -l   # 94 present, 91 pinned"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether retaining the launcher script would itself be adequate, given the same single writer produces it. Not decidable here."
+      ]
+    }
+  ],
+  "errors": [
+    "CONCURRENT WORKING-TREE MODIFICATION, observed not caused. At the start of this adjudication `git status --porcelain` over the whole repository was empty. At the end it reported two modified files: .agent-harness/scripts/check_canary_freshness.py (HEAD c63ab3c sha256 30d862309cd817fc..., worktree 96f22168c4893b14..., mtime 2026-08-04T01:11:09+0900) and .agent-harness/tests/test_canary_freshness.py (HEAD 56f0e0ca78a1a6c1..., worktree 3bff7b4616387962..., mtime 01:11:47+0900), +65/-13 lines combined. I did not write either file; my only repository write is the declared result_path. The likely author is another agent registered in this same run (A-R13-BYPASS and A-R13-CANARY both hold minted receipts) or the parent. I record it because my assignment fixes the bytes under judgement at HEAD c63ab3c: every verdict above is against HEAD bytes, .codex/hooks/*.py and both canary run directories were verified git-clean throughout, and the one affected citation was moved out of a fingerprint and into an explicit HEAD digest. It is also, in miniature, the hazard this whole review is about -- evidence read from a mutable working tree rather than from committed bytes -- so it is reported rather than silently absorbed."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-OBLIGATIONS.json"
+  ]
+}

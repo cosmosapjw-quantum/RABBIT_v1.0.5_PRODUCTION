@@ -1748,3 +1748,49 @@ def test_f_r12_a_fenced_block_without_a_registry_id_is_fine(repo: Path) -> None:
         "- `G-BETA=FAIL` remains.\n\n```\nvenv/bin/python check.py   # expect PASS\n```\n",
     )
     assert_clean(repo)
+
+
+def test_f_r13_a_homoglyph_status_is_refused(repo: Path) -> None:
+    """Round 13, registered reviewer, CRITICAL.
+
+    Round 12 closed characters that render as NOTHING and stopped there. The
+    reviewer used the other half: characters that render as SOMETHING ELSE.
+    Cyrillic ER, A, DZE, DZE spells a perfect `PASS` that matched nothing here,
+    and produced output byte-identical to a clean run -- not even a refusal,
+    because the refusal only fires once a literal token has been found.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA=РАЅЅ` is recorded.\n- `G-BETA=FAIL` remains.",
+    )
+    assert any("non-ASCII letters" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r13_a_homoglyph_in_prose_beside_an_id_is_refused(repo: Path) -> None:
+    """The same substitution in the prose form, which is refused unread anyway --
+    except that it was NOT, because the refusal needs a literal token first."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA` is РАЅЅ.\n- `G-BETA=FAIL` remains.",
+    )
+    assert any("non-ASCII letters" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r13_ordinary_non_ascii_punctuation_stays_legal(repo: Path) -> None:
+    """The control, and the reason the rule is LETTERS and not all non-ASCII.
+
+    The live corpus legitimately carries em dashes, arrows and section signs.
+    Refusing every non-ASCII byte would have cost fifteen honest characters to
+    buy the same protection that costs zero when scoped to letters.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA=FAIL` remains — see § 4 → the appendix.",
+    )
+    assert_clean(repo)

@@ -165,14 +165,14 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B18",
+     "line_contains": "D-070 Part B20",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
      "note": "Live ledger row for the strict-JSON repair that added the fixtures."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B18",
+     "line_contains": "D-070 Part B20",
      "value_regex": "Hooks `(\\d+)/\\d+`",
      "role": "current",
      "note": "Result cell of the same live row."
@@ -222,18 +222,23 @@
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 108,
+   "value": 111,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B18",
+     "line_contains": "D-070 Part B20",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."
     }
    ],
    "prior": [
+    {
+     "value": 108,
+     "as_of_commit": "0aa33cf",
+     "note": "D-070 Part B18, before the round-13 homoglyph repair."
+    },
     {
      "value": 101,
      "as_of_commit": "9df6cd4",
@@ -264,18 +269,23 @@
     "path": ".agent-harness/tests/test_canary_freshness.py",
     "pattern": "^def test_"
    },
-   "value": 29,
+   "value": 33,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B18",
+     "line_contains": "D-070 Part B20",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
      "note": "Live ledger row for the round-12 self-attack repairs."
     }
    ],
    "prior": [
+    {
+     "value": 29,
+     "as_of_commit": "0aa33cf",
+     "note": "D-070 Part B18, before the round-13 reviewer findings."
+    },
     {
      "value": 26,
      "as_of_commit": "9df6cd4",

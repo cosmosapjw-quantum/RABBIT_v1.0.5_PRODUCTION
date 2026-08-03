@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-canary-c10",
+  "assignment_id": "A-D070-C10-A",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "agent_id": "d070-canary-c10",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260804-f10-d070-canary-c10",
+    "assignment_id": "A-D070-C10-A",
+    "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b9faf3b302ef10fc980b07fcaf7443f5092f2a7702e485a2ef994482bc0d298f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-A.json",
+  "started_at": "2026-08-04T01:16:00Z",
+  "completed_at": "2026-08-04T01:16:00Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)"
+  },
+  "commands": [
+    "two concurrent stops, one agent id, two assignments"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-D070-C10-A",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Slot fixture for the two-assignment concurrency discriminator.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260804-f10-d070-canary-c10/ADMISSIONS.jsonl"
+      ],
+      "evidence_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "see artifact"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-A.json"
+  ]
+}

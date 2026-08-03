@@ -426,3 +426,102 @@ def test_f_r12_a_duplicate_key_in_the_admissions_ledger_is_refused(repo: Path) -
                       encoding="utf-8")
     errors = C.check(repo)
     assert any("C7" in m for m in errors), errors
+
+
+def test_f_r13_a_duplicated_artifact_class_cannot_hide_a_stale_canary(repo: Path) -> None:
+    """Round 13, registered reviewer, CRITICAL -- against round 12's own fix.
+
+    Part B18 reported an ambiguous attestation only when a PERMISSIVE re-read
+    still said ``artifact_class == CANARY_ATTESTATION``. That check was
+    worthless: a loose parse is last-value-wins and ``artifact_class`` is a key
+    like any other, so duplicating it with a decoy as the final value made the
+    document classify as "not ours" and vanish entirely -- not counted, not
+    live, not superseded, no error -- while carrying a hostile hook digest.
+
+    The stale hook below is what makes this discriminating: without it the file
+    could vanish and the run would still be clean, and the test would pass
+    against the broken code too. That mistake has been made five times in this
+    chain, so the discriminator is built in rather than assumed.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    write(repo / START_HOOK, "# start hook v2 -- C7 no longer describes this\n")
+    assert any("C7 is STALE" in m for m in C.check(repo)), "control: staleness must be caught"
+    body = path.read_text(encoding="utf-8")
+    doctored = body.replace(
+        '"artifact_class": "CANARY_ATTESTATION"',
+        '"artifact_class": "CANARY_ATTESTATION", "artifact_class": "NOT_A_CANARY_DECOY"',
+        1,
+    )
+    assert doctored.count('"artifact_class"') == 2, doctored[:200]
+    path.write_text(doctored, encoding="utf-8")
+    errors = C.check(repo)
+    assert any("repeated object key" in m for m in errors), errors
+
+
+def test_f_r13_an_unrelated_unparseable_file_is_still_ignored(repo: Path) -> None:
+    """The control on the widened rule: refusing everything ambiguous must not
+    mean refusing everything. A file that no parser accepts is not ours."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    write(repo / ".agent-harness/runs/run-canary-c7/artifacts/notes.json", "this is not json at all")
+    assert C.check(repo) == []
+
+
+def test_f_r13_authority_to_retire_belongs_to_the_document_not_the_id(repo: Path) -> None:
+    """Round 13, F-R13-003. A file that merely REUSES a backed id had authority.
+
+    `authorised` used to be a set of canary ids, so a sacrificial document with
+    no receipt of its own could borrow a genuine canary's id and retire another
+    canary with it. The reviewer's own attack was caught -- but only by the
+    DUPLICATE-ID rule, an unrelated check that happened to overlap. Coupling a
+    security property to another rule's coverage is how a guard silently stops
+    guarding when that other rule moves.
+
+    Building a case that actually discriminates takes care, and the first attempt
+    did not: a sacrificial document with a UNIQUE id is unauthorised under the
+    old rule as well, so it fails either way and proves nothing. The mutation
+    battery caught that. This version makes the clone escape the duplicate-id
+    rule by being RETIRED itself -- retired canaries are skipped before duplicate
+    detection -- so the only thing that can refuse it is per-document authority:
+
+      C6   backed, and made STALE, so failing to report it is observable
+      C7   backed, live
+      C7'  a CLONE of C7's id carrying no receipt, declaring it retires C6
+      C8   backed, retires C7 -- which retires the clone too, by id
+
+    Old rule: id C7 is authorised, so the clone's retirement of C6 takes effect
+    and C6's staleness is never reported. New rule: the clone's own path is not
+    authorised, so it is refused and C6 is still measured.
+    """
+    write(repo / START_HOOK, "# start hook v2 -- C6 no longer describes this\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    stale_c6 = repo / ".agent-harness/runs/run-canary-c6/artifacts/ATTESTATION.json"
+    body = json.loads(stale_c6.read_text(encoding="utf-8"))
+    body["start_hook_sha256"] = digest("# start hook v1\n")   # pins the OLD bytes
+    write(stale_c6, json.dumps(body, indent=1))
+
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    attest(repo, "run-canary-c8", fresh(repo, canary="C8", supersedes_canary=["C7"]))
+    clone = repo / ".agent-harness/runs/run-canary-c7-clone/artifacts/ATTESTATION.json"
+    write(clone, json.dumps({
+        "artifact_class": "CANARY_ATTESTATION",
+        "canary": "C7",                       # reuses an AUTHORISED id
+        "supersedes_canary": ["C6"],
+        "start_hook_sha256": digest((repo / START_HOOK).read_text(encoding="utf-8")),
+        "stop_hook_sha256": digest((repo / STOP_HOOK).read_text(encoding="utf-8")),
+    }, indent=1))
+
+    errors = C.check(repo)
+    assert any("THIS attestation is not itself backed" in m for m in errors), errors
+    assert any("C6 is STALE" in m for m in errors), (
+        "C6 must still be measured; if the clone retired it, the guard did nothing", errors)
+    assert not any("is attested by 2 live files" in m for m in errors), (
+        "the duplicate-id rule must NOT be what fails this, or it proves nothing", errors)
+
+
+def test_f_r13_a_backed_document_may_still_retire(repo: Path) -> None:
+    """The control: per-document authority must not break ordinary supersession."""
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    assert C.check(repo) == []

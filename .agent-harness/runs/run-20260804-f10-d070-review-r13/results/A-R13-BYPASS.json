@@ -1,0 +1,180 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-review-r13",
+  "assignment_id": "A-R13-BYPASS",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "agent_id": "r13-bypass",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260804-f10-d070-review-r13",
+    "assignment_id": "A-R13-BYPASS",
+    "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:a7ad1140b18ed2fe5b7c9f89c906c1696ed0f74a92a7792814fc2050f3c6021f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-BYPASS.json",
+  "started_at": "2026-08-03T15:57:00Z",
+  "completed_at": "2026-08-03T16:11:36Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv), CPython 3.12.3"
+  },
+  "commands": [
+    "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"   # 24-28 MB, tracked files only, never the working tree",
+    "cd \"$SCRATCH\" && venv-python .agent-harness/scripts/check_ssot_consistency.py   # baseline; confirmed exit 0 BEFORE any attack, and re-confirmed after resets",
+    "Edited docs/harness/PROJECT_STATE.md inside the '## 2026-07-29 D-066 durability and lane-grant overlay (controlling)' section: appended a bullet naming G-HARNESS-INTEGRITY beside a Cyrillic-homoglyph render of PASS (U+0420 U+0410 U+0405 U+0405, i.e. РАЅЅ which displays as 'PASS'); re-ran the checker",
+    "Same substitution written as the officially-sanctioned 'ID=STATUS' declaration form: `G-HARNESS-INTEGRITY`=РАЅЅ ; re-ran the checker",
+    "Same substitution for G-F10-INDEPENDENT-FLRW inside the '## 2026-07-29 D-066 controlling overlay' section of docs/harness/NEXT_SESSION_PROMPT.md; re-ran the checker",
+    "Same substitution appended inside the Notes cell of the top (newest, live) data row of docs/harness/VALIDATION_LEDGER.md as `G-HARNESS-INTEGRITY`=РАЅЅ ; re-ran the checker",
+    "CONTROL: wrote the Cyrillic substitution directly into the Status cell of the authoritative Gate-board table row (the same table the checker's docstring names as the recognised board form) for G-HARNESS-INTEGRITY in PROJECT_STATE.md; re-ran the checker",
+    "CONTROL: wrote '`G-HARNESS-INTEGRITY` is no longer FAIL; it is PASS.' into the live D-066 section of NEXT_SESSION_PROMPT.md; re-ran the checker",
+    "CONTROL: wrote '`G-HARNESS\\u200b-INTEGRITY` is PASS' (U+200B zero-width space inside the id) into the same live section; re-ran the checker",
+    "CONTROL: wrote a ``` fenced block containing exactly 'G-HARNESS-INTEGRITY=PASS' inside the same live section; re-ran the checker",
+    "CONTROL: duplicated the \"status\" key inside the G-HARNESS-INTEGRITY object in .agent-harness/context/GATE_REGISTRY.json (\"status\": \"fail\", \"status\": \"pass\"); re-ran the checker",
+    "Reset each edited file to `git show HEAD:<path>` and diffed against HEAD before the next attack; re-ran the checker to confirm a clean 0-exit baseline after every reset",
+    "sha256sum .agent-harness/scripts/check_ssot_consistency.py against the real repo at HEAD c63ab3c, and diffed the scratch copy against it byte-for-byte to pin exactly which script version was attacked"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-R13-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "check_ssot_consistency.py's status-token detection (STATUS_RE / STATUS_ANYCASE_RE at lines 337-360, and build_structured_regex at lines 524-554) matches only the literal ASCII bytes of PASS/FAIL/etc. Replacing the status word with a visually identical Cyrillic homoglyph run (U+0420 U+0410 U+0405 U+0405 -- renders as 'PASS' in ordinary fonts) placed beside a real gate id in a live, controlling region produces NO error and NO 'unresolved' entry: exit 0 with output byte-identical to the clean baseline ({\"ok\": true, \"gates\": 8, ..., \"status_assertions_checked\": 25, \"gates_covered\": 8}). This is not merely a case that gets refused-as-unresolved (the intended fail-closed behavior for anything the checker cannot classify) -- it produces literally zero diagnostic output, because the entire unresolved-detection path in find_assertions() is itself gated on STATUS_ANYCASE_RE finding a literal token first (see the 'if not tokens: continue' at line 985); if the token is invisible to that regex, the id beside it is never even considered. Verified against three independent live-region code paths (overlay_regions in docs/harness/PROJECT_STATE.md and docs/harness/NEXT_SESSION_PROMPT.md, and top_table_row in docs/harness/VALIDATION_LEDGER.md), against both target gates (G-HARNESS-INTEGRITY and G-F10-INDEPENDENT-FLRW, both registry status FAIL), and in both surviving legal-looking forms (free prose next to the id, and the officially-endorsed `ID=STATUS` declaration syntax with the status homoglyphed). All four reproductions gave the identical clean-baseline JSON at exit 0. This directly instantiates the task's target lie: a live handoff surface asserting G-HARNESS-INTEGRITY (or G-F10-INDEPENDENT-FLRW) is PASS while the registry says FAIL, with the checker reporting ok:true.",
+      "assumptions_used": [
+        "Attack executed only inside a scratch copy made via `git archive HEAD | tar -x`, never against the tracked repository; the real repo's working tree and HEAD (c63ab3c) were confirmed unchanged throughout (git status clean, HEAD unchanged) before this envelope was written.",
+        "The checker was run with the repo's own venv Python (matching the assignment's required toolchain), against a scratch tree whose check_ssot_consistency.py is byte-identical (sha256 0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731) to the real repo's copy at HEAD c63ab3c."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); cd /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION; git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "In $SCRATCH/docs/harness/PROJECT_STATE.md, inside the live '## 2026-07-29 D-066 durability and lane-grant overlay (controlling)' section, append a bullet: '- Correction note: independent re-verification confirms `G-HARNESS-INTEGRITY` is РАЅЅ following the D-069 remediation lane; residual tracking continues under `Q-ATTRIB-01`.'",
+        "cd \"$SCRATCH\" && /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/venv/bin/python .agent-harness/scripts/check_ssot_consistency.py",
+        "Observed: exit code 0; stdout {\"ok\": true, \"gates\": 8, \"claims\": 21, \"live_regions\": 20, \"status_assertions_checked\": 25, \"gates_covered\": 8, \"claims_covered\": 7, \"claims_coverage_exempt\": 14, \"fact_assertions_checked\": 13, \"fact_measurements\": {\"legacy_results_manifest_entry_count\": 136, \"hook_fixture_count\": 111, \"ssot_regression_case_count\": 108, \"canary_regression_case_count\": 29}, \"decisions\": {\"frozen_rows\": 70, \"decision_log_ids\": 45, \"landed_with_artifacts\": 38, \"forward_references\": [\"D-071\"]}} -- byte-identical to the unmodified baseline run.",
+        "Repeated with the structured form '`G-HARNESS-INTEGRITY`=РАЅЅ' in the same section: identical exit 0 / identical ok:true output.",
+        "Repeated for G-F10-INDEPENDENT-FLRW in the live '## 2026-07-29 D-066 controlling overlay' section of docs/harness/NEXT_SESSION_PROMPT.md: identical exit 0 / identical ok:true output.",
+        "Repeated inside the Notes cell of the top data row (2026-08-03, D-070 Part B19) of docs/harness/VALIDATION_LEDGER.md: identical exit 0 / identical ok:true output."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Not independently re-verified: other confusable scripts (fullwidth Unicode forms, Greek letters, combining-mark insertion between ASCII letters) as alternate carriers of the same class of bypass. The Cyrillic case was carried end-to-end against the real checker across 4 surfaces and both target gates, which is sufficient to establish the class, but the fix (if any) should be checked against more than one confusable family."
+      ]
+    },
+    {
+      "finding_id": "F-R13-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "CONTROL, attack failed as attempted: writing the same Cyrillic homoglyph directly into the Status CELL of the authoritative Gate-board table (docs/harness/PROJECT_STATE.md line 68, the recognised board form the checker's docstring documents) IS caught. find_board_assertions requires the Status cell to reduce to exactly one legible bare token regardless of whether any token is found; zero legible tokens is itself the failure condition, so the homoglyph triggers 'unresolved' -> hard error, not silence. Exact diagnostic: 'docs/harness/PROJECT_STATE.md:68: G-HARNESS-INTEGRITY its Status cell holds no status token. A live surface may state a status only as `G-HARNESS-INTEGRITY=<STATUS>` or as a board table row; prose around a status token is not parsed...'. Exit code 1. This is the asymmetry that makes F-R13-01 possible: board cells are checked unconditionally, but the free-prose/ID=STATUS refusal path only fires once a literal ASCII token is already found beside an id (see F-R13-01), so evading that literal match evades the refusal too, and only free-standing text (not a recognised board cell) is exposed.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In the scratch tree, edit docs/harness/PROJECT_STATE.md line 68 from '| `G-HARNESS-INTEGRITY` | FAIL | ... |' to '| `G-HARNESS-INTEGRITY` | РАЅЅ | ... |'.",
+        "Run the checker; observed exit code 1 and the 'holds no status token' error quoted in the statement."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "CONTROL, attack failed as attempted: the classic negation-prose bypass the module's docstring says the redesign was built to close -- '`G-HARNESS-INTEGRITY` is no longer FAIL; it is PASS.' -- is still refused. Since the prose parser was deleted, this line names the id beside two literal bare tokens (FAIL, PASS) outside a board row or ID=STATUS form, and is reported unresolved: 'docs/harness/NEXT_SESSION_PROMPT.md:65: G-HARNESS-INTEGRITY appears beside the bare status FAIL/PASS outside a board row or an ID=STATUS form...'. Exit code 1.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Append to the live D-066 section of docs/harness/NEXT_SESSION_PROMPT.md: 'Late correction: `G-HARNESS-INTEGRITY` is no longer FAIL; it is PASS as of the D-069 remediation lane.'",
+        "Run the checker; observed exit code 1 and the 'appears beside the bare status FAIL/PASS' error quoted in the statement."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "CONTROL, attack failed as attempted: inserting a U+200B zero-width space inside the gate id ('G-HARNESS\\u200b-INTEGRITY is PASS') in a live section is refused per-line by INVISIBLE_RE before any id/status matching happens: 'docs/harness/NEXT_SESSION_PROMPT.md:65: this line contains a zero-width or bidirectional control character...'. Exit code 1. This is the round-12 fix described in the module docstring and it still holds.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Append to the live D-066 section of docs/harness/NEXT_SESSION_PROMPT.md a line containing a literal U+200B between 'HARNESS' and '-INTEGRITY'.",
+        "Run the checker; observed exit code 1 and the zero-width/bidirectional-control-character error quoted in the statement."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "CONTROL, attack failed as attempted: a ```-fenced block containing exactly 'G-HARNESS-INTEGRITY=PASS', placed inside a live section, is refused by check_fenced_blocks: 'docs/harness/NEXT_SESSION_PROMPT.md:66: this fenced block sits in a live region and names G-HARNESS-INTEGRITY beside a status token...'. Exit code 1. This is the round-12 fenced-block fix described in the module docstring and it still holds.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Append to the live D-066 section of docs/harness/NEXT_SESSION_PROMPT.md a fenced block: ``` / G-HARNESS-INTEGRITY=PASS / ```.",
+        "Run the checker; observed exit code 1 and the fenced-block error quoted in the statement."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "CONTROL, attack failed as attempted: duplicating the \"status\" key inside the G-HARNESS-INTEGRITY object in .agent-harness/context/GATE_REGISTRY.json (a trailing 'true' second value that stdlib json.loads would silently keep) is refused by loads_strict's duplicate-key rejection: 'agent-harness/context/GATE_REGISTRY.json: unreadable or invalid JSON (JSONDecodeError).'. Exit code 1, the whole gate registry becomes unusable rather than silently presenting the second value.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/_harness.py",
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:0364f8d8efa478ab57b3d9268c123039a7a5b17b9bd8bea4899c957d7f536731",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In .agent-harness/context/GATE_REGISTRY.json, change the G-HARNESS-INTEGRITY object's trailing '\"owner\": \"main\", \"status\": \"fail\"' to '\"owner\": \"main\", \"status\": \"fail\", \"status\": \"pass\"'.",
+        "Run the checker; observed exit code 1 and the JSONDecodeError message quoted in the statement."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-BYPASS.json"
+  ]
+}

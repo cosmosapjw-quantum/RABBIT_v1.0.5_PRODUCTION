@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260804-f10-d070-review-r13",
+  "created_at": "2026-08-03T15:55:01+00:00",
+  "spec_ref": "SPEC.md",
+  "base_ref": "main",
+  "head_ref": "HEAD",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

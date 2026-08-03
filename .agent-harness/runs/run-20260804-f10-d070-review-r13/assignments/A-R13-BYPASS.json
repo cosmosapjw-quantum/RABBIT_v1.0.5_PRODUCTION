@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-review-r13",
+  "assignment_id": "A-R13-BYPASS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "independence_mode": "blind-results",
+  "discovery_mode": "independent",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "ATTACK check_ssot_consistency.py at HEAD c63ab3c and find a way to leave a FALSE statement about a gate's current status on a live handoff surface while the checker exits 0. The prose parser was deleted in Part B15: a status may be stated only as a board table row or as ID=STATUS, and a registry id sharing a hard segment with a bare status token is refused unread. Part B18 added case-insensitive refusal, rejection of zero-width and bidirectional characters, and refusal of live fenced blocks holding an id beside a status. Known and deliberately unfixed: an id on one list bullet and a bare status on the next are separate hard segments and stay legal. Your baseline MUST exit 0 before you attack; the previous round reported twelve false CATCHES because its baseline was dirty.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260804-f10-d070-review-r13/assignments/A-R13-BYPASS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-BYPASS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-BYPASS.json",
+  "status": "registered"
+}
