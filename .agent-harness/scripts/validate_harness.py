@@ -24,6 +24,7 @@ from _harness import (
     active_run_id,
     hash_files,
     load_json,
+    loads_strict,
     root,
     utc_now,
     validate_assignment_contract,
@@ -154,7 +155,7 @@ def read_ledger(ledger_path: Path) -> tuple[list[dict], list[str]]:
         if not line.strip():
             continue
         try:
-            row = json.loads(line)
+            row = loads_strict(line)
         except json.JSONDecodeError:
             errors.append(
                 f"Malformed admission ledger line: {ledger_path.name}:{number}"
@@ -306,7 +307,7 @@ def load_legacy_manifest(
         )
         return {}, "unreadable", errors
     try:
-        payload = json.loads(raw)
+        payload = loads_strict(raw)
     except json.JSONDecodeError as exc:
         errors.append(f"Legacy results manifest is not valid JSON: {exc}")
         return {}, "unparseable", errors
@@ -419,7 +420,7 @@ def declared_legacy_entry_count(repo: Path) -> tuple[int | None, list[str]]:
             )
         return None, errors
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = loads_strict(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         errors.append(
             f"Declared-facts file is unreadable or invalid JSON "

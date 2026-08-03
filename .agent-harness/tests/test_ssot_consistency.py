@@ -1660,3 +1660,91 @@ def test_f_r11_a_misspelt_id_does_not_satisfy_the_floor_for_the_real_one(repo: P
     messages = errors_of(repo)
     assert any("G-BETA=FAIL is asserted nowhere" in m for m in messages), messages
     assert not any("G-BET=" in m and "G-BETA" not in m for m in messages), messages
+
+
+# --------------------------------------------------------------------------
+# F-R12 -- round 12 attacked round 11's own fix and found three more ways for a
+# false gate status to be visible to a reader and invisible to this file.
+#
+# All three exploit the same seam: the checker's vocabulary of what a status
+# LOOKS like is narrower than a reader's. Each is closed structurally rather
+# than by widening a match, and each cost zero on the live corpus.
+# --------------------------------------------------------------------------
+
+
+def test_f_r12_a_lower_case_status_beside_an_id_is_refused(repo: Path) -> None:
+    """`G-BETA` is pass. -- STATUS_RE is upper-case only, so this was invisible."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA` is pass.")
+    assert any("G-BETA" in m and REFUSED in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r12_a_lower_case_declaration_is_refused(repo: Path) -> None:
+    """`G-BETA=pass` matched neither the structural form nor the bare-token scan."""
+    edit(repo, "docs/harness/PROJECT_STATE.md", "- `G-BETA=FAIL` remains.", "- `G-BETA=pass`.")
+    assert any("G-BETA" in m and REFUSED in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r12_an_ordinary_word_that_contains_a_status_is_not_a_status(repo: Path) -> None:
+    """The control the case-insensitive scan must not break.
+
+    `passes` and `failed` contain a status token and are ordinary English. If
+    the word boundary were dropped to catch lower case, every sentence in the
+    corpus that mentions a test suite would become an error.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- The suite passes and `G-BETA` was reviewed; nothing failed.\n- `G-BETA=FAIL` remains.",
+    )
+    assert_clean(repo)
+
+
+def test_f_r12_an_invisible_character_in_a_live_line_is_refused(repo: Path) -> None:
+    """`G-HARNESS<ZWSP>-INTEGRITY` is not a registry id and displays as one.
+
+    There is no way to read past this by improving the id match, because the
+    string genuinely is not the id. The character class is refused instead.
+    """
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BE​TA` is PASS.\n- `G-BETA=FAIL` remains.",
+    )
+    assert any("zero-width or bidirectional" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r12_a_bidi_override_in_a_live_line_is_refused(repo: Path) -> None:
+    """Same class: U+202E reorders what follows it when displayed."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- ‮G-BETA is PASS.\n- `G-BETA=FAIL` remains.",
+    )
+    assert any("zero-width or bidirectional" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r12_a_fenced_block_may_not_hold_an_id_beside_a_status(repo: Path) -> None:
+    """Fences are blanked before anything reads them -- correctly, since this
+    corpus quotes attack strings. Blanking decides what the CHECKER sees; it
+    does not decide what a PERSON sees, and that gap is this module's subject."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA=FAIL` remains.\n\n```\nG-BETA=PASS\n```\n",
+    )
+    assert any("fenced block sits in a live region" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_f_r12_a_fenced_block_without_a_registry_id_is_fine(repo: Path) -> None:
+    """The control: ordinary command samples mentioning PASS stay legal."""
+    edit(
+        repo,
+        "docs/harness/PROJECT_STATE.md",
+        "- `G-BETA=FAIL` remains.",
+        "- `G-BETA=FAIL` remains.\n\n```\nvenv/bin/python check.py   # expect PASS\n```\n",
+    )
+    assert_clean(repo)

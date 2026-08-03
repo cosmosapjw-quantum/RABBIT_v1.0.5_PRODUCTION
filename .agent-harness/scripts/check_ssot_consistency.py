@@ -315,7 +315,7 @@ from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any, TypeVar
 
-from _harness import load_json, root
+from _harness import load_json, loads_strict, root
 
 GATE_REGISTRY = ".agent-harness/context/GATE_REGISTRY.json"
 CLAIM_REGISTRY = ".agent-harness/context/CLAIM_REGISTRY.jsonl"
@@ -346,6 +346,34 @@ STATUS_TOKENS = (
     "DERIVED",
 )
 STATUS_RE = re.compile(r"(?<![A-Za-z0-9_-])(" + "|".join(STATUS_TOKENS) + r")(?![A-Za-z0-9_-])")
+# The REFUSAL scan is case-insensitive; the two legal FORMS are not. Round 12
+# attacked its own round-11 fix and found `` `G-X` is pass. `` and `` `G-X=pass` ``
+# both invisible: STATUS_RE is upper-case only, so neither the bare-token scan
+# nor the structural form saw them, while a human reads both as a status. The
+# asymmetry is deliberate and is closed in the safe direction -- a DECLARATION
+# must still be written `G-X=PASS`, because a declaration is machine-read and
+# should look like one, but anything that a reader would take for a status is
+# refused whatever its case. Measured cost on the live corpus: zero segments.
+STATUS_ANYCASE_RE = re.compile(
+    r"(?<![A-Za-z0-9_-])(" + "|".join(STATUS_TOKENS) + r")(?![A-Za-z0-9_-])",
+    re.IGNORECASE,
+)
+# Characters that render as nothing, or reorder what follows them. Round 12:
+# `G-HARNESS<U+200B>-INTEGRITY is PASS` is not a registry id, so it was invisible
+# to every rule here while displaying as the real gate id. There is no way to
+# read past that by improving the id match -- the fix is to refuse the character
+# class outright in a live region, which no honest handoff line needs. Measured
+# cost on the live corpus: zero lines.
+INVISIBLE_RE = re.compile(
+    "["
+    "­"              # soft hyphen
+    "​-‏"       # zero-width space/non-joiner/joiner, LRM, RLM
+    "‪-‮"       # bidi embedding and override
+    "⁠-⁤"       # word joiner and invisible operators
+    "⁦-⁩"       # bidi isolates
+    "﻿"              # zero-width no-break space / BOM
+    "]"
+)
 GATE_STATUSES = {"PASS", "FAIL"}
 CLAIM_STATUSES = set(STATUS_TOKENS) - {"PASS", "FAIL"}
 
@@ -466,7 +494,7 @@ def load_claims(repo: Path, errors: list[str]) -> dict[str, str]:
         if not line.strip():
             continue
         try:
-            row = json.loads(line)
+            row = loads_strict(line)
         except json.JSONDecodeError:
             errors.append(f"{CLAIM_REGISTRY}:{number}: malformed JSON line.")
             continue
@@ -933,6 +961,16 @@ def find_assertions(
     board, unresolved = find_board_assertions(region, id_regex)
     found: list[tuple[int, str, str]] = list(board)
     for number, line in region.lines:
+        if INVISIBLE_RE.search(line):
+            unresolved.append((
+                number,
+                "this line",
+                "contains a zero-width or bidirectional control character, so what it "
+                "DISPLAYS and what it SAYS can differ. A gate id with an invisible "
+                "character inside it is not a registry id and every rule here would "
+                "step over it while a reader sees the real gate",
+            ))
+            continue
         for _offset, segment in split_clauses(line):
             # Consume every structural pair FIRST. Masking removes the id along
             # with its status, which is why a fully structural segment leaves
@@ -942,7 +980,7 @@ def find_assertions(
                 found.append((number, pair.group(1), pair.group(2)))
                 masked[pair.start() : pair.end()] = " " * (pair.end() - pair.start())
             residue = "".join(masked)
-            tokens = sorted({m.group(1) for m in STATUS_RE.finditer(residue)})
+            tokens = sorted({m.group(1).upper() for m in STATUS_ANYCASE_RE.finditer(residue)})
             if not tokens:
                 continue
             for match in id_regex.finditer(residue):
@@ -967,6 +1005,61 @@ def _dedupe(rows: list[_RowT]) -> list[_RowT]:
         seen.add(row)
         out.append(row)
     return out
+
+
+def check_fenced_blocks(
+    repo: Path,
+    regions: list[Region],
+    id_regex: re.Pattern[str],
+    errors: list[str],
+) -> None:
+    """A live fenced block may not hold a registry id beside a status token.
+
+    Fenced blocks are blanked before regions are built, so a code sample is
+    never read as an assertion -- that is correct and necessary, because this
+    corpus quotes attack strings. But round 12 measured the consequence: a
+    ```-fenced ``G-X=PASS`` in a live handoff section was invisible to every
+    rule in this file while displaying to a reader exactly like the real thing.
+    Blanking decides what the CHECKER reads; it does not decide what a person
+    reads, and the gap between those two is the whole subject of this module.
+
+    So the block is not parsed -- parsing it would resurrect the prose problem
+    -- it is simply refused when it carries both. Measured cost on the live
+    corpus: 18 fenced blocks, 0 of which hold a registry id and a status.
+    """
+    live_lines: dict[str, set[int]] = {}
+    for region in regions:
+        live_lines.setdefault(region.rel, set()).update(n for n, _text in region.lines)
+    for rel, numbers in sorted(live_lines.items()):
+        text = read_text(repo, rel, errors)
+        if text is None:
+            continue
+        open_at: int | None = None
+        body: list[str] = []
+        for number, line in enumerate(text.split("\n"), start=1):
+            if line.lstrip().startswith("```"):
+                if open_at is None:
+                    open_at, body = number, []
+                    continue
+                span = set(range(open_at, number + 1))
+                joined = "\n".join(body)
+                if (
+                    span & numbers
+                    and id_regex.search(joined)
+                    and STATUS_ANYCASE_RE.search(joined)
+                ):
+                    found = sorted({m.group(1) for m in id_regex.finditer(joined)})
+                    errors.append(
+                        f"{rel}:{open_at}: this fenced block sits in a live region and "
+                        f"names {', '.join(found)} beside a status token. Fenced blocks are "
+                        "blanked before anything here reads them, so the block is invisible "
+                        "to every check while a reader sees a plain statement about a gate. "
+                        "Quote the example without a registry id, or move it out of the live "
+                        "region."
+                    )
+                open_at = None
+            elif open_at is not None:
+                body.append(line)
 
 
 def check_status_assertions(
@@ -1265,7 +1358,7 @@ def _json_array_length(
     if text is None:
         return None
     try:
-        value: Any = json.loads(text)
+        value: Any = loads_strict(text)
     except json.JSONDecodeError as exc:
         errors.append(
             f"{FACTS_FILE}: {where} cannot be run: {rel} is not valid JSON "
@@ -1929,6 +2022,7 @@ def main() -> None:
             )
             assertions_checked += checked
             covered |= region_covered
+        check_fenced_blocks(repo, regions, id_regex, errors)
         # An exemption whose line no longer sits in a live region is dead and is
         # reported, so exceptions cannot quietly accumulate past their occasion.
         used_exemptions = {

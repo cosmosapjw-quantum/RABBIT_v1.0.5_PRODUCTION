@@ -165,14 +165,14 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B16",
+     "line_contains": "D-070 Part B18",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
      "note": "Live ledger row for the strict-JSON repair that added the fixtures."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B16",
+     "line_contains": "D-070 Part B18",
      "value_regex": "Hooks `(\\d+)/\\d+`",
      "role": "current",
      "note": "Result cell of the same live row."
@@ -222,18 +222,23 @@
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 101,
+   "value": 108,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B15",
+     "line_contains": "D-070 Part B18",
      "value_regex": "(\\d+) SSOT regression cases",
      "role": "current",
-     "note": "Live ledger row for the structural-assertion rewrite."
+     "note": "Live ledger row for the round-12 self-attack repairs."
     }
    ],
    "prior": [
+    {
+     "value": 101,
+     "as_of_commit": "9df6cd4",
+     "note": "D-070 Part B15/B16, before the round-12 self-attack."
+    },
     {
      "value": 92,
      "as_of_commit": "1d62b31",
@@ -259,18 +264,23 @@
     "path": ".agent-harness/tests/test_canary_freshness.py",
     "pattern": "^def test_"
    },
-   "value": 26,
+   "value": 29,
    "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B16",
+     "line_contains": "D-070 Part B18",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
-     "note": "Live ledger row for the canary-retention repair."
+     "note": "Live ledger row for the round-12 self-attack repairs."
     }
    ],
    "prior": [
+    {
+     "value": 26,
+     "as_of_commit": "9df6cd4",
+     "note": "D-070 Part B16, before the round-12 strict-parse fixtures."
+    },
     {
      "value": 19,
      "as_of_commit": "3b2dcc6",

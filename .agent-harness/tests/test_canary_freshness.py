@@ -386,3 +386,43 @@ def test_f_r11_an_untracked_policy_cannot_replace_the_tracked_one(repo: Path) ->
     write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 0}))
     errors = C.check(repo)
     assert any("git does not track it" in m for m in errors), errors
+
+
+def test_f_r12_an_ambiguous_attestation_is_refused_loudly_not_skipped(repo: Path) -> None:
+    """Round 12, against round 11's own fix.
+
+    Part B16 made every evidence parse reject a repeated object key. Applying
+    that here without care would have been FAIL-OPEN in a new way: the discovery
+    loop skips anything that will not parse, so a duplicate key would have made
+    an attestation invisible -- and an invisible attestation cannot be reported
+    stale, which turns ambiguous bytes into a way of retiring a canary from its
+    own freshness check. The stale C6 below is what makes this discriminating:
+    if the ambiguous file were merely skipped, C6 would go unreported.
+    """
+    write(repo / START_HOOK, "# start hook v2 -- C6 no longer describes this\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    path = attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    body = path.read_text(encoding="utf-8")
+    assert body.count('"canary"') == 1, body
+    path.write_text(body.replace('"canary": "C7"', '"canary": "C-DECOY", "canary": "C7"', 1),
+                    encoding="utf-8")
+    errors = C.check(repo)
+    assert any("repeated object key" in m for m in errors), errors
+
+
+def test_f_r12_a_single_keyed_attestation_still_parses(repo: Path) -> None:
+    """The control: strict parsing must not reject ordinary attestations."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    assert C.check(repo) == []
+
+
+def test_f_r12_a_duplicate_key_in_the_admissions_ledger_is_refused(repo: Path) -> None:
+    """The ledger backs every canary's authority, so it is parsed strictly too."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    ledger = repo / ".agent-harness/runs/run-canary-c7/ADMISSIONS.jsonl"
+    row = ledger.read_text(encoding="utf-8").strip()
+    ledger.write_text(row.replace('{"event": "consumed"',
+                                  '{"event": "minted", "event": "consumed"', 1) + "\n",
+                      encoding="utf-8")
+    errors = C.check(repo)
+    assert any("C7" in m for m in errors), errors

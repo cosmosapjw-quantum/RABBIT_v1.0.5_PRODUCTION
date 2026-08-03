@@ -53,7 +53,7 @@ import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from _harness import root
+from _harness import loads_strict, root
 
 ARTIFACT_CLASS = "CANARY_ATTESTATION"
 RUNS_ROOT = ".agent-harness/runs"
@@ -74,8 +74,10 @@ def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def find_attestations(repo: Path) -> list[tuple[str, dict[str, Any]]]:
-    """Every retained canary attestation, as (relative path, document).
+def find_attestations(
+    repo: Path,
+) -> tuple[list[tuple[str, dict[str, Any]]], list[str]]:
+    """Every retained canary attestation as (relative path, document), plus errors.
 
     Searched RECURSIVELY. The previous single-level ``*/artifacts/*.json`` glob
     made an attestation one directory deeper or shallower completely invisible --
@@ -83,19 +85,40 @@ def find_attestations(repo: Path) -> list[tuple[str, dict[str, Any]]]:
     filter (round 10).
     """
     found: list[tuple[str, dict[str, Any]]] = []
+    errors: list[str] = []
     runs = repo / RUNS_ROOT
     if not runs.is_dir():
-        return found
+        return found, errors
     for path in sorted(runs.rglob("*.json")):
         try:
-            document = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-            # Not every artifact is JSON or ours; only a readable object that
-            # declares itself a canary attestation is in scope.
+            raw = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        try:
+            document = loads_strict(raw)
+        except json.JSONDecodeError:
+            # Strict parsing rejected it. Skipping here would be FAIL-OPEN: an
+            # attestation with a duplicate key would become invisible, and an
+            # invisible attestation cannot be reported stale, so ambiguous bytes
+            # would be a way to retire a canary from its own freshness check.
+            # Distinguish "not our JSON" from "ours but ambiguous" by re-reading
+            # permissively -- and report the second.
+            try:
+                loose = json.loads(raw)
+            except (json.JSONDecodeError, ValueError):
+                continue  # genuinely not parseable JSON; not ours
+            if isinstance(loose, dict) and loose.get("artifact_class") == ARTIFACT_CLASS:
+                errors.append(
+                    f"{path.relative_to(repo)}: this CANARY_ATTESTATION has a repeated "
+                    "object key, so which value is the attestation depends on which "
+                    "parser reads it. Ambiguous evidence is refused, not resolved -- "
+                    "and it is refused LOUDLY, because a document that silently failed "
+                    "to parse would be a canary that cannot be reported stale."
+                )
             continue
         if isinstance(document, dict) and document.get("artifact_class") == ARTIFACT_CLASS:
             found.append((str(path.relative_to(repo)), document))
-    return found
+    return found, errors
 
 
 def canary_id(rel: str, document: dict[str, Any]) -> str | None:
@@ -166,7 +189,7 @@ def receipt_backing(repo: Path, rel: str, canary: str, document: dict[str, Any])
         if not line:
             continue
         try:
-            row = json.loads(line)
+            row = loads_strict(line)
         except json.JSONDecodeError:
             return [
                 f"{rel}: canary {canary} names run {run_id!r} whose ADMISSIONS.jsonl has an "
@@ -388,7 +411,7 @@ def required_live(repo: Path, errors: list[str]) -> int:
             "raise the floor for anyone but this working tree."
         )
     try:
-        document = json.loads(path.read_text(encoding="utf-8"))
+        document = loads_strict(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         errors.append(f"{POLICY_FILE} is unreadable or invalid JSON ({exc.__class__.__name__}).")
         return 0
@@ -400,8 +423,7 @@ def required_live(repo: Path, errors: list[str]) -> int:
 
 
 def check(repo: Path) -> list[str]:
-    errors: list[str] = []
-    attestations = find_attestations(repo)
+    attestations, errors = find_attestations(repo)
 
     # Receipt backing is decided FIRST, because it is what gives a canary the
     # authority to retire another. A file nobody dispatched retires nothing.
@@ -537,7 +559,7 @@ def main() -> None:
     args = parser.parse_args()
     repo = root()
     errors = check(repo)
-    attestations = find_attestations(repo)
+    attestations, _discovery_errors = find_attestations(repo)
     backed = {
         name
         for rel, document in attestations
