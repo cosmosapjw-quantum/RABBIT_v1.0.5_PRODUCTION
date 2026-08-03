@@ -49,6 +49,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -74,12 +75,18 @@ def sha256_of(path: Path) -> str:
 
 
 def find_attestations(repo: Path) -> list[tuple[str, dict[str, Any]]]:
-    """Every retained canary attestation, as (relative path, document)."""
+    """Every retained canary attestation, as (relative path, document).
+
+    Searched RECURSIVELY. The previous single-level ``*/artifacts/*.json`` glob
+    made an attestation one directory deeper or shallower completely invisible --
+    no error, not even a count -- which is a fail-open hiding place, not a
+    filter (round 10).
+    """
     found: list[tuple[str, dict[str, Any]]] = []
     runs = repo / RUNS_ROOT
     if not runs.is_dir():
         return found
-    for path in sorted(runs.glob("*/artifacts/*.json")):
+    for path in sorted(runs.rglob("*.json")):
         try:
             document = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError):
@@ -111,23 +118,219 @@ def canary_id(rel: str, document: dict[str, Any]) -> str | None:
     return None
 
 
-def superseded_ids(attestations: list[tuple[str, dict[str, Any]]]) -> set[str]:
-    """Canary ids that some other canary declares it replaces."""
+RECEIPT_FIELDS = (
+    "canary_lease_run_id",
+    "consumed_assignment_id",
+    "consumed_by_agent_id",
+    "result_sha256",
+)
+
+
+def receipt_backing(repo: Path, rel: str, canary: str, document: dict[str, Any]) -> list[str]:
+    """Errors unless this attestation is backed by a real consumed receipt.
+
+    ROUND 10's DECISIVE FINDING. A canary attestation was just a file, and
+    ``supersedes_canary`` was self-asserted by the very artifact whose freshness
+    was in question. One typed JSON file -- no dispatch, no lease, no receipt --
+    with its own digests set to the current bytes retired the real C7 and
+    returned ``ok: true`` while the attested hook carried a hostile edit. The
+    detector written to stop four canaries dying silently was itself defeated by
+    a text editor.
+
+    A canary now has to point at the admission ledger row its dispatch actually
+    produced: the run, the assignment, the agent id, and the SHA-256 of the
+    result the Stop hook pinned. All four are checked, and the result file is
+    re-hashed rather than trusted. Forgery is not made impossible -- harness and
+    subagents share one OS user, which is the stated residual and is not closed
+    here -- but the cost moves from writing one file to forging an append-only
+    ledger row AND a result whose digest matches it AND keeping both consistent
+    with every other reader of that ledger.
+    """
+    errors: list[str] = []
+    missing = [field for field in RECEIPT_FIELDS if not str(document.get(field) or "").strip()]
+    if missing:
+        return [
+            f"{rel}: canary {canary} declares no {', '.join(missing)}, so nothing ties it "
+            "to a dispatch that actually happened. An attestation that names no receipt "
+            "is a file somebody wrote, not evidence that anything ran."
+        ]
+    run_id = str(document["canary_lease_run_id"])
+    ledger = repo / RUNS_ROOT / run_id / "ADMISSIONS.jsonl"
+    if not ledger.is_file():
+        return [
+            f"{rel}: canary {canary} names run {run_id!r}, which has no ADMISSIONS.jsonl."
+        ]
+    rows: list[dict[str, Any]] = []
+    for line in ledger.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            return [
+                f"{rel}: canary {canary} names run {run_id!r} whose ADMISSIONS.jsonl has an "
+                "unreadable line. A ledger that cannot be parsed cannot back anything."
+            ]
+        if isinstance(row, dict):
+            rows.append(row)
+    match = next(
+        (
+            row
+            for row in rows
+            if row.get("event") == "consumed"
+            and row.get("assignment_id") == document["consumed_assignment_id"]
+            and row.get("agent_id") == document["consumed_by_agent_id"]
+            and row.get("result_sha256") == document["result_sha256"]
+        ),
+        None,
+    )
+    if match is None:
+        return [
+            f"{rel}: canary {canary} claims assignment "
+            f"{document['consumed_assignment_id']!r} was consumed by agent "
+            f"{document['consumed_by_agent_id']!r} with result "
+            f"{str(document['result_sha256'])[:15]}..., but no such consumed row exists in "
+            f"{run_id}/ADMISSIONS.jsonl."
+        ]
+    result_path = repo / RUNS_ROOT / run_id / "results" / f"{document['consumed_assignment_id']}.json"
+    if not result_path.is_file():
+        errors.append(
+            f"{rel}: canary {canary} is backed by a ledger row whose result "
+            f"{result_path.relative_to(repo)} is missing, so the digest it pins cannot be "
+            "re-derived."
+        )
+    else:
+        actual = "sha256:" + sha256_of(result_path)
+        if actual != document["result_sha256"]:
+            errors.append(
+                f"{rel}: canary {canary} pins result {str(document['result_sha256'])[:15]}... "
+                f"but {result_path.relative_to(repo)} hashes to {actual[:15]}.... The ledger "
+                "row and the artifact disagree."
+            )
+    return errors
+
+
+def superseded_ids(
+    attestations: list[tuple[str, dict[str, Any]]], authorised: set[str]
+) -> tuple[set[str], list[str]]:
+    """Canary ids retired by another canary, plus errors for illegal retirements.
+
+    Only a canary that is itself receipt-backed may retire anything -- otherwise
+    a forged file retires the real one, which is exactly what round 10 did. A
+    canary may not retire ITSELF, and two canaries may not retire each other:
+    both are ways to make a stale canary unreachable by the freshness check
+    while leaving it in the record looking authoritative.
+    """
     retired: set[str] = set()
-    for _rel, document in attestations:
+    errors: list[str] = []
+    declares: dict[str, set[str]] = {}
+    for rel, document in attestations:
+        mine = canary_id(rel, document)
+        raw = document.get("supersedes_canary")
+        if isinstance(raw, str):
+            raw = [raw]
+        if mine is not None and isinstance(raw, list):
+            declares.setdefault(mine, set()).update(str(item) for item in raw)
+    for mine, names in sorted(declares.items()):
+        for other in sorted(names):
+            if mine in declares.get(other, set()):
+                errors.append(
+                    f"canaries {mine} and {other} retire each other. A cycle leaves both "
+                    "unreachable by the freshness check while both still read as "
+                    "authoritative; supersession must run one way, newest last."
+                )
+    for rel, document in attestations:
+        mine = canary_id(rel, document)
         declared = document.get("supersedes_canary")
         if isinstance(declared, str):
             declared = [declared]
-        if isinstance(declared, list):
-            retired.update(str(item) for item in declared)
-    return retired
+        if not isinstance(declared, list) or not declared:
+            continue
+        names = {str(item) for item in declared}
+        if mine is not None and mine in names:
+            errors.append(
+                f"{rel}: canary {mine} names ITSELF in 'supersedes_canary', which would "
+                "retire it from its own freshness check. A canary cannot supersede itself."
+            )
+            names.discard(mine)
+        if mine is None or mine not in authorised:
+            errors.append(
+                f"{rel}: canary {mine or '(no id)'} tries to retire "
+                f"{', '.join(sorted(names))} but is not itself backed by a consumed "
+                "admission receipt. Only a canary that really ran may retire another."
+            )
+            continue
+        retired.update(names)
+    return retired, errors
+
+
+POLICY_FILE = ".agent-harness/context/CANARY_POLICY.json"
+
+
+def required_live(repo: Path, errors: list[str]) -> int:
+    """How many live canaries this tree must retain, from its declaration.
+
+    Absent declaration means none required, which is what lets a synthetic
+    fixture repository hold no canary evidence without inventing some. Deleting
+    the declaration to silence the floor is refused: if git tracks the file and
+    the working tree has lost it, that is an error, not a permission.
+    """
+    path = repo / POLICY_FILE
+    if not path.is_file():
+        try:
+            tracked = subprocess.run(
+                ["git", "ls-files", "--error-unmatch", POLICY_FILE],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=False,
+            ).returncode == 0
+        except OSError as exc:
+            errors.append(
+                f"{POLICY_FILE} is absent and git could not be consulted "
+                f"({exc.__class__.__name__}); the canary policy cannot be established."
+            )
+            return 0
+        if tracked:
+            errors.append(
+                f"{POLICY_FILE} is tracked in git but missing from the working tree; the "
+                "canary floor cannot be lowered by deleting its declaration."
+            )
+        return 0
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        errors.append(f"{POLICY_FILE} is unreadable or invalid JSON ({exc.__class__.__name__}).")
+        return 0
+    value = document.get("min_live") if isinstance(document, dict) else None
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        errors.append(f"{POLICY_FILE} has no non-negative integer 'min_live'.")
+        return 0
+    return value
 
 
 def check(repo: Path) -> list[str]:
     errors: list[str] = []
     attestations = find_attestations(repo)
-    retired = superseded_ids(attestations)
 
+    # Receipt backing is decided FIRST, because it is what gives a canary the
+    # authority to retire another. A file nobody dispatched retires nothing.
+    authorised: set[str] = set()
+    backing_errors: dict[str, list[str]] = {}
+    for rel, document in attestations:
+        name = canary_id(rel, document)
+        if name is None:
+            continue
+        problems = receipt_backing(repo, rel, name, document)
+        backing_errors[rel] = problems
+        if not problems:
+            authorised.add(name)
+
+    retired, supersession_errors = superseded_ids(attestations, authorised)
+    errors.extend(supersession_errors)
+
+    live_count = 0
     for rel, document in attestations:
         canary = canary_id(rel, document)
         if canary is None:
@@ -139,6 +342,10 @@ def check(repo: Path) -> list[str]:
             continue
         if canary in retired:
             continue
+        live_count += 1
+        # A live canary must be backed. A retired one need not be re-checked --
+        # it is history, and its replacement carries the obligation.
+        errors.extend(backing_errors.get(rel, []))
 
         digest_fields = [
             key
@@ -182,6 +389,19 @@ def check(repo: Path) -> list[str]:
                     "replacement canary whose 'supersedes_canary' names "
                     f"{canary!r}."
                 )
+
+    # Zero live canaries must not read as "all clean". `.gitignore` excludes
+    # `/.agent-harness/runs/` wholesale and only specific canary directories are
+    # force-added, so a checkout that misses them found NO attestations and
+    # reported ok -- the detector's own default was fail-open (round 10).
+    minimum = required_live(repo, errors)
+    if live_count < minimum:
+        errors.append(
+            f"{RUNS_ROOT}: {live_count} live canary attestation(s) found, at least "
+            f"{minimum} required. Zero is not 'clean' -- run directories are "
+            "gitignored and force-added individually, so a missing attestation looks "
+            "exactly like a passing check. Retain one, or dispatch one."
+        )
     return errors
 
 
@@ -192,7 +412,13 @@ def main() -> None:
     repo = root()
     errors = check(repo)
     attestations = find_attestations(repo)
-    retired = superseded_ids(attestations)
+    backed = {
+        name
+        for rel, document in attestations
+        for name in [canary_id(rel, document)]
+        if name is not None and not receipt_backing(repo, rel, name, document)
+    }
+    retired, _ = superseded_ids(attestations, backed)
     live = [
         canary_id(rel, document)
         for rel, document in attestations

@@ -245,15 +245,22 @@
     "path": ".agent-harness/tests/test_canary_freshness.py",
     "pattern": "^def test_"
    },
-   "value": 10,
-   "as_of_commit": "32ba566",
+   "value": 19,
+   "as_of_commit": "PENDING_COMMIT",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-070 Part B10",
+     "line_contains": "D-070 Part B13",
      "value_regex": "(\\d+) canary regression cases",
      "role": "current",
-     "note": "Live ledger row for the canary-freshness detector."
+     "note": "Live ledger row for the canary trust-model repair."
+    }
+   ],
+   "prior": [
+    {
+     "value": 10,
+     "as_of_commit": "32ba566",
+     "note": "D-070 Part B10, before the round-10 repair."
     }
    ]
   }

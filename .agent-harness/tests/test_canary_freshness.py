@@ -38,9 +38,37 @@ def repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def attest(repo: Path, run: str, document: dict[str, object]) -> Path:
-    path = repo / ".agent-harness/runs" / run / "artifacts/ATTESTATION.json"
-    write(path, json.dumps({"artifact_class": "CANARY_ATTESTATION", **document}, indent=1))
+def attest(repo: Path, run: str, document: dict[str, object], *, backed: bool = True) -> Path:
+    """Write an attestation; by default also forge the receipt trail it needs.
+
+    Round 10 defeated the detector with a file nobody dispatched, so an
+    attestation now has to point at a consumed admission-ledger row and the
+    result that row pins. `backed=False` writes the bare file the attack used.
+    """
+    run_dir = repo / ".agent-harness/runs" / run
+    path = run_dir / "artifacts/ATTESTATION.json"
+    body = {"artifact_class": "CANARY_ATTESTATION", **document}
+    if backed:
+        assignment = str(body.setdefault("consumed_assignment_id", "A-CANARY"))
+        agent = str(body.setdefault("consumed_by_agent_id", "canary-agent"))
+        body.setdefault("canary_lease_run_id", run)
+        result = run_dir / "results" / f"{assignment}.json"
+        write(result, json.dumps({"status": "pass"}, indent=1))
+        digest = "sha256:" + hashlib.sha256(result.read_bytes()).hexdigest()
+        body.setdefault("result_sha256", digest)
+        write(
+            run_dir / "ADMISSIONS.jsonl",
+            json.dumps(
+                {
+                    "event": "consumed",
+                    "assignment_id": assignment,
+                    "agent_id": agent,
+                    "result_sha256": digest,
+                }
+            )
+            + "\n",
+        )
+    write(path, json.dumps(body, indent=1))
     return path
 
 
@@ -117,6 +145,109 @@ def test_an_attested_file_that_does_not_exist_is_an_error(repo: Path) -> None:
 
 
 def test_non_file_digest_fields_are_not_treated_as_attestations(repo: Path) -> None:
-    """`result_sha256` names an envelope, not a source file, and must not error."""
-    attest(repo, "run-canary-c7", fresh(repo, result_sha256="sha256:" + "0" * 64))
+    """`assignment_sha256` names an envelope, not a source file, and must not error.
+
+    `result_sha256` used to be the example here; it is now load-bearing, because
+    receipt backing re-derives it from the pinned result. The exclusion list
+    still has to keep genuinely non-file digests out of the attested set.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, assignment_sha256="sha256:" + "0" * 64))
     assert C.check(repo) == []
+
+
+# --------------------------------------------------------------------------
+# Round 10 (D-070 Part B13). The detector was defeated by a text editor.
+# --------------------------------------------------------------------------
+
+
+def test_f_r10_a_file_nobody_dispatched_cannot_retire_a_real_canary(repo: Path) -> None:
+    """The decisive round-10 finding, as the attack was run.
+
+    One typed JSON file with its digests set to the current bytes retired the
+    real canary and returned ok:true while the attested hook carried a hostile
+    edit. Only a canary backed by a consumed receipt may retire another.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    write(repo / START_HOOK, "# hostile edit\n")
+    forged = fresh(repo, canary="C999", supersedes_canary=["C7"])
+    attest(repo, "run-forged", forged, backed=False)
+    errors = C.check(repo)
+    assert any("not itself backed by a consumed admission receipt" in m for m in errors), errors
+    assert any("C7 is STALE" in m for m in errors), errors
+
+
+def test_f_r10_a_canary_cannot_supersede_itself(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C7"]))
+    write(repo / START_HOOK, "# hostile edit\n")
+    errors = C.check(repo)
+    assert any("names ITSELF" in m for m in errors), errors
+    assert any("C7 is STALE" in m for m in errors), errors
+
+
+def test_f_r10_two_canaries_cannot_retire_each_other(repo: Path) -> None:
+    """A cycle would leave both unreachable by the freshness check."""
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6", supersedes_canary=["C7"]))
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    write(repo / START_HOOK, "# hostile edit\n")
+    errors = C.check(repo)
+    assert any("retire each other" in m for m in errors), errors
+
+
+def test_f_r10_an_attestation_must_name_a_real_consumed_row(repo: Path) -> None:
+    document = fresh(repo, canary="C7")
+    document["consumed_by_agent_id"] = "somebody-else"
+    attest(repo, "run-canary-c7", document, backed=False)
+    errors = C.check(repo)
+    assert any("names no receipt" in m or "no such consumed row exists" in m for m in errors), errors
+
+
+def test_f_r10_a_pinned_result_digest_is_re_derived_not_trusted(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    result = repo / ".agent-harness/runs/run-canary-c7/results/A-CANARY.json"
+    write(result, json.dumps({"status": "tampered"}, indent=1))
+    errors = C.check(repo)
+    assert any("hashes to" in m and "disagree" in m for m in errors), errors
+
+
+def test_f_r10_an_attestation_hidden_deeper_is_still_found(repo: Path) -> None:
+    """The single-level glob was a hiding place, not a filter."""
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    deep = repo / ".agent-harness/runs/run-hidden/artifacts/sub/deep.json"
+    write(
+        deep,
+        json.dumps(
+            {"artifact_class": "CANARY_ATTESTATION", "canary": "C888",
+             "start_hook_sha256": "0" * 64, "stop_hook_sha256": "0" * 64},
+            indent=1,
+        ),
+    )
+    assert any("C888" in m for m in C.check(repo))
+
+
+def test_f_r10_zero_live_canaries_is_an_error_where_one_is_declared(repo: Path) -> None:
+    """runs/ is gitignored wholesale, so a missing attestation looked like a pass."""
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    assert any("live canary attestation" in m for m in C.check(repo))
+
+
+def test_f_r10_a_tree_declaring_no_canary_policy_needs_no_canary(repo: Path) -> None:
+    """A synthetic fixture holds no canary evidence and must not be forced to
+    invent some. Absence of the declaration is the permission, not a bypass."""
+    assert C.check(repo) == []
+
+
+def test_f_r10_deleting_the_policy_cannot_lower_the_floor(repo: Path) -> None:
+    """If git tracks the declaration and the tree has lost it, that is an error."""
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "policy"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    (repo / C.POLICY_FILE).unlink()
+    assert any("cannot be lowered by deleting" in m for m in C.check(repo))

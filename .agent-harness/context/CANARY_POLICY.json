@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "purpose": "How many LIVE canary attestations this repository must retain. Zero live canaries must not read as 'all clean': /.agent-harness/runs/ is gitignored wholesale and canary directories are force-added one at a time, so a checkout that misses them found nothing and reported ok -- the detector's own default was fail-open (round-10 finding). Declaring the number turns absence into an error. A tree that legitimately holds no canary evidence, such as a synthetic test fixture, simply has no policy file; check_canary_freshness.py then requires none, and refuses to accept a policy file that git tracks but the working tree has lost, so the declaration cannot be removed to silence the floor.",
+  "min_live": 1
+}
