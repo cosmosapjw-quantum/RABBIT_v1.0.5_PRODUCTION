@@ -247,6 +247,120 @@ def receipt_backing(repo: Path, rel: str, canary: str, document: dict[str, Any])
     return errors
 
 
+PENDING_COMMIT = "PENDING_COMMIT"
+
+
+def declared_provenance(
+    repo: Path, rel: str, canary: str, document: dict[str, Any]
+) -> list[str]:
+    """Errors unless the commit a canary NAMES actually contains the bytes it attests.
+
+    ROUND 13 (registered adjudicator, F-R13-05). C8 declared
+    ``head_commit 4022385``, where the stop hook hashes to ``0533da88`` -- the
+    very value C8 said had gone stale. The bytes it attested first exist at
+    ``9df6cd4``, C8's own sealing commit. Nothing caught it, because this
+    checker only ever compared attested digests against the WORKING TREE. A
+    provenance field that nothing verifies is decoration, and decoration in an
+    evidence record is worse than an absent field: it reads as a citation.
+
+    The underlying problem is structural and worth stating, because it makes the
+    naive fix impossible. A canary is dispatched as the last act BEFORE the
+    sealing commit, so at the moment it writes its attestation the commit that
+    will contain its bytes does not exist yet. ``git rev-parse HEAD`` therefore
+    returns the PREVIOUS commit -- which is exactly the wrong answer, and is
+    exactly what C8 recorded.
+
+    So the field follows the convention this repository already uses for a
+    declared fact whose commit is not yet known: write ``PENDING_COMMIT`` and
+    pin it in a follow-up. That is legal only while the attestation itself is
+    uncommitted; once it is tracked and clean, a real hash is required and the
+    bytes at that hash must match. An attestation cannot sit in the record
+    permanently claiming its provenance is still pending.
+    """
+    errors: list[str] = []
+    declared = str(document.get("head_commit") or "").strip()
+    if not declared:
+        return errors
+    attested = {
+        field: str(document.get(field) or "")
+        for field in document
+        if field.endswith(DIGEST_SUFFIX) and field not in NON_FILE_DIGESTS
+        and ATTESTED_FILES.get(field)
+    }
+    if not attested:
+        return errors
+
+    if declared == PENDING_COMMIT:
+        # Legal in the commit that INTRODUCES the attestation, and only there.
+        # A stricter "must be pinned once committed" is unsatisfiable: the pin
+        # names the sealing commit, which does not exist until the seal happens,
+        # so the very commit that seals the canary would fail its own check. The
+        # obligation lands on the NEXT commit, which is the same shape the facts
+        # file uses -- write PENDING_COMMIT, pin it in a follow-up.
+        if not is_tracked(repo, rel) or _git_dirty(repo, rel):
+            return errors
+        sealed_at = _git_last_commit(repo, rel)
+        head = _git_head(repo)
+        if sealed_at and head and sealed_at != head:
+            errors.append(
+                f"{rel}: canary {canary} still declares head_commit {PENDING_COMMIT!r}, but it was "
+                f"sealed at {sealed_at[:12]} and HEAD has since moved to {head[:12]}. Pin it to the "
+                "commit that contains these bytes, the same way a declared fact's 'as_of_commit' is "
+                "pinned by a follow-up. A permanently pending provenance claim is an unverifiable one."
+            )
+        return errors
+
+    for field, digest in sorted(attested.items()):
+        target = ATTESTED_FILES[field]
+        blob = _git_show(repo, declared, target)
+        if blob is None:
+            errors.append(
+                f"{rel}: canary {canary} declares head_commit {declared[:12]}, where {target} "
+                "cannot be read. A commit that does not contain the attested file cannot be "
+                "its provenance."
+            )
+            continue
+        actual = hashlib.sha256(blob).hexdigest()
+        if actual != digest:
+            errors.append(
+                f"{rel}: canary {canary} declares head_commit {declared[:12]} and attests "
+                f"{target} at {digest[:8]}, but at that commit the file hashes to {actual[:8]}. "
+                "The canary did not run against the bytes of the commit it names. Because a "
+                "canary runs BEFORE its own sealing commit, `git rev-parse HEAD` at write time "
+                f"is the PREVIOUS commit -- declare {PENDING_COMMIT!r} and pin it afterwards."
+            )
+    return errors
+
+
+def _git_last_commit(repo: Path, rel: str) -> str | None:
+    done = _git(repo, "log", "-1", "--format=%H", "--", rel)
+    if done is None or done.returncode != 0:
+        return None
+    return done.stdout.strip() or None
+
+
+def _git_head(repo: Path) -> str | None:
+    done = _git(repo, "rev-parse", "HEAD")
+    if done is None or done.returncode != 0:
+        return None
+    return done.stdout.strip() or None
+
+
+def _git_dirty(repo: Path, rel: str) -> bool:
+    done = _git(repo, "status", "--porcelain", "--", rel)
+    return done is None or bool(done.stdout.strip())
+
+
+def _git_show(repo: Path, commit: str, rel: str) -> bytes | None:
+    try:
+        done = subprocess.run(
+            ["git", "show", f"{commit}:{rel}"], cwd=repo, capture_output=True, check=False
+        )
+    except OSError:
+        return None
+    return done.stdout if done.returncode == 0 else None
+
+
 def _supersession_cycles(declares: dict[str, set[str]]) -> list[list[str]]:
     """Every directed cycle in the supersession graph, shortest first.
 
@@ -501,6 +615,8 @@ def check(repo: Path) -> list[str]:
                 "evidence that anything still holds."
             )
             continue
+
+        errors.extend(declared_provenance(repo, rel, canary, document))
 
         for field in sorted(digest_fields):
             target = ATTESTED_FILES.get(field)

@@ -1,0 +1,208 @@
+{
+ "schema_version": 1,
+ "purpose": "The mutation battery, in the repository instead of a scratch directory. This project's standard of proof is that a guard whose deletion breaks no test is not verified -- and rounds 9 through 13 applied it by hand, in /tmp, from scripts deleted with the session, so every 'N of N mutation-verified' row in the ledger cites evidence nobody can re-derive. test_mutation_gate.py runs these entries as part of the suite: each removes exactly one guard and requires the named fixtures to go red.",
+ "declared_guard_sites": {
+  ".agent-harness/scripts/check_ssot_consistency.py": 107,
+  ".agent-harness/scripts/check_canary_freshness.py": 24
+ },
+ "coverage_gap": "These entries cover 19 guards against 131 error-raising sites in the two checkers, so this is NOT full mutation coverage and does not claim to be. The covered set is the guards added or repaired in rounds 11 to 13, which is where every recent defect was found. The uncovered remainder is mostly older schema and declaration validation whose fixtures predate this manifest. test_guard_site_count_has_not_grown_silently is the ratchet: a new guard changes the measured count and fails the suite until someone either covers it here or restates the declaration deliberately.",
+ "mutations": [
+  {
+   "id": "M-SSOT-REFUSAL",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "            for match in id_regex.finditer(residue):",
+   "replacement": "            for match in []:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r11_bypass_string_cannot_reach_a_live_surface",
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r11_the_string_an_auditor_committed_to_this_repository"
+   ],
+   "why": "Without it, prose around a status token is unread again and all six measured B15 bypasses return."
+  },
+  {
+   "id": "M-SSOT-MASK",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "                masked[pair.start() : pair.end()] = \" \" * (pair.end() - pair.start())",
+   "replacement": "                pass",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_baseline_fixture_is_clean"
+   ],
+   "why": "Masking removes the id with its status; without it a correct ID=STATUS declaration refuses itself."
+  },
+  {
+   "id": "M-SSOT-MARKUP",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        r\"[`*_\\s]*=[`*_\\s]*(\" + \"|\".join(STATUS_TOKENS)",
+   "replacement": "        r\"=(\" + \"|\".join(STATUS_TOKENS)",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r11_markup_around_the_equals_is_not_grammar"
+   ],
+   "why": "If markup decided whether a declaration counted, markup would be a detector-disabling device."
+  },
+  {
+   "id": "M-SSOT-SEGMENT-SCOPE",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "HARD_BOUNDARY_RE = re.compile(r\"\\||^\\s*[-*] \")",
+   "replacement": "HARD_BOUNDARY_RE = re.compile(r\"\\||^\\s*[-*] |[.?!]\\s\")",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r10_an_abbreviation_cannot_sever_a_lie_from_its_detection"
+   ],
+   "why": "Sentence scoping reopens the abbreviation hole: '. ' fires inside 'cf.', splitting the id into one scope and its status token into another, so neither scope breaks the rule. This mutation makes sentence ends hard boundaries, which is what sentence scoping was."
+  },
+  {
+   "id": "M-SSOT-COVERAGE",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "                found.append((number, pair.group(1), pair.group(2)))",
+   "replacement": "                pass",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_baseline_fixture_is_clean"
+   ],
+   "why": "Structural declarations are the only coverage source; without them the floor is unsatisfiable."
+  },
+  {
+   "id": "M-SSOT-REGISTRY-CMP",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        if status == expected:",
+   "replacement": "        if status == expected or True:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r11_a_false_structural_declaration_is_still_a_contradiction",
+    ".agent-harness/tests/test_ssot_consistency.py::test_no_regress_registry_versus_declaration_divergence_is_detected"
+   ],
+   "why": "A legal FORM stating a false status must still be caught as the contradiction it is."
+  },
+  {
+   "id": "M-SSOT-ANYCASE",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "tokens = sorted({m.group(1).upper() for m in STATUS_ANYCASE_RE.finditer(residue)})",
+   "replacement": "tokens = sorted({m.group(1) for m in STATUS_RE.finditer(residue)})",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r12_a_lower_case_status_beside_an_id_is_refused",
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r12_a_lower_case_declaration_is_refused"
+   ],
+   "why": "Upper-case-only matching made 'G-X is pass' invisible while a reader sees a status."
+  },
+  {
+   "id": "M-SSOT-INVISIBLE",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        if INVISIBLE_RE.search(line):",
+   "replacement": "        if False:",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r12_an_invisible_character_in_a_live_line_is_refused",
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r12_a_bidi_override_in_a_live_line_is_refused"
+   ],
+   "why": "A zero-width character makes a gate id not a registry id while it displays as one."
+  },
+  {
+   "id": "M-SSOT-FENCE",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        check_fenced_blocks(repo, regions, id_regex, errors)",
+   "replacement": "        pass",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r12_a_fenced_block_may_not_hold_an_id_beside_a_status"
+   ],
+   "why": "Fences are blanked before anything reads them, so a fenced false status is invisible to every rule."
+  },
+  {
+   "id": "M-SSOT-HOMOGLYPH",
+   "target": ".agent-harness/scripts/check_ssot_consistency.py",
+   "anchor": "        foreign = [ch for ch in line if ord(ch) > 127 and unicodedata.category(ch).startswith(\"L\")]",
+   "replacement": "        foreign = []",
+   "kills": [
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r13_a_homoglyph_status_is_refused",
+    ".agent-harness/tests/test_ssot_consistency.py::test_f_r13_a_homoglyph_in_prose_beside_an_id_is_refused"
+   ],
+   "why": "Cyrillic ER/A/DZE/DZE spells a perfect PASS that matched nothing and produced no refusal at all."
+  },
+  {
+   "id": "M-CANARY-CYCLE",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "    for cycle in _supersession_cycles(declares):",
+   "replacement": "    for cycle in []:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r11_three_node_supersession_cycle_is_refused"
+   ],
+   "why": "Pairwise comparison misses C1->C2->C3->C1; three canaries retired each other and the checker said ok."
+  },
+  {
+   "id": "M-CANARY-CYCLE-EACH",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "                cycles.append(bare[spin:] + bare[:spin] + [min(bare)])",
+   "replacement": "                cycles[:] = [bare[spin:] + bare[:spin] + [min(bare)]]",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r11_each_distinct_cycle_is_reported_exactly_once"
+   ],
+   "why": "Two independent cycles must report as two defects, not one."
+  },
+  {
+   "id": "M-CANARY-UNIQUE-ID",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "        if canary in countable:\n            duplicated.setdefault(canary, [countable[canary]]).append(rel)\n        else:\n            countable[canary] = rel",
+   "replacement": "        countable[canary + str(len(countable))] = rel",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r11_two_files_claiming_one_canary_id_do_not_count_twice"
+   ],
+   "why": "'live: [C1, C1]' satisfied a declared floor of two; one canary duplicated is one canary."
+  },
+  {
+   "id": "M-CANARY-TRACKED",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "    if minimum and is_git_repo(repo):",
+   "replacement": "    if False:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r11_untracked_canary_evidence_does_not_satisfy_the_floor"
+   ],
+   "why": "runs/ is gitignored, so an un-added canary exists on one disk and nowhere else."
+  },
+  {
+   "id": "M-CANARY-POLICY-TRACKED",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "    elif not is_tracked(repo, POLICY_FILE):",
+   "replacement": "    elif False:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r11_an_untracked_policy_cannot_replace_the_tracked_one"
+   ],
+   "why": "An untracked min_live:0 replacing the tracked declaration lowered the floor to zero in silence."
+  },
+  {
+   "id": "M-CANARY-AMBIGUOUS",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "            try:\n                json.loads(raw)\n            except (json.JSONDecodeError, ValueError):\n                continue  # genuinely not parseable JSON; not ours, never was\n            errors.append(",
+   "replacement": "            try:\n                loose = json.loads(raw)\n            except (json.JSONDecodeError, ValueError):\n                continue\n            if not (isinstance(loose, dict) and loose.get(\"artifact_class\") == ARTIFACT_CLASS):\n                continue\n            errors.append(",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r13_a_duplicated_artifact_class_cannot_hide_a_stale_canary"
+   ],
+   "why": "Classifying with the loose parse let a duplicated artifact_class make a stale canary vanish entirely."
+  },
+  {
+   "id": "M-CANARY-DOC-AUTHORITY",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "        if mine is None or rel not in authorised_paths:",
+   "replacement": "        if mine is None or mine not in {canary_id(r, d) for r, d in attestations if r in authorised_paths}:",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r13_authority_to_retire_belongs_to_the_document_not_the_id"
+   ],
+   "why": "Per-id authority let any file reusing a backed id retire others; it was caught only by an unrelated rule."
+  },
+  {
+   "id": "M-STRICT-JSON",
+   "target": ".agent-harness/scripts/_harness.py",
+   "anchor": "    return json.loads(text, object_pairs_hook=_no_duplicate_keys)",
+   "replacement": "    return json.loads(text)",
+   "kills": [
+    ".agent-harness/tests/test_hooks.py::test_f_r11_duplicate_assignment_id_in_the_envelope_is_refused",
+    ".agent-harness/tests/test_hooks.py::test_f_r11_duplicate_keys_in_an_admissions_row_are_refused"
+   ],
+   "why": "Last-value-wins lets an envelope present one identity here and another to any reader that keeps the first."
+  },
+  {
+   "id": "M-CANARY-PROVENANCE",
+   "target": ".agent-harness/scripts/check_canary_freshness.py",
+   "anchor": "        errors.extend(declared_provenance(repo, rel, canary, document))",
+   "replacement": "        pass",
+   "kills": [
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r13_a_canary_naming_a_commit_that_lacks_its_bytes_is_refused",
+    ".agent-harness/tests/test_canary_freshness.py::test_f_r13_pending_commit_must_be_pinned_once_head_moves_on"
+   ],
+   "why": "Attested digests were only ever compared against the WORKING TREE, so a provenance field could name any commit at all. C8 named one where the stop hook still held the value C8 said had gone stale."
+  }
+ ]
+}

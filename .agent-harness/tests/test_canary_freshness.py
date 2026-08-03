@@ -525,3 +525,61 @@ def test_f_r13_a_backed_document_may_still_retire(repo: Path) -> None:
     attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
     attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
     assert C.check(repo) == []
+
+
+def test_f_r13_a_canary_naming_a_commit_that_lacks_its_bytes_is_refused(repo: Path) -> None:
+    """Round 13, F-R13-05. C8 declared a commit that did not contain what it attested.
+
+    The checker compared attested digests against the WORKING TREE and never
+    against the declared commit, so a provenance field could name any commit at
+    all. C8 named one where the stop hook still held the value C8 itself said had
+    gone stale.
+
+    The staleness control matters here: the attestation below is FRESH against
+    the working tree, so the only thing that can refuse it is provenance. Without
+    that the test would pass under the broken code too.
+    """
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="HEAD"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    first = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                           text=True, check=True).stdout.strip()
+    # Move the attested file, so `first` no longer contains the attested bytes,
+    # and re-point the attestation at that earlier commit.
+    write(repo / START_HOOK, "# start hook v2\n")
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = first
+    body["start_hook_sha256"] = digest("# start hook v2\n")   # FRESH vs working tree
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert not any("is STALE" in m for m in errors), ("control: it must be fresh", errors)
+    assert any("but at that commit the file hashes to" in m for m in errors), errors
+
+
+def test_f_r13_pending_commit_is_legal_in_the_commit_that_seals_it(repo: Path) -> None:
+    """The convention must be satisfiable, or nobody can ever seal a canary.
+
+    Requiring a real hash in the sealing commit is impossible: the pin names that
+    commit, which does not exist while it is being written. PENDING_COMMIT is
+    therefore legal exactly there, and the obligation lands on the NEXT commit.
+    """
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    assert C.check(repo) == []
+
+
+def test_f_r13_pending_commit_must_be_pinned_once_head_moves_on(repo: Path) -> None:
+    """...and it may not stay pending forever, or the field verifies nothing."""
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    write(repo / "unrelated.txt", "a later commit that does not touch the canary\n")
+    commit_all(repo)
+    assert any("still declares head_commit 'PENDING_COMMIT'" in m for m in C.check(repo)), C.check(repo)
