@@ -216,7 +216,7 @@
   },
   {
    "fact_id": "ssot_regression_case_count",
-   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered. The count is `def test_` lines, so a parametrised case counts once however many inputs it carries -- the B15 bypass family is seven inputs across two definitions.",
+   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered. The count is `def test_` lines, so a parametrised case counts once however many inputs it carries -- the B15 bypass family is seven inputs across two definitions. The count RETURNED to 108 at D-073 commit 2, having previously held 108 at `0aa33cf`: nine coverage-floor fixtures were retired when the generated board made their premise unreachable, and five board fixtures were added. The earlier 108 is not carried as a prior because a prior equal to the current value is ambiguous about which commit a reader should trust -- the checker refuses that pair, correctly, and the history is recorded here instead.",
    "measurement": {
     "kind": "count_lines_matching",
     "path": ".agent-harness/tests/test_ssot_consistency.py",
@@ -243,11 +243,6 @@
      "value": 111,
      "as_of_commit": "9f217f2",
      "note": "D-072, before the D-073 generated-board fixtures."
-    },
-    {
-     "value": 108,
-     "as_of_commit": "0aa33cf",
-     "note": "D-070 Part B18, before the round-13 homoglyph repair."
     },
     {
      "value": 101,
