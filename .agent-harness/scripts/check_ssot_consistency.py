@@ -311,6 +311,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unicodedata
 from datetime import date
 from pathlib import Path, PurePosixPath
@@ -1091,6 +1092,160 @@ def check_fenced_blocks(
                 open_at = None
             elif open_at is not None:
                 body.append(line)
+
+
+def is_git_repo(repo: Path) -> bool:
+    """True when this tree is a git repository at all.
+
+    Tracking is a property of git repositories, so the retention check below is
+    gated on this rather than firing on every synthetic fixture corpus. It is
+    not a bypass: `validate_harness.py` refuses to run at all when git is
+    unavailable, so the real repository can never take this branch.
+    """
+    try:
+        done = subprocess.run(
+            ["git", "rev-parse", "--git-dir"], cwd=repo,
+            capture_output=True, text=True, check=False,
+        )
+    except OSError:
+        return False
+    return done.returncode == 0
+
+def is_tracked(repo: Path, rel: str) -> bool:
+    """True when git tracks this path. Fail-closed: unknown counts as untracked.
+
+    The generated board is the only authority for current status, so a board a
+    fresh checkout would not receive is not an authority at all. `.gitignore`
+    already excludes whole trees in this repository and round 13 proved a
+    directory can vanish while the checker stays green, so presence on this disk
+    is not evidence of retention.
+    """
+    try:
+        done = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", "--", rel],
+            cwd=repo, capture_output=True, text=True, check=False,
+        )
+    except OSError:
+        return False
+    return done.returncode == 0
+
+BOARD_ARTIFACT = ".agent-harness/generated/STATUS_BOARD.md"
+# Files that show the board inline. A tuple so a second is possible, shipping
+# with none: every host multiplies the byte-equality surface and reopens the
+# question of which host is live. D-073 commit 2 adds PROJECT_STATE.md.
+BOARD_HOSTS: tuple[str, ...] = ()
+BOARD_BEGIN = "<!-- BEGIN GENERATED STATUS BOARD -->"
+BOARD_END = "<!-- END GENERATED STATUS BOARD -->"
+
+
+def render_board(gates: dict[str, str], claims: dict[str, str]) -> str:
+    """The board, as a pure function of the two registries.
+
+    Sorted by id so the bytes do not depend on registry ordering, and carrying
+    no date, no timestamp and no ``## `` heading -- see the module docstring of
+    ``build_status_board.py`` for why both of those are load-bearing rather than
+    stylistic.
+
+    Status is rendered UPPERCASE regardless of how the registry spells it. The
+    registry stores ``"fail"`` and the board shows ``FAIL``; normalising here
+    means a registry casing change cannot silently alter the board's bytes.
+    """
+    lines = [BOARD_BEGIN, "", "| Gate | Status |", "|---|---|"]
+    lines += [f"| `{gate}` | {status.upper()} |" for gate, status in sorted(gates.items())]
+    lines += ["", "| Claim | Status |", "|---|---|"]
+    lines += [f"| `{claim}` | {status.upper()} |" for claim, status in sorted(claims.items())]
+    lines += ["", BOARD_END]
+    return "\n".join(lines) + "\n"
+
+
+def extract_board(text: str, rel: str, errors: list[str]) -> str | None:
+    """The sentinel span of one file, or None with an error explaining why not.
+
+    Exactly one BEGIN and one END, in that order. Two blocks is how a second and
+    false board would be smuggled into a file that already carries a true one,
+    so the count is checked rather than the first match taken.
+    """
+    begins, ends = text.count(BOARD_BEGIN), text.count(BOARD_END)
+    if begins == 0 and ends == 0:
+        errors.append(
+            f"{rel}: no generated status board. This file is declared a board host, so it must "
+            f"carry the block between {BOARD_BEGIN} and {BOARD_END}."
+        )
+        return None
+    if begins != 1 or ends != 1:
+        errors.append(
+            f"{rel}: found {begins} board BEGIN and {ends} board END markers, expected one of each. "
+            "A second block is how a false board is smuggled in beside a true one."
+        )
+        return None
+    start = text.index(BOARD_BEGIN)
+    stop = text.index(BOARD_END)
+    if stop < start:
+        errors.append(f"{rel}: the board END marker precedes its BEGIN marker.")
+        return None
+    return text[start : stop + len(BOARD_END)] + "\n"
+
+
+def check_generated_board(
+    repo: Path,
+    gates: dict[str, str],
+    claims: dict[str, str],
+    regions: list[Region],
+    errors: list[str],
+) -> int:
+    """Require the rendered board to appear verbatim in the artifact and every host.
+
+    Returns the row count, which is the mechanical replacement for the old
+    coverage floor: if the renderer ever drops a row, the count stops matching
+    the registries and this fails, without anyone having to notice a missing
+    line in a table.
+    """
+    expected = render_board(gates, claims)
+    rows = len(gates) + len(claims)
+
+    artifact = read_text(repo, BOARD_ARTIFACT, errors)
+    if artifact is None:
+        return 0
+    if is_git_repo(repo) and not is_tracked(repo, BOARD_ARTIFACT):
+        errors.append(
+            f"{BOARD_ARTIFACT}: the generated board is not tracked by git, so a fresh checkout "
+            "would not receive the only authority for current status."
+        )
+    found = extract_board(artifact, BOARD_ARTIFACT, errors)
+    if found is not None and found != expected:
+        errors.append(
+            f"{BOARD_ARTIFACT}: the generated board does not match what the registries render. "
+            "Run .agent-harness/scripts/build_status_board.py. Verification is byte equality "
+            "against a fresh render, not a stored hash, so there is nothing to refresh and "
+            "nothing that can go stale."
+        )
+
+    live = live_line_index(regions)
+    for rel in BOARD_HOSTS:
+        text = read_text(repo, rel, errors)
+        if text is None:
+            continue
+        shown = extract_board(text, rel, errors)
+        if shown is None:
+            continue
+        if shown != expected:
+            errors.append(
+                f"{rel}: the board shown here is not what the registries render. It was edited by "
+                "hand, or the registries moved and the host was not rebuilt. Either way the file "
+                "states a status the authority does not."
+            )
+            continue
+        # The block must sit where somebody reads it. Without this it could
+        # verify byte-perfect while parked in a superseded section, leaving the
+        # controlling overlay with no board at all and the checker green -- which
+        # is precisely the F-D065-05 condition this module exists to prevent.
+        begin_line = text[: text.index(BOARD_BEGIN)].count("\n") + 1
+        if (rel, begin_line) not in live:
+            errors.append(
+                f"{rel}:{begin_line}: the generated status board sits outside a live region. A "
+                "board nobody reads is not a board; move it into the controlling section."
+            )
+    return rows
 
 
 def check_status_assertions(
@@ -2054,6 +2209,7 @@ def main() -> None:
             assertions_checked += checked
             covered |= region_covered
         check_fenced_blocks(repo, regions, id_regex, errors)
+        board_rows = check_generated_board(repo, gates, claims, regions, errors)
         # An exemption whose line no longer sits in a live region is dead and is
         # reported, so exceptions cannot quietly accumulate past their occasion.
         used_exemptions = {
@@ -2104,6 +2260,7 @@ def main() -> None:
                 "gates": len(gates),
                 "claims": len(claims),
                 "live_regions": len(regions),
+                "board_rows": board_rows,
                 "status_assertions_checked": assertions_checked,
                 "gates_covered": len([g for g in gates if g in covered]),
                 "claims_covered": len([c for c in claims if c in covered]),

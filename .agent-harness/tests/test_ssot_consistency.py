@@ -325,6 +325,22 @@ def repo(tmp_path: Path) -> Path:
         "tests",
     ):
         (tmp_path / directory).mkdir(parents=True, exist_ok=True)
+    # The generated board is the status authority (D-073), so a corpus without
+    # one has no status surface at all and the checker says so. The fixture
+    # therefore CARRIES a board rather than the check being weakened to tolerate
+    # its absence -- the same call made when the validator fixture had to carry
+    # its sibling checkers.
+    subprocess.run(
+        [sys.executable, str(REPO / ".agent-harness/scripts/build_status_board.py")],
+        cwd=tmp_path, check=True, capture_output=True,
+    )
+    # ...and stage it. The fixture corpus is a git repository, so the board is
+    # subject to the same retention rule as the real one: an untracked authority
+    # is one a fresh checkout would not receive.
+    subprocess.run(
+        ["git", "add", "-f", ".agent-harness/generated/STATUS_BOARD.md"],
+        cwd=tmp_path, check=True, capture_output=True,
+    )
     return tmp_path
 
 
@@ -1794,3 +1810,117 @@ def test_f_r13_ordinary_non_ascii_punctuation_stays_legal(repo: Path) -> None:
         "- `G-BETA=FAIL` remains — see § 4 → the appendix.",
     )
     assert_clean(repo)
+
+
+# --------------------------------------------------------------------------
+# D-073 -- the generated status board. Status stops being written by hand.
+#
+# These fixtures pin the properties that make generation an authority rather
+# than a convenience: the artifact must equal a fresh render, it must be
+# tracked, it may carry exactly one block, and every row must be present.
+# --------------------------------------------------------------------------
+
+
+def git_repo_for_board(repo: Path) -> None:
+    """Give the fixture repo a git identity, so tracking checks can run."""
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@t"], cwd=repo, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=repo, check=True)
+
+
+def commit_board(repo: Path) -> None:
+    import subprocess
+
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "board"], cwd=repo, check=True, capture_output=True)
+
+
+BOARD = ".agent-harness/generated/STATUS_BOARD.md"
+
+
+def build_board(repo: Path) -> None:
+    """Render the board into the fixture repository, as the generator would."""
+    import subprocess
+
+    subprocess.run(
+        [sys.executable, str(REPO / ".agent-harness/scripts/build_status_board.py")],
+        cwd=repo, check=True, capture_output=True,
+    )
+    subprocess.run(["git", "add", "-f", BOARD], cwd=repo, check=True, capture_output=True)
+
+
+def test_d073_a_freshly_built_board_is_clean(repo: Path) -> None:
+    """The control. Everything below must fail for its own reason, not because
+    the board is broken in general."""
+    git_repo_for_board(repo)
+    build_board(repo)
+    commit_board(repo)
+    assert_clean(repo)
+
+
+def test_d073_a_hand_edited_board_is_refused(repo: Path) -> None:
+    """The whole point: a status edited into the artifact does not survive.
+
+    This is the case the prose parser could never close, because a hand-written
+    board was the authority. Now the registries are, and the artifact is checked
+    against what they render.
+    """
+    git_repo_for_board(repo)
+    build_board(repo)
+    commit_board(repo)
+    path = repo / BOARD
+    text = path.read_text(encoding="utf-8")
+    assert "| `G-BETA` | FAIL |" in text, text
+    write(path, text.replace("| `G-BETA` | FAIL |", "| `G-BETA` | PASS |", 1))
+    assert any("does not match what the registries render" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_d073_a_second_block_is_refused(repo: Path) -> None:
+    """Two blocks is how a false board is smuggled in beside a true one."""
+    git_repo_for_board(repo)
+    build_board(repo)
+    commit_board(repo)
+    path = repo / BOARD
+    text = path.read_text(encoding="utf-8")
+    write(path, text + "\n" + text[text.index("<!-- BEGIN"):])
+    assert any("expected one of each" in m for m in errors_of(repo)), errors_of(repo)
+
+
+def test_d073_an_untracked_board_is_refused(repo: Path) -> None:
+    """A board a fresh checkout would not receive is not an authority.
+
+    The discriminator is that the CONTENT is correct: only the tracking check
+    can fail this case, so it cannot pass for the wrong reason.
+    """
+    import subprocess
+
+    git_repo_for_board(repo)
+    build_board(repo)
+    commit_board(repo)
+    # Untrack it and commit that removal WITHOUT `git add -A`, which would
+    # simply re-add the file and make this fixture prove nothing.
+    subprocess.run(["git", "rm", "--cached", "-q", BOARD], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "untrack the board"], cwd=repo,
+                   check=True, capture_output=True)
+    errors = errors_of(repo)
+    assert any("not tracked by git" in m for m in errors), errors
+    assert not any("does not match what the registries render" in m for m in errors), (
+        "content must be correct, or this proves nothing", errors)
+
+
+def test_d073_a_dropped_row_is_refused(repo: Path) -> None:
+    """The mechanical replacement for the coverage floor.
+
+    A renderer that silently drops a row would previously have been caught, if
+    at all, by a human noticing a missing line. Byte equality catches it without
+    anyone having to look.
+    """
+    git_repo_for_board(repo)
+    build_board(repo)
+    commit_board(repo)
+    path = repo / BOARD
+    lines = [l for l in path.read_text(encoding="utf-8").split("\n") if "`G-ALPHA`" not in l]
+    write(path, "\n".join(lines))
+    assert any("does not match what the registries render" in m for m in errors_of(repo)), errors_of(repo)

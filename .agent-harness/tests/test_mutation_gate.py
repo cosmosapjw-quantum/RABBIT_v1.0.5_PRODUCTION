@@ -65,14 +65,25 @@ def tree() -> Path:
         with archive.open("wb") as handle:
             subprocess.run(["git", "archive", "HEAD"], cwd=REPO, check=True, stdout=handle)
         subprocess.run(["tar", "-x", "-f", str(archive), "-C", str(target)], check=True)
-        # Working-tree edits, so the gate measures what is about to be committed
+        # Working-tree state, so the gate measures what is about to be committed
         # rather than what was committed last time. A battery that only ever saw
         # HEAD would pass on exactly the commit that introduced an unverified
         # guard.
-        changed = subprocess.run(
-            ["git", "diff", "--name-only", "HEAD"], cwd=REPO,
-            capture_output=True, text=True, check=True,
-        ).stdout.split()
+        #
+        # `git status --porcelain` rather than `git diff --name-only HEAD`: the
+        # latter misses UNTRACKED files, so a commit introducing a brand-new
+        # script left that script out of the scratch tree and every fixture
+        # depending on it failed there for a reason that had nothing to do with
+        # any mutation. Found while adding build_status_board.py, which is
+        # exactly the case -- a new file arriving with the guards that need it.
+        changed = [
+            line[3:].strip().strip('"')
+            for line in subprocess.run(
+                ["git", "status", "--porcelain", "--untracked-files=all"], cwd=REPO,
+                capture_output=True, text=True, check=True,
+            ).stdout.splitlines()
+            if line[:2] != "D " and line[:2] != " D"
+        ]
         for rel in changed:
             source = REPO / rel
             if not source.is_file():
