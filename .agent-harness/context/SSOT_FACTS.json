@@ -48,7 +48,7 @@
     "pattern": "^def test_"
    },
    "value": 111,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "9760a8c",
    "prior": [
     {
      "value": 108,
@@ -159,7 +159,7 @@
     "pattern": "^def test_"
    },
    "value": 56,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "9760a8c",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
@@ -216,7 +216,7 @@
     "pattern": "^def test_"
    },
    "value": 39,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "9760a8c",
    "assertions": [
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
