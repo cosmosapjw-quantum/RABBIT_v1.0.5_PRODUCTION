@@ -1,262 +1,425 @@
-# Blocker-resolution brainstorm — evidence, hypothesis space, adversarial review, verification design
+# Blocker-resolution plan — critical re-audit and bounded decision design
 
 **Date:** 2026-08-04
-**Status:** PROPOSAL for owner decision. Nothing here moves a gate, edits a registry, spends a
-contract, or touches frozen machinery. Both gates keep their recorded statuses; the trajectory
-lane stays closed on its preserved measurement per D-071; the harness freeze (D-074) stays in force.
-**Method:** physmath-research-harness pipeline (evidence-acquisition → hypothesis-space →
-adversarial-review → verification-design), run with a 6-agent web-evidence workflow and two
-independent adversarial reviewer agents. Reviewer independence is computational only — the writer
-spawned and prompted them. That recorded limit applies to this document itself.
+
+**Revision:** critical design re-audit of `b24d98b`
+
+**Review verdict:** `MAJOR_REVISIONS`
+
+**Status:** `SPECIFIED` for owner decision only. This document is not an execution grant, a sealed
+contract, an accepted evidence package, or a gate decision.
+
+The board remains **6 PASS / 2 FAIL**:
+
+- `G-F10-INDEPENDENT-FLRW=FAIL`, closed on the current instrument and measurement by D-071;
+- `G-HARNESS-INTEGRITY=FAIL`, with harness development frozen fix-critical-only by D-074.
+
+Recommended owner disposition:
+
+1. **Trajectory:** reject V2 as originally costed; if further causal localization is worth at most
+   two hours, authorize only the bounded, scratch-only V1 diagnostic defined below. Its output is
+   diagnostic evidence, never gate or reopen evidence.
+2. **Harness:** keep the gate FAIL and the harness frozen. V4 external-adjudicator recruitment is an
+   optional owner action outside the repository; it cannot itself move the gate or authorize H-H1/H-H4.
+3. **After V1:** select at most one materially new scientific family for contract design. Do not run
+   H-T2, H-T3, or a full V2 screen in parallel merely to keep options open.
 
 ---
 
-## 1. New evidence this exercise produced
+## 1. Reviewer verdict
 
-### 1.1 From the retained bytes (reviewer findings, checkable locally)
+### Strengths worth preserving
 
-- **F-R1 — the "unexplained drop" is explained.** The r4 progress line is printed from inside the
-  RHS (`scripts/audit/_trajectory_core.py`, every 50 evals), so it prints **trial** points, not
-  accepted state. The 0.1813 "peak" (eval 751) was never accepted state; the −0.0184 "drop" at
-  eval 951 is the rejection fallback to just past the last accepted state (eval-701 vicinity).
-  D-071 §2.3's "unexplained DROP" reading is over-mystified; rejections are already inside the
-  measured creep window, which makes the 4.58-yr projection *more* defensible, and removes the drop
-  as a stand-alone anomaly.
-- **F-R2 — the creep is FD-Jacobian refresh/rejection cycling.** Domain-phase state dimension is
-  3×60+2 = 182; scipy BDF's finite-difference Jacobian costs ~182 RHS evals per refresh. The
-  post-drop window's 10,100 evals ≈ 55.5 × 182: the creep's wall is almost entirely Jacobian
-  refreshes. The trace shows 150–250-eval plateaus at single T_cm values and repeated
-  forward/backward trial retreats — a discrete reject-refresh limit cycle, not smooth honest tiny
-  steps. A second, *escaped* stall episode exists at holdout startup (evals 1–301, ΔN=0.0007).
-- **F-R3 — the three-order-of-magnitude excess is a local fact.** The same instrument at 48/24
-  completed in 3,694 evals; 60/30 projects 3.27e7. No web trust needed.
-- **F-R4 — nothing of the stalled phase survives.** `r4_trajectory_report.json` has
-  `domain_holdout: null`. What *is* retained: base-phase `checkpoint_states`, endpoint spectrum,
-  per-eval rejection counters, `max_roundoff`.
-- **F-R5 — instrumentation is wrapper-feasible.** The solver loop (`solve_ivp(..., method="BDF",
-  rtol=1e-6, atol=1e-9)`) lives in `scripts/audit/_trajectory_core.py`, not in the frozen module.
-  A diagnostic driver can step-drive scipy BDF against the frozen module's public API with zero
-  edits to `_independent_noqke.py`.
+- The proposal separates trajectory and harness failure classes.
+- It treats reviewer multiplicity under one operator as computational diversity, not independent
+  governance.
+- It includes pass, kill, and ambiguity outcomes instead of defining every result as progress.
+- It keeps QKE, public-production claims, frozen-module edits, and gate movement out of scope.
+- H-T3 already carries a useful self-destruct clause: without a three-channel bound it is only an
+  easier configuration of the same instrument.
 
-### 1.2 From the literature (6 axes, each verified against primary sources by its agent)
+### Blocking corrections before any execution
 
-- **Practice check:** every production code on the same or harder physics (FortEPiaNO Ny 20–100;
-  Bennett et al. Ny 60–80, y_max 20–30; NEVO N=80 with an analytic O(N³) collision Jacobian;
-  nudec_BSM) integrates with LSODA/BDF at tolerances 1e-6..1e-7 and completes full decoupling
-  evolutions in minutes-to-hours on desktops — lifetime evaluation budgets of order 1e4–1e5. No
-  published analogue of a 1e7+-step requirement exists for this physics. The one published blow-up
-  mechanism (adaptive solver vs unresolved sharp features, FortEPiaNO App. B) is consistent with
-  the F-R2 signature.
-- **BDF stall taxonomy:** creep near quasi-equilibrium is one of four documented, separable
-  mechanisms — A(α) stability-wedge limitation from weakly damped oscillatory modes (STALD detects
-  this from step history at 2–7% overhead); error-estimator noise floor (acute here: the collision
-  term is a near-cancellation of gain and loss terms); Newton-failure cycling; genuinely fast
-  physics visible in one dense eigendecomposition. Signatures are disjoint-ish and standard
-  counters discriminate them.
-- **Asymptotic route precedent:** Esposito et al. 2000 integrate delta-f in 4 Fermi-weighted
-  orthonormal polynomials (17 stiff ODEs; the method line behind classic N_eff results).
-  AP/exponential/BGK-penalized reformulations carry uniform-in-stiffness proofs including
-  Fermi-Dirac equilibria. Caveat: every proven step-count win is vs explicit/semi-implicit
-  baselines, never vs an already-implicit BDF in creep.
-- **Rigorous surrogate route:** off-the-shelf machinery is dead at this scale (validated
-  integrators top out ~2–12 nonlinear states; ROM bounds are exponential-in-time or mere
-  estimates). One live mechanism: defect + logarithmic-norm certificate (Söderlind 2006; Wirtz et
-  al. 2014, effectivity ~10 on dissipative problems). Decisive unknown: the one-sided Lipschitz
-  constant μ of the collision+expansion Jacobian in a weighted norm — physics pushes μ→0 exactly
-  where certification is needed.
-- **Domain reduction:** y_max 30→20 is analytically certified for *equilibrium* content
-  (incomplete-gamma bound, ≤3.4e-6 relative in the energy moment at y_max=20; 5e-10 at 30; below
-  20 measured-invalid). CLASS completes tails analytically in production.
-- **Harness independence:** every surveyed framework decomposes independence into EXECUTION /
-  ATTESTATION / JUDGMENT. Execution and attestation are purchasable (hosted CI + attestations;
-  Rekor anchoring makes backdating impossible; private repos do not write to the public log and
-  must anchor separately). JUDGMENT is irreducibly a human or organization outside the writer's
-  control (IEEE 1012 managerial independence; ACM "person or team other than the authors";
-  CODECHECK; registered reports). No framework treats reviewer multiplicity under one controller
-  as independence.
-
-## 2. Candidate families and their adversarial-review outcomes
-
-Two reviewer agents (read-only, no candidate rewriting, no promote/kill authority) reviewed the
-ten families. Both reviews are quoted from their returned reports; full texts retained in the
-session task outputs.
-
-### Trajectory lane
-
-| Family | Class | Reviewer role | Load-bearing amendment |
+| ID | Problem in `b24d98b` | Why it is load-bearing | Required correction |
 |---|---|---|---|
-| H-T1 diagnosis-first instrumented replica | (instrument) | DEFENDED | pre-register the mechanism prediction set before running; log the kinematic-domain rejection counter live |
-| H-T2 asymptotic delta-f reformulation | (a) | NEEDS_MORE_EVIDENCE | mechanism as written was wrong: plain delta-f keeps the fast spectrum and fixes the *cancellation noise floor*; only micro-macro/AP closure removes fast modes; fidelity budget ~1% of a ~0.04 distortion ≈ 4e-4 vs the 2e-4 band — a convergence ladder is mandatory |
-| H-T3 confound-separating discriminator + certified tail | (c) | TRADEOFF | my first-node claim was **false**: at fixed y_max 24, order 60 gives first node ≈ 0.0147×(48/60)² ≈ 0.0094 — *closer* to zero than the stalled config's 0.0118. The run discriminates drivers; it does not presumptively complete. The analytic leg must bound three channels (equilibrium storage + distortion tail + operator feedback), not one. Avoid order 64 in any ladder or carry an explicit lane-scope adjudication |
-| H-T4 defect + log-norm certificate | (b) | TRADEOFF | kill test runs on base-phase `checkpoint_states` (the stalled phase retains no state); "rigorous" needs tube-level control, else label as scientific-computing-grade; pre-register numeric tripwires |
-| H-T5 instrument-pathology interpretation | (frame) | NEEDS_MORE_EVIDENCE | partially pre-confirmed by F-R2, so the registered prediction must be sharpened to "pathology signature **and** a driver absent from at least one allowed alternative construction", else confirmation is vacuous |
+| R-01 | RHS progress points were treated as accepted BDF states. | `make_rhs()` logs every raw RHS call, including finite-difference Jacobian columns and failed Newton/error-test trials. The retained log has no accepted-step trace. | Treat the `0.1813 -> 0.1629` sequence as evidence of trial-point retreat consistent with rejection, not proof of the accepted-state chronology. |
+| R-02 | `10100 ~= 55.5 * 182` was promoted to a causal explanation. | The arithmetic is consistent with repeated dense finite-difference batches, but r4 retained no `njev`, `nlu`, accepted-step, Newton-failure, or error-test counters. | Keep FD refresh/rejection cycling as `PROPOSED` until V1 records the solver events directly. |
+| R-03 | V2 assumed about 1,000 retained checkpoints and a one-RHS-call Jacobian cost. | The report contains exactly 31 base checkpoints of shape `3 x 48`, plus two scalar states. One dense 146-state finite-difference Jacobian requires at least 147 raw RHS calls; 31 require at least 4,557 calls before retries. | Split V2 into a zero-run mathematical admissibility screen and a three-checkpoint local kill screen. Do not call it cheap or rigorous. |
+| R-04 | The plan said V1/V2 required no contract or unfreeze. | D-071 closes the trajectory lane; diagnostic work may be proposed, but it needs a separate owner grant and may not be reused as reopen evidence. | Add an explicit authorization state and a pre-output diagnostic protocol. A future reopen discriminator still needs all D-071 conditions. |
+| R-05 | Literature and reviewer claims were described as primary-source verified, but no durable source or reviewer-result path was cited. | Session task outputs and prose summaries are not independently auditable repository evidence. | Make literature contextual only until exact source/page/claim mappings are retained. Treat reviewer verdicts as `SUMMARY_ONLY` unless a stable path and digest are supplied. |
+| R-06 | H-H1/H-H4 were scheduled after V4 despite D-074. | V4 success is not one of D-074's exact harness-reopen triggers. New CI/anchoring machinery would restart the frozen architecture by implication. | Mark H-H1/H-H4 `FORBIDDEN` now. They require a D-074 trigger or an explicit superseding owner decision. |
 
-Reviewer's structural conclusion: **the evidence graph is a DAG with H-T1 at the root.** H-T2,
-H-T3, H-T5 are H-T1-conditional; H-T4 is the only H-T1-independent candidate and carries its own
-cheap self-kill test. One trap stated explicitly: if the diagnosis returns a controller/tolerance
-pathology, the obvious cure (order cap, atol floor, analytic Jacobian) is **explicitly not a
-reopen** — those are the disposition's disqualified "generic optimization" items. H-T1's value is
-to select among reformulation-class candidates and kill the wrong ones, not to license tuning.
+### Scope verdict
 
-### Harness gate
+The useful minimum claim is not “the blocker is nearly solved.” It is:
 
-| Family | Reviewer role | Load-bearing amendment |
+> The retained trace is compatible with a reject/finite-difference-refresh pathology, but does not
+> identify its cause. One bounded diagnostic can test whether a materially new method deserves a
+> prospective contract. The current gate remains closed.
+
+That is scientifically useful and proportionate. Anything stronger is premature.
+
+## 2. Claim and evidence audit
+
+### 2.1 Local retained evidence
+
+| Claim ID | Status | Evidence | Adjudicated wording |
+|---|---|---|---|
+| F-R1A | `VALIDATED` | `scripts/audit/_trajectory_core.py:181-221` | Progress lines are emitted inside the RHS every 50 raw calls. They are not an accepted-step log. |
+| F-R1B | `DERIVED` | r4 lines around evals 751 and 951 plus SciPy BDF control flow | The retreat is consistent with a failed trial followed by a smaller trial. Whether either printed point was accepted is `UNVERIFIABLE` from retained bytes. |
+| F-R2A | `DERIVED` | 182-state domain system; SciPy 1.17.1 dense `num_jac`; repeated same-`N` blocks | Dense FD work is a plausible dominant contributor. One refresh invokes at least 183 raw RHS calls before any retry. |
+| F-R2B | `PROPOSED` | arithmetic coincidence only | “The wall is almost entirely reject-refresh cycling” is a hypothesis for V1, not a finding. |
+| F-R3A | `VALIDATED` | r4 base report | The 48/24 base completed in 3,694 raw RHS calls. |
+| F-R3B | `DERIVED` | rounded RHS trial log | The 3.27e7 / 4.58-year estimate is conditional on treating trial-point movement as a progress proxy. It remains an order-of-magnitude impracticality argument, not an accepted-state completion forecast. |
+| F-R4 | `VALIDATED` | r4 JSON key/count inspection | `domain_holdout` is null. Only 31 completed-base checkpoints survive; stalled-phase state, accepted-step history, and per-evaluation rejection history do not. `base.rejections` is only an aggregate `{min,max,final,count}`. |
+| F-R5 | `SPECIFIED` | local driver and installed SciPy source | A scratch diagnostic can leave `_independent_noqke.py` unchanged, but solver failure counters require a version-pinned diagnostic adapter around SciPy internals; public `solve_ivp` output is insufficient. |
+
+Minimal local checks:
+
+```bash
+jq '{domain_holdout,
+     checkpoints:(.base.checkpoint_states|length),
+     state_shape:[(.base.checkpoint_states[0].cloglog|length),
+                  (.base.checkpoint_states[0].cloglog[0]|length)],
+     rejections:.base.rejections}' \
+  .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json
+
+nl -ba scripts/audit/_trajectory_core.py | sed -n '181,221p'
+nl -ba venv/lib/python3.12/site-packages/scipy/integrate/_ivp/base.py | sed -n '138,170p'
+nl -ba venv/lib/python3.12/site-packages/scipy/integrate/_ivp/bdf.py | sed -n '328,405p'
+```
+
+### 2.2 Literature and reviewer evidence boundary
+
+The broad survey remains useful for hypothesis generation, not for a decision-bearing runtime claim.
+In particular:
+
+- Bennett et al. support precision and momentum-discretization convergence work, but that alone does
+  not establish the proposal's universal desktop-runtime or lifetime-evaluation ranges:
+  <https://arxiv.org/abs/2012.02726>.
+- CODECHECK defines independent execution of an author-provided workflow and explicitly has the
+  codechecker record rather than investigate or fix. It is a plausible execution witness, not by
+  itself a gate adjudicator: <https://codecheck.org.uk/project/>.
+- The FortEPiaNO, NEVO, nudec_BSM, STALD, AP/BGK, logarithmic-norm, validated-integrator, and CLASS
+  claims are `SUMMARY_ONLY` here until the exact primary source, version, page/section, and supported
+  sentence are recorded in this document or an already-authoritative repository source.
+- The two adversarial reviewer reports are also `SUMMARY_ONLY` because “session task outputs” is not
+  a durable evidence locator. Their corrections are retained as design improvements, not counted as
+  independent validation.
+
+No canonical claim-ledger status changes follow from this document. All candidate-family claims stay
+`PROPOSED` or `SPECIFIED`.
+
+## 3. Controlling authority and non-negotiable boundaries
+
+| Authority | Binding consequence for this plan |
+|---|---|
+| D-071 | The current 60/30 instrument and measurement remain closed. Reopen requires a materially new method, a prospectively sealed contract before output, and a reviewed bounded discriminator covering the stalled phase with end-to-end margin. |
+| D-074 | `.agent-harness/` and `.codex/hooks/` are fix-critical-only. V4 recruitment does not authorize new CI, anchoring, guards, declarations, or checkers. |
+| D-075 | Four D-065 obligations are discharged, but they are not the eight-conjunct gate. Operator/decision independence and an accepted evidence package remain absent. |
+| Anti-drift guardrail | A tracked diagnostic/telemetry wrapper is forbidden unless it directly moves a measured blocker or deletes/consolidates more obsolete surface than it adds. Rust AOT remains the active repeated-run target; SciPy/BDF is only the temporary number-of-record. |
+| Scope | QKE, public dispatch, public-production support, W7/B3, unblinding, and frozen-module edits remain forbidden. Raw failures must be preserved. |
+
+Authorization state:
+
+| Action | State now | What would authorize it |
 |---|---|---|
-| H-H1 external execution + attestation | TRADEOFF | counterexample: **run-picking** — writer runs N times, discloses the green one; every cryptographic property survives. Fix: trigger on every push to the audited branch + anchored monotone run index, plus a published conjunct-coverage map (live hook-runtime conjuncts are unreachable from CI) |
-| H-H2 external human judgment + frozen commitment | DEFENDED (design) | two mandatory amendments: freeze the **adjudicator identity** (or a deterministic recruitment procedure) before results, not merely the criteria — else reviewer-shopping defeats it; add a conjunct-scope annex (own re-execution vs judging retained bytes, per conjunct). Also: the signed verdict is a tamper-evident *input* to a writer-authored package, not the package |
-| H-H3 second local UID | REJECTED_SHORTCUT | `sudo` crosses it; implementation breaches the freeze; C13 depends on the shared user |
-| H-H4 transparency anchoring of the existing corpus | DEFENDED (narrow) | anchor record must carry the negative scope statement ("attests existence-at-time only; nothing about content honesty or implies_status"); worth doing only paired with a live H-H1/H-H2 process, else orphaned ceremony |
-| H-H5 accept the permanent FAIL as terminal | TRADEOFF | genuinely competitive, not a strawman; but "zero drift" is false (nothing enforces limitation-text propagation) and "the gate never moves" is a choice presented as necessity. Cheap decisive test: attempt H-H2 recruitment; measured failure upgrades H-H5 to the defended terminal state |
+| Read-only evidence correction and this design revision | `SPECIFIED` / allowed | Current owner request |
+| V4 recruitment outreach | `PROPOSED`, owner action | Owner chooses qualification criteria and deadline |
+| V1 diagnostic execution | `NOT_AUTHORIZED` | Separate explicit owner grant accepting the hard cap and diagnostic-only claim ceiling |
+| V2A mathematical screen | `PROPOSED` | Owner authorizes design-only work; no numerical output |
+| V2B numerical local screen | `NOT_AUTHORIZED` | V2A passes and owner accepts measured cost cap |
+| V3 prefix probe or H-T2 fidelity run | `FORBIDDEN` now | All D-071 reopen prerequisites, including a sealed reviewed contract |
+| H-H1 CI or H-H4 anchoring machinery | `FORBIDDEN` now | A D-074 reopen trigger or an explicit decision superseding D-074 |
 
-Reviewer's structural conclusion: **no combination without H-H2 can move the harness gate** —
-of D-075 §4's three independently sufficient reasons, only H-H2 touches judgment independence.
-H-H1/H-H3/H-H4 are ingredients of an H-H2-bearing package or components of the H-H5 terminal
-state, never freestanding routes.
+## 4. Candidate-family disposition
 
-## 3. Verification design — the smallest decisive test per surviving candidate
+### 4.1 Trajectory lane
 
-Nine fields per the verification-design discipline. Ordered by the priority rule: cheapest test
-that discriminates the most candidates first.
+| Family | Revised state | Retain / reject rationale |
+|---|---|---|
+| H-T1 bounded causal diagnostic | `SPECIFIED`, conditional | Retain only as scratch-only diagnostic V1. It can localize a solver mechanism but cannot reopen or move the gate. |
+| H-T2 micro-macro/AP reformulation | `PROPOSED` | Retain conditionally. Plain delta-f may reduce cancellation but does not remove fast modes; a materially new micro-macro/AP closure needs its own derivation and fidelity ladder. |
+| H-T3 analytic domain reduction | `PROPOSED` | Retain conditionally. The three-channel tail bound must be completed before a run; otherwise self-destruct. |
+| H-T4 defect/log-norm certificate | `PROPOSED`, redesign required | Do not call the current V2 cheap or rigorous. First define coordinates, norm, output functional, state coverage, and tube argument; then use local samples only as a kill screen. |
+| H-T5 pathology interpretation | `PROPOSED` framing only | Keep as a hypothesis to falsify, not a separate execution family. |
 
-### V1 — instrumented stall diagnostic (executes H-T1; discriminates H-T2/H-T3/H-T5)
+### 4.2 Harness lane
 
-1. **Testable claim:** the 60/30 domain-holdout creep is one (or a set) of: A(α)-wedge stability
-   limitation; error-estimator noise floor; Newton-failure cycling; RHS kinematic-boundary
-   discontinuity; genuine fast modes.
-2. **Required inputs:** wrapper driver around scipy BDF via the frozen module's public API
-   (F-R5); logging of h, order, error norm, error-test vs Newton-failure counters, per-eval
-   kinematic-domain rejection counter, RHS gain/loss magnitudes separately (noise-floor probe);
-   one dense 182-dim Jacobian eigendecomposition at the stall state; ~2–13 h wall.
-3. **Expected result if the pathology frame is correct:** a discrete signature — rejection
-   cycling tied to an identifiable driver (near-origin components, high-y bins, kinematic
-   boundary, or noise floor) — sharpened per the reviewer: a driver absent from at least one
-   allowed alternative construction.
-4. **Expected under the strongest competitor (intrinsic cost):** well-conditioned Newton, few
-   rejections, error tests honestly passed at tiny h, eigenvalues demanding that h.
-5. **Pass criterion:** the trace assigns ≥1 mechanism with a quantitative signature (e.g.
-   >50% of wall in Jacobian refreshes following rejections; or gain/loss cancellation ratio
-   putting the RHS noise floor above atol=1e-9/rtol=1e-6 demands).
-6. **Kill criterion (for the pathology frame):** the intrinsic-cost signature of field 4.
-7. **Ambiguity condition:** mixed signature with no dominant driver, or non-reproduction of the
-   stall.
-8. **Cheapest next action:** bank the pre-registered prediction set (dated, before any run
-   byte), then run the diagnostic. No contract, no gates, no frozen edits, no band touched.
-9. **Escalation path:** driver identified → draft the matching reopen contract (V3 if
-   construction-specific driver; H-T2's AP sub-route if genuine fast modes; V2's certificate
-   regardless); intrinsic-cost outcome → only H-T2 (with its fidelity ladder) and V2 remain.
+| Family | Revised state | Retain / reject rationale |
+|---|---|---|
+| H-H1 external CI/attestation | `FORBIDDEN` now | Cannot cover trusted local hook conjuncts and would add machinery during D-074 freeze. |
+| H-H2 external human adjudication | `PROPOSED` | The only surviving route to judgment independence, but still insufficient without all eight conjuncts and an accepted evidence package. |
+| H-H3 second local UID | `FORBIDDEN` shortcut | It does not create operator or decision independence and changes the frozen threat model. |
+| H-H4 transparency anchor | `FORBIDDEN` now | Existence-at-time is not content honesty or claim support; unpaired anchoring is ceremony. |
+| H-H5 retain terminal FAIL | current default | This is the controlling operational state, not a theorem that independent review can never occur. |
 
-**Compliance note:** uncontracted diagnostic ⇒ post-hoc selection surface. Mitigation is field
-8's pre-registration, consistent with the parallel-run grant's "all axes gated and reported, no
-post-hoc selection".
+## 5. Revised trajectory verification design
 
-### V2 — μ kill test for the defect+log-norm certificate (executes H-T4's gate; H-T1-independent)
+### V0 — pre-output diagnostic protocol
 
-1. **Testable claim:** the collision+expansion Jacobian has a usefully negative one-sided
-   Lipschitz constant μ(t) in some weighted norm along the epoch.
-2. **Required inputs:** retained base-phase `checkpoint_states` (verified present, F-R4); dense
-   Jacobian evaluations at ~1e3 checkpoints (~1–2 h at 4.42 s/eval); a small weighted-norm search.
-3. **Expected if H-T4 viable:** μ(t) ≤ μ* < 0 across the epoch in some tested norm, with the
-   projected certificate ≤ 1e-4 in the ΔN_eff functional.
-4. **Expected under competitor (certificate uselessness):** μ → 0⁻ or sign-indefinite as rates
-   die; or projected bound > 2e-4.
-5. **Pass criterion (pre-registered tripwire):** projected certificate ≤ 1e-4 at measured μ and
-   estimated defect scale.
-6. **Kill criterion (pre-registered tripwire):** μ not usefully negative in any tested norm, or
-   projected certificate > 1e-4 — stop before any norm-optimization rabbit hole.
-7. **Ambiguity condition:** μ marginally negative with projected bound in (1e-4, 2e-4): formally
-   decisive-capable but with no margin — treat as kill for contract purposes.
-8. **Cheapest next action:** the μ computation itself; hours, no new physics code.
-9. **Escalation path:** pass → design the tube-level (rigor-labeled) certificate + surrogate
-   tail ansatz for y∈(24,30] with its defect bounded, then a class-(b) reopen contract; kill →
-   record as an informative negative in the graph, H-T4 closed.
+V0 produces no scientific output. Before V1, record in one owner-approved protocol:
 
-### V3 — confound-separating discriminator (executes H-T3; conditional on V1)
+1. exact input commit and frozen-module SHA-256;
+2. Python, NumPy, and SciPy versions plus SHA-256 of the copied diagnostic BDF source;
+3. exact domain setup (`order=60`, `y_max=30`, `rtol=1e-6`, `atol=1e-9`);
+4. mechanism predictions and their counterfactual signatures;
+5. raw-RHS, wall, and accepted-step hard caps;
+6. output paths and mandatory failure preservation;
+7. the statement: **V1 output cannot satisfy any D-071 reopen conjunct**;
+8. tracked-file budget: zero production/harness/gate files and no persistent diagnostic framework.
 
-1. **Testable claim:** T13's stall driver is specific to the domain-extension axis of the 60/30
-   construction, and the representation-convergence question L7 actually gates can be measured by
-   a density-only companion plus a three-channel analytic bound on domain extension.
-2. **Required inputs:** V1's driver identification; corrected first-node arithmetic (order 60 at
-   y_max 24 ⇒ first node ≈ 0.0094 — *closer* to the origin; the run discriminates near-origin vs
-   high-y drivers rather than presumptively completing); drafted three-channel tail bound
-   (equilibrium storage via incomplete gamma + distortion tail + operator feedback) in the ΔN_eff
-   norm, presented before any output byte; a 1–2 h prefix probe covering the stalled early-N
-   phase as the reviewed discriminator required by reopen condition 3.
-3. **Expected if correct:** prefix probe of the chosen alternative construction traverses the
-   stalled N-window at a rate projecting completion inside the 18 h budget with margin.
-4. **Expected under competitor:** the alternative construction creeps identically (driver is
-   order-conditioning, not domain extension) — projection fails.
-5. **Pass criterion:** projected completion ≤ 50% of the frozen wall budget, from the probe's
-   measured rate over the previously-stalled window.
-6. **Kill criterion:** probe rate projects > 100% of budget, or the three-channel bound cannot
-   be stated at ≤ 2e-4-compatible looseness.
-7. **Ambiguity condition:** probe projects 50–100% of budget — margin requirement unmet;
-   redesign, do not contract.
-8. **Cheapest next action:** the tail-bound draft (paper exercise, zero runtime), since its
-   failure kills the family without any run.
-9. **Escalation path:** pass → prospectively sealed class-(c) contract (avoiding order 64 or
-   carrying the lane-scope adjudication), reviewed before implementation per the disposition;
-   kill → H-T2/V2 remain.
-10. **Self-destruct clause (reviewer-mandated):** if the analytic leg fails, this family
-    degenerates into "same instrument, easier config" = disqualified generic optimization, and
-    must be recorded as such rather than run anyway.
+If this protocol is not fixed before the first run byte, V1 must not run.
 
-### V4 — adjudicator-recruitment probe (executes H-H2's bottleneck; simultaneously decides H-H5)
+### V1 — bounded accepted-step diagnostic
 
-1. **Testable claim:** at least one qualified external human, outside the writer's control, will
-   accept a bounded adjudication engagement over the harness gate's eight pass_condition
-   conjuncts with a reproduction bundle.
-2. **Required inputs:** owner outreach (CODECHECK codechecker community is the concrete named
-   route; a colleague qualifies); a one-page scope statement; NO repo changes.
-3. **Expected if viable:** a named adjudicator (or deterministic recruitment procedure) that can
-   be frozen into a prospective commitment *before* any verdict work begins.
-4. **Expected under competitor (H-H5):** recruitment measurably fails — no qualified acceptor
-   within the owner's chosen window.
-5. **Pass criterion:** named adjudicator + agreed scope, recorded before any adjudication byte.
-6. **Kill criterion:** no acceptor within the window ⇒ H-H5 becomes the defended terminal state
-   (with its two amendments: anchor the terminal corpus; hold the limitation text as a
-   registry-referenced artifact cited by id).
-7. **Ambiguity condition:** an acceptor who declines verdict authority (pure CODECHECK-style
-   execution witness) — valuable, but covers execution only; judgment stays open and the record
-   must say so.
-8. **Cheapest next action:** the outreach message. Zero repo cost.
-9. **Escalation path:** pass → assemble the reproduction bundle + conjunct-scope annex + frozen
-   commitment (OSF registration or Rekor-anchored contract), then the adjudication itself, whose
-   signed verdict enters a writer-authored evidence package as a tamper-evident input with the
-   last-mile mediation stated in `limitations`; components H-H4 (scope-capped anchor) and H-H1
-   (anti-run-picking CI, conjunct-coverage map) attach here as ingredients.
+**Purpose:** decide whether the retained plateau is dominated by finite-difference refresh/rejection,
+error-control noise, Newton failure, a kinematic discontinuity, or a genuinely fast mode.
 
-### V5 — components, only-if-paired
+**Implementation boundary:** run only the 60/30 domain phase in a disposable scratch tree. Use the
+frozen comparator's existing public functions. Instrument a copied, version-pinned SciPy 1.17.1 BDF
+implementation; do not edit the installed environment, frozen module, repository driver, or harness.
 
-- **H-H4 anchor:** one-time hash of the sealed evidence tree + registries anchored externally,
-  carrying the negative scope statement verbatim. Execute only once V4 has a live outcome either
-  way (pass: anchors the bundle the adjudicator receives; kill: anchors the terminal corpus).
-- **H-H1 CI:** greenfield `.github/workflows/` re-running the deterministic suite on every push
-  to the audited branch with an anchored monotone run index and a published conjunct-coverage
-  map. An owner decision on scope is required despite being outside the frozen dirs, because
-  D-074's spirit ("continuing to add machinery…") applies even where its letter does not.
+**Mandatory observations:** for every attempted step and accepted step, retain:
 
-## 4. Recommended sequencing (owner decisions, not commitments)
+- `t_old`, proposed `t_new`, accepted `t`, `h_abs`, order, and acceptance boolean;
+- `nfev`, `njev`, `nlu`, Newton iteration count, Jacobian-refresh event, and failure class;
+- scaled error norm using `atol + rtol*abs(y)` component by component;
+- raw RHS-call count separately from SciPy `nfev` because FD calls are excluded from `nfev`;
+- kinematic-domain rejection count and largest roundoff correction per raw RHS call;
+- gain, loss, and net collision terms for a predeclared small component set, sufficient to compute a
+  cancellation ratio without dumping a new general telemetry surface;
+- one accepted-state snapshot immediately before the first reproduced reject-refresh cycle and one
+  dense Jacobian/eigenvalue calculation at that accepted state.
 
-```
-now ──► V1 diagnostic (2–13 h, pre-registered)     ──► selects among H-T2-AP / V3 / kills frames
-    ──► V2 μ kill test (hours, tripwired)          ──► H-T4 lives or dies cheaply
-    ──► V4 recruitment probe (outreach, zero repo) ──► H-H2 proceeds or H-H5 becomes terminal
-then, and only with the above in hand:
-    V3 tail-bound draft → prefix probe → sealed class-(c) contract   (if V1 supports it)
-    H-T2 fidelity ladder → AP sub-route contract                     (if V1 shows fast modes)
-    V5 components attach to whichever harness outcome V4 produced
+**Predeclared signatures:**
+
+| Mechanism | Required positive signature | Counterfactual that rejects it as dominant |
+|---|---|---|
+| Dense-FD refresh cycle | accepted `t` stalls while `njev` increments and a >=183-call same-trial batch follows | accepted progress continues without refresh-aligned call bursts |
+| Newton cycling | repeated `converged=false`, refresh/retry, and reduced `h_abs` before any error test | Newton converges and rejection is error-test-only |
+| Error/noise floor | Newton converges, scaled error remains >1, and gain/loss cancellation predicts component noise at or above the tolerance scale | scaled residual is well separated from the tolerance floor |
+| Kinematic discontinuity | rejection/refresh events co-locate with a jump in the existing kinematic-domain counter and named components | counter and component support remain smooth through failures |
+| Stability/fast mode | converged local Jacobian spectrum quantitatively requires the observed step restriction under the actual BDF order | spectrum is compatible with much larger stable steps and another counter explains the failures |
+
+**Hard cap:** stop at the first of:
+
+- 1,200 integration raw RHS calls, plus at most one post-capture dense Jacobian whose own budget is
+  capped at 366 raw calls including finite-difference retry columns;
+- two hours of total domain-phase wall time, including that Jacobian;
+- two complete reject-refresh cycles after the first accepted-state snapshot.
+
+The retained first episode occurs before raw eval 1,100, so extending beyond the cap because the
+signature is inconvenient is forbidden.
+
+**Decision:**
+
+- `PASS_DIAGNOSTIC`: one predeclared mechanism accounts for more than half of raw RHS calls or wall
+  inside the captured cycle and its counterfactual is absent;
+- `INCONCLUSIVE`: mixed or missing signature, non-reproduction, or cap reached first;
+- `FAIL_PROTOCOL`: missing counter, changed configuration, unsealed protocol, or lost raw failure.
+
+No result is a gate pass. `PASS_DIAGNOSTIC` only selects which new-method contract, if any, is worth
+drafting. `INCONCLUSIVE` stops this diagnostic family; no 13-hour extension follows automatically.
+
+### V2A — zero-run mathematical admissibility screen
+
+Before any Jacobian evaluation, H-T4 must specify:
+
+1. the exact 146-state base operator and coordinates in which the defect is measured;
+2. the output functional mapping state error to `Delta N_eff` error;
+3. at most three physics-derived, predeclared weighted norms;
+4. how discrete checkpoint values control an inter-checkpoint tube;
+5. how the completed 48/24 base trajectory can support a claim about a replacement method without
+   being misrepresented as stalled 60/30 state evidence;
+6. a sign-independent error-budget allocation fixed before numerical values are seen.
+
+If any item is missing, H-T4 is killed before compute. A local matrix measure is not a rigorous
+trajectory certificate.
+
+### V2B — local log-norm kill screen, only if V2A passes
+
+The retained report has 31 base checkpoints, not 1,000. The first screen uses the fixed
+earliest/middle/latest rows (`N=0.25`, `4.0`, `7.75`) and no adaptive checkpoint selection.
+
+Cost facts:
+
+```text
+base state dimension                    = 3*48 + 2 = 146
+minimum raw RHS calls / dense Jacobian  = 147
+minimum for three-point screen          = 441
+minimum for all 31 retained points      = 4,557
+31-point wall at 4.42 s/raw RHS         = about 5.6 h before retries
 ```
 
-The three head items are independent, cheap, and each has a pre-registered kill. None requires
-unfreezing anything, none touches a contract, none moves a gate. Every reopen-class follow-on
-requires its own prospectively sealed contract reviewed before implementation, per the
-disposition — this document does not draft those contracts.
+Measure one Jacobian's actual wall before authorizing the other two. Stop if the three-point screen
+kills every predeclared norm or if measured full-screen cost exceeds the owner cap. Passing three
+points means only `NOT_KILLED_LOCAL`; it does not establish negativity across the epoch, a tube bound,
+or a `VALIDATED` certificate. A later 31-point screen and tube proof require a separate decision.
 
-## 5. What this document does not do
+### V3 — analytic-domain route, conditional on V1
 
-No gate movement (no accepted evidence package exists). No harness unfreeze. No contract. No
-claim that the trajectory question is "actually easy" — the reviewer's metacognitive probe stands:
-the pathology frame is evidence-based but outcome-flattering, and its decisive test is V1, not
-this prose. The two errors the adversarial pass caught in the writer's own hypothesis graph
-(H-T3's first-node direction; H-T4's nonexistent retained trajectory) are preserved in §2's table
-as evidence that the review loop is load-bearing, not ceremonial.
+V3 remains paper-first:
+
+1. V1 must identify a driver absent from the proposed alternative construction.
+2. Before output, derive separate bounds for equilibrium storage, distortion tail, and operator
+   feedback, and fix how they combine with the existing numerical uncertainty budget.
+3. Failure to bound any one channel kills H-T3. Do not run a density-only easier configuration.
+4. Only a prospectively sealed and independently reviewed contract may authorize the prefix probe.
+5. The probe must use accepted-step progress and include setup/Jacobian costs; RHS trial movement is
+   not a completion-rate estimator.
+6. Projected end-to-end wall must be <=50% of the frozen budget. A 50-100% projection is ambiguous
+   and does not authorize a full run; >100% kills the route.
+
+### H-T2 — reformulation route, conditional on V1
+
+H-T2 is eligible for contract design only if V1 identifies a mechanism the reformulation removes.
+Plain delta-f is not credited with stiffness removal. A micro-macro/AP proposal must state its
+equilibrium manifold, conserved moments, fast-mode elimination argument, structural-independence
+boundary, and a convergence ladder whose fidelity budget is allocated before output. It competes
+with V3; both are not implemented in parallel by default.
+
+## 6. Revised harness decision design
+
+### V4 — optional external-adjudicator recruitment probe
+
+V4 is an owner outreach action, not a repository implementation.
+
+Before outreach, the owner fixes:
+
+- qualification criteria, conflicts of interest, and whether the candidate may have contributed to
+  the code or prior decisions;
+- a deterministic recruitment order or named candidate, compensation if any, response window, and
+  what counts as non-response;
+- authority to return PASS, FAIL, or INCONCLUSIVE without the writer editing the verdict;
+- the exact commit/evidence bundle and an eight-conjunct coverage matrix classifying each conjunct as
+  `REEXECUTED`, `RETAINED_BYTES_ADJUDICATED`, or `NOT_COVERED`;
+- publication/confidentiality terms and the rule that the writer may package but not rewrite the
+  signed verdict.
+
+The coverage matrix must enumerate the gate text rather than summarize it:
+
+1. validator and v2 fixtures exit zero;
+2. current registered assignment, exact five-field header, and pre-spawn non-run hashes;
+3. trusted-session Start context and runtime identity injection;
+4. runtime/assignment type agreement plus review-role, role-file, and result-template verification;
+5. blocked invalid first Stop;
+6. automatically accepted corrected assignment-hash-bound result;
+7. external-tool confinement outside the repository;
+8. post-run hashes proving result-only subagent writes.
+
+Outcomes:
+
+- `RECRUITED_WITH_JUDGMENT_AUTHORITY`: proceed to scope negotiation over existing bytes only;
+- `EXECUTION_WITNESS_ONLY`: useful CODECHECK-style reproducibility evidence, but judgment independence
+  and uncovered live-hook conjuncts remain open;
+- `NO_ACCEPTOR_WITHIN_WINDOW`: evidence that this route is unavailable under current resources, not
+  proof that independent judgment is impossible. Retain terminal FAIL and stop.
+
+V4 success does not move the gate. Movement would still require all eight gate conjuncts, independent
+judgment over the declared scope, and an accepted D-073 evidence package. V4 success is not a D-074
+reopen trigger.
+
+### H-H1 and H-H4 — no automatic follow-on
+
+Do not add greenfield CI, a monotone-run index, Rekor/OSF anchoring, a new declaration file, or a
+conjunct checker merely because V4 succeeds or fails. Under D-074 those components remain
+`FORBIDDEN` unless an exact reopen trigger is reproduced or the owner explicitly supersedes the
+freeze. An external reviewer can receive an immutable Git archive and existing hashes without first
+building another repository-local assurance layer.
+
+## 7. Sequencing and candidate selection
+
+Do not describe V1, V2, and V4 collectively as three cheap parallel heads. V1 is bounded compute,
+V2 was materially under-costed, and V4 is external coordination.
+
+```text
+default
+  -> preserve D-071 trajectory closure
+  -> preserve D-074 harness freeze and terminal FAIL
+
+optional owner actions
+  -> V4 recruitment probe (outside repo; no gate/harness effect)
+  -> V0 protocol -> V1 bounded diagnostic (only under separate owner grant)
+  -> V2A paper screen (independent of V1, zero numerical output)
+
+after evidence, never by default
+  V1 mechanism result -> choose at most one of H-T2 or V3 for a D-071 contract
+  V2A pass -> V2B three-point local kill screen under a measured cost cap
+  V4 recruited -> external scope negotiation over existing bundle
+```
+
+Cost-effective candidate comparison:
+
+| Candidate | Tracked files / net lines | Expected gain | Main risk | Minimal discriminator |
+|---|---|---|---|---|
+| V1 | 0 / 0; scratch only | causal localization, at most BMR 0.25 | mixed signature; SciPy-internal instrumentation error | <=1,200 raw calls or <=2 h |
+| V2A | this design only | kill an unsound certificate before compute | no usable norm/tube map | six-item mathematical admissibility review |
+| V4 | 0 / 0 | establish whether judgment authority is practically available | execution witness mistaken for adjudicator | frozen qualification/scope plus response window |
+
+## 8. Evidence contract for any authorized diagnostic
+
+Do not create another generic manifest. The one authorized run record must contain:
+
+- input commit, frozen-module digest, interpreter/library versions, diagnostic-source digest;
+- exact command, cwd, environment overrides, start/stop/wall, exit, stdout, and stderr;
+- every predeclared counter and raw negative/failure state;
+- accepted-state and trial-state data explicitly separated;
+- observed result, kill/ambiguity decision, and all violated assumptions;
+- tracked-file pre/post status proving zero production/harness/gate edits;
+- explicit claim ceiling and `implies_status: null`.
+
+Missing required evidence makes the diagnostic `FAIL_PROTOCOL`, not “partially informative.”
+
+## 9. Stopping and reopening rules
+
+### Trajectory
+
+- V1 ends at its first hard cap. No automatic rerun, tolerance tuning, order cap, analytic Jacobian,
+  faster host, or larger budget.
+- V2A failure ends H-T4. V2B local survival does not authorize a full screen or certificate.
+- V3 ends before runtime if any tail channel lacks a bound.
+- H-T2/V3 implementation begins only after one family wins an explicit blocker-movement-per-line
+  comparison and all D-071 reopen prerequisites are met.
+- Any future benchmark must cover the previously stalled phase and accepted-state progress. A kernel
+  or cheap-segment speedup is not endpoint progress.
+
+### Harness
+
+- `G-HARNESS-INTEGRITY` remains FAIL unless an accepted package supports every required conjunct and
+  independent decision authority adjudicates the declared scope.
+- Failed recruitment preserves the current operational stop; it does not create a new gate or proof
+  of impossibility.
+- H-H1/H-H4 remain frozen absent a D-074 trigger. No “small preparatory” machinery is exempt.
+
+### General
+
+- Preserve raw failures and do not refit bands, norms, checkpoint choices, or mechanism labels after
+  output.
+- A proposed action whose strongest claim would remain true if the physics RHS were removed is
+  governance work, not trajectory-blocker movement.
+- Every future PR must report the cost line required by
+  `bbn_codex_anti_drift_cost_effective_policy.md`.
+
+## 10. Claim ceiling and current cost
+
+This revision changes the design record only. It does not execute a diagnostic, validate a
+reformulation, recruit an adjudicator, create an evidence package, discharge a new obligation, or
+move either gate. Canonical `docs/harness/CLAIM_LEDGER.md` rows therefore remain unchanged.
+
+```text
+added_lines: 413
+deleted_lines: 250
+net_lines: 163
+files_touched: 1
+token_use_exact: UNAVAILABLE
+token_use_basis: no reliable task-scoped token counter is exposed
+runtime_behavior_changed: no
+physics_behavior_changed: no
+known_blocker_reduced: no -- design defects and cost error corrected only
+blocker_movement_ratio: 0.00
+validation_strengthened: yes -- proposal now has discriminating authority, cost, and stop boundaries
+cost_effectiveness_verdict: ACCEPT_WITH_LIMITS
+```
+
+The next permissible project action is an owner choice, not an inferred continuation.
