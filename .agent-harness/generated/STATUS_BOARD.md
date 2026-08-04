@@ -17,7 +17,7 @@ anywhere else: prose about a status is not checked and has been wrong before.
 | `G-F10-SCOPE` | PASS | the F-10 fence holds and downstream authority is closed |
 | `G-F10C1-RADIAL` | PASS | D-004/D-014: frozen direct and five-profile envelope |
 | `G-F10C1-REGRESSION` | PASS | retained tree passes its frozen regression set |
-| `G-HARNESS-INTEGRITY` | FAIL | D-065 restored FAIL; obligations 1, 3 and 4 adjudicated discharged at round 13, obligation 2 wording falsified |
+| `G-HARNESS-INTEGRITY` | FAIL | D-065 restored FAIL. All four obligations are now discharged -- 1, 3 and 4 by the round-13 registered panel, 2 under the wording revised at D-075 -- and the gate still fails: the pass condition has eight conjuncts the obligations do not touch, operator and decision independence is absent, and no evidence package backs a move. |
 
 | Claim | Status |
 |---|---|
