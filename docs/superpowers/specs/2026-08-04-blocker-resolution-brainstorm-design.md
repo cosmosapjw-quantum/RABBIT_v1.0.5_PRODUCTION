@@ -423,3 +423,92 @@ cost_effectiveness_verdict: ACCEPT_WITH_LIMITS
 ```
 
 The next permissible project action is an owner choice, not an inferred continuation.
+
+---
+
+## 11. Post-review measurement addendum — plateau structure of the retained trace
+
+**Author:** writer, after the re-audit. **Inputs:** retained bytes only
+(`r4_trajectory_stdout.log`, sha256 `28c541b3…`, and `scripts/audit/_trajectory_core.py:181-221`).
+**No run, no contract, no gate, no authorization change.** V1 stays `NOT_AUTHORIZED`.
+
+This addendum exists because the re-audit demoted F-R2B to `PROPOSED` on the grounds that only
+total-count arithmetic supported it (R-02). That demotion was correct, and re-measuring produced two
+results the re-audit did not have — one of which **refutes the writer's own `b24d98b` claim**, and one
+of which **falsifies a row of §5's V1 signature table**.
+
+### 11.1 Method
+
+The RHS logs its time argument every 50 raw calls (`_trajectory_core.py:216`). A dense finite-
+difference Jacobian perturbs `y` at fixed `t`, so every call inside one FD batch prints the *same*
+`T_cm`. Grouping consecutive log rows by identical printed `T_cm` therefore separates solver time
+points, and the run-length of each group measures raw calls spent at one time point.
+
+### 11.2 Results
+
+| Phase | State dim | FD batch (calls) | Raw calls | Distinct `t`-plateaus | Median plateau width | Rows inside multi-row plateaus |
+|---|---|---|---|---|---|---|
+| base 48/24 (**completed**) | 146 | 147 | 3,651 | 29 | 150 calls | 66/74 (89%) |
+| domain 60/30 (**stalled**) | 182 | 183 | 11,051 | 56 | 200 calls | 216/222 (97%) |
+
+**Result 1 — the FD signature is structural, not arithmetic.** Median plateau width tracks state
+dimension independently in both phases (147→150, 183→200 under 50-call logging quantization). This is
+a second, structural signature, distinct from the total-count coincidence R-02 rightly rejected.
+
+**Result 2 — this refutes the writer's `b24d98b` framing.** The base phase, which *completed* in
+2.7 hours, shows the same FD-dominated structure. **Dense-FD Jacobian dominance is this instrument's
+normal cost structure, not the pathology.** The `b24d98b` sentence "the creep's wall is almost
+entirely Jacobian refreshes", offered as a pathology finding, is equally true of the healthy run and
+therefore discriminates nothing.
+
+**Result 3 — what actually differs is step size, by three to four orders of magnitude.**
+`N` advance per distinct solver time point:
+
+```text
+base 48/24, completed              2.143e-01  (ΔN=+6.2145 over 29 time points)
+domain 60/30, whole phase          2.952e-03  (ΔN=+0.1653 over 56 time points)
+domain 60/30, post-drop creep      4.615e-05  (ΔN=+0.0024 over 52 time points)
+collapse ratio, base : creep       ~4,600x
+```
+
+Per-time-point *cost* rose only ~1.6× (126→197 raw calls), consistent with the dimension increase
+alone. What collapsed is the step actually taken.
+
+### 11.3 Consequences
+
+- **F-R2B's causal claim is unchanged and stays `PROPOSED`.** Nothing here says *why* `h` collapsed.
+  Accepted-step, Newton, error-test, order, and `njev`/`nlu` records remain unretained.
+- **V1 remains necessary, and its target sharpens.** The discriminating question is not "are Jacobian
+  refreshes frequent" — they are, in the healthy run too — but "why is `h` ~4.6e3× smaller per solver
+  time point". Error norm, Newton outcome, and order are what measure that.
+- **§5's V1 signature table, row 1, is falsified as written.** Its positive signature ("a ≥183-call
+  same-trial batch follows") and its counterfactual ("accepted progress continues without
+  refresh-aligned call bursts") both fire on the *completed* base phase. Before any V1 grant, that row
+  must be re-specified as refreshes **per accepted step**, or dropped. The other four rows are
+  untouched by this measurement.
+
+### 11.4 Limitations
+
+- 50-call logging quantizes plateau widths; 147 and 183 both fall in the 150/200 bins, so the match is
+  *consistent with* FD batches, not a unique fit.
+- Consecutive refreshes at the same trial `t` merge into one plateau, so distinct-`t` counts are a
+  **lower** bound and per-time-point advance an **upper** bound. This applies to both phases, so the
+  ratio is more robust than either absolute figure.
+- `T_cm` prints to 5 dp, hiding `ΔN` below ~1.2e-6. The measured creep advance (4.6e-5) sits ~38×
+  above that floor and is resolvable; sub-floor structure is not.
+- "distinct `t`-plateau ≈ solver time point" is an inference from SciPy BDF control flow, not a
+  retained solver counter. A version-pinned reading of `num_jac` would harden it; V1 would measure it
+  directly.
+
+```text
+added_lines: this section only
+deleted_lines: 0
+files_touched: 1
+runtime_behavior_changed: no
+physics_behavior_changed: no
+known_blocker_reduced: no -- one writer claim refuted, one V1 signature row falsified
+blocker_movement_ratio: 0.00
+cost_effectiveness_verdict: RECORD_ONLY
+```
+
+§10's cost block covers the re-audit revision and is not restated here.
