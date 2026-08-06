@@ -48,7 +48,7 @@
     "pattern": "^def test_"
    },
    "value": 114,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "1ddb122",
    "prior": [
     {
      "value": 111,
@@ -178,7 +178,7 @@
     "pattern": "^def test_"
    },
    "value": 64,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "1ddb122",
    "prior": [
     {
      "value": 61,
