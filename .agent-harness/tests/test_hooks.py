@@ -5792,3 +5792,86 @@ def test_bd623_r6_the_lock_follows_the_claim_holder_not_the_expected_agent(
     finally:
         fcntl.flock(fd, fcntl.LOCK_UN)
         os.close(fd)
+
+
+# --------------------------------------------------------------------------
+# BD623 R5 -- the two halves of the admission path agree about the same bytes.
+# --------------------------------------------------------------------------
+
+
+def test_bd623_r5_a_duplicate_key_receipt_is_refused_by_the_hook_reader(
+    tmp_path: Path,
+) -> None:
+    """Measured before the fix: one receipt carrying two `expected_agent_id`
+    keys was REFUSED as ambiguous by _harness.load_json (which admit_agent
+    uses) and ACCEPTED by _common.load_json (which Stop uses), resolving to the
+    second value while a reader keeping the first saw a different agent. The
+    same bytes, two identities, in the mechanism whose entire job is deciding
+    which agent wrote which result.
+    """
+    import _common
+
+    receipt = tmp_path / "A-1.json"
+    receipt.write_text(
+        '{"schema_version": 1, "expected_agent_id": "agent-ATTACKER",'
+        ' "state": "open", "expected_agent_id": "agent-VICTIM"}',
+        encoding="utf-8",
+    )
+    assert _common.load_json(receipt, None) is None
+    with pytest.raises(json.JSONDecodeError):
+        json.loads(receipt.read_text(encoding="utf-8"),
+                   object_pairs_hook=_common._no_duplicate_keys)
+
+
+def test_bd623_r5_a_duplicate_key_lease_is_refused(tmp_path: Path) -> None:
+    """The lease's run_id selects the run directory, the ledger, the receipt and
+    the agent lock. Last-value-wins there chooses which run an agent is bound
+    to."""
+    import _common
+
+    lease = tmp_path / "a1.json"
+    lease.write_text('{"run_id": "run-DECOY", "agent_id": "a1", "run_id": "run-REAL"}',
+                     encoding="utf-8")
+    assert _common.load_json(lease, None) is None
+
+
+def test_bd623_r5_both_readers_now_agree_on_the_same_bytes(tmp_path: Path) -> None:
+    """The property, stated directly: whatever admit_agent refuses as ambiguous,
+    the hooks must also refuse."""
+    import _common
+    from _harness import loads_strict
+
+    doc = ('{"schema_version": 1, "run_id": "run-A", "state": "open",'
+           ' "state": "consumed"}')
+    path = tmp_path / "r.json"
+    path.write_text(doc, encoding="utf-8")
+    with pytest.raises(json.JSONDecodeError):
+        loads_strict(doc)
+    assert _common.load_json(path, None) is None
+
+
+def test_bd623_r5_an_ordinary_document_still_parses(tmp_path: Path) -> None:
+    """The rule must reject ambiguity, not JSON."""
+    import _common
+
+    path = tmp_path / "ok.json"
+    path.write_text('{"schema_version": 1, "state": "open"}', encoding="utf-8")
+    assert _common.load_json(path, None) == {"schema_version": 1, "state": "open"}
+
+
+def test_bd623_r5_a_duplicate_key_stop_event_does_not_become_an_empty_event(
+    tmp_path: Path,
+) -> None:
+    """read_stdin_json collapses anything it cannot parse to `{}`, which for
+    Stop means no agent_id and therefore a refusal. Recorded rather than
+    changed: making it raise would crash the hook, and `{}` already routes to
+    the fail-closed path."""
+    import _common
+
+    done = subprocess.run(
+        [sys.executable, "-c",
+         f"import sys; sys.path.insert(0, {str(HOOKS_DIR)!r}); import _common; "
+         "print(repr(_common.read_stdin_json()))"],
+        input='{"agent_id": "a", "agent_id": "b"}', capture_output=True, text=True,
+    )
+    assert done.stdout.strip() == "{}", done.stdout

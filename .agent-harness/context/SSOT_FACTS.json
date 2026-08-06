@@ -47,9 +47,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 127,
-   "as_of_commit": "a13e4a2",
+   "value": 132,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 127,
+     "as_of_commit": "39e4560",
+     "note": "BD623 R6 reopen-lock fixtures. Superseded by R5's five strict-parser fixtures."
+    },
     {
      "value": 123,
      "as_of_commit": "1389914",
