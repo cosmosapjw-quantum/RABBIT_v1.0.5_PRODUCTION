@@ -82,12 +82,57 @@ def dump_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def dump_json_atomic(path: Path, value: Any) -> None:
-    """Same payload as dump_json, but a reader never observes a partial file."""
+def write_text_atomic(path: Path, text: str) -> None:
+    """Write text so a reader never observes a partial file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".tmp.{os.getpid()}.{path.name}")
-    tmp.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    tmp.write_text(text, encoding="utf-8")
     os.replace(tmp, path)
+
+
+def dump_json_atomic(path: Path, value: Any) -> None:
+    """Same payload as dump_json, but a reader never observes a partial file."""
+    write_text_atomic(path, json.dumps(value, indent=2, ensure_ascii=False) + "\n")
+
+
+PACK_PREAMBLE = (
+    "This pack contains only the shared Tier-0 context. Assignment-specific "
+    "context and sibling results are intentionally excluded."
+)
+
+
+def render_context_pack(
+    repo: Path, version: str, built_at: str, entries: list[tuple[str, str]]
+) -> str:
+    """The canonical pack, as a pure function of the index and the shared files.
+
+    One definition, used by the builder that writes the pack and by both
+    verifiers that check it. Before BD623 the pack was rendered in one place and
+    checked in two others by looking for the version string in its first six
+    lines -- which meant the body was never checked at all. Measured: a pack
+    truncated to 283 of 157,567 characters returned clean from both checks, and
+    so did one whose body had been replaced with a forged frozen-decision row
+    asserting that the harness freeze had been lifted.
+
+    The board took the same argument and settled it the same way: a projection
+    is verified by re-rendering it, not by storing a number about it. The pack
+    is a verbatim concatenation rather than a projection, so it keeps its stored
+    ``context_version`` for the "have the inputs changed" question -- but "is
+    this what those inputs render to" is a different question, and only
+    re-rendering answers it.
+    """
+    chunks = [
+        "# Canonical Shared Context Pack",
+        "",
+        f"Context version: `{version}`",
+        f"Built at: `{built_at}`",
+        "",
+        PACK_PREAMBLE,
+    ]
+    for rel, sha in entries:
+        text = (repo / rel).read_text(encoding="utf-8")
+        chunks.extend(["", f"---\n\n## Source: `{rel}`\n\nSHA-256: `{sha}`\n", text.rstrip()])
+    return "\n".join(chunks).rstrip() + "\n"
 
 
 def utc_now() -> str:

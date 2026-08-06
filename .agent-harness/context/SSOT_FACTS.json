@@ -47,9 +47,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 114,
-   "as_of_commit": "1ddb122",
+   "value": 119,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 114,
+     "as_of_commit": "1ddb122",
+     "note": "BD623 R3/R4/R4b fixtures. Superseded by R1's five pack-integrity fixtures, which check the pack's body rather than its header."
+    },
     {
      "value": 111,
      "as_of_commit": "9760a8c",

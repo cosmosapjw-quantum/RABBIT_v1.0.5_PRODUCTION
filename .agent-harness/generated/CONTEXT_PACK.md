@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `469282ffe247ee7e83a473984f2fde4524bb76675586fb3f78d75d18d77bd88a`
-Built at: `2026-08-06T08:10:05+00:00`
+Context version: `ed6ebd9df91e89d3e0726ba2fb7148b69607602b636a164f4335805d4f09cca8`
+Built at: `2026-08-06T10:46:31+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -9,7 +9,7 @@ This pack contains only the shared Tier-0 context. Assignment-specific context a
 
 ## Source: `.agent-harness/context/SHARED_CONTEXT.md`
 
-SHA-256: `bc573b9c4869a7e4bb711620a305cb584ad41cdeb65658a71838b675ccdaf631`
+SHA-256: `f4e8e92c742f398c38721e1d8945e909195e815c9677793c4be94438fb8395c3`
 
 # Shared Context — RABBIT Rust-first FLRW/F-10
 
@@ -136,7 +136,7 @@ Rebuild the context pack and refresh any changed evidence hash before spawning a
 |---|---|---|---|
 | Q-IND-01 | Does a structurally independent full-spectral FLRW solve reproduce the accepted envelope? | Independent formulation/integrator with frozen inputs and tolerances, not same-code replay | future F-10 validation |
 | Q-HOOK-01 | **REOPENED by D-065**: D-058 validates cross-run identity only when the lease is successfully written, but Start seals every registered run assignment rather than one parent-admitted assignment; Stop accepted a controlled same-runtime cross-assignment substitution, and a lease-write `OSError` restores mutable `ACTIVE_RUN` fallback. | Atomic parent-authenticated `agent_id` to one-assignment receipt; hard Start failure on receipt/lease write error; substitution and write-failure fixtures; replacement overlapping-main live canary with unique result-write attribution | owner/main |
-| Q-HOOK-01 remediation | **REMEDIATED, PENDING ADJUDICATION (D-067)**: the binding moved to a parent-minted single-use admission receipt (`admit_agent.py`), since `SubagentStart` never receives the spawn prompt. Start hard-fails on lease-write error; Stop requires lease + open receipt + `sha256(admission_proof)` + `expected_agent_id`, takes an `O_EXCL` claim, and appends attribution to the run's `ADMISSIONS.jsonl`. 114 hook tests; live canaries C1 accept / C2 substitution block / C3 lease-failure block. Three reviews (2 blind + 1 adversarial) all returned FAIL and were acted on. | Residual, stated not closed: agent and harness share one OS user, so a deliberately misbehaving agent can still forge a repo-local receipt. Whether the D-065 obligation is discharged is for the D-070 adjudicator, not the single writer. `docs/audit/BD622_D067_admission_binding_2026-07-29.md`. | owner/main |
+| Q-HOOK-01 remediation | **REMEDIATED, PENDING ADJUDICATION (D-067)**: the binding moved to a parent-minted single-use admission receipt (`admit_agent.py`), since `SubagentStart` never receives the spawn prompt. Start hard-fails on lease-write error; Stop requires lease + open receipt + `sha256(admission_proof)` + `expected_agent_id`, takes an `O_EXCL` claim, and appends attribution to the run's `ADMISSIONS.jsonl`. 119 hook tests; live canaries C1 accept / C2 substitution block / C3 lease-failure block. Three reviews (2 blind + 1 adversarial) all returned FAIL and were acted on. | Residual, stated not closed: agent and harness share one OS user, so a deliberately misbehaving agent can still forge a repo-local receipt. Whether the D-065 obligation is discharged is for the D-070 adjudicator, not the single writer. `docs/audit/BD622_D067_admission_binding_2026-07-29.md`. | owner/main |
 | Q-ATTRIB-01 | **OPEN (D-066)**: which byte-set of `A-D057R5-CROSS-REJECT.json` is authentic — the committed six-finding adjudication (`12d17ede`, `status fail`, `completed_at 05:40:32Z`) or the preserved working-tree withdrawal (`1ae3dd15`, `status error`, `completed_at 05:42:47Z`) that was written into the tracked tree at `2026-07-29T00:18:33Z`, inside the D-065 window and outside its main writer. | Parent-side write attribution for the disputed write, which did not exist when it occurred; absent that, the question is not decidable from the retained evidence. Both byte-sets are preserved; no gate, claim, or evidence key depends on the file alone. See `docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md`. | owner/main |
 
 ---

@@ -25,6 +25,7 @@ from _harness import (
     hash_files,
     load_json,
     loads_strict,
+    render_context_pack,
     root,
     utc_now,
     validate_assignment_contract,
@@ -1127,9 +1128,20 @@ def main() -> None:
     if not pack_path.is_file():
         errors.append("Generated CONTEXT_PACK.md is missing.")
     else:
-        first_lines = "\n".join(pack_path.read_text(encoding="utf-8").splitlines()[:6])
-        if f"Context version: `{actual}`" not in first_lines:
-            errors.append("Generated CONTEXT_PACK.md carries a stale context version.")
+        # Was a substring search over the pack's first six lines, which left the
+        # whole body unchecked: BD623 R1 passed a pack cut to 283 of 157,567
+        # characters, and one whose body was a forged frozen-decision row. The
+        # pack is a verbatim concatenation of files this function has already
+        # hashed, so re-rendering answers "is this what those inputs render to"
+        # directly, which is the question the six-line check only appeared to ask.
+        expected_pack = render_context_pack(
+            repo, actual, str(index.get("built_at", "")), entries
+        )
+        if pack_path.read_text(encoding="utf-8") != expected_pack:
+            errors.append(
+                "Generated CONTEXT_PACK.md is not what its inputs render to; "
+                "rebuild it with build_context_pack.py."
+            )
 
     active = None
     try:
