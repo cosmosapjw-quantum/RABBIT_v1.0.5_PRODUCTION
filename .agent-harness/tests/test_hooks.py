@@ -5605,3 +5605,93 @@ def test_bd623_r1_builder_and_verifier_share_one_renderer() -> None:
     import build_context_pack
 
     assert build_context_pack.render_context_pack is render_context_pack
+
+
+# --------------------------------------------------------------------------
+# BD623 R7 -- the corroboration signal is agent-authored, and now says so.
+# --------------------------------------------------------------------------
+
+FP_A = "sha256:" + "ab" * 32
+FP_B = "sha256:" + "ab" * 31 + "ac"
+
+
+def _result(assignment_id: str, role: str, **finding) -> dict:
+    base = {"claim_id": "C-001", "verdict": "pass", "evidence_fingerprint": FP_A,
+            "evidence_refs": ["proof.nb#L1-L40"]}
+    base.update(finding)
+    return {"assignment_id": assignment_id, "review_role": role, "findings": [base]}
+
+
+def test_bd623_r7_corroboration_fields_are_named_as_agent_asserted() -> None:
+    """`duplicate_count` and `supporting_*` read as measured independence. They
+    group on claim_id, evidence_fingerprint, verdict and evidence_refs -- four
+    fields the agent being corroborated wrote itself, with nothing anywhere
+    proving a fingerprint came from any evidence.
+    """
+    import merge_results
+
+    merged = merge_results.merge_findings([
+        _result("A-WOLFRAM", "cas_wolfram_xact", statement="Derived independently."),
+        # A free-rider that copied the fingerprint string and did no work.
+        _result("A-SYMPY", "cas_sympy", statement="I did not run anything.",
+                severity="critical"),
+    ])
+    assert len(merged) == 1
+    finding = merged[0]
+    assert finding["agent_asserted_duplicate_count"] == 2
+    assert finding["agent_asserted_supporting_review_roles"] == [
+        "cas_wolfram_xact", "cas_sympy"
+    ]
+    # The old names must not survive anywhere in the merged output.
+    for stale in ("duplicate_count", "supporting_assignments", "supporting_review_roles",
+                  "supporting_agent_types", "supporting_runtime_agent_types"):
+        assert stale not in finding, stale
+
+
+def test_bd623_r7_a_divergent_grouped_finding_is_not_silently_dropped() -> None:
+    """`representative = items[0]` kept only the first agent's prose, and first
+    is assignment-ID alphabetical order. The free-rider's own statement and its
+    `severity: critical` vanished before the adjudicator could see them.
+    """
+    import merge_results
+
+    merged = merge_results.merge_findings([
+        _result("A-WOLFRAM", "cas_wolfram_xact", statement="Derived independently."),
+        _result("A-SYMPY", "cas_sympy", statement="I did not run anything.",
+                severity="critical"),
+    ])
+    variants = merged[0]["agent_asserted_divergent_variants"]
+    assert [v["assignment_id"] for v in variants] == ["A-SYMPY"]
+    assert variants[0]["finding"]["severity"] == "critical"
+    assert variants[0]["finding"]["statement"] == "I did not run anything."
+
+
+def test_bd623_r7_identical_findings_record_no_variants() -> None:
+    """Genuine duplicates must not grow a variants list; the field exists to
+    mark divergence, so its presence has to mean something."""
+    import merge_results
+
+    merged = merge_results.merge_findings([
+        _result("A-WOLFRAM", "cas_wolfram_xact", statement="Same."),
+        _result("A-SYMPY", "cas_sympy", statement="Same."),
+    ])
+    assert merged[0]["agent_asserted_duplicate_count"] == 2
+    assert "agent_asserted_divergent_variants" not in merged[0]
+
+
+def test_bd623_r7_honest_independent_agreement_still_does_not_group() -> None:
+    """The other direction, recorded rather than fixed: two agents that
+    genuinely agree, with honest but different fingerprints, remain two
+    findings of count 1. The number tracks a string, not agreement. Closing
+    this needs a fingerprint the agent cannot author, which needs a control
+    plane this arrangement does not have.
+    """
+    import merge_results
+
+    merged = merge_results.merge_findings([
+        _result("A-WOLFRAM", "cas_wolfram_xact", statement="Independent derivation."),
+        _result("A-LEAN", "cas_lean", evidence_fingerprint=FP_B,
+                evidence_refs=["proof.lean#L1-L40"], statement="Independent derivation."),
+    ])
+    assert len(merged) == 2
+    assert [f["agent_asserted_duplicate_count"] for f in merged] == [1, 1]

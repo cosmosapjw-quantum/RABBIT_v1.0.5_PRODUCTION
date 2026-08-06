@@ -57,6 +57,81 @@ def canonical_key(finding: dict) -> tuple:
     )
 
 
+def merge_findings(results: list[dict]) -> list[dict]:
+    """Group findings across result envelopes. Extracted so it is testable.
+
+    It was inline in ``main`` behind the whole attribution gate, so the only
+    way to exercise it was to build a full admitted run -- which is why its
+    behaviour was described in prose and never measured.
+    """
+    groups: dict[tuple, list[dict]] = defaultdict(list)
+    for result in results:
+        for finding in result.get("findings", []):
+            groups[canonical_key(finding)].append(
+                {
+                    "assignment_id": result.get("assignment_id"),
+                    "runtime_agent_type": result.get(
+                        "runtime_agent_type", result.get("agent_type")
+                    ),
+                    "review_role": result.get(
+                        "review_role", result.get("agent_type")
+                    ),
+                    "finding": finding,
+                }
+            )
+
+    # NAMING IS THE POINT (BD623 R7). These fields were `duplicate_count` and
+    # `supporting_*`, and the adjudicator is instructed to read them as
+    # independent corroboration. They are not. Grouping is by `canonical_key`,
+    # whose four components -- claim_id, evidence_fingerprint, verdict,
+    # evidence_refs -- are ALL written by the agent being corroborated, and
+    # nothing anywhere verifies that a fingerprint was derived from any evidence
+    # (`_harness.py` checks only that it matches `sha256:<64 hex>`).
+    #
+    # Measured, both directions: an agent that copied a peer's fingerprint
+    # string verbatim produced `duplicate_count: 2` across two review roles
+    # while stating "I did not run anything"; and two genuinely independent
+    # agents agreeing on a claim, with honest but different fingerprints,
+    # produced two findings of count 1 each. The number moves with a string, not
+    # with agreement.
+    #
+    # The prefix is the whole fix. Computing a trustworthy fingerprint needs a
+    # control plane that the agent cannot write to, which this arrangement does
+    # not have and D-074 forbids building here. What it can stop doing is
+    # presenting an agent-authored number under a name that reads as measured.
+    merged = []
+    for key, items in groups.items():
+        representative = dict(items[0]["finding"])
+        representative["agent_asserted_supporting_assignments"] = [
+            item["assignment_id"] for item in items
+        ]
+        representative["agent_asserted_supporting_runtime_agent_types"] = [
+            item["runtime_agent_type"] for item in items
+        ]
+        representative["agent_asserted_supporting_review_roles"] = [
+            item["review_role"] for item in items
+        ]
+        representative["agent_asserted_duplicate_count"] = len(items)
+        # Everything the representative is NOT. `representative = items[0]` kept
+        # only the first agent's prose, and first is decided by
+        # `sorted(results/*.json)` -- assignment-ID alphabetical order. A
+        # second agent's differing statement, severity or counterevidence
+        # vanished before the adjudicator could see there had been a difference.
+        variants = [
+            {
+                "assignment_id": item["assignment_id"],
+                "review_role": item["review_role"],
+                "finding": item["finding"],
+            }
+            for item in items[1:]
+            if item["finding"] != items[0]["finding"]
+        ]
+        if variants:
+            representative["agent_asserted_divergent_variants"] = variants
+        merged.append(representative)
+    return merged
+
+
 def refuse(run_id: str, reasons: list[str]) -> NoReturn:
     """Print the refusal as JSON on stdout and exit non-zero, writing nothing."""
     print(
@@ -162,37 +237,8 @@ def main() -> None:
     if reasons:
         refuse(run_id, reasons)
 
-    groups: dict[tuple, list[dict]] = defaultdict(list)
-    for result in results:
-        for finding in result.get("findings", []):
-            groups[canonical_key(finding)].append(
-                {
-                    "assignment_id": result.get("assignment_id"),
-                    "runtime_agent_type": result.get(
-                        "runtime_agent_type", result.get("agent_type")
-                    ),
-                    "review_role": result.get(
-                        "review_role", result.get("agent_type")
-                    ),
-                    "finding": finding,
-                }
-            )
+    merged = merge_findings(results)
 
-    merged = []
-    for key, items in groups.items():
-        representative = dict(items[0]["finding"])
-        representative["supporting_assignments"] = [item["assignment_id"] for item in items]
-        representative["supporting_runtime_agent_types"] = [
-            item["runtime_agent_type"] for item in items
-        ]
-        representative["supporting_review_roles"] = [
-            item["review_role"] for item in items
-        ]
-        representative["supporting_agent_types"] = list(
-            representative["supporting_review_roles"]
-        )
-        representative["duplicate_count"] = len(items)
-        merged.append(representative)
 
     output = {
         "schema_version": 1,

@@ -47,9 +47,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 119,
-   "as_of_commit": "76dfe04",
+   "value": 123,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 119,
+     "as_of_commit": "76dfe04",
+     "note": "BD623 R1 pack-integrity fixtures. Superseded by R7's four merge-corroboration fixtures."
+    },
     {
      "value": 114,
      "as_of_commit": "1ddb122",
