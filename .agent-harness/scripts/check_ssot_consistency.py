@@ -821,6 +821,15 @@ def gate_basis(repo: Path) -> dict[str, str]:
         basis[gate_id] = str(entry.get("status_basis_legacy") or "")
     return basis
 
+def basis_cell(text: str) -> str:
+    """One table cell's worth of unbounded registry prose.
+
+    Escapes the cell separator and flattens newlines. Both would otherwise let
+    the Basis column restructure the table it sits in.
+    """
+    return str(text).replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ").replace("\r", " ")
+
+
 def render_board(
     gates: dict[str, str],
     claims: dict[str, str],
@@ -836,10 +845,19 @@ def render_board(
     Status is rendered UPPERCASE regardless of how the registry spells it. The
     registry stores ``"fail"`` and the board shows ``FAIL``; normalising here
     means a registry casing change cannot silently alter the board's bytes.
+
+    The Basis cell is the one place unbounded registry prose reaches the board,
+    so its cell separators are escaped. Unescaped, a single ``|`` in
+    ``status_basis_legacy`` renders a five-cell row in a three-column table --
+    measured, BD623 R3 -- and the extra cells land INSIDE the board span, which
+    ``check_no_status_beside_an_id`` excludes by construction. That is how a
+    status token beside a gate id ends up exempt from the rule written to catch
+    it. Escaping keeps the projection a function of the registry rather than of
+    the registry's punctuation.
     """
     lines = [BOARD_BEGIN, "", "| Gate | Status | Basis |", "|---|---|---|"]
     lines += [
-        f"| `{gate}` | {status.upper()} | {(basis or {}).get(gate, '')} |"
+        f"| `{gate}` | {status.upper()} | {basis_cell((basis or {}).get(gate, ''))} |"
         for gate, status in sorted(gates.items())
     ]
     lines += ["", "| Claim | Status |", "|---|---|"]

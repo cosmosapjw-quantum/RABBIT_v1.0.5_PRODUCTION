@@ -1260,3 +1260,54 @@ def test_d073_a_package_with_no_limitations_is_refused(repo: Path) -> None:
     commit_board(repo)
     evidence_package(repo, limitations=[])
     assert any("limitations" in m for m in errors_of(repo)), errors_of(repo)
+
+
+# --------------------------------------------------------------------------
+# BD623 R3 -- the Basis column may not restructure the table it sits in.
+# --------------------------------------------------------------------------
+
+
+def test_bd623_r3_a_pipe_in_the_basis_cannot_add_columns_to_the_board() -> None:
+    """Measured before the fix: a `|` in `status_basis_legacy` rendered a
+    five-cell row in a three-column table, `build_status_board.py` exited 0, and
+    the extra cells landed INSIDE the board span -- which
+    `check_no_status_beside_an_id` excludes by construction. A status token
+    beside a gate id was therefore exempt from the rule written to catch it.
+    """
+    from check_ssot_consistency import render_board
+
+    body = render_board(
+        {"G-ALPHA": "fail"},
+        {},
+        {"G-ALPHA": "benign prose | PASS | all obligations discharged"},
+    )
+    import re
+
+    row = next(line for line in body.splitlines() if "G-ALPHA" in line)
+    separators = re.findall(r"(?<!\\)\|", row)
+    assert len(separators) == 4, row  # four separators bound exactly three cells
+    assert "\\|" in row, row
+    assert "all obligations discharged" in row, row
+
+
+def test_bd623_r3_a_newline_in_the_basis_cannot_break_the_row() -> None:
+    """The same argument for the other character that ends a table row."""
+    from check_ssot_consistency import render_board
+
+    body = render_board({"G-ALPHA": "fail"}, {}, {"G-ALPHA": "first line\nsecond line"})
+    rows = [line for line in body.splitlines() if "G-ALPHA" in line]
+    assert len(rows) == 1, rows
+    assert "second line" in rows[0], rows[0]
+
+
+def test_bd623_r3_an_ordinary_basis_is_unchanged() -> None:
+    """The escape must be a no-op on every basis the registry holds today, or
+    the board's bytes would move and every host copy would need rewriting."""
+    from check_ssot_consistency import basis_cell
+
+    for text in [
+        "nine rows execute with rowwise invariants at module bytes 760a7c04",
+        "D-065 upholds it only on the frozen matched family and module bytes",
+        "",
+    ]:
+        assert basis_cell(text) == text
