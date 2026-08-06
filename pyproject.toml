@@ -63,7 +63,12 @@ where = ["src"]
 "rabbit.data" = ["*.json"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# `.agent-harness/tests` is listed because it was NOT collected before (BD623):
+# `testpaths = ["tests"]` meant `pytest -q` skipped the mutation battery, the
+# SSOT regression suite, the canary freshness suite and the hook fixtures
+# entirely, while D-074 section 6 recorded that the mutation battery "lives in
+# the repository and runs in the suite". It lived there; it did not run.
+testpaths = ["tests", ".agent-harness/tests"]
 markers = [
     "slow: marks tests that take >30s (deselect with '-m \"not slow\"')",
     "jax: marks tests requiring JAX",
