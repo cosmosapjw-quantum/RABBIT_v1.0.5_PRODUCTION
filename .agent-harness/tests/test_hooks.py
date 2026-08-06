@@ -5420,3 +5420,83 @@ def test_f_r11_duplicate_keys_in_an_admissions_row_are_refused(tmp_path: Path) -
     )
     done = run_stop_hook(tmp_path, stop_event(version))
     assert json.loads(done.stdout)["decision"] == "block", done.stdout
+
+
+# --------------------------------------------------------------------------
+# BD623 R4 / R4b -- a run id and a parent assignment id are path keys, not paths.
+# --------------------------------------------------------------------------
+
+SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+
+
+def test_bd623_r4_init_run_refuses_a_run_id_that_leaves_the_runs_directory(
+    tmp_path: Path,
+) -> None:
+    """Measured before the fix: `--run-id ../../../ESCAPED/pwned-run` exited 0,
+    created RUN_PLAN.json and the four run subdirectories OUTSIDE the
+    repository, and wrote the traversal string into ACTIVE_RUN -- the pointer
+    Start and Stop resolve every run against. An absolute path behaved the same.
+    """
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True,
+                   capture_output=True, text=True)
+    harness = tmp_path / ".agent-harness"
+    write_json(harness / "context" / "CONTEXT_INDEX.json",
+               {"context_version": "a" * 64, "shared_files": []})
+    write_json(harness / "templates" / "RUN_PLAN.json",
+               {"schema_version": 1, "budget": {"max_concurrent": 4, "max_total": 8,
+                                                "max_depth": 2}, "stages": []})
+    escape = tmp_path / "ESCAPED"
+
+    for run_id in ["../../../ESCAPED/pwned-run", str(escape / "abs-run")]:
+        done = subprocess.run(
+            [sys.executable, str(SCRIPTS / "init_run.py"), "--run-id", run_id],
+            cwd=tmp_path, capture_output=True, text=True,
+        )
+        assert done.returncode != 0, done.stdout
+        assert "Unsafe --run-id" in done.stderr, done.stderr
+
+    assert not escape.exists(), sorted(p.name for p in escape.iterdir())
+    assert not (harness / "ACTIVE_RUN").exists()
+
+
+def test_bd623_r4_init_run_still_accepts_an_ordinary_run_id(tmp_path: Path) -> None:
+    """The constraint must not narrow what already works: all 141 run
+    directories in the repository satisfy it, as does the generated default."""
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True,
+                   capture_output=True, text=True)
+    harness = tmp_path / ".agent-harness"
+    write_json(harness / "context" / "CONTEXT_INDEX.json",
+               {"context_version": "a" * 64, "shared_files": []})
+    write_json(harness / "templates" / "RUN_PLAN.json",
+               {"schema_version": 1, "budget": {"max_concurrent": 4, "max_total": 8,
+                                                "max_depth": 2}, "stages": []})
+    done = subprocess.run(
+        [sys.executable, str(SCRIPTS / "init_run.py"),
+         "--run-id", "run-20260804-f10-d075-owner"],
+        cwd=tmp_path, capture_output=True, text=True,
+    )
+    assert done.returncode == 0, done.stderr
+    assert (harness / "runs" / "run-20260804-f10-d075-owner" / "RUN_PLAN.json").is_file()
+    assert (harness / "ACTIVE_RUN").read_text().strip() == "run-20260804-f10-d075-owner"
+
+
+def test_bd623_r4b_new_assignment_refuses_a_parent_id_that_names_another_run(
+    tmp_path: Path,
+) -> None:
+    """Measured before the fix: the child's id was checked and the parent's was
+    not, so `--parent-assignment-id ../../run-alpha/assignments/A-PARENT` read a
+    parent out of a DIFFERENT run. Because `depth` is inherited from whatever
+    that file declares, a parent stating `depth: 0` registered a child at depth
+    1 with rc=0 -- the depth budget counted from a file the caller chose by path.
+    """
+    done = subprocess.run(
+        [sys.executable, str(SCRIPTS / "new_assignment.py"),
+         "--assignment-id", "A-CHILD",
+         "--agent-type", "default",
+         "--claim-id", "C-001",
+         "--parent-assignment-id", "../../run-alpha/assignments/A-PARENT",
+         "--task", "cross-run parent"],
+        cwd=tmp_path, capture_output=True, text=True,
+    )
+    assert done.returncode != 0, done.stdout
+    assert "Unsafe --parent-assignment-id" in done.stderr, done.stderr

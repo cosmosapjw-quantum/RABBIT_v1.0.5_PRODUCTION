@@ -7,7 +7,7 @@ import os
 import sys
 from datetime import datetime, timezone
 
-from _harness import dump_json, load_json, root, utc_now
+from _harness import ADMISSION_KEY_RE, dump_json, load_json, root, utc_now
 
 
 def main() -> None:
@@ -21,6 +21,20 @@ def main() -> None:
     repo = root()
     harness = repo / ".agent-harness"
     run_id = args.run_id or datetime.now(timezone.utc).strftime("run-%Y%m%dT%H%M%SZ")
+    # The run id is a path key, and `harness / "runs" / run_id` silently accepts
+    # an absolute path or a `../` chain: BD623 R4 created a full run tree and
+    # RUN_PLAN.json outside the repository and then wrote the traversal string
+    # into ACTIVE_RUN, which is what Start and Stop resolve every run against.
+    # This is the same key rule `_harness.admission_path` and Stop's
+    # `agent_lock_path` already enforce -- they returned None for the escaped id,
+    # which is why the damage stopped at the pointer instead of reaching the
+    # ledger. Applying it here closes the write and the pointer as well. All 141
+    # existing run directories already satisfy it, as does the generated default.
+    if not ADMISSION_KEY_RE.fullmatch(run_id):
+        raise SystemExit(
+            f"Unsafe --run-id {run_id!r}: a run id is a single path key matching "
+            f"{ADMISSION_KEY_RE.pattern}, not a path."
+        )
     run_dir = harness / "runs" / run_id
 
     index = load_json(harness / "context" / "CONTEXT_INDEX.json")

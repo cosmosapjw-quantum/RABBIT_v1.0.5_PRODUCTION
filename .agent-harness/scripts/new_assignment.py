@@ -50,6 +50,19 @@ def main() -> None:
 
     if not ASSIGNMENT_ID_RE.fullmatch(args.assignment_id):
         raise SystemExit("assignment-id has an invalid form")
+    # The parent id is also a path key -- `assignments_dir / f"{parent}.json"` --
+    # and it carried no check at all, while the child's id did. BD623 R4b: a
+    # parent named `../../run-alpha/assignments/A-PARENT` was read out of a
+    # DIFFERENT run, and because `depth` is inherited from whatever that file
+    # says, a parent declaring `depth: 0` registered a child at depth 1 with
+    # rc=0. The depth budget is only a budget if the parent it counts from is
+    # inside this run. No historical assignment carries a parent id, so this
+    # constrains nothing that has already happened.
+    if args.parent_assignment_id and not ASSIGNMENT_ID_RE.fullmatch(args.parent_assignment_id):
+        raise SystemExit(
+            f"Unsafe --parent-assignment-id {args.parent_assignment_id!r}: a parent id is "
+            "an assignment id in this run, not a path."
+        )
     if not args.claim_id:
         raise SystemExit("At least one --claim-id is required.")
     if len(set(args.claim_id)) != len(args.claim_id):
