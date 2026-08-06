@@ -48,7 +48,7 @@
     "pattern": "^def test_"
    },
    "value": 127,
-   "as_of_commit": "PENDING_COMMIT",
+   "as_of_commit": "a13e4a2",
    "prior": [
     {
      "value": 123,
