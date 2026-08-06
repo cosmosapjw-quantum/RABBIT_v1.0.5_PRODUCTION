@@ -47,9 +47,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 111,
-   "as_of_commit": "9760a8c",
+   "value": 114,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 111,
+     "as_of_commit": "9760a8c",
+     "note": "Superseded by BD623's three path-key fixtures: two for the init_run.py run-id escape (R4) and one for the unchecked --parent-assignment-id (R4b)."
+    },
     {
      "value": 108,
      "as_of_commit": "7157bbe",
@@ -101,17 +106,17 @@
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-074",
+     "line_contains": "BD623",
      "value_regex": "(\\d+) hook fixtures",
      "role": "current",
-     "note": "Live ledger row for the strict-JSON repair that added the fixtures."
+     "note": "Live ledger row for the BD623 audit triage and its path-key and board-escaping fixtures."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-074",
+     "line_contains": "BD623",
      "value_regex": "Hooks `(\\d+)/\\d+`",
      "role": "current",
-     "note": "Result cell of the same live row."
+     "note": "Result cell of the live BD623 ledger row."
     },
     {
      "file": "docs/harness/VALIDATION_LEDGER.md",
@@ -147,6 +152,20 @@
      "value_regex": "tests: 12 -> (\\d+)",
      "role": "historical",
      "note": "Cost block of the same report; must carry its as-of commit."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
     }
    ]
   },
@@ -158,18 +177,14 @@
     "path": ".agent-harness/tests/test_ssot_consistency.py",
     "pattern": "^def test_"
    },
-   "value": 61,
-   "as_of_commit": "5c761a9",
-   "assertions": [
-    {
-     "file": "docs/harness/VALIDATION_LEDGER.md",
-     "line_contains": "D-074",
-     "value_regex": "(\\d+) SSOT regression cases",
-     "role": "current",
-     "note": "Live ledger row for the round-12 self-attack repairs."
-    }
-   ],
+   "value": 64,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 61,
+     "as_of_commit": "5c761a9",
+     "note": "D-075. Superseded by BD623 R3's three board-escaping fixtures: a pipe and a newline in status_basis_legacy, plus the no-op check on every basis the registry holds today."
+    },
     {
      "value": 56,
      "as_of_commit": "736e862",
@@ -209,6 +224,22 @@
      "value": 82,
      "as_of_commit": "915e2e4",
      "note": "D-070 Part B9."
+    }
+   ],
+   "assertions": [
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "BD623",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "current",
+     "note": "Live ledger row for the BD623 audit triage and its path-key and board-escaping fixtures."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
     }
    ]
   },
