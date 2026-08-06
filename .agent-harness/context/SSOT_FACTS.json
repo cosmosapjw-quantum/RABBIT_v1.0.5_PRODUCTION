@@ -47,9 +47,14 @@
     "path": ".agent-harness/tests/test_hooks.py",
     "pattern": "^def test_"
    },
-   "value": 123,
-   "as_of_commit": "25059d3",
+   "value": 127,
+   "as_of_commit": "PENDING_COMMIT",
    "prior": [
+    {
+     "value": 123,
+     "as_of_commit": "1389914",
+     "note": "BD623 R7 merge-corroboration fixtures. Superseded by R6's four reopen-lock fixtures."
+    },
     {
      "value": 119,
      "as_of_commit": "76dfe04",

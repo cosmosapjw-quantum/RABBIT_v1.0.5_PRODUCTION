@@ -9,6 +9,8 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import pytest
+
 
 REPO = Path(__file__).resolve().parents[2]
 HOOKS_DIR = REPO / ".codex" / "hooks"
@@ -5695,3 +5697,98 @@ def test_bd623_r7_honest_independent_agreement_still_does_not_group() -> None:
     ])
     assert len(merged) == 2
     assert [f["agent_asserted_duplicate_count"] for f in merged] == [1, 1]
+
+
+# --------------------------------------------------------------------------
+# BD623 R6 -- a reopen may not delete a claim a live Stop is holding.
+# --------------------------------------------------------------------------
+
+
+def _claim_and_lock(tmp_path: Path, agent_id: str) -> tuple[Path, Path]:
+    harness = tmp_path / ".agent-harness"
+    claim = harness / "admissions" / RUN_ID / "A-1.json.claim"
+    claim.parent.mkdir(parents=True, exist_ok=True)
+    claim.write_text(agent_id, encoding="utf-8")
+    lock = harness / "admissions" / RUN_ID / ".agent-locks" / f"{agent_id}.lock"
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    return claim, lock
+
+
+def test_bd623_r6_reopen_releases_the_claim_when_no_stop_holds_the_lock(
+    tmp_path: Path,
+) -> None:
+    import admit_agent
+
+    claim, _lock = _claim_and_lock(tmp_path, "agent-1")
+    admit_agent.release_claim_under_stop_lock(
+        tmp_path / ".agent-harness", RUN_ID, {"expected_agent_id": "agent-1"}, claim
+    )
+    assert not claim.exists()
+
+
+def test_bd623_r6_reopen_refuses_while_the_stop_lock_is_held(tmp_path: Path) -> None:
+    """Measured before the fix: `claim.unlink(missing_ok=True)` took no lock at
+    all, so the claim -- which subagent_stop_validate.py calls "the only step
+    here that is atomic against a concurrent stop" -- was destroyed while Stop
+    held its per-(run, agent) flock. A probe confirmed the flock would have
+    blocked the delete had it ever been requested.
+    """
+    import fcntl
+    import os
+
+    import admit_agent
+
+    claim, lock = _claim_and_lock(tmp_path, "agent-1")
+    fd = os.open(lock, os.O_CREAT | os.O_RDWR, 0o600)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    try:
+        with pytest.raises(SystemExit) as caught:
+            admit_agent.release_claim_under_stop_lock(
+                tmp_path / ".agent-harness", RUN_ID,
+                {"expected_agent_id": "agent-1"}, claim,
+            )
+        assert "is stopping" in str(caught.value), caught.value
+        assert claim.exists(), "the live claim must survive the refused reopen"
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
+
+
+def test_bd623_r6_a_first_mint_with_no_prior_receipt_is_unaffected(tmp_path: Path) -> None:
+    """`prior is None` is an ordinary first mint, not a reopen; it must not
+    start refusing on a stale claim file."""
+    import admit_agent
+
+    claim, _lock = _claim_and_lock(tmp_path, "agent-1")
+    admit_agent.release_claim_under_stop_lock(
+        tmp_path / ".agent-harness", RUN_ID, None, claim
+    )
+    assert not claim.exists()
+
+
+def test_bd623_r6_the_lock_follows_the_claim_holder_not_the_expected_agent(
+    tmp_path: Path,
+) -> None:
+    """Stop writes its own agent_id into the claim, so the holder is known even
+    for a token-only receipt where expected_agent_id is empty by construction.
+    Locking on `expected_agent_id` would have left exactly that case unguarded.
+    """
+    import fcntl
+    import os
+
+    import admit_agent
+
+    claim, lock = _claim_and_lock(tmp_path, "agent-actual")
+    fd = os.open(lock, os.O_CREAT | os.O_RDWR, 0o600)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    try:
+        with pytest.raises(SystemExit) as caught:
+            admit_agent.release_claim_under_stop_lock(
+                tmp_path / ".agent-harness", RUN_ID,
+                {"expected_agent_id": ""}, claim,
+            )
+        assert "agent-actual" in str(caught.value), caught.value
+        assert claim.exists()
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)

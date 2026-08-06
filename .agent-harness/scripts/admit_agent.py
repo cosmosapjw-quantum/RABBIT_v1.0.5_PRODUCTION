@@ -104,8 +104,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
+import os
 import secrets
 import sys
 from datetime import datetime
@@ -380,6 +382,61 @@ def open_token_only_assignments(admissions_dir: Path, assignment_id: str) -> lis
         and str(receipt.get("state") or "") == "open"
         and not str(receipt.get("expected_agent_id") or "")
     )
+
+
+def release_claim_under_stop_lock(
+    harness: Path, run_id: str, prior: dict | None, claim: Path
+) -> None:
+    """Delete the O_EXCL claim, but never out from under a running Stop.
+
+    `subagent_stop_validate.py` calls this claim "the only step here that is
+    atomic against a concurrent stop", and it is what makes a receipt
+    single-use. A reopen has to release it, or the newly admitted agent can
+    never consume. It used to do that with a bare `claim.unlink(missing_ok=True)`
+    taking no lock at all: BD623 R6 destroyed a live claim while Stop held its
+    per-(run, agent) flock, and a probe confirmed the flock WOULD have blocked
+    the delete had it ever been requested.
+
+    So the reopen takes the same lock Stop takes, for the agent the receipt
+    being replaced was bound to. The path is constructed here rather than
+    imported because the definition lives in the Stop hook, which every live
+    canary attests by digest -- importing would mean editing it, which retires
+    C11, C12 and C13. `subagent_stop_validate.agent_lock_path` remains the
+    authority for this layout; the two must move together.
+
+    The agent to lock on is read from the claim file, which Stop writes its own
+    `agent_id` into -- so this works for a token-only receipt too, where
+    `expected_agent_id` is empty by construction. Note that a claim SURVIVING is
+    the normal post-consume state, not a sign of a stop in flight: Stop deletes
+    it only when a consume fails. "In flight" is the flock being held, and
+    nothing else.
+    """
+    holder = ""
+    try:
+        holder = claim.read_text(encoding="utf-8").strip()
+    except OSError:
+        pass
+    if not holder:
+        holder = str((prior or {}).get("expected_agent_id") or "")
+    if not holder or not ADMISSION_KEY_RE.fullmatch(holder):
+        claim.unlink(missing_ok=True)
+        return
+    lock_file = harness / "admissions" / run_id / ".agent-locks" / f"{holder}.lock"
+    lock_file.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(lock_file, os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            fail(
+                f"refusing to reopen while agent {holder!r} is stopping: its consume "
+                "lock is held, so deleting the claim now would remove the only step "
+                "that is atomic against that stop. Wait for it to finish."
+            )
+        claim.unlink(missing_ok=True)
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
 
 
 def main() -> None:
@@ -706,7 +763,7 @@ def main() -> None:
         fail(f"admission ledger could not be appended ({exc.__class__.__name__})")
     try:
         dump_json_atomic(target, receipt)
-        claim.unlink(missing_ok=True)
+        release_claim_under_stop_lock(harness, run_id, prior, claim)
     except OSError as exc:
         fail(f"admission receipt could not be written ({exc.__class__.__name__})")
 
