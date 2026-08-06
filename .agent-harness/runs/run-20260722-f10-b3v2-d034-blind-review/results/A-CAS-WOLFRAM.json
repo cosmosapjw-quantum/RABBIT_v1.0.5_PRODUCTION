@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-CAS-WOLFRAM",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "independence_mode": "blind-results",
+  "agent_type": "default",
+  "agent_id": "019f8a13-5e2b-7a92-b123-c223f950090a",
+  "role": "cas_wolfram_xact",
+  "status": "fail",
+  "design_verdict": "FAIL",
+  "permit_w7_numerical_output": false,
+  "permit_b3_implementation_or_output": false,
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-WOLFRAM.json",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-CAS-WOLFRAM",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:21788dbbd79f4b0f2ff1e1c58beee855883bb51e812e57f39f62093d82625e63"
+  },
+  "started_at": "2026-07-22T13:43:00Z",
+  "completed_at": "2026-07-22T13:55:26Z",
+  "completed_utc": "2026-07-22T13:55:26Z",
+  "summary": "FAIL. Exact Wolfram/xAct algebra passes the direct coherent row-ii factor-four trace, the full 24+15 rational reaction nullspace, and the entropy-affinity claim. The exact tagged MB integrals also reproduce c/(8*pi^3) and c/(24*pi^3), but the W6 global four-leg weak form has no elastic orientation stabilizer: distinct elastic rows contribute twice the tagged action, contradicting the frozen row-ii/iii/iv absolute-normalization targets. Separately, the binding Python finite-mass map uses generic Kallen lambda=(s-m_e^2)^2 for elastic scattering with only lam<=0 rejection, so it accepts 0<s<m_e^2, rejects the required s=m_e^2 support value, and clips invalid z_star roots. These are candidate-byte design failures, not W7 numerical findings.",
+  "assumptions_and_conventions": {
+    "physical_metric": "g_phys=diag(-1,+1,+1,+1), future p0>0, p.p=-m^2, chi_ij=-p_i.p_j",
+    "cas_metric": "eta_D=diag(+1,-1,-1,-1), slash(p)=gamma0 p0-gammai pi, gamma5=i gamma0 gamma1 gamma2 gamma3, P_L=(1-gamma5)/2",
+    "event_orientation": "1+2<->3+4, J=F-R, nu_leg=(-1,-1,+1,+1)",
+    "spin": "one occupied neutrino helicity; no neutrino average; electron matrix elements spin-summed and electron occupations per spin",
+    "domains": "0<f_l<1 for entropy; s>m_e^2 for elastic and s>4m_e^2 for pair interior; principal nonnegative square roots; threshold derivatives one-sided",
+    "units": "c=hbar=k_B=1; MeV",
+    "simplification": "Exact integers and rationals; Expand and FullSimplify with explicit real/positive assumptions. PowerExpand was used only after separately imposing 0<f_l<1, hence F,R>0 and no logarithm branch crossing.",
+    "resource_limits": "$HistoryLength=0; one serial WolframKernel process; no numerical W7/B3 source imported or executed"
+  },
+  "toolchain": {
+    "wolfram_version": "15.0.0 for Linux x86 (64-bit) (May 26, 2026)",
+    "xact_xtensor_version": "1.3.0 (2025-12-29)",
+    "xact_xperm_version": "1.2.4 (2025-12-29)",
+    "xact_note": "xTensor loaded and performed a declared Lorentzian-bundle metric contraction, eta[-a,-b] eta[a,c] P1[b] P2[-c] -> P1[b] P2[-b]. xPerm's optional external Linux link reported a connection failure; no finding depended on that accelerator.",
+    "source_script": "/tmp/A-CAS-WOLFRAM-D034.wl",
+    "source_script_sha256": "f6af27864765b9e9829b44a6e771ed31a748edf73ce94a2d5ab93577b941185c",
+    "executable_command": "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl"
+  },
+  "tool_versions": {
+    "WolframKernel": "15.0.0 for Linux x86 (64-bit) (May 26, 2026)",
+    "xAct_xTensor": "1.3.0 (2025-12-29)",
+    "xAct_xPerm": "1.2.4 (2025-12-29)"
+  },
+  "errors": [
+    "xPerm optional external Linux accelerator connection failed; xTensor loaded and the basic canonical metric contraction completed without it.",
+    "One mistyped temporary script path produced Get::noopen; it performed no calculation and was immediately rerun with the correct path."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-WOLFRAM.json"
+  ],
+  "artifacts": [
+    "/tmp/A-CAS-WOLFRAM-D034.wl#sha256:f6af27864765b9e9829b44a6e771ed31a748edf73ce94a2d5ab93577b941185c"
+  ],
+  "source_hashes": {
+    "cas_contract": "04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a",
+    "w6": "e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "w7_contract_source": "5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "test_vectors": "5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44"
+  },
+  "findings": [
+    {
+      "finding_id": "F-WOLFRAM-ROWII-PASS",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "none",
+      "evidence_fingerprint": "sha256:8dc52efc68fa45d6c92afe5cb9b28b939bddff6d97548623a8c56c4f627b4c02",
+      "confidence": 0.99,
+      "statement": "The direct coherent row-ii u/v trace is four times the distinguishable K_t base before the tagged map.",
+      "exact_evidence": [
+        "The explicit locked gamma matrices satisfy the Clifford algebra and P_L^2=P_L.",
+        "The component identity sum_mu (gamma^mu P_L)_{ab}(gamma_mu P_L)_{cd} = -sum_mu (gamma^mu P_L)_{ad}(gamma_mu P_L)_{cb} has maximum exact residual 0.",
+        "For arbitrary four-vector components, the exact residuals are {T-16 K_t,S-16 K_t,X+16 K_t}={0,0,0}, where X is the raw t/s interference trace.",
+        "The physical Wick-contraction sign gives M_t-M_s, hence |M_t-M_s|^2/(|M_t|^2)=1+1-2(-1)=4. With the common 2 G_F^2 current prefactor this maps 32 G_F^2 K_t to 128 G_F^2 K_t.",
+        "Frozen V-NULL-COM-345 gives (K_s,K_t,K_u)=(4,81/25,1/25), T=S=1296/25, X=-1296/25."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:111",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:103",
+        "/tmp/A-CAS-WOLFRAM-D034.wl#GENERIC_TRACE_CANONICAL_RESIDUALS"
+      ],
+      "counterevidence_refs": [],
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1) with the locked slash and P_L convention",
+        "one occupied neutrino helicity and no initial neutrino spin average",
+        "the relative minus between the two Wick contractions is retained"
+      ],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+        "Inspect InputForm keys LEFT_CURRENT_FIERZ_ANTISYMMETRIC_MAX, GENERIC_TRACE_CANONICAL_RESIDUALS, and PHYSICAL_MT_MINUS_MS_RATIO"
+      ],
+      "unresolved": [],
+      "denominator_exclusions": [],
+      "branch_notes": "No kinematic branch or numerical specialization is required for the generic trace identity; the rational vector is an independent exact component check."
+    },
+    {
+      "finding_id": "F-WOLFRAM-NORMALIZATION-FAIL",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "fail",
+      "severity": "fatal",
+      "failure_class": "MICROPHYSICS_AUTHORITY_CONFLICT",
+      "evidence_fingerprint": "sha256:50788bc877ade0e943332288f0ba3a6578dbab7585d5bd7b068fd5ca18ad3206",
+      "confidence": 0.98,
+      "statement": "The frozen global weak form and reaction factors do not reproduce the frozen tagged MB normalization for distinct elastic records.",
+      "exact_evidence": [
+        "Direct phase-space integration gives dPhi2=k*/(16*pi^2*sqrt(s)) dz*dphi and the massless outgoing angular factors integral(K_s)=chi12^2/(8*pi), integral(K_t)=chi12^2/(24*pi).",
+        "The tagged MB loss is exactly c G_F^2 p T^4 exp(-p/T)/(8*pi^3) for K_s and one third of this for K_t, equivalent to the canonical c/(8*pi^3) and c/(24*pi^3) after p=yT.",
+        "For a distinct elastic record (a,b;a,b), q_a contains integral J[-psi(p1)+psi(p3)]. Under the exact reversal (p1,p2,p3,p4)<->(p3,p4,p1,p2), the measure and K_s/K_t are invariant and J changes sign, so the p3 term equals the p1 term. With S_r=1 the global action is exactly twice the tagged action.",
+        "For (a,a;a,a), four equivalent leg depositions times S_r=1/4 give coefficient 1, whereas the tagged identical-final measure carries 1/2; this is also a factor two relative to a physical pre-symmetry amplitude. The current coefficient choices happen to encode a tagged coefficient for row i but not a coherent common matrix-element ledger.",
+        "Consequently the specified global graph predicts twice the frozen row-ii, row-iii, and row-iv elastic MB targets unless an elastic orientation stabilizer or an equivalent explicit coefficient redefinition is added. Pair-conversion rows do not share that duplication, so a uniform global factor cannot repair it."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:57",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:60",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:66",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:92",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:100",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:112",
+        "/tmp/A-CAS-WOLFRAM-D034.wl#TAGGED_MB_LOSS"
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:100 claims the current symmetry and leg deposition ledger recovers the tagged convention, but it supplies no elastic orientation quotient resolving the exact factor-two change of variables."
+      ],
+      "assumptions_used": [
+        "the displayed dGamma integrates all four on-shell momenta over the full labeled domain",
+        "reverse processes are represented by R and not a second record",
+        "K_s and K_t are invariant under simultaneous initial-final reversal",
+        "the canonical MB targets use the tagged collision action stated in CAS_CONTRACT.json"
+      ],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+        "Inspect InputForm keys OUTGOING_KS_KT, TAGGED_MB_LOSS, GLOBAL_DISTINCT_ELASTIC_TO_TAGGED_MULTIPLIER, and GLOBAL_IDENTICAL_ELASTIC_TO_TAGGED_MULTIPLIER",
+        "Apply the exact variable exchange (p1,p2,p3,p4)<->(p3,p4,p1,p2) to the p3 leg of q_a"
+      ],
+      "unresolved": [
+        "The candidate bytes do not state an elastic orientation stabilizer or an equivalent reaction-specific quotient."
+      ],
+      "reopen_condition": "Freeze a mathematically coherent reaction-rate quotient/stabilizer and rederive every row's physical matrix element, S_r, global-leg factor, tagged coefficient, and MB target on new exact bytes; do not fit coefficients to later output."
+    },
+    {
+      "finding_id": "F-WOLFRAM-NULLSPACE-PASS",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "none",
+      "evidence_fingerprint": "sha256:785d1883ce026cb9b3d57b40ef41932d009b08b71969a7b174f3219bf84ed677",
+      "confidence": 0.99,
+      "statement": "The independently enumerated 24-self plus 15-electron species stoichiometry has exactly the claimed rational left nullspace.",
+      "exact_evidence": [
+        "The six-by-39 rational matrix has rank 3 and left nullity 3.",
+        "Each target row (nu_e-antinu_e), (nu_mu-antinu_mu), and (nu_tau-antinu_tau) annihilates all 39 columns exactly.",
+        "Appending the target rows to Wolfram NullSpace[Transpose[S]] leaves rank 3, proving equality of spans over Q."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:84",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:114",
+        "/tmp/A-CAS-WOLFRAM-D034.wl#STOICH_RANK_LEFT_NULLITY"
+      ],
+      "counterevidence_refs": [],
+      "assumptions_used": [
+        "the 24 self and 15 electron records are enumerated in the frozen order",
+        "electron legs are omitted from the six species-count rows",
+        "the nullspace is computed over exact rationals"
+      ],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+        "Inspect InputForm keys REACTION_COUNTS, STOICH_RANK_LEFT_NULLITY, TARGET_NULL_PRODUCTS, and TARGET_SPANS_NULLSPACE"
+      ],
+      "unresolved": [],
+      "assumption": "Electron legs are omitted from the six species rows exactly as specified; energy conservation is not inserted as a species-count vector."
+    },
+    {
+      "finding_id": "F-WOLFRAM-ENTROPY-PASS",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "none",
+      "evidence_fingerprint": "sha256:737ec468a29bbe97e822e72840392f4fa8a47475fbf5c89161fd98637edeebab",
+      "confidence": 0.99,
+      "statement": "The entropy affinity identity and sign are exact on the strict-open occupation domain.",
+      "exact_evidence": [
+        "For 0<f_l<1, A=log(F/R)=eta1+eta2-eta3-eta4 exactly.",
+        "Because log is strictly increasing on positive reals, J A=(F-R)(log F-log R)>=0, with equality iff F=R.",
+        "The frozen vector gives F=4/625, R=144/625, J=-28/125, A=-2 log(6)=log(1/36), and J A>0.",
+        "For an equilibrium electron bath eta_e=-E/T_gamma, its leg contribution is the declared Q_EM/T_gamma sign; no chemical-potential term is present."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:114",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:402",
+        "/tmp/A-CAS-WOLFRAM-D034.wl#ENTROPY_VECTOR"
+      ],
+      "counterevidence_refs": [],
+      "assumptions_used": [
+        "all four occupations lie strictly between zero and one",
+        "electron chemical potential is zero",
+        "Q_EM is defined positive into the electromagnetic bath"
+      ],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+        "Inspect InputForm keys AFFINITY_IDENTITY_POSITIVE_DOMAIN and ENTROPY_VECTOR"
+      ],
+      "unresolved": [],
+      "branch_notes": "The identity is not asserted at f=0 or f=1; those logarithmic boundary points are outside the evolved strict-open state."
+    },
+    {
+      "finding_id": "F-WOLFRAM-FINITE-ME-SOURCE-FAIL",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "fatal",
+      "evidence_fingerprint": "sha256:31e1717c311360fbc00c2b0ce9c4104a650d9ec600ecd9447de1c802b2cb7317",
+      "confidence": 0.99,
+      "statement": "The continuum shell/Jacobian formulas are correct, but the binding unexecuted source does not implement the frozen elastic physical-side branch and therefore fails the exact-byte claim.",
+      "exact_evidence": [
+        "Under s>m_e^2, k*=(s-m_e^2)/(2 sqrt(s)), E_nu*=k*, E_e*=(s+m_e^2)/(2 sqrt(s)) satisfy both shells and E_nu*+E_e*=sqrt(s) exactly. Under s>4m_e^2 the pair formulas satisfy both massive shells and energy conservation.",
+        "The frozen elastic and pair rational vectors have exact shell residuals zero, exact four-momentum residual zero, and s+t+u=2.",
+        "Reducing the outgoing delta function gives d(E3+E4)/dk=k(1/E3+1/E4) and dPhi2=k/[16*pi^2(E3+E4)] dz*dphi=k/[16*pi^2 sqrt(s)] dz*dphi.",
+        "However scripts/audit/w7_b3v2_contract_source.py forms generic lambda=(s-(m3+m4)^2)(s-(m3-m4)^2) and rejects only lambda<=0. For elastic (m3,m4)=(0,m_e), lambda=(s-m_e^2)^2: at the exact subthreshold witness s=m_e^2/4 the source sees lambda=9m_e^4/16 and returns k*=3m_e/4 instead of rejecting s<=m_e^2.",
+        "At s=m_e^2 the source rejects lambda=0, while W6 requires the k*=0 threshold support value and physical-side derivative scope. It also computes sqrt(max(0,1-z_star^2)), silently clipping an invalid angular root rather than rejecting it."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:164",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:170",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:184",
+        "scripts/audit/w7_b3v2_contract_source.py:253",
+        "scripts/audit/w7_b3v2_contract_source.py:254",
+        "scripts/audit/w7_b3v2_contract_source.py:262",
+        "/tmp/A-CAS-WOLFRAM-D034.wl#ELASTIC_SOURCE_SUBTHRESHOLD_WITNESS"
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:164-170 correctly states the process-specific physical branches, but the binding source at lines 253-262 does not implement them."
+      ],
+      "assumptions_used": [
+        "m_e>0 and principal nonnegative square roots",
+        "elastic physical support requires s>m_e^2, with s=m_e^2 retained only as the k*=0 support value",
+        "pair physical support requires s>4m_e^2",
+        "invalid angular roots must fail raw rather than clip"
+      ],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+        "Inspect InputForm keys ELASTIC_KALLEN, ELASTIC_SOURCE_SUBTHRESHOLD_WITNESS, ELASTIC_SOURCE_THRESHOLD_WITNESS, ELASTIC_VECTOR, PAIR_VECTOR, and DPHI2_ON_ENERGY_SHELL",
+        "Read scripts/audit/w7_b3v2_contract_source.py lines 253-262 without importing or executing it"
+      ],
+      "unresolved": [
+        "The exact bytes have no separate threshold-support return and no raw z_star domain rejection."
+      ],
+      "denominator_exclusions": [
+        "P0>0",
+        "sqrt(s)>0",
+        "|beta|^2 appears only on the nonzero-beta branch",
+        "Gram norm>0"
+      ],
+      "reopen_condition": "Replace the generic elastic Kallen acceptance test by the exact process-specific s>m_e^2 branch, define the s=m_e^2 support return k*=0 separately from the one-sided derivative, reject z_star outside [-1,1] without clipping, and obtain a fresh exact-byte review."
+    }
+  ],
+  "audit_ledger": [
+    {
+      "item": "metric, slash, chirality, signs",
+      "status": "pass",
+      "note": "Locked eta_D and g_phys conventions were used explicitly; no signature switch."
+    },
+    {
+      "item": "dimensions",
+      "status": "pass",
+      "note": "G_F^2 times K has dimension zero, dPhi2 is dimensionless, and tagged massless loss scales G_F^2 T^5."
+    },
+    {
+      "item": "row-ii coherent trace",
+      "status": "pass",
+      "note": "Exact generic trace and rational vector establish constructive factor four with the Wick minus sign."
+    },
+    {
+      "item": "global absolute normalization",
+      "status": "fail",
+      "note": "Distinct elastic orientation reversal is double-counted by the full four-leg weak form."
+    },
+    {
+      "item": "reaction nullspace",
+      "status": "pass",
+      "note": "Exact rank/nullity and target span over Q."
+    },
+    {
+      "item": "entropy sign and limit",
+      "status": "pass",
+      "note": "Strict-open domain only; equality exactly F=R."
+    },
+    {
+      "item": "finite-mass interior shells and Jacobian",
+      "status": "pass",
+      "note": "Exact principal-branch formulas and rational vectors agree."
+    },
+    {
+      "item": "finite-mass source branch boundary",
+      "status": "fail",
+      "note": "Elastic subthreshold acceptance, threshold rejection, and angular clipping contradict frozen bytes."
+    }
+  ],
+  "commands": [
+    {
+      "command": "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D034.wl",
+      "exit_code": 0,
+      "validation": "Exact symbolic script completed; key expressions emitted in InputForm."
+    },
+    {
+      "command": "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRRAM-D034.wl",
+      "exit_code": 0,
+      "validation": "User-path typo produced Get::noopen and no calculation; immediately corrected. WolframKernel returns zero for this loader error, so this command is recorded as a raw non-validation failure."
+    }
+  ],
+  "scope_and_claim_ceiling": {
+    "executed": "Only exact symbolic/component algebra and frozen rational vectors in an isolated Wolfram script.",
+    "not_executed": "W7 numerical metrology, B3 collisions, T01-T12, Rust, Radau, trajectory, endpoint, and RABBIT unblinding.",
+    "claim_ceiling": "The three PASS findings are bounded exact-algebra subclaims. The candidate design verdict is FAIL, and no output or implementation authority follows."
+  }
+}

@@ -1,0 +1,504 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-FAILURE-REFLECTION",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f6c-3de7-7a10-bc65-45addb6cbd61",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-FAILURE-REFLECTION",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:eade263d78551f4b5eba9e1bc2e171132c9a827b7a2d4836c14c8f5915a4669d",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-FAILURE-REFLECTION.json",
+  "started_at": "2026-07-23T14:39:08Z",
+  "completed_at": "2026-07-23T14:45:58Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "Read .agent-harness/generated/CONTEXT_PACK.md completely in bounded sed ranges.",
+    "sha256sum and read the registered assignment, RESULT_ENVELOPE template, and context_mapper role file.",
+    "Inspect .agent-harness/scripts/_harness.py only to verify the registered ordered path-NUL-bytes-NUL review-role hash convention.",
+    "Compute the ordered context_mapper role bundle SHA-256 and verify it equals the assignment value.",
+    "sha256sum and read completely the five assignment-authorized failure-reflection inputs.",
+    "Cross-check route claims by source section and preserve distinct proximate defects, bounded passes, process amplifiers, and non-theorems.",
+    "jq -e . on the declared result artifact.",
+    "python3 .agent-harness/scripts/validate_harness.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "43e7a00c81c2f5c60ccb60d3a679e242c56f7ac479d989738fa37aeb6cc8c712"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-FAILURE-REFLECTION.json",
+      "sha256": "eade263d78551f4b5eba9e1bc2e171132c9a827b7a2d4836c14c8f5915a4669d"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": ".agent-harness/context/roles/context_mapper.md",
+      "raw_file_sha256": "39dc1281f6eb12fb2fb7739618987ae78fad47b88eff2cb8f42bfbb9a3ab0231",
+      "ordered_role_bundle_sha256": "403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093"
+    },
+    {
+      "path": "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+      "sha256": "2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a"
+    },
+    {
+      "path": "BD622_D039_second_external_audit_report.md",
+      "sha256": "1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7"
+    },
+    {
+      "path": "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md",
+      "sha256": "509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6"
+    },
+    {
+      "path": "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md",
+      "sha256": "860f9121bcd555fad95233959fc7b9e003caedd70fbad303ebb85f20564cec65"
+    },
+    {
+      "type": "review_method_record",
+      "private_reasoning_exposed": false,
+      "stages": [
+        {
+          "stage": "self-discover",
+          "checkable_output": "Extracted each route's stated mechanism, terminal defect, bounded pass, scope ceiling, and reopen evidence from the five authorized inputs."
+        },
+        {
+          "stage": "step-back",
+          "checkable_output": "Reorganized route chronology into proximate scientific defects, recurring process amplifiers, bounded passes, and non-theorems."
+        },
+        {
+          "stage": "metacognitive self-ask",
+          "checkable_output": "Checked for status inflation, completed-adjudication overclaims, causal monoculture, and authority leakage."
+        },
+        {
+          "stage": "CoVe",
+          "checkable_output": "Cross-verified D-038 classifications against the D-039 report, D-040 survey, D-041 adjudication, and current context/gate ceilings."
+        },
+        {
+          "stage": "adversarial self-ask",
+          "checkable_output": "Retained the strongest countercase: distinct-space Petrov, analytic enrichment, and moving-remap witnesses prevent a universal impossibility claim."
+        },
+        {
+          "stage": "CCoT",
+          "checkable_output": "Checked that process defects explain delayed detection and auditability loss without replacing each route's scientific proximate cause."
+        },
+        {
+          "stage": "PDR",
+          "checkable_output": "STOP/PRESERVE survives on current evidence; one complete prospectively sealed external design artifact is the decisive falsifier, and even that changes only design-review eligibility."
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D042-001",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The evidence supports a four-way causal taxonomy rather than a single repeated-bug story. Proximate scientific defects are route-specific: Fort lower-node interpolation and later null-oracle pathology; D-027 non-adjoint target-leg deposition; D-028 native conditioning/covariance; D-029 theorem-to-selector discontinuity; and B3-v2/W7 executable shell, basis, tail, trace, and arithmetic-graph incompleteness. Recurring process amplifiers are architecture-before-closed-invariants, last-defect packetization, additive truth surfaces, and late cheap negative controls. Bounded passes remain valid within their stated domains. Harness/reroot drift is a process and auditability cause but is not supported as the scientific cause of the post-repair D-037 failures.",
+      "assumptions_used": [
+        "Current source and machine results outrank historical prose and commit narrative.",
+        "A repeated programme pattern is not promoted to a universal physical root without route-specific evidence.",
+        "D-037 stopped after two admitted non-PASS envelopes and was not a completed four-axis adjudication."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Deduplicated-causal-findings",
+        "BD622_D039_second_external_audit_report.md#Deduplicated-failure-families",
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-independent-comparison-contract-and-current-failure-boundary"
+      ],
+      "evidence_fingerprint": "sha256:0fb5c928be6bdd351c021530c6aed9dc3df20eba5bd0a52c8c1fbc7c28570340",
+      "counterevidence_refs": [
+        "D-038 records architecture-first sequencing as a high-confidence recurrence amplifier.",
+        "A future clean exact-byte rerun that removes the seven D-037 findings would shift causal weight toward process artifacts."
+      ],
+      "reproduction": [
+        "Compare D-038 Historical reconstruction and Deduplicated causal findings with D-039 sections 2, 4, and 6.",
+        "Verify in CONTEXT_PACK that D-037 retains four bounded passes and seven binding failures without a four-axis adjudicator claim."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Retrospective causal weight at each earlier decision point remains uncertain.",
+        "No universal impossibility theorem for independent F-10 validation follows."
+      ]
+    },
+    {
+      "finding_id": "F-D042-002",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Fort separated useful contextual evidence from an unsuitable authority route. The r4/r6 work VALIDATED the exact lower-native-grid interpolation mechanism and its bounded correction causality, and r6 common-FD H-normalized null measures passed the unchanged cap. It still failed endpoint authority because no resolved non-null checkpoint, DLSODA step, mapper/tolerance ladder, endpoint, or RABBIT comparison was produced; its signed-over-absolute null statistic is direction-dependent 0/0. Whole-program Fort is DEPRECATED because its QKE/precision surface exceeds the frozen no-QKE objective. This conclusion would change only for a separately owner-authorized, provenance-locked classical slice with materially new non-null and endpoint evidence; ordinary wrapper, cache, telemetry, or exact-null exceptions cannot change it, and Fort still would not by itself supply structural independence.",
+      "assumptions_used": [
+        "The preserved r4-r6 evidence is immutable contextual evidence.",
+        "A bounded interpolation-causality PASS is not an endpoint or independent-FLRW PASS.",
+        "The no-QKE programme boundary excludes whole-program Fort authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-independent-comparison-contract-and-current-failure-boundary",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Historical-reconstruction"
+      ],
+      "evidence_fingerprint": "sha256:9633f8193373618672dfcfdd934e99f79f3ea41075d965fb0dd11f3ad3db5c72",
+      "counterevidence_refs": [
+        "r6 exact endpoint interpolation causality and analytic-null cap are VALIDATED within the zero-step diagnostic.",
+        "Fort helped localize a real external implementation defect before the route was stopped."
+      ],
+      "reproduction": [
+        "Read the r4-r6 bullets in CONTEXT_PACK and retain the explicit zero-DLSODA and no-endpoint ceilings.",
+        "Compare D-038's Fort reconstruction with the current G-F10-INDEPENDENT-FLRW fail condition."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No resolved non-null Fort checkpoint or endpoint exists.",
+        "A new owner decision backed by materially new physics evidence would be required even to reconsider a bounded Fort role."
+      ]
+    },
+    {
+      "finding_id": "F-D042-003",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "D-027 tested a direct target-leg pointwise M1 action. Its common-FD total null was a bounded PASS, but the representation was not adjoint to conservative all-leg deposition and failed resolved non-null self number, self energy, and independently reduced electron exchange at 1.9782e-10, 2.3350e-10, and 1.0684e-7 against 1e-10, 1e-10, and 1e-8. The preserved candidate is therefore rejected as an evolving RHS. Only a prospectively frozen all-leg weak or microreversible edge mechanism that passes the same non-null invariants without projection or cap tuning could change the method-family conclusion; it would be a new candidate, not a reinterpretation of the failed D-027 bytes.",
+      "assumptions_used": [
+        "Resolved non-null conservation and exchange are binding even when the equilibrium null passes.",
+        "Post-hoc projection and tolerance or cap tuning remain forbidden."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Historical-reconstruction",
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-Decisions-D-027",
+        "BD622_D039_second_external_audit_report.md#Deduplicated-failure-families"
+      ],
+      "evidence_fingerprint": "sha256:98284039dac19daa69b444384a0a6cc25f99e226b84fe1aeff77cdd452187c5f",
+      "counterevidence_refs": [
+        "The common-FD total null passed.",
+        "The failure localized a deposition-duality requirement that later designs could build in structurally."
+      ],
+      "reproduction": [
+        "Compare CONTEXT_PACK D-027 measurements with D-038's non-adjoint deposition classification.",
+        "Confirm D-039 FAM-2 requires an all-leg weak or microreversible edge form."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No admissible replacement deposition mechanism has been sealed."
+      ]
+    },
+    {
+      "finding_id": "F-D042-004",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "D-028 implemented a full-degree entropy-variable Galerkin-Petrov replacement and is VALIDATED as a narrow failure, not a useless attempt. Common-FD null, S1 invariants, exchange, first law, CP, entropy, resource, and weak/modal checks passed; the prospectively coded native mu-tau relative-L-infinity covariance was 4.666064056497196e-10 against 1e-10. W5 localizes small-y/native-map amplification but does not prove an exclusive 1/y^2 or pure-roundoff root. The exact candidate bytes remain failed. Only a materially new prospectively registered method with its own weak/mass identity and native conditioning bound, not GL64, symmetrization, metric/cap changes, or reduction retries, could change the broader method conclusion.",
+      "assumptions_used": [
+        "The prospectively coded native covariance co-gate is binding.",
+        "A favorable modal residual cannot uncertainty-rescue a failed structural/native gate.",
+        "W5 is localization evidence rather than an exclusivity theorem."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-Decisions-D-028",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Historical-reconstruction",
+        "BD622_D039_second_external_audit_report.md#Discretization"
+      ],
+      "evidence_fingerprint": "sha256:36181e1e827649abf52f36334ec2a19d9da4419a86e9ac141d50c2f1527adbff",
+      "counterevidence_refs": [
+        "D-028 passed every recorded static gate except native covariance.",
+        "The route provided rational empirical discovery and localized a conditioning boundary."
+      ],
+      "reproduction": [
+        "Verify the 4.666064056497196e-10 measurement and 1e-10 cap in CONTEXT_PACK.",
+        "Compare D-038 and D-039 statements that W5 does not prove an exclusive 1/y^2 cause."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The precise decomposition of native amplification between representation, conditioning, and reduction remains incomplete.",
+        "No materially new owner-authorized numerical method has reopened the gate."
+      ]
+    },
+    {
+      "finding_id": "F-D042-005",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "D-029 correctly rejected a three-node maximum-relative-entropy route before implementation. Its fixed-triple negative-KL theorem is DERIVED and its standalone piecewise binary64 stencil is VALIDATED only locally. The executable proposal added a target-dependent nearest-exterior selector, GL-weight prior, support switch, and exact-node branch that were not covered by one continuous, covariant semidiscrete theorem or Jacobian. This is a theorem-to-selector failure, not a refutation of maximum entropy generally. A coherent prior/selector/exact-node contract with switch continuity or Lipschitz control, Jacobian and tie covariance, the complete 24-self/15-electron binary64 ledger, and unchanged native/weak co-gates would be required to change the design-family conclusion.",
+      "assumptions_used": [
+        "A theorem for one fixed support triple does not authorize a state-dependent global selector.",
+        "Preimplementation rejection is a successful fail-closed outcome.",
+        "No implementation evidence can be inferred from a local stencil audit."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-Decisions-D-029",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Historical-reconstruction",
+        "BD622_D039_second_external_audit_report.md#Deduplicated-failure-families"
+      ],
+      "evidence_fingerprint": "sha256:f38373c0fa3a76b8e6c740c35fa380874d1e4502b441fb7e23ffde43d0b6faae",
+      "counterevidence_refs": [
+        "The fixed-triple theorem and local binary64 audit remain valid in their declared domains.",
+        "D-029 prevented an unsupported implementation campaign."
+      ],
+      "reproduction": [
+        "Compare CONTEXT_PACK D-029 with D-038's fixed-theorem versus changing-selector classification.",
+        "Verify D-039 FAM-4 calls for fixed topology or a compiler-total selector."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No continuous, covariant selector theorem exists for the proposed executable route.",
+        "Maximum-entropy methods outside this exact selector are not universally ruled out."
+      ]
+    },
+    {
+      "finding_id": "F-D042-006",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The sealed B3-v2/W7 route moved beyond earlier candidates by specifying six explicit species, finite-m_e reaction shells, entropy variables, a weak mass solve, reaction records, a ladder, exact vectors, and an A0-A4 metrology intent. D-037 preserved four bounded passes: reaction nullspace, entropy affinity, direct row-ii trace, and absolute normalization. It also retained seven binding whole-design failures: per-leg/process-total shell enforcement, one authoritative coefficient-Horner basis path, directed tail enclosure, canonical event/trace completeness, A0-A4 rigor, and the two whole-design claims. Source objects and validators existed, but not one compulsory consumer-complete operation graph. The decisive change would be a prospectively sealed single graph that maps every clause to every consumer, closes all seven classes while retaining all four passes, survives hostile mutations, and receives a unanimous fresh whole-design review. Even that changes only eligibility for a separate owner W7 decision; it does not authorize W7, B3, trajectory, or output.",
+      "assumptions_used": [
+        "D-037's first-non-PASS stop is binding and not a completed four-axis adjudication.",
+        "Callable validation pieces do not prove that every actual consumer uses the same canonical path.",
+        "Bounded subclaim passes cannot override a conjunctive whole-design failure."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-independent-comparison-contract-and-current-failure-boundary",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Deduplicated-causal-findings",
+        "BD622_D039_second_external_audit_report.md#D-038-root-cause-challenge"
+      ],
+      "evidence_fingerprint": "sha256:f7bc139b171c3533b02a67291d955ebf148adaab13b453e95a1aed7973adc223",
+      "counterevidence_refs": [
+        "Four algebraic and normalization subclaims passed.",
+        "D-033 through D-035 repaired genuine normalization, G_F, orientation, finite-mass, basis, ladder, and metrology defects.",
+        "A compiler-enforced graph for the sealed bytes would be the strongest falsifier of the executable-contract-root diagnosis."
+      ],
+      "reproduction": [
+        "Verify the four-pass/seven-failure accounting in CONTEXT_PACK and D-038.",
+        "Read D-039 section 4.2 for the two-parser, identical typed operation-DAG falsifier."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No consumer-complete sealed graph or unanimous review exists.",
+        "Technical repairability remains PROPOSED and D-039 STOP/PRESERVE remains binding."
+      ]
+    },
+    {
+      "finding_id": "F-D042-007",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "D-039's PCR-DG and ME-DVM were SPECULATIVE leads, not admitted remedies. PCR-DG proposed full-half-line compactification, fixed local blocks, and a clause-to-operation compiler to replace the global basis, tail ledger, and duplicated authority surfaces. It failed to justify reopening because structural non-isomorphism to B3-v2, finite-m_e event/cell partition, endpoint tail control, uniform conditioning, binary64 closure, and a small trusted compiler base were absent; D-041 then proved the same-trial/test-space terminal-vanishing wording FAIL-AS-WRITTEN because such a finite span cannot contain exact 1 or p. ME-DVM proposed a nonnegative reversible edge network with structural positivity and entropy, but a fixed dimensionless lattice cannot keep m_e/(T Delta y) integral on a continuous temperature interval and its dense edge cost fails the registered screen. The same-space and fixed-lattice conclusions are bounded theorems; distinct Petrov, analytic enrichment, and moving remap are not universally ruled out.",
+      "assumptions_used": [
+        "Novelty requires an operation-level mechanism and non-isomorphism, not a basis, language, or compiler rename.",
+        "The same-space theorem applies only to the finite terminal-vanishing span under its aligned assumptions.",
+        "The fixed-lattice obstruction does not imply a universal moving-remap no-go."
+      ],
+      "evidence_refs": [
+        "BD622_D039_second_external_audit_report.md#Rank-1-candidate-contract-Proof-Carrying-Compactified-Local-Reaction-DG",
+        "BD622_D039_second_external_audit_report.md#Rank-2-candidate-contract-Microreversible-Energy-Lattice-DVM",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-001",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-004"
+      ],
+      "evidence_fingerprint": "sha256:ea4a413d8afd51ecf6c02e8fca777ec63efd5aa4218b5151e880be6a74f40c35",
+      "counterevidence_refs": [
+        "Compactified scalar tails are conditionally integrable under a thermal envelope.",
+        "A genuinely distinct test space or analytic nonvanishing component escapes NC-SAME-SPACE.",
+        "A moving spacing witness evades the fixed-lattice obstruction."
+      ],
+      "reproduction": [
+        "Compare D-039 sections 8 and 9 with D-041 adjudicator findings 001, 004, and 006.",
+        "Retain candidate-level INCONCLUSIVE separately from gate-level FAIL."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No complete distinct-space or analytic candidate operator exists.",
+        "No structure-preserving moving-remap theorem or sparse edge graph exists."
+      ]
+    },
+    {
+      "finding_id": "F-D042-008",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "D-041's three candidates are archive-worthy non-admissions, not universal impossibility results. C-PETROV genuinely escapes the same-space theorem and has an exactly positive local two-node determinant plus conditional scalar-tail evidence, but lacks a fully specified pairing/domain, uniform inf-sup bound, candidate-wide fermionic entropy theorem, process-total shell/tail, deterministic derivative/permutation semantics, B3-v2 non-isomorphism, binary64 certificate, and cost/deflation plan. C-ANALYTIC places equilibrium or invariants in a nonvanishing analytic component and therefore escapes the terminal-span theorem, but lacks one-owner representation, a unique differentiable coefficient map, exact whole-method invariants/entropy, shell/tail authority, non-isomorphism, numerical certificates, and cost. C-MEDVM's fixed lattice fails, while a moving-spacing witness keeps the broader route INCONCLUSIVE; it lacks a remap theorem preserving occupation, invariants, reversibility, positivity, entropy, differentiability, covariance, and tail, as well as a sparse edge, binary64, and deletion certificate. G-EXT-FEASIBILITY therefore FAILS because zero candidates satisfy every conjunctive obligation.",
+      "assumptions_used": [
+        "The D-041 gate is conjunctive and theorem gaps are non-PASS.",
+        "Local algebraic facts do not establish candidate-wide feasibility.",
+        "Candidate scientific feasibility may remain INCONCLUSIVE while current gate admission is FAIL."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#candidate_decisions",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-002",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-003",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-004",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-011"
+      ],
+      "evidence_fingerprint": "sha256:422a92d94547186e2f25386a4a29570c381a99fc4b9092302f41eaa0c814c116",
+      "counterevidence_refs": [
+        "C-PETROV has constructive local algebra and conditional tail evidence.",
+        "C-ANALYTIC genuinely evades the same-space theorem.",
+        "The moving-spacing witness defeats a universal fixed-lattice inference."
+      ],
+      "reproduction": [
+        "Read D-041 candidate_decisions and findings 002-004.",
+        "Apply finding 011's exactly-one-pass rule without ranking non-passing candidates."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "One fully sealed candidate could change current non-admission.",
+        "No universal no-go is established for all distinct-space Petrov, analytic enrichment, or moving-remap DVM methods."
+      ]
+    },
+    {
+      "finding_id": "F-D042-009",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Harness drift is a real recurring process amplifier and auditability hazard, not an established scientific cause. D-031 through D-036 exposed unavailable VS Code PreToolUse interception, runtime-role binding errors, raw-versus-aggregate role-hash confusion, result-envelope failures, external-tool confinement, and write-attribution issues. The supported schema-v2 parent/SubagentStart/SubagentStop boundary is VALIDATED only as a process result. D-037 then reproduced substantive source failures after that repair, while D-038's mapper R3 idempotent context-build write attempt was disclosed with unchanged tracked content. This conclusion would change if a clean, independently attributed review of the same exact bytes eliminated the seven findings or proved that they came from stale/mismatched inputs; no such evidence exists.",
+      "assumptions_used": [
+        "Process integrity and scientific validity are separate axes.",
+        "An unchanged tracked diff does not excuse an out-of-scope write attempt, but the attempt also does not create a source contradiction.",
+        "D-037's admitted envelopes are the post-repair scientific evidence ceiling."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Registered-evidence",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Deduplicated-causal-findings",
+        ".agent-harness/generated/CONTEXT_PACK.md#G-HARNESS-INTEGRITY"
+      ],
+      "evidence_fingerprint": "sha256:c32b73500a8747495e1be666f4930912803115c325fb7fa769f357e3cdee2c24",
+      "counterevidence_refs": [
+        "Harness faults delayed reliable admission and weakened confidence in earlier lifecycle claims.",
+        "A clean exact-byte replay is the strongest causal falsifier."
+      ],
+      "reproduction": [
+        "Compare D-038's process-only mapper failures, schema-v2 readiness statement, and unchanged tracked-diff disclosure.",
+        "Verify CONTEXT_PACK keeps G-HARNESS-INTEGRITY PASS bounded to process, with independent-FLRW and metrology still FAIL."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Earlier run-level attribution remains weaker than the validated schema-v2 boundary.",
+        "No new scientific authority follows from harness PASS."
+      ]
+    },
+    {
+      "finding_id": "F-D042-010",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Legacy JAX did substantial exploratory work but was correctly retired as forward/runtime authority. It supplied a diagonal Type-I characteristic map, angular/PSTF bookkeeping, JIT/vmap engineering, selective AD/JVP/VJP, block/factor patterns, and fixed-schedule replay clues. It also retained incomplete and sometimes wrong physics: an under-resolved N_eff result with coarse quadrature and placeholder matrix elements, a dimensionally wrong T^4 reduced-collision prefactor later corrected to T^5, massless-electron reduced kernels, incomplete reactions/species, calibrated RTA, clipping, incomplete first-law/stress authority, and a remap that exposed stiff equilibrium microsteps. Current and legacy common low-level files are byte-identical while broad drivers were deleted, so restoration would restore authority surface rather than a corrected solver. Only independent semantic rederivation under a prospectively frozen exact physics contract could change the disposition of individual mechanisms; direct restoration, JAX promotion, or internal parity cannot.",
+      "assumptions_used": [
+        "Historical formula and software clues are not executable or scientific authority.",
+        "Current Rust AOT and frozen JAX oracle roles remain binding.",
+        "Future Type-I work remains owner-paused and outside this F-10 assignment."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#What-the-legacy-history-actually-contains",
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#Reuse-and-rejection-map"
+      ],
+      "evidence_fingerprint": "sha256:fb6d7362967f983ab6ce94ae172bac4e1f09b380271fda9a5520ea035ea7fce3",
+      "counterevidence_refs": [
+        "The characteristic, angular-moment, AD, and block-factor mechanisms remain useful PROPOSED clues.",
+        "History preserved and corrected specific defects, including the T^4 to T^5 prefactor."
+      ],
+      "reproduction": [
+        "Read D-040's legacy timeline, identical-common-path statement, and reuse/rejection table.",
+        "Verify the survey executed no code and grants no JAX restoration or F-11 authority."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The coupled Type-I stress response and exact future physics contract have not been derived.",
+        "No legacy mechanism has been independently revalidated for a future programme."
+      ]
+    },
+    {
+      "finding_id": "F-D042-011",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Conventional DSMC is excluded from the primary, precision, covariance/derivative, and endpoint-authority lanes for this programme, but not by a universal non-convergence theorem. Classical DSMC convergence exists, and recent homogeneous isotropic neutrino DSMC reports are bounded positive evidence. The mismatch is contractual: standard N_p^-1/2 sampling is uneconomical for deterministic 1e-10-class permutation/covariance claims, signed cancellation-dominated directional stresses, zero crossings, stiff feedback through shear and H, directional Pauli estimation, deterministic Jacobians, exact nulls, and reproducible endpoint comparisons. The no-stress Type-I shear norm is DERIVED monotone on its physical branch; highly oscillatory coupled shear remains SPECULATIVE and must not be used as an established DSMC objection. The conclusion could change only for a separately authorized bounded qualitative cross-check with a deterministic reference and preregistered absolute-error/seed refinement, or for a materially new low-variance method that proves the full deterministic contract; the latter would not be conventional DSMC authority.",
+      "assumptions_used": [
+        "Primary authority requires deterministic structural and derivative evidence, not only unbiased expectation values.",
+        "Relative error at a zero crossing is undefined and must be replaced by an absolute-error contract.",
+        "Future oscillatory shear is not assumed without a derived coupled response spectrum."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#Why-DSMC-is-not-the-primary-Bianchi-route",
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#Executive-conclusion",
+        "BD622_D039_second_external_audit_report.md#DSMC-disposition"
+      ],
+      "evidence_fingerprint": "sha256:9440c6cc813a6d449b733611d6f468d0836d758171a3ab1ace5d9d3d5992d9fc",
+      "counterevidence_refs": [
+        "Classical Bird DSMC convergence is established in its own setting.",
+        "Recent isotropic FLRW neutrino DSMC reports N_eff with finite statistical uncertainty.",
+        "Variance-reduced or asymptotic-preserving particle methods may be useful in other bounded settings."
+      ],
+      "reproduction": [
+        "Read D-040's six DSMC transfer objections and its bounded stochastic reconsideration conditions.",
+        "Compare D-039's CLT cost screen while retaining its explicit non-theorem qualification."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No deterministic coupled Type-I reference or stress-response spectrum exists.",
+        "A bounded future stochastic cross-check remains merely PROPOSED."
+      ]
+    },
+    {
+      "finding_id": "F-D042-012",
+      "claim_id": "C-D042-FAILURE-REFLECTION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The strongest countercase to STOP/PRESERVE is not another exact-byte patch: C-PETROV's distinct test space, C-ANALYTIC's nonvanishing analytic component, and the moving-spacing MEDVM witness show that D-041 proved only bounded no-go results. D-028 also shows that structure-preserving deterministic methods can pass nearly every static discriminator. The decisive falsifier is one prospectively sealed external design artifact, produced without repository edits or collision output, that supplies a single complete operator-and-consumer graph; bidirectional zero-gap obligation coverage with no duplicate authority; exact invariants, detailed balance, candidate-wide entropy, positivity, finite-m_e shell and directed tail; deterministic Jacobian and permutation semantics; uniform conditioning at or below 1e6; a prospective binary64 bound at or below 2.5e-11; exact non-isomorphism to B3-v2; all hostile mutations; permanent implementation at or below 800 LOC; and same-change net deletion of at least 1000 LOC. If all conjunctive items pass, the current no-candidate conclusion is falsified and an owner may consider one fresh design-only review. Any omission or new class preserves STOP/PRESERVE. Even a complete artifact grants no W7, B3, implementation, trajectory, endpoint, or public authority.",
+      "assumptions_used": [
+        "D-041's registered theorem, conditioning, binary64, novelty, and cost obligations are the current finite discriminator.",
+        "A future design artifact must replace authority surfaces rather than add another wrapper.",
+        "Owner authority and scientific evidence remain separate, sequential requirements."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#steelmen",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-008",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-009",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#F-EXT01-ADJ-010",
+        "BD622_D039_second_external_audit_report.md#Steelman-and-cross-examination",
+        "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md#Constructive-next-decision"
+      ],
+      "evidence_fingerprint": "sha256:fd6678aa0d8df884beaa9e03f561ce6c061bf50d430074138463013b3dcf3ff9",
+      "counterevidence_refs": [
+        "No universal impossibility theorem exists for all materially new deterministic candidate families.",
+        "The current evidence contains bounded constructive local algebra, scalar tail, entropy, and moving-spacing witnesses."
+      ],
+      "reproduction": [
+        "Apply D-041's conjunctive gate to candidate_decisions and findings 002-010.",
+        "Verify D-039 and D-038 authority ladders keep execution and implementation closed after any design-only result."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No artifact currently satisfies the decisive falsifier.",
+        "The only current bounded owner disposition remains STOP/PRESERVE and request for a materially new external breakthrough."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-FAILURE-REFLECTION.json"
+  ]
+}

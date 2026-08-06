@@ -1,0 +1,258 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+  "assignment_id": "A-B3-DESIGN",
+  "context_version": "11837c9fad62963dbc8def37e271b0aac04b865b93da0f2f033a73c5af445e1a",
+  "agent_id": "019f8b28-ec75-7aa1-b7d3-3ca5efc0bec3",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+    "assignment_id": "A-B3-DESIGN",
+    "context_version": "11837c9fad62963dbc8def37e271b0aac04b865b93da0f2f033a73c5af445e1a",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:71af439c0b666af18d7f2ef603b5f2b221ad940047e1187b51da7a219eacecd0",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+  "started_at": "2026-07-23T03:48:00+09:00",
+  "completed_at": "2026-07-23T03:56:51+09:00",
+  "tool_versions": {
+    "bash": "GNU bash 5.2.21",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sed -n '1,620p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/assignments/A-B3-DESIGN.json",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json",
+    "{ printf '%s\\0' '.agent-harness/context/roles/independent_auditor.md'; sed -n '1,$p' .agent-harness/context/roles/independent_auditor.md; printf '\\0'; } | sha256sum",
+    "nl -ba .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json",
+    "nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "nl -ba scripts/audit/w7_b3v2_contract_source.py",
+    "nl -ba docs/audit/BD622_W7_exact_test_vectors.json",
+    "nl -ba docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "nl -ba docs/audit/BD622_W5_d028_discriminator_result.md",
+    "python3 - <<'PY' [standalone Fraction reaction-rank, exact-vector, shell, entropy, and AST source/vector-equality audit; no repository import and no W7/B3 numerical output] PY",
+    "rg -n 'ArithmeticNode\\(|event_key_prefix|TAIL_CONTRACT|tail' scripts/audit/w7_b3v2_contract_source.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/assignments/A-B3-DESIGN.json",
+      "sha256": "71af439c0b666af18d7f2ef603b5f2b221ad940047e1187b51da7a219eacecd0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json",
+      "sha256": "d2780e2c763b134084b0143e7875cb8105a5e20e34ab524f5fa3225c096adc95"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+    },
+    {
+      "path": "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+      "sha256": "a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a"
+    },
+    {
+      "path": "docs/audit/BD622_W5_d028_discriminator_result.md",
+      "sha256": "83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-B3-DESIGN-001",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Independent exact enumeration reproduces 24 self and 15 electron records. The six-by-39 species-count matrix has rational rank three, left nullity three with exactly the declared flavourwise neutrino-minus-antineutrino span, and right nullity 36.",
+      "assumptions_used": [
+        "Species stoichiometry is outgoing minus incoming with electron legs omitted.",
+        "Reverse reactions are represented by R and are not additional columns.",
+        "The frozen reaction table and source ordering are the complete graph."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:94-132",
+        "scripts/audit/w7_b3v2_contract_source.py:50-169",
+        "docs/audit/BD622_W7_exact_test_vectors.json:95-98"
+      ],
+      "evidence_fingerprint": "sha256:21762343ab66c9463cbeb75f4c3e8e756701f61b87f4c9be82a8da4cb5f3088d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run the recorded standalone CPython Fraction audit: graph_counts 24 15, rank 3, left_nullity 3, declared_basis_annihilates True.",
+        "Right nullity follows as 39-3=36."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-B3-DESIGN-002",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "For strict-open occupations, J=F-R and A=log(F/R) have the same sign, so J*A is nonnegative with equality exactly at F=R. The rational vector independently gives F=4/625, R=144/625, J=-28/125, and F/R=1/36. With Q_EM=-Q_nu, the declared bath term has the consistent entropy sign.",
+      "assumptions_used": [
+        "All four occupations lie strictly between zero and one.",
+        "The electron bath is zero-chemical-potential equilibrium at T_gamma.",
+        "Four-momentum is conserved eventwise."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json:100-105",
+        "scripts/audit/w7_b3v2_contract_source.py:222-231",
+        "scripts/audit/w7_b3v2_contract_source.py:2190-2197"
+      ],
+      "evidence_fingerprint": "sha256:d3c818782c71afe3cc18f2c596553d993e741a5c3c9d5434f76a5ec99ca2706a",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Use exact fractions (1/5,2/5,3/5,4/5) in the recorded formulas; the standalone audit prints 4/625, 144/625, -28/125, ratio 1/36."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-B3-DESIGN-003",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The process-specific COM formulas and exact elastic/pair vectors are algebraically coherent, but the binding source does not enforce the specified per-leg shell postcondition. It takes one maximum shell residual and compares it with one scale maximized over all four legs, so a large-scale leg can rescue an out-of-cap residual on a smaller leg, contrary to the explicit no-aggregate-rescue rule.",
+      "assumptions_used": [
+        "The phrase every shell residual binds a separate scale max(1,E_l^2,|p_l|^2,m_l^2) for each leg.",
+        "Binary64 postconditions are part of design conformance, not diagnostics."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:202-208",
+        "scripts/audit/w7_b3v2_contract_source.py:575-584",
+        "docs/audit/BD622_W7_exact_test_vectors.json:79-89"
+      ],
+      "evidence_fingerprint": "sha256:a954ce52bbce9802ef025996046443794df60facb96c62cae95e4162deb2692e",
+      "counterevidence_refs": [
+        "The recorded exact-vector audit gives zero shell and conservation residuals and s+t+u-sum(m_l^2)=0 for both finite-m_e vectors; these vectors do not exercise unequal-scale binary64 postconditions."
+      ],
+      "reproduction": [
+        "Compare the per-leg inequality at proof-pack lines 205-208 with the global shell_scale and max(shell_residuals) at source lines 575-584.",
+        "Run the recorded exact Fraction audit to reproduce the nominal vector identities without treating them as stress coverage."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Apply the shell cap separately to every leg with its own scale and retain each raw failure.",
+        "Add a preregistered unequal-scale negative control before any W7 execution authority is reconsidered."
+      ]
+    },
+    {
+      "finding_id": "F-B3-DESIGN-004",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The proof requires every on-grid and off-grid consumer to evaluate the stored z-power coefficient vector by descending Horner and explicitly forbids node-value lookup. The source instead uses independently updated cached node_values in profile projection, mass assembly, and native reconstruction. Because the node-value and coefficient recurrences round differently, the sealed bytes define two numerical bases rather than the single polynomial representation required by the design.",
+      "assumptions_used": [
+        "Binary64 subtraction and coefficient updates are not algebraically exact in general.",
+        "The proof-pack statement that every consumer uses Horner is binding."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:249-263",
+        "scripts/audit/w7_b3v2_contract_source.py:945-979",
+        "scripts/audit/w7_b3v2_contract_source.py:1070-1080",
+        "scripts/audit/w7_b3v2_contract_source.py:1136-1162",
+        "scripts/audit/w7_b3v2_contract_source.py:1179-1189"
+      ],
+      "evidence_fingerprint": "sha256:99688d760e939c807dc4fb3530f97cc27cca0b100a7d1ba0b40992982b6f0fb5",
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:967-979 defines the required Horner evaluator, but the named consumers bypass it."
+      ],
+      "reproduction": [
+        "Inspect project_entropy_profile, assemble_mass_matrix, and species_native_observable for basis.node_values reads, then compare with the proof's all-consumer Horner requirement."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Route every projection-node, mass, reconstruction, and event evaluation through the one stored-coefficient Horner graph, including directed A2-A4 variants.",
+        "Freeze a source-level negative check that rejects any node_values consumer before a fresh blind review."
+      ]
+    },
+    {
+      "finding_id": "F-B3-DESIGN-005",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The 20 LadderRow objects and first-passing selection order match the declared lexicographic key, but the tail obligation is not reconstructible as a directed enclosure. The proof and TAIL_CONTRACT name mapped GL32 and bisection without supplying a quadrature-truncation enclosure, and the source contains no tail integrator. Its Stage-B helper accepts only one scalar q_lost_tail_upper per component even though the design requires a signed lower/upper enclosure and its supremum norm. Therefore Stage-A target-tail bounds and Stage-B lost-tail bounds are not certified by these bytes.",
+      "assumptions_used": [
+        "Directed rounding of pointwise GL evaluations encloses the quadrature approximation but does not, by itself, enclose the exact continuum integral.",
+        "A signed interval requires both endpoints or an explicitly defined outward supremum magnitude.",
+        "Caller-supplied tail numbers do not make the sealed source's tail generation reconstructible."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:308-374",
+        "scripts/audit/w7_b3v2_contract_source.py:1608-1624",
+        "scripts/audit/w7_b3v2_contract_source.py:1669-1739",
+        "scripts/audit/w7_b3v2_contract_source.py:2005-2011"
+      ],
+      "evidence_fingerprint": "sha256:34d13afe37bd21966336d31288084c8018f6d41939b2626aef17c0a238b9cabf",
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:1729-1739 correctly requires exactly all 20 Stage-A rows and every eligible Stage-B row before selection."
+      ],
+      "reproduction": [
+        "Search the complete source for tail definitions; only metric consumers and the TAIL_CONTRACT prose dictionary are present.",
+        "Inspect collision_refinement_metrics: q_lost_tail_upper is Sequence[float], not a sequence of directed signed intervals."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze an executable directed tail integrator with an explicit continuum quadrature-error enclosure and deterministic stopping proof.",
+        "Represent each signed lost-tail component by outward lower/upper endpoints and define the supremum extraction operation."
+      ]
+    },
+    {
+      "finding_id": "F-B3-DESIGN-006",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The sealed exact-byte candidate is not authority-sufficient. In addition to the shell, basis, and tail failures, event ordering and A0-A4 completeness remain caller assertions: event_leg_contributions accepts an unchecked arbitrary key prefix, reduce_event_contributions merely sorts it, and validate_arithmetic_trace checks topology, monotone keys, and nonzero owner counts without a canonical key grammar, expected operation counts, a trace emitter, or the required permutation/interval-overlap certificate. An incomplete trace with one node per owner can satisfy the validator. These gaps prevent reconstruction of the claimed canonical event and arithmetic graph and keep all W7/B3 numerical authority closed.",
+      "assumptions_used": [
+        "The unexecuted contract source is intended to seal the exact graph, not defer its binding details to a future caller.",
+        "Trace completeness must be checked against independently frozen loop domains and operation counts.",
+        "A design PASS requires every binding source/design obligation to be reconstructible from the registered bytes."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:284-306",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:439-451",
+        "scripts/audit/w7_b3v2_contract_source.py:282-316",
+        "scripts/audit/w7_b3v2_contract_source.py:1111-1133",
+        "scripts/audit/w7_b3v2_contract_source.py:1819-1986"
+      ],
+      "evidence_fingerprint": "sha256:2fdbc4fd87488d2f3d674084c6eab72b59a456b7cac64ae7e4ef860ff8f4674b",
+      "counterevidence_refs": [
+        "The proof text specifies the intended event key, stage policies, and owner list, and the source/vector objects are exactly equal; these are specification subclaims, not executable completeness enforcement."
+      ],
+      "reproduction": [
+        "rg -n 'ArithmeticNode\\(|event_key_prefix|TAIL_CONTRACT|tail' scripts/audit/w7_b3v2_contract_source.py",
+        "Observe that ArithmeticNode appears only as a class/type use and no canonical dynamic trace construction is present.",
+        "Constructing any topological monotone trace with at least one node for each non-input owner satisfies validate_arithmetic_trace regardless of omitted event-loop cardinality."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Correct the three binding defects and freeze canonical event-key construction and validation.",
+        "Add the deterministic A0 trace emitter, independently frozen loop and operation-count expectations, and the A4 permutation/interval-overlap verifier.",
+        "Obtain a fresh exact-byte blind review; do not execute W7, B3, T01-T12, Radau, trajectory, endpoint, or RABBIT unblinding on the current bytes."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json"
+  ]
+}

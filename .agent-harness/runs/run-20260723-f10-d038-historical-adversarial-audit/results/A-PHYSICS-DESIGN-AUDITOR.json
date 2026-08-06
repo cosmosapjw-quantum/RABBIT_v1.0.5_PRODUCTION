@@ -1,0 +1,568 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+  "assignment_id": "A-PHYSICS-DESIGN-AUDITOR",
+  "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+  "agent_id": "019f8b5e-30a8-73c3-9965-24439ce753c8",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+    "assignment_id": "A-PHYSICS-DESIGN-AUDITOR",
+    "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:66af271960cfb66d30e26a0db49adaa2b598b57120093e26d07205e7d783bd9a",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-PHYSICS-DESIGN-AUDITOR.json",
+  "started_at": "2026-07-22T19:46:44Z",
+  "completed_at": "2026-07-22T19:56:56Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "audit_method": "read-only exact-byte and historical static audit; no W7, B3, collision, solver, trajectory, endpoint, or RABBIT execution"
+  },
+  "commands": [
+    "sed -n '1,360p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/assignments/A-PHYSICS-DESIGN-AUDITOR.json",
+    "sha256sum and aggregate path-NUL-bytes-NUL verification for the independent_auditor role; sha256sum RESULT_ENVELOPE.json",
+    "sed -n '1,360p' .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/AUDIT_PROTOCOL.json",
+    "sha256sum and line-numbered reads of W3, W5, W6, W7 vectors, current W7 contract source, D-037 B3/W7 results, claim ledger, decision log, and branch review",
+    "git rev-parse HEAD main f10-independent-validation-blocker solver-divergence-fair-harness; git status --short; targeted git log/diff/show/rev-parse reads",
+    "line-numbered reads of preserved D-027, D-028, and D-029 adjudication/result artifacts under the legacy quarantine",
+    "python3 -c AST-only inspection of node_values consumers, ArithmeticNode constructor calls, tail function definitions, and shell-check ordering; source not imported or executed",
+    "git bundle verify .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-PHYSICS-DESIGN-AUDITOR.json",
+    "python3 .agent-harness/scripts/validate_harness.py"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/artifacts/M1_POINTWISE_STATIC_RESULT.json",
+      "sha256": "cab73790f74d0ebe36ceb956adb26076949e896d496122ddc04d521c3ebe91c4"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json",
+      "sha256": "4726c40e403aad42d15503b0ed11760558f98de06a8e6f54259ab219887c73db"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-DESIGN-ADJUDICATION.json",
+      "sha256": "614999cdf68a1f3492eb543a1a297454fa6c5f529463156ce7fd23e4ff94c159"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "sha256": "9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D038-PHYS-001",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "fail",
+      "severity": "critical",
+      "causal_label": "root_cause",
+      "claim_status": "DERIVED",
+      "statement": "The repeated comparator failures share an end-to-end semidiscrete-contract defect, not one repeated formula bug: method pieces were selected before reconstruction, deposition, support, covariance, conditioning, and smoothness were proved to define one operator. D-027's target-leg discretization missed conservation/exchange; D-028 restored weak conservation but exposed an ill-conditioned native 1/y^2 reconstruction; D-029 proved a fixed-triple theorem that did not cover its changing selector or exact-node branch.",
+      "strongest_counterargument": "These are three unrelated candidate methods, and D-028's miss is plausibly only roundoff amplification.",
+      "assumptions_used": [
+        "Frozen caps and stop rules are binding.",
+        "A common root may be a repeated specification-to-discretization boundary failure even when proximate numerical mechanisms differ.",
+        "W5 is localization evidence, not proof that D-028's underlying weak residual is exclusively roundoff."
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/ADJUDICATION.md:19-38",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json:45-68",
+        "src/rabbit/decoupling/_independent_noqke.py:1029-1033",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-DESIGN-ADJUDICATION.json:74-163",
+        "docs/audit/BD622_W5_d028_discriminator_result.md:22-52"
+      ],
+      "evidence_fingerprint": "sha256:cab73790f74d0ebe36ceb956adb26076949e896d496122ddc04d521c3ebe91c4",
+      "counterevidence_refs": [
+        "D-028 passes every recorded static discriminator except native mu-tau covariance.",
+        "W5 reduces the same residual to about 5e-13 in weak/modal metrics."
+      ],
+      "first_introduced": "Bounded: after D-026 and before the 2026-07-18 D-027 run for the pointwise method; after D-027 and before run-20260718T095658Z for D-028; during the 2026-07-18 D-029 symbolic/binary candidate assembly. Curated Git first preserves the D-028 bytes at 183ecd55971f4c60f9b383a1427f0fdc802c33a2 on 2026-07-19.",
+      "first_detectable": "D-027 at the preregistered resolved S1 state; D-028's conditioning hazard from the explicit native division by y^2 and quantitatively at GL48; D-029 when the symbolic and binary artifacts were compared before implementation.",
+      "why_earlier_checks_missed_it": "Common-FD nulls and local algebra do not test resolved non-null adjointness, smallest-node conditioning, or support-switch continuity.",
+      "reproduction": [
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py and compare 535370c1... with GL48_STATIC_R1.json",
+        "Inspect _native_action at source lines 1029-1033 and the D-029 method-definition comparison at lines 110-163 of the preserved adjudication."
+      ],
+      "confidence": 0.94,
+      "disconfirming_evidence": "A future proof showing a single coherent operator contract for each historical candidate, available before its implementation, would weaken the common-root classification.",
+      "recommendation": "Require one prospectively frozen operator contract joining evaluation, measure-adjoint deposition, support/tails, native readout, covariance, conditioning, and Jacobian behavior before any implementation or output.",
+      "forbidden_shortcut": "Do not project residuals away, change the native cap after output, or infer operator validity from equilibrium nulls.",
+      "unresolved": [
+        "The exact Git introduction commit for the uncommitted D-027 bytes is not recoverable from the curated history; the interval is bounded by hash-locked run evidence."
+      ]
+    },
+    {
+      "finding_id": "F-D038-PHYS-002",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "fail",
+      "severity": "critical",
+      "causal_label": "proximate_cause",
+      "claim_status": "DERIVED",
+      "statement": "The current D-035 exact bytes are not implementation-sufficient. The source returns threshold support before validating incoming shells and uses one global shell scale; three binding basis consumers use cached node_values instead of the required coefficient-Horner path; no executable tail integrator exists and Stage B accepts one scalar instead of a directed signed interval; no ArithmeticNode emitter exists and the validator does not bind canonical key grammar, exact operation counts, interfaces, or A4 permutation overlap.",
+      "strongest_counterargument": "The file is deliberately an unexecuted contract library, so a future caller could supply the missing tail and trace machinery.",
+      "assumptions_used": [
+        "D-035 claims an exact-byte design from which W7's graph must be reconstructible.",
+        "A caller assertion cannot replace fail-closed enforcement of a binding shell, basis, tail, or trace obligation.",
+        "Directed quadrature values without a continuum remainder do not enclose the continuum tail."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:202-209",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:249-263",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:321-374",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:439-527",
+        "scripts/audit/w7_b3v2_contract_source.py:526-584",
+        "scripts/audit/w7_b3v2_contract_source.py:1070-1189",
+        "scripts/audit/w7_b3v2_contract_source.py:1711-1739",
+        "scripts/audit/w7_b3v2_contract_source.py:1819-2116",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "counterevidence_refs": [
+        "The source correctly freezes 24+15 reactions, exact constants, orientation factors, a 20-row ladder, Horner evaluation itself, and several directed arithmetic primitives.",
+        "D-037 independently passes bounded reaction-nullspace, entropy, row-ii, and absolute-normalization subclaims."
+      ],
+      "first_introduced": "Bounded between D-034 adjudication completion at 2026-07-22T14:21:41Z and the sealed D-035 hashes recorded on 2026-07-23; no committed current-Git introduction exists for these untracked exact bytes.",
+      "first_detectable": "Immediately from static comparison of W6 9caaa445 with source 60fc9668; D-037 admitted the first two schema-v2 design FAIL envelopes.",
+      "why_earlier_checks_missed_it": "Source-only checks counted reaction/vector objects and nominal branches but did not prove all-consumer path uniqueness, negative shell controls, tail construction, or trace completeness.",
+      "reproduction": [
+        "Run an AST-only scan: node_values consumers are project_entropy_profile, assemble_mass_matrix, and species_native_observable; ArithmeticNode constructor calls are empty; tail function definitions are empty; threshold return line 529 precedes shell residual line 577.",
+        "Compare source interfaces with the cited binding W6 clauses."
+      ],
+      "confidence": 1.0,
+      "disconfirming_evidence": "An exact source path already present in the sealed bytes that constructs rigorous tails and canonical complete traces, or a proof that cached node_values are bitwise identical to Horner for every consumer, would disconfirm parts of this finding; none was found.",
+      "recommendation": "If separately owner-authorized, make one bounded exact-byte correction: validate each leg on its own scale before threshold return, use one coefficient-Horner basis path, implement a directed signed tail enclosure with remainder, and emit/validate one canonical complete A0 trace including A4 permutation overlap.",
+      "forbidden_shortcut": "Do not execute W7, supply missing semantics in an unsealed caller, or treat a prose dictionary as an interval certificate.",
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D038-PHYS-003",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "pass",
+      "severity": "high",
+      "causal_label": "proximate_cause",
+      "claim_status": "DERIVED",
+      "statement": "Microphysics and finite-mass under-specification genuinely caused D-033/D-034 failure, but it is not the whole current cause. The first W6 used a species-blind four-leg bracket, massless y4 closure for electron reactions, and a non-existent native Radau mass-matrix interface. D-034 then exposed a distinct elastic orientation factor-two, G_F literal drift, and nonconforming shell branches. D-035 corrected the orientation/G_F and bounded continuum algebra: D-037 passes row-ii, absolute normalization, reaction nullspace, and entropy, while failing executable shell enforcement and metrology.",
+      "strongest_counterargument": "All of these were isolated transcription omissions fixed by successive packets, so no systemic causal lesson remains.",
+      "assumptions_used": [
+        "Pair annihilation does not conserve neutrino pair number, although it conserves lepton number and total energy.",
+        "Finite-mass electron reactions require physical four-momentum shells and T_gamma/T_cm ownership, not a massless y sum.",
+        "Bounded D-037 passes must not be promoted to whole-design validation."
+      ],
+      "evidence_refs": [
+        "git:229847d0d02be11c61dbe5e4815e35de738b3580:docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "RABBIT_f10_independent_validation_branch_review.md:104-250",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-ADJUDICATOR.json:154-318",
+        "scripts/audit/w7_b3v2_contract_source.py:16-219",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:95870216b95f6aad3e6d26995a6b0ab8ba6040ad5dfcfed431de07c43fef0ee5",
+      "counterevidence_refs": [
+        "Current D-035 orientation and exact G_F literals match Tier-0.",
+        "D-037's bounded normalization and row-ii passes show that those historical defects were corrected rather than recurrent unchanged."
+      ],
+      "first_introduced": "Species/finite-mass/Radau defects are exact at W6 commit 229847d0 on 2026-07-22T01:46:20+09:00. D-034 orientation/G_F/source defects were introduced in the exact candidate interval between D-033 rejection and the D-034 run later on 2026-07-22.",
+      "first_detectable": "The W6 defects were detectable at commit 229847d0 by a pair-annihilation constant-mode counterexample, dimensional shell check, and SciPy API inspection. The D-034 defects were detectable from exact source/spec comparison and were found before output.",
+      "why_earlier_checks_missed_it": "W3 established coefficient ratios and MB reductions only; those results were overextended to absolute all-channel normalization and finite-mass implementation semantics.",
+      "reproduction": [
+        "git show 229847d0d02be11c61dbe5e4815e35de738b3580:docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "Inspect D-034 adjudicator findings F-ADJ-D034-NORMALIZATION and F-ADJ-D034-FINITE-ME, then contrast D-037 bounded passes."
+      ],
+      "confidence": 0.98,
+      "disconfirming_evidence": "A convention-consistent derivation showing the old species-blind pair-number theorem or massless electron shell was correct would reverse the historical classification; the exact counterexamples exclude that.",
+      "recommendation": "Retain the corrected continuum normalization subclaims and focus any future correction on executable enforcement; do not reopen or refit already closed constants and factors.",
+      "forbidden_shortcut": "Do not call bounded algebra passes W7 validation or infer complete finite-mass authority from nominal shell vectors.",
+      "unresolved": [
+        "The exact file-creation timestamps of the uncommitted D-033/D-034 candidate bytes are bounded by runs rather than commits."
+      ]
+    },
+    {
+      "finding_id": "F-D038-PHYS-004",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "detection_gap",
+      "claim_status": "DERIVED",
+      "statement": "The recurring detection gap is interface-focused negative coverage. Nominal equilibrium and exact-vector checks passed while resolved non-null adjointness, smallest-node conditioning, support switches, off-shell threshold inputs, per-leg scale rescue, all-consumer basis identity, tail remainder, and trace cardinality remained untested. Later audits did not merely tighten prose standards; they supplied discriminators at previously uncovered interfaces.",
+      "strongest_counterargument": "The later reviews demanded formal completeness beyond what a practical implementation needs.",
+      "assumptions_used": [
+        "Every listed interface is binding to conservation, covariance, support, or metrology authority.",
+        "A nominal positive vector cannot falsify an erroneous failure branch or aggregate rescue rule."
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/artifacts/M1_POINTWISE_STATIC_RESULT.json:28-50",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json:33-68",
+        "docs/audit/BD622_W7_exact_test_vectors.json:35-98",
+        "scripts/audit/w7_b3v2_contract_source.py:496-584",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a",
+      "counterevidence_refs": [
+        "The programme did prospectively freeze S1, native covariance, and exact threshold controls, and those controls stopped unsafe execution.",
+        "No physical output escaped the hard stops."
+      ],
+      "first_introduced": "Distributed across each candidate's initial test contract; most recently the D-035 vectors/source interval after D-034.",
+      "first_detectable": "At each candidate's first interface-specific discriminator: D-027 S1, D-028 GL48 native covariance/W5 subgrid, D-029 artifact comparison, and D-037 static source review.",
+      "why_earlier_checks_missed_it": "Coverage emphasized nominal identities and object equality rather than adversarial branch, completeness, and cross-representation mutations.",
+      "reproduction": [
+        "Compare the scalar s threshold vectors with two_body_outgoing's full-input threshold path.",
+        "Compare nominal exact-vector equality with the AST evidence showing no trace emitter or tail function and multiple cached node_values consumers."
+      ],
+      "confidence": 0.97,
+      "disconfirming_evidence": "A preregistered earlier test that exercised each cited interface and passed on the exact failing bytes would weaken this finding; none is recorded.",
+      "recommendation": "Consolidate a small pre-output negative-control set into existing tests: unequal-scale per-leg shells, off-shell threshold input, forbidden node_values consumer, missing trace count/key, signed tail crossing zero, support switch, and smallest-node covariance.",
+      "forbidden_shortcut": "Do not add a new standalone readiness gate; place these falsifiers beside the exact source obligations and delete redundant structural checks.",
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D038-PHYS-005",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "recurrence_amplifier",
+      "claim_status": "DERIVED",
+      "statement": "Named-defect patching before whole-contract closure amplified recurrence. The initial tracked W6 was 178 lines; the current candidate is a 621-line proof pack plus a 2,198-line source and 100-line vector file, yet it still has no W7 output and four binding executable gaps. Each correction addressed real new evidence, but source-only counts and nominal equality checks certified the repaired pieces without closing their new interfaces. A larger implementation-and-test push would increase uninterpretable surface before authority, not improve evidence per line.",
+      "strongest_counterargument": "Incremental exact-byte remediation is rational research: every stop prevented bad output, and later packets substantially improved species, normalization, shell, basis, and metrology detail.",
+      "assumptions_used": [
+        "Line count is a cost signal, not a scientific verdict.",
+        "Pre-output failures are cheaper than invalid trajectories, but repeated additive repair can still be inefficient.",
+        "The anti-drift policy prefers direct blocker movement and consolidation."
+      ],
+      "evidence_refs": [
+        "git:229847d0d02be11c61dbe5e4815e35de738b3580:docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "scripts/audit/w7_b3v2_contract_source.py",
+        "docs/audit/BD622_W7_exact_test_vectors.json",
+        "docs/harness/DECISION_LOG.md:5-14"
+      ],
+      "evidence_fingerprint": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+      "counterevidence_refs": [
+        "D-035 fixes D-034's orientation/G_F and process-specific shell formulas.",
+        "D-037 records four genuine bounded passes and stops before numerical expense."
+      ],
+      "first_introduced": "At tracked W6 commit 229847d0, which described itself as satisfying the D-029 reopen condition before blind approval and projected a later 700-1100-line implementation.",
+      "first_detectable": "At the same commit through the mismatch between theorem-level claims and omitted species/shell/solver details; recurrence became empirically clear across D-033, D-034, and D-037.",
+      "why_earlier_checks_missed_it": "Review packets were scoped to the previous named defects, so newly introduced interfaces were not always attacked in the same wave.",
+      "reproduction": [
+        "wc -l docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json",
+        "git show 229847d0:docs/audit/BD622_W6_comparator_design_proof_pack.md and compare its 178-line contract with current exact bytes and D-037 failures."
+      ],
+      "confidence": 0.9,
+      "disconfirming_evidence": "A measured comparison showing that immediate full implementation would expose the remaining defects more cheaply than a zero-output exact-byte review could reverse the cost ranking; no such evidence exists and execution is forbidden.",
+      "recommendation": "Prefer one owner-decided, bounded, consolidation-backed exact-byte correction and one fresh blind review; require deletion of duplicate basis/trace/tail representations where possible and stop again on any non-PASS.",
+      "forbidden_shortcut": "Do not launch W7 or B3 to discover design omissions dynamically, and do not add wrappers, telemetry, or policy knobs.",
+      "unresolved": [
+        "Exact token use is UNAVAILABLE because the harness exposes no reliable stage-scoped counter."
+      ]
+    },
+    {
+      "finding_id": "F-D038-PHYS-006",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "pass",
+      "severity": "medium",
+      "causal_label": "non_cause",
+      "claim_status": "VALIDATED",
+      "statement": "Harness defects delayed trustworthy admission but did not cause the scientific failures. D-034's repository-side .singularhistory and D-035's runtime/role mismatch were real process failures. After D-036 validated the supported schema-v2 boundary, D-037 admitted two independent FAIL envelopes with exact source hashes and unchanged non-run tree/status hashes; the shell, basis, tail, and trace defects are statically reproducible without relying on a failed hook.",
+      "strongest_counterargument": "Because earlier CAS agents were interrupted or inadmissible, the apparent science failures may be artifacts of the harness.",
+      "assumptions_used": [
+        "Process integrity and scientific validity are separate gates.",
+        "An admitted exact-source counterexample remains valid even if other CAS axes were stopped."
+      ],
+      "evidence_refs": [
+        "docs/harness/DECISION_LOG.md:5-8",
+        "docs/harness/CLAIM_LEDGER.md:5-10",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4",
+      "counterevidence_refs": [
+        "D-034 effective harness integrity failed, and D-037 did not complete four-axis CAS or adjudication."
+      ],
+      "first_introduced": "Harness containment/identity defects arose in D-034/D-035 on 2026-07-22 through 2026-07-23.",
+      "first_detectable": "At the unauthorized .singularhistory write and unsupported runtime-role launches; both preceded D-037's supported run.",
+      "why_earlier_checks_missed_it": "Static harness validation did not prove the live VS Code collaboration event boundary until the D-036 canary.",
+      "reproduction": [
+        "Verify D-037 result spawn_contract fields and exact source hashes, then independently compare the cited source lines with W6.",
+        "Confirm the D-037 recorded pre/post non-run hashes remain identical."
+      ],
+      "confidence": 1.0,
+      "disconfirming_evidence": "A demonstration that the admitted D-037 source bytes differ from 60fc9668 or that its findings depend on sibling contamination would reverse this non-cause verdict; the envelopes and assignment contract show neither.",
+      "recommendation": "Maintain the supported schema-v2 harness, but spend no physics-remediation budget on additional hook or identity plumbing.",
+      "forbidden_shortcut": "Do not promote harness PASS to W7/B3/scientific PASS, and do not dismiss exact-source defects because four-axis adjudication stopped early.",
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D038-PHYS-007",
+      "claim_id": "C-D038-PHYSICS-DESIGN-CAUSES",
+      "verdict": "pass",
+      "severity": "medium",
+      "causal_label": "non_cause",
+      "claim_status": "VALIDATED",
+      "statement": "Branch re-rooting and missing legacy commit narrative did not create the repeated failures. The preserved D-027/D-028/D-029 artifacts bind exact source/result hashes; the live D-028 source still hashes 535370c1 and its test  abdc4e01, matching GL48_STATIC_R1. W3 and W5 have identical Git blob IDs on the preserved blocker and current B3-v2 branches. The legacy bundle verifies. History limits exact introduction timestamps for some uncommitted bytes, but not the scientific observations or current exact-source counterexamples.",
+      "strongest_counterargument": "The curated history squashed or omitted the original comparator commits, so causal conclusions may be branch artifacts.",
+      "assumptions_used": [
+        "Content hashes and preserved run artifacts outrank commit messages for scientific identity.",
+        "A missing introduction commit creates chronology uncertainty but does not alter byte-level numerical evidence."
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/artifacts/M1_POINTWISE_STATIC_RESULT.json",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json",
+        "src/rabbit/decoupling/_independent_noqke.py",
+        "git:00a15d32dd4e96c32b5fbc574abbc02a4132edda:docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+        "git:8eecb8323d6d5abac98bd7681a7cb6ef8aedd1b0:docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+        ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        "The legacy bare HEAD does not contain _independent_noqke.py, and the curated Git first preserves the D-028 bytes only at 183ecd5 on 2026-07-19."
+      ],
+      "first_introduced": "Not applicable as a scientific cause. The provenance gap is bounded between the 2026-07-18 run artifacts and curated import commit 183ecd5 on 2026-07-19.",
+      "first_detectable": "At comparison of the legacy refs, quarantine hashes, current source hashes, and the two branch blob IDs.",
+      "why_earlier_checks_missed_it": "The curated history intentionally compresses earlier worktree state, so commit-only archaeology cannot recover every candidate's creation event.",
+      "reproduction": [
+        "git bundle verify .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py tests/test_independent_noqke_comparator.py",
+        "git rev-parse 00a15d3:docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md 8eecb83:docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md and repeat for W5."
+      ],
+      "confidence": 0.98,
+      "disconfirming_evidence": "A hash mismatch between a retained artifact and the bytes used to derive its result would reopen provenance; the checked D-028 and W3/W5 identities match.",
+      "recommendation": "Cite exact hashes and bounded intervals, preserve the blocker branch and quarantine, and avoid inventing missing commits.",
+      "forbidden_shortcut": "Do not use re-rooting uncertainty to erase validated failures or present commit messages as stronger than exact artifacts.",
+      "unresolved": [
+        "The exact first-introduction commit for D-027 and the pre-import D-028 worktree is unavailable; only the run-to-import interval is supportable."
+      ]
+    }
+  ],
+  "compact_chronology": [
+    {
+      "interval": "2026-07-18 D-027",
+      "introduction": "Between D-026 design approval and the r2 exact source/run; no preserved commit.",
+      "detection": "Resolved S1 misses self number/energy and electron exchange caps.",
+      "classification": "non-adjoint discretization proximate cause"
+    },
+    {
+      "interval": "2026-07-18 D-028",
+      "introduction": "After D-027 and before run-20260718T095658Z; curated at 183ecd5.",
+      "detection": "GL48 native mu-tau FAIL; W5 later localizes smallest-y 1/y^2 amplification.",
+      "classification": "conditioning/metrology proximate cause"
+    },
+    {
+      "interval": "2026-07-18 D-029",
+      "introduction": "Symbolic fixed-triple theorem and binary piecewise candidate assembled in the closeout run.",
+      "detection": "Side-by-side review finds prior/selector/exact-node and continuity contract mismatch.",
+      "classification": "theorem-to-executable design mismatch"
+    },
+    {
+      "interval": "2026-07-22 W6/D-033",
+      "introduction": "Exact tracked W6 commit 229847d0 at 2026-07-22T01:46:20+09:00, followed by the first W6/W7 candidate.",
+      "detection": "Pair-annihilation, finite-mass, Radau, reaction, ladder, and metrology omissions were detectable immediately and rejected in branch/D-033 review.",
+      "classification": "scientific specification plus executable-contract root"
+    },
+    {
+      "interval": "2026-07-22 D-034",
+      "introduction": "Bounded between D-033 rejection and D-034 exact-byte run.",
+      "detection": "Factor-two orientation, G_F drift, shell/source, basis/ladder, and A0-A4 failures found before output.",
+      "classification": "translation and normalization proximate causes"
+    },
+    {
+      "interval": "2026-07-23 D-035/D-037",
+      "introduction": "Bounded after D-034 adjudication and before sealed hashes W6 9caaa445/source 60fc9668/vectors e991d415.",
+      "detection": "D-037 admits shell, basis, tail, trace/A0-A4 failures under the supported harness and stops.",
+      "classification": "current executable-contract failure"
+    }
+  ],
+  "seven_stage_record": {
+    "self_discover": "Inventoried the exact current W6/source/vector bytes, D-037 envelopes, compact D-027/D-029 preserved artifacts, tracked W6 commit, current/preserved branch blobs, and legacy bundle without reading any D-038 sibling result.",
+    "step_back": "Separated numeric symptoms from root contract debt, detection gaps, recurrence amplification, harness process defects, and provenance uncertainty; did not reduce all failures to D-028 conditioning.",
+    "metacognitive_self_ask": [
+      "Am I mistaking stricter later standards for defects knowable at the time?",
+      "Am I overgeneralizing D-028's likely conditioning mechanism to other methods?",
+      "Am I treating missing commits, harness failures, or nominal exact-vector passes as scientific counterevidence?",
+      "Would a future caller be forced to choose omitted semantics, or are they already sealed?"
+    ],
+    "CoVe": [
+      {
+        "question": "Did early candidates fail executable physics gates rather than prose review alone?",
+        "answer": "Yes: D-027 and D-028 have hash-locked quantitative failures."
+      },
+      {
+        "question": "Does the current source independently reproduce D-037's four design defects?",
+        "answer": "Yes: static source/AST inspection reproduces shell ordering/scale, cached basis consumers, absent tail function, and absent trace emitter."
+      },
+      {
+        "question": "Are historical normalization defects still the current blocker?",
+        "answer": "No in their corrected bounded scope: D-037 passes row-ii and absolute normalization; executable enforcement remains failed."
+      },
+      {
+        "question": "Did harness or branch re-rooting cause the science failures?",
+        "answer": "No: D-037 admits exact-source failures under schema v2, and checked artifact/blob hashes survive re-rooting."
+      }
+    ],
+    "adversarial_self_ask": "Attacked all seven protocol falsifiers below and retained bounded chronology uncertainty instead of inventing commits or exclusive causes.",
+    "CCoT": [
+      {
+        "cause": "stricter review only",
+        "predicted_evidence": "documentary incompleteness without numerical or exact-source counterexamples",
+        "observed_evidence": "two quantitative static failures plus constructive shell/basis/tail/trace counterexamples",
+        "disposition": "rejected"
+      },
+      {
+        "cause": "isolated transcription bugs",
+        "predicted_evidence": "same design closes after factor/literal fixes",
+        "observed_evidence": "factor/G_F fixes close, but new and older operator-interface failures remain",
+        "disposition": "partial explanation only"
+      },
+      {
+        "cause": "end-to-end executable-contract and sequencing debt",
+        "predicted_evidence": "each local repair moves failure to an unsealed interface before output",
+        "observed_evidence": "D-027 through D-037 follow that pattern across distinct methods",
+        "disposition": "best-supported root explanation; causal inference, not theorem"
+      },
+      {
+        "cause": "harness or re-root artifact",
+        "predicted_evidence": "defects disappear under supported admission or hashes disagree",
+        "observed_evidence": "D-037 defects persist and checked identities match",
+        "disposition": "rejected as scientific cause"
+      }
+    ],
+    "PDR": "Severity remains critical for execution authority and high for recurrence risk. Confidence is high for exact-source defects and non-causes, lower for the unifying historical causal inference because some introduction commits are unavailable. The reversible next action is one owner-decided exact-byte correction plus a zero-output blind review; prohibited overreactions are W7/B3 execution, a larger implementation push, cap changes, and new wrapper/gate plumbing. A complete corrected trace/tail/basis/shell contract passing fresh blind review would reverse only exact-byte-remediation readiness, not later execution gates."
+  },
+  "required_falsifiers": [
+    {
+      "hypothesis": "The failures are merely stricter review standards applied to an otherwise coherent design.",
+      "verdict": "REJECTED",
+      "basis": "D-027/D-028 quantitative cap misses and current exact-source counterexamples are observable defects, not style demands."
+    },
+    {
+      "hypothesis": "The failures are isolated transcription bugs rather than a recurrent architecture or sequencing problem.",
+      "verdict": "REJECTED_AS_COMPLETE_EXPLANATION",
+      "basis": "Orientation and G_F were isolated and corrected, but adjointness, conditioning, selector continuity, basis identity, tails, and trace completeness span distinct interfaces and methods."
+    },
+    {
+      "hypothesis": "Harness defects caused the scientific failures rather than only delaying trustworthy admission.",
+      "verdict": "REJECTED",
+      "basis": "The supported D-037 run admitted exact-source FAIL envelopes; the defects reproduce statically."
+    },
+    {
+      "hypothesis": "The current D-035 source is implementation-sufficient and auditors are demanding unneeded formalism.",
+      "verdict": "REJECTED",
+      "basis": "A future caller must choose non-equivalent shell, basis, tail, trace, interface, and denominator semantics; those choices change gates and bounds."
+    },
+    {
+      "hypothesis": "Historical churn is harmless because each later packet fixed the prior defect.",
+      "verdict": "REJECTED_AS_COMPLETE_EXPLANATION",
+      "basis": "Corrections are real, but additive source/prose surfaces introduced unsealed interfaces and no W7 output authority was gained."
+    },
+    {
+      "hypothesis": "A single larger implementation-and-test push would be more cost-effective than another exact-byte design pass.",
+      "verdict": "REJECTED",
+      "basis": "The current graph cannot produce interpretable rigorous W7 bounds; zero-output static correction targets known defects at lower cost and risk."
+    },
+    {
+      "hypothesis": "The apparent repeated failures are artifacts of branch re-rooting or missing legacy context.",
+      "verdict": "REJECTED",
+      "basis": "Hash-locked artifacts, current D-028 byte identity, matching W3/W5 blobs, and a verified legacy bundle preserve the observations; only exact introduction timestamps remain bounded."
+    }
+  ],
+  "steelman_and_debate": {
+    "design_evolution_steelman": "The sequence was rational in important respects: every candidate addressed a real prior failure class, hard stops prevented invalid trajectories, D-028 passed nearly all static physics gates and W5 supports a conditioning interpretation, D-029 was rejected before implementation, and B3's six-species entropy-variable weak form materially improves the design. Genuine concessions: the first W6 overclaimed theorem and solver closure; D-034's normalization/source failures were real; current D-035 exact bytes are incomplete. Discriminating document test: two blind implementers must independently produce identical typed pseudocode operation graphs and trace/tail schemas from the corrected bytes without choosing an omitted convention.",
+    "audit_steelman": "Repeated failures reveal specification-to-executable debt, and stopping before expensive output was cost-effective because each missing choice can change physics or a rigorous bound. Genuine concessions: review requirements became more exact over time; not every later obligation was knowable to early candidates; D-028's lone miss is plausibly numerical conditioning rather than wrong continuum physics; D-037 closes several important algebraic subclaims. Discriminating document test: a zero-execution completeness verifier must reject deleted per-leg shell checks, any cached-node basis consumer, a missing signed-tail endpoint, an incomplete trace owner/opcount, or absent A4 permutation overlap.",
+    "joint_disposition": "Both sides agree that the method family remains plausible, the current bytes are not executable authority, and the next decision must maximize evidence per line without numerical output or blame-based history rewriting."
+  },
+  "ranked_recommendations": [
+    {
+      "rank": 1,
+      "evidence_gain_per_cost": "very high / low-to-medium",
+      "action": "Owner decision on one bounded exact-byte remediation addressing only per-leg shell enforcement, one Horner basis path, rigorous signed tail enclosure, and complete canonical trace/A4 certificate; consolidate obsolete duplicate representations."
+    },
+    {
+      "rank": 2,
+      "evidence_gain_per_cost": "high / low",
+      "action": "Add the seven interface negative controls to existing source tests and run one fresh blind zero-output design review; stop on any non-PASS."
+    },
+    {
+      "rank": 3,
+      "evidence_gain_per_cost": "high / near-zero",
+      "action": "Retain D-027, D-028, D-029, D-034, and D-037 as immutable evidence; cite exact hashes and bounded chronology rather than reopening old methods or inventing commits."
+    },
+    {
+      "rank": 4,
+      "evidence_gain_per_cost": "negative if done now",
+      "action": "Do not execute W7/B3 or enlarge harness, wrapper, telemetry, policy, grid, norm, or cap surfaces."
+    }
+  ],
+  "readiness": {
+    "exact_byte_remediation": {
+      "verdict": "PASS",
+      "scope": "technical readiness only; the defects are bounded and falsifiable",
+      "authority": "No remediation authority is granted by this audit; a new explicit owner decision remains required."
+    },
+    "W7_execution": {
+      "verdict": "FAIL",
+      "reason": "Current exact bytes fail shell, basis, tail, trace, and A0-A4 design obligations; no fresh blind PASS or owner execution decision exists."
+    },
+    "B3_implementation": {
+      "verdict": "FAIL",
+      "reason": "Executed W7 evidence, subsequent blind PASS, and a new owner decision are absent."
+    },
+    "independent_FLRW_closure": {
+      "verdict": "FAIL",
+      "reason": "No authorized static B3, segment, trajectory, endpoint, or RABBIT comparison exists."
+    }
+  },
+  "post_decision_review": {
+    "confidence": "High for exact current defects and non-causes; moderate-high for the recurrent root-cause synthesis.",
+    "residual_uncertainty": [
+      "Some pre-import candidate creation commits are unavailable; introduction intervals are bounded by run artifacts and curated import.",
+      "No numerical execution was authorized, so this audit does not predict whether a corrected B3 candidate will pass W7 or physics gates.",
+      "D-037 stopped before four-axis completion; bounded passes and exact-source failures are usable, but no completed adjudicator verdict is claimed."
+    ],
+    "conditions_that_reverse": [
+      "A corrected exact source proves per-leg shell checks, single-path basis identity, rigorous signed tails, and complete typed A0-A4/A4-permutation traces and receives a fresh blind PASS plus owner decision: exact-byte remediation can close and W7 execution may be reconsidered.",
+      "Executed W7 evidence and fresh adjudication PASS plus owner decision are required before B3 implementation.",
+      "T01-T12, segment, endpoint, and independent comparison evidence remain required before independent-FLRW closure."
+    ],
+    "prohibited_overreactions": [
+      "Do not abandon the B3 method family solely because the current contract is incomplete.",
+      "Do not authorize a large implementation push, W7 output, B3 collision, T01-T12, Radau, trajectory, endpoint, or RABBIT unblinding.",
+      "Do not change caps, grids, norms, constants, physical formulas, or claim ceilings.",
+      "Do not add another standalone readiness, manifest, hash, telemetry, or policy surface."
+    ]
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-PHYSICS-DESIGN-AUDITOR.json"
+  ]
+}

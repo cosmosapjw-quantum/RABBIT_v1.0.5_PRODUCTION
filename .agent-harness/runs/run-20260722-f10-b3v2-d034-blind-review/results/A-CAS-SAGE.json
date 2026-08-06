@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-CAS-SAGE",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "independence_mode": "blind-results",
+  "agent_id": "019f8a13-778e-7e60-97b1-4922e1a378b2",
+  "agent_type": "default",
+  "role": "cas_sage_singular",
+  "status": "fail",
+  "design_verdict": "FAIL",
+  "permit_output": false,
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SAGE.json",
+  "started_at": "2026-07-22T13:43:00Z",
+  "completed_at": "2026-07-22T14:02:14Z",
+  "tool_versions": {
+    "SageMath": "10.9",
+    "Singular": "4.3.2",
+    "GMP": "6.3.0",
+    "NTL": "11.5.1",
+    "FLINT": "3.0.1"
+  },
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SAGE.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SAGE.json",
+      "kind": "result_envelope"
+    }
+  ],
+  "commands": [
+    "sha256sum on the assignment and all named source-lock inputs",
+    "DOT_SAGE=/tmp/rabbit_d034_sage_cache sage -c '<embedded REPRO-SAGE source>'",
+    "Singular -q -t -c '<embedded REPRO-SINGULAR source>'"
+  ],
+  "errors": [
+    "Initial Sage invocation used a read-only default cache; the exact rerun with DOT_SAGE under /tmp succeeded.",
+    "First combined Sage reproducer referenced unavailable SAGE_VERSION; the corrected exact rerun succeeded."
+  ],
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-CAS-SAGE",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:719516597b1d754c0f2ace9c9aaf48e6a16bf454cb23e65a610e0c0a3625c1d0"
+  },
+  "contract_reproduction": {
+    "problem_id": "BD622-D033-D034-B3V2-W7-EXACT-BYTES",
+    "status_boundary": "Blind design and exact-algebra review only. No W7 numerical output, B3 collision output, T01-T12, Rust edit, Radau, trajectory, endpoint, unblinding, F-11, QKE, or public runtime authority.",
+    "assigned_claim_ids": [
+      "C-W7-ROWII-TRACE",
+      "C-W7-ABSOLUTE-NORMALIZATION",
+      "C-B3V2-REACTION-NULLSPACE",
+      "C-B3V2-ENTROPY-AFFINITY",
+      "C-W7-FINITE-ME-SHELL"
+    ],
+    "canonical_targets": {
+      "row_ii": "Direct coherent t+s u/v spin trace equals four times the distinguishable K_t base before the tagged map; crossing-only is forbidden.",
+      "mb_loss": "C_loss^Ks(c)/(G_F^2 T^5 y exp(-y))=c/(8pi^3); Kt=c/(24pi^3); rows i-v 8/pi^3,16/(3pi^3),4/pi^3,4/(3pi^3),4/(3pi^3).",
+      "mandelstam": "s+t+u=sum masses^2; electron elastic and pair both 2m_e^2.",
+      "entropy": "A=log(F/R)=eta1+eta2-eta3-eta4; J A>=0 with equality iff F=R; electron bath sign follows Q_EM/T_gamma."
+    },
+    "branch_contract": "beta=0 identity; exact thresholds are zero-measure k*=0 support values; derivatives only from physical side; principal nonnegative roots; no cleared root polynomial or clipping."
+  },
+  "source_locks": {
+    "w6": {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302"
+    },
+    "w7_contract_source": {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292"
+    },
+    "test_vectors": {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44"
+    },
+    "cas_contract": {
+      "path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json",
+      "sha256": "04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a"
+    }
+  },
+  "tool_contract": {
+    "sage": {
+      "version": "SageMath 10.9",
+      "coefficient_domain": "QQ(i), with exact rational subcomputations over QQ",
+      "ring": "QQ(i)[p10,p11,p12,p13,p20,p21,p22,p23,p30,p31,p32,p33,p40,p41,p42,p43,m,gl,gr]",
+      "monomial_order": "degree reverse lexicographic",
+      "extension_field": "QQ(i), i^2+1=0"
+    },
+    "singular": {
+      "version": "Singular 4.3.2",
+      "coefficient_domain": "QQ",
+      "ring": "QQ[s,m2,r,k,F,Rv]",
+      "monomial_order": "dp"
+    },
+    "resource_limits": "No explicit memory limit; exact scripts completed in about 3.1 s for Sage and 0.1 s for Singular on the assigned host."
+  },
+  "algebra_scope": {
+    "equality_classes": [
+      "Gamma-trace and Fierz statements are exact polynomial/matrix equalities over QQ(i), with no on-shell ideal needed.",
+      "Finite-shell squared-root relations are equalities modulo the stated polynomial ideals.",
+      "Energy formulas containing 1/r are equalities only after localization at r != 0; the physical branch additionally requires r=sqrt(s)>0 and k>=0.",
+      "Entropy positivity is a real ordered-field/logarithm statement for F>0 and R>0; Singular verifies only the equality locus ideal F-R."
+    ],
+    "denominator_clearing": "Elastic relations clear 2r; pair relations square only the already specified principal-root formula for ideal membership. No squared relation is used to select the physical root.",
+    "saturation_localization": "Sage saturation by <r> returns exponent 0 for both shell ideals; interpretation still localizes at r>0 for formulas with 1/r.",
+    "primary_branch_decomposition": "Singular primdecGTZ reports one algebraic component for each shell ideal over QQ. The polynomial variety contains sign-related root points; the contract's semialgebraic principal branch r>0,k>=0 is imposed separately.",
+    "excluded_components_and_loci": [
+      "r=0 and s=0 for any divided formula",
+      "negative sqrt(s) and negative k branches",
+      "beta^2=0 from the divided boost branch, handled only by the separate identity branch",
+      "zero Gram norm",
+      "F=0 or R=0 for log(F/R)",
+      "two-sided threshold derivatives"
+    ],
+    "order_of_limits": "Threshold derivatives are physical-side only. No claim is made for a two-sided derivative or for dividing by k at threshold."
+  },
+  "findings": [
+    {
+      "finding_id": "A-CAS-SAGE-F01",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "info",
+      "status_label": "DERIVED",
+      "summary": "The direct coherent same-flavour nu-antinu row-ii trace has the required factor four over the distinguishable K_t base.",
+      "statement": "The direct coherent same-flavour nu-antinu row-ii trace has the required factor four over the distinguishable K_t base.",
+      "evidence_fingerprint": "sha256:c4e2b467b4f2dad81b5121049d42707d79d503600e0a6a0a2d5d18c6a2d2bdca",
+      "exact_evidence": [
+        "The exact gamma matrices satisfy the eta_D=(+---) Clifford algebra.",
+        "The chiral bilinear identity is B_s=-B_t as a tensor equality. The fermionic Wick exchange contributes the second minus, so the physical s contribution equals +B_t and A_t+A_s=2A_t.",
+        "The exact spin trace is T_t=16 K_t for arbitrary symbolic four-momenta. With amplitude prefactor sqrt(2) G_F, the distinguishable base is 32 G_F^2 K_t and the coherent square is 128 G_F^2 K_t.",
+        "V-NULL-COM-345 gives (K_s,K_t,K_u)=(4,81/25,1/25)."
+      ],
+      "assumptions": [
+        "eta_D=diag(+1,-1,-1,-1), slash(p)=gamma0 p0-gammai pi, P_L=(1-gamma5)/2",
+        "one occupied neutrino helicity, no initial neutrino spin average",
+        "physical Wick-contraction exchange sign retained"
+      ],
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), slash(p)=gamma0 p0-gammai pi, P_L=(1-gamma5)/2",
+        "one occupied neutrino helicity, no initial neutrino spin average",
+        "physical Wick-contraction exchange sign retained"
+      ],
+      "counterevidence_refs": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:349",
+        "docs/audit/BD622_W7_exact_test_vectors.json"
+      ],
+      "reproducible_commands": [
+        "REPRO-SAGE"
+      ],
+      "reproduction": [
+        "REPRO-SAGE"
+      ],
+      "unresolved": [],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F02",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "fail",
+      "status_label": "SPECIFIED",
+      "severity": "blocker",
+      "summary": "The algebraic factor ledger closes, but the exact candidate normalizes with a different G_F literal than the frozen Tier-0 comparison input, so full absolute-normalization authority does not close.",
+      "statement": "The exact candidate fails absolute-normalization authority because its G_F literal differs from the frozen Tier-0 comparison input.",
+      "evidence_fingerprint": "sha256:ba35620a0b2d4513b4ca233bddba09d1f13346b475c5ec0d8be212dd0b993d36",
+      "exact_evidence": [
+        "Direct symbolic electron traces give 16[g_L^2 K_s+g_R^2 K_t-g_L g_R m_e^2 chi13], 16[g_L^2 K_t+g_R^2 K_s-g_L g_R m_e^2 chi13], and 16[g_L^2 K_t+g_R^2 K_u+g_L g_R m_e^2 chi12]. Multiplication by (sqrt(2)G_F)^2 yields the candidate's factor 32 and all three interference signs.",
+        "Exact two-body reduction gives dPhi2=k*/(16 pi^2 sqrt(s)) dz* dphi*. The massless MB loss integrals are c/(8 pi^3) for K_s and c/(24 pi^3) for K_t, giving rows i-v [8,16/3,4,4/3,4/3]/pi^3.",
+        "The independently reconstructed graph has 24 self and 15 electron rows. The self factor ledger is six (S=1/4,N64_KS), three (S=1,N128_KT), six (S=1,N32_KS), and nine (S=1,N32_KT); all orbit multiplicities are one and no bath spin factor is added.",
+        "Tier-0 freezes G_F=1.1663788e-11 MeV^-2, whereas W6 and the source freeze 1.1663787e-11 MeV^-2. Exact G_F^2 relative delta is -23327575/136043950508944, approximately -1.71470873293e-7."
+      ],
+      "assumptions": [
+        "The Tier-0 frozen input is authoritative for the independent endpoint comparison.",
+        "No fitted normalization or silent constant substitution is permitted."
+      ],
+      "assumptions_used": [
+        "The Tier-0 frozen input is authoritative for the independent endpoint comparison.",
+        "No fitted normalization or silent constant substitution is permitted."
+      ],
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:59",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:45",
+        "scripts/audit/w7_b3v2_contract_source.py:16"
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:59",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:45",
+        "scripts/audit/w7_b3v2_contract_source.py:16",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:53",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:105"
+      ],
+      "reopen_condition": "Freeze one exact G_F literal consistently across Tier-0, W6, CAS_CONTRACT, source, and vectors, then repeat fresh blind exact-byte review before any W7 execution.",
+      "reproducible_commands": [
+        "REPRO-SAGE"
+      ],
+      "reproduction": [
+        "REPRO-SAGE"
+      ],
+      "unresolved": [
+        "The governing exact G_F literal must be reconciled across Tier-0 and all D-034 candidate bytes."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F03",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "info",
+      "status_label": "DERIVED",
+      "summary": "The independently enumerated 24+15 stoichiometric graph has rank three and exactly the required three-dimensional rational left nullspace.",
+      "statement": "The 24+15 graph has rank three and exactly the required rational left nullspace.",
+      "evidence_fingerprint": "sha256:ce8afc32c861afa78a3e62d4c2d7ccdaefe8504da210e40990d310cfc9e15fe0",
+      "exact_evidence": [
+        "The six-by-39 species-count matrix has rank 3 over QQ.",
+        "Its left kernel has dimension 3 and equals the row span of (1,-1,0,0,0,0), (0,0,1,-1,0,0), and (0,0,0,0,1,-1).",
+        "Sage and Singular independently return rank(S)=3; Singular returns rank(L)=3 and rank(L*S)=0."
+      ],
+      "assumptions": [
+        "Electron legs are omitted from the six species-count rows.",
+        "Stoichiometry is outgoing minus incoming under nu_leg=(-1,-1,+1,+1).",
+        "Reverse reactions are represented by R rather than duplicate graph columns."
+      ],
+      "assumptions_used": [
+        "Electron legs are omitted from the six species-count rows.",
+        "Stoichiometry is outgoing minus incoming under nu_leg=(-1,-1,+1,+1).",
+        "Reverse reactions are represented by R rather than duplicate graph columns."
+      ],
+      "counterevidence_refs": [],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:77",
+        "scripts/audit/w7_b3v2_contract_source.py:45",
+        "docs/audit/BD622_W7_exact_test_vectors.json"
+      ],
+      "reproducible_commands": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "reproduction": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "unresolved": [],
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F04",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "info",
+      "status_label": "DERIVED",
+      "summary": "The entropy affinity and equality locus follow exactly on the strict-open occupation domain.",
+      "statement": "The entropy affinity is nonnegative with equality exactly at F=R on the strict-open occupation domain.",
+      "evidence_fingerprint": "sha256:92aa0c75627eb0953e2acbff5a129df81de061452d0ef6a67fb76cd01139c065",
+      "exact_evidence": [
+        "F/R equals exp(eta1+eta2-eta3-eta4), hence A=log(F/R).",
+        "For F,R>0, J*A=R(x-1)log(x)>=0 with x=F/R; strict monotonicity of log gives equality iff x=1 iff F=R.",
+        "The rational vector gives F=4/625, R=144/625, J=-28/125, F/R=1/36, so J*log(1/36)>0.",
+        "For equilibrium electron legs eta_e=-E/T_gamma, their entropy contribution is sum(-eta_e nu_leg J)=Q_EM/T_gamma under the frozen energy sign."
+      ],
+      "assumptions": [
+        "All occupations lie strictly in (0,1).",
+        "T_gamma>0.",
+        "Event direction and Q_EM=-Q_nu follow the contract."
+      ],
+      "assumptions_used": [
+        "All occupations lie strictly in (0,1).",
+        "T_gamma>0.",
+        "Event direction and Q_EM=-Q_nu follow the contract."
+      ],
+      "counterevidence_refs": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:43",
+        "docs/audit/BD622_W7_exact_test_vectors.json"
+      ],
+      "reproducible_commands": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "reproduction": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "unresolved": [],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F05",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "status_label": "SPECIFIED",
+      "severity": "blocker",
+      "summary": "The shell/Jacobian algebra passes, but the exact source rejects the threshold support value required by W6 and CAS_CONTRACT.",
+      "statement": "The exact source violates the finite-mass branch contract by rejecting the required k*=0 threshold support value.",
+      "evidence_fingerprint": "sha256:61de94d12f9c3d09a1999d855385a626b657700795fedd55ebd92e86a7715bbc",
+      "exact_evidence": [
+        "Both exact finite-mass vectors have positive energies, exact shells, exact four-momentum conservation, and s+t+u=2m_e^2. Elastic has (s,t,u)=(4,-9/40,-71/40); pair has (25/4,-5/8,-29/8).",
+        "Modulo <r^2-s,2rk-(s-m_e^2)>, 4s k^2-(s-m_e^2)^2 reduces to zero. Modulo <r^2-s,4k^2-(s-4m_e^2)>, 4k^2-(s-4m_e^2) reduces to zero. The physical principal roots require r>0 and k>=0.",
+        "Exact delta-function reduction gives dPhi2=k*/(16 pi^2 sqrt(s)) dz* dphi*.",
+        "W6 line 170 and CAS_CONTRACT require exact threshold equality to be a k*=0 support value with physical-side derivatives. The exact source uses if lam <= 0.0: raise ValueError, so equality is rejected together with subthreshold points and no k*=0 support value is produced."
+      ],
+      "assumptions": [
+        "The unexecuted exact source is part of the candidate bytes and must implement the binding branch contract without an omitted later choice.",
+        "Threshold evaluation is a support/one-sided-test obligation, not collision-output authority."
+      ],
+      "assumptions_used": [
+        "The unexecuted exact source is part of the candidate bytes and must implement the binding branch contract without an omitted later choice.",
+        "Threshold evaluation is a support/one-sided-test obligation, not collision-output authority."
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:170",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:75",
+        "scripts/audit/w7_b3v2_contract_source.py:254",
+        "scripts/audit/w7_b3v2_contract_source.py:255"
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:170",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:75",
+        "scripts/audit/w7_b3v2_contract_source.py:254",
+        "scripts/audit/w7_b3v2_contract_source.py:255",
+        "docs/audit/BD622_W7_exact_test_vectors.json"
+      ],
+      "reopen_condition": "Freeze an exact threshold branch that returns the declared k*=0 support value without division by k*, preserves strict subthreshold rejection, and defines the physical-side derivative test; then repeat fresh blind exact-byte review.",
+      "reproducible_commands": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "reproduction": [
+        "REPRO-SAGE",
+        "REPRO-SINGULAR"
+      ],
+      "unresolved": [
+        "The threshold branch must distinguish equality from subthreshold input and expose the declared k*=0 support value without division by k*."
+      ],
+      "confidence": 1.0
+    }
+  ],
+  "claim_summary": {
+    "pass": [
+      "C-W7-ROWII-TRACE",
+      "C-B3V2-REACTION-NULLSPACE",
+      "C-B3V2-ENTROPY-AFFINITY"
+    ],
+    "fail": [
+      "C-W7-ABSOLUTE-NORMALIZATION",
+      "C-W7-FINITE-ME-SHELL"
+    ],
+    "inconclusive": []
+  },
+  "authority_boundary": {
+    "w7_numerical_output": "FORBIDDEN",
+    "b3_collision_output": "FORBIDDEN",
+    "t01_t12": "FORBIDDEN",
+    "trajectory_endpoint_unblinding": "FORBIDDEN",
+    "scientific_validation": "NOT CLAIMED",
+    "gate_effect": "Any FAIL keeps all numerical/static authority closed under D-034."
+  },
+  "commands_run": [
+    "sha256sum on assignment and all named source-lock inputs",
+    "sage --version",
+    "Singular --version",
+    "REPRO-SAGE",
+    "REPRO-SINGULAR"
+  ],
+  "raw_failures": [
+    "Initial Sage invocation attempted its default cache under a read-only path; rerun with DOT_SAGE=/tmp/rabbit_d034_sage_cache succeeded.",
+    "First combined Sage reproducer used an unavailable SAGE_VERSION name; corrected to sage.version.version and reran successfully."
+  ],
+  "reproducers": {
+    "storage_note": "The assignment permits only this unique result artifact, so the required executable Sage and Singular sources are embedded here instead of being written as separate files.",
+    "REPRO-SAGE": {
+      "command": "DOT_SAGE=/tmp/rabbit_d034_sage_cache sage -c '<embedded source>'",
+      "language": "Sage/Python",
+      "source": "from sage.all import *\nfrom collections import Counter\nimport sage.version\nprint(\"SAGE_VERSION\",sage.version.version)\nK.<ii>=QuadraticField(-1)\nnames=[\"p%d%d\"%(a,b) for a in range(1,5) for b in range(4)]+[\"m\",\"gl\",\"gr\"]\nR=PolynomialRing(K,names,order=\"degrevlex\"); vv=R.gens(); ps=[vector(R,vv[4*i:4*i+4]) for i in range(4)]; m,gl,gr=vv[-3:]; I=R(ii)\ns1=matrix(R,[[0,1],[1,0]]); s2=matrix(R,[[0,-I],[I,0]]); s3=matrix(R,[[1,0],[0,-1]]); I2=identity_matrix(R,2); Z=zero_matrix(R,2)\ng0=block_matrix(R,[[I2,Z],[Z,-I2]])\ndef gi(s): return block_matrix(R,[[Z,s],[-s,Z]])\ng=[g0,gi(s1),gi(s2),gi(s3)]; eta=[1,-1,-1,-1]; g5=I*g[0]*g[1]*g[2]*g[3]; PL=(identity_matrix(R,4)-g5)/2; PR=(identity_matrix(R,4)+g5)/2\nV=[g[a]*PL for a in range(4)]; W=[g[a]*(gl*PL+gr*PR) for a in range(4)]\nclifford=all(g[a]*g[b]+g[b]*g[a]==2*(eta[a] if a==b else 0)*identity_matrix(R,4) for a in range(4) for b in range(4))\nfierz=all(sum(V[mu][a,b]*(eta[mu]*V[mu])[c,d]+V[mu][a,d]*(eta[mu]*V[mu])[c,b] for mu in range(4))==0 for a in range(4) for b in range(4) for c in range(4) for d in range(4))\ndef slash(p): return g[0]*p[0]-g[1]*p[1]-g[2]*p[2]-g[3]*p[3]\ndef tr(L):\n M=identity_matrix(R,4)\n for x in L: M=M*x\n return M.trace()\ndef mdot_plus(p,q): return p[0]*q[0]-sum(p[i]*q[i] for i in range(1,4))\nchi=lambda p,q:mdot_plus(p,q); p1,p2,p3,p4=ps; Ks=chi(p1,p2)*chi(p3,p4); Kt=chi(p1,p4)*chi(p2,p3); Ku=chi(p1,p3)*chi(p2,p4)\nTt=sum(tr([slash(p3),V[mu],slash(p1),V[nu]])*tr([slash(p2),eta[mu]*V[mu],slash(p4),eta[nu]*V[nu]]) for mu in range(4) for nu in range(4))\nTs=sum(tr([slash(p3),V[mu],slash(p1),V[nu]])*tr([slash(p4)+m*identity_matrix(R,4),eta[mu]*W[mu],slash(p2)+m*identity_matrix(R,4),eta[nu]*W[nu]]) for mu in range(4) for nu in range(4))\nTo=sum(tr([slash(p1),V[mu],slash(p3),V[nu]])*tr([slash(p4)+m*identity_matrix(R,4),eta[mu]*W[mu],slash(p2)+m*identity_matrix(R,4),eta[nu]*W[nu]]) for mu in range(4) for nu in range(4))\nTp=sum(tr([slash(p2),V[mu],slash(p1),V[nu]])*tr([slash(p3)+m*identity_matrix(R,4),eta[mu]*W[mu],slash(p4)-m*identity_matrix(R,4),eta[nu]*W[nu]]) for mu in range(4) for nu in range(4))\nprint(\"RING\",R.base_ring(),R.term_order(),\"CLIFFORD\",clifford,\"FIERZ_BILINEAR_MINUS\",fierz)\nprint(\"ROWII_DIST_TRACE_16KT\",Tt==16*Kt,\"COHERENT_FACTOR\",4,\"M2\",128,\"GF2_Kt\")\nprint(\"ELECTRON_TRACES\",Ts==16*(gl^2*Ks+gr^2*Kt-gl*gr*m^2*chi(p1,p3)),To==16*(gl^2*Kt+gr^2*Ks-gl*gr*m^2*chi(p1,p3)),Tp==16*(gl^2*Kt+gr^2*Ku+gl*gr*m^2*chi(p1,p2)))\nspecies=(\"nu_e\",\"antinu_e\",\"nu_mu\",\"antinu_mu\",\"nu_tau\",\"antinu_tau\"); flavours=(\"e\",\"mu\",\"tau\"); nu={\"e\":\"nu_e\",\"mu\":\"nu_mu\",\"tau\":\"nu_tau\"}; anti={\"e\":\"antinu_e\",\"mu\":\"antinu_mu\",\"tau\":\"antinu_tau\"}\nrows=[]\nfor a in species: rows.append((\"S%02d\"%len(rows),(a,a,a,a),QQ(1)/4,\"N64_KS\"))\nfor f in flavours: rows.append((\"S%02d\"%len(rows),(nu[f],anti[f],nu[f],anti[f]),QQ(1),\"N128_KT\"))\nfor cp in (nu,anti):\n for i,f in enumerate(flavours):\n  for h in flavours[i+1:]: rows.append((\"S%02d\"%len(rows),(cp[f],cp[h],cp[f],cp[h]),QQ(1),\"N32_KS\"))\nfor f in flavours:\n for h in flavours:\n  if f!=h: rows.append((\"S%02d\"%len(rows),(nu[f],anti[h],nu[f],anti[h]),QQ(1),\"N32_KT\"))\nfor i,f in enumerate(flavours):\n for h in flavours[i+1:]: rows.append((\"S%02d\"%len(rows),(nu[f],anti[f],nu[h],anti[h]),QQ(1),\"N32_KT\"))\nei=0\nfor a in species:\n for charge in (\"e-\",\"e+\"):\n  same=((not a.startswith(\"antinu\")) and charge==\"e-\") or (a.startswith(\"antinu\") and charge==\"e+\"); rows.append((\"E%02d\"%ei,(a,charge,a,charge),QQ(1),\"ELASTIC_S\" if same else \"ELASTIC_T\")); ei+=1\nfor f in flavours: rows.append((\"E%02d\"%ei,(nu[f],anti[f],\"e-\",\"e+\"),QQ(1),\"PAIR_\"+f)); ei+=1\nS=matrix(QQ,6,len(rows),0)\nfor c,row in enumerate(rows):\n for a in row[1][2:]:\n  if a in species: S[species.index(a),c]+=1\n for a in row[1][:2]:\n  if a in species: S[species.index(a),c]-=1\nL=matrix(QQ,[[1,-1,0,0,0,0],[0,0,1,-1,0,0],[0,0,0,0,1,-1]])\nprint(\"GRAPH_COUNTS\",len(rows[:24]),len(rows[24:]),\"IDS\",rows[0][0],rows[23][0],rows[24][0],rows[-1][0])\nprint(\"FACTOR_LEDGER\",Counter((x[2],x[3]) for x in rows[:24]))\nprint(\"NULLSPACE\",S.rank(),S.left_kernel().dimension(),L*S==zero_matrix(QQ,3,39),L.row_space()==S.left_kernel())\ndef mdot_phys(p,q): return -p[0]*q[0]+sum(p[i]*q[i] for i in range(1,4))\ndef audit(name,masses,mom):\n shell=[mdot_phys(mom[i],mom[i])+masses[i]^2 for i in range(4)]; cons=mom[0]+mom[1]-mom[2]-mom[3]; ss=-mdot_phys(mom[0]+mom[1],mom[0]+mom[1]); tt=-mdot_phys(mom[0]-mom[2],mom[0]-mom[2]); uu=-mdot_phys(mom[0]-mom[3],mom[0]-mom[3]); print(name,shell,list(cons),ss,tt,uu,ss+tt+uu,sum(x^2 for x in masses))\npn=[vector(QQ,x) for x in [[1,0,0,1],[1,0,0,-1],[1,QQ(3)/5,0,QQ(4)/5],[1,-QQ(3)/5,0,-QQ(4)/5]]]\nprint(\"V_NULL_K\",(-mdot_phys(pn[0],pn[1]))*(-mdot_phys(pn[2],pn[3])),(-mdot_phys(pn[0],pn[3]))*(-mdot_phys(pn[1],pn[2])),(-mdot_phys(pn[0],pn[2]))*(-mdot_phys(pn[1],pn[3])))\npe=[vector(QQ,x) for x in [[QQ(3)/4,0,0,QQ(3)/4],[QQ(5)/4,0,0,-QQ(3)/4],[QQ(3)/4,QQ(9)/20,0,QQ(3)/5],[QQ(5)/4,-QQ(9)/20,0,-QQ(3)/5]]]; pp=[vector(QQ,x) for x in [[QQ(5)/4,0,0,QQ(5)/4],[QQ(5)/4,0,0,-QQ(5)/4],[QQ(5)/4,QQ(9)/20,0,QQ(3)/5],[QQ(5)/4,-QQ(9)/20,0,-QQ(3)/5]]]\naudit(\"V_ELASTIC\",[0,1,0,1],pe); audit(\"V_PAIR\",[0,0,1,1],pp)\nRf=PolynomialRing(QQ,[\"s\",\"m2\",\"r\",\"k\"],order=\"degrevlex\"); s,m2,r,k=Rf.gens(); Iel=Rf.ideal(r^2-s,2*r*k-(s-m2)); Ip=Rf.ideal(r^2-s,4*k^2-(s-4*m2)); satel,ee=Iel.saturation(Rf.ideal(r)); satp,ep=Ip.saturation(Rf.ideal(r))\nprint(\"SHELL_IDEALS\",Iel.reduce(4*s*k^2-(s-m2)^2),Ip.reduce(4*k^2-(s-4*m2)),\"SAT_EXP\",ee,ep,\"PRIMARY_COMPONENTS\",1,1)\nks_coeff=QQ(1)/2/8/32*4*6*QQ(8)/3; kt_coeff=QQ(1)/2/8/96*4*6*QQ(8)/3\nprint(\"DPHI2\",\"k/(16*pi^2*r)\",\"MB\",ks_coeff,kt_coeff,\"ROWS\",[64*ks_coeff,128*kt_coeff,32*ks_coeff,32*kt_coeff,32*kt_coeff])\nf=[QQ(1)/5,QQ(2)/5,QQ(3)/5,QQ(4)/5]; F=f[0]*f[1]*(1-f[2])*(1-f[3]); Rev=f[2]*f[3]*(1-f[0])*(1-f[1]); J=F-Rev\nprint(\"ENTROPY_VECTOR\",F,Rev,J,F/Rev,\"PRODUCT_POSITIVE\",J<0 and F/Rev<1)\ngf_candidate=QQ(11663787)/10^18; gf_frozen=QQ(11663788)/10^18; print(\"GF_INPUT_EQUAL\",gf_candidate==gf_frozen,\"GF2_RELATIVE_DELTA\",gf_candidate^2/gf_frozen^2-1)",
+      "observed_summary": [
+        "CLIFFORD True; FIERZ_BILINEAR_MINUS True; ROWII_DIST_TRACE_16KT True; ELECTRON_TRACES True True True",
+        "GRAPH_COUNTS 24 15; NULLSPACE rank 3, nullity 3, exact target span True",
+        "V_NULL_K 4 81/25 1/25; finite vectors exact; shell ideal reductions 0",
+        "MB 1/8 1/24; rows [8,16/3,4,4/3,4/3]",
+        "ENTROPY_VECTOR 4/625 144/625 -28/125 1/36",
+        "GF_INPUT_EQUAL False; GF2_RELATIVE_DELTA -23327575/136043950508944"
+      ]
+    },
+    "REPRO-SINGULAR": {
+      "command": "Singular -q -t -c '<embedded source>'",
+      "language": "Singular",
+      "source": "LIB \"primdec.lib\";\nring q=0,(s,m2,r,k,F,Rv),dp;\nideal Iel=r^2-s,2*r*k-(s-m2);\nideal Ipair=r^2-s,4*k^2-(s-4*m2);\n\"SINGULAR_VERSION\"; system(\"--version\");\n\"ELASTIC_REL\"; reduce(4*s*k^2-(s-m2)^2,std(Iel));\n\"PAIR_REL\"; reduce(4*k^2-(s-4*m2),std(Ipair));\n\"PRIMARY_COUNTS\"; size(primdecGTZ(Iel)); size(primdecGTZ(Ipair));\nideal Ientropy=F-Rv;\n\"ENTROPY_EQUALITY_IDEAL\"; std(Ientropy);\nmatrix S[6][39];\nS[1,22]=-1; S[2,22]=-1; S[3,22]=1; S[4,22]=1;\nS[1,23]=-1; S[2,23]=-1; S[5,23]=1; S[6,23]=1;\nS[3,24]=-1; S[4,24]=-1; S[5,24]=1; S[6,24]=1;\nS[1,37]=-1; S[2,37]=-1; S[3,38]=-1; S[4,38]=-1; S[5,39]=-1; S[6,39]=-1;\nmatrix L[3][6]=1,-1,0,0,0,0,0,0,1,-1,0,0,0,0,0,0,1,-1;\n\"STOICH_RANK\"; rank(S);\n\"LEFT_BASIS_RANK\"; rank(L);\n\"LEFT_PRODUCT_RANK\"; rank(L*S);\nquit;",
+      "observed_summary": [
+        "ELASTIC_REL 0; PAIR_REL 0",
+        "PRIMARY_COUNTS 1 1",
+        "ENTROPY_EQUALITY_IDEAL <F-Rv>",
+        "STOICH_RANK 3; LEFT_BASIS_RANK 3; LEFT_PRODUCT_RANK 0"
+      ]
+    }
+  },
+  "write_scope": {
+    "declared_result_only": true,
+    "repository_writes": [
+      ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SAGE.json"
+    ],
+    "sibling_results_read": false,
+    "forbidden_numerical_output_run": false
+  }
+}

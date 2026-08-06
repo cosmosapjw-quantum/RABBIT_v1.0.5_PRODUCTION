@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+  "assignment_id": "A-W7-METROLOGY",
+  "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+  "agent_id": "019f8aaa-d1f2-7ac3-b944-13b264fec292",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+    "assignment_id": "A-W7-METROLOGY",
+    "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:0adcf64dc5185b5372e043fe06a7d01e67236e09fc35dd55ad62101567bd5476"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-W7-METROLOGY.json",
+  "started_at": "2026-07-22T16:30:00Z",
+  "completed_at": "2026-07-22T16:43:34Z",
+  "tool_versions": {
+    "audit_mode": "static formula/design/source review only; no imported or executed W7 source",
+    "python": "CPython 3.12.3 (version query only)",
+    "ripgrep": "14.1.0",
+    "sed": "GNU sed 4.9",
+    "sha256sum": "GNU coreutils 9.4",
+    "kernel": "Linux 6.17.0-35-generic x86_64 GNU/Linux"
+  },
+  "commands": [
+    "sed -n '1,240p' /home/cosmosapjw/.codex/skills/physics-math-audit/SKILL.md",
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,180p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '181,340p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-W7-METROLOGY.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-W7-METROLOGY.json",
+    "sed/wc static reads of only CAS_CONTRACT.json, BD622_W6_comparator_design_proof_pack.md, w7_b3v2_contract_source.py, BD622_W7_exact_test_vectors.json, and independent_auditor.md",
+    "rg -n targeted formula/trace/metrology searches over only the assigned exact inputs",
+    "nl -ba ... | sed -n ... targeted line-numbered reads over only the assigned exact inputs",
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-W7-METROLOGY.json .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json .agent-harness/context/roles/independent_auditor.md",
+    "rg -n 'ArithmeticNode\\(|declared_interface=|metrology_bounds\\(|directed_cond2_upper\\(|TAIL_CONTRACT|permutation.*certificate|trace_ids|operation_counts|event_key_prefix' scripts/audit/w7_b3v2_contract_source.py",
+    "rg -n 'Q_nu|Q_EM|energy_transfer|energy_debit|energy contribution' scripts/audit/w7_b3v2_contract_source.py (expected no-match exit 1)",
+    "python3 --version; rg --version; sed --version; sha256sum --version; uname -srmo (separate read-only version queries)",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md#sha256:3f3ac1936999a97a92c0fa037661090fb740bc57febb745f3e7ae751ec2326f5",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-W7-METROLOGY.json#sha256:0adcf64dc5185b5372e043fe06a7d01e67236e09fc35dd55ad62101567bd5476",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+    "scripts/audit/w7_b3v2_contract_source.py#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+    "docs/audit/BD622_W7_exact_test_vectors.json#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+    ".agent-harness/context/roles/independent_auditor.md#sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-W7M-001-MISSING-DIRECT-ROWII-TRACE",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The exact D-035 bytes do not contain the required direct coherent t+s u/v-spinor derivation for nu_f+antinu_f -> nu_f+antinu_f. They only assert N128_KT = 128 G_F^2 K_t and say a future W7 continuum axis will derive it. No amplitude, conjugation, fermionic/interference sign, gamma trace, or canonical reduction is present, so the coefficient cannot receive blind design authority without using the explicitly forbidden crossing/tagged assumption.",
+      "evidence_fingerprint": "sha256:e825d471987cc003f7a3cacf0cad2f7855dc3c027fb670edc9c262bb02f55407",
+      "assumptions_used": [
+        "Only the assignment's exact named D-035 bytes may establish this fresh blind claim.",
+        "The locked metric, slash, gamma5, projector, and one-helicity/no-spin-average conventions in CAS_CONTRACT.json apply.",
+        "A coefficient-table assertion is not a reconstructible direct trace."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:80-83 requires the amplitude, conjugation, interference sign, gamma trace, and canonical reduction and forbids crossing-only inference.",
+        "scripts/audit/w7_b3v2_contract_source.py:184-191 contains only the coefficient lookup N128_KT = 128*gf*gf*k_t.",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:420-430 describes the trace in future tense and labels the source SPECIFIED_NOT_EXECUTED.",
+        "Targeted rg over all assigned exact inputs found no spinor, conjugation, or interference derivation in the binding source."
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:68-79 assigns N128_KT consistently to S06-S08.",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:104-125 states the intended row and coefficient."
+      ],
+      "reproduction": [
+        "rg -n 'row[-_ ]?ii|spinor|gamma|interference|conjug|trace|N128_KT' docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json docs/audit/BD622_W7_exact_test_vectors.json",
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '175,191p'"
+      ],
+      "unresolved": [
+        "The asserted 128 K_t coefficient may be physically correct, but these bytes do not establish it by the required direct route.",
+        "No W7 numerical or CAS trace was executed in this assignment."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-W7M-002-ABSOLUTE-NORMALIZATION-NOT-CLOSED",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The rational O_r/S_r ledger is internally coherent, but the binding source does not close the all-channel map from a reaction record to q and Q_nu. electron_matrix_element accepts free g_l/g_r values with no reaction-flavour binding, invariant_event_prefactor accepts a free matrix element and does not runtime-enforce exactly five quadrature weights, event_leg_contributions accepts an arbitrary key prefix, and the source has no Q_nu/Q_EM energy-debit function. A later controller could therefore change flavour, factor, key, or energy ownership without violating these source checks.",
+      "evidence_fingerprint": "sha256:c6305c30b6378807546db0b7b67df6f6b332fdf5d10f311db2c27e3212c9034c",
+      "assumptions_used": [
+        "Global elastic orientation quotient O_r is independent of factorial symmetry S_r.",
+        "A complete absolute-normalization contract must bind reaction identity, amplitude/coupling identity, measure factors, leg deposition, canonical event key, and the matching energy debit.",
+        "Python tuple annotations alone are not a fail-closed runtime length check."
+      ],
+      "evidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:42-169 freezes O_r, S_r, multiplicity, 24+15 rows, and amplitude IDs.",
+        "scripts/audit/w7_b3v2_contract_source.py:194-219 takes g_l/g_r independently of reaction legs and accepts every PAIR_ prefix.",
+        "scripts/audit/w7_b3v2_contract_source.py:234-279 takes matrix_element as a free scalar and iterates an unchecked-length quadrature_weights value.",
+        "scripts/audit/w7_b3v2_contract_source.py:282-316 appends to an arbitrary event_key_prefix rather than constructing or validating the full canonical key.",
+        "A targeted rg for Q_nu, Q_EM, energy_transfer, energy_debit, or energy contribution in the binding source returned no match.",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:39-49 and 117-123 require the global moment/energy map and full canonical trace key."
+      ],
+      "counterevidence_refs": [
+        "Exact rational review gives distinct elastic (1/2)*1*2=1 and identical elastic (1/2)*(1/4)*4=1/2, hence 128 maps to tagged 64; conversion/pair has O_r=1.",
+        "scripts/audit/w7_b3v2_contract_source.py:184-219 has dimensionally consistent G_F^2 times degree-four invariant amplitudes.",
+        "scripts/audit/w7_b3v2_contract_source.py:234-279 yields q units MeV and massless scaling G_F^2 T_cm^5 when its inputs are conforming."
+      ],
+      "reproduction": [
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '20,316p'",
+        "rg -n 'Q_nu|Q_EM|energy_transfer|energy_debit|energy contribution' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "A future controller could supply the intended couplings, five weights, canonical key, and energy debit, but those choices are not frozen by the reviewed exact bytes.",
+        "The external Hannestad-Madsen normalization was not fetched because this blind assignment permits only named inputs."
+      ],
+      "confidence": 0.95
+    },
+    {
+      "finding_id": "F-W7M-003-PER-LEG-SHELL-GATE-VIOLATION",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The finite-m_e constructor violates the locked per-leg shell postcondition. It takes the maximum residual over all four legs and compares it with one maximum scale over all four legs, so a high-scale leg can rescue a nonconforming lower-scale leg. The CAS contract requires each shell residual to be checked against its own scale and expressly forbids aggregate rescue.",
+      "evidence_fingerprint": "sha256:c54728997794be3ece5a74c9e2c13ae3b6e6385603459c5bd3b66a9257426b66",
+      "assumptions_used": [
+        "For leg l the required bound is |p_l.p_l+m_l^2| <= 128 epsilon64 max(1,E_l^2,|p_l|^2,m_l^2).",
+        "Replacing four componentwise inequalities by max(residual_l) <= 128 epsilon64 max(scale_l) is strictly weaker when scales differ."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:85-98 requires process-specific support, exact Jacobian, and each-shell/no-aggregate postconditions.",
+        "scripts/audit/w7_b3v2_contract_source.py:575-584 computes shell_residual=max(shell_residuals), shell_scale=max(all leg scales), then performs only one comparison.",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:202-211 states the same per-shell bound and no-aggregate rule."
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:401-607 correctly separates elastic/pair support thresholds, uses principal roots, identity/nonzero-beta boosts, strict z_star rejection, dPhi2=k*/(16*pi^2*sqrt(s)), positive interior energies, component conservation, and Mandelstam checks at design level.",
+        "docs/audit/BD622_W7_exact_test_vectors.json:35-90 supplies threshold and rational shell/conservation controls."
+      ],
+      "reproduction": [
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '540,607p'",
+        "nl -ba .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json | sed -n '85,98p'"
+      ],
+      "unresolved": [
+        "No shell vector was numerically evaluated, so this is a source-contract failure rather than a measured failing event.",
+        "The threshold support label exists, but no threshold derivative calculation is present in these bytes."
+      ],
+      "confidence": 0.995
+    },
+    {
+      "finding_id": "F-W7M-004-TRACE-COMPLETENESS-UNENFORCEABLE",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The claimed single sealed A0 trace is not constructible or completeness-checkable from the source. No code instantiates ArithmeticNode or instruments the binding physics functions. validate_arithmetic_trace checks only contiguous IDs, known owner/opcode, topological inputs, monotone free-form keys, and at least one node per owner; it does not enforce opcode arity for directed replay, a nonempty/final_reconstruction-owned output set, the canonical key schema, owner/opcode counts, or stage-specific interface identity. The one boolean declared_interface cannot distinguish the required event, reduction, basis-object, projected-state, and q-vector boundaries.",
+      "evidence_fingerprint": "sha256:f60847e11536977e1721fdc8812689438be344ec317c33d7e8c2b090ddad3be5",
+      "assumptions_used": [
+        "Completeness cannot be inferred merely because every owner name occurs once.",
+        "A replay certificate must reject omitted operations and extra operands before any stage result is trusted.",
+        "The required interface locations differ between A1 and A2 and therefore need more information than an untyped boolean unless an exact node manifest supplies it."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:117-123 requires full canonical key, exact owner/opcode, declared interfaces, final IDs, and operation counts.",
+        "scripts/audit/w7_b3v2_contract_source.py:1809-1845 defines the node and validator but does not validate arity, key shape, output nonemptiness/ownership, or owner/opcode counts.",
+        "scripts/audit/w7_b3v2_contract_source.py:1848-1879 silently ignores extra operands for directed add/sub/mul/div/sqrt/exp/sin/cos.",
+        "scripts/audit/w7_b3v2_contract_source.py:1948-1986 uses one declared_interface boolean for both A1 and A2 and returns owner-only counts.",
+        "Targeted rg found no ArithmeticNode construction and no declared_interface assignment anywhere in the binding source."
+      ],
+      "counterevidence_refs": [
+        "The validator does enforce contiguous/topological nodes, known owners/opcodes, monotone loop keys, and a directed-to-binary boundary check.",
+        "STAGE_POLICIES at scripts/audit/w7_b3v2_contract_source.py:1757-1791 states the intended A0-A4 owner sets and prose interfaces."
+      ],
+      "reproduction": [
+        "rg -n 'ArithmeticNode\\(|declared_interface=' scripts/audit/w7_b3v2_contract_source.py",
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '1809,1986p'"
+      ],
+      "unresolved": [
+        "A later controller could invent a trace builder and interface manifest, but that would introduce unreviewed exact bytes.",
+        "No synthetic trace was executed because this assignment is static review only."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-W7M-005-HORNER-ONLY-GRAPH-BYPASSED",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The A0/A3 mass and reconstruction graph violates the frozen arbitrary-y Horner rule. Although PolynomialBasis.evaluate performs descending Horner on stored z-power coefficients, projection, mass assembly, and native observable reconstruction use cached node_values directly; the directed mass graph also accepts node-value tables. Because MGS node updates and coefficient-Horner evaluation have different binary64 operation paths, these values are not guaranteed bitwise identical, so the reviewed A0 graph and A0-A4 owner split are ambiguous.",
+      "evidence_fingerprint": "sha256:f24fe31120f5afe63d02500095d0ea6b64c10508d206f1bc69d5fe047eff0029",
+      "assumptions_used": [
+        "The CAS contract's phrase every consumer includes design nodes, mass assembly, projection, and final reconstruction.",
+        "Separate floating-point evaluation paths cannot be treated as identical without a proved bitwise identity, which is absent."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:105-111 requires every consumer to evaluate stored coefficients by descending Horner and forbids node lookup.",
+        "scripts/audit/w7_b3v2_contract_source.py:967-979 defines the conforming Horner evaluator.",
+        "scripts/audit/w7_b3v2_contract_source.py:1070-1080 projects with basis.node_values.",
+        "scripts/audit/w7_b3v2_contract_source.py:1136-1190 assembles M and O with basis.node_values rather than basis.evaluate.",
+        "scripts/audit/w7_b3v2_contract_source.py:1386-1429 takes directed basis_values directly for the A3/A4 mass graph."
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:1083-1091 reconstruct_entropy does use basis.evaluate and therefore follows Horner for that isolated path.",
+        "The basis stores both coefficient and node representations with a common sign."
+      ],
+      "reproduction": [
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '960,1190p'",
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '1386,1429p'"
+      ],
+      "unresolved": [
+        "The numerical size of node-value versus Horner divergence was not evaluated and is irrelevant to the exact-graph mismatch.",
+        "A single retained representation and consumer path must be chosen before any W7 execution authority."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-W7M-006-BNATIVE-NOT-RIGOROUSLY-COMPOSED",
+      "claim_id": "C-W7-METROLOGY-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The B_native implementation is not a rigorous directed certificate. metrology_bounds receives binary64 float endpoint pairs, computes interval differences, midpoints, radii, division, and the factor-four sum with ordinary round-to-nearest arithmetic, and has no explicit beta/Pbeta partition or permutation input. native_permutation_defect likewise accepts a caller-supplied denominator and uses ordinary float subtraction. No source function constructs or validates the required A4 permutation certificate. Consequently the common D_pair domain, outward B terms, high-precision middle equality, and final triangle comparison are not enforceable from these bytes.",
+      "evidence_fingerprint": "sha256:3eea1ceb09c0f61b4c8fd2073b25bdd26a99d8aa2f822fc614cb0a002f420ebb",
+      "assumptions_used": [
+        "A rigorous upper bound must preserve directed MPFR endpoints or perform an explicitly outward conversion and outward reductions.",
+        "The common denominator must be mechanically tied to both beta and Pbeta A0/A4 domains, not supplied by convention alone.",
+        "The triangle argument needs an exact/isomorphic A4 middle equality after P; interval overlap without a graph/input mapping is not by itself equality."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:131-150 freezes one D_pair, directed A0-A4 terms, permutation certificate, and B_native formula.",
+        "scripts/audit/w7_b3v2_contract_source.py:2014-2075 defines float endpoint types and ordinary non-directed B-term arithmetic.",
+        "scripts/audit/w7_b3v2_contract_source.py:2084-2096 computes R_native from ordinary floats and a free denominator.",
+        "Targeted rg found no permutation-certificate implementation or trace-ID comparison in the source."
+      ],
+      "counterevidence_refs": [
+        "The abstract triangle structure is conservative if its premises hold: two beta/Pbeta paths require at most 2*(B_sum+B_basis+B_solve+B_interval), so the frozen factor four has slack.",
+        "scripts/audit/w7_b3v2_contract_source.py:1468-1514 locally implements the mathematically valid symmetric bound cond2(M)<=||M||_infinity||M^-1||_infinity with directed row sums and unit-column solves.",
+        "scripts/audit/w7_b3v2_contract_source.py:633-757 provides basic directed MPFR interval operations."
+      ],
+      "reproduction": [
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '1455,1514p;1998,2115p'",
+        "rg -n 'permutation.*certificate|trace_ids|operation_counts' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "The local condition-bound function is not wired to a trace, exact state/P closure, cap decision, or outward result serialization.",
+        "No B term or native residual was numerically produced, as required by this assignment."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-W7M-007-TAIL-ORACLE-NOT-RECONSTRUCTIBLE",
+      "claim_id": "C-W7-METROLOGY-DESIGN",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The tail contract is prose data rather than a reconstructible directed oracle. The source has no GL32 interval nodes/weights, transformed integrand (including dz/du=2/(1-u)^2), deterministic active-interval queue, enclosure accumulator, or endpoint switch. spectral_l1_metric reduces purported directed tail endpoints with ordinary floats, while collision_refinement_metrics accepts only one float per signed lost-tail component, so it cannot represent or take the supremum of a two-sided signed interval. The exact vector file contains no tail or support-neighbour vector bundle.",
+      "evidence_fingerprint": "sha256:b59f54d73d57d5dbef5e0a947a71767e21ccb09a511edb7b24b3b3168420c4a7",
+      "assumptions_used": [
+        "Changing variables z=b+(1+u)/(1-u) requires the Jacobian dz/du=2/(1-u)^2 in the transformed integrand.",
+        "A signed interval contribution requires both lower and upper endpoints; one value named q_lost_tail_upper cannot bound absolute magnitude when the lower endpoint is more negative.",
+        "A prose algorithm without exact nodes, operation graph, and accumulator semantics leaves executable choices."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:125-129 requires a directed 256-bit interval GL32 tail integrator with deterministic splitting and fail-closed termination.",
+        "scripts/audit/w7_b3v2_contract_source.py:2005-2011 contains only a TAIL_CONTRACT string dictionary; targeted rg found no tail-integrator function.",
+        "scripts/audit/w7_b3v2_contract_source.py:1669-1693 computes the claimed spectral upper endpoint with ordinary float arithmetic.",
+        "scripts/audit/w7_b3v2_contract_source.py:1711-1726 accepts q_lost_tail_upper as Sequence[float] and takes abs of that one value.",
+        "docs/audit/BD622_W7_exact_test_vectors.json:1-100 ends after nullspace vectors and contains no tail/support-neighbour vectors."
+      ],
+      "counterevidence_refs": [
+        "The finite domains, rational map, electron/neutrino envelope formulas, left-first split rule, tolerance, and leaf cap are stated consistently in CAS_CONTRACT.json and TAIL_CONTRACT.",
+        "The named large-y profile envelope is dimensionally and sign-wise plausible for the listed perturbations."
+      ],
+      "reproduction": [
+        "rg -n 'TAIL_CONTRACT|tail|GL32|leftmost widest|q_lost_tail' scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json",
+        "nl -ba scripts/audit/w7_b3v2_contract_source.py | sed -n '1640,1740p;1998,2014p'",
+        "nl -ba docs/audit/BD622_W7_exact_test_vectors.json | sed -n '1,120p'"
+      ],
+      "unresolved": [
+        "No tail integral was executed, so no numerical tail claim is made.",
+        "A future implementation would have to add exact bytes and receive a fresh blind review before execution."
+      ],
+      "confidence": 0.98
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-W7-METROLOGY.json"
+  ]
+}

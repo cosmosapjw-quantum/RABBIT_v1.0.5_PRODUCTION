@@ -1,0 +1,255 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+  "assignment_id": "A-D040-JAX-LEGACY-RECOVERY",
+  "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+  "agent_id": "019f8e74-d178-7bc0-bbfd-8f7de0b0afb6",
+  "agent_type": "context_mapper",
+  "runtime_agent_type": "context_mapper",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+    "assignment_id": "A-D040-JAX-LEGACY-RECOVERY",
+    "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:6972198298c3d08e34db404b1c17cfc3990a65ad06ab0559897c03e2cc3485e7",
+    "runtime_agent_type": "context_mapper",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-LEGACY-RECOVERY.json",
+  "started_at": "2026-07-23T10:12:00Z",
+  "completed_at": "2026-07-23T10:27:35Z",
+  "tool_versions": {
+    "git": "local Git; legacy object database queried only via --git-dir and bundle list-heads",
+    "rg": "local ripgrep; read-only targeted evidence filtering"
+  },
+  "commands": [
+    "sha256sum assignment, role, result template, prior mapper result, plan, bundle, manifest, and ref inventories",
+    "git bundle list-heads .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+    "git --git-dir=.publish-local/20260719T052443Z/legacy.git for-each-ref",
+    "git --git-dir=.publish-local/20260719T052443Z/legacy.git log --all --reverse -- <JAX/Bianchi-related paths>",
+    "git --git-dir=.publish-local/20260719T052443Z/legacy.git show/diff/ls-tree for selected JAX commits and refs",
+    "read-only join of legacy-HEAD and current-HEAD JAX blob IDs"
+  ],
+  "artifacts": [
+    {
+      "path": ".publish-local/20260719T052443Z/legacy.git",
+      "kind": "exact local rollback Git directory",
+      "detail": "HEAD 0b2339c676dba6f36dbf0850419c4d78e1a5f907 on bd612-remediation; 1,336 HEAD commits and 1,342 all-ref commits; queried in place without checkout."
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "kind": "portable reachable-ref bundle",
+      "sha256": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "detail": "37 recorded refs; `git bundle list-heads` agrees with the preserved inventory."
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/BACKUP_MANIFEST.md",
+      "kind": "preservation manifest",
+      "sha256": "sha256:ce6c3b8f443d195756be90631a1e21ddb54236e3d2c697eda004451796092fb2"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/refs-before.tsv",
+      "kind": "pre-reroot ref inventory",
+      "sha256": "sha256:f3ab75ec0f2a2f6ba074e1c1203ede6e6c2735c75628e02aa572926e769a72db"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D040-LEGACY-001",
+      "claim_id": "C-D040-JAX-LEGACY-PROVENANCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The preserved publication-era object is safely queryable and closes the prior mapper's named-ref provenance gap. `.publish-local/20260719T052443Z/legacy.git` is the exact rollback authority, with HEAD `0b2339c676dba6f36dbf0850419c4d78e1a5f907` on `bd612-remediation`; the portable bundle has SHA-256 `9f22f318...` and 37 recorded refs. The legacy database contains 1,336 commits reachable from HEAD and 1,342 across named refs. No checkout, unpack, clone, fetch, restore, worktree, test, or code execution was performed.",
+      "assumptions_used": [
+        "The preservation manifest and exact in-place object database are the authorized sources",
+        "Named-ref history, not reflog-only or unreachable-object archaeology, is the requested incremental trace"
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/BACKUP_MANIFEST.md: Legacy Git",
+        ".publish-local/20260719T052443Z/history/bundle-heads.tsv",
+        ".publish-local/20260719T052443Z/history/refs-before.tsv",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git rev-parse HEAD",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git rev-list --all --count"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        "The bundle intentionally omits 5,726 objects unreachable from named refs; `legacy.git` preserves them, but this assignment did not attribute unrelated unreachable objects."
+      ],
+      "reproduction": [
+        "git bundle list-heads .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git for-each-ref --format='%(refname) %(objectname)'"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-LEGACY-002",
+      "claim_id": "C-D040-JAX-LEGACY-PROVENANCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The true legacy history begins at root `692f394149846033fb39e974221db7d41b33e50f` on 2026-04-20. That root already contains 40 `src/rabbit/jax` files and 15,557 inserted JAX lines, including geometry, Class-A/Class-B drivers, Type-I and characteristic drivers, weak/network/thermo, SMC, runtime-device, and solver surfaces. Thus no pre-root incremental JAX genesis exists in reachable history; the recoverable incremental timeline begins after this mature import, confirming the unified-plan diagnosis while repairing the earlier survey's mistaken claim that only the curated 2026-07-19 import was available.",
+      "assumptions_used": [
+        "A root commit has no recoverable parent in this object graph"
+      ],
+      "evidence_refs": [
+        "legacy commit 692f394149846033fb39e974221db7d41b33e50f, 2026-04-20, `initial commit`",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git ls-tree -r 692f394... -- src/rabbit/jax",
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:23-30",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-005"
+      ],
+      "evidence_fingerprint": "sha256:900b5ebc2ff0b624fd71eba8b5b272f9a158cc8826ca3cd68874bd72425ca284",
+      "counterevidence_refs": [
+        "The exact legacy database contains unreachable objects, but none supplies an authoritative parent of root `692f394...`."
+      ],
+      "reproduction": [
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git rev-list --max-parents=0 --all",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show --numstat 692f394... -- src/rabbit/jax"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Development before the 2026-04-20 mature import remains unavailable as incremental Git history."
+      ]
+    },
+    {
+      "finding_id": "F-D040-LEGACY-003",
+      "claim_id": "C-D040-JAX-LEGACY-DELTA",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The post-root history provides an exact mechanism timeline. Non-LRS characteristic primitives landed in `52d2712b` on 2026-04-21 (+532 across source/test/audit), followed by compact non-LRS driver wiring in `3d13c8f` (+775/-57). The private full-Boltzmann direct-kernel candidate changed `driver_typeI_full_boltzmann.py` in `eb850dfa` on 2026-04-23 (+323/-46). JAX-native nu-e/pair collision code and parity tests landed in `e5d671b0` on 2026-04-28 (+673). Discrete-adjoint Rodas5P replay landed in `b2ff69fc` on 2026-05-04 (+324). Class-A characteristic and vector-tilt scaffolds landed in `3cc4463b` (+308) and `c0e4d770` (+153) on 2026-05-05. These are exact historical additions, not current authority.",
+      "assumptions_used": [
+        "Commit-local path stats describe code-surface evolution, not scientific validity"
+      ],
+      "evidence_refs": [
+        "legacy commits 52d2712b15e16428983d2fb9bb499b5a012d9a07 and 3d13c8f52cf6c8c34d193666984259c9bc619c89",
+        "legacy commits eb850dfaa77546e9f98c554e2ad653ec678c6e86 and e5d671b045fdd9404f4cd30fed0249b417954618",
+        "legacy commits b2ff69fcde8154fa4d4fe4510cfbcf72fd76b064, 3cc4463bc129298b3a5194d6a3faaa2cba15b0b4, and c0e4d7701eec83824bbf4fb28c8dd73961297a28"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        "Later deletion and retirement commits explicitly demoted or removed several of these surfaces."
+      ],
+      "reproduction": [
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show --stat <commit> -- src/rabbit/jax tests docs/audit"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-LEGACY-004",
+      "claim_id": "C-D040-JAX-LEGACY-DELTA",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The legacy history exposes concrete failure modes that are more informative than the curated snapshot alone. The q-grid remap audit at `905e6aa9` records a JIT tracer leak from caching trace-local JAX arrays, fixed by caching NumPy arrays and converting inside the current trace. Reintroducing the physically correct temperature remap then exposed a stiff equilibration manifold: very large temperature derivatives forced Rodas5P microsteps, so the remap was reverted while the cache fix was retained. The same audit recorded `N_eff=2.993` versus 3.044, attributing the gap to coarse quadrature, interpolation, placeholder matrix elements, and incomplete physics. The later hostile audit at preserved ref `815579b2` identified a dimensionally inconsistent T^4 collision-rate prefactor; `e1bd7c19` corrected the JAX reduced 2-to-2 scaling to T^5. These are historical failure/localization records, not validated Bianchi remedies.",
+      "assumptions_used": [
+        "Audit text is evidence of recorded historical behavior and decisions, not independent physics validation",
+        "D-040 prohibits replaying the numerical paths"
+      ],
+      "evidence_refs": [
+        "legacy commit 905e6aa9f1fecdfe49ca9c33b728d53d50663cb2:docs/audit/PR-T3B_jax_kernel_runtime.md",
+        "legacy ref feature/bianchi-i-full-nonperturbative at 815579b219bc93a4bb2245095afa5bebd7291336",
+        "legacy commit e1bd7c193e3f9ce66e2dd2d9c9cc5bdef02a3a3c modifying collisions_jax.py and nu_nu_scattering_jax.py"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        "The q-remap audit proposed IMEX or asymptotic-preserving directions, but neither proposal is validated by this read-only survey.",
+        "The preserved feature branch name does not identify a divergent code line: its tip is an ancestor checkpoint containing the BD612 audit documents."
+      ],
+      "reproduction": [
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show 905e6aa9:docs/audit/PR-T3B_jax_kernel_runtime.md",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show --name-status e1bd7c19 -- src/rabbit/jax"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No prospective contract tests IMEX/AP suitability for a future oscillatory-shear Bianchi system."
+      ]
+    },
+    {
+      "finding_id": "F-D040-LEGACY-005",
+      "claim_id": "C-D040-JAX-LEGACY-DELTA",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The history also records deliberate deflation. PR-D1 `2c6f2efd` deleted four augmented JAX modules plus their four tests (11,632 deletions in the targeted JAX/test slice; commit subject reports 14,332 repository-wide). PR-D2 `3b892482` deleted the nonlinear non-LRS collision/weak-network layer (2,355 targeted deletions; subject reports 23,546 repository-wide). BD614 `ddb9d0e9` deleted 10 dead/test-only JAX source modules and 11 tests (3,913 lines documented), including curved PSTF, Class-B substrate, Class-A characteristic, generic Jacobian, experimental linear solves, vector tilt, and a pair-process twin. BD620 `0c1d0ac2` retired the remaining Type-I forward line to opt-in/parity status, and PORT-00 `f52cdb26` retired JAX authority. These commits are the strongest evidence that historical mechanisms must be treated selectively rather than restored wholesale.",
+      "assumptions_used": [
+        "Deletion/retirement commits are authoritative for historical surface status",
+        "Commit-subject repository-wide totals and targeted path stats are reported separately"
+      ],
+      "evidence_refs": [
+        "legacy commits 2c6f2efdfc024e6eb30ce56c0c88471f9d6e9561 and 3b892482778f223a5dcac5e939b2ef423d85343d",
+        "legacy commit ddb9d0e9bdfacd1ffbb2a6d3f4d2e9756be9689d",
+        "legacy commits 0c1d0ac299d98c88bd03fedd4fbef3f421c95480 and f52cdb26a85c3d58eb9dd08c6c48532023e87a6e"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        "Retained low-level AD, collision, geometry, weak, network, and solver components remain as frozen component oracles; deletion does not make them scientific authorities."
+      ],
+      "reproduction": [
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show --stat --name-status <commit> -- src/rabbit/jax tests src/rabbit/config"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-LEGACY-006",
+      "claim_id": "C-D040-JAX-LEGACY-PROVENANCE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The preserved refs are exact and bounded. Named heads include `bd612-remediation@0b2339c6`, `feature/bianchi-i-full-nonperturbative@815579b2`, `backup/bd407-pre-adversarial-audit-20260608@9ff010a7`, and several v2/spec branches; tags resolve to v3.0.0-rc1 commit `3ca65feb` (2026-05-05), v3.1.0-rc1 `a879fd2d` (2026-05-05), and v3.2.0-rc1 `f9acec9b` (2026-05-05). The Bianchi-named branch is not a separate surviving implementation branch: its tip is the 2026-07-08 BD612 hostile-audit checkpoint and is already an ancestor of legacy HEAD.",
+      "assumptions_used": [
+        "Ref tips and ancestry are descriptive provenance only"
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/history/bundle-heads.tsv",
+        ".publish-local/20260719T052443Z/history/refs-before.tsv",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git merge-base 815579b2 0b2339c6"
+      ],
+      "evidence_fingerprint": "sha256:f3ab75ec0f2a2f6ba074e1c1203ede6e6c2735c75628e02aa572926e769a72db",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git for-each-ref",
+        "git --git-dir=.publish-local/20260719T052443Z/legacy.git show -s refs/tags/v3.0.0-rc1^{} refs/tags/v3.1.0-rc1^{} refs/tags/v3.2.0-rc1^{}"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-LEGACY-007",
+      "claim_id": "C-D040-JAX-LEGACY-DELTA",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The current-versus-legacy source delta is exact: legacy HEAD contains 52 `src/rabbit/jax` files; current HEAD contains 48. All 48 common paths have identical Git blob IDs, so their bytes are unchanged across the reroot. The four legacy-only paths are `driver_typeI.py`, `driver_typeI_char.py`, `run_extended_bbn.py`, and `runtime_device.py`. Those files embodied the high-level Type-I/characteristic forward drivers, extended-PSTF runner, runtime probing, prewarm/device fallback, and large benchmark/reporting surfaces. Their absence from current HEAD, while every retained component is byte-identical, proves the current snapshot is a deliberate high-level authority/dispatch deflation rather than a rewritten low-level JAX implementation.",
+      "assumptions_used": [
+        "Identical SHA-1 blob IDs across the two Git object databases imply byte-identical file content",
+        "Path presence is compared only under `src/rabbit/jax`"
+      ],
+      "evidence_refs": [
+        "legacy HEAD 0b2339c676dba6f36dbf0850419c4d78e1a5f907 `ls-tree -r -- src/rabbit/jax`",
+        "current HEAD `ls-tree -r -- src/rabbit/jax`",
+        "read-only blob-ID join: 48 common, zero differing; counts legacy 52/current 48",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json"
+      ],
+      "evidence_fingerprint": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7",
+      "counterevidence_refs": [
+        "This exact byte identity does not validate any retained component's physics; it establishes provenance and delta only."
+      ],
+      "reproduction": [
+        "join legacy and current `git ls-tree -r` outputs by path and compare blob IDs",
+        "comm -3 legacy-JAX-paths current-JAX-paths"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-LEGACY-RECOVERY.json"
+  ]
+}

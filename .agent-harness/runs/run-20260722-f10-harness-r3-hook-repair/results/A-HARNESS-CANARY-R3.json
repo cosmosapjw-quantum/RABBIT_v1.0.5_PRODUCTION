@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-harness-r3-hook-repair",
+  "assignment_id": "A-HARNESS-CANARY-R3",
+  "context_version": "742f39fa7b0a5c750e59bd8634036e26f377d47e306e2f8b4379efd882d7fedf",
+  "agent_id": "019f8916-8681-74a1-9105-a754507103ac",
+  "agent_type": "context_mapper",
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/results/A-HARNESS-CANARY-R3.json",
+  "started_at": "2026-07-22T09:09:24+00:00",
+  "completed_at": "2026-07-22T09:12:00+00:00",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-CANARY-R3.json",
+    "printf '%s' '<controlled negative SubagentStop event>' | /usr/bin/python3 .codex/hooks/subagent_stop_validate.py"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-HARNESS-CANARY-R3-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The delivered live subagent prompt contained the exact RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, INDEPENDENCE_MODE, mandatory bootstrap, agent identity, and Hook preflight PASS, but did not contain the required literal HARNESS_PRETOOLUSE_STATUS=PASS or HARNESS_PRETOOLUSE_ASSIGNMENT_SHA256=514408338f8f0b77ac22fb3100c172a7bf9ac29b12b8e6fb14ebdff93f1b8dd3 lines. The required live PreToolUse rewrite-delivery proof therefore fails. A controlled pre-artifact SubagentStop event without a HARNESS_RESULT marker was blocked by the active validator.",
+      "assumptions_used": [
+        "The received prompt is the authoritative observable for the assignment-required PreToolUse attestation check.",
+        "The registered assignment SHA-256 is 514408338f8f0b77ac22fb3100c172a7bf9ac29b12b8e6fb14ebdff93f1b8dd3."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-CANARY-R3.json",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        "live prompt bootstrap observed by agent 019f8916-8681-74a1-9105-a754507103ac",
+        "controlled negative SubagentStop stdout: decision=block"
+      ],
+      "evidence_fingerprint": "sha256:514408338f8f0b77ac22fb3100c172a7bf9ac29b12b8e6fb14ebdff93f1b8dd3",
+      "counterevidence_refs": [
+        "The mandatory bootstrap prose states that PreToolUse injected both attestation lines, but the literal lines were not delivered in the received prompt."
+      ],
+      "reproduction": [
+        "Inspect the received subagent prompt for the two literal HARNESS_PRETOOLUSE_* lines.",
+        "Run the recorded controlled negative SubagentStop command before creating the result artifact; it returns decision=block."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Whether the host applies PreToolUse updatedInput but strips its injected lines before SubagentStart prompt delivery requires owner-side trusted-session investigation."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/results/A-HARNESS-CANARY-R3.json"
+  ]
+}

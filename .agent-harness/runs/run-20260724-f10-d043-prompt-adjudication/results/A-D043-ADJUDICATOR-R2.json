@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-d043-prompt-adjudication",
+  "assignment_id": "A-D043-ADJUDICATOR-R2",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9009-0f3c-7922-8acf-0151ea64b980",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-d043-prompt-adjudication",
+    "assignment_id": "A-D043-ADJUDICATOR-R2",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:98fdb2c98bb8c6fb4e8b50e48dcdd845c806ce8391895f26819ae623c17ecb75",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260724-f10-d043-prompt-adjudication/results/A-D043-ADJUDICATOR-R2.json",
+  "started_at": "2026-07-23T18:06:00Z",
+  "completed_at": "2026-07-23T18:06:00Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sha256sum docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md .agent-harness/context/FROZEN_DECISIONS.md docs/harness/PROJECT_STATE.md docs/harness/DECISION_LOG.md docs/harness/NEXT_SESSION_PROMPT.md and the three allowed sibling results",
+    "sed -n '/| Source commit and path |/,/^$/p' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | rg -c '^| `(CODE_HEAD|EVIDENCE_BASE):'",
+    "jq -s '[.[].findings[]] | group_by([.claim_id,.evidence_fingerprint,.verdict])' on the three allowed sibling results",
+    "git status --short -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "git log -1 --format='%H %s' -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "rg -n 'PROMPT_COMMIT|unreachable|NOT_SUPPLIED|CURRENT_BINDING|HISTORICAL_|XG-00|fictional lab ZIP' docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md"
+  ],
+  "artifacts": [
+    "Reviewed corrected prompt: sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5.",
+    "Current SSOT hashes: FROZEN_DECISIONS sha256:57fbf2945e1919aa3d476ec93194df5f7fffd8fd65b6bc0e390119a4fe04de72; PROJECT_STATE sha256:5c37c2c26c819298d59f0b696149a5e4f3d2fd1e4679227c5cfa190c579563ec; DECISION_LOG sha256:c3151f9648ad13e6b4c782e176bf71d5e37251af1ba2a40404764006cf76ea7c; NEXT_SESSION_PROMPT sha256:91c2ac7a61f0b5b622da89071f30e59eb25f925395a2e67d952a807cb3dfb3ff.",
+    "Allowed sibling result hashes: HISTORY-PROVENANCE sha256:f1acafa043a30db249b1a4a748d148118b8542595cfb11859cc2f772ef934f7a; ARTIFACT-BOUNDARY sha256:ec550f9dad83be9453df968264802898749a557de10be351ab0469f4266359a1; CONTRACT-REDESIGN sha256:a26ee4f19fdaabac01f880c269bac31a06582821da15ffa68795df10181c4994.",
+    "Deduplication by (claim_id,evidence_fingerprint,verdict): 10 raw findings, 10 unique groups, 0 duplicates.",
+    "Claim audit: C-D043-PROMPT-ADMISSION is VALIDATED only as an issuance-contract review; no experimental, scientific, implementation, W7, B3, or production claim was upgraded."
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D043-ADJ-R2-001",
+      "claim_id": "C-D043-PROMPT-ADMISSION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PASS for issuance-contract readiness only, conditional on commit and push. The current corrected prompt (1) contains exactly 16 published CODE_HEAD/EVIDENCE_BASE commit-path-hash bindings and requires the received request to be byte-identical to a future pushed PROMPT_COMMIT; (2) truthfully classifies 4f4da8f0... as an original but unreachable local byte and e3ea99a9... as absent original evidence for which only a post-hoc reconstruction exists, never original provenance; (3) makes absent historical raw claim-local NOT_SUPPLIED while requiring every replay-only or optional byte actually consumed to be content-hash-promoted to CURRENT_BINDING before seal; (4) keeps every prospective contract/source/test/raw-output/stderr/manifest byte under XG-00 while preserving XG-01 through XG-11 and all STOP/PRESERVE and owner-authority boundaries; and (5) forbids an empty or fictional ZIP when Phase A yields no finalist. The earlier fail findings are preserved as historical facts and do not conflict with this prospective contract. Because the reviewed prompt is currently a modified working-tree file whose last committed path version is 386cc23a49ab257d73ecd33c7a49fd50c407814a, it is not yet dispatchable authority.",
+      "assumptions_used": [
+        "Before issuance, the owner commits and pushes exactly the reviewed prompt bytes with SHA-256 2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5, supplies that exact PROMPT_COMMIT, and preserves the required CODE_HEAD -> EVIDENCE_BASE -> PROMPT_COMMIT ancestry.",
+        "Any byte change before commit requires rechecking this verdict; a later branch tip or uncommitted file is not a substitute.",
+        "This adjudication grants no candidate, scientific feasibility, implementation, runtime, W7, B3, F-11, QKE, public-support, or production authority."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:23-132 (commit roles, byte-identity rule, ancestry, and 16 published bindings)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:136-180 (unreachable/absent historical bytes, NOT_SUPPLIED, and claim-local failure boundary)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:337-345 (four consumed-input classes and preseal promotion)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:370-392 (XG-00 through XG-11 and double XG-00 application)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:668-690 (conditional bundle and prohibition on empty or fictional ZIP)",
+        ".agent-harness/context/FROZEN_DECISIONS.md:47 (D-043 preserves the original failure, supersedes only the malformed prerequisite, and leaves authority stops closed)",
+        ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-HISTORY-PROVENANCE.json (original-byte reachability and post-hoc-only reconstruction evidence)",
+        ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-ARTIFACT-BOUNDARY.json (claim-local historical boundary and consumed-byte promotion)",
+        ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-CONTRACT-REDESIGN.json (16-row reproduction, unchanged XG-01..11, and prospective contract review)"
+      ],
+      "evidence_fingerprint": "sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+      "counterevidence_refs": [
+        "git status reports the reviewed prompt as modified, and git log resolves its last committed path version to 386cc23a49ab257d73ecd33c7a49fd50c407814a; therefore the required future PROMPT_COMMIT and push are not yet satisfied.",
+        "The original 4f4/e3 provenance failure remains true: the redesign permits no promotion of the unreachable original, post-hoc reconstruction, or absent historical raw.",
+        "The earlier contract-design review used prompt SHA-256 ec245e06...; this adjudication binds only the currently reviewed SHA-256 2a7a4dbf... and requires re-review after any further byte change."
+      ],
+      "reproduction": [
+        "Count Section 1.1 rows with the recorded sed/rg command; output is 16.",
+        "Run the recorded three-envelope jq grouping; output is raw_count=10, unique_groups=10, duplicates=[].",
+        "Run sha256sum on the corrected prompt; output is 2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5.",
+        "Run the recorded git status and git log commands; they show the prompt is modified and its last committed path version is 386cc23a49ab257d73ecd33c7a49fd50c407814a."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Owner commit/push and exact PROMPT_COMMIT dispatch remain future authority actions outside this assignment."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-d043-prompt-adjudication/results/A-D043-ADJUDICATOR-R2.json"
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-W7-METROLOGY",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "agent_id": "019f8937-c2c8-7b51-b94e-3d2c5e480b01",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-W7-METROLOGY",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:448845dbc95f461ec7ff02b49907f164bb126cb9d9b586e6a351c0cf1228f517"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-W7-METROLOGY.json",
+  "started_at": "2026-07-22T09:49:42Z",
+  "completed_at": "2026-07-22T09:53:03Z",
+  "tool_versions": {
+    "python3": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "sed": "GNU sed 4.9"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,100p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '101,200p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '201,300p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json",
+    "wc -l docs/audit/BD622_W6_comparator_design_proof_pack.md docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md docs/audit/BD622_W5_d028_discriminator_result.md .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "sed -n '1,120p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '121,240p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '241,305p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '1,100p' docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "sed -n '101,157p' docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "sed -n '1,120p' docs/audit/BD622_W5_d028_discriminator_result.md",
+    "sed -n '1,100p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "sed -n '101,162p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "sed -n '1,240p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,260p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json .agent-harness/context/roles/independent_auditor.md docs/audit/BD622_W6_comparator_design_proof_pack.md docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md docs/audit/BD622_W5_d028_discriminator_result.md .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json .agent-harness/templates/RESULT_ENVELOPE.json",
+    "nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md | sed -n '25,210p'",
+    "nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md | sed -n '209,305p'",
+    "nl -ba .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json | sed -n '20,162p'",
+    "nl -ba docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md | sed -n '1,35p;105,157p'",
+    "nl -ba docs/audit/BD622_W5_d028_discriminator_result.md | sed -n '22,52p'",
+    "nl -ba .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json | sed -n '15,45p'",
+    "sha256sum --version",
+    "sed --version",
+    "python3 --version",
+    "python3 -m json.tool .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md#sha256:67cf5213c9a6e55c08d5d23b43ac94359e7191a25780ef00036fb5cd68b2f01a",
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json#sha256:448845dbc95f461ec7ff02b49907f164bb126cb9d9b586e6a351c0cf1228f517",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+    "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#sha256:a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a",
+    "docs/audit/BD622_W5_d028_discriminator_result.md#sha256:83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0",
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-W7M-001",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "Absolute continuum normalization and the direct row-ii trace are not closed by the authorized bytes. W6 and the CAS contract state the obligations, but the assignment supplies no W7 source or derivation. W3 explicitly validates only coefficient ratios and the Maxwell-Boltzmann reduction, leaves the overall normalization unfixed, and obtains row ii by crossing rather than the required direct v-spinor calculation. Therefore every 2*pi, spin, electron-degeneracy, identical-final-state, tagged-target, global-leg, and catalogue-multiplicity factor cannot be independently reconstructed, and this review cannot authorize implementation or T01.",
+      "assumptions_used": [
+        "The CAS invariant phase-space measure, one-helicity neutrino convention, and no-tagged-initial average rule are controlling.",
+        "The assignment's required_inputs list is exhaustive under blind targeted discovery.",
+        "An obligation or candidate target is not evidence that its derivation has been completed."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json:17-24",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:183-197",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:249-254",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:3-20",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:116-144",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:37-39",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:67-82"
+      ],
+      "evidence_fingerprint": "sha256:a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:189-197",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:67-70"
+      ],
+      "reproduction": [
+        "sed -n '183,197p;249,254p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '1,20p;116,144p' docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+        "sed -n '37,39p;67,82p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Direct coherent t+s row-ii amplitude, interference sign, u/v spin sums, and final K_t coefficient.",
+        "Explicit reduction of the invariant measure to the dimensionless per-target and global weak-source prefactors.",
+        "A factor ledger covering every 2*pi power, spin sum or average, electron bath degeneracy, final identical-particle factor, tagged/global multiplicity, and flavour-orbit multiplicity.",
+        "Finite-m_e electron weak-coupling convention and absolute elastic/pair matrix elements, including interference."
+      ]
+    },
+    {
+      "finding_id": "F-W7M-002",
+      "claim_id": "C-W7-METROLOGY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The arithmetic axis and B_native bound are not yet an executable prospective contract. The frozen B3 operation graph is asserted but not supplied; exact binary64-input promotion, elementary-function rounding, interval composition, same-node comparison norm, continuum-reference delta, and conversion back to reported bits are undefined. B_fp is introduced but never mapped into B_sum, while B_sum, B_basis, B_solve, and B_interval have no common absolute or relative normalization, formulas, numeric values, or component denominators. W6 also names 256-bit MPFR while the shared CAS numeric cross-check names 100 decimal digits without assigning which precision governs the binding interval certificate. Consequently B_native cannot be reproduced or dimensionally audited before output.",
+      "assumptions_used": [
+        "B_native is a dimensionless native relative diagnostic and all additive terms must be normalized to the same component denominator.",
+        "Same-node replay must begin from the exact frozen binary64 inputs to isolate arithmetic from discretization.",
+        "The binding interval calculation must state one precision and directed-rounding protocol distinct from optional nonbinding CAS spot checks."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:199-207",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:216-232",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:261-272",
+        "docs/audit/BD622_W5_d028_discriminator_result.md:43-52",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:136-141"
+      ],
+      "evidence_fingerprint": "sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:150-157",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:221-231"
+      ],
+      "reproduction": [
+        "sed -n '199,232p;261,272p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '43,52p' docs/audit/BD622_W5_d028_discriminator_result.md",
+        "sed -n '136,141p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Exact same-node input bytes, operation order, reduction tree leaves, and MPFR promotion policy.",
+        "Binding precision and directed-rounding scope for exp, log, sqrt, quadrature accumulation, QR, and Cholesky replay.",
+        "Formulas and common normalization for B_sum, B_basis, B_solve, and B_interval, including how B_fp enters B_sum.",
+        "Numeric component floors, denominators, statewise maxima, thread/BLAS setting, and final B_native cap."
+      ]
+    },
+    {
+      "finding_id": "F-W7M-003",
+      "claim_id": "C-W7-METROLOGY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Finite-m_e branch separation is conceptually required but not reconstructibly specified. W6 gives on-shell and whole-event-rejection conditions, yet supplies no invariant parameterization, root equation, integration Jacobian, root enumeration and multiplicity rule, threshold tie rule, or list of denominators and excluded components. The CAS contract explicitly requires those elimination details. Its exact elastic and pair vectors test shell identities only; they do not determine the physical support map or demonstrate that elastic and pair branches remain separate under reduction. The directed tail enclosure is likewise named without an integrand, transform, interval endpoints beyond the coarse domain, or proof rule.",
+      "assumptions_used": [
+        "A source-reviewable support contract must determine all physical roots and Jacobian weights without implementation-time choices.",
+        "Positive energy, on-shellness, and conservation are necessary but not sufficient to specify a reduced collision integral.",
+        "Massless self and finite-mass electron reductions may not share the massless y4 relation."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:69-91",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:187-197",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:43-50",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:59-64",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:71-82",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:98-120"
+      ],
+      "evidence_fingerprint": "sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:84-91",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:60-64"
+      ],
+      "reproduction": [
+        "sed -n '69,91p;187,197p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '43,50p;59,82p;98,120p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Separate elastic and pair invariant coordinates, reduced support equations, and phase-space Jacobians.",
+        "Complete physical-root enumeration, discriminant-zero behavior, multiplicity, and one-sided derivative construction.",
+        "Every cleared denominator and excluded threshold component required by the CAS contract.",
+        "Directed finite-domain and 40-to-infinity tail interval construction."
+      ]
+    },
+    {
+      "finding_id": "F-W7M-004",
+      "claim_id": "C-W7-METROLOGY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The advertised frozen state and test-vector set is not frozen in the reviewed bytes. S-split has no explicit thermodynamic point, the CP control does not identify its base state or temperatures, support controls name but do not list the threshold tuples, and the 100 entropy states defer their generator and seed hash. Numeric caps, denominators, component floors, and environment pins are also deferred until before B3 output. Because the next authorization step permits implementation and T01-T12 after this blind review plus an owner decision, leaving these values to future source construction creates an output-adjacent degree of freedom and prevents exact-hash source-only closure now.",
+      "assumptions_used": [
+        "A frozen state includes all thermodynamic coordinates, base occupations, perturbations, and exact generation bytes.",
+        "A frozen support vector includes explicit input tuples and expected branch classification.",
+        "Prospective metrology requires caps and denominators fixed before any candidate collision output and reviewable before execution authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json:17-24",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:230-247",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:249-275",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:277-281"
+      ],
+      "evidence_fingerprint": "sha256:448845dbc95f461ec7ff02b49907f164bb126cb9d9b586e6a351c0cf1228f517",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:159-181",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:266-275"
+      ],
+      "reproduction": [
+        "sed -n '230,281p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '17,24p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-W7-METROLOGY.json"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "S-split T_cm and T_gamma and CP-control base state plus temperatures.",
+        "Explicit exact-node, nextafter, Y_max-adjacent, and analytic root-threshold tuples with expected classifications.",
+        "Entropy-state generator bytes, seed, seed hash, ordering, and rejection rule for invalid logits.",
+        "Exact gmpy2 wheel version and hash, platform metadata policy, component floors, and numeric cap ledger."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-W7-METROLOGY.json"
+  ]
+}

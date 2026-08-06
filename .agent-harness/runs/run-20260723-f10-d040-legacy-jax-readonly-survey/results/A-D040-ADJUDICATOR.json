@@ -1,0 +1,225 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+  "assignment_id": "A-D040-ADJUDICATOR",
+  "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+  "agent_id": "019f8e78-9e9d-7212-ad0b-bf04ae7f4434",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+    "assignment_id": "A-D040-ADJUDICATOR",
+    "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ff348753e4571db0732a0f68d27ad98e7b9332f321275a88bcfbce2e61738409",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-ADJUDICATOR.json",
+  "started_at": "2026-07-23T10:28:00Z",
+  "completed_at": "2026-07-23T10:37:13Z",
+  "tool_versions": {
+    "rg": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "registered-input adjudication only; no scientific execution"
+  },
+  "commands": [
+    "sed -n in complete bounded ranges over .agent-harness/generated/CONTEXT_PACK.md, the registered assignment, sealed role/template, five registered result envelopes, and D040_PRIMARY_LITERATURE_MATRIX.json",
+    "sha256sum the registered assignment, sealed role/template, five result envelopes, and primary-literature matrix",
+    "rg -n '\"(finding_id|claim_id|verdict|evidence_fingerprint)\"' over only the five registered result envelopes",
+    "path-and-byte aggregate sha256sum over the five result envelopes and primary-literature matrix",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-ADJUDICATOR.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+      "kind": "registered input",
+      "sha256": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-PHYSICS-REUSE.json",
+      "kind": "registered input",
+      "sha256": "sha256:2ba9d3fb1ec7a8ca41350f15d4d2b89a3da26348815af6016c438a92acaecfcf"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json",
+      "kind": "registered input",
+      "sha256": "sha256:3534afc268c74be15f0a9a345816ba2c58415844a13d412f229ab30fbea4f4c7"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-BIANCHI-DSMC-LOCAL.json",
+      "kind": "registered input",
+      "sha256": "sha256:ac87b8d2806bfc2e4c4c490d2d0a38de48225e11e04ce75c9b8f834b0ff2de06"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-LEGACY-RECOVERY.json",
+      "kind": "registered input",
+      "sha256": "sha256:8df6b7b589c7bda86de08b0f6e589d4f128106926a8a1a9c5840ea1ed2f7b47f"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/artifacts/D040_PRIMARY_LITERATURE_MATRIX.json",
+      "kind": "registered primary-literature matrix",
+      "sha256": "sha256:2761c6a820794230433e21e9be629d6d742275d66798c4afe7e12b5803da74ab"
+    },
+    {
+      "path": "D-040 registered adjudication input set",
+      "kind": "path-and-byte aggregate",
+      "sha256": "sha256:11228097f2d6a6a75ebdbf57fe0197320012fda9b5c9d0f45c5033e4bcc37985",
+      "detail": "37 raw findings normalize to 34 exact (claim_id, evidence_fingerprint, verdict) keys. One two-finding stiff/oscillatory key and one three-finding legacy-delta key were collapsed; the 34 keys were then synthesized into five adjudicated semantic findings."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D040-ADJ-001",
+      "claim_id": "C-D040-JAX-LEGACY-SYNTHESIS",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "EVIDENCE: the five envelopes contain 37 raw findings and 34 exact deduplication keys. The repeated keys are (C-D040-STIFF-OSCILLATORY, ef108093..., fail), whose two records cover solver authority and runtime/AD hazards, and (C-D040-JAX-LEGACY-DELTA, 9f22f318..., pass), whose three records cover additions, localized failures, and later deletion. INFERENCE: these are complementary subfindings sharing one exact key, not independent votes. The apparent pass/fail mix for C-D040-BIANCHI-PREMISE is also not a conflict: passes establish the paused Type-I target and low-signal observables; failures reject evidence for oscillatory dynamics and current non-LRS completeness. STATUS: normalized adjudication PASS. AUTHORITY: evidence synthesis only; no scientific or implementation authority.",
+      "assumptions_used": [
+        "Deduplication uses the assignment-mandated exact triple without semantic rekeying.",
+        "Different scopes under one broad claim ID are resolved by their explicit statements and assumptions."
+      ],
+      "evidence_refs": [
+        "A-D040-JAX-NUMERICS-REUSE.json:F-D040-SO-001,F-D040-SO-002",
+        "A-D040-JAX-LEGACY-RECOVERY.json:F-D040-LEGACY-003--F-D040-LEGACY-005",
+        "A-D040-BIANCHI-DSMC-LOCAL.json:F-D040-BL-001--F-D040-BL-004"
+      ],
+      "evidence_fingerprint": "sha256:11228097f2d6a6a75ebdbf57fe0197320012fda9b5c9d0f45c5033e4bcc37985",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "rg -n '\"(finding_id|claim_id|verdict|evidence_fingerprint)\"' over the five registered envelopes and group exact triples"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-ADJ-002",
+      "claim_id": "C-D040-JAX-LEGACY-SYNTHESIS",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "EVIDENCE: the local Type-I equations yield DERIVED monotone no-stress damping d(Sigma_sq)/dN=-2(1-Sigma_sq)Sigma_sq on the physical branch; current full-driver evidence is LRS-only with Pi_minus=0; the literature matrix reports Bianchi-I isotropization evidence and warns that oscillation results are type-, matter-, and time-direction-specific. INFERENCE: the owner's coupled highly oscillatory shear/expansion-decay premise is not established. A fast collision timescale is plausible, but whether it creates stiffness, oscillation, overdamping, or a multiscale coupling in the future equations is unknown. STATUS: no-stress monotone damping is DERIVED within its assumptions; coupled oscillatory shear is SPECULATIVE; current solver suitability is unvalidated. AUTHORITY: no F-11, JAX, solver, or numerical authority. PREREQUISITES: freeze the two-shear/PSTF equations, stress normalization, observable, and physical branch; derive the linear-response spectrum and phase/damping signal before choosing a method. FALSIFIERS: absence of complex or separated fast modes under that frozen model, monotone reference trajectories, or phase/error signals below the prospective arithmetic and discretization floor.",
+      "assumptions_used": [
+        "Bianchi Type I has zero curvature sources.",
+        "The monotonic derivation is limited to Pi=0 and 0<=Sigma_sq<1.",
+        "Literature from other Bianchi types does not transfer without model alignment."
+      ],
+      "evidence_refs": [
+        "A-D040-BIANCHI-DSMC-LOCAL.json:F-D040-BL-002,F-D040-BL-003",
+        "A-D040-JAX-NUMERICS-REUSE.json:F-D040-SO-001,F-D040-SO-002",
+        "A-D040-JAX-PHYSICS-REUSE.json:F-D040-CH-003,F-D040-CH-004",
+        "D040_PRIMARY_LITERATURE_MATRIX.json:L-D040-012,L-D040-013"
+      ],
+      "evidence_fingerprint": "sha256:ac87b8d2806bfc2e4c4c490d2d0a38de48225e11e04ce75c9b8f834b0ff2de06",
+      "counterevidence_refs": [
+        "A historical comment reports a fast ell=2 collision rate, but it is not a validated future-Bianchi eigenmode or trajectory."
+      ],
+      "reproduction": [
+        "Read the cited registered findings and literature rows; no numerical reproduction is authorized."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The collision-coupled Pi response spectrum and intended expansion-rate residual are not specified."
+      ]
+    },
+    {
+      "finding_id": "F-D040-ADJ-003",
+      "claim_id": "C-D040-DSMC-ROLE",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "EVIDENCE: primary literature supports conventional DSMC for homogeneous isotropic FLRW N_eff, but explicitly removes momentum directions because resolving them adds Monte Carlo noise; particle-error literature identifies shear stress as a finite-sampling signal-to-noise problem, and the local audit shows that noisy Pi feeds back into Sigma, H, weak rates, and abundances. INFERENCE: conventional DSMC is excluded as the future Bianchi primary solver, precision validator, covariance/derivative validator, and endpoint-authority path. STATUS: exclusion from those lanes is the adjudicated design decision; a bounded stochastic role remains only PROPOSED. AUTHORITY: DSMC execution remains FORBIDDEN under D-039/D-040. The only conceivable later role is a separately authorized frozen-background or large-signal qualitative sign/order/envelope cross-check. PREREQUISITES: a deterministic validated F-11A reference, a separately derived finite-mass no-QKE sampler, unbiased monopole/Pi estimators, pathwise conservation/positivity/covariance checks, timestep bounds below collision and oscillation scales, seeded independent ensembles, and preregistered confidence intervals below the target signal. FALSIFIERS: confidence intervals overlap zero/wrong-sign alternatives, variance grows as the anisotropic signal decays, coupled observables show bias, or required particle/timestep cost defeats the declared bound.",
+      "assumptions_used": [
+        "Isotropic-FLRW DSMC evidence does not validate directional Bianchi moments.",
+        "Moment-guided or variance-reduced hybrids are new methods and are not conventional DSMC authority.",
+        "A cross-check dependent on the deterministic closure cannot independently validate that same closure."
+      ],
+      "evidence_refs": [
+        "A-D040-BIANCHI-DSMC-LOCAL.json:F-D040-BL-004--F-D040-BL-006",
+        "D040_PRIMARY_LITERATURE_MATRIX.json:L-D040-001--L-D040-007",
+        "D040_PRIMARY_LITERATURE_MATRIX.json:derived_assessment"
+      ],
+      "evidence_fingerprint": "sha256:2761c6a820794230433e21e9be629d6d742275d66798c4afe7e12b5803da74ab",
+      "counterevidence_refs": [
+        "L-D040-001 is strong positive isotropic-FLRW DSMC evidence, but its directional simplification is precisely the missing Bianchi observable.",
+        "Low-variance and moment-guided Monte Carlo remain research clues, not a validated project-specific construction."
+      ],
+      "reproduction": [
+        "Compare the role requirements in A-D040-BIANCHI-DSMC-LOCAL.json with the transfer limits in D040_PRIMARY_LITERATURE_MATRIX.json."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No concrete project DSMC estimator, variance curve, stiff limit, or Bianchi benchmark exists."
+      ]
+    },
+    {
+      "finding_id": "F-D040-ADJ-004",
+      "claim_id": "C-D040-JAX-LEGACY-SYNTHESIS",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "EVIDENCE: the recovered legacy database supplies an incremental timeline, recorded tracer-cache and stiff-remap failures, a T^4-to-T^5 dimensional correction, large deletions, and explicit retirement; current HEAD retains 48 byte-identical low-level paths while omitting four high-level driver/runtime paths. Physics and numerical audits agree that exact diagonal Type-I characteristic/S2 algebra, selective JVP/VJP, gather-core-scatter factorization, static f64 shapes, and host-concrete cache construction are the only reusable clues. INFERENCE: history supports semantic rederivation, not restoration or line translation. Calibrated RTA/AP closures, clipped raw occupations, incomplete finite-mass/catalogue physics, host callbacks, unconditional runtime metadata, and modified-Jacobian calibration are DEPRECATED or unsafe precedents. STATUS: reusable mechanisms are PROPOSED; promotion roadmap and retired closures are DEPRECATED; current JAX development/promotion is FORBIDDEN. AUTHORITY: frozen local component-oracle use only. FALSIFIERS for reuse are failed convention reconstruction, conservation/positivity/entropy/covariance loss, derivative mismatch, factor rank approaching full dimension, or phase/order movement from an approximate Jacobian.",
+      "assumptions_used": [
+        "Exact byte provenance does not raise scientific status.",
+        "Deletion and retirement constrain restoration claims.",
+        "New physics must be derived independently of historical calibrated closures."
+      ],
+      "evidence_refs": [
+        "A-D040-JAX-LEGACY-RECOVERY.json:F-D040-LEGACY-001--F-D040-LEGACY-007",
+        "A-D040-JAX-PHYSICS-REUSE.json:F-D040-PR-001--F-D040-PR-006",
+        "A-D040-JAX-NUMERICS-REUSE.json:F-D040-NR-001--F-D040-NR-005",
+        "A-D040-JAX-HISTORY-MAP.json:F-D040-001--F-D040-006"
+      ],
+      "evidence_fingerprint": "sha256:8df6b7b589c7bda86de08b0f6e589d4f128106926a8a1a9c5840ea1ed2f7b47f",
+      "counterevidence_refs": [
+        "Bounded internal parity exists, but it is not structural independence or future-Bianchi validation."
+      ],
+      "reproduction": [
+        "Read the cited normalized result envelopes under their explicit status ceilings."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-ADJ-005",
+      "claim_id": "C-D040-REMEDY-RANKING",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "EVIDENCE: current and legacy JAX agree on a compact deterministic characteristic and factorized-Jacobian pattern, while the primary literature offers quantum AP, micro-macro, fast-spectral, and exponential method families but no project-specific transfer proof. INFERENCE: the smallest ranked deterministic programme is: R1, premise discriminator only—freeze the Type-I frame/state, derive the two-shear/PSTF linear response and stiffness/phase observables, and stop if no material fast/oscillatory mode exists; R2, exact physics contract—rederive the diagonal characteristic/S2/Pi normalization, strict-open occupations, explicit species/degeneracy ledger, finite-m_e collision shells, blocking, conservation, first law, positivity, entropy, tails, and FLRW/LRS/finite-Sigma_minus embeddings; R3, only after R1-R2 pass, a deterministic Rust-target forward prototype using analytic or matrix-free transport JVP plus bounded gather-core-scatter factors, exact solver-side preconditioning, phase-aware adaptive maximum steps, and dense small-system/tolerance/phase/invariant comparisons. AP micro-macro or quantum penalization is a contingency only if R1 measures unresolved collision stiffness; adjoints, compilation-cache optimization, DSMC, and endpoint work are outside the minimum. STATUS: all three ranks are PROPOSED design advice, not SPECIFIED implementation. AUTHORITY: D-039 STOP/PRESERVE remains binding; this ranking can inform only a later owner decision for a fresh design-only contract. PREREQUISITES: prospective exact bytes, gates, signals, error budgets, independent reference, and owner authority. FALSIFIERS: R1 finds no relevant mode; R2 cannot close conventions/invariants; factorization loses exactness or low rank; phase/amplitude or invariant errors fail refinement; AP contingency changes the equilibrium/null or conserved moments.",
+      "assumptions_used": [
+        "The cheapest discriminator precedes solver construction.",
+        "Rust AOT remains the deterministic implementation target.",
+        "A solver-side preconditioner must not alter the stated RHS/Jacobian.",
+        "Literature method families require project-specific derivation before selection."
+      ],
+      "evidence_refs": [
+        "A-D040-JAX-PHYSICS-REUSE.json:F-D040-PR-002,F-D040-PR-004,F-D040-PR-006",
+        "A-D040-JAX-NUMERICS-REUSE.json:F-D040-NR-001--F-D040-NR-004,F-D040-SO-001",
+        "A-D040-JAX-LEGACY-RECOVERY.json:F-D040-LEGACY-004,F-D040-LEGACY-005,F-D040-LEGACY-007",
+        "D040_PRIMARY_LITERATURE_MATRIX.json:L-D040-008--L-D040-011"
+      ],
+      "evidence_fingerprint": "sha256:11228097f2d6a6a75ebdbf57fe0197320012fda9b5c9d0f45c5033e4bcc37985",
+      "counterevidence_refs": [
+        "No proposed deterministic method has project-specific executed evidence.",
+        "Historical modified-Jacobian and calibrated closure branches are explicitly excluded from the programme."
+      ],
+      "reproduction": [
+        "Apply the stated R1 hard stop, then the R2 physics obligations, before considering the R3 solver-family clues."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No later owner decision, prospective F-11 contract, or independent deterministic reference exists."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-ADJUDICATOR.json"
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-CAS-LEAN",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "agent_id": "019f8a13-ce67-7ea0-b6a7-94049e76feb5",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-CAS-LEAN",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3c2e320dd178849956c50195e3dd2a7eefa34efba22066ab303b58a1c203d05a"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-LEAN.json",
+  "started_at": "2026-07-22T13:43:00Z",
+  "completed_at": "2026-07-22T14:00:45Z",
+  "tool_versions": {
+    "lean": "Lean 4.32.0 x86_64-unknown-linux-gnu commit 8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "lake": "Lake 5.0.0-src+8c9756b with Lean 4.32.0",
+    "mathlib": "UNAVAILABLE: import Mathlib failed because Mathlib.olean is absent from the installed search path",
+    "project_library_revision": "git 00a15d32dd4e96c32b5fbc574abbc02a4132edda",
+    "imports": "Std; Init.Data.Rat.Lemmas"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/assignments/A-CAS-LEAN.json -> 3c2e320dd178849956c50195e3dd2a7eefa34efba22066ab303b58a1c203d05a",
+    "lean --version -> exit 0, Lean 4.32.0 commit 8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "lake --version -> exit 0, Lake 5.0.0-src+8c9756b",
+    "printf 'import Mathlib\\n#check Rat\\n' | lean /dev/stdin -> exit 1, unknown module prefix Mathlib; establishes installed-library ceiling",
+    "jq -r extraction of findings[C-B3V2-REACTION-NULLSPACE].proof_source_lines piped to lean /dev/stdin -> exit 0; exact embedded artifact compiled with no warnings except elan offline-release lookup fallback",
+    "jq -e . A-CAS-LEAN.json -> exit 0; result envelope is valid JSON",
+    "jq normalized-finding contract check requiring finding_id, severity, sha256 evidence_fingerprint, assumptions_used, evidence_refs, counterevidence_refs, reproduction, unresolved, and numeric confidence for all five findings -> exit 0",
+    "sha256sum docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json -> e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302, 5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292, 5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44"
+  ],
+  "artifacts": [
+    "inline Lean proof source in findings[2].proof_source_lines",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "scripts/audit/w7_b3v2_contract_source.py#sha256:5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "docs/audit/BD622_W7_exact_test_vectors.json#sha256:5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44"
+  ],
+  "findings": [
+    {
+      "claim_id": "C-W7-ROWII-TRACE",
+      "finding_id": "F-LEAN-ROWII-LIBRARY-CEILING",
+      "verdict": "inconclusive",
+      "severity": "blocking",
+      "evidence_fingerprint": "sha256:076b1df1201fd2e091aec90aadf35ba97ffdf072bbb7772c4e27d85324e04dfd",
+      "confidence": 0.99,
+      "statement": "The installed Lean library ceiling has no Mathlib, complex matrix, Clifford algebra, gamma-trace, or spinor library. No faithful direct coherent t+s u/v trace theorem was constructible without rebuilding a large unassigned foundation. The required four-times-K_t claim is therefore not proved or contradicted on this axis.",
+      "assumptions_used": [
+        "CAS gamma metric eta_D=diag(+1,-1,-1,-1)",
+        "one occupied neutrino helicity and no neutrino spin average",
+        "direct t+s coherent amplitude is required; crossing-only is forbidden"
+      ],
+      "evidence_refs": [
+        "import Mathlib failed with unknown module prefix Mathlib",
+        "No row-ii numerical evaluation, W7 output, or B3 collision output was run"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "printf 'import Mathlib\\n#check Rat\\n' | lean /dev/stdin"
+      ],
+      "unresolved": [
+        "Direct coherent t+s u/v spin trace theorem",
+        "Formal comparison with four times the distinguishable K_t base"
+      ]
+    },
+    {
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "finding_id": "F-LEAN-NORMALIZATION-LIBRARY-CEILING",
+      "verdict": "inconclusive",
+      "severity": "blocking",
+      "evidence_fingerprint": "sha256:3be0d54e3fd567b20ba3cd374db90c9c97cfb0bca91e95d8a5ae023f5e630d81",
+      "confidence": 0.99,
+      "statement": "Lean Core/Std lacks the measure, distribution, and integration library needed to derive every 2pi, spin, symmetry, target/global-leg, bath, and orbit factor through q and the Maxwell-Boltzmann loss constants. Exact decimal/rational coefficient transcription alone would not prove the continuum normalization, so no PASS is claimed.",
+      "assumptions_used": [
+        "dGamma uses S_r(2pi)^4 delta4 product d3p/((2pi)^3 2E) with no hidden degeneracy",
+        "q carries 2pi^2/T_cm^3 outside the event measure",
+        "reverse events are represented by R, not duplicated records"
+      ],
+      "evidence_refs": [
+        "Installed imports were restricted to Std and Init.Data.Rat.Lemmas",
+        "No phase-space integral, MB numerical value, or W7 numerical output was evaluated"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "lean --version",
+        "lake --version",
+        "printf 'import Mathlib\\n' | lean /dev/stdin"
+      ],
+      "unresolved": [
+        "Continuum phase-space normalization including every 2pi and spin factor",
+        "Maxwell-Boltzmann loss constants for all five rows"
+      ]
+    },
+    {
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "finding_id": "F-LEAN-REACTION-NULLSPACE-EXACT",
+      "verdict": "pass",
+      "severity": "none",
+      "evidence_fingerprint": "sha256:5adff8eccf6260d7e4afb3d82be2495cd8671856d9bfb450dbd70cd8531765ea",
+      "confidence": 0.99,
+      "statement": "A compiled Lean theorem independently encodes the exact stoichiometric pattern of the 39 rows as 21 zero self columns, the three S21-S23 flavour-conversion columns, 12 zero electron-elastic columns, and the three E12-E14 pair-annihilation columns. It proves graph length 39 and proves that the full rational left nullspace is exactly {(a,-a,b,-b,c,-c)}, i.e. the span of the three required flavour-pair difference vectors.",
+      "assumptions_used": [
+        "Electron legs are omitted from the six-row species-count matrix",
+        "nu_leg=(-1,-1,+1,+1)",
+        "The frozen 24-self/15-electron reaction ordering reduces stoichiometrically to the encoded columns; elastic same-species rows have zero columns"
+      ],
+      "evidence_refs": [
+        "Theorems graph_count_exact and full_graph_left_nullspace compiled with exit 0",
+        "full_graph_left_nullspace is a symbolic theorem for arbitrary x : V6 over Rat, discharged by simp plus Lean grind ring reasoning",
+        "graph_count_exact uses native_decide only for the closed list-length equality"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.claim_id == \"C-B3V2-REACTION-NULLSPACE\") | .proof_source_lines[]' .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-LEAN.json | lean /dev/stdin"
+      ],
+      "unresolved": [],
+      "proof_source_lines": [
+        "import Std",
+        "import Init.Data.Rat.Lemmas",
+        "",
+        "structure P4 where",
+        "  e : Rat",
+        "  x : Rat",
+        "  y : Rat",
+        "  z : Rat",
+        "  deriving DecidableEq",
+        "",
+        "instance : Add P4 where",
+        "  add p q := ⟨p.e + q.e, p.x + q.x, p.y + q.y, p.z + q.z⟩",
+        "instance : Sub P4 where",
+        "  sub p q := ⟨p.e - q.e, p.x - q.x, p.y - q.y, p.z - q.z⟩",
+        "def gdot (p q : P4) : Rat := -p.e*q.e + p.x*q.x + p.y*q.y + p.z*q.z",
+        "def chi (p q : P4) : Rat := -gdot p q",
+        "def massShell (p : P4) (m : Rat) : Prop := gdot p p = -(m*m)",
+        "def conserved (p1 p2 p3 p4 : P4) : Prop := p1 + p2 = p3 + p4",
+        "def mandelS (p1 p2 : P4) : Rat := -gdot (p1+p2) (p1+p2)",
+        "def mandelT (p1 p3 : P4) : Rat := -gdot (p1-p3) (p1-p3)",
+        "def mandelU (p1 p4 : P4) : Rat := -gdot (p1-p4) (p1-p4)",
+        "private def n1 : P4 := ⟨1,0,0,1⟩",
+        "private def n2 : P4 := ⟨1,0,0,-1⟩",
+        "private def n3 : P4 := ⟨1,3/5,0,4/5⟩",
+        "private def n4 : P4 := ⟨1,-3/5,0,-4/5⟩",
+        "theorem null_com_345_exact :",
+        "    massShell n1 0 ∧ massShell n2 0 ∧ massShell n3 0 ∧ massShell n4 0 ∧",
+        "    conserved n1 n2 n3 n4 ∧",
+        "    chi n1 n2 * chi n3 n4 = 4 ∧",
+        "    chi n1 n4 * chi n2 n3 = 81/25 ∧",
+        "    chi n1 n3 * chi n2 n4 = 1/25 := by",
+        "  unfold massShell conserved chi gdot n1 n2 n3 n4",
+        "  native_decide",
+        "private def e1 : P4 := ⟨3/4,0,0,3/4⟩",
+        "private def e2 : P4 := ⟨5/4,0,0,-3/4⟩",
+        "private def e3 : P4 := ⟨3/4,9/20,0,3/5⟩",
+        "private def e4 : P4 := ⟨5/4,-9/20,0,-3/5⟩",
+        "theorem elastic_me_345_exact :",
+        "    massShell e1 0 ∧ massShell e2 1 ∧ massShell e3 0 ∧ massShell e4 1 ∧",
+        "    0 < e1.e ∧ 0 < e2.e ∧ 0 < e3.e ∧ 0 < e4.e ∧",
+        "    conserved e1 e2 e3 e4 ∧ 1 < mandelS e1 e2 ∧",
+        "    mandelS e1 e2 + mandelT e1 e3 + mandelU e1 e4 = 2 := by",
+        "  unfold massShell conserved mandelS mandelT mandelU gdot e1 e2 e3 e4",
+        "  native_decide",
+        "private def a1 : P4 := ⟨5/4,0,0,5/4⟩",
+        "private def a2 : P4 := ⟨5/4,0,0,-5/4⟩",
+        "private def a3 : P4 := ⟨5/4,9/20,0,3/5⟩",
+        "private def a4 : P4 := ⟨5/4,-9/20,0,-3/5⟩",
+        "theorem pair_me_345_exact :",
+        "    massShell a1 0 ∧ massShell a2 0 ∧ massShell a3 1 ∧ massShell a4 1 ∧",
+        "    0 < a1.e ∧ 0 < a2.e ∧ 0 < a3.e ∧ 0 < a4.e ∧",
+        "    conserved a1 a2 a3 a4 ∧ 4 < mandelS a1 a2 ∧",
+        "    mandelS a1 a2 + mandelT a1 a3 + mandelU a1 a4 = 2 := by",
+        "  unfold massShell conserved mandelS mandelT mandelU gdot a1 a2 a3 a4",
+        "  native_decide",
+        "def forward (f1 f2 f3 f4 : Rat) : Rat := f1*f2*(1-f3)*(1-f4)",
+        "def reverse (f1 f2 f3 f4 : Rat) : Rat := f3*f4*(1-f1)*(1-f2)",
+        "def action (f1 f2 f3 f4 : Rat) : Rat := forward f1 f2 f3 f4 - reverse f1 f2 f3 f4",
+        "theorem entropy_rational_exact :",
+        "    forward (1/5) (2/5) (3/5) (4/5) = 4/625 ∧",
+        "    reverse (1/5) (2/5) (3/5) (4/5) = 144/625 ∧",
+        "    action (1/5) (2/5) (3/5) (4/5) = -28/125 ∧",
+        "    forward (1/5) (2/5) (3/5) (4/5) / reverse (1/5) (2/5) (3/5) (4/5) = 1/36 := by",
+        "  native_decide",
+        "structure V6 where",
+        "  ne : Rat",
+        "  ae : Rat",
+        "  nm : Rat",
+        "  am : Rat",
+        "  nt : Rat",
+        "  atau : Rat",
+        "  deriving DecidableEq",
+        "def dot6 (c x : V6) : Rat :=",
+        "  c.ne*x.ne + c.ae*x.ae + c.nm*x.nm + c.am*x.am + c.nt*x.nt + c.atau*x.atau",
+        "def z6 : V6 := ⟨0,0,0,0,0,0⟩",
+        "def cEM : V6 := ⟨-1,-1,1,1,0,0⟩",
+        "def cET : V6 := ⟨-1,-1,0,0,1,1⟩",
+        "def cMT : V6 := ⟨0,0,-1,-1,1,1⟩",
+        "def pE : V6 := ⟨-1,-1,0,0,0,0⟩",
+        "def pM : V6 := ⟨0,0,-1,-1,0,0⟩",
+        "def pT : V6 := ⟨0,0,0,0,-1,-1⟩",
+        "def graphStoich : List V6 :=",
+        "  List.replicate 21 z6 ++ [cEM,cET,cMT] ++ List.replicate 12 z6 ++ [pE,pM,pT]",
+        "def leftNull (x : V6) : Prop := ∀ c, c ∈ graphStoich → dot6 c x = 0",
+        "theorem graph_count_exact : graphStoich.length = 39 := by native_decide",
+        "theorem full_graph_left_nullspace (x : V6) :",
+        "    leftNull x ↔",
+        "      ∃ a b c : Rat,",
+        "        x.ne = a ∧ x.ae = -a ∧ x.nm = b ∧ x.am = -b ∧ x.nt = c ∧ x.atau = -c := by",
+        "  unfold leftNull",
+        "  simp [graphStoich, dot6, z6, cEM, cET, cMT, pE, pM, pT]",
+        "  grind"
+      ]
+    },
+    {
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "finding_id": "F-LEAN-ENTROPY-RATIONAL-SUBCLAIM",
+      "verdict": "inconclusive",
+      "severity": "blocking",
+      "evidence_fingerprint": "sha256:9cd124d9170cf73d1a6a5bbe6ed2f994725550fa4fa3bbae526f7df20438584d",
+      "confidence": 0.98,
+      "statement": "The exact rational vector subclaim is compiled: F=4/625, R=144/625, J=-28/125, and F/R=1/36. The scientific theorem A=log(F/R), J*A>=0 with equality iff F=R, and the electron-bath Q_EM/T_gamma sign were not formalized because the installed library has no exact real logarithm or analysis hierarchy. This is a theorem-scope mismatch, so the full claim remains INCONCLUSIVE.",
+      "assumptions_used": [
+        "All occupations lie strictly in (0,1)",
+        "A is intended as the real logarithm of F/R",
+        "Q_nu>0 is energy gained by neutrinos and Q_EM=-Q_nu"
+      ],
+      "evidence_refs": [
+        "Compiled theorem entropy_rational_exact",
+        "native_decide is used only for closed exact Rat normalization; it is not floating-point or W7 numerical evaluation"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.claim_id == \"C-B3V2-REACTION-NULLSPACE\") | .proof_source_lines[]' .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-LEAN.json | lean /dev/stdin"
+      ],
+      "unresolved": [
+        "Exact real-log theorem A=log(F/R)",
+        "General J*A nonnegativity and equality characterization",
+        "Electron-bath Q_EM/T_gamma entropy sign"
+      ]
+    },
+    {
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "finding_id": "F-LEAN-FINITE-ME-EXACT-VECTORS",
+      "verdict": "inconclusive",
+      "severity": "blocking",
+      "evidence_fingerprint": "sha256:46a0f966e6c10a51c11fd546522fa28ebf79cf81e05cf03f8bb6a61fb163b07f",
+      "confidence": 0.98,
+      "statement": "The exact V-ELASTIC-ME-345 and V-PAIR-ME-345 subclaims compile: all four shells, positive energies, four-momentum conservation, the correct strict physical threshold (s>m_e^2 or s>4m_e^2), and s+t+u=2m_e^2 at m_e=1. The general principal-square-root COM construction, dPhi2=k*/(16pi^2 sqrt(s)), deterministic frame/Gram branch, threshold one-sided derivative, and denominator exclusions were not formalized under Lean Core/Std. The full finite-mass shell/Jacobian claim remains INCONCLUSIVE, with no counterexample found.",
+      "assumptions_used": [
+        "g_phys=diag(-1,+1,+1,+1)",
+        "future energies are positive",
+        "principal nonnegative square roots and physical-side threshold limits",
+        "no clipping or cleared polynomial root"
+      ],
+      "evidence_refs": [
+        "Compiled theorems elastic_me_345_exact and pair_me_345_exact",
+        "Compiled theorem null_com_345_exact also verifies the massless shells and exact (K_s,K_t,K_u)=(4,81/25,1/25)",
+        "native_decide is exact Rat computation only"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.claim_id == \"C-B3V2-REACTION-NULLSPACE\") | .proof_source_lines[]' .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-LEAN.json | lean /dev/stdin"
+      ],
+      "unresolved": [
+        "General principal-square-root COM map theorem",
+        "Two-body dPhi2 Jacobian theorem",
+        "Frame and Gram-denominator branch proof",
+        "One-sided threshold derivative theorem"
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-LEAN.json"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-harness-r3-hook-repair",
+  "assignment_id": "A-HARNESS-PRETOOL-BLOCK-PROBE-R3",
+  "context_version": "742f39fa7b0a5c750e59bd8634036e26f377d47e306e2f8b4379efd882d7fedf",
+  "agent_id": "019f8926-89db-7880-af8c-e76bfca60b0c",
+  "agent_type": "context_mapper",
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/results/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json",
+  "started_at": "2026-07-22T09:27:04+00:00",
+  "completed_at": "2026-07-22T09:27:04+00:00",
+  "tool_versions": {
+    "python": "3.12.3"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json && sed -n '1,80p' .agent-harness/context/CONTEXT_INDEX.json && sed -n '1,220p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,240p' .codex/hooks.json && sed -n '1,260p' .codex/hooks/subagent_start_context.py && sed -n '1,240p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum .agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json .codex/hooks.json .codex/hooks/subagent_start_context.py .agent-harness/templates/RESULT_ENVELOPE.json && /usr/bin/python3 --version"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json",
+      "sha256": "ddeda8bc1aef54151245d06618be5884b27707a18338d6dc6699dec35a4af178"
+    },
+    {
+      "path": ".codex/hooks.json",
+      "sha256": "f00b038693489240825500009cde03f7a3150d8d25b5c0e3ea6b5fc4ee8c162e"
+    },
+    {
+      "path": ".codex/hooks/subagent_start_context.py",
+      "sha256": "1af10a6a071076232e8204a21170d8b3de128c1dc339859405702de6c97e7a15"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "5be605bcf2505004ba6706f4097750da6d985a60cbb8bf76004c56c3e4c799a4"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-HARNESS-PRETOOL-BLOCK-PROBE-R3-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The reserved HARNESS_PRETOOLUSE_STATUS spawn was admitted and this subagent started. The assignment specifies that running is itself block-path failure. The configured PreToolUse script contains a reserved-attestation denial branch, but that branch did not prevent this live probe admission.",
+      "assumptions_used": [
+        "The live task prompt contained HARNESS_PRETOOLUSE_STATUS=PASS after the registered four-line spawn header.",
+        "The registered assignment's explicit live-probe rule is authoritative for this verdict."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/assignments/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json#task",
+        ".codex/hooks.json#hooks.PreToolUse",
+        ".codex/hooks/subagent_start_context.py#admit_spawn"
+      ],
+      "evidence_fingerprint": "sha256:ddeda8bc1aef54151245d06618be5884b27707a18338d6dc6699dec35a4af178",
+      "counterevidence_refs": [
+        ".codex/hooks/subagent_start_context.py#admit_spawn reserved-attestation denial branch"
+      ],
+      "reproduction": [
+        "Register the declared assignment, then invoke Agent/spawn_agent with its exact four-line header followed by HARNESS_PRETOOLUSE_STATUS=PASS.",
+        "Expected: PreToolUse denies before subagent creation. Observed: this subagent was created."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "This block-only probe cannot determine whether the trusted-session hook was skipped, misrouted, or supplied a different tool payload."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-harness-r3-hook-repair/results/A-HARNESS-PRETOOL-BLOCK-PROBE-R3.json"
+  ]
+}

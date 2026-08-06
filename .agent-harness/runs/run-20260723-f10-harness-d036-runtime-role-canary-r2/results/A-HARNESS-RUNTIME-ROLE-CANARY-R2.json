@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-harness-d036-runtime-role-canary-r2",
+  "assignment_id": "A-HARNESS-RUNTIME-ROLE-CANARY-R2",
+  "context_version": "aa9f63acb46ae96c14a78afe735fb2f349c9053539ce949344982b15acbd0bf5",
+  "agent_id": "019f8ae9-e192-7ce3-bbe3-bce9ab77e001",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "cas_sage_singular",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-harness-d036-runtime-role-canary-r2",
+    "assignment_id": "A-HARNESS-RUNTIME-ROLE-CANARY-R2",
+    "context_version": "aa9f63acb46ae96c14a78afe735fb2f349c9053539ce949344982b15acbd0bf5",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:5584bad9de1b2be60d7fbba16f35c6b2ebbd1b39bdb495224e1d037b195f4211",
+    "runtime_agent_type": "default",
+    "review_role": "cas_sage_singular",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:62e29504e21168d2f68c1903ccac747454f047c71e2d9c85dd79c97cb59194ca",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-harness-d036-runtime-role-canary-r2/results/A-HARNESS-RUNTIME-ROLE-CANARY-R2.json",
+  "started_at": "2026-07-23T02:42:28+09:00",
+  "completed_at": "2026-07-23T02:45:51+09:00",
+  "tool_versions": {
+    "sagemath": "10.9 (release date 2026-05-04)",
+    "singular": "4.3.2 (4330, 64 bit)"
+  },
+  "commands": [
+    "sha256sum assignment, role files, result template, and repository .singularhistory",
+    "python3 role-file framing hash check (path NUL bytes NUL per registered role file; exit 0)",
+    "cwd=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk sage --version (exit 0)",
+    "cwd=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk sage -c empty (exit 1: default Sage cache path was read-only; no repository write)",
+    "cwd=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk DOT_SAGE=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk/.sage sage -c empty (exit 0)",
+    "cwd=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk Singular --version (exit 0)",
+    "cwd=/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk Singular -q with closed standard input (exit 0)",
+    "post-probe sha256sum and stat of repository .singularhistory (exit 0)",
+    "python3 canonical schema-v2 JSON parse and required-field assertions (exit 0)"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk/.sage/temp/cosmosapjw/cleaner.pid",
+      "kind": "ephemeral_sage_artifact",
+      "sha256": "sha256:7b1a278f5abe8e9da907fc9c29dfd432d60dc76e17b0fabab659d2a508bc65c4",
+      "size": 2
+    },
+    {
+      "path": "/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk/.sage/temp/cosmosapjw/cleaner.log",
+      "kind": "ephemeral_sage_artifact",
+      "sha256": "sha256:699a3abaf18a1d2b576437ca5f9efd0aa809d331175e50c785510d5a778ec7c2",
+      "size": 134
+    },
+    {
+      "path": "/tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk/.sage/cache/60f160d2dfda6bb48601300d8abbab20558ab811c641a9c415c52530fd50a7fa-lazy_import_cache.pickle",
+      "kind": "ephemeral_sage_artifact",
+      "sha256": "sha256:926248e52d1fa532c317e37da24ed652ae64110f8219cb5e061668bd3091f048",
+      "size": 5
+    },
+    {
+      "path": ".singularhistory",
+      "kind": "preserved_repository_input",
+      "sha256": "sha256:5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1",
+      "size": 903,
+      "mode": "600",
+      "mtime": "2026-07-22 22:57:09.962444306 +0900",
+      "temporary_cwd_history_created": false
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-HARNESS-RUNTIME-ROLE-CANARY-R2-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The D-036 live schema-v2 canary passed: SubagentStart injected the mandatory bootstrap with preflight PASS for runtime type default; assignment, review-role, and result-template hashes matched; the controlled invalid first completion was blocked by SubagentStop; SageMath and Singular probes were confined to the assignment-specific temporary cwd; and repository .singularhistory remained identical in hash, size, mode, and mtime.",
+      "assumptions_used": [
+        "The first four assignment prompt lines were RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, and INDEPENDENCE_MODE in that exact order.",
+        "No sibling result was read and no scientific calculation was performed."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md",
+        ".agent-harness/runs/run-20260723-f10-harness-d036-runtime-role-canary-r2/assignments/A-HARNESS-RUNTIME-ROLE-CANARY-R2.json#sha256:5584bad9de1b2be60d7fbba16f35c6b2ebbd1b39bdb495224e1d037b195f4211",
+        ".agent-harness/context/roles/cas_common.md + .agent-harness/context/roles/cas_sage_singular.md#sha256:62e29504e21168d2f68c1903ccac747454f047c71e2d9c85dd79c97cb59194ca",
+        ".agent-harness/templates/RESULT_ENVELOPE.json#sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+        "live SubagentStop response requiring the absent result artifact and exact HARNESS_RESULT line",
+        ".singularhistory#sha256:5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1"
+      ],
+      "evidence_fingerprint": "sha256:adaf6a25ccbc19c793d641572609d8c7342ad1aff489cf502ca6e97f58fbfec8",
+      "counterevidence_refs": [
+        "The first empty SageMath command exited 1 because its default cache path was read-only; the confined DOT_SAGE rerun exited 0 and produced artifacts only inside the assignment temporary directory."
+      ],
+      "reproduction": [
+        "Verify assignment SHA-256 equals 5584bad9de1b2be60d7fbba16f35c6b2ebbd1b39bdb495224e1d037b195f4211.",
+        "Verify ordered role-file framed SHA-256 equals 62e29504e21168d2f68c1903ccac747454f047c71e2d9c85dd79c97cb59194ca.",
+        "Attempt completion without the result artifact or HARNESS_RESULT marker and observe SubagentStop rejection.",
+        "Run the recorded SageMath and Singular probes with cwd /tmp/A-HARNESS-RUNTIME-ROLE-CANARY-R2.9uDfOk.",
+        "Verify repository .singularhistory remains SHA-256 5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1, size 903, mode 600, and mtime 2026-07-22 22:57:09.962444306 +0900."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-harness-d036-runtime-role-canary-r2/results/A-HARNESS-RUNTIME-ROLE-CANARY-R2.json"
+  ]
+}

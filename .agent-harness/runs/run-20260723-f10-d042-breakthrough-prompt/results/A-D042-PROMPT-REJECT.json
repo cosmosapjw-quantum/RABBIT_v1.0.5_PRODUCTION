@@ -1,0 +1,226 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-PROMPT-REJECT",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f82-4b8d-7021-8b8e-e4e8d601f06b",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-PROMPT-REJECT",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:a004827a58941974e26e756251696b8a0f2f628efd0a642a5e3d40317839ec28",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-REJECT.json",
+  "started_at": "2026-07-23T15:04:00Z",
+  "completed_at": "2026-07-23T15:11:39Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "ripgrep": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "Read the canonical context pack completely in bounded sed ranges.",
+    "Verify the registered assignment, ordered review-role bundle, and RESULT_ENVELOPE hashes.",
+    "Preserve and inspect draft SHA-256 bab03230cfb935a1e66cde60ec449efd9b6bc7d562291f05d5d621dc31607068.",
+    "Read only the two assignment-designated sibling results and apply the registered seven-stage hostile cross-steelman."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "bab03230cfb935a1e66cde60ec449efd9b6bc7d562291f05d5d621dc31607068"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-FAILURE-REFLECTION.json",
+      "sha256": "f7b308db42cf0cac171378b68af77fe6046b73ca3def16f0cda612e41936302e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json",
+      "sha256": "687d9a0541d88db1399cba92ccdf0e5c88eec8a17eec510b3a7f7e3f90e19f4f"
+    },
+    {
+      "type": "review_method_record",
+      "private_reasoning_exposed": false,
+      "stages": {
+        "self-discover": "Mapped each new authority, file, schema, gate, reviewer, execution, and PR surface.",
+        "step-back": "Tested whether the request reduces the blocker or recreates the prior gate-and-document growth pattern.",
+        "metacognitive_self_ask": "Checked whether repeated prohibitions actually bind execution and consumer reachability.",
+        "CoVe": "Cross-checked the draft against the failure-reflection and anti-drift PR-DAG results.",
+        "adversarial_self_ask": "Steel-manned the draft as a bounded external kill screen with strong authority language.",
+        "CCoT": "Separated useful intent from four binding contract defects.",
+        "PDR": "Selected minimal corrections that preserve STOP/PRESERVE and an empty repository PR queue."
+      }
+    }
+  ],
+  "review_verdict": "REJECT_NOT_READY",
+  "route_verdict": "REJECT_DRAFT_AS_WRITTEN",
+  "strongest_admission_steelman": "The draft repeatedly preserves STOP/PRESERVE, forbids repository and physical RABBIT output, makes gates conjunctive, preserves raw failures, names a mechanism-deletion negative control, and limits any positive conclusion to an external-candidate intake review. With prior owner authority for nonphysical execution and a much smaller single-authority bundle, those controls could form a useful cheap-kill screen.",
+  "decisive_falsifier": "Rejection is falsified by a sealed revision that cites explicit owner authority for external nonphysical execution, uses one authoritative contract and at most one <=800-LOC microprototype, freezes every novelty/domain/norm/arithmetic definition before output, proves semantic mechanism reachability under controlled mutants rather than seal/import failure, and returns an empty repository PR queue until intake PASS plus a separate owner design decision.",
+  "stance_change_condition": "Change to intake-ready only when all six minimal corrections below are present in the exact prompt bytes and an independent reread finds no alternate authority or truth surface.",
+  "minimal_binding_corrections": [
+    {
+      "id": "BC-1-AUTHORITY",
+      "correction": "Delete the request's self-authorization of executable experiments unless an exact prior owner decision authorizing external nonphysical execution is cited. Without it, permit report-only design analysis and no lab run."
+    },
+    {
+      "id": "BC-2-DEFLATE",
+      "correction": "Reduce the pool to two or three complete alternatives or a reasoned no-go, implement at most one prototype, and cap the bundle at one machine contract, one runner, one mechanism module, one test/proof module, raw outputs, <=6 authored files, and <=800 total authored LOC. Remove separate schemas, runtime lock, harness canary, candidate contracts, and five-axis formal/reviewer replication unless one targeted claim demonstrably requires them."
+    },
+    {
+      "id": "BC-3-FREEZE-PASS",
+      "correction": "The prompt itself must freeze the typed operation-graph equivalence rule, conditioning domain and norm, B64 quantity/normalization/denominator/arithmetic model, and deletion ownership. Until then XG-01, XG-07, XG-08, and the repository-deletion part of XG-10 are INCONCLUSIVE, not candidate-controlled PASS criteria."
+    },
+    {
+      "id": "BC-4-REAL-REACHABILITY",
+      "correction": "Run deletion/constant/fixture mutants only on controlled post-seal copies. A hash, file-existence, or import failure does not count as a mutation kill. Each mutant must reach the named mechanism symbols and fail a scientific microcase assertion for the preregistered reason while the unmutated package passes."
+    },
+    {
+      "id": "BC-5-BRANCHES",
+      "correction": "Define global versus candidate-local stops: provenance or isolation error stops all; a candidate scientific non-PASS archives only that candidate and continues independent alternatives; tool absence is error/inconclusive; zero survivors is a successful no-go; multiple complete survivors are INCONCLUSIVE unless one prospectively frozen strict-dominance rule is satisfied."
+    },
+    {
+      "id": "BC-6-NO-PR-FRONT-RUN",
+      "correction": "Remove the mandatory candidate-specific five-PR list and exact future diff claims from the external deliverable. The current repository PR queue is empty. Only after one candidate passes intake and a separate owner design decision may the main writer produce an exact file/symbol/deletion plan; external deletion numbers remain estimates and cannot PASS a repository gate."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D042-REJECT-001",
+      "claim_id": "C-D042-PROMPT-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The draft self-authorizes generation, formal work, and executable manufactured-mechanism experiments even though the controlling state remains D-039 STOP/PRESERVE with only a read-only external design request. The intake-only final choice limits downstream authority but does not supply the missing upstream authority to execute this new external campaign.",
+      "assumptions_used": [
+        "A request document cannot create authority absent an exact owner decision.",
+        "External nonphysical execution is still execution and is distinct from read-only design advice."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#0-binding-state-and-authority",
+        ".agent-harness/generated/CONTEXT_PACK.md#Frozen-scope",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json#current_disposition"
+      ],
+      "evidence_fingerprint": "sha256:726602fb7e42b998531c4fa1017dbc2b3ed1ba47b9f8d36303b667e4d6d904f3",
+      "counterevidence_refs": [
+        "The draft forbids repository writes, physical RABBIT output, PR authority, and implementation authority.",
+        "The proposed lab is resource-bounded and external."
+      ],
+      "reproduction": [
+        "Compare draft lines 35-48 with the context-pack D-039 frozen scope and the sibling PR-DAG current disposition."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No exact owner authority for the executable external campaign is cited."
+      ]
+    },
+    {
+      "finding_id": "F-D042-REJECT-002",
+      "claim_id": "C-D042-PROMPT-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The requested screen is itself gate/package inflation: 6-10 families, up to three prototypes, twelve XG gates, seven shared harness files, two schemas, per-candidate contracts, up to 19 files and 1800 LOC, four blind domains, five formal axes, two cross-steelmen, an adjudicator, and a five-PR plan. Manifest, lock, schemas, candidate contracts, report, and runner repeat authority fields without one compulsory compiler-to-consumer path.",
+      "assumptions_used": [
+        "External location does not make duplicated truth surfaces cost-free.",
+        "A new screen must be materially smaller than the failed gate/document surface it is meant to replace."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#4-candidate-search-before-implementation",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#6-required-executable-lab-bundle",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#8-required-independent-review-and-crag",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-FAILURE-REFLECTION.json#F-D042-001"
+      ],
+      "evidence_fingerprint": "sha256:2fd897110b4e96d9026a67bf1dcc4f9254a4b03ea1f67ef03e7fbd4796d40fb3",
+      "counterevidence_refs": [
+        "The surfaces are external and capped.",
+        "The draft forbids generated prose, duplicate manifests, and candidate-specific harnesses."
+      ],
+      "reproduction": [
+        "Count the mandatory package and review surfaces in draft sections 4-8 and compare them with the recurring-mistake list in section 2."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No compulsory single-authority generation path is specified."
+      ]
+    },
+    {
+      "finding_id": "F-D042-REJECT-003",
+      "claim_id": "C-D042-PROMPT-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Several PASS rules are non-reconstructible or gameable. Non-isomorphism lacks frozen canonical graphs and an equivalence relation; conditioning and B64 lack a prompt-frozen domain, norm, normalization, denominator, and arithmetic model; an external estimate cannot prove an exact future net-minus-1000 repository diff; and mechanism deletion can be 'killed' by E0 hash/import failure without demonstrating scientific reachability. Package-wide first-non-PASS and exit semantics also fail to say whether one killed candidate suppresses independent alternatives.",
+      "assumptions_used": [
+        "Candidate-selected preregistration inside its own returned bundle is not an independent prospective freeze.",
+        "A provenance failure is not evidence that mechanism mathematics reached a scientific assertion.",
+        "An unexecuted diff estimate is SPECIFIED, not VALIDATED."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#5-conjunctive-candidate-gates",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#6-required-executable-lab-bundle",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#7-mandatory-experiment-and-mutation-matrix"
+      ],
+      "evidence_fingerprint": "sha256:80a2f811f6bdfc5d6f35a54943cbbb845a68ede0ee8cec50f961cd1ff426fa17",
+      "counterevidence_refs": [
+        "The draft attempts prospective thresholds, hostile mutants, fixed seeds, deterministic reductions, and a deletion counterfactual.",
+        "INCONCLUSIVE is explicitly non-PASS."
+      ],
+      "reproduction": [
+        "Try to compute XG-01, XG-07, XG-08, or XG-10 solely from prompt-fixed definitions.",
+        "Delete mechanism.py and observe that a seal or import failure can satisfy the stated package-level kill without testing semantic reachability."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No candidate-independent operation equivalence, numerical domain, or controlled-mutant protocol is frozen."
+      ]
+    },
+    {
+      "finding_id": "F-D042-REJECT-004",
+      "claim_id": "C-D042-PROMPT-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The mandatory candidate-specific five-PR list front-runs the only authorized positive outcome, which is intake review. It is also impossible to satisfy when the valid route verdict is NO_ADMISSIBLE_CANDIDATE. Requiring exact repository files, symbols, deletions, and an executable first PR before intake turns an external screen into a de facto implementation roadmap despite the draft's planning-only label.",
+      "assumptions_used": [
+        "Intake review precedes repository design and implementation planning.",
+        "A planning disclaimer does not neutralize mandatory executable PR specifications.",
+        "The current repository PR queue is empty."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#10-required-anti-driftanti-inflation-pr-list",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#11-required-output-package",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json#current_disposition",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json#steelman_cross_examination"
+      ],
+      "evidence_fingerprint": "sha256:16c83ba05da748755ae20103db8850f56e7f93eb8a5625b756f28898875e7629",
+      "counterevidence_refs": [
+        "The draft repeatedly labels the PR list conditional and separates later owner gates.",
+        "A compact inert authority DAG can help prevent stage collapse."
+      ],
+      "reproduction": [
+        "Apply the NO_ADMISSIBLE_CANDIDATE route and attempt to produce the mandatory candidate-specific PR list without inventing a candidate.",
+        "Compare the draft's required first executable PR with the sibling result's empty current PR queue."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No intake-approved candidate exists from which an exact repository diff could be derived."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-REJECT.json"
+  ]
+}

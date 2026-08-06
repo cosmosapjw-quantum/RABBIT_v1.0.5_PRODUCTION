@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-ADJUDICATOR-R2",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f91-2ce0-7ca1-bc44-6824984f05cc",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-ADJUDICATOR-R2",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:0422b11d441db213fa71e53da53ab2985b45bfd8445fe792b520eeb79895aa33",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-ADJUDICATOR-R2.json",
+  "started_at": "2026-07-23T15:26:14Z",
+  "completed_at": "2026-07-23T15:27:30Z",
+  "tool_versions": {
+    "jq": "1.7",
+    "ripgrep": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable assignment-scoped exact token counter is exposed"
+  },
+  "commands": [
+    "Read .agent-harness/generated/CONTEXT_PACK.md completely in bounded sed ranges.",
+    "sha256sum and read the registered assignment, canonical RESULT_ENVELOPE template, and adjudicator role file.",
+    "Inspect only the targeted hash_files implementation needed to verify the ordered path-NUL-bytes-NUL adjudicator role digest.",
+    "Verify the assignment runtime_agent_type and compatibility agent_type are both default, the assignment SHA-256 is 0422b11d..., the role bundle is bd1c0501..., and the result template is 936c043e....",
+    "sha256sum and read completely the current sealed revised prompt and all six assignment-authorized normalized sibling results.",
+    "jq -s over the six result findings to deduplicate by claim_id, evidence_fingerprint, and verdict.",
+    "rg and targeted sed ranges over the revised prompt to map each earlier binding correction to the current exact clauses.",
+    "Recompute all registered input hashes immediately before writing this result.",
+    "jq -e, sha256sum, and python3 .agent-harness/scripts/validate_harness.py on the completed result; validator returned ok=true for the active run and context."
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "43e7a00c81c2f5c60ccb60d3a679e242c56f7ac479d989738fa37aeb6cc8c712"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-ADJUDICATOR-R2.json",
+      "sha256": "0422b11d441db213fa71e53da53ab2985b45bfd8445fe792b520eeb79895aa33"
+    },
+    {
+      "path": ".agent-harness/context/roles/adjudicator.md",
+      "raw_file_sha256": "267fd3ac8b462eb9b13f2722f6c53ff5813351593c4d45a8ae8e75295b039305",
+      "ordered_role_bundle_sha256": "bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+      "role": "current sealed revised prompt"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-FAILURE-REFLECTION.json",
+      "sha256": "f7b308db42cf0cac171378b68af77fe6046b73ca3def16f0cda612e41936302e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json",
+      "sha256": "4c61cc527b2f2bed4e5d1e2208f50071f2f838a87fff365101a1104256099677"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json",
+      "sha256": "444add51b849cfee0d8eebb5e2782104d644e5fb6528a3e81544cbbc0e8f754c"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json",
+      "sha256": "687d9a0541d88db1399cba92ccdf0e5c88eec8a17eec510b3a7f7e3f90e19f4f"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-ADMIT.json",
+      "sha256": "3040ba23a1ce4511b4f6e77b964d2206844369eb02cee8321895b060429ae7cc"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-REJECT.json",
+      "sha256": "eb2c80d65fc4c1a6ca2aac6849213714216134b3f25f7ee740e20d7826e53aa0"
+    },
+    {
+      "type": "review_method_record",
+      "private_reasoning_exposed": false,
+      "stages": [
+        {
+          "stage": "self-discover",
+          "checkable_output": "Loaded only the current prompt and six authorized normalized results; identified the current prompt hash, the old-draft hash cited by both hostile prompt reviews, and every requested authority, phase, definition, mutation, cost, and PR boundary."
+        },
+        {
+          "stage": "step-back",
+          "checkable_output": "Separated prompt issuance quality from candidate feasibility, lab execution, repository adoption, scientific validation, and endpoint authority."
+        },
+        {
+          "stage": "metacognitive self-ask",
+          "checkable_output": "Checked whether an apparently strict request could create an empty feasible set through proof-file, nullspace-conditioning, deletion, or PR-planning requirements unrelated to mechanism truth."
+        },
+        {
+          "stage": "CoVe",
+          "checkable_output": "Mapped all eleven earlier binding corrections onto the revised exact clauses and verified that the five hostile FAIL findings cite the superseded bab03230... draft rather than the current 6b5545bd... bytes."
+        },
+        {
+          "stage": "adversarial self-ask",
+          "checkable_output": "Tested the current text against self-authorization, multi-prototype inflation, candidate-selected domains, nullspace-contaminated conditioning, high-precision substitution, nonsemantic mutant kills, forced deletion, fabricated no-candidate PR plans, and terminal self-approval."
+        },
+        {
+          "stage": "CCoT",
+          "checkable_output": "Resolved sibling conflicts in favor of the current sealed request: one Phase-B finalist, one <=6-file <=800-LOC lab, claim-dependent proof, semantic reachability, and adoption-only net-deflation."
+        },
+        {
+          "stage": "PDR",
+          "checkable_output": "Issued PASS for verbatim request issuance only; retained STOP/PRESERVE and every repository, scientific-execution, W7/B3, trajectory, endpoint, unblinding, F-11, QKE, and public-runtime prohibition."
+        }
+      ]
+    }
+  ],
+  "adjudication": {
+    "verdict": "PASS_ISSUANCE_READY",
+    "issuance_disposition": "ISSUE_CURRENT_REVISED_PROMPT_VERBATIM",
+    "current_prompt_sha256": "6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+    "superseded_prompt_sha256_cited_by_hostile_reviews": "bab03230cfb935a1e66cde60ec449efd9b6bc7d562291f05d5d621dc31607068",
+    "authority_effect": "Prompt issuance only. No candidate, lab result, repository change, design-cycle activation, W7/B3 work, scientific execution, trajectory, endpoint, unblinding, F-11, QKE, public runtime, or production authority is created.",
+    "deduplication": {
+      "raw_findings": 21,
+      "exact_unique_keys": 20,
+      "raw_pass": 16,
+      "unique_pass": 15,
+      "raw_fail": 5,
+      "unique_fail": 5,
+      "duplicate_key": {
+        "claim_id": "C-D042-CANDIDATE-SEARCH",
+        "evidence_fingerprint": "sha256:4ba0e32e6f4671932bdb28688bed130bff2857a240dd782ba2280d98c3e02a8e",
+        "verdict": "pass",
+        "finding_ids": [
+          "F-D042-CANDIDATE-SEARCH-001",
+          "F-D042-CANDIDATE-SEARCH-002"
+        ]
+      },
+      "semantic_resolution": [
+        "All five exact FAIL keys are retained as valid reviews of the superseded bab03230... draft; none directly falsifies the revised 6b5545bd... bytes.",
+        "The failure-reflection, candidate-search, experiment-package, and PR-DAG PASS results are bounded design inputs, not authorities that may override the current prompt.",
+        "The old experiment-package variant allowing up to three implemented candidates, 19 authored files, and repository net-minus-1000 as a candidate gate is rejected for this issuance; the current prompt permits exactly one Phase-B finalist, <=6 authored files, <=800 authored LOC, and keeps net deflation adoption-only.",
+        "The old PR-DAG result remains useful as a stage-separation steelman, but the current prompt controls: the repository queue is empty, PR_DAG is unreachable for every non-single-pass route, and any single-pass proposal is non-authoritative and estimated."
+      ]
+    },
+    "review_checks": [
+      {
+        "check": "owner_and_scope_boundary",
+        "verdict": "pass",
+        "evidence": "Opening authority paragraph and section 0 state the dated owner authorization for only repository-free nonphysical external work, preserve STOP/PRESERVE, cap any positive outcome at a request for owner intake authorization, and keep the current repository PR queue empty."
+      },
+      {
+        "check": "phase_a_and_phase_b_cardinality",
+        "verdict": "pass",
+        "evidence": "Section 4 requires 6-10 brief families, at most three complete paper alternatives, prospectively strict-dominance selection, and exactly one Phase-B implementation; a no-go or unresolved tie produces no code."
+      },
+      {
+        "check": "prospective_novelty_domain_stability_and_arithmetic",
+        "verdict": "pass",
+        "evidence": "Section 5 freezes before output the typed operation graph, bidirectional equivalence rule, closed dimensionless domain, invariant quotient, scaling, norm/dual norm, stability quantity, denominator floor, normalization, operation count, rounding model, and deterministic reduction order. XG-07 distinguishes condition-based from exact/interval routes; XG-08 binds the declared native arithmetic graph."
+      },
+      {
+        "check": "semantic_mechanism_reachability",
+        "verdict": "pass",
+        "evidence": "Section 6 mutates controlled post-seal scratch copies, requires the same public candidate call and executed named symbol, rejects file/hash/import failures as mutation kills, and requires a preregistered scientific assertion to fail for the expected reason."
+      },
+      {
+        "check": "candidate_and_package_stop_semantics",
+        "verdict": "pass",
+        "evidence": "Section 5 makes candidate scientific failure local, provenance/isolation failure package-wide, zero survivors NO_ADMISSIBLE_CANDIDATE, and an unresolved Phase-A tie INCONCLUSIVE_EVIDENCE_OR_TIE; section 7 preserves the first Phase-B non-PASS without tuning."
+      },
+      {
+        "check": "feasibility_cost_and_deflation_separation",
+        "verdict": "pass",
+        "evidence": "XG-10 evaluates the bounded external prototype and permanent-code estimate, while section 10 explicitly makes safe-deletion absence an adoption FAIL-COST rather than a mathematical falsifier and makes cumulative net<=-1000 an adoption objective validated only from later real diffs."
+      },
+      {
+        "check": "empty_pr_queue_and_conditional_proposal",
+        "verdict": "pass",
+        "evidence": "Section 10 repeats that the queue is empty, requires PR_DAG=UNREACHABLE for every verdict except exactly one external candidate pass, and labels any resulting at-most-five-PR intake proposal non-authoritative, estimated, and evidence for a later owner decision rather than a queue."
+      },
+      {
+        "check": "anti_inflation_and_terminal_authority",
+        "verdict": "pass",
+        "evidence": "Sections 6-8 allow one authority path, <=6 authored files, <=800 authored executable/test/proof LOC, no install/notebook/generated-code authority/duplicate manifest/schema/candidate harness, claim-dependent formal proof only, one evidence mapper plus three blind reviews, and a semantic package-deletion falsifier. Section 11 permits only a request for owner authorization after one all-gate pass."
+      }
+    ],
+    "earlier_binding_corrections": [
+      {
+        "correction_family": "external_execution_authority",
+        "status": "resolved",
+        "current_clause": "Opening paragraph and section 0 identify the dated owner instruction, its exact external-lab scope, and the direct-receipt boundary."
+      },
+      {
+        "correction_family": "single_finalist_and_formal_package_satisfiability",
+        "status": "resolved",
+        "current_clause": "Sections 4 and 6 implement exactly one finalist, one authority path, <=6 authored files, <=800 LOC, and one optional claim-dependent proof file; temporary independent reviewer checks are not package authorities."
+      },
+      {
+        "correction_family": "prospective_method_specific_definitions",
+        "status": "resolved",
+        "current_clause": "Section 5 freezes graph equivalence, domain, quotient, norm, scaling, denominator, arithmetic, and mutation sites; exact/interval stability has an explicit equivalent route."
+      },
+      {
+        "correction_family": "semantic_not_structural_mutation_kills",
+        "status": "resolved",
+        "current_clause": "Section 6 requires controlled scratch copies, same-call symbol reachability, and scientific assertion failure; file/hash/import failure does not count."
+      },
+      {
+        "correction_family": "global_local_branch_semantics",
+        "status": "resolved",
+        "current_clause": "Section 5 distinguishes candidate archive, package provenance stop, zero-survivor no-go, and tie inconclusive; section 7 stops the selected finalist without tuning."
+      },
+      {
+        "correction_family": "scientific_feasibility_versus_repository_deflation",
+        "status": "resolved",
+        "current_clause": "Section 10 makes deletion adoption-only, labels every estimate ESTIMATED, and bars net-minus-1000 from serving as an external scientific PASS criterion."
+      },
+      {
+        "correction_family": "no_candidate_and_pr_front_running",
+        "status": "resolved",
+        "current_clause": "Section 10 requires PR_DAG=UNREACHABLE unless exactly one candidate passes and keeps any later proposal non-authoritative with an empty current queue."
+      },
+      {
+        "correction_family": "lab_command_review_time_and_terminal_wording",
+        "status": "resolved",
+        "current_clause": "Section 6 makes ./run_lab.sh the only lab command, excludes CRAG/review time from its 30-minute cap, and section 11 ends with REQUEST_OWNER_AUTHORIZATION rather than self-authorization."
+      }
+    ],
+    "strongest_rejection_steelman": "Even a disciplined external request can recreate the prior local minimum by rewarding manifests, reviewers, synthetic checks, and future PR prose around no collision mechanism. Its most dangerous failure would be to let a package pass after deleting the real mechanism, to reject exact-nullspace mathematics through a raw full-space condition number, to force repository deletion as a truth criterion, or to turn a conditional PR sketch into current authority.",
+    "strongest_admission_steelman": "The revised prompt converts each of those risks into an executable stop: semantic symbol-reachable mutants, quotient/scaling-defined stability, declared native arithmetic, one finalist and one small lab, candidate-local versus provenance-global routes, adoption-only deflation, an empty PR queue, and a final owner-request token that cannot self-authorize the next stage.",
+    "decisive_falsifier": "This PASS is falsified if the exact 6b5545bd... prompt can be followed while a constant or fixture substitute reaches and passes the finalist's scientific microcase, while any novelty/domain/quotient/norm/stability/native-arithmetic definition is selected after output, while a no-candidate route is forced to invent candidate-specific PRs or deletion, or while any external result directly authorizes repository or scientific execution. No such reachable path remains in the revised text.",
+    "stance_change_condition": "Change the issuance verdict to FAIL or INCONCLUSIVE if the prompt bytes differ from 6b5545bd..., the request is not transmitted under the stated direct owner authority, a preseal definition or semantic-reachability clause is removed or bypassed, deflation becomes a scientific feasibility criterion, more than one Phase-B prototype becomes reachable, or the empty-queue and separate-owner gates are weakened.",
+    "limitations": [
+      "This is a prompt-contract adjudication only. No candidate, lab package, CAS/formal claim, manufactured mechanism, repository code, or scientific output was implemented or executed.",
+      "A future external report must still verify every immutable input hash; a mismatch remains PROVENANCE_FAIL.",
+      "Any later candidate PASS remains PROPOSED with respect to RABBIT and can request only a separate owner intake decision."
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-D042-ADJUDICATOR-R2-001",
+      "claim_id": "C-D042-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The current sealed revised D-042 prompt at SHA-256 6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873 is ready for verbatim issuance. It closes the earlier draft's authority, multi-prototype/package-inflation, prospective-definition, semantic-reachability, stop-branch, feasibility-versus-deflation, PR-front-running, review-time, and terminal-wording defects while preserving STOP/PRESERVE and every downstream authority gate. The five hostile FAIL findings remain valid only for the superseded bab03230... draft. Conflicting older sibling package and PR variants are not incorporated where they exceed the current one-finalist, <=6-file, <=800-LOC, adoption-separated contract.",
+      "assumptions_used": [
+        "The registered target is the current sealed 6b5545bd... file, not the superseded bab03230... draft cited by both hostile prompt reviews.",
+        "The prompt will be copied verbatim and received under the dated direct owner authority stated in its opening paragraph.",
+        "Current exact prompt bytes govern over sibling design variants that were not themselves incorporated into the revised request.",
+        "Issuance readiness is separate from candidate feasibility, scientific validation, repository adoption, and every later owner decision."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md@sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873#0-binding-state-and-authority",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md@sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873#4-candidate-search-before-implementation",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md@sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873#5-conjunctive-candidate-gates",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md@sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873#6-required-executable-lab-bundle",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md@sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873#10-required-anti-driftanti-inflation-pr-list",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-ADMIT.json@sha256:3040ba23a1ce4511b4f6e77b964d2206844369eb02cee8321895b060429ae7cc#cross_steelman",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-REJECT.json@sha256:eb2c80d65fc4c1a6ca2aac6849213714216134b3f25f7ee740e20d7826e53aa0#minimal_binding_corrections"
+      ],
+      "evidence_fingerprint": "sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+      "counterevidence_refs": [
+        "A-D042-PROMPT-ADMIT and A-D042-PROMPT-REJECT correctly identify binding flaws in the superseded bab03230... draft.",
+        "A-D042-EXPERIMENT-PACKAGE demonstrates how the request could inflate if its older multi-candidate, 19-file, repository-deflation-as-gate variant were imported.",
+        "A-D042-PR-DAG-ANTI-DRIFT demonstrates how even a labelled shadow DAG could become a de facto roadmap if the empty-queue and separate-owner clauses were removed."
+      ],
+      "reproduction": [
+        "sha256sum docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+        "Verify that the digest is 6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873.",
+        "Map the earlier authority, package, definition, mutation, branch, deflation, PR, and terminal corrections to current sections 0, 4, 5, 6, 7, 10, and 11.",
+        "Deduplicate the six allowed result envelopes by (claim_id,evidence_fingerprint,verdict): 21 raw findings become 20 exact keys, with the only duplicate being the two C-D042-CANDIDATE-SEARCH PASS findings on 4ba0e32e...."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No external candidate has yet been evaluated; prompt PASS carries no scientific or implementation implication.",
+        "No repository PR is queued or authorized."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-ADJUDICATOR-R2.json"
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-CAS-LEAN",
+  "agent_id": "019f893f-1b00-7940-ba37-2c8cfdd3792a",
+  "agent_type": "default",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "independence_mode": "blind-results",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-LEAN.json",
+  "status": "inconclusive",
+  "started_at": "2026-07-22T09:54:00Z",
+  "completed_at": "2026-07-22T10:05:18Z",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-CAS-LEAN",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d6a7053c70091989840f265ac834c47f978048cd7bc300a91c5442a22e458e99",
+    "assignment_file_sha256": "d6a7053c70091989840f265ac834c47f978048cd7bc300a91c5442a22e458e99"
+  },
+  "summary": "Lean 4.32.0 with Std compiled the exact six-species stoichiometric nullspace proof, the three-parameter nonzero-column right kernel, a cleared-denominator Mandelstam identity, all three frozen rational four-momentum vectors, and the rational entropy flux arithmetic. Mathlib is unavailable, so the direct u/v trace, invariant measure normalization, real-log entropy inequality, and channel-specific finite-m_e support/root elimination were not proved and are fail-closed as inconclusive.",
+  "claim_ids": [
+    "C-W7-ROWII-TRACE",
+    "C-W7-ABSOLUTE-NORMALIZATION",
+    "C-B3V2-REACTION-NULLSPACE",
+    "C-B3V2-ENTROPY-AFFINITY",
+    "C-W7-FINITE-ME-SHELL"
+  ],
+  "tooling": {
+    "lean": "Lean 4.32.0, x86_64-unknown-linux-gnu, commit 8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "lake": "Lake 5.0.0-src+8c9756b (Lean 4.32.0)",
+    "imports": [
+      "Std"
+    ],
+    "mathlib": "UNAVAILABLE: import Mathlib fails because no Mathlib module or olean is in the Lean search path",
+    "project_library": "NONE: no lean-toolchain, lakefile.lean, lakefile.toml, or leanpkg.toml is present in the assignment workspace",
+    "resource_limits": "No timeout or memory limit was hit; the final stdin compilation completed in 0.8 s wall time.",
+    "token_use": "UNAVAILABLE: the harness exposes no reliable stage-scoped token counter"
+  },
+  "tool_versions": {
+    "lean": "4.32.0 commit 8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "lake": "5.0.0-src+8c9756b",
+    "stdlib": "bundled with Lean 4.32.0",
+    "mathlib": "UNAVAILABLE"
+  },
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-LEAN.json"
+  ],
+  "errors": [],
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-CAS-LEAN.json",
+    "lean --version",
+    "lake --version",
+    "lean /dev/stdin with the exact embedded lean_evidence.source"
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-LEAN.json"
+  ],
+  "assumptions_and_conventions": {
+    "species_order": [
+      "nu_e",
+      "antinu_e",
+      "nu_mu",
+      "antinu_mu",
+      "nu_tau",
+      "antinu_tau"
+    ],
+    "metric": "g_phys=diag(-1,+1,+1,+1); chi_ij=-g_phys(p_i,p_j)",
+    "reaction_orientation": "1+2<->3+4 with species stoichiometry (-1,-1,+1,+1)",
+    "domains": "Exact integer stoichiometry; exact integers after clearing rational momentum denominators; future-directed positive-energy checks are explicit for the frozen vectors.",
+    "branch_choices": "Only the supplied positive-energy rational vectors were checked. No squared support equation or eliminated root was accepted, so no spurious-branch claim is made.",
+    "dimensions": "The compiled algebra is dimension-free after common momentum-denominator clearing. It does not establish the G_F^2 T^5 rate normalization."
+  },
+  "graph_derivation": {
+    "self_events": "24 = 6 same-species identical elastic + 3 same-flavour nu-antinu elastic + 6 distinct-flavour same-sign elastic + 6 distinct-flavour opposite-sign elastic + 3 unordered flavour-pair conversions.",
+    "electron_events": "15 = 6 neutrino/antineutrino species times 2 bath charges for elastic scattering + 3 flavour-diagonal pair annihilation/creation events.",
+    "stoichiometric_columns": "The 21 self-elastic and 12 electron-elastic columns are zero. With unit orbit orientation, P_e_mu=(-1,-1,1,1,0,0), P_e_tau=(-1,-1,0,0,1,1), P_mu_tau=(0,0,-1,-1,1,1), E_e=(-1,-1,0,0,0,0), E_mu=(0,0,-1,-1,0,0), E_tau=(0,0,0,0,-1,-1). Nonzero rational rescaling of a reversible column does not change the left-nullspace.",
+    "left_nullspace": "Exactly {(a,-a,b,-b,c,-c): a,b,c in Q}, hence span_Q{L_e,L_mu,L_tau}.",
+    "right_nullspace": "For nonzero-column coordinates (x_e_mu,x_e_tau,x_mu_tau,x_e,x_mu,x_tau), the kernel is x_e=-x_e_mu-x_e_tau, x_mu=x_e_mu-x_mu_tau, x_tau=x_e_tau+x_mu_tau. A basis is (1,0,0,-1,1,0), (0,1,0,-1,0,1), (0,0,1,0,-1,1). Together with 33 unit vectors on zero columns, the full 6x39 matrix has right-nullity 36 and rank 3."
+  },
+  "findings": [
+    {
+      "finding_id": "F-LEAN-ROWII-TRACE-INCONCLUSIVE",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "inconclusive",
+      "status_label": "INCONCLUSIVE",
+      "severity": "blocking",
+      "statement": "The required direct coherent t+s u/v-spinor trace is not proved on the Lean axis.",
+      "summary": "No direct coherent t+s u/v-spinor trace was compiled. W3 explicitly supplies only a crossing inference, which the shared contract forbids as a pass.",
+      "evidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#7-coefficient-provenance--partial-independent-spin-trace-derivation-f-5-coefficient-leg",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#candidate_canonical_targets.row_ii_direct"
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#7-coefficient-provenance--partial-independent-spin-trace-derivation-f-5-coefficient-leg"
+      ],
+      "reproduction": [
+        "Run lean /dev/stdin with lean_evidence.source; no row-ii trace theorem is present because the required complex gamma-matrix library is unavailable."
+      ],
+      "unresolved": [
+        "Direct v-spinor amplitude",
+        "t+s interference sign",
+        "generic four-times-base K_t coefficient"
+      ],
+      "assumptions_used": [
+        "V^mu=gamma^mu P_L in the stated eta_D convention",
+        "A direct v-spinor computation, including interference sign, is mandatory"
+      ],
+      "limitations": [
+        "Mathlib matrix/complex/Clifford support is unavailable",
+        "No unsimplified amplitude, spin sums, interference sign, or final generic K_t coefficient was proved"
+      ],
+      "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-LEAN-ABSOLUTE-NORMALIZATION-INCONCLUSIVE",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "status_label": "INCONCLUSIVE",
+      "severity": "blocking",
+      "statement": "The absolute invariant phase-space normalization is not proved on the Lean axis.",
+      "summary": "The absolute invariant phase-space normalization is not established. W3 derives only the reduction conditional on the prefactor and explicitly disclaims independent absolute normalization.",
+      "evidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#1-purpose",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#4-the-maxwellboltzmann-integral",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#conventions.phase_space_measure"
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#1-purpose"
+      ],
+      "reproduction": [
+        "Inspect W3 section 1 and section 4; the c/(8*pi^3) reduction is conditional on the starting prefactor and explicitly is not an independent absolute-normalization validation."
+      ],
+      "unresolved": [
+        "Invariant delta-function reduction",
+        "Every 2*pi power",
+        "Spin, degeneracy, identical-final-state, and catalogue factors"
+      ],
+      "assumptions_used": [
+        "One occupied helicity state per neutrino species",
+        "No tagged incoming-neutrino average",
+        "Every 2*pi, spin, degeneracy, identical-final-state, and catalogue factor must be explicit"
+      ],
+      "limitations": [
+        "No formal invariant-measure or delta-function angular reduction library is available",
+        "The candidate c/(8*pi^3) and c/(24*pi^3) therefore remains unproved on this axis"
+      ],
+      "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-LEAN-REACTION-NULLSPACE-PASS",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "status_label": "DERIVED",
+      "severity": "info",
+      "statement": "The independently enumerated 6x39 species-count matrix has left nullspace exactly span_Q{L_e,L_mu,L_tau} and right nullity 36.",
+      "summary": "The independently enumerated 24-self/15-electron graph gives an exact integer stoichiometric left nullspace equal to span_Q{L_e,L_mu,L_tau}; the compiled proof also parameterizes the nonzero-column right kernel and accounts for all 33 zero columns.",
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#3-six-species-reaction-and-invariant-contract",
+        "embedded Lean theorems graph_counts, left_null_exact, right_block_exact"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run lean /dev/stdin with lean_evidence.source and require exit code 0 for graph_counts, left_null_exact, and right_block_exact."
+      ],
+      "unresolved": [],
+      "assumptions_used": [
+        "All listed reversible orbits occur with nonzero rational multiplicity",
+        "Elastic reactions have zero species-count columns",
+        "Electron pair creation/annihilation is present once per flavour orbit"
+      ],
+      "limitations": [
+        "This proves species-count stoichiometry, not eventwise energy conservation",
+        "It does not validate matrix elements, absolute rates, collision output, or binary64 assembly"
+      ],
+      "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+      "confidence": 0.97
+    },
+    {
+      "finding_id": "F-LEAN-ENTROPY-AFFINITY-INCONCLUSIVE",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "inconclusive",
+      "status_label": "INCONCLUSIVE",
+      "severity": "blocking",
+      "statement": "Only the exact rational entropy test-vector flux arithmetic compiled; the real-log affinity and total entropy inequality remain unproved.",
+      "summary": "Lean compiled the exact rational test-vector arithmetic F=4/625, R=144/625, and J=-28/125 after denominator clearing. The real-log identity and inequality were not compiled because Mathlib Real.log/order theorems are unavailable; the neutrino-plus-bath Q_EM/T_gamma sign mapping is also not formalized.",
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#candidate_canonical_targets.entropy_affinity",
+        "embedded Lean theorem entropy_rational_flux"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run lean /dev/stdin with lean_evidence.source and require entropy_rational_flux to compile.",
+        "Attempt import Mathlib; it fails with unknown module prefix Mathlib."
+      ],
+      "unresolved": [
+        "Real-log odds identity",
+        "Nonnegativity and equality condition",
+        "Q_EM/T_gamma total entropy sign map"
+      ],
+      "assumptions_used": [
+        "0<f_i<1 so F,R and all odds are positive",
+        "log denotes the real natural logarithm"
+      ],
+      "limitations": [
+        "No compiled theorem for log(F/R)=eta1+eta2-eta3-eta4",
+        "No compiled theorem for (F-R)log(F/R)>=0 with equality iff F=R",
+        "No compiled total entropy proof including Q_EM=-Q_nu"
+      ],
+      "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-LEAN-FINITE-ME-SHELL-INCONCLUSIVE",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "inconclusive",
+      "status_label": "INCONCLUSIVE",
+      "severity": "blocking",
+      "statement": "The Mandelstam identity and frozen shell vectors compile exactly, but channel-specific support-root completeness and elimination exclusions remain unproved.",
+      "summary": "Lean compiled a cleared-denominator Mandelstam identity and exact elastic/pair frozen-vector shell, conservation, positive-energy, and s+t+u=2m_e^2 checks. The contract does not provide a channel-specific support polynomial or elimination denominators, so physical root completeness, threshold collisions, and excluded components remain unproved.",
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#4-finite-electron-mass-event-geometry",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#candidate_canonical_targets.mandelstam_shell",
+        "embedded Lean theorems mandelstam_identity_int, elastic_vector_exact, pair_vector_exact"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run lean /dev/stdin with lean_evidence.source and require mandelstam_identity_int, elastic_vector_exact, and pair_vector_exact to compile."
+      ],
+      "unresolved": [
+        "Support polynomial and discriminant",
+        "Cleared denominators and excluded components",
+        "Multiple-root and one-sided derivative theorem",
+        "Finite-m_e interference trace"
+      ],
+      "assumptions_used": [
+        "g_phys=diag(-1,+1,+1,+1)",
+        "The supplied electron energies use the positive branch",
+        "Rational vector denominators are cleared by common scale 20"
+      ],
+      "limitations": [
+        "The general compiled identity is stated over cleared integer pairings, not Mathlib Real four-vectors",
+        "No support-root equation, discriminant, denominator list, multiple-root condition, or one-sided derivative theorem is supplied or proved",
+        "No finite-m_e matrix-element K_s/K_t/K_u interference trace is proved"
+      ],
+      "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+      "confidence": 0.98
+    }
+  ],
+  "lean_evidence": {
+    "proof_kind": "Compiled Lean kernel proofs using Std; no sorry, admit, axiom, native_decide, numerical floating evaluation, or external CAS.",
+    "reproducible_command": "lean /dev/stdin <<'EOF'\n<copy the exact source field below>\nEOF",
+    "exit_code": 0,
+    "stdout_stderr": "warning: failed to query latest release, using existing version 'leanprover/lean4:v4.32.0'",
+    "evidence_fingerprint": "sha256:880261b66a6bfbe705e0f6ad2bcf804d872a8ce534ccec40f61cb7339baae949",
+    "source": "import Std\n\nstructure S6 where\n  ne : Int\n  ane : Int\n  nmu : Int\n  anmu : Int\n  ntau : Int\n  antau : Int\n  deriving DecidableEq, Repr\n\ndef dot (l c : S6) : Int := l.ne*c.ne + l.ane*c.ane + l.nmu*c.nmu + l.anmu*c.anmu + l.ntau*c.ntau + l.antau*c.antau\ndef z : S6 := ⟨0,0,0,0,0,0⟩\ndef pEMu : S6 := ⟨-1,-1,1,1,0,0⟩\ndef pETau : S6 := ⟨-1,-1,0,0,1,1⟩\ndef pMuTau : S6 := ⟨0,0,-1,-1,1,1⟩\ndef eE : S6 := ⟨-1,-1,0,0,0,0⟩\ndef eMu : S6 := ⟨0,0,-1,-1,0,0⟩\ndef eTau : S6 := ⟨0,0,0,0,-1,-1⟩\ndef selfCols : List S6 := List.replicate 21 z ++ [pEMu,pETau,pMuTau]\ndef electronCols : List S6 := List.replicate 12 z ++ [eE,eMu,eTau]\ndef allCols : List S6 := selfCols ++ electronCols\ndef annihilates (l : S6) (cs : List S6) : Prop := ∀ c ∈ cs, dot l c = 0\n\ntheorem graph_counts : selfCols.length = 24 ∧ electronCols.length = 15 ∧ allCols.length = 39 := by decide\n\ntheorem left_null_exact (l : S6) : annihilates l allCols ↔ ∃ a b c : Int, l = ⟨a,-a,b,-b,c,-c⟩ := by\n  cases l with\n  | mk ne ane nmu anmu ntau antau =>\n    constructor\n    · intro h\n      simp [annihilates, allCols, selfCols, electronCols, dot, z, pEMu, pETau, pMuTau, eE, eMu, eTau] at h\n      refine ⟨ne, nmu, ntau, ?_⟩\n      simp\n      omega\n    · rintro ⟨a,b,c,h⟩\n      simp at h\n      simp [annihilates, allCols, selfCols, electronCols, dot, z, pEMu, pETau, pMuTau, eE, eMu, eTau]\n      omega\n\ndef rightBlock (xab xac xbc xa xb xc : Int) : Prop := xab+xac+xa=0 ∧ -xab+xbc+xb=0 ∧ -xac-xbc+xc=0\ntheorem right_block_exact (xab xac xbc xa xb xc : Int) : rightBlock xab xac xbc xa xb xc ↔ xa = -xab-xac ∧ xb = xab-xbc ∧ xc = xac+xbc := by\n  simp [rightBlock]\n  omega\n\ntheorem mandelstam_identity_int (g11 g22 g33 g44 g12 g13 g14 m1sq m2sq m3sq m4sq : Int) (h11 : g11 = -m1sq) (h22 : g22 = -m2sq) (h33 : g33 = -m3sq) (h44 : g44 = -m4sq) (h14 : g14 = g11 + g12 - g13) : -(g11 + g22 + g12 + g12) + -(g11 + g33 - g13 - g13) + -(g11 + g44 - g14 - g14) = m1sq + m2sq + m3sq + m4sq := by omega\n\nstructure V4 where\n  e : Int\n  x : Int\n  y : Int\n  z : Int\n  deriving DecidableEq, Repr\ndef vadd (p q : V4) : V4 := ⟨p.e+q.e,p.x+q.x,p.y+q.y,p.z+q.z⟩\ndef vsub (p q : V4) : V4 := ⟨p.e-q.e,p.x-q.x,p.y-q.y,p.z-q.z⟩\ndef g (p q : V4) : Int := -p.e*q.e + p.x*q.x + p.y*q.y + p.z*q.z\ndef shell (p : V4) (m : Int) : Prop := g p p = -(m*m)\ndef conserved (p1 p2 p3 p4 : V4) : Prop := vadd p1 p2 = vadd p3 p4\ndef mandelS (p1 p2 : V4) : Int := -g (vadd p1 p2) (vadd p1 p2)\ndef mandelT (p1 p3 : V4) : Int := -g (vsub p1 p3) (vsub p1 p3)\ndef mandelU (p1 p4 : V4) : Int := -g (vsub p1 p4) (vsub p1 p4)\ndef ep1 : V4 := ⟨15,0,0,15⟩\ndef ep2 : V4 := ⟨25,0,0,-15⟩\ndef ep3 : V4 := ⟨15,9,0,12⟩\ndef ep4 : V4 := ⟨25,-9,0,-12⟩\ndef pp1 : V4 := ⟨25,0,0,25⟩\ndef pp2 : V4 := ⟨25,0,0,-25⟩\ndef pp3 : V4 := ⟨25,9,0,12⟩\ndef pp4 : V4 := ⟨25,-9,0,-12⟩\ntheorem elastic_vector_exact : shell ep1 0 ∧ shell ep2 20 ∧ shell ep3 0 ∧ shell ep4 20 ∧ conserved ep1 ep2 ep3 ep4 ∧ mandelS ep1 ep2 + mandelT ep1 ep3 + mandelU ep1 ep4 = 2*(20*20) := by simp [shell, g, conserved, vadd, vsub, mandelS, mandelT, mandelU, ep1, ep2, ep3, ep4]\ntheorem pair_vector_exact : shell pp1 0 ∧ shell pp2 0 ∧ shell pp3 20 ∧ shell pp4 20 ∧ conserved pp1 pp2 pp3 pp4 ∧ mandelS pp1 pp2 + mandelT pp1 pp3 + mandelU pp1 pp4 = 2*(20*20) := by simp [shell, g, conserved, vadd, vsub, mandelS, mandelT, mandelU, pp1, pp2, pp3, pp4]\n\ndef np1 : V4 := ⟨5,0,0,5⟩\ndef np2 : V4 := ⟨5,0,0,-5⟩\ndef np3 : V4 := ⟨5,3,0,4⟩\ndef np4 : V4 := ⟨5,-3,0,-4⟩\ndef chi (p q : V4) : Int := -g p q\ntheorem null_vector_invariants : shell np1 0 ∧ shell np2 0 ∧ shell np3 0 ∧ shell np4 0 ∧ conserved np1 np2 np3 np4 ∧ chi np1 np2 * chi np3 np4 = 4*(5^4) ∧ 25*(chi np1 np4 * chi np2 np3) = 81*(5^4) ∧ 25*(chi np1 np3 * chi np2 np4) = 1*(5^4) := by simp [shell, g, conserved, vadd, chi, np1, np2, np3, np4]\ntheorem entropy_rational_flux : 1*2*(5-3)*(5-4) = 4 ∧ 3*4*(5-1)*(5-2) = 144 ∧ 4-144 = -140 ∧ (-140 : Int)*5 = (-28)*25 := by decide\n"
+  },
+  "limitations": [
+    "No sibling result was read.",
+    "No numerical oracle, collision output, T01-T12 execution, production edit, Radau, trajectory, endpoint, or unblinding was performed.",
+    "Mathlib absence prevents formal Real.log, real-analysis, measure-theory, and convenient complex matrix/Clifford proofs.",
+    "The W6 design does not state explicit finite-m_e channel support polynomials, eliminated denominators, or root selectors; those cannot be reconstructed without expanding beyond the registered inputs.",
+    "The exact nullspace result does not confer W7 or B3 implementation/output authority."
+  ],
+  "independence_attestation": {
+    "sibling_results_read": false,
+    "production_collision_code_read_or_executed": false,
+    "forbidden_outputs_produced": false,
+    "writes": [
+      ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-LEAN.json"
+    ]
+  }
+}

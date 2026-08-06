@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-harness-r4-supported-workaround",
+  "assignment_id": "A-HARNESS-CANARY-R4",
+  "context_version": "654dea2ee0a6cf7a06986310f2bb26bc74f519a047b3bd3df8e076738b984de9",
+  "agent_id": "019f892d-e4cb-7a41-90c3-781697db5c36",
+  "agent_type": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-harness-r4-supported-workaround",
+    "assignment_id": "A-HARNESS-CANARY-R4",
+    "context_version": "654dea2ee0a6cf7a06986310f2bb26bc74f519a047b3bd3df8e076738b984de9",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:7a1aad3c6c3547ccac64a89273a6ec7efb7fa76890aa661dc4b5c046666807ee"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260722-f10-harness-r4-supported-workaround/results/A-HARNESS-CANARY-R4.json",
+  "started_at": "2026-07-22T09:34:20Z",
+  "completed_at": "2026-07-22T09:35:45Z",
+  "tool_versions": {
+    "python": "3.12.3"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-harness-r4-supported-workaround/assignments/A-HARNESS-CANARY-R4.json",
+    "printf controlled missing-marker SubagentStop event | /usr/bin/python3 .codex/hooks/subagent_stop_validate.py"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-HARNESS-CANARY-R4-STOP-BLOCK",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The supported R4 chain is live for this canary: the registered four-field prompt header and SubagentStart identity/preflight contract matched the active context; the controlled first SubagentStop attempt without a result artifact or HARNESS_RESULT marker was blocked fail-closed.",
+      "assumptions_used": [
+        "The received four-line assignment header is the main-owned registered launch admission.",
+        "The manual controlled SubagentStop event uses the injected agent identity and registered context_mapper role."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md",
+        ".agent-harness/runs/run-20260722-f10-harness-r4-supported-workaround/assignments/A-HARNESS-CANARY-R4.json",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:c985bf2a7277fe2bb1fb88854275dd2c481356e25520cf41db7a1e175ac1ace4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Confirm the declared result path is absent, then send a SubagentStop event without HARNESS_RESULT to .codex/hooks/subagent_stop_validate.py; observe decision=block.",
+        "Submit this artifact with the final one-line HARNESS_RESULT envelope; the live stop hook must accept the result contract."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The parent-side pre/post non-run write-hash comparison remains owned by the main agent."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-harness-r4-supported-workaround/results/A-HARNESS-CANARY-R4.json"
+  ]
+}

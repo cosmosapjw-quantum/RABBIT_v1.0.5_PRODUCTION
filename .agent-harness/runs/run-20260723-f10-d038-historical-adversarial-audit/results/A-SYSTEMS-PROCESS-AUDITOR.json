@@ -1,0 +1,579 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+  "assignment_id": "A-SYSTEMS-PROCESS-AUDITOR",
+  "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+  "agent_id": "019f8b5e-498e-7d52-bcd9-f4557451b51e",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+    "assignment_id": "A-SYSTEMS-PROCESS-AUDITOR",
+    "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:798acdbfba6542982314746119ea45ebc46b1614667fdda8e34033a9363ab5ff",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-SYSTEMS-PROCESS-AUDITOR.json",
+  "started_at": "2026-07-23T04:20:00+09:00",
+  "completed_at": "2026-07-23T04:55:43+09:00",
+  "tool_versions": {
+    "bash": "GNU bash 5.2.21",
+    "git": "2.43.0",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "audit_mode": "read-only historical/current-tree inspection; no scientific execution"
+  },
+  "commands": [
+    "sed -n in bounded ranges over .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum assignment, role, result template, audit protocol, ledgers, hooks, preserved adjudications, and current sealed design bytes",
+    "python3 -c using _harness.hash_files to verify the registered path-bound role digest",
+    "git rev-parse --verify HEAD; git branch --show-current; git status --short; git show-ref --heads",
+    "git log --all --decorate --oneline --date-order -n 120",
+    "git show --numstat for 19eca21, d7ccd31, 75e1821, f1a81b3, cb513a5, 9ac08b8, 229847d, 8eecb83, 7a13197, cb76cd5, and 00a15d3",
+    "git ls-tree comparisons proving identical W3/W5 blobs across the preserved and rerooted branches",
+    "git --git-dir=.publish-local/20260719T052443Z/legacy.git show-ref and bounded log inspection",
+    "git bundle list-heads .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+    "bounded reads of the assigned Fort, D-027, D-028, D-029, D-037, harness, state, decision, and validation evidence",
+    "wc -l and git diff --no-index --numstat for the initial versus current W6 design surface",
+    "no W7, B3, collision, Rust, Radau, trajectory, endpoint, or RABBIT numerical execution"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/AUDIT_PROTOCOL.json",
+      "sha256": "8c40864753ed8f3813c47972221fea03abce624d9e56f216c18573678381cdef"
+    },
+    {
+      "path": "docs/harness/VALIDATION_LEDGER.md",
+      "sha256": "ad5df7f9d829b0290cbc0bd07fc5af7f77df3b003e891049cfd8f4b7d9f587e1"
+    },
+    {
+      "path": "docs/harness/PROJECT_STATE.md",
+      "sha256": "be8146cff9f7bd0496539f3fd0212a38a3d4813f09be64ac0c45eb4ebb5847d4"
+    },
+    {
+      "path": "RABBIT_f10_independent_validation_branch_review.md",
+      "sha256": "a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": ".singularhistory",
+      "sha256": "5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "sha256": "9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D038-SP-001",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "critical",
+      "causal_label": "root_cause",
+      "statement": "D-027, D-028, and D-029 are genuine and distinct scientific or numerical-method failures, not artifacts of harness fragility or later review strictness. D-027's non-adjoint pointwise action missed frozen S1 conservation/exchange caps; D-028's conservative Galerkin method missed the prospectively frozen native mu-tau cap; D-029's executable selector/prior/exact-node rule was not the continuous fixed-triple method that had been derived. Each was stopped before trajectory authority.",
+      "assumptions_used": [
+        "The frozen caps and method definitions were prospective and were not relaxed after output.",
+        "The preserved adjudications and exact failed artifacts are authoritative within their bounded static scopes."
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-DESIGN-ADJUDICATION.json",
+        ".agent-harness/context/FROZEN_DECISIONS.md:31-33"
+      ],
+      "evidence_fingerprint": "sha256:80fb73afb06af4d3885127f48f6aa2d84320268be965c9c9d474259fbf044502",
+      "counterevidence_refs": [
+        "D-027 common-FD null passed; D-028 passed every recorded gate except native covariance; D-029's fixed-triple theorem and local binary64 stencil passed within narrow limits."
+      ],
+      "first_introduced": "Bounded: each candidate was introduced between its predecessor decision and its 2026-07-18 registered run; no immutable commit identifies the dirty-tree candidate byte introduction.",
+      "first_detectable": "D-027 and D-028 were first detectable by their prospectively frozen M1 discriminators in the same runs; D-029 was detectable by comparing its two sealed design artifacts before implementation.",
+      "why_earlier_checks_missed_it": "Common-FD nulls, local stencil identities, and modal conservation are weaker than resolved non-null conservation, native covariance, selector continuity, and collision-level contracts.",
+      "strongest_counterargument": "The methods were mostly coherent and failed only because the programme used unusually strict caps.",
+      "falsifier": "Recompute the preserved metrics under the unchanged prospective definitions; a value within cap or one coherent selector derivation would weaken this classification.",
+      "attempted_break_test": "Compared partial passes with the exact binding failures and verified that the failure conditions were not added after output.",
+      "reproduction": [
+        "Read the three preserved adjudications and exact artifact hashes; no numerical rerun is authorized or needed for this historical classification."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The broader viability of a different conservative method remains unresolved; these failures do not prove that every B3-like method must fail."
+      ],
+      "recommendation": "Retain all three as immutable discriminators and require any new method to beat the same prospective static gates before implementation.",
+      "forbidden_shortcut": "Do not relax caps, project or symmetrize output, retry reductions, run GL64, or reinterpret bounded subclaim passes as method validation."
+    },
+    {
+      "finding_id": "F-D038-SP-002",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "proximate_cause",
+      "statement": "The Fort sequence mixed separable failure classes. The initial contract was not executable; r2 failed cache closure; r3 failed executable-byte and failure-retention authority; r4 finally exposed a real stock-source exact-lower-node interpolation defect; r5 then failed because its blind assignment omitted the controller and file-level baseline needed to authorize physical output. Harness and bundle defects delayed evidence, while the lower-node source defect was the scientific proximate cause of the GL60 anomaly. No Fort endpoint was validated.",
+      "assumptions_used": [
+        "FortEPiaNO 1.4.0 commit 6cac851 is the pinned upstream source authority.",
+        "Initial-only, one-RHS, zero-DLSODA evidence cannot be promoted to endpoint evidence."
+      ],
+      "evidence_refs": [
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260717-f10c2-independent-v2/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260717-f10-fort-initial-grid-diagnostic-r2/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-initial-grid-diagnostic-r3/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-initial-grid-diagnostic-r4/ADJUDICATION.md",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-endpoint-interpolation-r5/ADJUDICATION.md"
+      ],
+      "evidence_fingerprint": "sha256:6e71cf3bff8cd299deb6e05b7fe357fc5d818814a6c393731a2e19486492b3b5",
+      "counterevidence_refs": [
+        "Every stage failed closed and materially localized the next defect; r4 exact tuple-set correlation is strong bounded evidence, and r6 later validated patch causality only."
+      ],
+      "first_introduced": "Contract omissions existed no later than the first 2026-07-17 independent-v2 freeze; cache and authority defects were introduced in their respective run-local bundles. The interpolation defect existed no later than pinned upstream commit 6cac851; its earlier origin is unresolved.",
+      "first_detectable": "Contract/cache/authority defects were detectable pre-output or at startup. The interpolation defect was in principle detectable by an exact-native-node unit oracle before physical output, but was actually localized after r4's 2026-07-18 GL60 anomaly.",
+      "why_earlier_checks_missed_it": "Canonical upstream tests did not exercise the comparison's strict constants/layout/metrics or exact lower-node interpolation semantics; bundle reviews closed one authority layer at a time.",
+      "strongest_counterargument": "The staged sequence was rational fail-closed engineering, not process failure.",
+      "falsifier": "A single prospective end-to-end nonphysical suite covering full cache closure, loader bytes, controller scope, and exact native endpoints would have passed the earlier bundles.",
+      "attempted_break_test": "Separated r3's explicitly non-scientific authority failure from r4's source-correlated raw-action anomaly and r5's assignment-context failure.",
+      "reproduction": [
+        "Inspect the preserved adjudication chain and r4's exact affected-index equality; do not rerun immutable bundles."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "The exact historical commit that first introduced Fort's strict-lower-bracket behavior was not reconstructed.",
+        "No Fort endpoint evidence exists, so endpoint-level agreement remains unresolved."
+      ],
+      "recommendation": "Keep Fort r6 contextual and stopped. If history is revisited, use the preserved exact-node failure as a test-oracle lesson, not as authority to reopen whole-program Fort.",
+      "forbidden_shortcut": "Do not attribute all Fort failures to physics, treat authority closure as endpoint progress, or add another wrapper/cache/telemetry loop."
+    },
+    {
+      "finding_id": "F-D038-SP-003",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "critical",
+      "causal_label": "root_cause",
+      "statement": "The recurrent B3-v2/W7 failure is executable-contract debt plus an inadequate test oracle. The initial W6 entered Git as a 178-line design-only proof pack at 229847d. The current W6 is 621 lines and the sealed unexecuted W7 source is 2,198 lines, yet source-only checks proved only record counts, branch examples, ladder cardinality, and object equality. D-037 then found concrete self-inconsistencies: per-leg shell requirements were aggregated or skipped at threshold, proof-mandated coefficient-Horner evaluation was bypassed by cached node values, directed tail enclosures had no executable rigorous integrator, and A0-A4/event traces admitted incomplete caller-supplied graphs.",
+      "assumptions_used": [
+        "The W6 prose requirements are binding design obligations rather than optional future implementation notes.",
+        "A design claiming a reconstructible metrology bound must make nonconforming caller behavior impossible or detectable."
+      ],
+      "evidence_refs": [
+        "git commit 229847d0d02be11c61dbe5e4815e35de738b3580",
+        "RABBIT_f10_independent_validation_branch_review.md:54-102",
+        "docs/harness/VALIDATION_LEDGER.md:4-9",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:9b48b5ba4c06fb30dc0141e3e5899e8f7811b3c9dc0c887780cc00cea022125d",
+      "counterevidence_refs": [
+        "D-037 independently passed reaction nullspace, entropy affinity, direct row-ii normalization, and absolute normalization subclaims; the 20-row selection closure also exists."
+      ],
+      "first_introduced": "Initial architectural under-specification is present at 229847d on 2026-07-22. The exact current defects were introduced in an uncommitted interval after D-034's 2026-07-22 FAIL and before D-035 sealing on 2026-07-23.",
+      "first_detectable": "The initial W6 defects were detectable in the external branch review and D-033. The current shell/basis/tail/trace defects were detectable immediately from the sealed source and proof and were detected by D-037 before execution.",
+      "why_earlier_checks_missed_it": "Draft checks asserted existence and equality of selected objects, not semantic closure, negative controls, per-consumer basis provenance, tail enclosure rigor, or exact trace cardinality.",
+      "strongest_counterargument": "Auditors are demanding unnecessary formalism from a design that would probably work numerically.",
+      "falsifier": "A clause-to-symbol closure matrix plus adversarial source checks should show every binding obligation is enforced and reject incomplete traces, unequal-scale shell rescue, node-value consumers, and scalar-only tails. The current bytes do not meet that test.",
+      "attempted_break_test": "Compared each D-037 failure against the proof pack's own binding language and retained all four genuine pass subclaims rather than treating the whole design as uniformly wrong.",
+      "reproduction": [
+        "Use the D-037 line-referenced static reproductions; no W7 or B3 execution is required."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Whether B3-v2 remains the best architecture after a clean redesign is unresolved.",
+        "No numerical evidence exists for W7 or B3 on the current bytes."
+      ],
+      "recommendation": "Do not authorize another literal patch yet. First require an owner decision on whether to continue and, if continued, a bounded obligation-to-enforcement matrix with negative controls and an explicit deletion/consolidation budget.",
+      "forbidden_shortcut": "Do not execute W7/B3, infer sufficiency from record counts or source/vector equality, or convert bounded algebraic passes into whole-design authority."
+    },
+    {
+      "finding_id": "F-D038-SP-004",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "root_cause",
+      "statement": "Harness defects were root causes of untrustworthy admission and write attribution, but not of the scientific failures. D-031 assumed a PreToolUse event that VS Code collaboration does not emit and an early retry path could bypass Stop validation; D-034's structural validator passed while Sage/Singular created undeclared repository-root .singularhistory; D-035 then lost admissible results through runtime-role misregistration and uppercase verdict enums. D-036's schema-v2 runtime/review-role separation, sealed role/template hashes, retry-safe Stop, temporary cwd, and parent pre/post hashes repaired the supported boundary. D-037 still failed scientifically after that repair.",
+      "assumptions_used": [
+        "Live event evidence outranks static hook fixtures for event availability and external-tool containment.",
+        "The unchanged D-037 parent hashes establish result-only writes only within the declared parent/Start/Stop boundary."
+      ],
+      "evidence_refs": [
+        "docs/harness/PROJECT_STATE.md:62-82",
+        "docs/harness/PROJECT_STATE.md:128-157",
+        "docs/harness/VALIDATION_LEDGER.md:4-13",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/validate_harness.py",
+        ".singularhistory"
+      ],
+      "evidence_fingerprint": "sha256:ee824bb72d01d30e1b4e9237078b5344afe22a92ecd3408fed8f884e5225222a",
+      "counterevidence_refs": [
+        "D-032 R4 and D-036 R3 demonstrate that the supported workaround can be enforced live; D-037 preserved identical pre/post hashes."
+      ],
+      "first_introduced": "D-031 event assumptions and retry semantics were introduced before the 2026-07-22 R2/R3 probes; D-034's external-tool cwd defect existed in its assignment/run; D-035 identity defects existed in its v1 registrations.",
+      "first_detectable": "Only live canaries exposed the PreToolUse and retry gaps. Repository status hashing exposed .singularhistory. Live Stop exposed runtime/role and enum mismatches.",
+      "why_earlier_checks_missed_it": "validate_harness validates registered JSON contracts and result paths but cannot prove a VS Code event fired or that an external process wrote nowhere else in the repository.",
+      "strongest_counterargument": "Harness failures contaminated reviewer conclusions and therefore explain the scientific FAILs.",
+      "falsifier": "If the same exact source findings disappeared after D-036 under valid schema-v2 reviewers, the harness-causation hypothesis would gain support. D-037 instead reproduced binding source defects.",
+      "attempted_break_test": "Compared pre-repair false admissions and unauthorized writes with the post-repair D-037 exact-byte findings and kept process PASS separate from science FAIL.",
+      "reproduction": [
+        "Read current Start/Stop hooks and the D-034 through D-037 validation-ledger rows; verify .singularhistory SHA-256 5abbc842."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "VS Code collaboration PreToolUse remains unavailable and must not be claimed.",
+        "Exclusive write attribution still depends on main-owned pre/post hashing, not Stop alone."
+      ],
+      "recommendation": "Freeze the supported schema-v2 parent/Start/Stop contract and require external-tool cwd confinement plus parent-side whole-tree attribution for every future run.",
+      "forbidden_shortcut": "Do not claim launch interception, infer science from harness PASS, or hide/rewrite rejected results and unauthorized artifacts."
+    },
+    {
+      "finding_id": "F-D038-SP-005",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "causal_label": "recurrence_amplifier",
+      "statement": "The 2026-07-19 public-history reroot is not supported as a scientific cause, but it weakens commit-level first-introduction tracing. The exact legacy Git database, 37-ref bundle, and quarantined runs were preserved. W3 and W5 on the blocker and successor branches have byte-identical blobs despite new commit IDs, and D-037 fails on current exact hashes. However, the active branch stops at 00a15d3 while W6, W7, ledgers, hooks, and later D-033 through D-037 state are dirty or untracked, so those changes can be dated only by sealed run intervals rather than immutable commits.",
+      "assumptions_used": [
+        "Exact blob equality is sufficient to identify rerooted W3/W5 content despite commit-ID changes.",
+        "Preserved run hashes are valid interval evidence but weaker than authored commit ancestry."
+      ],
+      "evidence_refs": [
+        "docs/harness/DECISION_LOG.md:14",
+        "docs/harness/VALIDATION_LEDGER.md:15",
+        "git refs main=ca3a013, blocker=8eecb83, successor=00a15d3",
+        ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs"
+      ],
+      "evidence_fingerprint": "sha256:f047b9a6ce9b456ee2150da0d091e19b9381f65b36944a16222edaa7ca22ed2f",
+      "counterevidence_refs": [
+        "The bundle and legacy database preserve reachable legacy content, and the quarantine retains the Fort/D-027/D-028/D-029 run evidence; no missing context was found that reverses a current exact-byte failure."
+      ],
+      "first_introduced": "Public reroot occurred 2026-07-19. The successor branch replayed W3/W5 on 2026-07-21 and left post-W5 D-033 through D-037 work outside commit ancestry.",
+      "first_detectable": "Immediately detectable from the current graph, identical ls-tree blobs, dirty status, legacy refs, and preserved run paths.",
+      "why_earlier_checks_missed_it": "Narrative documents cite hashes and runs, but current Git alone presents only the curated branch and cannot bisect uncommitted remediation stages.",
+      "strongest_counterargument": "The apparent repeated failures are reroot artifacts or consequences of missing legacy context.",
+      "falsifier": "Locate a preserved legacy blob or omitted run that changes a binding current formula, cap, or D-037 source finding. None was identified in the assigned evidence.",
+      "attempted_break_test": "Compared duplicated W3/W5 blob IDs across branches, inspected legacy refs/bundle, and checked current exact D-037 bytes without relying on commit messages.",
+      "reproduction": [
+        "git ls-tree 19eca21 and 7a13197 for W3; d7ccd31 and cb76cd5 for spin traces; 75e1821 and 00a15d3 for W5.",
+        "git bundle list-heads .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle"
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Exact first-introduction commits for dirty D-033 through D-037 bytes do not exist in the active Git graph.",
+        "Unreachable legacy objects were not exhaustively audited."
+      ],
+      "recommendation": "Before any future review, freeze the full candidate and authority files in one immutable snapshot manifest or commit while preserving the current dirty evidence unchanged.",
+      "forbidden_shortcut": "Do not rewrite or delete the legacy/quarantine evidence, and do not use reroot uncertainty to dismiss current exact-byte failures."
+    },
+    {
+      "finding_id": "F-D038-SP-006",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "recurrence_amplifier",
+      "statement": "Workflow sequencing and cost control repeatedly optimized the last observed failure without first closing the full executable-obligation graph. Fort r2/r3/r4/r5 each added net 293/384/210/299 run-local lines with blocker-movement ratios 0.25/0.25/0.50/0.25 and no endpoint. D-027 added 1,295 private-source lines at ratio 0.25; D-028's replacement was net +80 at 0.25; D-029 added 271 evidence lines at 0.25; the first W6/W7 review recorded a non-run net +1,060 at 0.25, while the current unexecuted W7 contract source alone is 2,198 lines. Legacy PORT-00-to-R-03C1A history also compressed 110 commits into about 25 hours, including 58 spec, 19 test, 12 feature, and 3 revert subjects. Line count is not itself a defect; repeated low-movement, last-defect packets are the recurrence amplifier.",
+      "assumptions_used": [
+        "Run-local diffs are comparable as iteration-cost indicators but must not be summed as independent retained production LOC.",
+        "Commit-subject counts are process signals, not proof of technical waste."
+      ],
+      "evidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md:4-15",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260717-f10-fort-initial-grid-diagnostic-r2/ADJUDICATION.md#Scope-and-Cost-Effectiveness",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-initial-grid-diagnostic-r3/ADJUDICATION.md#Cost-effectiveness",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-initial-grid-diagnostic-r4/ADJUDICATION.md#Cost-effectiveness",
+        ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-fort-endpoint-interpolation-r5/ADJUDICATION.md#Cost-line",
+        ".publish-local/20260719T052443Z/legacy.git log f52cdb2..0b2339c"
+      ],
+      "evidence_fingerprint": "sha256:5d5e1fc2916191183b85ed57a8c9fd16dbf13358ba4a1cdcc9ea084bcde557f2",
+      "counterevidence_refs": [
+        "The hard stops prevented endpoint runs on incoherent designs, preserved raw failures, and often converted ambiguity into exact localized defects; fail-closed iteration had real evidence value."
+      ],
+      "first_introduced": "The pattern predates F-10 in the preserved 2026-07-12/13 Rust history and recurs in the 2026-07-17 through 2026-07-23 Fort and B3/W7 chains.",
+      "first_detectable": "Detectable whenever a remediation packet reported blocker movement 0.25 and immediately opened another packet for a newly exposed contract class; terminally clear by D-037.",
+      "why_earlier_checks_missed_it": "Cost verdicts assessed each local movement in isolation and did not impose a cross-revision closure matrix or stop-loss decision on accumulated design-only surface.",
+      "strongest_counterargument": "Historical churn is harmless because every later packet fixed the prior defect and prevented a worse implementation.",
+      "falsifier": "A next exact-byte review that closes the already enumerated obligations with no new failure class and materially raises blocker movement would support the benign-learning interpretation.",
+      "attempted_break_test": "Separated retained production LOC from overlapping run-local diffs and credited every genuine localization benefit before classifying the repeated low-movement sequence.",
+      "reproduction": [
+        "Read the cost blocks in the preserved adjudications and count legacy subject prefixes over f52cdb2..0b2339c."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Exact token use is UNAVAILABLE because the harness exposes no assignment-scoped counter.",
+        "No reliable all-surface cumulative LOC can be computed by summing overlapping run-local diffs."
+      ],
+      "recommendation": "Require an owner stop-or-continue decision before more edits. Any continuation should use one consolidated obligation ledger, a fixed review-cycle stop condition, and deletion/consolidation accounting before implementation.",
+      "forbidden_shortcut": "Do not answer the accumulated design debt with one larger implementation-and-test push or report a segment/static improvement as endpoint progress."
+    },
+    {
+      "finding_id": "F-D038-SP-007",
+      "claim_id": "C-D038-SYSTEMS-PROCESS-CAUSES",
+      "verdict": "fail",
+      "severity": "high",
+      "causal_label": "detection_gap",
+      "statement": "The current SSOT surface is internally layered rather than singular: PROJECT_STATE's top overlay correctly records D-037 and requires a new owner decision, while its terminal Next action still says to stop at D-029 and omits D-030 through D-037. The authoritative gate registry is clearer: independent-FLRW, covariance-metrology, and current-tree full regression are FAIL; harness integrity is PASS only in the schema-v2 process boundary. This drift can mis-sequence work even though the latest decision log is correct.",
+      "assumptions_used": [
+        "Readers may reasonably treat a section titled Next action as operative unless supersession is machine-explicit.",
+        "The gate registry and latest decision log outrank the stale terminal narrative."
+      ],
+      "evidence_refs": [
+        "docs/harness/PROJECT_STATE.md:104-160",
+        "docs/harness/PROJECT_STATE.md:1261-1276",
+        "docs/harness/DECISION_LOG.md:4-14",
+        ".agent-harness/context/GATE_REGISTRY.json:15-22",
+        ".agent-harness/context/GATE_REGISTRY.json:45-69",
+        ".agent-harness/context/GATE_REGISTRY.json:82-89"
+      ],
+      "evidence_fingerprint": "sha256:9a11ad613ad6452992d8479b062644484dfbed2e6f13a4834ad53aa484c68d33",
+      "counterevidence_refs": [
+        "The newest overlay and decision log are explicit enough for a careful reviewer, and no evidence shows the stale section caused a forbidden execution."
+      ],
+      "first_introduced": "The terminal D-029 next-action text became stale as D-030 through D-037 overlays were added between 2026-07-22 and 2026-07-23.",
+      "first_detectable": "Detectable by comparing the first 160 and final 16 lines of current PROJECT_STATE with the current gate registry and decision log.",
+      "why_earlier_checks_missed_it": "Context generation includes both layers and validates hashes, not semantic supersession of prose next-action sections.",
+      "strongest_counterargument": "The top overlay obviously supersedes the historical lower section, so this is harmless documentation structure.",
+      "falsifier": "A deterministic SSOT resolver or consolidated single next-action section that rejects the stale D-029 instruction would remove the ambiguity.",
+      "attempted_break_test": "Compared current gate statuses and latest decisions against both PROJECT_STATE locations; no gate status was inferred from the stale narrative.",
+      "reproduction": [
+        "sed -n 1,190p docs/harness/PROJECT_STATE.md; sed -n 1210,1276p docs/harness/PROJECT_STATE.md; inspect GATE_REGISTRY.json."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No evidence establishes that this prose drift caused an actual unauthorized action."
+      ],
+      "recommendation": "Consolidate or explicitly mark the terminal D-029 section historical in the existing SSOT rather than adding another standalone gate.",
+      "forbidden_shortcut": "Do not treat harness PASS, source-only checks, or the stale D-029 text as authority for remediation or execution."
+    }
+  ],
+  "chronology": [
+    {
+      "interval": "FortEPiaNO 1.4.0 commit 6cac851 through 2026-07-17 independent-v2",
+      "introduced": "Stock lower-node behavior predates the pinned commit; comparison-contract omissions existed by the first freeze.",
+      "first_detectable": "Contract review before output; exact-node source defect could have been detected nonphysically but was actually localized at r4 on 2026-07-18.",
+      "classification": "specification/executable contract plus test-oracle defect"
+    },
+    {
+      "interval": "2026-07-17 r2 through 2026-07-18 r5/r6",
+      "introduced": "Cache, runtime-byte, retention, and assignment-context defects were run-local.",
+      "first_detectable": "At GL60 startup or blind pre-output authority review.",
+      "classification": "process/provenance proximate causes, separate from Fort source physics"
+    },
+    {
+      "interval": "D-026 to D-027 on 2026-07-18",
+      "introduced": "Direct pointwise non-adjoint action candidate.",
+      "first_detectable": "Prospective resolved S1 static discriminator.",
+      "classification": "scientific discretization root cause"
+    },
+    {
+      "interval": "D-027 to D-028 on 2026-07-18",
+      "introduced": "Full-degree Galerkin mass inversion.",
+      "first_detectable": "Prospective native mu-tau GL48 metric.",
+      "classification": "numerical conditioning root cause"
+    },
+    {
+      "interval": "D-028 to D-029 on 2026-07-18",
+      "introduced": "Piecewise nearest-exterior/max-entropy selector and exact-node branch.",
+      "first_detectable": "Blind comparison of symbolic and binary64 artifacts before implementation.",
+      "classification": "design coherence root cause"
+    },
+    {
+      "interval": "229847d on 2026-07-22 through D-037 on 2026-07-23",
+      "introduced": "Initial W6 under-specification at the commit; current exact defects in the uncommitted D-034-to-D-035 interval.",
+      "first_detectable": "External branch review/D-033 for the initial design; D-037 static exact-byte review for the current shell/basis/tail/trace defects.",
+      "classification": "specification-to-source and oracle root cause"
+    },
+    {
+      "interval": "D-031 through D-036 on 2026-07-22/23",
+      "introduced": "Wrong event assumption, retry bypass, external cwd gap, and runtime/review-role conflation.",
+      "first_detectable": "Live canaries, repository status hashing, and live Stop validation.",
+      "classification": "harness/identity/isolation root cause for trust only"
+    },
+    {
+      "interval": "2026-07-19 reroot through current 00a15d3 dirty tree",
+      "introduced": "Curated history and later uncommitted design/harness state.",
+      "first_detectable": "Current graph/blob comparisons and legacy/quarantine inventory.",
+      "classification": "auditability amplifier; scientific non-cause on present evidence"
+    }
+  ],
+  "seven_stage_record": {
+    "self_discover": "Mapped current refs/dirty surface, preserved legacy refs/bundle, Fort r2-r5 adjudications, D-027/D-028/D-029 artifacts, D-031-D-037 lifecycle evidence, current hooks, ledgers, gates, and the two allowed prior-run D-037 results. Initial hypotheses were multiple scientific failures, executable-contract debt, harness trust defects, and provenance/cost amplifiers.",
+    "step_back": "Separated outcome failure from evidence-admission failure: method/source defects can fail science; harness/provenance defects can delay or invalidate trust; branch and SSOT drift can amplify recurrence. Partial algebraic passes and initial-only diagnostics are not endpoint evidence.",
+    "metacognitive_self_ask": [
+      "Am I mistaking stricter later standards for defects knowable at the time? Checked prospective caps and contemporaneous proof obligations.",
+      "Am I blaming line count rather than semantics? Treated LOC only as cost/iteration evidence and credited localization gains.",
+      "Am I relying on commit messages? Preferred exact blobs, results, source, gates, and adjudications.",
+      "Could rerooting hide exculpatory evidence? Checked preserved refs/bundle/quarantine; exact first-introduction remains bounded where the tree is uncommitted.",
+      "Could harness failures explain science? Compared D-037 after schema-v2 repair; they do not."
+    ],
+    "cove": [
+      {
+        "question": "Were D-027/D-028 caps prospective?",
+        "answer": "Yes; preserved adjudications explicitly prohibit post-output norm/cap change."
+      },
+      {
+        "question": "Did r3 produce scientific output?",
+        "answer": "No; authority failed before execution."
+      },
+      {
+        "question": "Is the GL60 anomaly a grid/cache outlier?",
+        "answer": "No; independent grid metrology passed and exact tuple sets match the raw-action locus."
+      },
+      {
+        "question": "Did D-036 repair science?",
+        "answer": "No; it repaired runtime/review-role and lifecycle trust only, and D-037 still failed the exact design."
+      },
+      {
+        "question": "Did rerooting alter W3/W5 content?",
+        "answer": "No for the compared files; blocker and successor commits point to identical blobs."
+      },
+      {
+        "question": "Is current W6/W7 implementation-sufficient?",
+        "answer": "No on current static evidence; D-037 gives reproducible proof/source contradictions without numerical output."
+      }
+    ],
+    "adversarial_self_ask": "Each finding records its strongest counterargument, falsifier, and break test. The audit concedes rational fail-closed learning, genuine partial mathematical passes, bounded harness repair, and preserved history while rejecting claim promotion and automatic continuation.",
+    "ccot": "See contrast_table; competing explanations are discriminated by prospective timing, exact current source behavior, live lifecycle probes, preserved blob identity, and whether defects persist after harness repair.",
+    "pdr": "See pdr; severity remains critical for B3/W7 readiness, high for workflow and harness history, and medium/inconclusive for reroot causality. No remediation or execution is authorized by this audit."
+  },
+  "contrast_table": [
+    {
+      "explanation": "Merely stricter review of an otherwise coherent design",
+      "predicted_evidence": "Current source satisfies its own proof; only new formal requirements fail.",
+      "observed_evidence": "D-037 finds proof/source contradictions in shell, basis, tail, and trace obligations already stated by W6.",
+      "disposition": "rejected"
+    },
+    {
+      "explanation": "Isolated transcription bugs",
+      "predicted_evidence": "One correction class closes the route without new structural defects.",
+      "observed_evidence": "Some defects are isolated, but independent method, shell, basis, tail, trace, authority, and provenance classes recur.",
+      "disposition": "partly true locally; rejected as the global explanation"
+    },
+    {
+      "explanation": "Harness defects caused the scientific failures",
+      "predicted_evidence": "Valid schema-v2 review removes or reverses source findings.",
+      "observed_evidence": "D-037 validly admits two FAIL results after D-036 repair.",
+      "disposition": "rejected"
+    },
+    {
+      "explanation": "D-035 is implementation-sufficient and auditors demand excess formalism",
+      "predicted_evidence": "Negative controls and trace/domain completeness are enforced by current bytes.",
+      "observed_evidence": "Current validators admit aggregate shell rescue, cached-node basis consumers, scalar tails, and incomplete caller traces.",
+      "disposition": "rejected"
+    },
+    {
+      "explanation": "Historical churn is harmless because each packet fixes the last defect",
+      "predicted_evidence": "Failure classes converge and blocker movement rises without comparable surface growth.",
+      "observed_evidence": "Localization improved, but repeated 0.25 movement and new binding classes persisted through D-037.",
+      "disposition": "learning value conceded; recurrence-amplifier claim retained"
+    },
+    {
+      "explanation": "One larger implementation/test push is cheaper",
+      "predicted_evidence": "Design bytes are coherent enough that runtime is the remaining discriminator.",
+      "observed_evidence": "Static exact-byte contradictions precede any legitimate W7/B3 output.",
+      "disposition": "rejected"
+    },
+    {
+      "explanation": "Failures are reroot or missing-context artifacts",
+      "predicted_evidence": "Preserved blobs/runs reverse or erase current discrepancies.",
+      "observed_evidence": "Exact current D-037 bytes fail; duplicated W3/W5 blobs are identical; history uncertainty affects dating, not verdict.",
+      "disposition": "rejected as science cause; retained as auditability limitation"
+    }
+  ],
+  "steelman_debate": {
+    "design_evolution_steelman": "The staged programme repeatedly refused to hide RED results, preserved exact bytes, caught three candidate failures before trajectory, and used each Fort stage to convert uncertainty into a narrower defect. Partial nullspace, entropy, row-ii, normalization, cache, grid, and interpolation results are genuine. Some closure demands are expensive because reproducible independent transport is intrinsically hard.",
+    "design_concessions": [
+      "Current D-035 bytes do not enforce their own shell, basis, tail, and trace contracts.",
+      "Source-only count/equality checks were insufficient.",
+      "No W7, B3, or independent endpoint evidence exists."
+    ],
+    "audit_steelman": "Repeated FAILs reveal systemic executable-contract debt and a sequencing pattern in which the last named defect is patched without a complete obligation graph. Stopping before execution was cost-effective because it prevented invalid numerical evidence and a larger B3 implementation.",
+    "audit_concessions": [
+      "D-027 through D-029 are distinct scientific failures, not one monolithic process defect.",
+      "Harness repair now works within its declared boundary.",
+      "Rerooting preserved substantial evidence and did not create the current source defects."
+    ],
+    "discriminating_test": "Before any owner-authorized edit, require a document-level clause-to-source/negative-control matrix for every binding W6/W7 obligation. An independent reviewer must be able to reject unequal-scale shell rescue, any node-value basis consumer, scalar-only signed tails, and incomplete traces using current bytes alone. Passing that test with no new obligation class would weaken the systemic-debt verdict."
+  },
+  "readiness": {
+    "exact_byte_remediation": {
+      "status": "FAIL",
+      "reason": "D-037 requires a new owner decision, and the current workflow lacks the consolidated obligation closure and stop-loss predicate needed to make another literal patch credible. Technical route viability remains unresolved."
+    },
+    "w7_execution": {
+      "status": "FAIL",
+      "reason": "Shell, directed-tail, A0-A4, domain, denominator, and trace contracts fail before output."
+    },
+    "b3_implementation": {
+      "status": "FAIL",
+      "reason": "The exact design is not implementation-sufficient, W7 has not executed, and owner authority is absent."
+    },
+    "independent_flrw_closure": {
+      "status": "FAIL",
+      "reason": "No independent full-spectral trajectory or endpoint exists; independent-FLRW, covariance-metrology, and current-tree regression gates remain FAIL."
+    },
+    "harness_supported_boundary": {
+      "status": "PASS_WITH_LIMITS",
+      "reason": "Schema-v2 parent/Start/Stop identity, sealed role/template hashes, retry validation, temporary cwd, and parent pre/post attribution passed; PreToolUse launch interception remains unavailable."
+    }
+  },
+  "pdr": {
+    "severity_recheck": "Critical for current B3/W7 readiness; high for workflow recurrence and historical harness admission; medium for provenance/SSOT auditability. No evidence justifies downgrading the binding failures.",
+    "residual_uncertainty": [
+      "Dirty post-W5 work has no commit ancestry, so several first-introduction dates are bounded by runs rather than commits.",
+      "The earlier origin of Fort's lower-node behavior was not reconstructed beyond pinned commit 6cac851.",
+      "No W7/B3 numerical output exists, so the eventual numerical viability of a redesigned method is unknown.",
+      "D-038 sibling results were not read, preserving blind-results independence."
+    ],
+    "smallest_reversible_next_decisions": [
+      "Owner decides whether to stop/archive B3-v2 or authorize a design-process reset; this audit grants neither.",
+      "If continuation is chosen later, snapshot all exact candidate/authority bytes and require one consolidated obligation/negative-control ledger before any implementation or output.",
+      "Consolidate the stale PROJECT_STATE next-action section into the existing SSOT rather than adding a new gate."
+    ],
+    "prohibited_overreactions": [
+      "Do not delete or rewrite failed runs, .singularhistory, legacy Git, or quarantine evidence.",
+      "Do not relax caps, project/symmetrize results, retry reductions, or run W7/B3/Radau/trajectory/endpoint/unblinding.",
+      "Do not blame harness defects for scientific findings or treat harness PASS as science validation.",
+      "Do not launch one larger implementation/test push to bypass exact-byte design failure."
+    ],
+    "verdict_reversal_conditions": [
+      "A new owner decision explicitly authorizes a bounded next slice.",
+      "An immutable candidate maps every binding obligation to enforced code and adversarial negative controls, with no source/proof contradiction.",
+      "Fresh independent review passes the exact bytes and all external tools remain confined with identical parent pre/post non-run hashes.",
+      "Only after separately granted authority do W7 evidence and later static B3 gates pass; independent-FLRW closure additionally requires a full structurally independent endpoint and current-tree regression."
+    ],
+    "token_use_exact": "UNAVAILABLE",
+    "token_use_basis": "The harness exposes no reliable assignment-scoped exact token counter."
+  },
+  "independence_attestation": {
+    "mode": "blind-results",
+    "d038_sibling_results_read": false,
+    "writes_outside_result_path": false,
+    "scientific_execution_performed": false
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-SYSTEMS-PROCESS-AUDITOR.json"
+  ]
+}

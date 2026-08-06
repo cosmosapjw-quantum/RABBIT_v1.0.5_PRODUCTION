@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+  "assignment_id": "A-CAS-WOLFRAM",
+  "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+  "agent_id": "019f8aac-263c-7271-b314-531f35147d2e",
+  "agent_type": "cas_wolfram_xact",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+    "assignment_id": "A-CAS-WOLFRAM",
+    "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:37758008ffc469d06a1ce9a688525da310fbdb0cf4ba6c7eead6540684c01116"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-CAS-WOLFRAM.json",
+  "started_at": "2026-07-22T16:30:00Z",
+  "completed_at": "2026-07-22T16:51:20Z",
+  "tool_versions": {
+    "Wolfram Language": "15.0.0 for Linux x86 (64-bit) (May 26, 2026)",
+    "xAct xTensor": "1.3.0 (2025-12-29)",
+    "xAct xPerm": "1.2.4 (2025-12-29); package loaded, external MathLink executable connection failed",
+    "xAct declarations": "M4 dimension 4; TangentM4; etaD[-aa,-bb]; CD; abstract ToCanonical metric contraction returned delta[aa,-cc]",
+    "explicit gamma representation": "exact Weyl matrices; eta_D=diag(+1,-1,-1,-1); gamma5=diag(-1,-1,+1,+1); P_L=(1-gamma5)/2",
+    "Wolfram resource limits": "$RecursionLimit=1024; $IterationLimit=4096; $MaxExtraPrecision=50.; $HistoryLength=Infinity"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-CAS-WOLFRAM.json",
+    "sha256sum docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json .agent-harness/context/roles/cas_sage_singular.md",
+    "command -v WolframKernel",
+    "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+    "sha256sum /tmp/A-CAS-WOLFRAM-D035.wl",
+    "WolframKernel -noprompt -run 'Print[InputForm[{$RecursionLimit,$IterationLimit,$MaxExtraPrecision,$HistoryLength}]]; Quit[]'"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/A-CAS-WOLFRAM-D035.wl",
+      "sha256": "f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+      "kind": "executable Wolfram Language plus xAct exact-algebra script",
+      "retention": "assignment-specific external temporary path because repository writes are restricted to the unique result",
+      "scope": "exact design review only; no W7 numeric oracle, B3 collision/static output, T01-T12, trajectory, or endpoint"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json",
+      "problem_id": "BD622-D035-B3V2-W7-EXACT-BYTES",
+      "source_locks": {
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "docs/audit/BD622_W7_exact_test_vectors.json": "sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+      }
+    },
+    {
+      "kind": "stable InputForm result summary",
+      "expressions": [
+        "Tr_dist=16 K_t; |M_dist|^2=32 G_F^2 K_t",
+        "raw chiral Fierz A_s=-A_t; Wick-relative-minus coherent amplitude gives |M_same|^2=128 G_F^2 K_t",
+        "same-sign Tr_dist=16 K_s; coefficients 32 and coherent 128 before O_r S_r",
+        "electron elastic=32 G_F^2(g_L^2 K_s+g_R^2 K_t-g_L g_R m_e^2 chi_13)",
+        "electron pair=32 G_F^2(g_L^2 K_t+g_R^2 K_u+g_L g_R m_e^2 chi_12)",
+        "two-pi reduction=p1^2 dp1 p2^2 dp2 k_star/(256 pi^4 E1 E2 sqrt(s) T_cm^3)",
+        "stoichiometric rank=3; left-null basis is the three flavour charge differences",
+        "A=log(F/R)=eta1+eta2-eta3-eta4; (F-R)A>=0 with equality iff F=R",
+        "source aggregate shell witness=True; required per-leg shell witness=False"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-WOLFRAM-ROWII-001",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "none",
+      "statement": "Under the locked gamma convention, the distinguishable t-channel trace is 16 K_t. For the raw s-bilinear the exact chiral Fierz identity gives A_s=-A_t; the canonical fermionic Wick relative minus therefore makes the two physical diagram contributions constructive. With amplitude normalization sqrt(2) G_F, the distinguishable result is 32 G_F^2 K_t and the coherent same-flavour row is exactly 128 G_F^2 K_t, four times the base.",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), slash(p)=gamma0 p0-gammai pi, gamma5=i gamma0 gamma1 gamma2 gamma3, P_L=(1-gamma5)/2",
+        "massless future external neutrino and antineutrino legs with one occupied helicity and no neutrino spin average",
+        "canonical external ordering 1+2->3+4 and the Wick relative minus between the raw t and s contractions",
+        "real G_F and exact symbolic four-vector components"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#row_ii_direct_trace_target",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:118",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:420",
+        "/tmp/A-CAS-WOLFRAM-D035.wl#sha256:f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+        "Wolfram markers ROWII_DIST_TRACE_IDENTITY=True, ROWII_FIERZ_RAW_S_EQUALS_MINUS_T=True, ROWII_FOUR_TIMES_BASE=True"
+      ],
+      "evidence_fingerprint": "sha256:be23bd0ec4f5e4f8954ff07a339ba89fcd097f400ac894992d1e7b10a1a3ca69",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+        "Inspect the ROWII_* and CLIFFORD_ZERO markers; all are exact True and key expressions are emitted in InputForm"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-WOLFRAM-NORMALIZATION-001",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "pass",
+      "severity": "none",
+      "statement": "The exact global factor ledger is internally consistent: the reduced two-body measure and q normalization give the printed 1/(256 pi^4) radial prefactor and q has units MeV; distinct elastic O*S*leg=1 maps global 32 to tagged 32, identical elastic O*S*leg=1/2 maps global 128 to tagged 64, and conversion/pair has O=1. Independent exact traces reproduce all four self amplitude IDs and the finite-mass electron elastic/opposite-charge/pair signs with spin sums and no initial electron-spin average or extra bath/orbit multiplier.",
+      "assumptions_used": [
+        "global dGamma, two-body dPhi2, q moment, spin convention, and reaction orientation are exactly those in the CAS contract",
+        "electron distributions are per spin while the matrix elements sum initial and final electron or positron spins",
+        "G_F=1.1663788e-11 MeV^-2, m_e=0.5109989500 MeV, sin2_theta_W=0.23122 are exact decimal inputs",
+        "no target, CP, bath, reverse-process, or flavour-orbit multiplier beyond the explicit graph"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#absolute_normalization",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:37",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:94",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:134",
+        "scripts/audit/w7_b3v2_contract_source.py:172",
+        "scripts/audit/w7_b3v2_contract_source.py:234",
+        "/tmp/A-CAS-WOLFRAM-D035.wl#sha256:f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+        "Wolfram markers SAMESIGN_DIST_TRACE_IDENTITY=True, ELECTRON_ELASTIC_TRACE_IDENTITY=True, ELECTRON_POSITRON_TRACE_IDENTITY=True, ELECTRON_PAIR_TRACE_IDENTITY=True, TWO_PI_REDUCTION_IDENTITY=True"
+      ],
+      "evidence_fingerprint": "sha256:70c9c0a89a9da36231d1cbfed7f8677fb70bf19805d6f05674685766e598cc7a",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+        "Inspect the SAMESIGN_*, ELECTRON_*, ORIENTATION_*, TWO_PI_REDUCTION*, and Q_ENERGY_DIMENSION_EXPONENT markers"
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-WOLFRAM-NULLSPACE-001",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "none",
+      "statement": "An independent exact enumeration produced 24 self plus 15 electron records. The resulting 6x39 integer species-count stoichiometric matrix has rank 3, so its left nullspace has dimension 3 and equals exactly the rational span of (1,-1,0,0,0,0), (0,0,1,-1,0,0), and (0,0,0,0,1,-1), with no extra or missing direction.",
+      "assumptions_used": [
+        "species order is nu_e, antinu_e, nu_mu, antinu_mu, nu_tau, antinu_tau",
+        "leg signs are (-1,-1,+1,+1)",
+        "electron legs are omitted from the six stoichiometric rows",
+        "reverse reactions are represented by R and are not duplicate columns"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#reaction_generator",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:94",
+        "scripts/audit/w7_b3v2_contract_source.py:50",
+        "/tmp/A-CAS-WOLFRAM-D035.wl#sha256:f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+        "Wolfram markers REACTION_COUNTS_SELF_ELECTRON_TOTAL={24,15,39}, STOICHIOMETRIC_RANK=3, LEFT_NULLSPACE_DIMENSION=3, LEFT_NULLSPACE_EQUALS_TARGET_SPAN=True"
+      ],
+      "evidence_fingerprint": "sha256:4835f67402483d357174667592c13966681d79439576374c97274de4a355d7f8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+        "Inspect REACTION_COUNTS_*, STOICHIOMETRIC_RANK, LEFT_NULLSPACE_DIMENSION, LEFT_NULLSPACE_INPUTFORM, and LEFT_NULLSPACE_EQUALS_TARGET_SPAN"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-WOLFRAM-ENTROPY-001",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "none",
+      "statement": "For strict-open occupations, exact algebra gives A=log(F/R)=eta1+eta2-eta3-eta4. Since F/R>0 and Reduce finds no x>0 region with (x-1)log(x)<0 and the zero set is x=1, J*A is nonnegative with equality exactly when F=R. The rational vector gives F=4/625, R=144/625, J=-28/125, A=log(1/36), and positive J*A.",
+      "assumptions_used": [
+        "0<f_i<1 for all four legs, so F and R are strictly positive and real",
+        "principal real logarithm",
+        "boundary occupations are excluded; no boundary equality or limiting claim is made",
+        "no PowerExpand or custom transformation function was used"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#entropy_affinity",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:529",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-ENTROPY-RATIONAL",
+        "/tmp/A-CAS-WOLFRAM-D035.wl#sha256:f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+        "Wolfram markers ENTROPY_AFFINITY_LOG_RATIO=True, ENTROPY_KERNEL_NEGATIVE_REGION=False, ENTROPY_KERNEL_ZERO_SET=ratio==1, ENTROPY_RATIONAL_AFFINITY_TARGET=True"
+      ],
+      "evidence_fingerprint": "sha256:b813c51fa5969db41c3001d6438560aff9ee4969d0ae9cbe836b11767525e94b",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+        "Inspect the ENTROPY_* InputForm markers"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Boundary limits at f_i=0 or 1 remain outside this strict-open claim, as required by the contract"
+      ]
+    },
+    {
+      "finding_id": "F-WOLFRAM-FINITE-ME-SHELL-001",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The exact process-specific COM formulas, principal branches, forward/inverse boost, dPhi2=k_star/(16 pi^2 sqrt(s)), thresholds, one-sided derivative scope, and exact elastic/pair vectors are algebraically consistent. The binding contract source nevertheless violates the required postcondition: W6 requires each leg's shell residual to be compared with that same leg's max(1,E^2,|p|^2,m^2) scale and forbids aggregate rescue, while two_body_outgoing computes one event-wide maximum shell_scale, one maximum residual, and compares only those maxima. The exact witness scales {1,4,1,1} and residuals {256 epsilon64,0,0,0} passes the source aggregate check but fails the required first-leg check. Therefore the finite-mass shell claim fails on the reviewed exact bytes.",
+      "assumptions_used": [
+        "physical metric diag(-1,+1,+1,+1), P0>0, s>0, 0<=beta2<1, principal nonnegative roots",
+        "elastic support s>=m_e^2 and pair support s>=4m_e^2 with strict interior construction",
+        "beta2=0 is the identity boost branch; the only interior denominators are P0, sqrt(s), beta2 on the nonzero branch, and Gram norm",
+        "epsilon64=2^-52 and the W6 per-leg postcondition is binding"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#finite_mass_shell",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:165",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:206",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:209",
+        "scripts/audit/w7_b3v2_contract_source.py:577",
+        "scripts/audit/w7_b3v2_contract_source.py:578",
+        "scripts/audit/w7_b3v2_contract_source.py:582",
+        "scripts/audit/w7_b3v2_contract_source.py:583",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-ELASTIC-ME-345",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-PAIR-ME-345",
+        "/tmp/A-CAS-WOLFRAM-D035.wl#sha256:f686de44a140f3fb480a03ff8ed98253c1e61149b2ffd4115f74e02ee72c532f",
+        "Wolfram markers ELASTIC_SHELLS, PAIR_SHELLS, DPHI2_DERIVATION=True, BOOST_MASS_SHELL_INVARIANT=True, BOOST_INVERSE_*=True, V_ELASTIC_ME_345, V_PAIR_ME_345, SOURCE_AGGREGATE_SHELL_CHECK_WITNESS=True, CONTRACT_PER_LEG_SHELL_CHECK_WITNESS=False"
+      ],
+      "evidence_fingerprint": "sha256:67958e875978a1215811b91b558f51ad20cdeb3ccf9ee8e20b84038b790b3231",
+      "counterevidence_refs": [
+        "The exact shell formulas and named rational vectors pass; the failure is specifically the binary64 postcondition enforcement graph, not the continuum shell/Jacobian derivation"
+      ],
+      "reproduction": [
+        "sed -n '202,210p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '575,585p' scripts/audit/w7_b3v2_contract_source.py",
+        "WolframKernel -noprompt -script /tmp/A-CAS-WOLFRAM-D035.wl",
+        "Compare SOURCE_AGGREGATE_SHELL_CHECK_WITNESS=True with CONTRACT_PER_LEG_SHELL_CHECK_WITNESS=False"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No W7 numerical execution is authorized or needed to exhibit this exact validator mismatch"
+      ]
+    }
+  ],
+  "errors": [
+    "xAct xPerm 1.2.4 reported LinkOpen::linke and Connection failed while attempting its external MathLink executable. xTensor 1.3.0 still loaded; DefManifold, DefMetric, and ToCanonical succeeded. The decisive gamma traces and rational proofs use exact explicit 4x4 matrices and do not depend on the failed external xPerm link.",
+    "An initial inline version-probe expression had a Wolfram ToExpression::sntx syntax error. It produced no evidence and was superseded by the saved executable script and clean exit-code-zero runs."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-CAS-WOLFRAM.json"
+  ]
+}

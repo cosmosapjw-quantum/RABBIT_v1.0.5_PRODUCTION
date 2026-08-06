@@ -1,0 +1,292 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+  "assignment_id": "A-D043-ARTIFACT-BOUNDARY",
+  "context_version": "00cbc4cea516a7377f85a3794a22ee2271588773b72910aa73b99bbfb911296c",
+  "agent_id": "019f9009-2ecb-7872-b7cb-6ab470a237d3",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+    "assignment_id": "A-D043-ARTIFACT-BOUNDARY",
+    "context_version": "00cbc4cea516a7377f85a3794a22ee2271588773b72910aa73b99bbfb911296c",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:fe5cc2701495bafa791fb5695fcb886d6689865bba447346f855de634ee89c20",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-ARTIFACT-BOUNDARY.json",
+  "started_at": "2026-07-23T17:29:37Z",
+  "completed_at": "2026-07-23T17:42:36Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "web_discovery": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "sha256sum and full read of the registered assignment, independent-auditor role, canonical result template, and current context pack",
+    "compute the registered ordered path-NUL-bytes-NUL independent-auditor role digest",
+    "sha256sum and full read of docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md, the tracked EXT-01 CAS_CONTRACT.json, and the tracked EXT-01 adjudicator envelope",
+    "git ls-files and git status --short limited to the tracked EXT-01 run and current D-042 prompt",
+    "jq -c '{assignment_id,artifacts}' over the seven prior EXT-01 axis/steelman envelopes; no findings or verdict bodies were selected",
+    "jq -c '{assignment_id,tool_versions,commands}' over the five prior EXT-01 formal/CAS envelopes; no findings or verdict bodies were selected",
+    "sha256sum the EXT-01 literature matrix, seven axis/steelman envelopes, old adjudicator assignment/role/template, external report, and external ZIP",
+    "sha256sum the nineteen directly named /tmp artifacts from the prior EXT-01 envelopes",
+    "sha256sum -c /tmp/A-EXT01-SAGE.tKYIVH/cas/ephemeral_manifest.sha256",
+    "cwd=/tmp/A-EXT01-WOLFRAM.YURUbWIZ/BD622_D039_second_audit_test_package; sha256sum -c MANIFEST.sha256",
+    "sha256sum .singularhistory; expected read-only failure because the named path is absent",
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md and compare with the historical hash recorded by A-EXT01-ADJUDICATOR",
+    "jq -e targeted schema-v2, identity, spawn-contract, finding-count, claim-id, status, and files-written checks on the registered result",
+    "sha256sum the final registered result"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+      "status": "verified"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+      "sha256": "9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+      "status": "verified"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6",
+      "status": "verified"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/artifacts/EXT01_PRIMARY_LITERATURE_MATRIX.json",
+      "sha256": "1780a7d40279dfc599e8fef94bc5cb73a264a5c4e63f8d25b3e85f51eb3cf3cc",
+      "status": "verified"
+    },
+    {
+      "purpose": "Seven tracked EXT-01 axis and steelman result envelopes referenced by the adjudicator",
+      "status": "all individual SHA-256 values match the adjudicator",
+      "sha256_values": [
+        "d0cd486f2df33396713c893fbfa9754962968362c8e573b46201e072a0e6fc12",
+        "f97e0a8f91051d5356378973cabc73d531059d69fd5ff66512975dd2d1dfd449",
+        "83260763e11e414765a7153906963a366c28bae57232d0679565ca4f6c637c10",
+        "610256b5478d05b49422bbb8cb9107cbe3c0c758bff5cc0472654fd56778e65e",
+        "34340cd1b9561a5b1716a2fef01b463f7841fcce3e964b3adc4a4476c84ead2d",
+        "16601f44b1d07101f69fadca55bf23c292da81ad964f30b9dc291d361c3e38ea",
+        "fe94d6875893220beb792622cadb6850f1ea4bd370d0d1cb923f0c9b2871af15"
+      ]
+    },
+    {
+      "purpose": "Nineteen directly named prior-run /tmp artifacts",
+      "status": "all present and all individual SHA-256 values match their result-envelope references"
+    },
+    {
+      "path": "/tmp/A-EXT01-SAGE.tKYIVH/cas/ephemeral_manifest.sha256",
+      "sha256": "0f4b90a5c87fe3ab16d856b5924024f598eba553c08ae16bce801d6db6f3b63e",
+      "status": "verified; all 15 manifest entries pass sha256sum -c"
+    },
+    {
+      "path": "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/BD622_D039_second_audit_test_package/MANIFEST.sha256",
+      "sha256": "c448bc5a1fd0849bd7b225f02b6b17391e5bd74ee1004750876003bcdca80866",
+      "status": "verified; all 23 manifest entries pass sha256sum -c"
+    },
+    {
+      "path": "BD622_D039_second_external_audit_report.md",
+      "sha256": "1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7",
+      "status": "verified"
+    },
+    {
+      "path": "BD622_D039_second_audit_bundle.zip",
+      "sha256": "7a5bb4508142626d1d4c3e97ca9ff2ab5f97cb40c4baea073da45da656ccbf5b",
+      "status": "verified"
+    },
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "historical_expected_sha256": "e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748",
+      "current_sha256": "7442c7075f4703e75fea23edab8467b4e741aa1d19a95c344f4628d66f79626d",
+      "status": "historical mutable-path reference no longer resolves to the old bytes; current pack is the registered D-043 context"
+    },
+    {
+      "path": ".singularhistory",
+      "historical_expected_sha256": "5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1",
+      "status": "absent; no file was created, repaired, copied, or substituted"
+    }
+  ],
+  "adversarial_loop": [
+    {
+      "stage": "self-discover",
+      "checkable_action": "Inventoried only the registered D-042/EXT-01 slice and selected artifact, tool-version, and command metadata from the historical envelopes."
+    },
+    {
+      "stage": "step-back",
+      "checkable_action": "Separated three distinct questions: understanding the old failure, replaying an old claim, and admitting a new prospectively sealed candidate."
+    },
+    {
+      "stage": "metacognitive-self-ask",
+      "checkable_action": "Tested whether present-day artifact availability was being mistaken for logical necessity, and whether a summary-only boundary could hide a raw contradiction."
+    },
+    {
+      "stage": "CoVe",
+      "checkable_action": "Recomputed every extant hash in the targeted inventory, checked both nested manifests, and tested the two drift/absence counterexamples without changing bytes."
+    },
+    {
+      "stage": "adversarial-self-ask",
+      "checkable_action": "Steelman: binding every historical byte maximizes substitution resistance and exact replay. Countercheck: it also makes unrelated new search depend on transient outputs, caches, and mutable aliases; claim-local promotion to a binding tier preserves substitution resistance without that false dependency."
+    },
+    {
+      "stage": "CCoT",
+      "checkable_action": "Exercised four branches: prospective mismatch stops; historical semantic-boundary mismatch stops reliance; replay-only absence permits search but forbids a replay claim; optional cache or /tmp absence has no admission effect."
+    },
+    {
+      "stage": "PDR",
+      "checkable_action": "Proposed the four-class manifest rule in F-D043-ART-004 and named the condition that promotes a historical artifact from optional to binding."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D043-ART-001",
+      "claim_id": "C-D043-ARTIFACT-BOUNDARY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The canonical tracked EXT-01 failure boundary is intact. The CAS contract, final adjudication, literature matrix, and all seven referenced tracked axis/steelman envelopes match their sealed hashes. Every one of the nineteen directly named /tmp artifacts that still exists matches its envelope hash; the Sage ephemeral manifest verifies 15/15 entries and the extracted external-package manifest verifies 23/23 entries. These checks verify provenance only and do not rerun or strengthen any scientific claim.",
+      "assumptions_used": [
+        "SHA-256 equality verifies byte identity, not truth of the enclosed claim.",
+        "The historical adjudicator is the canonical normalized failure summary.",
+        "No scientific or CAS command was executed."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#1-immutable-evidence-and-provenance",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#artifacts",
+        "/tmp/A-EXT01-SAGE.tKYIVH/cas/ephemeral_manifest.sha256",
+        "/tmp/A-EXT01-WOLFRAM.YURUbWIZ/BD622_D039_second_audit_test_package/MANIFEST.sha256"
+      ],
+      "evidence_fingerprint": "sha256:326a6e539245b4aac9a76411571069b6347a62e7ed31f79803e16e029caac40a",
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md no longer has the historical adjudicator-recorded hash.",
+        ".singularhistory is absent at the historical repository-root path."
+      ],
+      "reproduction": [
+        "Run the sha256sum commands recorded in this envelope.",
+        "Run sha256sum -c on the two named manifests without executing their code."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The historical complete harness-input bundle cannot be reconstructed from the mutable context-pack path alone.",
+        "Tool availability and dependency-image identity were not tested because scientific replay was forbidden."
+      ]
+    },
+    {
+      "finding_id": "F-D043-ART-002",
+      "claim_id": "C-D043-ARTIFACT-BOUNDARY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The current D-042 provenance clause is over-broad for a new prospective breakthrough search. It says to recompute every listed historical hash before analysis and convert any mismatch into package-level PROVENANCE_FAIL, while also requiring preservation of historical raw files. That conflates current launch authority with old replay evidence. The failure mode is concrete: the historical adjudicator's mutable CONTEXT_PACK.md reference now resolves to newer valid D-043 bytes, and the historically named repository-root .singularhistory is absent. Neither condition corrupts a not-yet-created prospective candidate contract, so either condition must not by itself veto an otherwise self-contained new search. As written, the boundary can produce a false package-level stop.",
+      "assumptions_used": [
+        "A prospective candidate must not rely on an unavailable old raw artifact unless that dependence is declared before output.",
+        "A mutable path is not an immutable artifact identity.",
+        "Absence and hash mismatch must never be silently repaired or substituted."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#1-immutable-evidence-and-provenance",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#artifacts",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#artifacts",
+        ".agent-harness/generated/CONTEXT_PACK.md"
+      ],
+      "evidence_fingerprint": "sha256:3018b99b21fd9dcb6f8fa5986299154a62133eebdd2d329c32878a2bca0c7e3c",
+      "counterevidence_refs": [
+        "Strongest countercase: requiring every old raw byte maximizes exact replay, prevents cherry-picking summaries, and can expose a corrupted historical citation.",
+        "If a new novelty or no-go claim actually depends on a specific old raw artifact, absence of that artifact must block that claim."
+      ],
+      "reproduction": [
+        "Compare D-042 section 1 with the historical artifact references in A-EXT01-ADJUDICATOR and A-EXT01-SAGE.",
+        "sha256sum .agent-harness/generated/CONTEXT_PACK.md",
+        "sha256sum .singularhistory"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "D-042 has not yet been edited; this assignment has no shared-file write authority."
+      ]
+    },
+    {
+      "finding_id": "F-D043-ART-003",
+      "claim_id": "C-D043-ARTIFACT-BOUNDARY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The minimum historical bytes needed to understand the prior EXT-01 failure are the sealed EXT-01 CAS contract and final adjudication; the literature matrix becomes required only for a borrowed-literature or transfer claim. Individual axis envelopes are audit drill-down, not necessary launch inputs for a new search. Re-executing an old axis claim is a different operation and requires its exact proof/source script, exact input bundle or vectors, dependency/tool lock, assumptions, and recorded command; logs and compiled objects are comparison outputs, while generated caches, DOT_SAGE state, cleaner logs, .olean/.vo/.glob products, and temporary-directory names are not execution authorities. Exact old harness-lifecycle replay additionally needs the historical assignment/role/template/context bytes, and that full bundle is presently incomplete because the context alias has advanced.",
+      "assumptions_used": [
+        "Understanding means reconstructing the bounded verdict, assumptions, gate, and overclaim ceiling.",
+        "Re-execution means executing the same mathematical statement under the same input and tool/dependency contract.",
+        "Generated outputs and caches may aid comparison but are not authoritative source inputs."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+        "artifact, tool_versions, and commands fields selected from A-EXT01-WOLFRAM/SAGE/LEAN/SYMPY/ROCQ"
+      ],
+      "evidence_fingerprint": "sha256:431297dc6d3426d4a0f20f1e572d9905a855befa7f4998edbe4181a649882972",
+      "counterevidence_refs": [
+        "A summary can contain an adjudication error that only raw proof artifacts expose.",
+        "Some toolchains may accept a compiled object as a practical replay aid."
+      ],
+      "reproduction": [
+        "Inspect only the artifacts, tool_versions, and commands fields selected by the recorded jq commands.",
+        "For any future old-claim replay, build a prospective replay manifest from the exact source/input/tool entries before execution."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Lean's envelope did not artifact-list every project bootstrap byte named in its command log, so a byte-exact Lean environment replay is not established here.",
+        "No old axis was rerun."
+      ]
+    },
+    {
+      "finding_id": "F-D043-ART-004",
+      "claim_id": "C-D043-ARTIFACT-BOUNDARY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Adopt a four-class, claim-local provenance manifest. P0_PROSPECTIVE_BINDING contains the issued D-042 request digest, the new presealed EXPERIMENT_CONTRACT.json, its MANIFEST.sha256, candidate source/tests/proof, manufactured vectors, tool/image digests, and preseal decision: absence, mismatch, substitution, or output-before-seal is package-level PROVENANCE_FAIL and stops. H1_HISTORICAL_SEMANTIC_REQUIRED contains the sealed EXT-01 CAS contract and adjudication, plus the literature matrix only when a transfer claim uses it: mismatch blocks reliance on the affected historical premise and therefore blocks novelty screening until the premise is independently restated and sealed in P0. H2_HISTORICAL_REPLAY_ONLY contains old axis sources, logs, external bundles, individual envelopes, and tool locks: absence records HISTORICAL_REPLAY_UNAVAILABLE, forbids claiming replay or revalidation, but does not block a self-contained new candidate search. H3_HISTORICAL_AUDIT_OPTIONAL contains compiled outputs, generated caches, DOT_SAGE state, mutable context aliases, old hook-role/template snapshots, and /tmp path identities: these can never be scientific or launch inputs. Any H2/H3 artifact that a proposed candidate actually needs must be promoted by content hash into P0 before preseal; otherwise it is quarantined and unused. No missing or mismatched byte may be repaired, substituted, or silently downgraded.",
+      "assumptions_used": [
+        "The new candidate contract is self-contained and independently freezes every scientific premise it consumes.",
+        "Negative historical summaries constrain overclaiming but do not serve as a fixture oracle.",
+        "Claim-local failure is fail-closed because a claim cannot proceed when its declared input is absent.",
+        "Package-level failure is reserved for corruption of current prospective authority/isolation or for a missing historical premise actually consumed by the candidate."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#5-conjunctive-candidate-gates",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#6-required-executable-lab-bundle",
+        "F-D043-ART-001",
+        "F-D043-ART-002",
+        "F-D043-ART-003"
+      ],
+      "evidence_fingerprint": "sha256:81f65790f6115556196d8f5ab57286d467a9fff65655881e8b15d32c9403056d",
+      "counterevidence_refs": [
+        "An H2 artifact must be promoted to P0 whenever exact operation-graph comparison cannot be reconstructed from H1.",
+        "If the H1 adjudication or contract is missing or corrupt and no independent P0 restatement exists, novelty screening must stop."
+      ],
+      "reproduction": [
+        "Negative control A: remove only an H2 raw log from a scratch issuance inventory; expect HISTORICAL_REPLAY_UNAVAILABLE and no replay claim, while P0 search remains eligible.",
+        "Negative control B: mutate one byte of EXPERIMENT_CONTRACT.json or candidate source after seal; expect immediate package-level PROVENANCE_FAIL before mechanism output.",
+        "Negative control C: make a novelty assertion depend on an absent H2 proof script without promoting it to P0; expect the novelty gate to stop.",
+        "Negative control D: point to a different current file at an old mutable context path; expect no substitution and no effect unless that byte was explicitly promoted to P0."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The main writer must translate these classes into exact D-042 prose and machine-readable manifest fields.",
+        "A separate reviewer should verify that no prospective candidate obligation is accidentally left only in H2."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-ARTIFACT-BOUNDARY.json"
+  ]
+}

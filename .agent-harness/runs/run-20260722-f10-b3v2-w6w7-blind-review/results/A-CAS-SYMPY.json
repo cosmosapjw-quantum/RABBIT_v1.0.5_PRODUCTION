@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-CAS-SYMPY",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "agent_id": "019f893f-34a1-77f1-9395-d239a374917b",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-CAS-SYMPY",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b12164908d6a06aadc871c3e4e4cbcdb15a786a28ddc6e3ae380e1fcddfa017d"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SYMPY.json",
+  "started_at": "2026-07-22T19:02:02+09:00",
+  "completed_at": "2026-07-22T19:02:02+09:00",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0",
+    "backend_note": "System python3 was used because venv/bin/python has no SymPy installation. All binding algebra used exact SymPy Integer/Rational/Matrix expressions. The one 100-digit entropy decimal is explicitly non-proof."
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-CAS-SYMPY.json",
+    "python3 -c '<E1: explicit Dirac matrices; arbitrary real p1..p4; exact row-ii trace contractions>'",
+    "python3 -c '<E2: exact 39-column six-species stoichiometric matrix; rank/rref/nullspaces>'",
+    "python3 -c '<E3: exact invariant measure and MB angular/radial integrations>'",
+    "python3 -c '<E4: exact shell, Mandelstam, entropy, and support-root identities>'",
+    "python3 -c \"import mpmath, platform, sympy; print(platform.python_version(), sympy.__version__, mpmath.__version__)\""
+  ],
+  "artifacts": [],
+  "embedded_evidence": {
+    "contract_statement": "Independently determine whether the exact B3-v2/W7 design is algebraically coherent under the frozen conventions. A candidate target below is a falsifiable claim, not an allowed intermediate assumption. Any normalization, branch, graph, or convention mismatch is a fail or inconclusive result, never silently repaired.",
+    "E1_row_ii_exact_source": "Use eta_D=diag(1,-1,-1,-1), gamma5=I*g0*g1*g2*g3, PL=(I-gamma5)/2, V[mu]=gamma[mu]*PL, slash(p)=g0*p0-sum_i gi*pi. For arbitrary real symbolic p1..p4 set At2=sum_{mu,nu} h_mu*h_nu tr(/p3 Vmu /p1 Vnu) tr(/p2 Vmu /p4 Vnu), As2=sum h_mu*h_nu tr(/p2 Vmu /p1 Vnu) tr(/p3 Vmu /p4 Vnu), X=sum h_mu*h_nu tr(/p3 Vmu /p1 Vnu /p2 Vmu /p4 Vnu). SymPy exact factor(expand(...)) returned At2-16*K_t=0, As2-16*K_t=0, X+16*K_t=0 for K_t=dot_D(p1,p4)*dot_D(p2,p3).",
+    "E1_row_ii_transcript": "For V-NULL-COM-345: At2=1296/25, As2=1296/25, Re(At As*)=-1296/25, |At-As|^2=5184/25; divided by K_t=81/25 these are 16,16,-16,64. With kappa^2=2 G_F^2, the tagged result is 128 G_F^2 K_t.",
+    "E2_graph_source": "Rows are [nu_e,antinu_e,nu_mu,antinu_mu,nu_tau,antinu_tau]. Independently add 6 same-species same-sign elastic, 3 same-flavour nu-antinu elastic, 6 distinct-flavour same-sign elastic, 6 ordered distinct-flavour opposite-sign elastic, 3 unordered pair conversions, 12 species-by-e-/e+ elastic, and 3 flavour-pair annihilation columns; compute Matrix.hstack(cols).rank(), S.T.nullspace(), S.nullspace(), and S.rref() exactly.",
+    "E2_graph_transcript": "event_count=39; class_counts=6,3,6,6,3 self and 12,3 electron; zero columns=33; rank=3; left nullity=3; right nullity=36; nonzero columns are the three P_f->P_g conversions and three P_f->e-e+ annihilations.",
+    "E3_phase_space_proof": "After fixing p1 along z, d^3p2/((2*pi)^3 2E2) and integrating its azimuth gives p2 dp2 dmu/(8*pi^2). The massless two-body final phase space is dPhi2=dOmega*/(32*pi^2), hence after final azimuth dPhi2=dz*/(16*pi). Including 1/(2p1) gives p2 dp2 dmu dz*/(256*pi^3 p1). Exact SymPy integrations gave int B_t dz*=8/3, int(1-mu)^2 dmu=8/3, int y2^3 exp(-y2)dy2=6, so I_Ks=32*y1^2 exp(-y1) and I_Kt=I_Ks/3.",
+    "E4_shell_root_proof": "Let P=p1+p2=(E,Pvec), B=Pvec.n, k=|p3|, E3=sqrt(k^2+m3^2), A=(s+m3^2-m4^2)/2, D0=E^2-B^2. The unsquared shell is E*E3-B*k=A. Squaring yields D0*k^2-2*A*B*k+E^2*m3^2-A^2=0 and k_pm=(A*B +/- E*sqrt(A^2-m3^2*D0))/D0. Exact substitution returns zero, but physical admission additionally requires the unsquared equation, k>=0, positive p3^0,p4^0, nonnegative discriminant, and exact conservation/shell checks.",
+    "exact_test_vectors": {
+      "V-NULL-COM-345": "conservation=[0,0,0,0], all shells=0, (K_s,K_t,K_u)=(4,81/25,1/25)",
+      "V-ELASTIC-ME-345": "conservation=[0,0,0,0], all shell residuals=0, (s,t,u)=(4,-9/40,-71/40), sum=2",
+      "V-PAIR-ME-345": "conservation=[0,0,0,0], all shell residuals=0, (s,t,u)=(25/4,-5/8,-29/8), sum=2",
+      "V-ENTROPY-RATIONAL": "F=4/625, R=144/625, A=-log(36), J=-28/125, A*J=56*log(6)/125>0; 100-digit decimal 0.80270824221416864036... is non-proof"
+    },
+    "simplification_rules": [
+      "Exact Integer/Rational matrix arithmetic only for binding results.",
+      "For polynomial identities compare expand, factor, simplify, and direct zero equality; no floating equality is promoted.",
+      "Real log is used only on F/R>0 and sqrt is the nonnegative real root.",
+      "No shell equation is squared without retaining the original unsquared sign test."
+    ],
+    "resource_limits": "Serial local Python; each exact command completed in under 7 seconds. No W7 numerical oracle, collision evaluator, production import, trajectory, endpoint, or sibling result was read or executed."
+  },
+  "findings": [
+    {
+      "finding_id": "F-SYMPY-ROWII",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED. Direct u/v spin sums give the unsimplified same-flavour amplitude M=sqrt(2) G_F (A_t-A_s), A_t=[ubar3 V^mu u1][vbar2 V_mu v4], A_s=[vbar2 V^mu u1][ubar3 V_mu v4]. The relative minus is the fermionic Wick-exchange sign. Exact arbitrary-four-vector Dirac-matrix contraction gives sum|A_t|^2=16 K_t, sum|A_s|^2=16 K_t, and Re sum(A_t A_s*)=-16 K_t. Thus the interference is constructive after the diagram minus and sum|M|^2=128 G_F^2 K_t. This is a direct v-spinor calculation, not crossing.",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), V^mu=gamma^mu P_L, P_L=(1-gamma5)/2",
+        "massless spin sums sum u ubar=slash(p) and sum v vbar=slash(p); one occupied neutrino helicity and no tagged-initial average",
+        "low-energy neutral-current normalization L_NC=-(G_F/sqrt(2)) J_NC^2 with J_nu=sum_f nubar_f gamma^mu P_L nu_f, so one distinguishable current contraction has kappa=sqrt(2)G_F"
+      ],
+      "evidence_refs": [
+        "embedded_evidence.E1_row_ii_exact_source",
+        "embedded_evidence.E1_row_ii_transcript",
+        "CAS_CONTRACT.json exact vector V-NULL-COM-345"
+      ],
+      "evidence_fingerprint": "sha256:0d71110b8ff101426908373d1f36acde427bcf95ee21e87e575c3fc757d55a9c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run E1 under Python 3.12.3/SymPy 1.14.0 and require exact zeros for At2-16*K_t, As2-16*K_t, and X+16*K_t."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-SYMPY-NORMALIZATION",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "INCONCLUSIVE overall. The massless neutrino-self normalization is DERIVED exactly: the invariant measure reduces to 1/(256*pi^3*p1), and for |M|^2=c G_F^2 K the MB loss is c G_F^2 T_cm^5 y exp(-y)/(8*pi^3) for K_s and /(24*pi^3) for K_t. Together with the independently derived raw traces, one-helicity/no-average convention, row-i final 1/2!, and unit microscopic orbit multiplicities, this yields tagged c={64,128,32,32,32} and rows {8/pi^3,16/(3*pi^3),4/pi^3,4/(3*pi^3),4/(3*pi^3)}. The assigned inputs do not state the finite-m_e electron weak-coupling/interference formulas or a complete electron spin-sum/bath-degeneracy convention, so the requested all-channel absolute normalization cannot be proved or falsified.",
+      "assumptions_used": [
+        "Invariant collision measure exactly as fixed in CAS_CONTRACT.json",
+        "massless final-state dPhi2=dOmega*/(32*pi^2)",
+        "one neutrino helicity, no initial tagged-neutrino average, and 1/2! only for the row-i identical integrated final pair",
+        "each explicitly enumerated microscopic event orbit has rational multiplicity one; row coefficients carry coherent-diagram and final-symmetry factors separately"
+      ],
+      "evidence_refs": [
+        "embedded_evidence.E3_phase_space_proof",
+        "F-SYMPY-ROWII",
+        "BD622_W3_per_row_mb_closed_form_oracles.md sections 3-5, used only as the falsifiable target after independent reduction"
+      ],
+      "evidence_fingerprint": "sha256:749b76da5c22d927002d49de96a2adc75ee31f4a088eb44cc386be56bd5d7c63",
+      "counterevidence_refs": [
+        "BD622_W3_per_row_mb_closed_form_oracles.md explicitly limits itself to ratios/MB reduction and assigns electron normalization to W7."
+      ],
+      "reproduction": [
+        "Run E3 with exact SymPy integrate calls and verify total_coeff=1/(256*pi^3*p1), I_Ks=32*y1^2*exp(-y1), I_Kt=I_Ks/3."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Finite-m_e electron elastic and pair matrix elements, including g_L/g_R assignments and interference signs, are not supplied by the assigned inputs.",
+        "Electron/positron spin sums versus any bath factor-of-two convention cannot be itemized exactly once without those missing definitions.",
+        "Therefore W7/B3 implementation authority remains blocked even though the massless-self prefactor is exact."
+      ]
+    },
+    {
+      "finding_id": "F-SYMPY-NULLSPACE",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED. Independent microscopic orbit enumeration gives 24 reversible self events (6+3+6+6+3 across rows i-v) and 15 global electron events (12 elastic plus 3 pair). With rows in the frozen six-species order and columns oriented forward, 33 elastic columns are zero, pair conversion c_fg=-P_f+P_g, and pair annihilation d_f=-P_f. The exact 6x39 rational matrix has rank 3. Its left nullspace is exactly span_Q{L_e,L_mu,L_tau}; energy is not a species-count null vector. Its right nullspace has dimension 36: 33 unit vectors on zero columns plus r_fg=e_c_fg-e_d_f+e_d_g for the three unordered flavour pairs.",
+      "assumptions_used": [
+        "P_f=e_nu_f+e_antinu_f and flavour order e<mu<tau",
+        "pair conversions are oriented P_f->P_g for f<g; pair annihilations are oriented P_f->e-+e+",
+        "all microscopic event-orbit multiplicities are exact rational one; final identical-particle factors affect rates, not species stoichiometry"
+      ],
+      "evidence_refs": [
+        "embedded_evidence.E2_graph_source",
+        "embedded_evidence.E2_graph_transcript",
+        "Exact residual S*r_fg=[0,0,0,0,0,0] for (e,mu),(e,tau),(mu,tau)"
+      ],
+      "evidence_fingerprint": "sha256:2fc7e5790bf009d2978580f27d773ed73f016e882165e39e4cc65386110afcd1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Recreate the seven class loops in E2 without reading a production row table, then require event_count=39, rank=3, left_nullity=3, right_nullity=36, and zero_column_count=33."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-SYMPY-ENTROPY",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED on the strict-open domain. Algebra gives F/R=product_{initial} f/(1-f) times product_{final}(1-f)/f and therefore A=log(F/R)=eta1+eta2-eta3-eta4. Since log is strictly increasing on (0,infinity), (F-R)(log F-log R)>=0 with equality iff F=R. For nu=(-1,-1,+1,+1) and forward J=F-R, dS_fermion/dt=-sum eta_l nu_l J=A J. For electron exchange, equilibrium bath eta_e=-E_e/T_gamma and eventwise energy conservation convert the electron terms exactly to Q_EM/T_gamma with Q_EM=-Q_nu; the total event entropy remains A J.",
+      "assumptions_used": [
+        "0<f_i<1, hence F,R>0 and the real logarithm is defined",
+        "forward orientation and stoichiometric sign exactly as fixed in CAS_CONTRACT.json",
+        "electron/positron bath has zero chemical potential and positive T_gamma",
+        "eventwise four-momentum conservation and Q_nu>0 defined as neutrino energy gain"
+      ],
+      "evidence_refs": [
+        "embedded_evidence.exact_test_vectors.V-ENTROPY-RATIONAL",
+        "Monotonicity proof for real log on positive arguments"
+      ],
+      "evidence_fingerprint": "sha256:afac19757f9ec83700fdf72409b8a80d2b466de3f7a2949150822375dc1c7917",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Exact rational substitution gives F=4/625, R=144/625, A=-log(36), J=-28/125, and A*J=56*log(6)/125>0. The 100-digit decimal is only a non-proof cross-check."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-SYMPY-FINITE-ME",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED for the kinematic shell/root obligation. Under g_phys=(-,+,+,+), s=-(p1+p2)^2, t=-(p1-p3)^2, u=-(p1-p4)^2 and p1+p2=p3+p4 imply s+t+u=sum_i m_i^2 exactly; both electron elastic and pair channels therefore give 2 m_e^2. The explicit lab-direction root formula in E4 is exact before branch selection. All denominators, discriminants, and spurious squared branches are identified; no massless y4 relation or boundary clipping is used.",
+      "assumptions_used": [
+        "real future-directed on-shell momenta, positive-energy massive square-root branch, and exact four-momentum conservation",
+        "timelike total P with s>0; physical production additionally satisfies the relevant threshold",
+        "root direction n is real unit length"
+      ],
+      "evidence_refs": [
+        "embedded_evidence.E4_shell_root_proof",
+        "embedded_evidence.exact_test_vectors.V-ELASTIC-ME-345",
+        "embedded_evidence.exact_test_vectors.V-PAIR-ME-345"
+      ],
+      "evidence_fingerprint": "sha256:da6b6c11354d4d72980418ec05c930c8800df1b5472e137ac9e76d3751de859e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Expand s,t,u from the metric definitions and substitute p4=p1+p2-p3; exact simplify returns sum_i m_i^2.",
+        "Substitute k_pm from E4 into D0*k^2-2*A*B*k+E^2*m3^2-A^2; exact simplify returns zero for both algebraic roots.",
+        "Run the two exact rational vectors; shell and conservation residuals are identically zero and s+t+u=2."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Excluded algebraic loci: D0=E^2-B^2=0 and, if a COM unit direction is introduced, |Pvec|=0; the latter is removable only by a separate COM branch.",
+        "Rejected branches: negative discriminant; k<0; A+B*k<=0 after squaring; p3^0<=0 or p4^0<=0; failed exact shell/conservation checks.",
+        "At discriminant zero or vanishing delta-function Jacobian the roots collide; only a one-sided threshold derivative is supported.",
+        "This pass is kinematic only and does not supply the missing finite-m_e electron weak-amplitude normalization recorded in F-SYMPY-NORMALIZATION."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SYMPY.json"
+  ]
+}

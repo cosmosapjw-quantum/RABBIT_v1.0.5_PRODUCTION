@@ -1,0 +1,142 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+  "assignment_id": "A-HISTORY-MAPPER-R2",
+  "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+  "agent_id": "019f8b4a-e0b0-78f3-9f2c-8d085bd75513",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+    "assignment_id": "A-HISTORY-MAPPER-R2",
+    "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:4838181987ed1bee66fb67164d9621bb7a1ac7f70e907d7673410ab76d8ae508",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R2.json",
+  "started_at": "2026-07-22T19:25:51Z",
+  "completed_at": "2026-07-22T19:27:48Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "python": "3.12.3"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '261,620p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/assignments/A-HISTORY-MAPPER-R2.json",
+    "sed -n '1,320p' .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/assignments/A-HISTORY-MAPPER-R2.json",
+    "sed -n '1,320p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,260p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,220p' .agent-harness/context/roles/default.md",
+    "rg -n 'def hash_files|hash_files\\(' .agent-harness/scripts .agent-harness -g '*.py'",
+    "find .agent-harness/context/roles -maxdepth 1 -type f -printf '%f\\n' | sort",
+    "python3 -c \"from pathlib import Path; import sys; sys.path.insert(0,'.agent-harness/scripts'); from _harness import hash_files; print(hash_files(Path('.').resolve(), ['.agent-harness/context/roles/independent_auditor.md']))\"",
+    "sed -n '1,320p' .agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER.json",
+    "python3 -c \"from pathlib import Path; import sys; sys.path.insert(0,'.agent-harness/scripts'); from _harness import hash_files; print(hash_files(Path('.').resolve(), ['.agent-harness/context/roles/context_mapper.md']))\""
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/assignments/A-HISTORY-MAPPER-R2.json",
+      "sha256": "4838181987ed1bee66fb67164d9621bb7a1ac7f70e907d7673410ab76d8ae508"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "aggregate_sha256": "9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": ".agent-harness/context/roles/default.md",
+      "status": "missing"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER.json",
+      "sha256": "7beb87a448dc42b7d9c72eeea5415696ef522a179e7a80a804692c7c80c3904b"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D038-MAPPER-R2-ADMISSION-001",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "error",
+      "severity": "high",
+      "causal_label": "process_contract_violation",
+      "statement": "The replacement history audit was not admitted because the registered required_inputs list names .agent-harness/context/roles/default.md, which is absent. The assignment, runtime identity, result template, and aggregate independent-auditor role hash all verified; the missing required input is the sole observed admission blocker.",
+      "assumptions_used": [
+        "Every file named in required_inputs must exist and be readable before substantive analysis.",
+        "The mandatory SubagentStart instruction to stop on any missing required file is authoritative."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/assignments/A-HISTORY-MAPPER-R2.json: required_inputs includes .agent-harness/context/roles/default.md",
+        ".agent-harness/context/roles: directory enumeration contains no default.md",
+        ".agent-harness/context/roles/independent_auditor.md: aggregate hash sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+        ".agent-harness/templates/RESULT_ENVELOPE.json: raw hash sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+      ],
+      "evidence_fingerprint": "sha256:07cd9b4ed1bee1e0eb44132264816d895843927c1432905b226761cb2f264e3f",
+      "counterevidence_refs": [],
+      "first_introduced_interval": "No later than assignment registration at 2026-07-22T19:25:51Z; earlier provenance was not inspected because admission failed.",
+      "first_detectable_interval": "Bootstrap required-input read, before any history discovery.",
+      "why_earlier_checks_missed_it": "Unresolved; no upstream registration-validator evidence was authorized after the missing file was observed.",
+      "reproduction": [
+        "test -f .agent-harness/context/roles/default.md",
+        "find .agent-harness/context/roles -maxdepth 1 -type f -printf '%f\\n' | sort"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The seven mandated audit stages were not started because the assignment failed admission.",
+        "A corrected, newly registered mapper assignment is required."
+      ],
+      "constructive_recommendation": "Remove the nonexistent path from a newly registered assignment or provide and seal the intended role file, then launch a fresh mapper.",
+      "forbidden_shortcut": "Do not ignore the missing registered input or edit the shared assignment from this subagent."
+    },
+    {
+      "finding_id": "F-D038-MAPPER-R1-PROCESS-001",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "low",
+      "causal_label": "process_evidence_only",
+      "statement": "The first mapper's role-hash mismatch was a false positive: sha256:403bfe1d... is the correct aggregate _harness.hash_files digest for context_mapper.md, while sha256:39dc1281... is only the raw file hash. This prior error is preserved as process evidence and is not historical evidence about D-038's scientific or implementation causes.",
+      "assumptions_used": [
+        "The repository _harness.hash_files algorithm is the governing role-hash algorithm."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER.json: records the raw-versus-sealed comparison and status error",
+        ".agent-harness/scripts/_harness.py: hash_files hashes normalized path, NUL, file bytes, NUL",
+        ".agent-harness/context/roles/context_mapper.md: raw sha256:39dc1281f6eb12fb2fb7739618987ae78fad47b88eff2cb8f42bfbb9a3ab0231; aggregate sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093"
+      ],
+      "evidence_fingerprint": "sha256:039185a2ccdb389b8271c217fc6deb81017a9c9ebad6348e4f6b0df140d889b5",
+      "counterevidence_refs": [],
+      "first_introduced_interval": "The first mapper's bootstrap comparison in the current D-038 run.",
+      "first_detectable_interval": "Immediate recomputation with _harness.hash_files.",
+      "why_earlier_checks_missed_it": "The first mapper compared unlike digest definitions.",
+      "reproduction": [
+        "sha256sum .agent-harness/context/roles/context_mapper.md",
+        "python3 -c \"from pathlib import Path; import sys; sys.path.insert(0,'.agent-harness/scripts'); from _harness import hash_files; print(hash_files(Path('.').resolve(), ['.agent-harness/context/roles/context_mapper.md']))\""
+      ],
+      "confidence": 1.0,
+      "unresolved": [],
+      "constructive_recommendation": "Use _harness.hash_files for every review_role_sha256 admission check.",
+      "forbidden_shortcut": "Do not treat this process error as evidence for any historical D-038 causal claim."
+    }
+  ],
+  "errors": [
+    "CONTRACT_VIOLATION: registered required input .agent-harness/context/roles/default.md is missing; substantive history discovery and all seven audit stages were not started."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R2.json"
+  ]
+}

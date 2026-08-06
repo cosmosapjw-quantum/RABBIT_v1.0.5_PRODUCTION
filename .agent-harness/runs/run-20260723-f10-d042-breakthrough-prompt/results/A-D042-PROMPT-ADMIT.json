@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-PROMPT-ADMIT",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f82-3223-7b93-9435-438b9df01145",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-PROMPT-ADMIT",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:22a7830352d63af402f99ace9affeedfe7d824c9b67fd8548cba0a43c6d7b46f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-ADMIT.json",
+  "started_at": "2026-07-23T15:06:07Z",
+  "completed_at": "2026-07-23T15:13:28Z",
+  "tool_versions": {
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "sed": "GNU sed 4.9",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable assignment-scoped counter is exposed"
+  },
+  "commands": [
+    "sed -n over every line of .agent-harness/generated/CONTEXT_PACK.md, the assignment, role file, and RESULT_ENVELOPE template",
+    "sha256sum over the assignment, role file, result template, draft, and both allowed sibling results",
+    "Initial comparison of the raw independent_auditor.md SHA-256 e4bded48... with the registered role-bundle SHA-256 9675bef9... produced a false-positive mismatch; no substantive input was opened until the encoding was resolved",
+    "ordered path-NUL-bytes-NUL SHA-256 verification of the review-role bundle",
+    "sed -n over all 572 lines of docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+    "sed -n over all 560 lines of A-D042-CANDIDATE-SEARCH.json",
+    "sed -n over all 682 lines of A-D042-EXPERIMENT-PACKAGE.json",
+    "jq and the shared validate_result_contract logic for envelope verification"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "bab03230cfb935a1e66cde60ec449efd9b6bc7d562291f05d5d621dc31607068"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json",
+      "sha256": "4c61cc527b2f2bed4e5d1e2208f50071f2f838a87fff365101a1104256099677"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json",
+      "sha256": "444add51b849cfee0d8eebb5e2782104d644e5fb6528a3e81544cbbc0e8f754c"
+    },
+    {
+      "purpose": "Ordered draft-plus-designated-siblings evidence bundle",
+      "sha256": "504318d09c029e8bedfa8b9b1ac896d263efba3e2321ff2d8e4b362ee15009ea"
+    }
+  ],
+  "cross_steelman": {
+    "verdict": "FAIL_AS_WRITTEN_RESEAL_AFTER_BINDING_CORRECTIONS",
+    "strongest_admission_case": "The draft genuinely asks for six to ten operation-level alternatives, executable mechanism code, hostile kill tests, exact/formal evidence, raw-failure preservation, a strict no-physical-output firewall, and an owner-separated PR ladder. The two designated sibling designs show that these requirements can be rendered machine-readable without granting scientific or implementation authority.",
+    "binding_corrections": [
+      {
+        "id": "BC-1-FORMAL-PACKAGE-SATISFIABILITY",
+        "correction": "Make finalist formal evidence claim-dependent, or raise the finalist authored-file cap. Requiring Wolfram/xAct, Sage/Singular, SymPy/mpmath, Lean, and Rocq while allowing only four authored candidate files is not demonstrably satisfiable after contract.json, mechanism.py, and tests.py consume three files. State exactly which formal sources are inside the ZIP, which review artifacts are outside the candidate file cap, and how all are hashed."
+      },
+      {
+        "id": "BC-2-METHOD-SPECIFIC-STABILITY",
+        "correction": "Replace the universal raw condition-number <=1e6 and B64<=2.5e-11 gates with a presealed, dimensionless, norm- and scaling-defined reduced/quotient stability bound and a method-specific native arithmetic budget tied to the downstream hard cap. Exact or directed-interval mechanisms need an explicit equivalent path. Exact invariant null directions must not make an otherwise valid method fail through an undefined full-space condition number."
+      },
+      {
+        "id": "BC-3-SEPARATE-FEASIBILITY-FROM-DEFLATION",
+        "correction": "Do not make permanent LOC<=800 and repository net<=-1000 necessary for scientific mechanism feasibility. Keep a hard cost disclosure and anti-inflation screen, but gate repository adoption separately on an exact safe-deletion map and direct blocker movement. Never force deletion of immutable evidence or an unsuperseded active surface merely to admit an external mechanism."
+      },
+      {
+        "id": "BC-4-CONDITIONAL-PR-DAG",
+        "correction": "Require the named file/symbol/consumer/deletion PR DAG only after exactly one candidate passes the mechanism gates. For NO_ADMISSIBLE_CANDIDATE, PROVENANCE_FAIL, or INCONCLUSIVE_EVIDENCE_OR_TIE, require PR_DAG=UNREACHABLE with the blocking gate; do not demand a fabricated candidate-specific plan."
+      },
+      {
+        "id": "BC-5-COMMAND-AND-AUTHORITY-BOUNDARY",
+        "correction": "State that ./run_lab.sh is the only lab execution command, while CRAG and blind-review orchestration have separately recorded commands/artifacts and do not count as lab replay. Define whether their wall time is inside the 30-minute cap. Replace the terminal token AUTHORIZE_ONE_EXTERNAL_CANDIDATE_INTAKE_REVIEW with REQUEST_OWNER_AUTHORIZATION_FOR_ONE_EXTERNAL_CANDIDATE_INTAKE_REVIEW so the external report cannot read as self-authorizing."
+      }
+    ],
+    "strongest_rejection_steelman": "As written, the request can manufacture an empty feasible set: a breakthrough can be rejected because its proof artifacts exceed an incompatible file cap, its exact nullspace makes an undefined full-space condition number infinite, or the repository lacks 1000 safely deletable lines. Those are contract and cleanup failures, not falsifications of the mechanism. The resulting package would be a highly disciplined no-go generator rather than a neutral breakthrough intake.",
+    "decisive_falsifier": "Before sending the prompt, instantiate a hypothetical perfect finalist that needs separate Lean and Rocq proofs plus the named CAS axes, has exact conservation null directions, and has no safely superseded 1000-line repository surface. If no package can satisfy every conjunctive gate without weakening its proof, inventing a condition number, or deleting preserved/active code, the prompt is non-admissible independent of candidate merit.",
+    "stance_change_condition": "Preserve the current draft hash. Admit only a newly sealed revision that implements BC-1 through BC-5 and passes one fresh independent satisfiability review. Such a prompt PASS would authorize only external request issuance; STOP/PRESERVE and every numerical, repository, W7/B3, trajectory, endpoint, and public-runtime prohibition remain unchanged."
+  },
+  "limitations": [
+    "Bootstrap initially compared the raw role-file digest e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836 with the ordered role-bundle digest. The repository-compatible path-NUL-bytes-NUL computation equals the registered 9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1, so review_role_verified=true; the initial mismatch was a reviewer error, not a stale assignment.",
+    "No scientific, CAS, formal, lab-package, or candidate execution was performed."
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D042-PROMPT-ADMIT-001",
+      "claim_id": "C-D042-PROMPT-ADMIT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The D-042 draft is not admissible as written. It strongly closes novelty, executable-code, kill-test, formal-evidence, no-output, and owner-authority concerns, but its conjunctive formal-file, method-independent conditioning/arithmetic, repository-deflation, unconditional PR-DAG, and terminal-authority clauses can reject a scientifically valid new mechanism for non-scientific or internally incompatible reasons.",
+      "assumptions_used": [
+        "A breakthrough request must permit a no-candidate outcome without fabricating a repository PR plan.",
+        "Conditioning and floating-point error are meaningful only after the norm, scaling, quotient/nullspace treatment, domain, and output normalization are fixed.",
+        "Repository cleanup is an adoption constraint, not evidence that an external mathematical mechanism is true or false.",
+        "The external auditor may recommend or request owner action but cannot issue owner authority."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md#sections-3-12@sha256:bab03230cfb935a1e66cde60ec449efd9b6bc7d562291f05d5d621dc31607068",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json#candidate_search_contract@sha256:4c61cc527b2f2bed4e5d1e2208f50071f2f838a87fff365101a1104256099677",
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json#experiment_package_specification@sha256:444add51b849cfee0d8eebb5e2782104d644e5fb6528a3e81544cbbc0e8f754c"
+      ],
+      "evidence_fingerprint": "sha256:504318d09c029e8bedfa8b9b1ac896d263efba3e2321ff2d8e4b362ee15009ea",
+      "counterevidence_refs": [
+        "The draft's authority firewall and first-non-PASS archive rule are unusually strong and should be retained.",
+        "The candidate-search sibling supplies eight genuinely different operation families with explicit disguised-old-method attacks.",
+        "The experiment-package sibling supplies a concrete real-mechanism deletion falsifier and deterministic replay contract."
+      ],
+      "reproduction": [
+        "Count the mandatory candidate files against the finalist's named formal/CAS axes and the four-authored-files-per-candidate cap.",
+        "Apply XG-07 to a mechanism with exact invariant null directions before a quotient norm is defined.",
+        "Apply XG-10 and section 10 to a passing external candidate when no 1000-line safe deletion surface exists.",
+        "Apply sections 10 and 11 to NO_ADMISSIBLE_CANDIDATE and identify the required but nonexistent candidate-specific PR DAG."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A corrected draft must be newly sealed and independently checked; this result does not authorize editing the preserved draft.",
+        "No external mechanism, package, formal proof, or scientific output was executed or validated.",
+        "STOP/PRESERVE remains binding."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PROMPT-ADMIT.json"
+  ]
+}

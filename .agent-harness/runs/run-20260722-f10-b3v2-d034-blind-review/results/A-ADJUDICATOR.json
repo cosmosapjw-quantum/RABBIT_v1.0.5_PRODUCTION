@@ -1,0 +1,463 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-ADJUDICATOR",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "agent_id": "019f8a2b-516c-7ec1-bfe6-9090f2c0ac55",
+  "agent_type": "default",
+  "role": "adjudicator",
+  "independence_mode": "adjudication",
+  "status": "fail",
+  "design_verdict": "FAIL",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-ADJUDICATOR.json",
+  "started_at": "2026-07-22T14:09:21Z",
+  "completed_at": "2026-07-22T14:21:41Z",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-ADJUDICATOR",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:33aa114aac45d80e1d0a4732657a0762c61981fa1fe7b2c9ed444afc025a3682"
+  },
+  "source_locks": {
+    "cas_contract": "04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a",
+    "w6": "e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "w7_contract_source": "5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "test_vectors": "5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44",
+    "allowed_results": {
+      "A-B3-DESIGN": "39e9394a6fd2b354cf6c56a7051cab53b12cc9de60d99d45615c2992fc6eca49",
+      "A-W7-METROLOGY": "98a73fce2de0bb5bbd64ba5f12d71d24f33272f13e1afb8486bc95bb0fb147af",
+      "A-CAS-WOLFRAM": "91c45257c79570bf508b03f5e1ac6603c3b7b143952ce12704a5c6c30e82cd9a",
+      "A-CAS-SAGE": "d8e4b2c804ab30c855b7d5431064cfab7ba8a5a8c702df2492fbdd6007ab6481",
+      "A-CAS-LEAN": "f19f64a93092f9b6000dc43cfecb2c272011e1f7e5fbd4c41ed4bdc06756cb52",
+      "A-CAS-SYMPY": "c9f6521552f45169200a276c50b8b7cabf8a6daf56e0b1ce1559ca1001a3f66c"
+    }
+  },
+  "deduplication": {
+    "key": [
+      "claim_id",
+      "evidence_fingerprint",
+      "verdict"
+    ],
+    "submitted_findings": 31,
+    "unique_findings": 31,
+    "exact_duplicates_removed": 0,
+    "material_claim_groups": 9,
+    "note": "No exact tuple duplicates existed. Findings with different proof artifacts were retained as independent support and then normalized into the nine assigned claim groups."
+  },
+  "summary": "FAIL. The exact D-034 W6/source/vector candidate does not earn design authority or W7 numerical-execution authority. Bounded row-ii, reaction-nullspace, and entropy algebra survives, but the global weak-form absolute normalization is inconsistent, the finite-m_e source violates the frozen elastic support/threshold graph, the basis/ladder is not reconstructible for off-grid use, and the A0-A4/B_native metrology graph is incomplete. Lean's missing Mathlib/analysis/Clifford stack is a tool ceiling, not a source contradiction and not a pass. No W7 numerical result, B3 collision, T01-T12, Rust edit, Radau solve, trajectory, endpoint, or unblinding was produced or authorized.",
+  "assumptions_and_conventions": {
+    "model": "Classical flavour-diagonal zero-asymmetry flat-FLRW no-QKE comparator with six ordered neutrino/antineutrino species.",
+    "units": "c=hbar=k_B=1; MeV.",
+    "metric": "g_phys=diag(-1,+1,+1,+1); eta_D=-g_phys; future p0>0; chi_ij=-p_i.p_j.",
+    "event": "1+2<->3+4; J=F-R; nu_leg=(-1,-1,+1,+1); reverse processes are represented by R and not duplicate rows.",
+    "spin": "One occupied neutrino helicity with no neutrino average; electron amplitudes spin-summed and bath occupations per spin.",
+    "branches": "Principal nonnegative roots; elastic interior s>m_e^2; pair interior s>4m_e^2; exact thresholds are k*=0 support values with physical-side derivatives only; no clipping.",
+    "authority": "D-034 is exact-byte design/CAS review only. Structural failures cannot be uncertainty-rescued."
+  },
+  "findings": [
+    {
+      "finding_id": "F-ADJ-D034-B3-DESIGN",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The exact B3-v2 candidate is not one executable, deterministic design: the finite-mass source diverges from the binding branch and operation graph, the basis lacks a frozen off-grid evaluator and affine-rule graph, and the ladder predicates do not uniquely define eligibility or selection.",
+      "evidence_fingerprint": "sha256:850294afc11e6eff7379a36184b28f5ebeaac4faabe57fb91f9c4a590cd9ca6f",
+      "assumptions_used": [
+        "W6, CAS_CONTRACT, the locked source, and vectors jointly define the exact candidate.",
+        "Algebraic real-number equivalence is insufficient where A0 and row selection require one binary64 operation graph.",
+        "No unlisted implementation may supply omitted basis, support, or metric choices."
+      ],
+      "evidence_refs": [
+        "A-B3-DESIGN:F-B3-DESIGN-001",
+        "A-B3-DESIGN:F-B3-BASIS-002",
+        "A-B3-DESIGN:F-B3-BASIS-003",
+        "A-B3-DESIGN:F-B3-LADDER-004",
+        "scripts/audit/w7_b3v2_contract_source.py:192-272",
+        "scripts/audit/w7_b3v2_contract_source.py:291-438"
+      ],
+      "counterevidence_refs": [
+        "A-B3-DESIGN:F-B3-GRAPH-005 passes only the bounded 24+15 record structure and nullspace subclaim."
+      ],
+      "reproduction": [
+        "Compare the W6 finite-mass, basis, Stage-A, and ladder clauses with the cited exact source sections.",
+        "Observe that the source supplies nodewise basis values but no arbitrary-y evaluator, returns an unscaled GL rule, and gives only string labels for A0-A4."
+      ],
+      "unresolved": [
+        "Freeze corrected process-specific finite-mass bytes and postconditions.",
+        "Freeze the affine GL operation order and one arbitrary-y basis evaluator used by every consumer.",
+        "Define every Stage-A/Stage-B observable, denominator, interval rule, and decision procedure."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-ADJ-D034-W7-DESIGN",
+      "claim_id": "C-W7-METROLOGY-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The W7 design cannot authorize numerical execution because absolute normalization, finite-mass source semantics, and the arithmetic certificate all fail at the exact-byte design stage.",
+      "evidence_fingerprint": "sha256:a49101ad0c266c1bde3d5d8c3abfe1a20821dcce8c0f38fcf8477d5661eef5f0",
+      "assumptions_used": [
+        "Any fatal assigned design claim keeps D-034 authority closed.",
+        "Bounded algebraic passes cannot substitute for a reconstructible exact source and metrology graph."
+      ],
+      "evidence_refs": [
+        "A-W7-METROLOGY:F-W7-D034-001",
+        "A-W7-METROLOGY:F-W7-D034-002",
+        "A-W7-METROLOGY:F-W7-D034-003",
+        "A-W7-METROLOGY:F-W7-D034-004",
+        "A-W7-METROLOGY:F-W7-D034-005"
+      ],
+      "counterevidence_refs": [
+        "Source hashes, dimensions, two-body phase-space coefficient, and reaction-record counts pass as bounded checks only."
+      ],
+      "reproduction": [
+        "Normalize the assigned findings by claim and inspect the remaining fatal exact-byte findings."
+      ],
+      "unresolved": [
+        "Correct the exact candidate bytes and obtain a new registered blind review before any owner W7 execution decision."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-ADJ-D034-ROWII",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "Bounded exact-algebra PASS: Wolfram/xAct, Sage, and SymPy independently derive the direct coherent row-ii factor four over the distinguishable K_t base with the locked Wick sign and gamma conventions. Lean is INCONCLUSIVE solely because its installed library lacks the required formal algebra stack.",
+      "evidence_fingerprint": "sha256:8dc52efc68fa45d6c92afe5cb9b28b939bddff6d97548623a8c56c4f627b4c02",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), P_L=(1-gamma5)/2, and one occupied neutrino helicity.",
+        "The physical relative Wick minus is retained; crossing-only is not accepted."
+      ],
+      "evidence_refs": [
+        "A-CAS-WOLFRAM:F-WOLFRAM-ROWII-PASS",
+        "A-CAS-SAGE:A-CAS-SAGE-F01",
+        "A-CAS-SYMPY:F-SYMPY-ROWII-TRACE-PASS"
+      ],
+      "counterevidence_refs": [
+        "A-CAS-LEAN:F-LEAN-ROWII-LIBRARY-CEILING is an engine/library ceiling and contains no contradiction."
+      ],
+      "reproduction": [
+        "Use the exact scripts and commands embedded or referenced by the three passing CAS result envelopes."
+      ],
+      "unresolved": [
+        "Formal four-axis closure remains INCONCLUSIVE until a Lean environment with an adequate complex-matrix/Clifford stack proves the theorem."
+      ],
+      "confidence": 0.99,
+      "claim_ceiling": "DERIVED bounded subclaim only; not whole-design, W7-output, or B3 authority."
+    },
+    {
+      "finding_id": "F-ADJ-D034-NORMALIZATION",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "fail",
+      "severity": "fatal",
+      "statement": "The exact candidate fails all-channel absolute normalization. The SymPy/Sage tagged MB reductions do not carry the W6 all-leg global weak form through the initial/final reversal. For a distinct elastic record, the p3 deposition maps exactly to the p1 deposition under reversal, so the locked S_r=1 global action is twice the tagged action unless an elastic orientation quotient or equivalent coefficient definition is frozen. In addition, Tier-0 freezes G_F=1.1663788e-11 while W6/source/CAS freeze 1.1663787e-11.",
+      "evidence_fingerprint": "sha256:50788bc877ade0e943332288f0ba3a6578dbab7585d5bd7b068fd5ca18ad3206",
+      "assumptions_used": [
+        "The displayed dGamma integrates the full labeled four-leg domain.",
+        "J includes the reverse process and no separate elastic orientation restriction is stated.",
+        "K_s and K_t and the measure are invariant under simultaneous initial/final reversal.",
+        "Tier-0 constants govern the independent comparison and may not drift silently."
+      ],
+      "evidence_refs": [
+        "A-CAS-WOLFRAM:F-WOLFRAM-NORMALIZATION-FAIL",
+        "A-CAS-SAGE:A-CAS-SAGE-F02",
+        "A-W7-METROLOGY:F-W7-D034-001",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:50-117",
+        "scripts/audit/w7_b3v2_contract_source.py:16-165"
+      ],
+      "counterevidence_refs": [
+        "A-CAS-SYMPY:F-SYMPY-ABSOLUTE-NORMALIZATION-PASS derives the tagged c/(8*pi^3) and c/(24*pi^3) bases but does not apply the global all-leg reversal factor.",
+        "A-CAS-SAGE:A-CAS-SAGE-F02 reports that the local factor ledger otherwise closes but independently fails the exact G_F input.",
+        "A-W7-METROLOGY:F-W7-D034-001 isolates only the identical-row loss term; its specific factor-two diagnosis omits the reversal-equivalent outgoing contribution and is not used as the primary tie-break.",
+        "A-CAS-LEAN:F-LEAN-NORMALIZATION-LIBRARY-CEILING is INCONCLUSIVE and supplies no counterexample."
+      ],
+      "reproduction": [
+        "For a distinct elastic (a,b;a,b) row, apply (p1,p2,p3,p4)<->(p3,p4,p1,p2) to integral J[-psi(p1)+psi(p3)]; both terms become equal, yielding twice the tagged term when S_r=1.",
+        "Compare Tier-0 G_F=1.1663788e-11 with W6/source/CAS G_F=1.1663787e-11."
+      ],
+      "unresolved": [
+        "Freeze one coherent physical-matrix-element, symmetry, orientation, global-leg, tagged-coefficient, and MB-target ledger for every row.",
+        "Freeze one exact G_F literal across Tier-0, W6, CAS_CONTRACT, source, and vectors.",
+        "Repeat a fresh blind all-channel normalization derivation; do not fit coefficients to output."
+      ],
+      "confidence": 0.99,
+      "failure_class": "MICROPHYSICS_AUTHORITY_CONFLICT"
+    },
+    {
+      "finding_id": "F-ADJ-D034-NULLSPACE",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "Exact four-axis PASS: the independently reconstructed 6x39 rational stoichiometric graph has rank three and left nullspace exactly span{(1,-1,0,0,0,0),(0,0,1,-1,0,0),(0,0,0,0,1,-1)}.",
+      "evidence_fingerprint": "sha256:785d1883ce026cb9b3d57b40ef41932d009b08b71969a7b174f3219bf84ed677",
+      "assumptions_used": [
+        "Electron legs are omitted from the six species rows.",
+        "Stoichiometry is outgoing minus incoming under nu_leg=(-1,-1,+1,+1).",
+        "Reverse reactions are represented by R rather than duplicate columns."
+      ],
+      "evidence_refs": [
+        "A-CAS-WOLFRAM:F-WOLFRAM-NULLSPACE-PASS",
+        "A-CAS-SAGE:A-CAS-SAGE-F03",
+        "A-CAS-LEAN:F-LEAN-REACTION-NULLSPACE-EXACT",
+        "A-CAS-SYMPY:F-SYMPY-REACTION-NULLSPACE-PASS",
+        "A-B3-DESIGN:F-B3-GRAPH-005"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run the exact Wolfram, Sage/Singular, Lean, and SymPy proof commands recorded in their result envelopes."
+      ],
+      "unresolved": [],
+      "confidence": 1.0,
+      "claim_ceiling": "DERIVED species-count subclaim only; energy conservation remains eventwise and this does not validate normalization or implementation."
+    },
+    {
+      "finding_id": "F-ADJ-D034-ENTROPY",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "Bounded exact-algebra PASS on the strict-open occupation domain: A=log(F/R)=eta1+eta2-eta3-eta4 and (F-R)log(F/R)>=0 with equality exactly at F=R; the electron bath contribution has the locked Q_EM/T_gamma sign. Lean compiles the rational vector but is INCONCLUSIVE for the real-log theorem because Mathlib is unavailable.",
+      "evidence_fingerprint": "sha256:737ec468a29bbe97e822e72840392f4fa8a47475fbf5c89161fd98637edeebab",
+      "assumptions_used": [
+        "All occupations lie strictly in (0,1).",
+        "The logarithm is the real principal logarithm on positive F/R.",
+        "Electron chemical potential is zero and Q_EM=-Q_nu."
+      ],
+      "evidence_refs": [
+        "A-CAS-WOLFRAM:F-WOLFRAM-ENTROPY-PASS",
+        "A-CAS-SAGE:A-CAS-SAGE-F04",
+        "A-CAS-SYMPY:F-SYMPY-ENTROPY-AFFINITY-PASS",
+        "A-CAS-LEAN:F-LEAN-ENTROPY-RATIONAL-SUBCLAIM"
+      ],
+      "counterevidence_refs": [
+        "A-CAS-LEAN:F-LEAN-ENTROPY-RATIONAL-SUBCLAIM is a formal-library ceiling, not a contradiction."
+      ],
+      "reproduction": [
+        "Use the exact Wolfram, Sage/Singular, and SymPy derivations recorded in their result envelopes; the Lean envelope reproduces the exact rational vector only."
+      ],
+      "unresolved": [
+        "Formal four-axis closure of the general real-log and bath-sign theorem remains INCONCLUSIVE under the installed Lean library."
+      ],
+      "confidence": 0.99,
+      "claim_ceiling": "DERIVED bounded continuum subclaim only; not a binary64 collision entropy test or design authority."
+    },
+    {
+      "finding_id": "F-ADJ-D034-FINITE-ME",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "fatal",
+      "statement": "The continuum finite-m_e shell and dPhi2 formulas pass on their physical branches, but the binding source fails the exact-byte claim: its generic elastic Kallen expression admits 0<s<m_e^2, rejects the required k*=0 threshold support value, clips the angular radicand, recomputes gamma with a different binary64 graph, and omits required post-boost checks.",
+      "evidence_fingerprint": "sha256:31e1717c311360fbc00c2b0ce9c4104a650d9ec600ecd9447de1c802b2cb7317",
+      "assumptions_used": [
+        "Elastic physical support is s>m_e^2 and pair support is s>4m_e^2.",
+        "Threshold equality is a support-only k*=0 value with one-sided derivatives.",
+        "A0 requires the frozen operation graph; invalid roots fail raw rather than clip."
+      ],
+      "evidence_refs": [
+        "A-CAS-WOLFRAM:F-WOLFRAM-FINITE-ME-SOURCE-FAIL",
+        "A-CAS-SAGE:A-CAS-SAGE-F05",
+        "A-CAS-SYMPY:F-SYMPY-FINITE-ME-SHELL-SOURCE-BRANCH-FAIL",
+        "A-W7-METROLOGY:F-W7-D034-002",
+        "A-W7-METROLOGY:F-W7-D034-003",
+        "A-B3-DESIGN:F-B3-DESIGN-001",
+        "scripts/audit/w7_b3v2_contract_source.py:192-272"
+      ],
+      "counterevidence_refs": [
+        "The W6 analytic formulas and the off-threshold elastic/pair rational vectors pass exactly.",
+        "A-CAS-LEAN:F-LEAN-FINITE-ME-EXACT-VECTORS is INCONCLUSIVE for the general map and finds no source counterexample."
+      ],
+      "reproduction": [
+        "For elastic outgoing masses (0,m_e), simplify the source lambda to (s-m_e^2)^2; at s=m_e^2/4 it is positive and the source returns an energy-nonconserving k*=3m_e/4 instead of rejecting.",
+        "At s=m_e^2 the source rejects lambda=0, contrary to the support-only threshold clause; inspect max(0,1-z_star^2) and the gamma expressions."
+      ],
+      "unresolved": [
+        "Freeze process-specific support branches, an explicit threshold-test return, an unclipped z_star domain check, one gamma graph, and all shell/conservation/Mandelstam postconditions."
+      ],
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "F-ADJ-D034-BASIS-LADDER",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The basis and ladder are not exact-byte executable: no affine [-1,1] to [0,Y_max] operation graph or arbitrary-y basis evaluator is frozen, source and prose use different QR/product graphs, and Stage-A/Stage-B acceptance observables and denominator rules are incomplete.",
+      "evidence_fingerprint": "sha256:677a8a4b9e8ba2b9d218858e991f728c50a5af6594f9c1b8d6a2b50b6a4cb6eb",
+      "assumptions_used": [
+        "Outgoing event momenta and 4097 reference points are generally off design nodes.",
+        "The A0/A2 split requires exact affine, QR, and reconstruction interfaces.",
+        "A selection cap without a unique observable and denominator is not an executable gate."
+      ],
+      "evidence_refs": [
+        "A-B3-DESIGN:F-B3-BASIS-002",
+        "A-B3-DESIGN:F-B3-BASIS-003",
+        "A-B3-DESIGN:F-B3-LADDER-004",
+        "scripts/audit/w7_b3v2_contract_source.py:291-438"
+      ],
+      "counterevidence_refs": [
+        "The candidate set, row order, quadrature orders, pairwise sum tree, and numeric caps are frozen, but they do not close the missing evaluator and observable definitions."
+      ],
+      "reproduction": [
+        "Inspect gauss_legendre_mpfr and deterministic_weighted_basis: the former returns an unscaled rule and the latter returns only node values.",
+        "Compare normalized-inner-product/left-associated-product prose with _inner, value**degree, and recomputed norm divisions.",
+        "Attempt to instantiate weighted L1, pointwise, cond2, collision, and lost/tail predicates solely from the exact bytes."
+      ],
+      "unresolved": [
+        "Freeze affine mapping, arbitrary-y reconstruction, exact QR/product interfaces, cond2 decision procedure, and every Stage-A/Stage-B metric."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "F-ADJ-D034-ARITHMETIC",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "fatal",
+      "statement": "A0-A4 and B_native are not a reconstructible directed-interval graph. The source provides labels but no directed root enclosures, interval QR/mass/q/O graph, stage-interface rounding functions, B-term evaluators, or native permutation-defect equation; O_mp and the beta/P beta common denominator/domain are also ambiguous.",
+      "evidence_fingerprint": "sha256:b97fc944be501269f8b9f101524fc7e411471cf0a9c8dcfbc51baf4f83dc1d20",
+      "assumptions_used": [
+        "Every operation and directed-rounding interface must be fixed before numerical output.",
+        "A nearest-rounded Newton root with a stopping tolerance is not a directed enclosure of the exact root.",
+        "A triangle bound for a permutation defect requires a common pair denominator and a domain closed under P."
+      ],
+      "evidence_refs": [
+        "A-W7-METROLOGY:F-W7-D034-004",
+        "A-W7-METROLOGY:F-W7-D034-005",
+        "scripts/audit/w7_b3v2_contract_source.py:291-438",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:337-386"
+      ],
+      "counterevidence_refs": [
+        "W6 names A0-A4 and the four B terms, but names alone do not specify executable directed endpoints or the native defect."
+      ],
+      "reproduction": [
+        "Statically enumerate the locked source functions and observe that O, directed intervals, A0-A4 evaluators, B terms, and the native defect are absent.",
+        "Attempt to define O_mp, the native beta/P beta numerator, and one permutation-invariant denominator from the prose; multiple inequivalent completions remain."
+      ],
+      "unresolved": [
+        "Freeze the full directed arithmetic graph, exact stage interfaces, root enclosures, native defect equation, permutation-closed state domain, and explicit triangle proof."
+      ],
+      "confidence": 0.99
+    }
+  ],
+  "conflict_resolution": [
+    {
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "conflict": "SymPy reports PASS, Sage reports a locally closing factor ledger but FAIL on G_F, W7 metrology reports an identical-row factor-two FAIL, Wolfram reports a global elastic-orientation FAIL, and Lean is INCONCLUSIVE.",
+      "resolution": "FAIL. The governing W6 q is an all-leg global weak form. The exact initial/final reversal proves a factor-two duplication for distinct elastic records when S_r=1 and no orientation quotient exists. The SymPy/Sage tagged-integral calculations do not traverse that global mapping. The W7 isolated-loss diagnosis is not used as the primary tie-break because it omits the reversal-equivalent outgoing term. The independent exact G_F mismatch is an additional source-level failure.",
+      "classification": "genuine exact-byte source/spec conflict"
+    },
+    {
+      "claim_id": "C-W7-ROWII-TRACE",
+      "conflict": "Three CAS axes PASS while Lean is INCONCLUSIVE.",
+      "resolution": "Retain a bounded exact-algebra PASS with an explicit INCONCLUSIVE four-axis formalization ceiling. Lean lacks the library foundation and supplies no contradiction.",
+      "classification": "tool ceiling, not substantive disagreement"
+    },
+    {
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "conflict": "Three CAS axes prove the general claim while Lean proves only the rational vector and is INCONCLUSIVE for real logarithms.",
+      "resolution": "Retain a bounded exact-algebra PASS with an explicit INCONCLUSIVE Lean formalization ceiling.",
+      "classification": "tool ceiling, not substantive disagreement"
+    },
+    {
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "conflict": "Continuum formulas and off-threshold vectors pass, but three axes and both design reviewers identify a locked-source branch failure; Lean is incomplete on the general theorem.",
+      "resolution": "FAIL the exact-byte claim while retaining the analytic interior shell/Jacobian as a bounded subclaim. Passing vectors do not exercise the subthreshold/threshold source branches.",
+      "classification": "source defect, not a CAS contradiction"
+    }
+  ],
+  "tool_ceilings": [
+    {
+      "axis": "Lean",
+      "status": "INCONCLUSIVE",
+      "detail": "Lean 4.32.0 is installed, but Mathlib.olean is absent. The axis could compile exact rational/nullspace theorems with Std but could not faithfully formalize the Clifford trace, continuum normalization, real-log theorem, or general COM/Jacobian theorem.",
+      "effect": "No contradiction and no PASS for the omitted formal theorems; run-level four-axis closure remains INCONCLUSIVE even though the design independently FAILS on source defects."
+    },
+    {
+      "axis": "Wolfram/xAct",
+      "status": "USABLE",
+      "detail": "The optional xPerm external accelerator failed to connect, but WolframKernel and xTensor completed the exact algebra used by the findings.",
+      "effect": "No adjudicated finding depends on the unavailable accelerator."
+    }
+  ],
+  "source_defects": [
+    "Global four-leg versus tagged absolute-normalization ledger lacks a coherent elastic orientation quotient/coefficient mapping.",
+    "The exact G_F literal drifts from Tier-0.",
+    "Finite-m_e elastic support, threshold, angular-domain, gamma-operation, and postcondition bytes contradict W6.",
+    "Affine GL mapping and arbitrary-y basis reconstruction are absent; QR/product bytes differ from prose.",
+    "Stage-A/Stage-B ladder observables and decisions are incomplete.",
+    "A0-A4, directed intervals, B terms, and the native permutation metric are not implemented or uniquely specified."
+  ],
+  "claim_summary": {
+    "C-B3V2-DESIGN": "fail",
+    "C-W7-METROLOGY-DESIGN": "fail",
+    "C-W7-ROWII-TRACE": "pass_bounded_three_axis_with_lean_tool_ceiling",
+    "C-W7-ABSOLUTE-NORMALIZATION": "fail",
+    "C-B3V2-REACTION-NULLSPACE": "pass_exact_four_axis",
+    "C-B3V2-ENTROPY-AFFINITY": "pass_bounded_three_axis_with_lean_tool_ceiling",
+    "C-W7-FINITE-ME-SHELL": "fail_exact_source_bytes",
+    "C-B3V2-BASIS-LADDER": "fail",
+    "C-W7-ARITHMETIC-GRAPH": "fail"
+  },
+  "gate_verdicts": [
+    {
+      "gate_id": "D-034-FRESH-BLIND-DESIGN",
+      "verdict": "FAIL",
+      "reason": "Multiple fatal exact-byte design defects remain; bounded algebraic passes cannot authorize execution."
+    },
+    {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "verdict": "FAIL",
+      "reason": "No executed W7 evidence exists and the required A0-A4/B_native design is not reconstructible."
+    },
+    {
+      "gate_id": "G-F10-INDEPENDENT-FLRW",
+      "verdict": "FAIL",
+      "reason": "No authorized B3 static output, trajectory, or independent endpoint exists; the precursor design review fails."
+    },
+    {
+      "gate_id": "G-F10-SCOPE",
+      "verdict": "PASS",
+      "reason": "The review produced no forbidden W7/B3 numerical output, Rust edit, Radau solve, trajectory, endpoint, unblinding, F-11, QKE, or public-runtime claim."
+    }
+  ],
+  "authority_boundary": {
+    "w7_numerical_execution": "FORBIDDEN",
+    "b3_implementation": "FORBIDDEN",
+    "b3_collision_output": "FORBIDDEN",
+    "t01_t12": "FORBIDDEN",
+    "radau_trajectory_endpoint": "FORBIDDEN",
+    "rabbit_unblinding": "FORBIDDEN",
+    "f11_qke_public_runtime": "FORBIDDEN",
+    "retained_safe_claims": [
+      "DERIVED bounded direct row-ii coherent factor-four trace on Wolfram/Sage/SymPy, with Lean formal closure INCONCLUSIVE.",
+      "DERIVED exact 24+15 species-count nullspace on all four axes.",
+      "DERIVED bounded entropy-affinity theorem on Wolfram/Sage/SymPy, with Lean formal closure INCONCLUSIVE.",
+      "DERIVED physical-interior finite-m_e shell and dPhi2 formulas, explicitly not the locked-source branch implementation."
+    ],
+    "reopen_condition": "Freeze corrected W6/source/vector/CAS bytes resolving every normalization, constant, finite-mass, basis/ladder, and arithmetic-graph defect, then obtain a fresh registered blind PASS. Only that PASS may support a new owner decision for W7 numerical execution; B3 implementation and T01-T12 would still require executed W7 evidence, another blind PASS, and another owner decision."
+  },
+  "commands": [
+    "sha256sum and complete targeted reads of CONTEXT_PACK.md, A-ADJUDICATOR.json, CAS_CONTRACT.json, W6, adjudicator role, and the six allowed result envelopes",
+    "targeted static reads of the exact locked W7 source and exact vectors only to resolve cited normalization, finite-mass, basis, and arithmetic conflicts",
+    "sha256sum CAS_CONTRACT.json W6 w7_b3v2_contract_source.py BD622_W7_exact_test_vectors.json",
+    "No CAS engine, W7 numerical oracle, B3 collision, T01-T12, Rust, Radau, trajectory, endpoint, or unblinding command was run by the adjudicator."
+  ],
+  "tool_versions": {
+    "adjudication_mode": "static exact-byte/result-envelope adjudication",
+    "sha256sum": "GNU coreutils 9.4",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter"
+  },
+  "raw_failures": [
+    "Two draft jq envelope-check expressions had validator-only scoping/precedence errors. They did not modify the artifact. The corrected read-only expression returned true.",
+    "The first SubagentStop attempt was blocked because the result envelope omitted started_at. The corrected retry records the start boundary immediately after the last allowed sibling completed."
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-ADJUDICATOR.json"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-ADJUDICATOR.json"
+  ]
+}

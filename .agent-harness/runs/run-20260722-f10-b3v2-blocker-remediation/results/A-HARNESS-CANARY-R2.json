@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "assignment_id": "A-HARNESS-CANARY-R2",
+  "run_id": "run-20260722-f10-b3v2-blocker-remediation",
+  "context_version": "f491565ab8055057c646af6ffc9d67283a0d7603bb98a2a6293ee703ad2e745a",
+  "status": "fail",
+  "claim_id": "C-HARNESS-INTEGRITY",
+  "verdict": "FAIL",
+  "summary": "The controlled missing-artifact stop was blocked, but the injected SubagentStart preflight reported ADVISORY/FAIL rather than PASS; the harness-integrity claim therefore fails closed.",
+  "spawn_fields": {
+    "RUN_ID": "run-20260722-f10-b3v2-blocker-remediation",
+    "ASSIGNMENT_ID": "A-HARNESS-CANARY-R2",
+    "CONTEXT_VERSION": "f491565ab8055057c646af6ffc9d67283a0d7603bb98a2a6293ee703ad2e745a",
+    "INDEPENDENCE_MODE": "shared-core"
+  },
+  "hook_observations": {
+    "subagent_start_injected_mandatory_bootstrap": true,
+    "subagent_start_preflight": "ADVISORY/FAIL — hook event did not expose the spawn header; the subagent must verify all four fields manually before substantive work",
+    "controlled_subagent_stop_blocked": true,
+    "controlled_subagent_stop_evidence": "Declared result artifact does not exist: .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/results/A-HARNESS-CANARY-R2.json",
+    "automatic_final_validation": "pending final SubagentStop validation after this artifact is written"
+  },
+  "commands": [
+    "sed -n '1,240p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '241,520p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,260p' .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/assignments/A-HARNESS-CANARY-R2.json"
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/results/A-HARNESS-CANARY-R2.json"
+  ],
+  "unauthorized_writes": [],
+  "evidence": [
+    {
+      "evidence_id": "E-HARNESS-CANARY-R2-START",
+      "observation": "Injected bootstrap present, but preflight was not PASS."
+    },
+    {
+      "evidence_id": "E-HARNESS-CANARY-R2-STOP",
+      "observation": "SubagentStop blocked the controlled missing-artifact completion attempt."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-blocker-remediation",
+  "assignment_id": "A-HARNESS-CANARY",
+  "agent_type": "context_mapper",
+  "context_version": "f491565ab8055057c646af6ffc9d67283a0d7603bb98a2a6293ee703ad2e745a",
+  "independence_mode": "shared-core",
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/results/A-HARNESS-CANARY.json",
+  "summary": "The four-field spawn header, assignment, context pack, context index, and declared unique result path are consistent, but no distinct SubagentStart-injected bootstrap contract or hook-preflight PASS was observable in the received agent context; trusted hook activation therefore remains unproved and C-HARNESS-INTEGRITY fails closed.",
+  "claim_results": [
+    {
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "summary": "Static header and context consistency passed; mandatory SubagentStart injection and preflight PASS were not evidenced.",
+      "evidence": [
+        {
+          "kind": "spawn_context_observation",
+          "subagent_start_bootstrap_injected": false,
+          "hook_preflight": "NOT_OBSERVED",
+          "detail": "The parent task payload supplied RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, and INDEPENDENCE_MODE, but the received context contained no separately identifiable SubagentStart bootstrap contract and no hook-preflight PASS assertion."
+        },
+        {
+          "kind": "field_consistency",
+          "all_four_fields_match": true,
+          "fields": {
+            "RUN_ID": "run-20260722-f10-b3v2-blocker-remediation",
+            "ASSIGNMENT_ID": "A-HARNESS-CANARY",
+            "CONTEXT_VERSION": "f491565ab8055057c646af6ffc9d67283a0d7603bb98a2a6293ee703ad2e745a",
+            "INDEPENDENCE_MODE": "shared-core"
+          }
+        },
+        {
+          "kind": "required_input_digest",
+          "path": ".agent-harness/generated/CONTEXT_PACK.md",
+          "sha256": "65a9d55cc881dc8a08909038757acdf6f8aa87a4a7c14e2c059000e964d80bd0"
+        },
+        {
+          "kind": "required_input_digest",
+          "path": ".agent-harness/context/CONTEXT_INDEX.json",
+          "sha256": "1cf0ac0a38196461425f46b99dd2adc1effb1bdd5a31ba4a4032a3bb01c8dd6d"
+        },
+        {
+          "kind": "required_input_digest",
+          "path": ".agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/assignments/A-HARNESS-CANARY.json",
+          "sha256": "4a52e6f6696a45edd7c248ec7803903df7b218f8ac13da6aaf57a71a1120a894"
+        },
+        {
+          "kind": "result_handoff",
+          "declared_path_matches": true,
+          "path_was_unused_before_write": true,
+          "automatic_hook_enforcement_observed": false
+        }
+      ],
+      "assumptions": [
+        "Only context visibly delivered to this agent can count as evidence of SubagentStart injection or hook preflight."
+      ]
+    }
+  ],
+  "commands": [
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/assignments/A-HARNESS-CANARY.json",
+    "sed -n '1,296p' .agent-harness/generated/CONTEXT_PACK.md (read in bounded chunks)",
+    "sed -n '1,200p' .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/assignments/A-HARNESS-CANARY.json",
+    "sed -n '1,120p' .agent-harness/context/CONTEXT_INDEX.json",
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/context/CONTEXT_INDEX.json .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/assignments/A-HARNESS-CANARY.json",
+    "test ! -e .agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/results/A-HARNESS-CANARY.json"
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-blocker-remediation/results/A-HARNESS-CANARY.json"
+  ]
+}
