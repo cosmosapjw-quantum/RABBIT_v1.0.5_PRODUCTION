@@ -155,12 +155,34 @@ Found by the verification pass, not by the audit. Numbers measured, not estimate
 
 ---
 
-## 6. What this document authorises
+## 6. What was done, as measured
 
-Fixes for R1, R3, R4, R5, R6, R7, R8 only, each as its own commit with a fixture that fails before
-and passes after, and the governance work that does not touch the frozen surface. R2 is refuted and
-nothing changes for it. Everything in `OUT-OF-SCOPE` is recorded at D-076 and stays out.
+| # | Outcome | Where |
+|---|---|---|
+| R1 | **CLOSED** — pack re-rendered and byte-compared; the 6-line scan is gone; the pack is written atomically | `_harness.render_context_pack`, `build_context_pack.py`, `validate_harness.py` |
+| R2 | **REFUTED, nothing changed** | — |
+| R3 | **CLOSED** — the Basis cell can no longer restructure the board | `check_ssot_consistency.basis_cell` |
+| R4 | **CLOSED** — run id must be a path key | `init_run.py` |
+| R4b | **CLOSED** — parent assignment id must be a path key | `new_assignment.py` |
+| R5 | **PARTLY CLOSED** — the shared hook reader refuses duplicate keys, closing the Stop-side receipt and lease. The Start hook's own direct parses are NOT closed | `.codex/hooks/_common.py` |
+| R6 | **CLOSED** — a reopen takes the consuming agent's lock before deleting its claim | `admit_agent.py` |
+| R7 | **PARTLY CLOSED** — the corroboration fields are renamed `agent_asserted_*` and divergent members are retained. The signal is still agent-authored | `merge_results.py`, `roles/adjudicator.md` |
+| R8 | **NOT CLOSED** — lives only in the attested Start hook | recorded at D-076 |
 
-**No gate moves. `G-HARNESS-INTEGRITY` remains FAIL**, and this audit adds nothing to its
-pass condition — its 14-condition bar is filed as informational, because adding obligations is gate
+**Why R8 and the rest of R5 are not closed.** Every live canary attests
+`subagent_start_context.py` and `subagent_stop_validate.py` by digest, and C11/C12/C13 have no
+preserved runner — they were driven by hand. Editing either file retires the entire live canary set
+with no way to re-establish it. `check_canary_freshness.py` states that cost is deliberate: "a
+canary that was not re-run after the code changed is not evidence." The fix for R5 landed in
+`_common.py` precisely because that file is **not** in `ATTESTED_FILES`, which was verified after
+the edit rather than assumed. R8 has no such path.
+
+Governance landed outside the frozen surface: a CI job that runs the existing checkers, `testpaths`
+that finally collects them, a lock pinned to the environment that was actually measured, 56
+pinned-but-untracked artifacts retained, an unverifiable skills lock deleted, and `main` protected
+by a ruleset — without a signed-commits rule, because no signing key is configured and requiring one
+would have blocked all pushes.
+
+**No gate moved. `G-HARNESS-INTEGRITY` remains FAIL**, and this audit adds nothing to its pass
+condition — its 14-condition bar is filed as informational, because adding obligations is gate
 machinery and the freeze forbids it.
