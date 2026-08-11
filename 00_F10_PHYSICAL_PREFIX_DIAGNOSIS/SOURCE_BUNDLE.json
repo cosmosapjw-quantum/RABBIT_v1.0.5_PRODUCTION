@@ -1,0 +1,121 @@
+{
+  "mathphysics_research_archive": {
+    "entry_count": 97,
+    "internal_report_sha256": "4d99bdc214f6ec5735954e9acdbed8d83de08a0b994d31483c6f7c2786617cf3",
+    "internal_tail_bounds_sha256": "dc56db83a78c8ae5f062fa470a47314c25292f4600f562e76fed1bcf117bb8ba",
+    "path": "RABBIT_F10_MathPhysics_Blocker_Research_Loop_2026-08-06.zip",
+    "sha256": "bb3ca057d1ecee6b11e33bba5dbcd8325a23d95dfe925bb5a235866d05ed4fb0",
+    "size": 516405
+  },
+  "rabbit_source": {
+    "branch": "f10-independent-validation-b3v2",
+    "commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+    "prefix_files": [
+      {
+        "git_blob_oid": "de44feee0aa484abe26976c7dc34c579643005b5",
+        "path": "src/rabbit/decoupling/_independent_noqke.py",
+        "sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+        "size": 54327
+      },
+      {
+        "git_blob_oid": "465a73f0ce40f7149bebdc2d67103f388e2344d9",
+        "path": "scripts/audit/_trajectory_core.py",
+        "sha256": "3ec42baa678a0f36baa79dab7ed6fcd136272be1634b50e78bc4b41b7e480cda",
+        "size": 17093
+      },
+      {
+        "git_blob_oid": "d3e4e2bcfbfbe91535276c07808dc58aa1289289",
+        "path": "scripts/audit/d069_independent_trajectory_r4.py",
+        "sha256": "670bbbda461be5ac10d03671d47d89acdaca329640bb152676c5a76acc11cb0c",
+        "size": 29753
+      },
+      {
+        "git_blob_oid": "2a6b7e4d06eccbc85e296a7ac3ad3850635a6964",
+        "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+        "size": 157895
+      },
+      {
+        "git_blob_oid": "f79f18b08195e0ef504219683f9bed0c387348ba",
+        "path": "native/rabbit_cpu/src/electron_catalog.rs",
+        "sha256": "930066ca47d729386eebe91091680fc2f6e2c7039f0760166f2c88c3af54b805",
+        "size": 6021
+      },
+      {
+        "git_blob_oid": "566a9c3fee911c6a51dafe561ce0a2d11a029a57",
+        "path": "native/rabbit_cpu/src/quadrature.rs",
+        "sha256": "356f4e92b3fcc270c822c6cc7bd785c681011af6de374cf4b88b3a895b904786",
+        "size": 4027
+      },
+      {
+        "git_blob_oid": "4f50df999e6d1929ad6009db7b7cad2693a8ca07",
+        "path": "tests/test_independent_noqke_comparator.py",
+        "sha256": "8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8",
+        "size": 4672
+      },
+      {
+        "git_blob_oid": "42a66e1c25c23004c1e67e93163f2d63ef2b8637",
+        "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+        "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+        "size": 7893
+      },
+      {
+        "git_blob_oid": "0e3b50c1c21fa2c589a3dbed7eb9f7bc0a16c512",
+        "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+        "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+        "size": 13290
+      },
+      {
+        "git_blob_oid": "68f690aef1d757aff69ecae515f6820792e39553",
+        "path": "docs/audit/BD622_V2_result_2026-08-05.md",
+        "sha256": "770e7de8f81886b2a56a204fbf6db5aa90ad185bff77b6faf4e7fb17abc529fc",
+        "size": 9681
+      },
+      {
+        "git_blob_oid": "9c236772870c90d419432290106e5677b77e2a11",
+        "path": "docs/audit/BD622_V3_protocol_2026-08-05.md",
+        "sha256": "83df9d0edc085fe5a0a58008d24b29f795541be10fe8a5618db6592618456c77",
+        "size": 15043
+      },
+      {
+        "git_blob_oid": "dd6dc5e30467e5ef93a510b64d7429f9a51e09c9",
+        "path": "docs/audit/BD622_V3_report_2026-08-06.md",
+        "sha256": "8b028acdbf4a4c3644f4fcdd0b1b8e112d635cb6979e8b9dac03b1516a17c78f",
+        "size": 30371
+      }
+    ],
+    "reconstruction": {
+      "authority": "Git commit and tree objects on diagnosis_report ancestry",
+      "command": "git archive --format=tar 719987d0bc5a018d57fded1df2c8ad3f0c3fc24f"
+    },
+    "subtree_oids": {
+      "docs/audit": "3af91e2d643cca042e6ea52cc3872fc138b49dd6",
+      "native": "75222f416c84efb579879271c0d35ff023363abe",
+      "scripts": "10239f6e8ae76e538b917abb7b226c4fd3d9dbd3",
+      "src": "5657f5f0c631826e7d45c2f62073141e192814cc",
+      "tests": "d4e3a123ffc34d0f1e7a7db032e8389831447735"
+    },
+    "tree_oid": "3f132936bbeb62cacd4b5958cf5762a58693f41c"
+  },
+  "schema": "rabbit.f10.source_bundle.v1",
+  "solver_research_archive": {
+    "entry_count": 257,
+    "internal_bundle_heads": [
+      {
+        "commit": "b8f11b03d9d59746c4ceddbb0712dfbd3f5386ab",
+        "ref": "refs/heads/research/solver-algorithm-loop"
+      }
+    ],
+    "internal_bundle_verified": true,
+    "internal_exprb_sha256": "f1e699b0bfb2a207cdf1252151c4c88f3bdbb9bcd47577f4719be8b0d6f0d8ca",
+    "internal_history_bundle_sha256": "0963576beb9dbffc49b6a3c474da947259385f97ecd7075e675de76004e8e5c0",
+    "internal_history_commit": "b8f11b03d9d59746c4ceddbb0712dfbd3f5386ab",
+    "internal_history_ref": "research/solver-algorithm-loop",
+    "internal_jvp_sha256": "50d77af42e0deef88beff2f10d8572ec46e727c68d0d7fda81d12f9e4bd8efde",
+    "internal_manifest": "RABBIT_F10_SolverAlgorithm_Blocker_Research_Loop_2026-08-06/REPRODUCIBILITY_MANIFEST.json",
+    "internal_manifest_sha256": "0a33120486d611a5bdc6e5e20a23d203e0554e4f169cb8c7abe47dfe608a315f",
+    "path": "RABBIT_F10_SolverAlgorithm_Blocker_Research_Loop_2026-08-06.zip",
+    "sha256": "8ffb9c34019e4bc9e431985df9fe69a347ced5da11f68308a1943187e3829fd8",
+    "size": 3237834
+  }
+}

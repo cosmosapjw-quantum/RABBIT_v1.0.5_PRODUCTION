@@ -1,0 +1,1380 @@
+{
+  "decision": "ADJUDICATED",
+  "criteria_sha_verified": true,
+  "items": {
+    "U1_ratchet_corruption": {
+      "leg": "v3a",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "at least 2 creep-state pinned-step observation Jacobians exist (budget-exempt, step sqrt(EPS))",
+          "value": true,
+          "evidence": {
+            "pinned_obs_jacobians": [
+              "obs_jac_1200.npz",
+              "obs_jac_2000.npz",
+              "obs_jac_3000.npz"
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "for at least 2 of those states the ratcheted columns were recomputed at the logged ratcheted factors",
+          "value": true,
+          "evidence": {
+            "ratcheted_recomputes": [
+              "ratcheted_cols_1200.npz",
+              "ratcheted_cols_2000.npz",
+              "ratcheted_cols_3000.npz"
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "sealed_text": "the relative-deviation distribution of ratcheted versus non-ratcheted columns is computed and reported",
+          "value": true,
+          "evidence": {
+            "pairs": [
+              {
+                "checkpoint": "1200",
+                "n_ratcheted_cols": 51,
+                "ratcheted_col_relative_deviation": {
+                  "median": 0.009483607186178968,
+                  "max": 0.4539000033221696,
+                  "n_over_1pct": 23,
+                  "n_over_10pct": 9
+                },
+                "note": "non-ratcheted columns identical by construction (same pinned J)"
+              },
+              {
+                "checkpoint": "2000",
+                "n_ratcheted_cols": 51,
+                "ratcheted_col_relative_deviation": {
+                  "median": 0.01641428385862463,
+                  "max": 0.5433850013193666,
+                  "n_over_1pct": 26,
+                  "n_over_10pct": 14
+                },
+                "note": "non-ratcheted columns identical by construction (same pinned J)"
+              },
+              {
+                "checkpoint": "3000",
+                "n_ratcheted_cols": 51,
+                "ratcheted_col_relative_deviation": {
+                  "median": 0.01607563316604079,
+                  "max": 234.17739586080282,
+                  "n_over_1pct": 32,
+                  "n_over_10pct": 17
+                },
+                "note": "non-ratcheted columns identical by construction (same pinned J)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "U2_p1_conjunct2": {
+      "leg": "v3a",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "U1's artifacts exist",
+          "value": true,
+          "evidence": {
+            "via": "U1 artifacts"
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "the overlap statistic between the ratcheted-component set and the top-deviation component set is computed",
+          "value": true,
+          "evidence": {
+            "ratcheted_set_size": 51,
+            "overlaps": [
+              {
+                "checkpoint": "1200",
+                "top_deviation_set": [
+                  1,
+                  42,
+                  43,
+                  45,
+                  46,
+                  47,
+                  61,
+                  102,
+                  103,
+                  105,
+                  106,
+                  107,
+                  121,
+                  162,
+                  163,
+                  165,
+                  166
+                ],
+                "overlap_with_ratcheted": 17,
+                "top_size": 17
+              },
+              {
+                "checkpoint": "2000",
+                "top_deviation_set": [
+                  1,
+                  42,
+                  44,
+                  45,
+                  46,
+                  47,
+                  61,
+                  102,
+                  104,
+                  105,
+                  106,
+                  107,
+                  121,
+                  162,
+                  164,
+                  165,
+                  166
+                ],
+                "overlap_with_ratcheted": 17,
+                "top_size": 17
+              },
+              {
+                "checkpoint": "3000",
+                "top_deviation_set": [
+                  1,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  61,
+                  103,
+                  104,
+                  105,
+                  106,
+                  107,
+                  121,
+                  163,
+                  164,
+                  165,
+                  166
+                ],
+                "overlap_with_ratcheted": 17,
+                "top_size": 17
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "U4_creep_spectrum": {
+      "leg": "v3a",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the spectral-block eigenvalues of at least one pinned-step creep-state Jacobian are computed and retained",
+          "value": true,
+          "evidence": {
+            "spectra": [
+              {
+                "file": "obs_jac_1200.npz",
+                "N": 0.16286930247517223,
+                "abscissa": -5.750232540723099,
+                "n_pos": 0,
+                "n_complex_pairs": 0
+              },
+              {
+                "file": "obs_jac_2000.npz",
+                "N": 0.16297062760991832,
+                "abscissa": -5.748477425814591,
+                "n_pos": 0,
+                "n_complex_pairs": 0
+              },
+              {
+                "file": "obs_jac_3000.npz",
+                "N": 0.1631703648662373,
+                "abscissa": -5.745025070293732,
+                "n_pos": 0,
+                "n_complex_pairs": 0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "U15b_startup_full": {
+      "leg": "v3a",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "jac_factor is logged at the init refresh",
+          "value": true,
+          "evidence": {
+            "init_rows": 1,
+            "init_factor_max_over_sqrt_eps": 100.0
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "trial, newton and factor records cover raw calls 1 through 351",
+          "value": true,
+          "evidence": {
+            "coverage": {
+              "trials_first": 223,
+              "newton_first": 223,
+              "factor_first": 221
+            },
+            "trials_within_351": 53,
+            "newton_within_351": 54
+          }
+        }
+      ]
+    },
+    "U3_base_ratchet": {
+      "leg": "v3b",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the base run reaches its terminal event or its call cap with factor logging active throughout",
+          "value": true,
+          "evidence": {
+            "stop_reason": null,
+            "solver_status": "finished",
+            "N_reached": 9.600902459542082,
+            "factor_rows": 18
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "the factor max/median trajectory across refreshes is computed",
+          "value": true,
+          "evidence": {
+            "refreshes": 18,
+            "trajectory": [
+              {
+                "tag": "init",
+                "at_raw": 183,
+                "max_over_sqrt_eps": 100.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 33,
+                "n_above_100x": 0
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 439,
+                "max_over_sqrt_eps": 1000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 33
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 599,
+                "max_over_sqrt_eps": 10000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 760,
+                "max_over_sqrt_eps": 10000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 921,
+                "max_over_sqrt_eps": 100000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1082,
+                "max_over_sqrt_eps": 1000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1241,
+                "max_over_sqrt_eps": 10000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1397,
+                "max_over_sqrt_eps": 100000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1560,
+                "max_over_sqrt_eps": 1000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1714,
+                "max_over_sqrt_eps": 10000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 1872,
+                "max_over_sqrt_eps": 100000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2070,
+                "max_over_sqrt_eps": 1000000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2237,
+                "max_over_sqrt_eps": 10000000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2400,
+                "max_over_sqrt_eps": 100000000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2561,
+                "max_over_sqrt_eps": 1000000000000000.0,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2719,
+                "max_over_sqrt_eps": 1e+16,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 49,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 2937,
+                "max_over_sqrt_eps": 1e+17,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 51,
+                "n_above_100x": 34
+              },
+              {
+                "tag": "refresh",
+                "at_raw": 3114,
+                "max_over_sqrt_eps": 1e+18,
+                "median_over_sqrt_eps": 1.0,
+                "n_above_10x": 51,
+                "n_above_100x": 34
+              }
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "sealed_text": "whether max factor ever exceeded 100x sqrt(EPS) is reported",
+          "value": true,
+          "evidence": {
+            "base_factor_exceeded_100x": true,
+            "peak_over_sqrt_eps": 1e+18
+          }
+        }
+      ]
+    },
+    "U8b_base_domrej": {
+      "leg": "v3b",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the per-call dom_rej series is retained for the whole base leg",
+          "value": true,
+          "evidence": {
+            "rows": 3569
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "every change point is located by call index and N",
+          "value": true,
+          "evidence": {
+            "distinct_values": 95,
+            "n_changes": 124,
+            "change_points": [
+              {
+                "i": 1089,
+                "N": 1.1083486803609728,
+                "from": 972552,
+                "to": 972504
+              },
+              {
+                "i": 1091,
+                "N": 1.1957322865088431,
+                "from": 972504,
+                "to": 972408
+              },
+              {
+                "i": 1244,
+                "N": 1.2831158926567134,
+                "from": 972408,
+                "to": 972360
+              },
+              {
+                "i": 1408,
+                "N": 1.8124569343243917,
+                "from": 972360,
+                "to": 972408
+              },
+              {
+                "i": 1563,
+                "N": 1.9922635514005886,
+                "from": 972408,
+                "to": 972216
+              },
+              {
+                "i": 1565,
+                "N": 2.0821668599386873,
+                "from": 972216,
+                "to": 972264
+              },
+              {
+                "i": 1721,
+                "N": 2.036655231521179,
+                "from": 972264,
+                "to": 972216
+              },
+              {
+                "i": 1723,
+                "N": 2.08104691164177,
+                "from": 972216,
+                "to": 972264
+              },
+              {
+                "i": 1902,
+                "N": 2.2772577336092064,
+                "from": 972264,
+                "to": 972216
+              },
+              {
+                "i": 1908,
+                "N": 2.333970551397534,
+                "from": 972216,
+                "to": 972264
+              },
+              {
+                "i": 1910,
+                "N": 2.362326960291698,
+                "from": 972264,
+                "to": 972168
+              },
+              {
+                "i": 1913,
+                "N": 2.390683369185862,
+                "from": 972168,
+                "to": 972120
+              },
+              {
+                "i": 1919,
+                "N": 2.4610708234182517,
+                "from": 972120,
+                "to": 971976
+              },
+              {
+                "i": 2073,
+                "N": 2.4962645505344465,
+                "from": 971976,
+                "to": 972024
+              },
+              {
+                "i": 2075,
+                "N": 2.5314582776506414,
+                "from": 972024,
+                "to": 971880
+              },
+              {
+                "i": 2079,
+                "N": 2.6303862086736696,
+                "from": 971880,
+                "to": 971784
+              },
+              {
+                "i": 2083,
+                "N": 2.729314139696698,
+                "from": 971784,
+                "to": 971736
+              },
+              {
+                "i": 2087,
+                "N": 2.848916116305024,
+                "from": 971736,
+                "to": 971592
+              },
+              {
+                "i": 2240,
+                "N": 2.919054127401836,
+                "from": 971592,
+                "to": 971544
+              },
+              {
+                "i": 2242,
+                "N": 2.9891921384986477,
+                "from": 971544,
+                "to": 971640
+              },
+              {
+                "i": 2246,
+                "N": 3.1294681606922716,
+                "from": 971640,
+                "to": 971592
+              },
+              {
+                "i": 2405,
+                "N": 3.238796018014009,
+                "from": 971592,
+                "to": 971640
+              },
+              {
+                "i": 2409,
+                "N": 3.3481238753357467,
+                "from": 971640,
+                "to": 971496
+              },
+              {
+                "i": 2411,
+                "N": 3.4027878039966155,
+                "from": 971496,
+                "to": 971304
+              },
+              {
+                "i": 2564,
+                "N": 3.4574517326574843,
+                "from": 971304,
+                "to": 971352
+              },
+              {
+                "i": 2567,
+                "N": 3.4326271537439945,
+                "from": 971352,
+                "to": 971304
+              },
+              {
+                "i": 2722,
+                "N": 3.4527068224685102,
+                "from": 971304,
+                "to": 971352
+              },
+              {
+                "i": 2729,
+                "N": 3.4388076190461625,
+                "from": 971352,
+                "to": 971400
+              },
+              {
+                "i": 2731,
+                "N": 3.4449880843483305,
+                "from": 971400,
+                "to": 971352
+              },
+              {
+                "i": 2741,
+                "N": 3.4630892545462366,
+                "from": 971352,
+                "to": 971304
+              },
+              {
+                "i": 2743,
+                "N": 3.4679455816462514,
+                "from": 971304,
+                "to": 971208
+              },
+              {
+                "i": 2745,
+                "N": 3.476071630033736,
+                "from": 971208,
+                "to": 971256
+              },
+              {
+                "i": 2747,
+                "N": 3.4841976784212205,
+                "from": 971256,
+                "to": 971304
+              },
+              {
+                "i": 2749,
+                "N": 3.492323726808705,
+                "from": 971304,
+                "to": 971256
+              },
+              {
+                "i": 2753,
+                "N": 3.508575823583674,
+                "from": 971256,
+                "to": 971304
+              },
+              {
+                "i": 2759,
+                "N": 3.5398916614905325,
+                "from": 971304,
+                "to": 971256
+              },
+              {
+                "i": 2763,
+                "N": 3.5630814510099063,
+                "from": 971256,
+                "to": 971352
+              },
+              {
+                "i": 2769,
+                "N": 3.6065599178845806,
+                "from": 971352,
+                "to": 971304
+              },
+              {
+                "i": 2771,
+                "N": 3.6268485952398812,
+                "from": 971304,
+                "to": 971160
+              },
+              {
+                "i": 2773,
+                "N": 3.647137272595182,
+                "from": 971160,
+                "to": 971112
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "U5_late_epoch_map": {
+      "leg": "v3c",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "all 6 segments ran to their cap or a terminal condition with factor and rhs logs",
+          "value": true,
+          "evidence": {
+            "segments": {
+              "0.5": "../v3_out/v3c_N0.5/domain",
+              "1.0": "../v3_out/v3c_N1.0/domain",
+              "2.0": "../v3_out/v3c_N2.0/domain",
+              "3.0": "../v3_out/v3c_N3.0/domain",
+              "5.0": "../v3_out/v3c_N5.0/domain",
+              "7.0": "../v3_out/v3c_N7.0/domain"
+            }
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "each segment is classified by the sealed thresholds below",
+          "value": true,
+          "evidence": {
+            "classification": {
+              "0.5": {
+                "class": "CREEP",
+                "N_per_call": 2.0271862042025817e-06,
+                "ratchet": true,
+                "stop_reason": "call_cap:1500",
+                "N_reached": 0.5020094941145203,
+                "raw_calls": 1500
+              },
+              "1.0": {
+                "class": "CREEP",
+                "N_per_call": 6.621098437187167e-06,
+                "ratchet": true,
+                "stop_reason": "call_cap:1500",
+                "N_reached": 1.006531526662442,
+                "raw_calls": 1500
+              },
+              "2.0": {
+                "class": "AMBIGUOUS",
+                "N_per_call": 8.685817893628156e-05,
+                "ratchet": true,
+                "stop_reason": "call_cap:1500",
+                "N_reached": 2.0865739009296265,
+                "raw_calls": 1500
+              },
+              "3.0": {
+                "class": "NORMAL",
+                "N_per_call": 0.0005991105544269774,
+                "ratchet": true,
+                "stop_reason": "call_cap:1500",
+                "N_reached": 3.58871970151878,
+                "raw_calls": 1500
+              },
+              "5.0": {
+                "class": "NORMAL",
+                "N_per_call": 0.0054577727871198975,
+                "ratchet": true,
+                "stop_reason": null,
+                "N_reached": 9.600902459542082,
+                "raw_calls": 1066
+              },
+              "7.0": {
+                "class": "NORMAL",
+                "N_per_call": 0.0192659441447561,
+                "ratchet": false,
+                "stop_reason": null,
+                "N_reached": 9.600902459542082,
+                "raw_calls": 352
+              }
+            },
+            "thresholds": {
+              "creep_if_N_per_call_below": 1e-05,
+              "normal_if_N_per_call_above": 0.0001,
+              "between_is": "AMBIGUOUS",
+              "ratchet_if_factor_exceeds_x_sqrt_eps": 100,
+              "rate_window": "integration calls after the init Jacobian, first 1000"
+            }
+          }
+        },
+        {
+          "index": 2,
+          "sealed_text": "every segment report carries the constructed-initial-condition caveat",
+          "value": true,
+          "evidence": {
+            "segments_missing_caveat": []
+          }
+        }
+      ]
+    },
+    "U6_v2_repro_creep": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "V2 prints are compared to the r4 reference at every overlapping index including 951-1201",
+          "value": true,
+          "evidence": {
+            "compared": 25,
+            "mismatches": [],
+            "skipped": [],
+            "creep_window_compared": [
+              951,
+              1001,
+              1051,
+              1101,
+              1151,
+              1201
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "skipped indices are counted, not silently dropped",
+          "value": true,
+          "evidence": {
+            "skipped_counted": [],
+            "n_skipped": 0
+          }
+        }
+      ]
+    },
+    "U7_drop_closure": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the r4 print sequence over evals 701-1001 is aligned against V2 trial/accepted records",
+          "value": true,
+          "evidence": {
+            "alignment": [
+              {
+                "eval": 701,
+                "printed_N": "0.1628",
+                "matches_trial": [
+                  {
+                    "t": 0.1628218629868731,
+                    "outcome": "newton_failure",
+                    "raw": 524
+                  },
+                  {
+                    "t": 0.16282186298687312,
+                    "outcome": "accepted",
+                    "raw": 714
+                  },
+                  {
+                    "t": 0.1628399351728918,
+                    "outcome": "accepted",
+                    "raw": 925
+                  }
+                ],
+                "matches_accepted": [
+                  {
+                    "t": 0.16282186298687312,
+                    "raw": 714
+                  },
+                  {
+                    "t": 0.1628399351728918,
+                    "raw": 925
+                  }
+                ]
+              },
+              {
+                "eval": 751,
+                "printed_N": "0.1813",
+                "matches_trial": [
+                  {
+                    "t": 0.1813277814700145,
+                    "outcome": "newton_failure",
+                    "raw": 904
+                  }
+                ],
+                "matches_accepted": []
+              },
+              {
+                "eval": 801,
+                "printed_N": "0.1813",
+                "matches_trial": [
+                  {
+                    "t": 0.1813277814700145,
+                    "outcome": "newton_failure",
+                    "raw": 904
+                  }
+                ],
+                "matches_accepted": []
+              },
+              {
+                "eval": 851,
+                "printed_N": "0.1813",
+                "matches_trial": [
+                  {
+                    "t": 0.1813277814700145,
+                    "outcome": "newton_failure",
+                    "raw": 904
+                  }
+                ],
+                "matches_accepted": []
+              },
+              {
+                "eval": 901,
+                "printed_N": "0.1813",
+                "matches_trial": [
+                  {
+                    "t": 0.1813277814700145,
+                    "outcome": "newton_failure",
+                    "raw": 904
+                  }
+                ],
+                "matches_accepted": []
+              },
+              {
+                "eval": 951,
+                "printed_N": "0.1629",
+                "matches_trial": [
+                  {
+                    "t": 0.1628941517309479,
+                    "outcome": "newton_failure",
+                    "raw": 921
+                  },
+                  {
+                    "t": 0.1628580073589105,
+                    "outcome": "newton_failure",
+                    "raw": 923
+                  },
+                  {
+                    "t": 0.16285800735891048,
+                    "outcome": "accepted",
+                    "raw": 927
+                  }
+                ],
+                "matches_accepted": [
+                  {
+                    "t": 0.16285800735891048,
+                    "raw": 927
+                  },
+                  {
+                    "t": 0.16285913687053666,
+                    "raw": 1123
+                  },
+                  {
+                    "t": 0.16286026638216283,
+                    "raw": 1125
+                  }
+                ]
+              },
+              {
+                "eval": 1001,
+                "printed_N": "0.1629",
+                "matches_trial": [
+                  {
+                    "t": 0.1628941517309479,
+                    "outcome": "newton_failure",
+                    "raw": 921
+                  },
+                  {
+                    "t": 0.1628580073589105,
+                    "outcome": "newton_failure",
+                    "raw": 923
+                  },
+                  {
+                    "t": 0.16285800735891048,
+                    "outcome": "accepted",
+                    "raw": 927
+                  }
+                ],
+                "matches_accepted": [
+                  {
+                    "t": 0.16285800735891048,
+                    "raw": 927
+                  },
+                  {
+                    "t": 0.16285913687053666,
+                    "raw": 1123
+                  },
+                  {
+                    "t": 0.16286026638216283,
+                    "raw": 1125
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "the 0.1813 print and the 0.1629 print are each assigned to a trial or an accepted state with evidence",
+          "value": true,
+          "evidence": {
+            "0.1813": {
+              "print": "0.1813",
+              "assignment": "trial",
+              "evidence": {
+                "eval": 751,
+                "printed_N": "0.1813",
+                "matches_trial": [
+                  {
+                    "t": 0.1813277814700145,
+                    "outcome": "newton_failure",
+                    "raw": 904
+                  }
+                ],
+                "matches_accepted": []
+              }
+            },
+            "0.1629": {
+              "print": "0.1629",
+              "assignment": "accepted",
+              "evidence": {
+                "eval": 951,
+                "printed_N": "0.1629",
+                "matches_trial": [
+                  {
+                    "t": 0.1628941517309479,
+                    "outcome": "newton_failure",
+                    "raw": 921
+                  },
+                  {
+                    "t": 0.1628580073589105,
+                    "outcome": "newton_failure",
+                    "raw": 923
+                  },
+                  {
+                    "t": 0.16285800735891048,
+                    "outcome": "accepted",
+                    "raw": 927
+                  }
+                ],
+                "matches_accepted": [
+                  {
+                    "t": 0.16285800735891048,
+                    "raw": 927
+                  },
+                  {
+                    "t": 0.16285913687053666,
+                    "raw": 1123
+                  },
+                  {
+                    "t": 0.16286026638216283,
+                    "raw": 1125
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "U8a_v2_domrej": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "dom_rej distinct values and change points over V2's 4,003 calls are computed",
+          "value": true,
+          "evidence": {
+            "rows": 4003,
+            "distinct": 1,
+            "n_changes": 0,
+            "change_points": []
+          }
+        }
+      ]
+    },
+    "U9_scipy_version_diff": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the num_jac and BDF sources of 1.17.0 and 1.17.1 are diffed without installing 1.17.1",
+          "value": true,
+          "evidence": {
+            "artifact": "U9_scipy_version_diff.json",
+            "fields_present": [
+              "versions_compared",
+              "num_jac_diff_lines",
+              "bdf_diff_lines"
+            ],
+            "payload_excerpt": {
+              "versions_compared": [
+                "scipy 1.17.0 (installed at /home/cosmosapjw/.local/lib/python3.12/site-packages/scipy/integrate/_ivp/)",
+                "scipy 1.17.1 (source extracted from wheel scipy-1.17.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl, downloaded via pip download --no-deps --only-binary :all:, NOT installed)"
+              ],
+              "num_jac_diff_lines": [],
+              "bdf_diff_lines": []
+            }
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "behavioural differences or their absence are stated with line references",
+          "value": true,
+          "evidence": {
+            "artifact": "U9_scipy_version_diff.json",
+            "fields_present": [
+              "behavioural_difference",
+              "verdict",
+              "line_references"
+            ],
+            "payload_excerpt": {
+              "behavioural_difference": "NONE",
+              "verdict": "NO. scipy/integrate/_ivp/common.py and scipy/integrate/_ivp/bdf.py are byte-for-byte identical between the installed 1.17.0 and the 1.17.1 wheel that r4 recorded (empty unified diffs; equal md5 sums). The num_jac step-factor ratchet (persistent per-component factor multiplied by NUM_JAC_FACTOR_INCREASE=10 when max_diff < NUM_JAC_DIFF_SMALL*scale, floored only at NUM_JAC_MIN_FACTOR with no upper cap) and the entire BDF._step_impl control flow are unchanged, so the 1.17.0 vs 1.17.1 version difference cannot change the ratchet behaviour or the stall. The stall diagnosis transfers exactly between the two versions.",
+              "line_references": [
+                "common.py:260-265 (NUM_JAC_* constants, identical in both versions)",
+                "common.py:268 (def num_jac)",
+                "common.py:332-333 (zero-step 'factor[i] *= 10' loop inside num_jac)",
+                "common.py:343 (def _dense_num_jac)",
+                "common.py:353-370 (diff_too_small branch: new_factor = NUM_JAC_FACTOR_INCREASE * factor[ind], factor[update_ind] = new_factor[update])",
+                "common.py:378-380 (ratchet: factor *= NUM_JAC_FACTOR_INCREASE when diff small, *= NUM_JAC_FACTOR_DECREASE when big, np.maximum floor at NUM_JAC_MIN_FACTOR; no upper cap)",
+                "common.py:385,405-449 (same logic mirrored in _sparse_num_jac)",
+                "bdf.py:219 (self.jac_factor = None \u2014 persistent ratchet state across Jacobian refreshes)",
+                "bdf.py:272 (J, self.jac_factor = num_jac(...) \u2014 factor fed back each refresh)",
+                "bdf.py:309 (def _step_impl)",
+                "bdf.py:336,362-375 (Newton convergence loop and Jacobian refresh on failure)",
+                "bdf.py:377-382 (non-convergence: factor = 0.5, n_equal_steps = 0, LU = None)",
+                "bdf.py:393-403,421,440-448 (error-based step factor, n_equal_steps gating, order selection delta_order)"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "U10_factor_lifetime": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the storage site of jac_factor is identified with line references",
+          "value": true,
+          "evidence": {
+            "artifact": "U10_factor_lifetime.json",
+            "fields_present": [
+              "storage_site",
+              "line_references"
+            ],
+            "payload_excerpt": {
+              "storage_site": "Per-solver-instance attribute `self.jac_factor` on the BDF (and Radau) solver object. Initialized to None in BDF.__init__ at bdf.py:219 (`self.jac_factor = None`; Radau equivalent at radau.py:318). Updated inside the finite-difference closure `jac_wrapped` at bdf.py:272-274: `J, self.jac_factor = num_jac(self.fun_vectorized, t, y, f, self.atol, self.jac_factor, sparsity)` (Radau equivalent at radau.py:361-362). num_jac itself (common.py:268) holds no state: it copies the incoming array (common.py:319 `factor = factor.copy()`) and returns the updated copy (common.py:382 dense / common.py:451 sparse). The OdeSolver base class (base.py:135-170) defines no jac_factor; grep of base.py finds zero occurrences. No module-level or global mutable state exists; only the constants NUM_JAC_* at common.py:260-265 are module-level.",
+              "line_references": [
+                "bdf.py:219 -- self.jac_factor = None (per-instance init in BDF.__init__)",
+                "bdf.py:272-274 -- J, self.jac_factor = num_jac(...) inside jac_wrapped closure (only writer of the attribute)",
+                "radau.py:318 -- self.jac_factor = None (Radau shares the mechanism)",
+                "radau.py:361-362 -- Radau's num_jac call updating self.jac_factor",
+                "base.py:135-170 -- OdeSolver.__init__: no jac_factor attribute; base class holds no FD-step state",
+                "common.py:260 -- NUM_JAC_DIFF_REJECT = EPS ** 0.875 (retry threshold)",
+                "common.py:261 -- NUM_JAC_DIFF_SMALL = EPS ** 0.75 (x10 ratchet threshold)",
+                "common.py:262 -- NUM_JAC_DIFF_BIG = EPS ** 0.25 (x0.1 decrease threshold)",
+                "common.py:263 -- NUM_JAC_MIN_FACTOR = 1e3 * EPS (lower floor; no upper cap exists)",
+                "common.py:264 -- NUM_JAC_FACTOR_INCREASE = 10",
+                "common.py:265 -- NUM_JAC_FACTOR_DECREASE = 0.1",
+                "common.py:316-317 -- factor is None -> np.full(n, EPS ** 0.5) (the only sqrt(EPS) reset, at instance start)",
+                "common.py:319 -- factor = factor.copy() (num_jac is stateless; state lives on the solver instance)",
+                "common.py:330-333 -- zero-step guard: while h[i] == 0: factor[i] *= 10",
+                "common.py:353 -- diff_too_small = max_diff < NUM_JAC_DIFF_REJECT * scale (retry trigger)",
+                "common.py:356 -- new_factor = NUM_JAC_FACTOR_INCREASE * factor[ind] (x10 retry)",
+                "common.py:366,370 -- retry x10 adopted only if max_diff[ind]*scale_new < max_diff_new*scale[ind]",
+                "common.py:378 -- factor[max_diff < NUM_JAC_DIFF_SMALL * scale] *= NUM_JAC_FACTOR_INCREASE (the per-refresh decade ratchet, dense)",
+                "common.py:379 -- factor[max_diff > NUM_JAC_DIFF_BIG * scale] *= NUM_JAC_FACTOR_DECREASE (the only decrease, dense)",
+                "common.py:380 -- factor = np.maximum(factor, NUM_JAC_MIN_FACTOR) (floor, dense)",
+                "common.py:382 -- return diff, factor (updated copy returned to caller)",
+                "common.py:447-449,451 -- sparse-path mirrors of the increase/decrease/floor/return",
+                "lsoda.py:3-4 -- imports from .common exclude num_jac; LSODA has no jac_factor",
+                "lsoda.py:141-144 -- ode(self.fun, jac).set_integrator('lsoda', ...) (delegation to ODEPACK)",
+                "_ode.py:92 -- from ._odepack import lsoda as lsoda_step (compiled Fortran entry)",
+                "_ode.py:1237-1238 -- class lsoda(IntegratorBase): runner = lsoda_step"
+              ]
+            }
+          }
+        },
+        {
+          "index": 1,
+          "sealed_text": "reset semantics for a fresh solver instance are stated",
+          "value": true,
+          "evidence": {
+            "artifact": "U10_factor_lifetime.json",
+            "fields_present": [
+              "reset_on_new_instance"
+            ],
+            "payload_excerpt": {
+              "reset_on_new_instance": true
+            }
+          }
+        },
+        {
+          "index": 2,
+          "sealed_text": "whether LSODA shares the mechanism is stated",
+          "value": true,
+          "evidence": {
+            "artifact": "U10_factor_lifetime.json",
+            "fields_present": [
+              "lsoda_shares_mechanism",
+              "lsoda_explanation"
+            ],
+            "payload_excerpt": {
+              "lsoda_shares_mechanism": false,
+              "lsoda_explanation": "LSODA does not use num_jac and cannot exhibit this Python-side ratchet. The scipy.integrate._ivp.lsoda.LSODA class imports only validate_tol, validate_first_step, warn_extraneous from .common (lsoda.py:3) -- num_jac is never imported or called, and LSODA sets no jac_factor attribute. Instead LSODA.__init__ wraps the ODEPACK Fortran solver: `solver = ode(self.fun, jac); solver.set_integrator('lsoda', ...)` (lsoda.py:141-144), stepping via the compiled integrator (lsoda.py:153-164). The 'lsoda' integrator class (scipy/integrate/_ode.py:1237-1238) has `runner = lsoda_step` imported from the compiled extension `scipy.integrate._odepack` (_ode.py:92; binary _odepack.cpython-312-x86_64-linux-gnu.so). With jac=None, the finite-difference Jacobian is formed entirely inside ODEPACK's Fortran PRJA routine, whose increment is recomputed FRESH at every Jacobian evaluation from the current state and error weights (r_j = max(sqrt(uround)*|y_j|, r0/ewt_j), with r0 built from h, uround and the weighted norm of f) -- there is no per-component multiplier persisted between Jacobian refreshes, hence no state that can ratchet across the run. Production-adjacent LSODA/ODEPACK codes therefore would NOT be exposed to this specific runaway; the stateful step-factor ratchet is specific to SciPy's Python num_jac used by the BDF and Radau solve_ivp methods."
+            }
+          }
+        }
+      ]
+    },
+    "U12_h_nonrecovery": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the order-pinning mechanism (n_equal_steps reset on failure) is documented from bdf.py control flow together with V2 event counts",
+          "value": true,
+          "evidence": {
+            "artifact": "U12_h_nonrecovery.json",
+            "fields_present": [
+              "control_flow_lines",
+              "v2_counts",
+              "max_reachable_order_given_failures",
+              "closure_statement"
+            ],
+            "payload_excerpt": {
+              "control_flow_lines": [
+                "bdf.py L12-L15: constants MAX_ORDER=5, NEWTON_MAXITER=4, MIN_FACTOR=0.2, MAX_FACTOR=10 bound everything below.",
+                "bdf.py L362-L368: inner Newton loop; solve_bdf_system (L36-L69) returns converged=False when the iteration diverges or cannot meet tol within NEWTON_MAXITER=4 iterations.",
+                "bdf.py L370-L375: first non-convergence with a stale Jacobian refreshes J (self.jac(t_new, y_predict)) and retries at the SAME h; this path does NOT touch n_equal_steps. In V2, 19 of 69 non-converged Newton calls took this path (jac_was_current=false).",
+                "bdf.py L377-L383: Newton failure with a current Jacobian: factor=0.5; h_abs *= 0.5 (L378-L379); change_D(D, order, 0.5) (L380); self.n_equal_steps = 0 (L381); LU=None; continue. This is the reset that guards the order/step-size logic: every convergence failure halves h AND zeroes the equal-step counter. 50 of 69 non-converged calls ended here (the 50 trial-level 'newton_failure' outcomes).",
+                "bdf.py L392-L399: error-test rejection (error_norm > 1) also shrinks h and sets self.n_equal_steps = 0 (L397). Zero occurrences in the V2 run (no error_norm > 1 in step_events.jsonl).",
+                "bdf.py L403: on an accepted step, self.n_equal_steps += 1 is the ONLY place the counter increases.",
+                "bdf.py L421-L422: 'if self.n_equal_steps < order + 1: return True, None' \u2014 the sole gate. Order and step size are reconsidered ONLY after order+1 consecutive accepted steps at the same h with no reset in between.",
+                "bdf.py L424-L441: when the gate opens, error norms at orders order-1/order/order+1 are compared and delta_order = argmax(factors) - 1 in {-1, 0, +1} (L440-L441): order can move at most ONE notch per selection.",
+                "bdf.py L444-L448: factor = min(MAX_FACTOR=10, safety * max(factors)); self.h_abs *= factor; change_D; self.n_equal_steps = 0. This block is the ONLY place h_abs can INCREASE \u2014 h growth is gated behind the same n_equal_steps >= order+1 condition, and each selection re-zeroes the counter.",
+                "bdf.py L315-L322 and L346-L350: max_step/min_step/t_bound clamp paths also reset n_equal_steps = 0; not exercised in V2 (h stayed within [min_step, max_step], t_bound not approached)."
+              ],
+              "v2_counts": {
+                "accepted": 92,
+                "newton_failures": 50,
+                "newton_nonconverged_calls_raw": 69,
+                "newton_failures_recovered_by_in_trial_jac_refresh": 19,
+                "n_equal_steps_resets": {
+                  "newton_failure_L381": 50,
+                  "order_stepsize_selection_L447": 34,
+                  "error_test_rejection_L397": 0,
+                  "step_clamp_L318_L322_L349": 0,
+                  "total": 84,
+                  "counter_value_when_newton_failure_hit": {
+                    "0": 45,
+                    "1": 2,
+                    "2": 3
+                  }
+                },
+                "creep_order_distribution": {
+                  "1": 21,
+                  "2": 5,
+                  "3": 4,
+                  "4": 5
+                },
+                "creep_window_definition": "accepted steps with raw > 951 (35 accepted steps)",
+                "creep_median_order": 1,
+                "creep_trial_newton_failures": 39,
+                "creep_failure_bursts": 15,
+                "longest_clean_run": 53,
+                "longest_clean_run_note": "The 53-step run is the failure-free startup transient (accepted raws 223-330, before the first Newton failure at raw 332), i.e. before the jac_factor ratchet corrupted the Jacobian.",
+                "longest_clean_run_creep": 5,
+                "creep_clean_runs_between_failure_bursts": [
+                  5,
+                  5,
+                  4,
+                  2,
+                  2,
+                  2,
+                  2,
+                  2,
+                  2,
+                  2,
+                  2,
+                  2,
+                  1,
+                  1,
+                  1
+                ],
+                "creep_mean_accepted_per_burst": 2.33,
+                "creep_selection_events_raw_and_order": [
+                  [
+                    1131,
+                    4
+                  ],
+                  [
+                    1328,
+                    3
+                  ],
+                  [
+                    1724,
+                    2
+                  ],
+                  [
+                    1728,
+                    1
+                  ],
+                  [
+                    1924,
+                    1
+                  ],
+                  [
+                    2120,
+                    1
+                  ],
+                  [
+                    2317,
+                    1
+                  ],
+                  [
+                    2703,
+                    1
+                  ],
+                  [
+                    2899,
+                    1
+                  ],
+                  [
+                    3096,
+                    1
+                  ],
+                  [
+                    3292,
+                    1
+                  ],
+                  [
+                    3680,
+                    1
+                  ]
+                ]
+              },
+              "max_reachable_order_given_failures": 2,
+              "closure_statement": "CLOSED. The h-non-recovery in the stalled run is fully explained by bdf.py's n_equal_steps gating interacting with the ratcheted num_jac step factor. (1) The corrupted finite-difference Jacobian (jac_factor ratcheted to ~1e19*sqrt(EPS)) makes Newton fail whenever h grows; each failure takes the L377-L383 path: h is halved and n_equal_steps is zeroed. (2) h can only ever INCREASE inside the order/step-size selection block (L444-L445, capped at x10), which is gated by n_equal_steps >= order+1 (L421) \u2014 so every failure not only shrinks h, it also postpones the only h-growth opportunity. (3) In the V2 creep (raw > 951) the measured failure arrival is one burst per ~2.3 accepted steps (15 bursts vs 35 accepts; clean-run median 2, max 5). At that rate only the order-1 gate (2 clean steps) can open, so the maximum sustainable order is 2 and even order 3 needs the one 5-step window that never produced an upward selection; the inherited pre-creep order 4 instead collapsed one notch per selection (4->3 at raw 1131, 3->2 at 1328, 2->1 at 1724) because delta_order is bounded at -1 per selection (L440-441). (4) Thereafter the run is a limit cycle: 2 accepts at order 1 -> selection fires with factor 10 (h x10, counter zeroed) -> Newton immediately fails at the boosted h -> 1-4 halvings (h /2 to /16) -> 2 accepts -> repeat. Net h drifts from 1.1e-06 to only 3.3e-05 over ~3000 RHS calls and the order is pinned at 1. Prediction (max sustainable order 2, pinned in practice at 1) matches the measured creep order distribution {1:21, 2:5, 3:4, 4:5} with median 1 \u2014 the higher-order accepts are exactly the decaying 4->3->2->1 front, not upward mobility."
+            }
+          }
+        }
+      ]
+    },
+    "U13_threshold_recal": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "the pre-creep steady-window h median and the Newton-rate distribution are computed from V2 data and recorded as V3 design input, not as a V2 re-adjudication",
+          "value": true,
+          "evidence": {
+            "design_input_not_readjudication": true,
+            "steady_window_calls": "351-900",
+            "h_median_steady": 0.01850591848314137,
+            "h_median_creep": 1.1030386974281159e-05,
+            "newton_nonconv_rate_steady": 1.5,
+            "newton_nonconv_rate_creep": 1.542857142857143
+          }
+        }
+      ]
+    },
+    "U15a_startup_v2": {
+      "leg": "tier0",
+      "status": "CLOSED",
+      "conditions": [
+        {
+          "index": 0,
+          "sealed_text": "V2's calls 1-351 are characterised from trial/newton data, with the unavailability of factor logs in that window recorded",
+          "value": true,
+          "evidence": {
+            "trials": 53,
+            "outcomes": {
+              "accepted": 53
+            },
+            "newton_calls": 54,
+            "newton_nonconv": 1,
+            "h_first": 5.996057500575721e-22,
+            "h_at_351": 0.022037689252400135,
+            "factor_availability": "V2 logged jac_factor only at refreshes (first at call 521); startup factor evolution unavailable there, RECORDED AS SUCH; V3a's init-tagged log closes it going forward"
+          }
+        }
+      ]
+    }
+  },
+  "counts": {
+    "CLOSED": 15,
+    "PARTIAL": 0,
+    "UNMEASURED": 0
+  },
+  "excluded": {
+    "X1": "gated physical question -- D-071 sealed-contract requirement",
+    "X2": "order-48 vs 60 quadrature on distorted spectrum -- adjacent to X1",
+    "X3": "harness conjuncts and adjudicator recruitment -- decisions, not measurements",
+    "X4": "any repair of the pathology -- disqualified by D-071 and V0 section 7",
+    "X5": "re-adjudicating V2 -- sealed letters are immutable"
+  },
+  "claim_ceiling": "diagnostic evidence only; cannot satisfy any D-071 reopen conjunct; no repair is licensed; implies_status null"
+}
