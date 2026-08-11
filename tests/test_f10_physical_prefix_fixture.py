@@ -98,3 +98,29 @@ def test_prepare_writes_only_prospective_inputs_before_receipts():
         assert (output / "PREFIX_CONTRACT.sha256").read_text().endswith(
             "  " + (output / "PREFIX_CONTRACT.json").relative_to(repo).as_posix() + "\n"
         )
+
+
+def test_receipt_evaluator_matches_frozen_rhs_on_real_collision_state():
+    """Catch sign, chain, layout, temperature, or energy-transfer RHS drift."""
+
+    setup = core.build_setup(
+        order=8,
+        y_max=8.0,
+        incoming_polar_order=2,
+        final_polar_order=2,
+        electron_radial_order=8,
+        label="test",
+    )
+    _, state = core.initial_state(setup)
+    observed = fixture.evaluate_physical_state(setup, 0.0, state)
+    stats = core.Stats()
+    expected = core.make_rhs(setup, stats, core.Deadline(600.0))(0.0, state)
+
+    np.testing.assert_array_equal(observed.rhs, expected)
+    assert observed.occupations_strict_open
+    assert observed.occupation_min > 0.0
+    assert observed.occupation_max < 1.0
+    assert np.isfinite(observed.first_law_residual)
+    assert observed.equilibrium_tail_number_fraction > 0.0
+    assert observed.equilibrium_tail_energy_fraction > 0.0
+    assert not observed.reaction_tail_authority_validated

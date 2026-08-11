@@ -12,7 +12,7 @@ import hashlib
 import io
 import json
 import subprocess
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from collections.abc import Mapping
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
@@ -141,6 +141,139 @@ def load_numeric_npz(path: Path) -> dict[str, np.ndarray]:
     if any(array.dtype.hasobject for array in arrays.values()):
         raise ValueError("object dtype is forbidden in a sealed NPZ fixture")
     return arrays
+
+
+@dataclass(frozen=True)
+class PhysicalEvaluation:
+    """One direct evaluation of the frozen physical collision/RHS path."""
+
+    N: float
+    state: np.ndarray
+    pair_cloglog: np.ndarray
+    temperature_cm_mev: float
+    temperature_gamma_mev: float
+    elapsed_time_mev_inverse: float
+    occupations: np.ndarray
+    occupation_min: float
+    occupation_max: float
+    occupations_strict_open: bool
+    rhs: np.ndarray
+    collision_electron: np.ndarray
+    collision_self_interaction: np.ndarray
+    collision_total: np.ndarray
+    collision_modal_total: np.ndarray
+    electron_bath_energy_transfer: float
+    first_law_residual: float
+    whole_reaction_domain_rejections: int
+    matrix_roundoff_corrections: int
+    largest_matrix_roundoff_correction: float
+    equilibrium_tail_number_fraction: float
+    equilibrium_tail_energy_fraction: float
+    tail_edge_relative_distortion_max: float
+    tail_edge_occupation_max: float
+    reaction_tail_authority_validated: bool
+    collision_diagnostics: dict[str, float]
+
+
+def evaluate_physical_state(
+    setup: core.Setup, N: float, state: np.ndarray
+) -> PhysicalEvaluation:
+    """Evaluate the frozen collision action and its full trajectory RHS once."""
+
+    expansion = float(N)
+    packed = np.asarray(state, dtype=np.float64)
+    if not np.isfinite(expansion):
+        raise ValueError("N must be finite")
+    if packed.shape != (setup.state_size,) or not np.all(np.isfinite(packed)):
+        raise ValueError("state must be a finite vector with the frozen layout")
+    pair_cloglog, temperature_gamma, elapsed_time = core.unpack(setup, packed)
+    temperature_cm = setup.t_start * float(np.exp(-expansion))
+    occupations = ind.cloglog_to_occupation(pair_cloglog)
+    strict_open = bool(
+        np.all(np.isfinite(occupations))
+        and np.all(occupations > 0.0)
+        and np.all(occupations < 1.0)
+    )
+    if not strict_open:
+        raise ind.IndependentNoQkeError("occupation left the strict-open domain")
+
+    action = ind.evaluate_independent_collision_action(
+        grid=setup.grid,
+        pair_cloglog=pair_cloglog,
+        temperature_cm_mev=temperature_cm,
+        temperature_gamma_mev=temperature_gamma,
+        config=setup.config,
+    )
+    thermo = ind.independent_thermodynamics(
+        grid=setup.grid,
+        pair_cloglog=pair_cloglog,
+        temperature_cm_mev=temperature_cm,
+        temperature_gamma_mev=temperature_gamma,
+    )
+    total = np.asarray(action.total)
+    pair_rate = 0.5 * np.stack(
+        (total[0] + total[1], total[2] + total[3], total[4] + total[5])
+    )
+    chain = ind.cloglog_chain_factor(pair_cloglog)
+    dc_dN = pair_rate / (thermo.hubble_mev * chain)
+    eos = ind.electromagnetic_eos_adaptive(temperature_gamma)
+    dtemperature_gamma_dN = (
+        -3.0 * (eos.rho + eos.pressure)
+        + action.electron_bath_energy_transfer / thermo.hubble_mev
+    ) / eos.drho_dtemperature
+    rhs = np.concatenate(
+        (dc_dN.ravel(), [dtemperature_gamma_dN, 1.0 / thermo.hubble_mev])
+    )
+    if rhs.shape != packed.shape or not np.all(np.isfinite(rhs)):
+        raise ind.IndependentNoQkeError("physical RHS is nonfinite or wrong-shaped")
+
+    equilibrium = 1.0 / (1.0 + np.exp(setup.grid.nodes))
+    tail_slice = slice(max(0, setup.order - 4), setup.order)
+    tail_scale = np.maximum(equilibrium[tail_slice], np.finfo(np.float64).tiny)
+    tail_distortion = np.abs(
+        occupations[:, tail_slice] - equilibrium[None, tail_slice]
+    ) / tail_scale[None, :]
+    diagnostics = {
+        str(name): float(value) for name, value in action.diagnostics.items()
+    }
+    return PhysicalEvaluation(
+        N=expansion,
+        state=packed.copy(),
+        pair_cloglog=np.asarray(pair_cloglog, dtype=np.float64).copy(),
+        temperature_cm_mev=float(temperature_cm),
+        temperature_gamma_mev=float(temperature_gamma),
+        elapsed_time_mev_inverse=float(elapsed_time),
+        occupations=np.asarray(occupations, dtype=np.float64).copy(),
+        occupation_min=float(np.min(occupations)),
+        occupation_max=float(np.max(occupations)),
+        occupations_strict_open=strict_open,
+        rhs=np.asarray(rhs, dtype=np.float64),
+        collision_electron=np.asarray(action.electron, dtype=np.float64).copy(),
+        collision_self_interaction=np.asarray(
+            action.self_interaction, dtype=np.float64
+        ).copy(),
+        collision_total=np.asarray(action.total, dtype=np.float64).copy(),
+        collision_modal_total=np.asarray(action.modal_total, dtype=np.float64).copy(),
+        electron_bath_energy_transfer=float(action.electron_bath_energy_transfer),
+        first_law_residual=float(diagnostics["first_law_residual"]),
+        whole_reaction_domain_rejections=int(
+            action.whole_reaction_domain_rejections
+        ),
+        matrix_roundoff_corrections=int(action.matrix_roundoff_corrections),
+        largest_matrix_roundoff_correction=float(
+            action.largest_matrix_roundoff_correction
+        ),
+        equilibrium_tail_number_fraction=core.equilibrium_tail_fraction(
+            setup.y_max, power=2
+        ),
+        equilibrium_tail_energy_fraction=core.equilibrium_tail_fraction(
+            setup.y_max, power=3
+        ),
+        tail_edge_relative_distortion_max=float(np.max(tail_distortion)),
+        tail_edge_occupation_max=float(np.max(occupations[:, tail_slice])),
+        reaction_tail_authority_validated=False,
+        collision_diagnostics=diagnostics,
+    )
 
 
 def _write_json(path: Path, payload: object) -> None:
