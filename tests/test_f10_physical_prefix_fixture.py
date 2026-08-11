@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import hashlib
 import struct
+import tempfile
 from pathlib import Path
 
 import numpy as np
 import pytest
 
 from scripts.audit import f10_physical_prefix_fixture as fixture
+from scripts.audit import _trajectory_core as core
 
 
 def test_canonical_bytes_have_hand_checked_hashes():
@@ -39,4 +41,60 @@ def test_deterministic_npz_repeats_and_rejects_object_arrays(tmp_path: Path):
     with pytest.raises(ValueError, match="object dtype"):
         fixture.write_deterministic_npz(
             tmp_path / "bad.npz", {"x": np.array([{}], dtype=object)}
+        )
+
+
+def test_initial_and_catalog_manifest_use_frozen_order60_contract():
+    """Catch wrong resolution, state layout, catalogue count, or value hashing."""
+
+    setup = core.build_setup(order=60, y_max=30.0, label="f10-prefix")
+    arrays = fixture.build_initial_arrays(setup)
+    assert arrays["y"].shape == (182,)
+    assert float(arrays["N"]) == 0.0
+    assert int(arrays["order"]) == 60
+    assert int(arrays["state_dim"]) == 182
+    assert float(arrays["y_max"]) == 30.0
+
+    manifest = fixture.build_quadrature_catalog_manifest(setup)
+    assert manifest["grid"]["nodes"]["count"] == 60
+    assert manifest["grid"]["weights"]["count"] == 60
+    assert manifest["catalogs"]["self_reactions"]["count"] == 48
+    assert manifest["catalogs"]["electron_reactions"]["count"] == 18
+    assert manifest["catalogs"]["self_events"]["count"] == 27
+    assert manifest["catalogs"]["electron_events"]["count"] == 15
+
+
+def test_source_bundle_manifest_resolves_exact_archives_and_tree():
+    """Catch branch/tree drift or substitution of either retained archive."""
+
+    manifest = fixture.build_source_bundle_manifest(Path.cwd())
+    assert manifest["rabbit_source"]["commit"] == fixture.BASE_COMMIT
+    assert len(manifest["rabbit_source"]["tree_oid"]) == 40
+    assert manifest["solver_research_archive"]["sha256"] == (
+        "8ffb9c34019e4bc9e431985df9fe69a347ced5da11f68308a1943187e3829fd8"
+    )
+    assert manifest["solver_research_archive"]["internal_history_commit"] == (
+        "b8f11b03d9d59746c4ceddbb0712dfbd3f5386ab"
+    )
+    assert manifest["mathphysics_research_archive"]["sha256"] == (
+        "bb3ca057d1ecee6b11e33bba5dbcd8325a23d95dfe925bb5a235866d05ed4fb0"
+    )
+
+
+def test_prepare_writes_only_prospective_inputs_before_receipts():
+    """Catch any physical output or unsealed receipt created by preparation."""
+
+    repo = Path.cwd()
+    with tempfile.TemporaryDirectory(prefix=".f10-fixture-test-", dir=repo) as raw:
+        output = Path(raw)
+        fixture.prepare_fixture(repo, output)
+
+        contract = fixture.read_json(output / "PREFIX_CONTRACT.json")
+        assert contract["contract_status"] == "PROSPECTIVE_UNEXECUTED"
+        assert contract["static_receipt_discriminator"]["jvp"]["relative_step"] == 1e-3
+        assert contract["static_receipt_discriminator"]["arnoldi"]["krylov_dimension"] == 10
+        assert not (output / "receipts/PHYSICAL_RHS_JVP_RECEIPTS.json").exists()
+        assert not (output / "receipts/PHYSICAL_RHS_JVP_VECTORS.npz").exists()
+        assert (output / "PREFIX_CONTRACT.sha256").read_text().endswith(
+            "  " + (output / "PREFIX_CONTRACT.json").relative_to(repo).as_posix() + "\n"
         )
