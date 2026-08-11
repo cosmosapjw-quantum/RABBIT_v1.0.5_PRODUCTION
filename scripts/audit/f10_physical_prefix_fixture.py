@@ -439,6 +439,7 @@ def run_state_arnoldi_receipt(
     start_vector = np.concatenate((base.rhs, [1.0]))
     jvp_calls: list[dict[str, object]] = []
     vectors: dict[str, np.ndarray] = {
+        "arnoldi_start_vector": start_vector,
         "base_collision_total": base.collision_total,
         "base_occupations": base.occupations,
         "base_rhs": base.rhs,
@@ -459,12 +460,32 @@ def run_state_arnoldi_receipt(
         )
         shifted_N = float(N) + epsilon * float(vector[-1])
         shifted_state = packed + epsilon * vector[:-1]
-        shifted = evaluate_physical_state(setup, shifted_N, shifted_state)
-        delta = shifted.rhs - base.rhs
-        result = np.concatenate((delta / epsilon, [0.0]))
         call_index = len(jvp_calls)
         prefix = f"jvp_{call_index:02d}"
         vectors[f"{prefix}_direction"] = vector.copy()
+        vectors[f"{prefix}_shifted_state"] = shifted_state
+        attempt: dict[str, object] = {
+            "call_index": call_index,
+            "scheme": "forward_time_augmented",
+            "epsilon": float(epsilon),
+            "direction_norm": vector_norm,
+            "shifted_N": shifted_N,
+            "shifted_state_sha256": sha256_bytes(float64_le_bytes(shifted_state)),
+        }
+        try:
+            shifted = evaluate_physical_state(setup, shifted_N, shifted_state)
+        except Exception as error:
+            attempt.update(
+                {
+                    "status": "ERROR_RETAINED",
+                    "error_type": type(error).__name__,
+                    "error_message": str(error),
+                }
+            )
+            jvp_calls.append(attempt)
+            raise
+        delta = shifted.rhs - base.rhs
+        result = np.concatenate((delta / epsilon, [0.0]))
         vectors[f"{prefix}_jvp"] = result
         vectors[f"{prefix}_shifted_collision_total"] = shifted.collision_total
         vectors[f"{prefix}_shifted_rhs"] = shifted.rhs
@@ -477,16 +498,9 @@ def run_state_arnoldi_receipt(
         subtractive_condition = (
             None if difference_norm == 0.0 else denominator / difference_norm
         )
-        jvp_calls.append(
+        attempt.update(
             {
-                "call_index": call_index,
-                "scheme": "forward_time_augmented",
-                "epsilon": float(epsilon),
-                "direction_norm": vector_norm,
-                "shifted_N": shifted_N,
-                "shifted_state_sha256": sha256_bytes(
-                    float64_le_bytes(shifted_state)
-                ),
+                "status": "EXECUTED",
                 "shifted_rhs_sha256": sha256_bytes(
                     float64_le_bytes(shifted.rhs)
                 ),
@@ -497,14 +511,61 @@ def run_state_arnoldi_receipt(
                 "physical_diagnostics": _evaluation_summary(shifted),
             }
         )
+        jvp_calls.append(attempt)
         return result
 
-    result = arnoldi(
-        augmented_operator,
-        start_vector,
-        max_dim=int(krylov_dim),
-        tolerance=float(tolerance),
-    )
+    try:
+        result = arnoldi(
+            augmented_operator,
+            start_vector,
+            max_dim=int(krylov_dim),
+            tolerance=float(tolerance),
+        )
+    except Exception as error:
+        successful_shifts = sum(
+            call.get("status") == "EXECUTED" for call in jvp_calls
+        )
+        receipt = {
+            "schema": "rabbit.f10.physical_rhs_jvp_state_receipt.v1",
+            "status": "EXECUTED_WITH_RETAINED_JVP_FAILURE",
+            "label": label,
+            "source_path": source_path,
+            "base": _evaluation_summary(base),
+            "jvp_rule": {
+                "augmentation": "z=(y,N); G(z)=(F(N,y),1)",
+                "relative_step": float(relative_step),
+                "scheme": "forward_time_augmented",
+                "persistent_finite_difference_factor": False,
+            },
+            "arnoldi": {
+                "requested_dimension": int(krylov_dim),
+                "dimension": None,
+                "breakdown": None,
+                "breakdown_tolerance": float(tolerance),
+                "orthogonalization": "double_modified_gram_schmidt",
+                "orthogonality_residual_inf": None,
+                "source_sha256": getattr(
+                    arnoldi, "_rabbit_exact_source_sha256", None
+                ),
+                "status": "ERROR_RETAINED",
+                "error_type": type(error).__name__,
+                "error_message": str(error),
+            },
+            "rhs_call_accounting": {
+                "base_calls": 1,
+                "shifted_attempts": len(jvp_calls),
+                "shifted_calls": successful_shifts,
+                "failed_shifted_calls": len(jvp_calls) - successful_shifts,
+                "full_rhs_equivalent_calls": 1 + len(jvp_calls),
+            },
+            "jvp_calls": jvp_calls,
+            "jvp_failure": {
+                "error_type": type(error).__name__,
+                "error_message": str(error),
+                "scientific_verdict": "DIRECT_JVP_NOT_ADMISSIBLE_AT_FROZEN_RULE",
+            },
+        }
+        return receipt, vectors
     basis = np.asarray(getattr(result, "basis"), dtype=np.float64)
     hessenberg = np.asarray(getattr(result, "hessenberg"), dtype=np.float64)
     dimension = int(getattr(result, "dimension"))
@@ -543,7 +604,9 @@ def run_state_arnoldi_receipt(
         },
         "rhs_call_accounting": {
             "base_calls": 1,
+            "shifted_attempts": len(jvp_calls),
             "shifted_calls": len(jvp_calls),
+            "failed_shifted_calls": 0,
             "full_rhs_equivalent_calls": 1 + len(jvp_calls),
         },
         "jvp_calls": jvp_calls,
@@ -584,6 +647,8 @@ def run_receipt_set(
             total_calls += int(
                 receipt["rhs_call_accounting"]["full_rhs_equivalent_calls"]  # type: ignore[index]
             )
+            if receipt.get("status") == "EXECUTED_WITH_RETAINED_JVP_FAILURE":
+                failure_count += 1
             state_receipts.append(receipt)
             for name, array in vectors.items():
                 combined_vectors[f"{label}__{name}"] = np.asarray(array)
@@ -756,6 +821,7 @@ def write_receipt_artifacts(
     started_utc: str,
     finished_utc: str,
     wall_seconds: float,
+    receipt_dir: Path | None = None,
 ) -> None:
     """Write source-bound receipt JSON, numeric vectors, and one run log."""
 
@@ -765,7 +831,11 @@ def write_receipt_artifacts(
         raise ValueError("receipt contract digest must be a SHA-256")
     if not np.isfinite(wall_seconds) or wall_seconds < 0.0:
         raise ValueError("receipt wall_seconds must be finite and nonnegative")
-    destination = Path(output_dir).resolve() / "receipts"
+    destination = (
+        Path(receipt_dir).resolve()
+        if receipt_dir is not None
+        else Path(output_dir).resolve() / "receipts"
+    )
     destination.mkdir(parents=True, exist_ok=True)
     receipt_path = destination / "PHYSICAL_RHS_JVP_RECEIPTS.json"
     vector_path = destination / "PHYSICAL_RHS_JVP_VECTORS.npz"
@@ -815,11 +885,19 @@ def write_receipt_artifacts(
 
 
 def verify_receipt_artifacts(
-    output_dir: Path, seal_commit: str, contract_sha256: str
+    output_dir: Path,
+    seal_commit: str,
+    contract_sha256: str,
+    *,
+    receipt_dir: Path | None = None,
 ) -> dict[str, object]:
     """Verify receipt metadata, vector members, counts, and run-log hashes."""
 
-    destination = Path(output_dir).resolve() / "receipts"
+    destination = (
+        Path(receipt_dir).resolve()
+        if receipt_dir is not None
+        else Path(output_dir).resolve() / "receipts"
+    )
     receipt_path = destination / "PHYSICAL_RHS_JVP_RECEIPTS.json"
     vector_path = destination / "PHYSICAL_RHS_JVP_VECTORS.npz"
     run_log_path = destination / "RECEIPT_RUN_LOG.json"
@@ -895,8 +973,13 @@ def validate_static_receipt_payload(
     ):
         raise ValueError("receipt state labels do not match the four-state contract")
 
-    allowed_statuses = {"EXECUTED", "EXECUTED_WITH_RECORDED_BREAKDOWN"}
+    successful_statuses = {"EXECUTED", "EXECUTED_WITH_RECORDED_BREAKDOWN"}
+    executed_statuses = {
+        *successful_statuses,
+        "EXECUTED_WITH_RETAINED_JVP_FAILURE",
+    }
     all_executed = True
+    all_successful = True
     diagnostics_present = True
     direct_jvp_present = True
     per_state: list[dict[str, object]] = []
@@ -904,8 +987,9 @@ def validate_static_receipt_payload(
         if not isinstance(state, dict):
             raise ValueError("receipt state must be an object")
         status = state.get("status")
-        executed = status in allowed_statuses
+        executed = status in executed_statuses
         all_executed = all_executed and executed
+        all_successful = all_successful and status in successful_statuses
         base = state.get("base")
         first_law = False
         occupation = False
@@ -954,18 +1038,33 @@ def validate_static_receipt_payload(
             )
         arnoldi = state.get("arnoldi")
         jvp_calls = state.get("jvp_calls")
-        jvp = bool(
-            isinstance(arnoldi, dict)
-            and _is_sha256(arnoldi.get("source_sha256"))
-            and isinstance(jvp_calls, list)
+        calls_have_provenance = bool(
+            isinstance(jvp_calls, list)
             and len(jvp_calls) > 0
             and all(
                 isinstance(call, dict)
                 and call.get("scheme") == "forward_time_augmented"
                 and _is_finite_number(call.get("epsilon"))
                 and float(call["epsilon"]) > 0.0
+                and _is_sha256(call.get("shifted_state_sha256"))
+                and (
+                    (
+                        call.get("status") == "EXECUTED"
+                        and _is_sha256(call.get("jvp_sha256"))
+                    )
+                    or (
+                        call.get("status") == "ERROR_RETAINED"
+                        and isinstance(call.get("error_type"), str)
+                        and isinstance(call.get("error_message"), str)
+                    )
+                )
                 for call in jvp_calls
             )
+        )
+        jvp = bool(
+            isinstance(arnoldi, dict)
+            and _is_sha256(arnoldi.get("source_sha256"))
+            and calls_have_provenance
         )
         state_diagnostics = first_law and occupation and domain and tail and rhs
         diagnostics_present = diagnostics_present and state_diagnostics
@@ -994,6 +1093,7 @@ def validate_static_receipt_payload(
             raise ValueError(f"receipt claim ceiling changed: {field}")
     return {
         "all_states_executed": all_executed,
+        "all_states_successful": all_successful,
         "all_required_diagnostics_present": diagnostics_present,
         "direct_jvp_provenance_present": direct_jvp_present,
         "historical_observation_jacobians_used": False,
@@ -1056,11 +1156,7 @@ def verify_preseal(repo: Path, output_dir: Path) -> dict[str, object]:
     contract = read_json(destination / "PREFIX_CONTRACT.json")
     protected_count = verify_protected_paths(root, contract)
     states = load_receipt_states(root, destination)
-    receipt_paths = (
-        destination / "receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
-        destination / "receipts/PHYSICAL_RHS_JVP_VECTORS.npz",
-        destination / "receipts/RECEIPT_RUN_LOG.json",
-    )
+    receipt_paths = receipt_paths_from_contract(root, destination, contract)
     present = [path.as_posix() for path in receipt_paths if path.exists()]
     if present:
         raise ValueError(f"physical receipt output exists before sealing: {present}")
@@ -1088,6 +1184,8 @@ def execute_receipts(
     seal = verify_seal(root, destination, seal_commit, require_clean=True)
     states = load_receipt_states(root, destination)
     setup = core.build_setup(order=60, y_max=30.0, label="f10-prefix")
+    contract = read_json(destination / "PREFIX_CONTRACT.json")
+    receipt_paths = receipt_paths_from_contract(root, destination, contract)
     manifest = read_json(destination / "QUADRATURE_CATALOG_MANIFEST.json")
     if manifest.get("collision_config") != asdict(setup.config):
         raise ValueError("runtime collision configuration differs from the sealed manifest")
@@ -1126,9 +1224,13 @@ def execute_receipts(
         started_utc=started_utc,
         finished_utc=finished_utc,
         wall_seconds=wall_seconds,
+        receipt_dir=receipt_paths[0].parent,
     )
     return verify_receipt_artifacts(
-        destination, seal_commit, str(seal["contract_sha256"])
+        destination,
+        seal_commit,
+        str(seal["contract_sha256"]),
+        receipt_dir=receipt_paths[0].parent,
     )
 
 
@@ -1138,8 +1240,13 @@ def verify_receipts(
     """Verify a retained receipt set without requiring a clean worktree."""
 
     seal = verify_seal(repo, output_dir, seal_commit, require_clean=False)
+    contract = read_json(Path(output_dir).resolve() / "PREFIX_CONTRACT.json")
+    receipt_paths = receipt_paths_from_contract(repo, output_dir, contract)
     receipt = verify_receipt_artifacts(
-        output_dir, seal_commit, str(seal["contract_sha256"])
+        output_dir,
+        seal_commit,
+        str(seal["contract_sha256"]),
+        receipt_dir=receipt_paths[0].parent,
     )
     return {"seal": seal, "receipt": receipt}
 
@@ -1167,6 +1274,43 @@ def read_json(path: Path) -> dict[str, object]:
     if not isinstance(payload, dict):
         raise ValueError(f"JSON document {path} must contain an object")
     return payload
+
+
+def receipt_paths_from_contract(
+    repo: Path, output_dir: Path, contract: Mapping[str, object]
+) -> tuple[Path, Path, Path]:
+    """Resolve the three prospectively declared receipt paths inside output_dir."""
+
+    root = Path(repo).resolve()
+    destination = Path(output_dir).resolve()
+    output_paths = contract.get("output_paths")
+    if not isinstance(output_paths, dict):
+        raise ValueError("contract output_paths must be an object")
+    resolved: list[Path] = []
+    for key, basename in zip(
+        ("receipts", "vectors", "run_log"),
+        (
+            "PHYSICAL_RHS_JVP_RECEIPTS.json",
+            "PHYSICAL_RHS_JVP_VECTORS.npz",
+            "RECEIPT_RUN_LOG.json",
+        ),
+        strict=True,
+    ):
+        relative = output_paths.get(key)
+        if not isinstance(relative, str):
+            raise ValueError(f"contract output path is missing: {key}")
+        candidate = (root / relative).resolve()
+        try:
+            candidate.relative_to(destination)
+        except ValueError as error:
+            raise ValueError(f"receipt path escapes output directory: {relative}") from error
+        if candidate.name != basename:
+            raise ValueError(f"receipt output basename changed: {relative}")
+        resolved.append(candidate)
+    parents = {path.parent for path in resolved}
+    if len(parents) != 1:
+        raise ValueError("receipt outputs must share one prospectively sealed directory")
+    return resolved[0], resolved[1], resolved[2]
 
 
 def write_sha256sums(
@@ -1256,11 +1400,16 @@ def _git_blob_oid(repo: Path, path: Path) -> str:
     return oid
 
 
-def _seal_lacks_receipts(repo: Path, output_dir: Path, seal_commit: str) -> bool:
+def _seal_lacks_receipts(
+    repo: Path,
+    output_dir: Path,
+    seal_commit: str,
+    contract: Mapping[str, object],
+) -> bool:
     root = Path(repo).resolve()
     destination = Path(output_dir).resolve()
-    for suffix in RECEIPT_RELATIVE_PATHS:
-        relative = (destination / suffix).relative_to(root).as_posix()
+    for path in receipt_paths_from_contract(root, destination, contract):
+        relative = path.relative_to(root).as_posix()
         result = subprocess.run(
             ["git", "-C", str(root), "cat-file", "-e", f"{seal_commit}:{relative}"],
             capture_output=True,
@@ -1321,15 +1470,15 @@ def _artifact_metadata(path: str, output_relative: str) -> tuple[
         return ["REQ-CONTRACT"], "contract", "SPECIFIED", (
             "Prospective contract committed before direct receipt output."
         )
-    if suffix == RECEIPT_RELATIVE_PATHS[0]:
+    if suffix.endswith("PHYSICAL_RHS_JVP_RECEIPTS.json"):
         return ["REQ-RHS-JVP", "REQ-RECEIPTS"], "receipt", "VALIDATED", (
-            "Executed four-state physical RHS/JVP diagnostic receipt."
+            "Executed four-state physical RHS/JVP diagnostic receipt; inspect its retained verdict."
         )
-    if suffix == RECEIPT_RELATIVE_PATHS[1]:
+    if suffix.endswith("PHYSICAL_RHS_JVP_VECTORS.npz"):
         return ["REQ-RHS-JVP", "REQ-RECEIPTS"], "jvp_provenance", "VALIDATED", (
             "Raw direct RHS, collision, Arnoldi, direction, and JVP vectors."
         )
-    if suffix == RECEIPT_RELATIVE_PATHS[2]:
+    if suffix.endswith("RECEIPT_RUN_LOG.json"):
         return ["REQ-RHS-JVP", "REQ-RECEIPTS"], "rhs_provenance", "VALIDATED", (
             "Execution chronology and receipt/vector byte bindings."
         )
@@ -1344,6 +1493,17 @@ def build_provenance_index(
     root = Path(repo).resolve()
     destination = Path(output_dir).resolve()
     output_relative = destination.relative_to(root).as_posix()
+    contract = read_json(destination / "PREFIX_CONTRACT.json")
+    active_receipts = receipt_paths_from_contract(root, destination, contract)
+    receipt_candidates = [
+        path.relative_to(root).as_posix()
+        for path in active_receipts
+    ]
+    receipt_candidates.extend(
+        f"{output_relative}/{suffix}"
+        for suffix in RECEIPT_RELATIVE_PATHS
+        if (destination / suffix).is_file()
+    )
     generated = (
         "SOURCE_BUNDLE.json",
         "PREFIX_INPUTS.json",
@@ -1351,7 +1511,6 @@ def build_provenance_index(
         "initial_state_order60_ymax30.npz",
         "PREFIX_CONTRACT.json",
         "PREFIX_CONTRACT.sha256",
-        *RECEIPT_RELATIVE_PATHS,
     )
     candidate_paths = list(
         dict.fromkeys(
@@ -1359,6 +1518,7 @@ def build_provenance_index(
                 *PREFIX_SOURCE_PATHS,
                 *RETAINED_EVIDENCE_PATHS,
                 *(f"{output_relative}/{suffix}" for suffix in generated),
+                *receipt_candidates,
                 "README.md",
                 f"{output_relative}/README.md",
                 f"{output_relative}/FILE_LOCATIONS.md",
@@ -1435,10 +1595,10 @@ def _branch_scope_payload(seal_commit: str) -> dict[str, object]:
 
 
 def _receipt_index_payload(
-    output_relative: str, receipt_validation: Mapping[str, object]
+    receipt_relative: str,
+    vectors_relative: str,
+    receipt_validation: Mapping[str, object],
 ) -> dict[str, object]:
-    receipt = f"{output_relative}/{RECEIPT_RELATIVE_PATHS[0]}"
-    vectors = f"{output_relative}/{RECEIPT_RELATIVE_PATHS[1]}"
     historical = [
         path for path in V3_DOMAIN_PATHS if "/obs_jac_" in path
     ]
@@ -1447,29 +1607,29 @@ def _receipt_index_payload(
         "state_labels": list(REQUIRED_STATE_LABELS),
         "direct_receipts": {
             "physical_rhs": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/base/rhs_sha256",
-                "raw_vectors": vectors,
+                "raw_vectors": vectors_relative,
             },
             "direct_time_augmented_jvp": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/jvp_calls",
-                "raw_vectors": vectors,
+                "raw_vectors": vectors_relative,
             },
             "first_law": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/base/first_law_residual",
             },
             "strict_open_occupation": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/base/occupation",
             },
             "domain_rejection_and_roundoff": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/base/domain",
             },
             "finite_domain_tail": {
-                "path": receipt,
+                "path": receipt_relative,
                 "selector": "/results/states/*/base/tail",
                 "reaction_tail_authority_validated": False,
             },
@@ -1484,7 +1644,10 @@ def _receipt_index_payload(
 
 
 def _required_artifact_set_complete(
-    repo: Path, output_dir: Path, provenance: Mapping[str, object]
+    repo: Path,
+    output_dir: Path,
+    provenance: Mapping[str, object],
+    receipt_paths: tuple[Path, Path, Path],
 ) -> bool:
     root = Path(repo).resolve()
     destination = Path(output_dir).resolve()
@@ -1498,7 +1661,7 @@ def _required_artifact_set_complete(
         destination / "initial_state_order60_ymax30.npz",
         destination / "PREFIX_CONTRACT.json",
         destination / "PREFIX_CONTRACT.sha256",
-        *(destination / suffix for suffix in RECEIPT_RELATIVE_PATHS),
+        *receipt_paths,
         *(root / path for path in RETAINED_EVIDENCE_PATHS),
     ]
     artifacts = provenance.get("artifacts")
@@ -1521,26 +1684,34 @@ def finalize_fixture(repo: Path, output_dir: Path, seal_commit: str) -> dict[str
 
     root = Path(repo).resolve()
     destination = Path(output_dir).resolve()
-    output_relative = destination.relative_to(root).as_posix()
     seal = verify_seal(root, destination, seal_commit, require_clean=False)
+    contract = read_json(destination / "PREFIX_CONTRACT.json")
+    receipt_paths = receipt_paths_from_contract(root, destination, contract)
     receipt_summary = verify_receipt_artifacts(
-        destination, seal_commit, str(seal["contract_sha256"])
+        destination,
+        seal_commit,
+        str(seal["contract_sha256"]),
+        receipt_dir=receipt_paths[0].parent,
     )
-    receipt = read_json(destination / RECEIPT_RELATIVE_PATHS[0])
+    receipt = read_json(receipt_paths[0])
     receipt_validation = validate_static_receipt_payload(receipt)
-    chronology = _seal_lacks_receipts(root, destination, seal_commit)
+    chronology = _seal_lacks_receipts(root, destination, seal_commit, contract)
     if not chronology:
         raise ValueError("prospective seal already contains receipt output")
 
     _write_json(destination / "BRANCH_SCOPE.json", _branch_scope_payload(seal_commit))
     _write_json(
         destination / "RECEIPT_INDEX.json",
-        _receipt_index_payload(output_relative, receipt_validation),
+        _receipt_index_payload(
+            receipt_paths[0].relative_to(root).as_posix(),
+            receipt_paths[1].relative_to(root).as_posix(),
+            receipt_validation,
+        ),
     )
     provenance = build_provenance_index(root, destination, seal_commit)
     _write_json(destination / "PROVENANCE_INDEX.json", provenance)
     requested_complete = _required_artifact_set_complete(
-        root, destination, provenance
+        root, destination, provenance, receipt_paths
     )
     static_executed = bool(
         receipt_validation["all_states_executed"]
@@ -1552,6 +1723,9 @@ def finalize_fixture(repo: Path, output_dir: Path, seal_commit: str) -> dict[str
         "requested_artifact_set_complete": requested_complete,
         "fixture_hashes_validated": True,
         "static_physical_receipts_executed": static_executed,
+        "direct_jvp_admissible_all_states": receipt_validation[
+            "all_states_successful"
+        ],
         "prospective_contract_sealed_before_receipts": chronology,
         "physical_prefix_executed": False,
         "reaction_tail_authority_validated": False,
@@ -1591,6 +1765,19 @@ def finalize_fixture(repo: Path, output_dir: Path, seal_commit: str) -> dict[str
                         "check": "four-state required static diagnostics",
                         "status": "PASS" if static_executed else "FAIL",
                         "evidence": receipt_validation,
+                    },
+                    {
+                        "check": "direct JVP admissible at frozen rule for every state",
+                        "status": (
+                            "PASS"
+                            if receipt_validation["all_states_successful"]
+                            else "FAIL"
+                        ),
+                        "evidence": {
+                            "all_states_successful": receipt_validation[
+                                "all_states_successful"
+                            ]
+                        },
                     },
                 ],
                 "executed_commands": [],
@@ -1694,13 +1881,18 @@ def verify_final(repo: Path, output_dir: Path, seal_commit: str) -> dict[str, ob
     destination = Path(output_dir).resolve()
     output_relative = destination.relative_to(root).as_posix()
     seal = verify_seal(root, destination, seal_commit, require_clean=False)
+    contract = read_json(destination / "PREFIX_CONTRACT.json")
+    receipt_paths = receipt_paths_from_contract(root, destination, contract)
     receipt_summary = verify_receipt_artifacts(
-        destination, seal_commit, str(seal["contract_sha256"])
+        destination,
+        seal_commit,
+        str(seal["contract_sha256"]),
+        receipt_dir=receipt_paths[0].parent,
     )
     receipt_validation = validate_static_receipt_payload(
-        read_json(destination / RECEIPT_RELATIVE_PATHS[0])
+        read_json(receipt_paths[0])
     )
-    if not _seal_lacks_receipts(root, destination, seal_commit):
+    if not _seal_lacks_receipts(root, destination, seal_commit, contract):
         raise ValueError("receipt output predates or appears in prospective seal")
 
     machine_json_names = (
@@ -1776,11 +1968,11 @@ def verify_final(repo: Path, output_dir: Path, seal_commit: str) -> dict[str, ob
             "PREFIX_CONTRACT.sha256",
             "SHA256SUMS",
             "initial_state_order60_ymax30.npz",
-            *RECEIPT_RELATIVE_PATHS,
             "README.md",
             "FILE_LOCATIONS.md",
         )
     )
+    publish_paths.update(path.relative_to(root).as_posix() for path in receipt_paths)
     publish_paths.update(RETAINED_EVIDENCE_PATHS)
     publish_paths.add("README.md")
     for relative in sorted(publish_paths):
@@ -2111,7 +2303,18 @@ def _contract_payload(
     inputs_path: Path,
     grid_manifest_path: Path,
     initial_path: Path,
+    *,
+    receipt_subdir: str,
+    predecessor_seal: str | None,
 ) -> dict[str, object]:
+    predecessor_paths = (
+        [
+            f"{output_dir.relative_to(repo).as_posix()}/{suffix}"
+            for suffix in RECEIPT_RELATIVE_PATHS
+        ]
+        if predecessor_seal is not None
+        else []
+    )
     protected_paths = list(
         dict.fromkeys(
             [
@@ -2128,6 +2331,7 @@ def _contract_payload(
                 *CHECKPOINT_PATHS,
                 *V3_PROVENANCE_PATHS,
                 *V3_DOMAIN_PATHS,
+                *predecessor_paths,
             ]
         )
     )
@@ -2135,9 +2339,17 @@ def _contract_payload(
         {"path": path, "sha256": sha256_path(repo / path)}
         for path in protected_paths
     ]
-    return {
-        "schema": "rabbit.f10.physical_prefix_contract.v1",
-        "contract_status": "PROSPECTIVE_UNEXECUTED",
+    payload: dict[str, object] = {
+        "schema": (
+            "rabbit.f10.physical_prefix_contract.v2"
+            if predecessor_seal is not None
+            else "rabbit.f10.physical_prefix_contract.v1"
+        ),
+        "contract_status": (
+            "PROSPECTIVE_UNEXECUTED_RECOVERY"
+            if predecessor_seal is not None
+            else "PROSPECTIVE_UNEXECUTED"
+        ),
         "claim_ceiling": {
             "d071_reopen_earned": False,
             "physical_prefix_executed": False,
@@ -2218,15 +2430,15 @@ def _contract_payload(
         },
         "output_paths": {
             "receipts": (
-                f"{output_dir.relative_to(repo).as_posix()}/receipts/"
+                f"{output_dir.relative_to(repo).as_posix()}/{receipt_subdir}/"
                 "PHYSICAL_RHS_JVP_RECEIPTS.json"
             ),
             "vectors": (
-                f"{output_dir.relative_to(repo).as_posix()}/receipts/"
+                f"{output_dir.relative_to(repo).as_posix()}/{receipt_subdir}/"
                 "PHYSICAL_RHS_JVP_VECTORS.npz"
             ),
             "run_log": (
-                f"{output_dir.relative_to(repo).as_posix()}/receipts/"
+                f"{output_dir.relative_to(repo).as_posix()}/{receipt_subdir}/"
                 "RECEIPT_RUN_LOG.json"
             ),
         },
@@ -2241,11 +2453,38 @@ def _contract_payload(
         ],
         "no_post_output_refit": True,
         "failure_retention_required": True,
+        "receipt_failure_semantics": {
+            "base_diagnostics_retained_before_jvp": True,
+            "failed_shift_direction_epsilon_state_and_error_retained": True,
+            "negative_jvp_admissibility_is_not_artifact_absence": True,
+            "runner_exits_nonzero_on_retained_jvp_failure": True,
+        },
         "protected_paths": protected,
     }
+    if predecessor_seal is not None:
+        payload["predecessor_attempt"] = {
+            "seal_commit": predecessor_seal,
+            "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+            "recovery_reason": (
+                "The v1 runner discarded valid base diagnostics when the first "
+                "creep_1200 shifted JVP call left the strict occupation domain."
+            ),
+            "parameter_changes": False,
+            "artifacts": [
+                {"path": path, "sha256": sha256_path(repo / path)}
+                for path in predecessor_paths
+            ],
+        }
+    return payload
 
 
-def prepare_fixture(repo: Path, output_dir: Path) -> None:
+def prepare_fixture(
+    repo: Path,
+    output_dir: Path,
+    *,
+    receipt_subdir: str = "receipts",
+    predecessor_seal: str | None = None,
+) -> None:
     """Generate only pre-receipt inputs/manifests and the prospective contract."""
 
     root = Path(repo).resolve()
@@ -2255,10 +2494,25 @@ def prepare_fixture(repo: Path, output_dir: Path) -> None:
     except ValueError as error:
         raise ValueError("fixture output directory must be inside the repository") from error
     destination.mkdir(parents=True, exist_ok=True)
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", receipt_subdir) or receipt_subdir in {
+        ".",
+        "..",
+    }:
+        raise ValueError("receipt_subdir must be one safe path component")
+    if predecessor_seal is not None:
+        if len(predecessor_seal) != 40 or any(
+            char not in "0123456789abcdef" for char in predecessor_seal
+        ):
+            raise ValueError("predecessor seal must be a lowercase 40-character OID")
+        predecessor_paths = tuple(
+            destination / suffix for suffix in RECEIPT_RELATIVE_PATHS
+        )
+        if not all(path.is_file() for path in predecessor_paths):
+            raise ValueError("recovery preparation lacks the complete first attempt")
     receipt_paths = (
-        destination / "receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
-        destination / "receipts/PHYSICAL_RHS_JVP_VECTORS.npz",
-        destination / "receipts/RECEIPT_RUN_LOG.json",
+        destination / receipt_subdir / "PHYSICAL_RHS_JVP_RECEIPTS.json",
+        destination / receipt_subdir / "PHYSICAL_RHS_JVP_VECTORS.npz",
+        destination / receipt_subdir / "RECEIPT_RUN_LOG.json",
     )
     if any(path.exists() for path in receipt_paths):
         raise FileExistsError("prepare refuses to overwrite or coexist with receipt output")
@@ -2286,6 +2540,8 @@ def prepare_fixture(repo: Path, output_dir: Path) -> None:
             inputs_path,
             grid_manifest_path,
             initial_path,
+            receipt_subdir=receipt_subdir,
+            predecessor_seal=predecessor_seal,
         ),
     )
     contract_relative = contract_path.relative_to(root).as_posix()
@@ -2325,6 +2581,8 @@ def _parser() -> argparse.ArgumentParser:
     ):
         command_parser.add_argument("--repo", type=Path, required=True)
         command_parser.add_argument("--output-dir", type=Path, required=True)
+    prepare.add_argument("--receipt-subdir", default="receipts")
+    prepare.add_argument("--predecessor-seal")
     for command_parser in (
         run_receipts_parser,
         verify_receipts_parser,
@@ -2338,7 +2596,12 @@ def _parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = _parser().parse_args()
     if args.command == "prepare":
-        prepare_fixture(args.repo, args.output_dir)
+        prepare_fixture(
+            args.repo,
+            args.output_dir,
+            receipt_subdir=args.receipt_subdir,
+            predecessor_seal=args.predecessor_seal,
+        )
         print(json.dumps({"status": "PREPARED"}, sort_keys=True))
         return 0
     if args.command == "verify-preseal":

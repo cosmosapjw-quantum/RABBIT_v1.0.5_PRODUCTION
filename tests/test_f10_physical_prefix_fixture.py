@@ -209,7 +209,15 @@ def test_static_receipt_validator_requires_all_four_direct_diagnostics():
                     },
                 },
                 "arnoldi": {"source_sha256": "a" * 64},
-                "jvp_calls": [{"scheme": "forward_time_augmented", "epsilon": 1e-3}],
+                "jvp_calls": [
+                    {
+                        "scheme": "forward_time_augmented",
+                        "epsilon": 1e-3,
+                        "status": "EXECUTED",
+                        "jvp_sha256": "d" * 64,
+                        "shifted_state_sha256": "e" * 64,
+                    }
+                ],
                 "rhs_call_accounting": {"full_rhs_equivalent_calls": 2},
             }
         )
@@ -226,9 +234,23 @@ def test_static_receipt_validator_requires_all_four_direct_diagnostics():
 
     summary = fixture.validate_static_receipt_payload(receipt)
     assert summary["all_states_executed"]
+    assert summary["all_states_successful"]
     assert summary["all_required_diagnostics_present"]
     assert summary["direct_jvp_provenance_present"]
     assert not summary["reaction_tail_authority_validated"]
+
+    states[1]["status"] = "EXECUTED_WITH_RETAINED_JVP_FAILURE"
+    states[1]["jvp_calls"][0].update(
+        {
+            "status": "ERROR_RETAINED",
+            "error_type": "IndependentNoQkeError",
+            "error_message": "outside strict occupation domain",
+        }
+    )
+    limited = fixture.validate_static_receipt_payload(receipt)
+    assert limited["all_states_executed"]
+    assert not limited["all_states_successful"]
+    assert limited["direct_jvp_provenance_present"]
 
     receipt["results"]["states"] = states[:-1]
     with pytest.raises(ValueError, match="state labels"):
@@ -317,6 +339,95 @@ def test_time_augmented_receipt_uses_direct_rhs_calls_and_fixed_rule():
         or np.isfinite(call["subtractive_condition_ratio"])
         for call in receipt["jvp_calls"]
     )
+
+
+def test_direct_jvp_failure_retains_base_diagnostics_and_attempt(monkeypatch):
+    """Catch loss of valid base evidence when a shifted physical call is rejected."""
+
+    setup = core.build_setup(
+        order=8,
+        y_max=8.0,
+        incoming_polar_order=2,
+        final_polar_order=2,
+        electron_radial_order=8,
+        label="test",
+    )
+    _, state = core.initial_state(setup)
+    base = fixture.evaluate_physical_state(setup, 0.0, state)
+    calls = 0
+
+    def evaluator(*_args, **_kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return base
+        raise fixture.ind.IndependentNoQkeError("synthetic shifted-domain rejection")
+
+    def failing_arnoldi(operator, start_vector, **_kwargs):
+        operator(np.ones_like(start_vector))
+        raise AssertionError("operator failure should propagate first")
+
+    setattr(failing_arnoldi, "_rabbit_exact_source_sha256", "a" * 64)
+    monkeypatch.setattr(fixture, "evaluate_physical_state", evaluator)
+
+    receipt, vectors = fixture.run_state_arnoldi_receipt(
+        setup,
+        "retained",
+        "retained.npz",
+        0.0,
+        state,
+        failing_arnoldi,
+        relative_step=1e-3,
+        krylov_dim=2,
+        tolerance=1e-12,
+    )
+
+    assert receipt["status"] == "EXECUTED_WITH_RETAINED_JVP_FAILURE"
+    assert receipt["base"]["rhs_sha256"]
+    assert receipt["jvp_calls"][0]["status"] == "ERROR_RETAINED"
+    assert receipt["jvp_calls"][0]["error_type"] == "IndependentNoQkeError"
+    assert receipt["rhs_call_accounting"]["shifted_attempts"] == 1
+    assert "base_rhs" in vectors
+
+
+def test_recovery_contract_uses_new_output_paths_and_binds_first_attempt():
+    """Catch overwrite of the first failed receipt during a prospectively sealed retry."""
+
+    repo = Path.cwd()
+    with tempfile.TemporaryDirectory(prefix=".f10-fixture-test-", dir=repo) as raw:
+        output = Path(raw)
+        fixture.prepare_fixture(repo, output)
+        receipts = output / "receipts"
+        receipts.mkdir()
+        for name in (
+            "PHYSICAL_RHS_JVP_RECEIPTS.json",
+            "PHYSICAL_RHS_JVP_VECTORS.npz",
+            "RECEIPT_RUN_LOG.json",
+        ):
+            (receipts / name).write_bytes((name + "\n").encode("utf-8"))
+
+        fixture.prepare_fixture(
+            repo,
+            output,
+            receipt_subdir="receipts_v2",
+            predecessor_seal="a" * 40,
+        )
+        contract = fixture.read_json(output / "PREFIX_CONTRACT.json")
+        paths = fixture.receipt_paths_from_contract(repo, output, contract)
+
+        assert contract["schema"] == "rabbit.f10.physical_prefix_contract.v2"
+        assert all("/receipts_v2/" in path.as_posix() for path in paths)
+        assert contract["predecessor_attempt"]["seal_commit"] == "a" * 40
+        assert len(contract["predecessor_attempt"]["artifacts"]) == 3
+        protected = {entry["path"] for entry in contract["protected_paths"]}
+        assert all(
+            (output / "receipts" / name).relative_to(repo).as_posix() in protected
+            for name in (
+                "PHYSICAL_RHS_JVP_RECEIPTS.json",
+                "PHYSICAL_RHS_JVP_VECTORS.npz",
+                "RECEIPT_RUN_LOG.json",
+            )
+        )
 
 
 def test_protected_path_validation_detects_digest_substitution():

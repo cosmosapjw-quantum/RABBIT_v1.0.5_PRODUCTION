@@ -4,7 +4,7 @@
     "physical_prefix_executed": false,
     "public_production_support": "FORBIDDEN"
   },
-  "contract_status": "PROSPECTIVE_UNEXECUTED",
+  "contract_status": "PROSPECTIVE_UNEXECUTED_RECOVERY",
   "failure_retention_required": true,
   "full_prefix_obligation": {
     "coverage": {
@@ -47,9 +47,29 @@
   ],
   "no_post_output_refit": true,
   "output_paths": {
-    "receipts": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
-    "run_log": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/RECEIPT_RUN_LOG.json",
-    "vectors": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_VECTORS.npz"
+    "receipts": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+    "run_log": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/RECEIPT_RUN_LOG.json",
+    "vectors": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_VECTORS.npz"
+  },
+  "predecessor_attempt": {
+    "artifacts": [
+      {
+        "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
+        "sha256": "21bb4162a7cd2d1816c3f0965520dacfe2d4e2feb17165b32dc65c0ce4889b8a"
+      },
+      {
+        "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_VECTORS.npz",
+        "sha256": "7a709729fa3d3039c5f5c72aa8e6322984e9fd1f4a30b67575e64b1ceaf4cb1c"
+      },
+      {
+        "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/RECEIPT_RUN_LOG.json",
+        "sha256": "d23c6ee0165c835d2fb6273b3df92a36e9eb3d7e90d226b7fea83a5d81813b1a"
+      }
+    ],
+    "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+    "parameter_changes": false,
+    "recovery_reason": "The v1 runner discarded valid base diagnostics when the first creep_1200 shifted JVP call left the strict occupation domain.",
+    "seal_commit": "27afe5d817f0382c47cdc2cef2703cca69d827ed"
   },
   "protected_paths": [
     {
@@ -58,11 +78,11 @@
     },
     {
       "path": "scripts/audit/f10_physical_prefix_fixture.py",
-      "sha256": "a3891a53e962353fec8b10045fbd130f04ba01af1df1e62572b8349fd5e277db"
+      "sha256": "a9e0cf1bb5bcd0dbd286be3e6ad28a5d696aaff8bfe99a7797be449ee82b08b6"
     },
     {
       "path": "tests/test_f10_physical_prefix_fixture.py",
-      "sha256": "3cbfba8264684bd0ca191854e78ae0ab506ce66e1070733ce4dd56336d2395cf"
+      "sha256": "226e4b4e2ea82734183d86f470377a73e7fd2ce9f0693c3a678c38172b6b86c4"
     },
     {
       "path": "src/rabbit/decoupling/_independent_noqke.py",
@@ -251,8 +271,26 @@
     {
       "path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/trials.jsonl",
       "sha256": "c0998aeb5bd8a9cdad6e440acbfb554fbb27b2d7bfd17d02761a5b40603f3c3a"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "sha256": "21bb4162a7cd2d1816c3f0965520dacfe2d4e2feb17165b32dc65c0ce4889b8a"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_VECTORS.npz",
+      "sha256": "7a709729fa3d3039c5f5c72aa8e6322984e9fd1f4a30b67575e64b1ceaf4cb1c"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/RECEIPT_RUN_LOG.json",
+      "sha256": "d23c6ee0165c835d2fb6273b3df92a36e9eb3d7e90d226b7fea83a5d81813b1a"
     }
   ],
+  "receipt_failure_semantics": {
+    "base_diagnostics_retained_before_jvp": true,
+    "failed_shift_direction_epsilon_state_and_error_retained": true,
+    "negative_jvp_admissibility_is_not_artifact_absence": true,
+    "runner_exits_nonzero_on_retained_jvp_failure": true
+  },
   "required_receipts": [
     "physical_rhs",
     "direct_time_augmented_jvp",
@@ -262,7 +300,7 @@
     "matrix_roundoff",
     "finite_domain_tail"
   ],
-  "schema": "rabbit.f10.physical_prefix_contract.v1",
+  "schema": "rabbit.f10.physical_prefix_contract.v2",
   "source_identity": {
     "branch": "f10-independent-validation-b3v2",
     "commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",

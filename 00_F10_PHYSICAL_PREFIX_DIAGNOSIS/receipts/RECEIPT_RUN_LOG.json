@@ -1,0 +1,11 @@
+{
+  "contract_sha256": "835b34648c7b3ead32a50f7f7a22b804bb474451ad58783573a59ddafdc33e71",
+  "finished_utc": "2026-08-11T03:13:10Z",
+  "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+  "receipt_sha256": "21bb4162a7cd2d1816c3f0965520dacfe2d4e2feb17165b32dc65c0ce4889b8a",
+  "schema": "rabbit.f10.physical_rhs_jvp_run_log.v1",
+  "seal_commit": "27afe5d817f0382c47cdc2cef2703cca69d827ed",
+  "started_utc": "2026-08-11T03:12:44Z",
+  "vectors_sha256": "7a709729fa3d3039c5f5c72aa8e6322984e9fd1f4a30b67575e64b1ceaf4cb1c",
+  "wall_seconds": 25.877840449102223
+}
