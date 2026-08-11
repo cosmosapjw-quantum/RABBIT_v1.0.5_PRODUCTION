@@ -1,0 +1,952 @@
+{
+  "contract_sha256": "c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc",
+  "environment": {
+    "numpy": "2.4.2",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "scipy": "1.17.0"
+  },
+  "finished_utc": "2026-08-11T03:22:34Z",
+  "results": {
+    "d071_reopen_earned": false,
+    "failure_count": 1,
+    "full_rhs_equivalent_calls": 9,
+    "historical_observation_jacobians_used": false,
+    "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+    "physical_prefix_executed": false,
+    "reaction_tail_authority_validated": false,
+    "resolution": {
+      "order": 60,
+      "state_dim": 182,
+      "y_max": 30.0
+    },
+    "schema": "rabbit.f10.physical_rhs_jvp_receipt_set.v1",
+    "source_bundle_sha256": "8ffb9c34019e4bc9e431985df9fe69a347ced5da11f68308a1943187e3829fd8",
+    "state_count": 4,
+    "states": [
+      {
+        "arnoldi": {
+          "breakdown": true,
+          "breakdown_tolerance": 1e-12,
+          "dimension": 1,
+          "orthogonality_residual_inf": 0.0,
+          "orthogonalization": "double_modified_gram_schmidt",
+          "requested_dimension": 10,
+          "source_sha256": "50d77af42e0deef88beff2f10d8572ec46e727c68d0d7fda81d12f9e4bd8efde"
+        },
+        "base": {
+          "N": 0.0,
+          "collision_diagnostics": {
+            "charge_conjugation_residual": 0.0005852109596794371,
+            "electromagnetic_entropy_rate": -2.2389639023112555e-29,
+            "entropy_duality_residual": 3.240124658698295e-13,
+            "entropy_production": 2.1086739291159847e-41,
+            "event_neutrino_energy_transfer": -2.2389639023112497e-28,
+            "event_neutrino_entropy_rate": 2.2389639023091468e-29,
+            "first_law_residual": 0.0,
+            "mu_tau_residual": 0.0004111954689888547,
+            "node_neutrino_entropy_rate": 2.2389639023105978e-29,
+            "self_event_energy_residual": 0.0
+          },
+          "collision_total_sha256": "bee129ab870d999c80f89f03dda2d56944dcef4b79fa078571682902d996755b",
+          "domain": {
+            "largest_matrix_roundoff_correction": 0.0,
+            "matrix_roundoff_corrections": 0,
+            "whole_reaction_rejections": 1477632
+          },
+          "elapsed_time_mev_inverse": 0.0,
+          "electron_bath_energy_transfer": 2.2389639023112497e-28,
+          "first_law_residual": 0.0,
+          "occupation": {
+            "maximum": 0.4970379967529832,
+            "minimum": 9.469152911415635e-14,
+            "strict_open": true
+          },
+          "rhs_sha256": "8b4208ef905cbdda78792b65a406b267eb083491c6277ed55154b44f9b6bed71",
+          "state_sha256": "b60f0aeaa98b6729c927e2b667a21f5bb9f1c06e3d31fc1e60f916bc11ecb263",
+          "tail": {
+            "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+            "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+            "last_four_node_occupation_max": 1.2430874731181287e-13,
+            "last_four_node_relative_distortion_max": 1.624571046718189e-15,
+            "reaction_tail_authority_validated": false
+          },
+          "temperature_cm_mev": 10.0,
+          "temperature_gamma_mev": 10.0
+        },
+        "jvp_calls": [
+          {
+            "call_index": 0,
+            "direction_norm": 1.0,
+            "epsilon": 0.24635387993660685,
+            "jvp_sha256": "ad0bf5709cffb3acb2891388e5d7b989edd80e906189743556353456d58a13c0",
+            "physical_diagnostics": {
+              "N": 1.0983031411550206e-20,
+              "collision_diagnostics": {
+                "charge_conjugation_residual": 0.0005852109596794371,
+                "electromagnetic_entropy_rate": -2.2389639023112555e-29,
+                "entropy_duality_residual": 3.240124658698295e-13,
+                "entropy_production": 2.1086739291159847e-41,
+                "event_neutrino_energy_transfer": -2.2389639023112497e-28,
+                "event_neutrino_entropy_rate": 2.2389639023091468e-29,
+                "first_law_residual": 0.0,
+                "mu_tau_residual": 0.0004111954689888547,
+                "node_neutrino_entropy_rate": 2.2389639023105978e-29,
+                "self_event_energy_residual": 0.0
+              },
+              "collision_total_sha256": "bee129ab870d999c80f89f03dda2d56944dcef4b79fa078571682902d996755b",
+              "domain": {
+                "largest_matrix_roundoff_correction": 0.0,
+                "matrix_roundoff_corrections": 0,
+                "whole_reaction_rejections": 1477632
+              },
+              "elapsed_time_mev_inverse": 0.24635387993660685,
+              "electron_bath_energy_transfer": 2.2389639023112497e-28,
+              "first_law_residual": 0.0,
+              "occupation": {
+                "maximum": 0.4970379967529832,
+                "minimum": 9.469152911415635e-14,
+                "strict_open": true
+              },
+              "rhs_sha256": "8b4208ef905cbdda78792b65a406b267eb083491c6277ed55154b44f9b6bed71",
+              "state_sha256": "17cf0653597f5a0d63f34fd26298139775ffcfa00b02f7de253de7cc1798670e",
+              "tail": {
+                "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+                "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+                "last_four_node_occupation_max": 1.2430874731181287e-13,
+                "last_four_node_relative_distortion_max": 1.624571046718189e-15,
+                "reaction_tail_authority_validated": false
+              },
+              "temperature_cm_mev": 10.0,
+              "temperature_gamma_mev": 10.0
+            },
+            "relative_difference_signal": 0.0,
+            "rhs_difference_norm": 0.0,
+            "scheme": "forward_time_augmented",
+            "shifted_N": 1.0983031411550206e-20,
+            "shifted_rhs_sha256": "8b4208ef905cbdda78792b65a406b267eb083491c6277ed55154b44f9b6bed71",
+            "shifted_state_sha256": "17cf0653597f5a0d63f34fd26298139775ffcfa00b02f7de253de7cc1798670e",
+            "status": "EXECUTED",
+            "subtractive_condition_ratio": null
+          }
+        ],
+        "jvp_rule": {
+          "augmentation": "z=(y,N); G(z)=(F(N,y),1)",
+          "persistent_finite_difference_factor": false,
+          "relative_step": 0.001,
+          "scheme": "forward_time_augmented"
+        },
+        "label": "initial",
+        "rhs_call_accounting": {
+          "base_calls": 1,
+          "failed_shifted_calls": 0,
+          "full_rhs_equivalent_calls": 2,
+          "shifted_attempts": 1,
+          "shifted_calls": 1
+        },
+        "schema": "rabbit.f10.physical_rhs_jvp_state_receipt.v1",
+        "source_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/initial_state_order60_ymax30.npz",
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN"
+      },
+      {
+        "arnoldi": {
+          "breakdown": null,
+          "breakdown_tolerance": 1e-12,
+          "dimension": null,
+          "error_message": "coordinate decodes outside strict occupation domain",
+          "error_type": "IndependentNoQkeError",
+          "orthogonality_residual_inf": null,
+          "orthogonalization": "double_modified_gram_schmidt",
+          "requested_dimension": 10,
+          "source_sha256": "50d77af42e0deef88beff2f10d8572ec46e727c68d0d7fda81d12f9e4bd8efde",
+          "status": "ERROR_RETAINED"
+        },
+        "base": {
+          "N": 0.16286930247517223,
+          "collision_diagnostics": {
+            "charge_conjugation_residual": 1.7804154922704778e-08,
+            "electromagnetic_entropy_rate": 1.1172549520258293e-20,
+            "entropy_duality_residual": 3.838154967698994e-15,
+            "entropy_production": 1.4974631123568966e-26,
+            "event_neutrino_energy_transfer": 9.493459458191332e-20,
+            "event_neutrino_entropy_rate": -1.1172564494889416e-20,
+            "first_law_residual": 0.0,
+            "mu_tau_residual": 0.0012376661509906244,
+            "node_neutrino_entropy_rate": -1.117256449488933e-20,
+            "self_event_energy_residual": 0.0
+          },
+          "collision_total_sha256": "33e53f9586726890f1082e5461071cc581c4f6ac15b342f19521c4b205bddad7",
+          "domain": {
+            "largest_matrix_roundoff_correction": 0.0,
+            "matrix_roundoff_corrections": 0,
+            "whole_reaction_rejections": 1477632
+          },
+          "elapsed_time_mev_inverse": 4.3184509101514783e+18,
+          "electron_bath_energy_transfer": -9.493459458191332e-20,
+          "first_law_residual": 0.0,
+          "occupation": {
+            "maximum": 0.49703782467962554,
+            "minimum": 9.472628853562014e-14,
+            "strict_open": true
+          },
+          "rhs_sha256": "5a6d91484697b051bd65aaf44300d6e796cac1812dcf490596e04c8017fd965e",
+          "state_sha256": "623985fb3393bfa6d7eb4c78e7a5c359d14621146fc3f020956c4685eab54cc8",
+          "tail": {
+            "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+            "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+            "last_four_node_occupation_max": 1.2435488413530045e-13,
+            "last_four_node_relative_distortion_max": 0.00037368464746633293,
+            "reaction_tail_authority_validated": false
+          },
+          "temperature_cm_mev": 8.497022351366393,
+          "temperature_gamma_mev": 8.497129004420698
+        },
+        "jvp_calls": [
+          {
+            "call_index": 0,
+            "direction_norm": 1.0,
+            "epsilon": 4318450910151478.5,
+            "jvp_sha256": "ca05dbc6683d885d3d84143fc1d5e082dac4085545e9b0fb2bb2bb21bdb777b1",
+            "physical_diagnostics": {
+              "N": 0.16300830717673803,
+              "collision_diagnostics": {
+                "charge_conjugation_residual": 2.1405616888773866e-09,
+                "electromagnetic_entropy_rate": 1.1049385034758506e-20,
+                "entropy_duality_residual": 4.221370963118749e-15,
+                "entropy_production": 1.4851710667094893e-26,
+                "event_neutrino_energy_transfer": 9.387500033197747e-20,
+                "event_neutrino_entropy_rate": -1.1049399886469173e-20,
+                "first_law_residual": 0.0,
+                "mu_tau_residual": 1.2281304573449972,
+                "node_neutrino_entropy_rate": -1.104939988646908e-20,
+                "self_event_energy_residual": 0.0
+              },
+              "collision_total_sha256": "e9997b2e7ef6787e256845b0ec43fa3263ebaa7b8ef4054e487f8b988b4e4a73",
+              "domain": {
+                "largest_matrix_roundoff_correction": 0.0,
+                "matrix_roundoff_corrections": 0,
+                "whole_reaction_rejections": 1477632
+              },
+              "elapsed_time_mev_inverse": 4.32276936106163e+18,
+              "electron_bath_energy_transfer": -9.387500033197747e-20,
+              "first_law_residual": 0.0,
+              "occupation": {
+                "maximum": 0.4970378244383059,
+                "minimum": 9.472632716360597e-14,
+                "strict_open": true
+              },
+              "rhs_sha256": "d8de7e3f625a8010b9336b88d41ca7739e266b776acdca4319b52693e033277f",
+              "state_sha256": "b20231d64f148d0f1828009c5afd1421263ed5074eef4b07967fd97da6b1e38d",
+              "tail": {
+                "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+                "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+                "last_four_node_occupation_max": 1.2435438925905915e-13,
+                "last_four_node_relative_distortion_max": 0.0003884446845389412,
+                "reaction_tail_authority_validated": false
+              },
+              "temperature_cm_mev": 8.495841307397477,
+              "temperature_gamma_mev": 8.49594796784354
+            },
+            "relative_difference_signal": 0.00013900374596083042,
+            "rhs_difference_norm": 8638043165212672.0,
+            "scheme": "forward_time_augmented",
+            "shifted_N": 0.16300830717673803,
+            "shifted_rhs_sha256": "d8de7e3f625a8010b9336b88d41ca7739e266b776acdca4319b52693e033277f",
+            "shifted_state_sha256": "b20231d64f148d0f1828009c5afd1421263ed5074eef4b07967fd97da6b1e38d",
+            "status": "EXECUTED",
+            "subtractive_condition_ratio": 7194.050729264432
+          },
+          {
+            "call_index": 1,
+            "direction_norm": 1.0,
+            "epsilon": 4318450910151478.5,
+            "error_message": "coordinate decodes outside strict occupation domain",
+            "error_type": "IndependentNoQkeError",
+            "scheme": "forward_time_augmented",
+            "shifted_N": -68984406.01726866,
+            "shifted_state_sha256": "2a85c27f4ac875941f45537db4108de5b6c676745e5b9191fcc4bc4dca874736",
+            "status": "ERROR_RETAINED"
+          }
+        ],
+        "jvp_failure": {
+          "error_message": "coordinate decodes outside strict occupation domain",
+          "error_type": "IndependentNoQkeError",
+          "scientific_verdict": "DIRECT_JVP_NOT_ADMISSIBLE_AT_FROZEN_RULE"
+        },
+        "jvp_rule": {
+          "augmentation": "z=(y,N); G(z)=(F(N,y),1)",
+          "persistent_finite_difference_factor": false,
+          "relative_step": 0.001,
+          "scheme": "forward_time_augmented"
+        },
+        "label": "creep_1200",
+        "rhs_call_accounting": {
+          "base_calls": 1,
+          "failed_shifted_calls": 1,
+          "full_rhs_equivalent_calls": 3,
+          "shifted_attempts": 2,
+          "shifted_calls": 1
+        },
+        "schema": "rabbit.f10.physical_rhs_jvp_state_receipt.v1",
+        "source_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz",
+        "status": "EXECUTED_WITH_RETAINED_JVP_FAILURE"
+      },
+      {
+        "arnoldi": {
+          "breakdown": true,
+          "breakdown_tolerance": 1e-12,
+          "dimension": 1,
+          "orthogonality_residual_inf": 0.0,
+          "orthogonalization": "double_modified_gram_schmidt",
+          "requested_dimension": 10,
+          "source_sha256": "50d77af42e0deef88beff2f10d8572ec46e727c68d0d7fda81d12f9e4bd8efde"
+        },
+        "base": {
+          "N": 0.16297062760991832,
+          "collision_diagnostics": {
+            "charge_conjugation_residual": 8.759434443881245e-09,
+            "electromagnetic_entropy_rate": 1.1170813771379252e-20,
+            "entropy_duality_residual": 2.5591675645491752e-15,
+            "entropy_production": 1.4980912390610043e-26,
+            "event_neutrino_energy_transfer": 9.491022928814688e-20,
+            "event_neutrino_entropy_rate": -1.1170828752291642e-20,
+            "first_law_residual": 0.0,
+            "mu_tau_residual": 0.01274716416850032,
+            "node_neutrino_entropy_rate": -1.1170828752291585e-20,
+            "self_event_energy_residual": 0.0
+          },
+          "collision_total_sha256": "f102f3c9cd273faeb044b445f9b1ffafdd7ca4c41abeb6234f52e22b62f03d74",
+          "domain": {
+            "largest_matrix_roundoff_correction": 0.0,
+            "matrix_roundoff_corrections": 0,
+            "whole_reaction_rejections": 1477632
+          },
+          "elapsed_time_mev_inverse": 4.3215991029098307e+18,
+          "electron_bath_energy_transfer": -9.491022928814688e-20,
+          "first_law_residual": 0.0,
+          "occupation": {
+            "maximum": 0.49703782447070743,
+            "minimum": 9.472631852742886e-14,
+            "strict_open": true
+          },
+          "rhs_sha256": "52ddd56f71b40ba8fe654e39a8cfbb50c83eb0c9e8f66ce55a0200fe3f03b37f",
+          "state_sha256": "bc6be3c38f32d888afbfea51833cdc8e61d5fd306bb1e8cb36c6df46ec5b743c",
+          "tail": {
+            "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+            "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+            "last_four_node_occupation_max": 1.2435489060992396e-13,
+            "last_four_node_relative_distortion_max": 0.0003738291036203546,
+            "reaction_tail_authority_validated": false
+          },
+          "temperature_cm_mev": 8.49616143304877,
+          "temperature_gamma_mev": 8.49626815293583
+        },
+        "jvp_calls": [
+          {
+            "call_index": 0,
+            "direction_norm": 1.0,
+            "epsilon": 4321599102909830.5,
+            "jvp_sha256": "129a61012224171ed49631d09f034bc985de6ba4d91a171945c799e88d9719fe",
+            "physical_diagnostics": {
+              "N": 0.1631097054614681,
+              "collision_diagnostics": {
+                "charge_conjugation_residual": 6.192960925519831e-10,
+                "electromagnetic_entropy_rate": 1.1047362560347852e-20,
+                "entropy_duality_residual": 1.293882780774102e-15,
+                "entropy_production": 1.477428769953301e-26,
+                "event_neutrino_energy_transfer": 9.384830181272293e-20,
+                "event_neutrino_entropy_rate": -1.1047377334635552e-20,
+                "first_law_residual": 0.0,
+                "mu_tau_residual": 1.329785744618119,
+                "node_neutrino_entropy_rate": -1.1047377334635523e-20,
+                "self_event_energy_residual": 0.0
+              },
+              "collision_total_sha256": "1a9928c7d9029b8c5b2736d1de63cebf3eb9159a729e61e57bad019b7119b557",
+              "domain": {
+                "largest_matrix_roundoff_correction": 0.0,
+                "matrix_roundoff_corrections": 0,
+                "whole_reaction_rejections": 1477632
+              },
+              "elapsed_time_mev_inverse": 4.3259207020127406e+18,
+              "electron_bath_energy_transfer": -9.384830181272293e-20,
+              "first_law_residual": 0.0,
+              "occupation": {
+                "maximum": 0.4970378241411758,
+                "minimum": 9.472603875550639e-14,
+                "strict_open": true
+              },
+              "rhs_sha256": "8a01e95c3b3b967ab9e89a845acf032ffc5a7d077ae97e57ca6ae89710e9eebc",
+              "state_sha256": "60cec1fd4494c5b602ecbf1f3ed6f2780eb39c8cb74ee8179e12731467a472b7",
+              "tail": {
+                "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+                "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+                "last_four_node_occupation_max": 1.2435512402329266e-13,
+                "last_four_node_relative_distortion_max": 0.000374890468139112,
+                "reaction_tail_authority_validated": false
+              },
+              "temperature_cm_mev": 8.494979887335566,
+              "temperature_gamma_mev": 8.495086614570909
+            },
+            "relative_difference_signal": 0.00013907689685246037,
+            "rhs_difference_norm": 8644341102882816.0,
+            "scheme": "forward_time_augmented",
+            "shifted_N": 0.1631097054614681,
+            "shifted_rhs_sha256": "8a01e95c3b3b967ab9e89a845acf032ffc5a7d077ae97e57ca6ae89710e9eebc",
+            "shifted_state_sha256": "60cec1fd4494c5b602ecbf1f3ed6f2780eb39c8cb74ee8179e12731467a472b7",
+            "status": "EXECUTED",
+            "subtractive_condition_ratio": 7190.266842528485
+          }
+        ],
+        "jvp_rule": {
+          "augmentation": "z=(y,N); G(z)=(F(N,y),1)",
+          "persistent_finite_difference_factor": false,
+          "relative_step": 0.001,
+          "scheme": "forward_time_augmented"
+        },
+        "label": "creep_2000",
+        "rhs_call_accounting": {
+          "base_calls": 1,
+          "failed_shifted_calls": 0,
+          "full_rhs_equivalent_calls": 2,
+          "shifted_attempts": 1,
+          "shifted_calls": 1
+        },
+        "schema": "rabbit.f10.physical_rhs_jvp_state_receipt.v1",
+        "source_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_2000.npz",
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN"
+      },
+      {
+        "arnoldi": {
+          "breakdown": true,
+          "breakdown_tolerance": 1e-12,
+          "dimension": 1,
+          "orthogonality_residual_inf": 0.0,
+          "orthogonalization": "double_modified_gram_schmidt",
+          "requested_dimension": 10,
+          "source_sha256": "50d77af42e0deef88beff2f10d8572ec46e727c68d0d7fda81d12f9e4bd8efde"
+        },
+        "base": {
+          "N": 0.1631703648662373,
+          "collision_diagnostics": {
+            "charge_conjugation_residual": 2.8370456600339192e-08,
+            "electromagnetic_entropy_rate": 1.1198274514246236e-20,
+            "entropy_duality_residual": 2.2841664278607734e-15,
+            "entropy_production": 1.5050778461964612e-26,
+            "event_neutrino_energy_transfer": 9.512454327280885e-20,
+            "event_neutrino_entropy_rate": -1.1198289565024697e-20,
+            "first_law_residual": 0.0,
+            "mu_tau_residual": 0.010995327735546716,
+            "node_neutrino_entropy_rate": -1.1198289565024646e-20,
+            "self_event_energy_residual": 0.0
+          },
+          "collision_total_sha256": "0b18a01f9393b331764089fd2049c86afe81eb71a7f68a438b7b4541ef957247",
+          "domain": {
+            "largest_matrix_roundoff_correction": 0.0,
+            "matrix_roundoff_corrections": 0,
+            "whole_reaction_rejections": 1477632
+          },
+          "elapsed_time_mev_inverse": 4.327807013315129e+18,
+          "electron_bath_energy_transfer": -9.512454327280885e-20,
+          "first_law_residual": 0.0,
+          "occupation": {
+            "maximum": 0.4970378240022176,
+            "minimum": 9.472636667292174e-14,
+            "strict_open": true
+          },
+          "rhs_sha256": "5cca42e73383c383c018234f9b0ca66a2d0853695b918721d45b1622163a53d7",
+          "state_sha256": "cad23459ed67d49a69545d664a84e9af526778ec397e9c35f60f107b422b043a",
+          "tail": {
+            "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+            "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+            "last_four_node_occupation_max": 1.2435491758203416e-13,
+            "last_four_node_relative_distortion_max": 0.00037416110134352236,
+            "reaction_tail_authority_validated": false
+          },
+          "temperature_cm_mev": 8.494464602540665,
+          "temperature_gamma_mev": 8.494571476328172
+        },
+        "jvp_calls": [
+          {
+            "call_index": 0,
+            "direction_norm": 1.0,
+            "epsilon": 4327807013315129.0,
+            "jvp_sha256": "5db8396819241841d6a994ddf8ea725e009c46ed1e36fee4c7c715a2925f84a9",
+            "physical_diagnostics": {
+              "N": 0.16330958687701072,
+              "collision_diagnostics": {
+                "charge_conjugation_residual": 2.0818209788244944e-09,
+                "electromagnetic_entropy_rate": 1.1073455259447246e-20,
+                "entropy_duality_residual": 2.989299707266241e-15,
+                "entropy_production": 1.4837476529640672e-26,
+                "event_neutrino_energy_transfer": 9.405116253014435e-20,
+                "event_neutrino_entropy_rate": -1.1073470096923775e-20,
+                "first_law_residual": 0.0,
+                "mu_tau_residual": 0.8976157470841792,
+                "node_neutrino_entropy_rate": -1.1073470096923709e-20,
+                "self_event_energy_residual": 0.0
+              },
+              "collision_total_sha256": "20a2987dfb53177ae059f201fe42f86a3d68ba31766041307f18823ffaa7a7f9",
+              "domain": {
+                "largest_matrix_roundoff_correction": 0.0,
+                "matrix_roundoff_corrections": 0,
+                "whole_reaction_rejections": 1477632
+              },
+              "elapsed_time_mev_inverse": 4.332134820328444e+18,
+              "electron_bath_energy_transfer": -9.405116253014435e-20,
+              "first_law_residual": 0.0,
+              "occupation": {
+                "maximum": 0.49703782367106836,
+                "minimum": 9.47262318044969e-14,
+                "strict_open": true
+              },
+              "rhs_sha256": "5db19dbb09b31fbf8c642fe1d534ab91a3ce3135418590b341063a534ddfb787",
+              "state_sha256": "939c53b8c4e1df3f2796fc1508a15b7e403bd1c197480412525bd40ed72fecf8",
+              "tail": {
+                "equilibrium_energy_fraction_beyond_ymax": 4.921721142238624e-10,
+                "equilibrium_number_fraction_beyond_ymax": 4.99252797610401e-11,
+                "last_four_node_occupation_max": 1.2435510895427924e-13,
+                "last_four_node_relative_distortion_max": 0.00037552287734852964,
+                "reaction_tail_authority_validated": false
+              },
+              "temperature_cm_mev": 8.493282068417555,
+              "temperature_gamma_mev": 8.493388949208521
+            },
+            "relative_difference_signal": 0.00013922105787051827,
+            "rhs_difference_norm": 8656759986696192.0,
+            "scheme": "forward_time_augmented",
+            "shifted_N": 0.16330958687701072,
+            "shifted_rhs_sha256": "5db19dbb09b31fbf8c642fe1d534ab91a3ce3135418590b341063a534ddfb787",
+            "shifted_state_sha256": "939c53b8c4e1df3f2796fc1508a15b7e403bd1c197480412525bd40ed72fecf8",
+            "status": "EXECUTED",
+            "subtractive_condition_ratio": 7182.821444511966
+          }
+        ],
+        "jvp_rule": {
+          "augmentation": "z=(y,N); G(z)=(F(N,y),1)",
+          "persistent_finite_difference_factor": false,
+          "relative_step": 0.001,
+          "scheme": "forward_time_augmented"
+        },
+        "label": "creep_3000",
+        "rhs_call_accounting": {
+          "base_calls": 1,
+          "failed_shifted_calls": 0,
+          "full_rhs_equivalent_calls": 2,
+          "shifted_attempts": 1,
+          "shifted_calls": 1
+        },
+        "schema": "rabbit.f10.physical_rhs_jvp_state_receipt.v1",
+        "source_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_3000.npz",
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN"
+      }
+    ]
+  },
+  "schema": "rabbit.f10.physical_rhs_jvp_receipts.v1",
+  "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+  "started_utc": "2026-08-11T03:22:08Z",
+  "vector_manifest": [
+    {
+      "dtype": "float64",
+      "name": "creep_1200__arnoldi_start_vector",
+      "sha256": "f551510db35d5078b95d1eb0706e2044ff5453f5aae03990accbd134f36b8ee9",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__base_collision_total",
+      "sha256": "33e53f9586726890f1082e5461071cc581c4f6ac15b342f19521c4b205bddad7",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__base_occupations",
+      "sha256": "87336f6cbd54791bf01d89561e5166c7c0ec7cc9c1fc0d3312cadebb92ae14aa",
+      "shape": [
+        3,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__base_rhs",
+      "sha256": "5a6d91484697b051bd65aaf44300d6e796cac1812dcf490596e04c8017fd965e",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__base_state",
+      "sha256": "623985fb3393bfa6d7eb4c78e7a5c359d14621146fc3f020956c4685eab54cc8",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_00_direction",
+      "sha256": "dff57b926d1669bcb4f5e39d201de8cb401cded5745829468b8fd9cf883d3e5b",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_00_jvp",
+      "sha256": "228a715514cc6b0668f61ffc96b54380f583f87b741f509efa23cd9ecf0ca319",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_00_shifted_collision_total",
+      "sha256": "e9997b2e7ef6787e256845b0ec43fa3263ebaa7b8ef4054e487f8b988b4e4a73",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_00_shifted_rhs",
+      "sha256": "d8de7e3f625a8010b9336b88d41ca7739e266b776acdca4319b52693e033277f",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_00_shifted_state",
+      "sha256": "b20231d64f148d0f1828009c5afd1421263ed5074eef4b07967fd97da6b1e38d",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_01_direction",
+      "sha256": "9dc3f70c53713dda6ae776998b7459d5e2b2dcf0c924ec2fe68427620e86b460",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_1200__jvp_01_shifted_state",
+      "sha256": "2a85c27f4ac875941f45537db4108de5b6c676745e5b9191fcc4bc4dca874736",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__arnoldi_basis",
+      "sha256": "d861196dc942ddd1a2fd84938b328b5c08b22b18cc12837d79db3f38dc4b409e",
+      "shape": [
+        183,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__arnoldi_hessenberg",
+      "sha256": "82d2d3730b4a15a5bc9c637b644b28f92ff7600508d358f4481e209df1e72249",
+      "shape": [
+        2,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__arnoldi_start_vector",
+      "sha256": "ab41aa6eedfe0457c8598c6e538a98388e8a98b9b1de4c956d4282ff27ccd11f",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__base_collision_total",
+      "sha256": "f102f3c9cd273faeb044b445f9b1ffafdd7ca4c41abeb6234f52e22b62f03d74",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__base_occupations",
+      "sha256": "e25b1b12ff174e856e73557d218d60c6e8bd198cb170bc3795fd5b8ce79bbc23",
+      "shape": [
+        3,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__base_rhs",
+      "sha256": "52ddd56f71b40ba8fe654e39a8cfbb50c83eb0c9e8f66ce55a0200fe3f03b37f",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__base_state",
+      "sha256": "bc6be3c38f32d888afbfea51833cdc8e61d5fd306bb1e8cb36c6df46ec5b743c",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__jvp_00_direction",
+      "sha256": "d861196dc942ddd1a2fd84938b328b5c08b22b18cc12837d79db3f38dc4b409e",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__jvp_00_jvp",
+      "sha256": "b8ceee160f12190195cc4f2bd53388e2e7fc1fae10dfa38b5c654f1445abde40",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__jvp_00_shifted_collision_total",
+      "sha256": "1a9928c7d9029b8c5b2736d1de63cebf3eb9159a729e61e57bad019b7119b557",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__jvp_00_shifted_rhs",
+      "sha256": "8a01e95c3b3b967ab9e89a845acf032ffc5a7d077ae97e57ca6ae89710e9eebc",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_2000__jvp_00_shifted_state",
+      "sha256": "60cec1fd4494c5b602ecbf1f3ed6f2780eb39c8cb74ee8179e12731467a472b7",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__arnoldi_basis",
+      "sha256": "d1b891a9fd8d5ca3041de3274c3e3f29e2badb8c98ddfee98f92e80e58b2fd21",
+      "shape": [
+        183,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__arnoldi_hessenberg",
+      "sha256": "99b8b6267b610fd659e12ed71daa4db2207e72eace5edddc0223249739fc6783",
+      "shape": [
+        2,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__arnoldi_start_vector",
+      "sha256": "282f53734a83fd3ded488c54e4ae7f47a1d01c25956d8d345246c74d09fd2722",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__base_collision_total",
+      "sha256": "0b18a01f9393b331764089fd2049c86afe81eb71a7f68a438b7b4541ef957247",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__base_occupations",
+      "sha256": "7f52f32121a2e0103907069ec331a1f38f1391cf0188cae3a82e033872230bb3",
+      "shape": [
+        3,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__base_rhs",
+      "sha256": "5cca42e73383c383c018234f9b0ca66a2d0853695b918721d45b1622163a53d7",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__base_state",
+      "sha256": "cad23459ed67d49a69545d664a84e9af526778ec397e9c35f60f107b422b043a",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__jvp_00_direction",
+      "sha256": "d1b891a9fd8d5ca3041de3274c3e3f29e2badb8c98ddfee98f92e80e58b2fd21",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__jvp_00_jvp",
+      "sha256": "aad648dab057ea94ae76ab5890d4f2a78a13e0b6f6f6e5169cf609a3d7b6ec8c",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__jvp_00_shifted_collision_total",
+      "sha256": "20a2987dfb53177ae059f201fe42f86a3d68ba31766041307f18823ffaa7a7f9",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__jvp_00_shifted_rhs",
+      "sha256": "5db19dbb09b31fbf8c642fe1d534ab91a3ce3135418590b341063a534ddfb787",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "creep_3000__jvp_00_shifted_state",
+      "sha256": "939c53b8c4e1df3f2796fc1508a15b7e403bd1c197480412525bd40ed72fecf8",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__arnoldi_basis",
+      "sha256": "e6ae7d057fe4155e2d9836d1d5bba55ec199aff08da53cc95b72d2244e34031d",
+      "shape": [
+        183,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__arnoldi_hessenberg",
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+      "shape": [
+        2,
+        1
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__arnoldi_start_vector",
+      "sha256": "559fc1c108e809e414d647bb8725ea9b1931f0148e859b211f644165e1a96c91",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__base_collision_total",
+      "sha256": "bee129ab870d999c80f89f03dda2d56944dcef4b79fa078571682902d996755b",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__base_occupations",
+      "sha256": "f3e90786efbea601281d674d26b69176393decd17da1b79241519d0d64029fc2",
+      "shape": [
+        3,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__base_rhs",
+      "sha256": "8b4208ef905cbdda78792b65a406b267eb083491c6277ed55154b44f9b6bed71",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__base_state",
+      "sha256": "b60f0aeaa98b6729c927e2b667a21f5bb9f1c06e3d31fc1e60f916bc11ecb263",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__jvp_00_direction",
+      "sha256": "e6ae7d057fe4155e2d9836d1d5bba55ec199aff08da53cc95b72d2244e34031d",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__jvp_00_jvp",
+      "sha256": "ad0bf5709cffb3acb2891388e5d7b989edd80e906189743556353456d58a13c0",
+      "shape": [
+        183
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__jvp_00_shifted_collision_total",
+      "sha256": "bee129ab870d999c80f89f03dda2d56944dcef4b79fa078571682902d996755b",
+      "shape": [
+        6,
+        60
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__jvp_00_shifted_rhs",
+      "sha256": "8b4208ef905cbdda78792b65a406b267eb083491c6277ed55154b44f9b6bed71",
+      "shape": [
+        182
+      ]
+    },
+    {
+      "dtype": "float64",
+      "name": "initial__jvp_00_shifted_state",
+      "sha256": "17cf0653597f5a0d63f34fd26298139775ffcfa00b02f7de253de7cc1798670e",
+      "shape": [
+        182
+      ]
+    }
+  ],
+  "wall_seconds": 26.15906969131902
+}

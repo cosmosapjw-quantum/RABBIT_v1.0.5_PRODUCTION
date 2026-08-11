@@ -1,0 +1,99 @@
+{
+  "direct_receipts": {
+    "direct_time_augmented_jvp": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "raw_vectors": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_VECTORS.npz",
+      "selector": "/results/states/*/jvp_calls"
+    },
+    "domain_rejection_and_roundoff": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "selector": "/results/states/*/base/domain"
+    },
+    "finite_domain_tail": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "reaction_tail_authority_validated": false,
+      "selector": "/results/states/*/base/tail"
+    },
+    "first_law": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "selector": "/results/states/*/base/first_law_residual"
+    },
+    "physical_rhs": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "raw_vectors": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_VECTORS.npz",
+      "selector": "/results/states/*/base/rhs_sha256"
+    },
+    "strict_open_occupation": {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "selector": "/results/states/*/base/occupation"
+    }
+  },
+  "historical_observation_jacobians": {
+    "classification": "RETAINED_FINITE_DIFFERENCE_OBSERVATIONS_ONLY",
+    "paths": [
+      ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_1200.npz",
+      ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_2000.npz",
+      ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_3000.npz"
+    ],
+    "used_for_direct_jvp_receipts": false
+  },
+  "schema": "rabbit.f10.receipt_index.v1",
+  "state_labels": [
+    "initial",
+    "creep_1200",
+    "creep_2000",
+    "creep_3000"
+  ],
+  "validation": {
+    "all_required_diagnostics_present": true,
+    "all_states_executed": true,
+    "all_states_successful": false,
+    "d071_reopen_earned": false,
+    "direct_jvp_provenance_present": true,
+    "historical_observation_jacobians_used": false,
+    "physical_prefix_executed": false,
+    "reaction_tail_authority_validated": false,
+    "states": [
+      {
+        "direct_jvp_present": true,
+        "domain_present": true,
+        "first_law_present": true,
+        "label": "initial",
+        "occupation_present": true,
+        "rhs_present": true,
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+        "tail_present": true
+      },
+      {
+        "direct_jvp_present": true,
+        "domain_present": true,
+        "first_law_present": true,
+        "label": "creep_1200",
+        "occupation_present": true,
+        "rhs_present": true,
+        "status": "EXECUTED_WITH_RETAINED_JVP_FAILURE",
+        "tail_present": true
+      },
+      {
+        "direct_jvp_present": true,
+        "domain_present": true,
+        "first_law_present": true,
+        "label": "creep_2000",
+        "occupation_present": true,
+        "rhs_present": true,
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+        "tail_present": true
+      },
+      {
+        "direct_jvp_present": true,
+        "domain_present": true,
+        "first_law_present": true,
+        "label": "creep_3000",
+        "occupation_present": true,
+        "rhs_present": true,
+        "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+        "tail_present": true
+      }
+    ]
+  }
+}

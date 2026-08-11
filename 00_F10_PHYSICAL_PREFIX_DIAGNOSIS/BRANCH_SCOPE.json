@@ -1,0 +1,30 @@
+{
+  "base": {
+    "branch": "f10-independent-validation-b3v2",
+    "commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f"
+  },
+  "branch": "diagnosis_report",
+  "claim_ceiling": {
+    "d071_reopen_earned": false,
+    "physical_prefix_executed": false,
+    "public_production_support": "FORBIDDEN",
+    "reaction_tail_authority_validated": false
+  },
+  "controlling_documents": [
+    "AGENTS.md",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    "docs/superpowers/specs/2026-08-11-f10-diagnosis-report-branch-design.md"
+  ],
+  "intended_remote_ref": "refs/remotes/origin/diagnosis_report",
+  "merge_to_main_authorized": false,
+  "non_goals": [
+    "trajectory or physical-prefix execution",
+    "D-071 or public capability promotion",
+    "QKE implementation",
+    "merge into origin/main"
+  ],
+  "purpose": "Externally inspectable source/input/retained-state provenance and direct static physical RHS/JVP receipts.",
+  "schema": "rabbit.f10.diagnosis_branch_scope.v1",
+  "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6"
+}

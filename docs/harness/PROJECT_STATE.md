@@ -1,5 +1,27 @@
 # Project State
 
+**Branch-local `diagnosis_report` notice (2026-08-11).**
+
+The owner-authorized `diagnosis_report` branch publishes the exact F-10 source
+lock, original order-60 / `y_max=30` V3a retained states and raw provenance,
+deterministic input/grid/catalog manifests, and prospectively sealed static
+physical RHS/direct-JVP receipts. Start at
+`00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md`.
+
+The active recovery seal is
+`acb5641e8008f0c8305e8e83db4d7269ba9e1cd6`; its contract SHA-256 is
+`c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc`.
+The earlier seal and failed receipt remain byte-preserved. The recovery receipt
+retains valid base RHS, first-law, occupation, domain/roundoff, and tail
+diagnostics for all four states. Its fixed-rule direct JVP is a negative
+admissibility result at `creep_1200`, where the second shifted call leaves the
+strict occupation domain; this failure is not hidden or promoted.
+
+This is an artifact/provenance publication only. The physical prefix trajectory
+was not run, reaction-tail authority was not established, and no gate,
+registry, public capability, QKE scope, or `main` history changed. The remote
+delivery target is only `origin/diagnosis_report`.
+
 Date: 2026-07-29
 
 ## Current status

@@ -1,5 +1,25 @@
 # Next Session Prompt
 
+## 2026-08-11 `diagnosis_report` preservation overlay (branch-local, controlling)
+
+Open `00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md` first. Preserve active seal
+`acb5641e8008f0c8305e8e83db4d7269ba9e1cd6`, contract SHA-256
+`c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc`,
+the first failed receipt under `receipts/`, and the active recovery receipt
+under `receipts_v2/` byte-for-byte.
+
+Do not rerun, replace, amend, normalize, or regrade either receipt set. The
+active evidence contains all four base RHS/first-law/occupation/domain/tail
+diagnostics and an explicit `creep_1200` direct-JVP strict-domain failure. A
+future change to source, state, epsilon, Krylov dimension, tolerance, threshold,
+or output semantics needs new owner authority, a new contract identity, and a
+new prospective seal. Static receipts are not a trajectory; do not claim a
+physical-prefix execution, reaction-tail authority, registry/gate movement,
+public production, QKE scope, or a merge to `main`.
+
+This overlay records preservation state only and grants no new work. The remote
+ref for these bytes is `origin/diagnosis_report`.
+
 ## 2026-08-04 D-074 FREEZE — harness development is closed; read this before anything (controlling)
 
 **The programme is stopped. Nothing in this file authorises work.**
