@@ -1,0 +1,814 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-math-algo-code-independent",
+  "assignment_id": "A-MAC-ALGO",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c7b-9a02-7a63-b57a-51494ab6e6f7",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-math-algo-code-independent",
+    "assignment_id": "A-MAC-ALGO",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8dc23887f09e6ef7a503afdd540d0db6140e8a2296372cd652607d2dadebed95",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ALGO.json",
+  "started_at": "2026-08-23T02:47:17Z",
+  "completed_at": "2026-08-23T02:56:27Z",
+  "claim_status": "PROPOSED",
+  "claim_ceiling": "This is a blind static algorithm/work-model analysis. No trajectory, benchmark, implementation, independent physics validation, D-071 reopen, or gate promotion was performed. The 34-findings inventory remains non-green.",
+  "executive_verdict": {
+    "verdict": "fail",
+    "statement": "No generic BDF/Rosenbrock/Krylov/sparse/multirate substitution has a source-backed route to the retained 8305x endpoint miss. The current order-60 state has n=2+2M=122 variables, while one full collision evaluation traverses about 1,036,800 electron events and 518,400 self-event geometries reused over four channel contractions. Collision/source work and step collapse therefore dominate dense n^3 linear algebra. Only two materially new, same-physics discriminators are ranked: a moment-constrained dynamically adapted fermion representation and a Fermi-Dirac asymptotic-preserving penalized collision integrator. Both are PROPOSED, must use the retained stalled-phase state and exact order-60/ymax-30 physics, and fail closed unless a prospective bounded test projects endpoint completion inside the existing wall cap with margin.",
+    "retained_blockers": [
+      "G-F10-INDEPENDENT-FLRW remains FAIL and CLOSED_ON_CURRENT_MEASUREMENT.",
+      "G-HARNESS-INTEGRITY remains FAIL.",
+      "The order-16 to order-32 approximately 3.5 percent Yp drift remains a physics/discretization blocker, not an ODE-method tuning target.",
+      "The physical-prefix/JVP receipt is static, scale-inadmissible at one state, and supplies no trajectory or reaction-tail authority."
+    ]
+  },
+  "operator_work_model": {
+    "definitions": {
+      "M": "radial nodes per folded neutrino bank",
+      "b": "number of folded neutrino banks; current isotropic source has b=2 (electron-pair and heavy-pair)",
+      "n": "2+bM state variables (photon temperature, elapsed seconds, and logits); n=98 at M=48 and n=122 at M=60",
+      "P_e": "12 explicit electron/positron processes",
+      "R_e": "electron radial quadrature order; production setting 6",
+      "A_e": "electron angular quadrature order; production setting 4",
+      "A_s": "self-collision angular quadrature order; production setting 12",
+      "P_s": "4 folded self-collision channel contractions"
+    },
+    "source": "C_rhs = Theta(P_e M^2 R_e A_e + P_s M^2 A_s^2) arithmetic, with event-stream storage Theta(P_e M^2 R_e A_e + M^2 A_s^2) if materialized. At M=48 this is 663,552 electron events plus 331,776 self geometries and about 1,327,104 self channel-event contractions; at M=60 it is 1,036,800 electron events plus 518,400 self geometries and about 2,073,600 self channel-event contractions.",
+    "analytic_dense_jacobian": "C_J has the same collision-event asymptotic order as C_rhs with a larger derivative-update constant, plus two full RHS calls for the centered photon-temperature column and O(n^2) assembly/storage. The occupation block is algorithmically dense; the Friedmann derivative is a rank-one correction, not the dominant collision derivative.",
+    "finite_difference_dense_jacobian": "Forward differences cost approximately (n+1) C_rhs; centered differences approximately 2n C_rhs. This is strictly unattractive at n=122 unless the state dimension is first reduced. SciPy's componentwise finite-difference scaling avoids the particular global elapsed-time norm defect, but does not remove the call count.",
+    "dense_direct_linear_algebra": "One dense LU costs Theta(n^3) setup and Theta(n^2) memory; each triangular solve costs Theta(n^2). At n=122 this work is small compared with millions of collision contractions per RHS/Jacobian evaluation, so reducing LU cost alone cannot plausibly close an 8305x endpoint gap.",
+    "current_bdf": "The Rust BDF path uses diffsol 0.16.0 with NalgebraMat/NalgebraLU. It builds a dense Jacobian once per bitwise-identical linearization point and applies cached dense Jv columns. Per accepted step is roughly nonlinear residual RHS work plus C_J + Theta(n^3), with actual retry/history cost controlled by diffsol. The exact Jacobian cache already yielded a closed 55.815 percent endpoint improvement and is not a new candidate.",
+    "current_rodas5p": "The custom dense Rosenbrock-W path performs one fused RHS/Jacobian construction and one LU per linearization, approximately seven stage RHS calls, and centered df/dt work; a useful leading model is C_J + about 9 C_rhs + Theta(n^3) per fresh linearization. Its direct dense solve is not the dominant asymptotic cost.",
+    "matrix_free_inexact_newton_krylov": "With finite-difference Jv, each Krylov matvec costs about one full RHS. For k accumulated Krylov iterations per Newton solve, work is Theta(k C_rhs) plus residual calls and preconditioner setup; memory is Theta(kn) for an unrestarted basis or Theta(mn) for restart length m. Without a physics preconditioner k can approach n, making this worse than the current analytic dense Jacobian. A matrix-free method becomes plausible only after an analytic event-stream Jv and a demonstrated block/relaxation preconditioner reduce full collision passes.",
+    "rosenbrock_k": "Rosenbrock-K methods can use a Krylov basis whose dimension is tied to temporal order, but current code has no admissible production Jv and the existing physical-prefix Arnoldi evidence includes three dimension-one breakdowns plus one out-of-domain perturbation. An order-4 to order-5 basis would still cost multiple C_rhs calls with finite-difference Jv and has no credible 8305x route by itself.",
+    "block_sparse_low_rank": "The collision folds couple every radial output to both folded input banks through incoming-pair quadrature, interpolation/deposition, and Pauli factors; structural sparsity is therefore near dense. A block-diagonal bank preconditioner reduces factorization from Theta((bM)^3) toward Theta(b M^3), but leaves collision-source/Jv work and neglected inter-bank stiffness. The analytically rank-one Friedmann term can use a low-rank update, but that optimizes the cheap part. Sparse/KLU/faer support is library-feasible only after a measured sparse graph and fill study; current structure supplies neither.",
+    "exponential_imex_multirate": "A generic exponential integrator still needs repeated Jv/phi actions and inherits the same expensive, currently unvalidated Jv. A generic IMEX or multirate split is a no-go because collision moments directly drive photon temperature and both neutrino banks are stiff and strongly coupled. A Fermi-Dirac asymptotic-preserving penalization is distinct: it analytically treats a moment-matched stiff relaxation while retaining the exact collision residual, and can in principle change step count rather than only linear algebra.",
+    "adaptive_representation": "A time-dependent orthogonal fermion basis parameterized by effective temperature and occupancy can encode particle number and energy in its lowest mode and evolve only r residual coefficients per bank. The reduced state is n_r=2+b(2+r); however, exact order-60 collision quadrature remains Theta(M^2) unless separately changed. The only credible endpoint gain is removal of badly scaled, stiff tail logits and a resulting multi-order reduction in accepted/rejected steps, which must be measured rather than inferred.",
+    "switching": "A collisionless-tail switch does not target the observed early N approximately 0.1653 stall. Any switch must have a prospectively sealed invariant/residual indicator, hysteresis, conservation-preserving handoff, and the same stalled-phase benchmark. BDF-to-Rosenbrock switching based only on retry counts is telemetry-driven policy and is not a D-071 reopen condition."
+  },
+  "method_comparison": [
+    {
+      "method": "variable-order BDF with current dense analytic Jacobian",
+      "disposition": "REFERENCE_ONLY",
+      "endpoint_plausibility": "No; it is the measured stalled method and its major exact-Jacobian reuse gain is already closed.",
+      "prerequisites": ["Preserve SciPy/BDF as temporary number-of-record until Rust endpoint authority passes."],
+      "failure_modes": ["order/history reset from stop-time chunking", "nonlinear/error retry explosion", "strict tail-logit scaling"],
+      "falsifier": "Any claim that tolerance, hmax, hardware, or retry tuning alone is a D-071 reopen.",
+      "library_feasibility": "Current Rust diffsol 0.16.0 and Python SciPy 1.17.1 lock support BDF; no dependency change needed."
+    },
+    {
+      "method": "dense Rosenbrock-W / current Rodas5P",
+      "disposition": "CORRECTNESS_ORACLE_OR_DISCRIMINATOR_ONLY",
+      "endpoint_plausibility": "Low; one dense factorization is cheap relative to source construction, while about nine source-equivalent calls per fresh linearization remain.",
+      "prerequisites": ["Repair fail-closed event/config/retry semantics before using outputs as evidence."],
+      "failure_modes": ["immediate hard failure on a recoverable LU/nonfinite attempt", "extra event-refinement solves outside attempt semantics", "dense finite-difference Jacobian in Python"],
+      "falsifier": "Same-physics stalled-window wall and collision-call count fail to improve by the prospectively sealed multi-order target.",
+      "library_feasibility": "Custom Rust implementation exists; Python NumPy implementation is a non-authoritative reference path."
+    },
+    {
+      "method": "Rosenbrock-K",
+      "disposition": "NO_GO_UNTIL_ADMISSIBLE_JV",
+      "endpoint_plausibility": "Low on current evidence; temporal-order Krylov dimension helps linear solves but does not remove collision evaluations or the observed state-scaling defect.",
+      "prerequisites": ["componentwise weighted perturbations", "domain-preserving logit Jv", "nontrivial Arnoldi dimension at retained stalled states", "reaction-tail authority"],
+      "failure_modes": ["happy breakdown at dimension one", "out-of-domain finite-difference perturbation", "Krylov error masks physical residual"],
+      "falsifier": "Any retained stalled state has inadmissible Jv or Krylov dimension below the method requirement.",
+      "library_feasibility": "No current project implementation or pinned Rosenbrock-K library; custom Rust work would be required."
+    },
+    {
+      "method": "matrix-free inexact Newton-Krylov BDF",
+      "disposition": "NO_GO_AS_STANDALONE_SWAP",
+      "endpoint_plausibility": "Low at n=122 because dense LU is cheap and each finite-difference Jv is a full collision call.",
+      "prerequisites": ["analytic or fused event-stream Jv", "physics block/relaxation preconditioner", "weighted nonlinear forcing", "true collision-call accounting"],
+      "failure_modes": ["Krylov iteration count approaches n", "preconditioner setup reproduces dense Jacobian cost", "loss of positivity/domain in perturbations"],
+      "falsifier": "Total full-collision-equivalent calls per accepted stalled-window advance do not beat current dense BDF.",
+      "library_feasibility": "SUNDIALS CVODE documents matrix-free inexact Newton with user Jv/preconditioning, but it is not a current dependency. diffsol 0.16.0 is currently used with dense NalgebraLU and no verified matrix-free Krylov path was found in the assigned source."
+    },
+    {
+      "method": "sparse, block, and low-rank derivative solvers",
+      "disposition": "NO_GO_FOR_ENDPOINT_CLAIM; BLOCK_PRECONDITIONER_RESEARCH_ONLY",
+      "endpoint_plausibility": "Very low without a measured sparse pattern; collision blocks are algorithmically dense and the proven rank-one Friedmann component is cheap.",
+      "prerequisites": ["order-60 numerical sparsity and fill measurement", "bounded block-preconditioned iteration count", "unchanged collision evaluation"],
+      "failure_modes": ["near-full fill", "strong off-diagonal bank coupling", "source remains dominant"],
+      "falsifier": "Sparse setup plus solves do not materially reduce full stalled-window wall, even if an isolated factorization microbenchmark improves.",
+      "library_feasibility": "Cargo.lock contains faer and nalgebra-sparse transitively; SciPy accepts sparse Jacobians. Availability is not evidence of benefit."
+    },
+    {
+      "method": "generic exponential, IMEX, or multirate split",
+      "disposition": "NO_GO",
+      "endpoint_plausibility": "Low because the current collision and FLRW energy equations are stiff and strongly coupled; generic splitting can add instability or repeated source/Jv work.",
+      "prerequisites": ["mathematically identified fast operator", "shared invariants and equilibrium", "coupling-error estimator", "positivity"],
+      "failure_modes": ["order reduction", "nonconservative handoff", "negative or unit-exceeding occupation", "fast-slow resonance/instability"],
+      "falsifier": "A frozen-state split commutator/coupling residual is not small over the proposed macro step.",
+      "library_feasibility": "SUNDIALS ARKODE supports IMEX/multirate algorithms but is not pinned; a library swap does not supply the missing physics split."
+    },
+    {
+      "method": "moment-constrained adaptive fermion representation",
+      "disposition": "RANKED_PROPOSED_DISCRIMINATOR",
+      "endpoint_plausibility": "Moderate but unvalidated; it is the cleanest analytically constrained domain reduction and directly targets tail-logit stiffness/scale while retaining full collision physics for validation.",
+      "prerequisites": ["invertible moment-to-parameter map", "conservative Galerkin projection", "strict 0<f<1 representation", "full-grid residual and omitted-mode certificate", "fixed order-60 collision quadrature"],
+      "failure_modes": ["basis degeneracy near equilibrium or dilute tail", "aliasing of collision residual", "moment agreement hides pointwise/tail error", "source wall unchanged despite reduced state"],
+      "falsifier": "The presealed stalled-window test fails occupation, moments, residual/tail, endpoint agreement, or at least a 10000x projected full-collision-call reduction relative to the retained projection.",
+      "library_feasibility": "No pinned library provides the repository-specific collision projection; a bounded native Rust discriminator is feasible without changing solver authority."
+    },
+    {
+      "method": "Fermi-Dirac asymptotic-preserving penalized collision integrator",
+      "disposition": "RANKED_PROPOSED_DISCRIMINATOR",
+      "endpoint_plausibility": "Moderate-low but potentially multi-order if the stall is relaxation stiffness near a moment-matched Fermi-Dirac manifold.",
+      "prerequisites": ["derive a moment-matched Fermi-Dirac equilibrium for each allowed collision invariant", "choose a prospective penalty bound mu", "prove residual conservation and strict occupation admissibility", "couple photon-energy exchange implicitly or conservatively"],
+      "failure_modes": ["stall is not relaxation stiffness", "penalty residual remains stiff", "mu tuning is post hoc", "equilibrium or collision invariants mismatch current physics"],
+      "falsifier": "The full collision residual divided by the penalty is not uniformly bounded on retained stalled states, or the macro-step count/collision-call projection misses the same-budget-with-margin criterion.",
+      "library_feasibility": "No pinned AP Boltzmann library fits this operator; the primary Hu-Li-Pareschi construction supplies a method pattern, not drop-in code. A custom Rust discriminator is required."
+    },
+    {
+      "method": "method or representation switching",
+      "disposition": "ONLY_AS_A_COMPONENT_OF_A_RANKED_DISCRIMINATOR",
+      "endpoint_plausibility": "None for a generic BDF/Rodas or late collisionless switch; possible only with a fixed adaptive-basis/AP residual indicator inside the stalled phase.",
+      "prerequisites": ["prospective indicator", "hysteresis", "state/invariant-preserving two-way map", "handoff residual"],
+      "failure_modes": ["chatter", "history loss", "boundary conservation defect", "switch occurs after the observed stall"],
+      "falsifier": "The indicator does not trigger before N approximately 0.1653 or the handoff changes any locked physical observable beyond its gate tolerance.",
+      "library_feasibility": "Custom orchestration only; adding policy knobs without a measured stalled-window win is forbidden."
+    }
+  ],
+  "ranked_candidates": [
+    {
+      "rank": 1,
+      "candidate": "Moment-constrained dynamically adapted fermion basis with full-grid residual certificate",
+      "status": "PROPOSED",
+      "why_ranked": "Highest blocker movement per prospective line because it is an analytically constrained domain reduction, targets the tail-logit/state-scale failure rather than cheap LU work, and has primary-literature precedent for fermionic freeze-out-like Boltzmann problems.",
+      "prospective_scope": "One bounded discriminator only: implement the two-bank effective-temperature/occupancy map, r-mode residual projection, and reconstruction inside an existing Rust audit executable; do not wire production dispatch or add a new gate.",
+      "line_estimate": "180-300 net Rust/test lines for a discriminator if existing collision evaluators are reused; production integration is separately estimated at 300-500 and is forbidden until the discriminator earns D-071 reopen.",
+      "setup_cost": "One moment inversion and basis build per accepted macro state, approximately O(b M r^2 + b r^3); collision quadrature remains dominant Theta(M^2).",
+      "runtime_hypothesis": "n falls from 122 to n_r=2+2(2+r), e.g. 14 for r=4, but this alone is insufficient. Admission requires removal of step collapse and at least 10000x reduction in projected full-collision-equivalent calls, not a reduced-state microbenchmark.",
+      "smallest_same_physics_benchmark": "Prospectively seal the retained order-60/ymax-30 checkpoint immediately before the N approximately 0.1653 stall and integrate a fixed N-width window that contains the observed stall. Use unchanged collision quadrature, constants, tolerances, FLRW coupling, event, and raw state. Compare reconstructed occupations and number/energy moments to the current full-grid RHS at every accepted point; compute an independent full-grid collision residual and omitted-mode tail bound; record full-collision-equivalent calls and wall. The contract must project the complete endpoint inside the existing 64,800-second cap with margin and must predeclare the required reduction (at least 10000x against the retained projected call count).",
+      "pass_conditions": [
+        "strict 0<f<1 for every reconstructed grid value",
+        "locked number, energy, first-law, event, and endpoint tolerances all pass",
+        "independent full-grid residual and omitted-mode certificate pass without post-hoc r selection",
+        "no renewed step-size creep across the entire sealed window",
+        "projected endpoint wall is below one half of the existing wall cap and the call reduction is at least 10000x"
+      ],
+      "hard_falsifiers": [
+        "moment map loses uniqueness or conditioning",
+        "r must grow proportionally to M in the stalled phase",
+        "full-grid residual/tail fails while moments pass",
+        "collision/source calls remain within two orders of magnitude of the retained projection"
+      ],
+      "blocker_movement_ratio": "Prospective discriminator: approximately 1 directly moved dominant blocker / 1 changed algorithm surface = 1.0 if kept within one existing executable; zero until the benchmark runs.",
+      "wall_time_policy": "Hard-cap the discriminator before execution; no extension or second tuning pass. A segment pass is diagnostic only and does not reopen the endpoint gate."
+    },
+    {
+      "rank": 2,
+      "candidate": "Moment-matched Fermi-Dirac asymptotic-preserving penalized collision step",
+      "status": "PROPOSED",
+      "why_ranked": "It can remove relaxation-scale step restrictions while preserving the exact collision residual, so it is the only surveyed time integrator with a plausible multi-order step-count mechanism. It ranks below the adaptive basis because the repository-specific invariant/penalty derivation and photon coupling are substantially harder.",
+      "prospective_scope": "Derive C(f)=mu(M_FD[U]-f)+R(f) for the current folded collision operator, with U the exact allowed collision moments. Implement only a frozen-configuration then stalled-window Rust discriminator; no solver policy, backend promotion, or generic IMEX framework.",
+      "line_estimate": "250-400 net Rust/test lines for a bounded discriminator if current collision and moment routines are reused; likely more than 400 for production, which requires a separate blocker-moving authorization.",
+      "setup_cost": "Moment-matched equilibrium solve O(b M) residual work plus a small dense moment solve; one exact collision residual per stage remains Theta(M^2). The stiff penalty update is O(n).",
+      "runtime_hypothesis": "If the stalled phase is close to the Fermi-Dirac slow manifold, macro steps become independent of the fast relaxation scale and full collision calls can fall by orders of magnitude. If not, the residual stays stiff and there is no advantage.",
+      "smallest_same_physics_benchmark": "First, on the retained order-60 stalled states, measure the prospectively fixed penalty dominance ratio and exact number/energy exchange identities without evolving. Only if those pass, integrate the same fixed stalled N-window and compare against a tight full-collision reference. Count exact collision calls, not stages or nominal steps; retain unchanged FLRW energy exchange and endpoint event.",
+      "pass_conditions": [
+        "the penalty equilibrium has exactly the declared collision invariants and valid Fermi-Dirac occupation",
+        "the residual preserves the same invariants and photon-neutrino energy exchange",
+        "a predeclared mu works for every retained stalled state without tuning",
+        "strict occupation and locked endpoint/first-law checks pass",
+        "projected endpoint wall is below one half of the existing cap and the call reduction is at least 10000x"
+      ],
+      "hard_falsifiers": [
+        "no uniform prospective penalty bound",
+        "residual remains as stiff as the original operator",
+        "positivity requires clipping",
+        "macro step changes a locked conservation or calibration observable",
+        "the observed stall is caused by quadrature/physics error rather than relaxation stiffness"
+      ],
+      "blocker_movement_ratio": "Prospective discriminator: 1 dominant blocker / 1 algorithm surface = 1.0 if bounded; zero until executed. Higher derivation and line risk than rank 1.",
+      "wall_time_policy": "Run the static dominance discriminator first under a small fixed cap; the trajectory window is forbidden if it fails. No parameter sweep."
+    }
+  ],
+  "not_ranked": [
+    "Rosenbrock-K and matrix-free JFNK: no admissible production Jv or demonstrated preconditioner; current n is too small and source too expensive for linear algebra alone to move 8305x.",
+    "Sparse/KLU/faer: current collision Jacobian is structurally dense; an isolated factorization speedup is segment-only.",
+    "Generic exponential/IMEX/multirate: no mathematically valid weakly coupled split; AP penalization is the narrower ranked alternative.",
+    "BDF/Rodas switching, hmax/tolerance tuning, more cores, GPU, or larger budget: explicitly not a D-071 reopen mechanism.",
+    "Prepared self-collision geometry caching: historical endpoint effect was only 9.195 percent with 3.277 percent RSS growth, so it does not meet the dominant-blocker rule.",
+    "Exact Jacobian cache/logit optimization: already closed with a 55.815 percent endpoint gain and must not be reopened."
+  ],
+  "primary_sources": [
+    {
+      "citation": "Birrell, Wilkening, Rafelski, Boltzmann Equation Solver Adapted to Emergent Chemical Non-equilibrium, JCP 281 (2015), DOI 10.1016/j.jcp.2014.10.056",
+      "url": "https://arxiv.org/abs/1403.2019",
+      "use": "Primary precedent for a dynamically adapted fermion orthogonal basis whose lowest term captures number and energy, validated on a neutrino-freeze-out-motivated problem. It does not validate this repository's endpoint."
+    },
+    {
+      "citation": "Hu, Li, Pareschi, Asymptotic-preserving exponential methods for the quantum Boltzmann equation with high-order accuracy",
+      "url": "https://arxiv.org/abs/1310.7658",
+      "use": "Primary precedent for Fermi/Bose asymptotic-preserving exponential collision treatment. It supplies a pattern, not a drop-in proof for this collision operator."
+    },
+    {
+      "citation": "Tranquilli and Sandu, Rosenbrock-Krylov Methods for Large Systems of Differential Equations, SIAM J. Sci. Comput. 36 (2014), DOI 10.1137/130923336",
+      "url": "https://arxiv.org/abs/1305.5481",
+      "use": "Primary source for temporal-order-sized Krylov spaces in Rosenbrock-K methods; applicability remains blocked by the current Jv evidence."
+    },
+    {
+      "citation": "Knoll and Keyes, Jacobian-free Newton-Krylov methods: a survey of approaches and applications, JCP 193 (2004)",
+      "url": "https://doi.org/10.1016/j.jcp.2003.08.010",
+      "use": "Primary work-model basis for matrix-free nonlinear solves and the need for effective preconditioning."
+    },
+    {
+      "citation": "SUNDIALS CVODE 7.5.0 mathematical documentation",
+      "url": "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html",
+      "use": "Official documentation for variable-order BDF, weighted norms, and matrix-free inexact Newton/linear-solver architecture."
+    },
+    {
+      "citation": "SciPy BDF API documentation",
+      "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.BDF.html",
+      "use": "Official documentation for variable-order BDF and the condition under which Jacobian sparsity helps."
+    },
+    {
+      "citation": "diffsol official crate documentation",
+      "url": "https://docs.rs/diffsol/latest/diffsol/",
+      "use": "Official library feasibility check; current repository is pinned to 0.16.0 and directly instantiates the dense Nalgebra backend."
+    }
+  ],
+  "anti_drift_accounting": {
+    "analysis_result_added_lines": "Result artifact only; production added/deleted/net lines are 0/0/0.",
+    "candidate_line_estimates": "Rank 1 discriminator 180-300 net lines; rank 2 discriminator 250-400 net lines. These are prospective planning estimates, not measured diffs.",
+    "token_use": "UNAVAILABLE: the harness exposed no exact per-assignment token counter.",
+    "blocker_movement_ratio": "Current work: 0 production blockers moved / 0 production-code surfaces changed; candidates have no earned movement until a prospective stalled-window discriminator runs.",
+    "cost_effectiveness_verdict": "COST-EFFECTIVE AS READ-ONLY TRIAGE. DO NOT IMPLEMENT BOTH. Authorize at most rank 1's bounded discriminator first; rank 2 is a mutually exclusive second option only after rank 1 is falsified or mathematically blocked."
+  },
+  "tool_versions": {
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python_runtime": "3.12.3",
+    "scipy_runtime": "1.17.0 (environment; requirements.measured.txt declares 1.17.1)",
+    "numpy_runtime": "2.4.2 (environment; requirements.measured.txt declares 2.4.4)",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)",
+    "diffsol_lock": "0.16.0",
+    "web_research_date": "2026-08-23"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-ALGO.json",
+    "targeted reads of the sealed context pack, assignment, role, template, original A-ODE-ADJ3 register, gate/status/policy files, and assignment-listed source only",
+    "rg/nl targeted source inspection for OdeConfig, OdeSystem, BDF/Rodas paths, collision event loops, Jacobian construction, dependency versions, and adapter behavior",
+    "sha256sum over the assignment, original register, policy/gate/status, and assignment-listed source artifacts",
+    "fresh primary/official web review: arXiv:1403.2019, arXiv:1310.7658, arXiv:1305.5481, Knoll-Keyes DOI, SUNDIALS CVODE, SciPy BDF, and diffsol documentation",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ALGO.json",
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-ALGO.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "authoritative original 34-finding register"
+    },
+    {
+      "path": ".agent-harness/context/GATE_REGISTRY.json",
+      "sha256": "bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f",
+      "role": "current machine-readable gate and D-071 authority"
+    },
+    {
+      "path": ".agent-harness/generated/STATUS_BOARD.md",
+      "sha256": "5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "role": "current human-readable status authority"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f",
+      "role": "programme anti-drift authority"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149",
+      "role": "cost-effectiveness policy"
+    },
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "sha256": "78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "role": "current Rust BDF/Rodas solver implementation"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "role": "current state, source, and Jacobian assembly"
+    },
+    {
+      "path": "native/rabbit_cpu/src/electron_spectral.rs",
+      "sha256": "501ae08a078ed7a4ce7643196e8096d4a2e038de85de6409574fa7ca4a7d805a",
+      "role": "electron collision event/operator structure"
+    },
+    {
+      "path": "native/rabbit_cpu/src/neutrino_self_spectral.rs",
+      "sha256": "1c6600a8f18b2bfba3a611dcf148021f51df2e26e814c9066a12a1b1a62d63a0",
+      "role": "self-collision event/operator structure"
+    },
+    {
+      "path": "native/rabbit_cpu/Cargo.lock",
+      "sha256": "af38eb9fa2c536cf93b76b63e10302431bef4487c444c6a21e3388360c4d4fae",
+      "role": "Rust dependency/version feasibility"
+    },
+    {
+      "path": "requirements.measured.txt",
+      "sha256": "b8996835e148f086bf1e6cc2be6a2eee4a91d525421a1e67c687008dcbe2050b",
+      "role": "Python dependency/version authority"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-MAC-ALGO-001",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAIN / MATERIAL REFORMULATION REQUIRED] F-ODE-ADJ3-001 remains the dominant endpoint blocker. No BDF, dense Rosenbrock-W, Rosenbrock-K, matrix-free JFNK, sparse/block factorization, generic exponential/IMEX/multirate, or method-switch substitution is supported as an 8305x remedy. Only the two ranked same-physics discriminators could satisfy D-071's materially-new-method condition, and neither has executed.",
+      "assumptions_used": ["The original register and current D-071 gate are authoritative.", "The 3.27e7 RHS, 4.58-year, and 8305x figures are retained measurements/projections, not recomputed here."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-001", ".agent-harness/context/GATE_REGISTRY.json:G-F10-INDEPENDENT-FLRW", "native/rabbit_cpu/src/ode.rs:283-590,680-916", "https://arxiv.org/abs/1403.2019", "https://arxiv.org/abs/1310.7658"],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": ["The order-48 base phase completed and current exact Jacobian caching produced a material but far-too-small historical gain."],
+      "reproduction": ["Run only a prospectively sealed order-60/ymax-30 stalled-window discriminator from the retained pre-stall checkpoint, then project full endpoint wall under the unchanged cap with margin."],
+      "confidence": 0.98,
+      "unresolved": ["Whether tail-logit stiffness or near-equilibrium relaxation is the cause of the stall is unmeasured.", "A segment success cannot reopen the endpoint gate. "]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-002",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[REJECT AS KRYLOV EVIDENCE] F-ODE-ADJ3-002 bars production Rosenbrock-K/JFNK claims: one Jv perturbation leaves the strict state domain because a global scale is dominated by elapsed seconds, while three Arnoldi probes terminate at dimension one. Remedy is a componentwise error-weighted, logit-domain-preserving analytic or fused Jv plus a real stalled-prefix trajectory; this is a prerequisite, not an endpoint remedy.",
+      "assumptions_used": ["Elapsed seconds is passive for collision/state dynamics but is part of the solver state/error contract.", "Static retained states do not establish trajectory authority."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-002", "native/rabbit_cpu/src/ode.rs:123-203", "https://arxiv.org/abs/1305.5481", "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html"],
+      "evidence_fingerprint": "sha256:7db72888d007d0ff736d6aaf0257b039a02508eab7b4905fd81af0ec5f024864",
+      "counterevidence_refs": ["The receipt does contain direct static Jv evaluations; they are evidence of the defect, not of a viable Krylov method."],
+      "reproduction": ["At every retained state, form componentwise WRMS-scaled domain-preserving perturbations, require finite Jv, strict occupations, and Arnoldi dimension at least the chosen method order before any trajectory test."],
+      "confidence": 0.99,
+      "unresolved": ["No production analytic Jv or preconditioner exists.", "Reaction-tail authority remains false."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-003",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[PHYSICS/DISCRETIZATION BLOCKER] F-ODE-ADJ3-003 cannot be cured by changing the time integrator. Any adaptive representation or AP method must first reproduce the strict Nq16-to-32 ladder and then an order-48/60 full-grid reference under the existing Yp tolerance; otherwise dimension reduction merely hides the approximately 3.5 percent drift.",
+      "assumptions_used": ["The original tier-2 convergence tolerance remains authoritative.", "No new Nq ladder was run."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-003", "native/rabbit_cpu/src/electron_spectral.rs:548-717", "native/rabbit_cpu/src/neutrino_self_spectral.rs:826-1034"],
+      "evidence_fingerprint": "sha256:e2cb5d2d26c4fc2743541c6fa945759e1200e2dd8b204d990adaf12a93f56867",
+      "counterevidence_refs": ["Lower-order component tests exist but do not supersede the failed production observable ladder."],
+      "reproduction": ["Run the prospectively sealed strict Nq ladder with identical physics and exact failure checks; for a reduced basis also compare reconstructed full-grid collision residual and omitted modes."],
+      "confidence": 1.0,
+      "unresolved": ["The source of the Yp drift is not isolated."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-004",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CORRECTNESS REPAIR / NOT WALL REMEDY] F-ODE-ADJ3-004 needs a phase-lifecycle invariant: consume no state unless solver success, the expected terminal event, a bounded event residual, finite/physical state, and complete diagnostics all pass. This is a small fail-closed wrapper repair; changing the integrator first would preserve false success.",
+      "assumptions_used": ["Expected phase/event semantics from the original register are authoritative."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-004"],
+      "evidence_fingerprint": "sha256:4b24e5e2fad87121a81f1cd683ac648a36814f008033dc617067457360e99b62",
+      "counterevidence_refs": [],
+      "reproduction": ["Inject unsuccessful solve, missing event, nonfinite event, bad residual, and partial-phase outputs; every path must stop before postprocessing."],
+      "confidence": 0.99,
+      "unresolved": ["Exact wrapper ownership and line count require an implementation assignment.", "Expected endpoint movement is negligible; correctness only."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-005",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CORRECTNESS REPAIR / NOT WALL REMEDY] F-ODE-ADJ3-005 needs the same fail-closed tilted-phase contract, including the intended handoff, baseline check, and actual use of T_end. No numerical method is admissible evidence until those predicates are enforced.",
+      "assumptions_used": ["The original finding's phase and baseline semantics are unchanged."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-005"],
+      "evidence_fingerprint": "sha256:37748ec4d55faf3abe13a31edc9e112a9e7a4437d73a88613b81c96b24eb6421",
+      "counterevidence_refs": [],
+      "reproduction": ["Inject solve failure, missed handoff, failed baseline, and wrong T_end independently; require explicit failure before derived outputs."],
+      "confidence": 0.99,
+      "unresolved": ["No endpoint speed effect is expected."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-006",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CONVERGENCE-CONTRACT REPAIR] F-ODE-ADJ3-006 requires checking every solve, all declared ell/components, and an absolute-plus-relative denominator guard. A zero denominator must not map to zero change. This is independent of BDF versus Rosenbrock and cannot move the measured endpoint wall.",
+      "assumptions_used": ["Convergence is over every configured transport component, not a default first component."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-006"],
+      "evidence_fingerprint": "sha256:f973cccf2d3e0ee5f6b6078f9874018a5989fed3f98dcdfaf7ceb9d3ec01d8b1",
+      "counterevidence_refs": [],
+      "reproduction": ["Use a zero reference denominator with nonzero candidate, a failed second solve, and a nonconverged non-first ell; all must fail."],
+      "confidence": 1.0,
+      "unresolved": ["Tolerance convention must be taken from the governing gate, not invented in implementation."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-007",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[EVENT CONTRACT REPAIR] F-ODE-ADJ3-007 requires the NumPy Rodas path to return explicit failure when refinement, direction, initial/nonfinite event, fractional state, or terminal residual checks fail. Fabricating a terminal event is forbidden. This reference-path repair has no credible 8305x endpoint benefit.",
+      "assumptions_used": ["NumPy Rodas is not current production authority."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-007", "src/rabbit/solver/rodas5p.py", "src/rabbit/solver/rodas5p_adapter.py"],
+      "evidence_fingerprint": "sha256:7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "counterevidence_refs": [],
+      "reproduction": ["Run one adversarial case for each event/refinement failure class and require success=false, event_reached=false, raw finite-state provenance, and a specific reason."],
+      "confidence": 1.0,
+      "unresolved": ["Prefer deprecating an orphan path over expanding it if no current authority consumes it."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-008",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[FROZEN-ORACLE CONTAINMENT] F-ODE-ADJ3-008 has the analogous JAX Rodas false-success surface. JAX is frozen as a local parity/AD oracle, so forward method development is a no-go. If the oracle remains callable, only minimal fail-closed guards/tests are justified; otherwise quarantine it from evidence paths.",
+      "assumptions_used": ["The anti-drift guardrail freezing JAX development is controlling."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-008", "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"],
+      "evidence_fingerprint": "sha256:57e3f5ae9d2be021cf8b79bc385c855b7921bb0c8e10b56a406a77893f298359",
+      "counterevidence_refs": ["Frozen JAX parity checks remain useful when they fail closed."],
+      "reproduction": ["Exercise initial/nonfinite/missed-event/config/state failures through the existing frozen oracle smoke only; no timing or promotion claim."],
+      "confidence": 1.0,
+      "unresolved": ["Whether to repair or remove each orphan surface is a bounded maintenance decision."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-009",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[DEPRECATE OR FAIL LOUD] F-ODE-ADJ3-009's clipping and H floors change the differential equation and defeat physical gates. Replace with bounded variables plus raw failure, as the Rust logit state already models, or deprecate the old Python driver. Clipping cannot be part of any adaptive/AP remedy.",
+      "assumptions_used": ["Physical occupations require strict bounds and unchanged equations."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-009", "src/rabbit/collisions/dynamic_collision_driver.py", "native/rabbit_cpu/src/isotropic_boltzmann.rs:360-386"],
+      "evidence_fingerprint": "sha256:3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "counterevidence_refs": ["The current Rust path uses strict logit occupations rather than clipping."],
+      "reproduction": ["Drive occupations outside the admissible interval and H toward invalid values; require raw failure with no clipped/floored continuation."],
+      "confidence": 1.0,
+      "unresolved": ["Old Python-path authority should be resolved before spending code on it."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-010",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[ORDER-OF-OPERATIONS REPAIR] F-ODE-ADJ3-010 requires wrappers to test success/event/state/residual before endpoint thermodynamics or network work. This prevents consuming invalid trajectories; it is not a performance remedy except for avoiding wasted post-failure work.",
+      "assumptions_used": ["Solver output is untrusted until the full contract passes."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-010"],
+      "evidence_fingerprint": "sha256:4dc1ec5acf248ac2c5d9b45ff30e28c103f15146a805d14b8c7b9268ffea3fd5",
+      "counterevidence_refs": [],
+      "reproduction": ["Inject failure immediately before each wrapper's endpoint work and prove the endpoint function is not called."],
+      "confidence": 1.0,
+      "unresolved": ["Expected dominant-wall movement is none because the retained run stalls inside integration."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-011",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CANONICAL CONTRACT REPAIR] F-ODE-ADJ3-011 needs validated inputs, solver success, expected event and residual, finite/physical final state, and truthful work fields; remove unused dense output. This contract must wrap every candidate before scientific comparison.",
+      "assumptions_used": ["The coupled solve is the canonical consumption path."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-011"],
+      "evidence_fingerprint": "sha256:35897bd1f88d09d749e058d4cce80b6e0b262e4c885a255e66008508e585d795",
+      "counterevidence_refs": [],
+      "reproduction": ["Property-test invalid inputs and each terminal predicate independently; accepted output must satisfy all predicates and have complete work telemetry."],
+      "confidence": 0.99,
+      "unresolved": ["Work counters are separately ambiguous under F-ODE-ADJ3-017."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-012",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[REFERENCE ADAPTER REPAIR / NO PERFORMANCE CLAIM] F-ODE-ADJ3-012 needs centralized config validation, pass-through of a supplied Jacobian, a real attempt cap, and truthful nfev/njev/nlu. The fixed-step dense finite-difference Jacobian is O(n C_rhs) and must not be proposed for the production endpoint.",
+      "assumptions_used": ["The NumPy adapter remains non-authoritative unless explicitly retained as a comparator."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-012", "src/rabbit/solver/rodas5p.py", "src/rabbit/solver/rodas5p_adapter.py"],
+      "evidence_fingerprint": "sha256:d6e3beb068e12bb0229b8b30057528af4292aa9105811dc2b676d219d8df2d43",
+      "counterevidence_refs": ["A supplied analytic Jacobian could make the comparator less wasteful, but it does not grant endpoint authority."],
+      "reproduction": ["Pass invalid tolerances, a known analytic Jacobian, a one-attempt budget, and counted RHS; assert exact rejection/pass-through/counter behavior."],
+      "confidence": 1.0,
+      "unresolved": ["Delete/deprecate rather than expand if no current evidence consumer requires this adapter."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-013",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CLASSIFIER REPAIR] F-ODE-ADJ3-013 requires failure to take precedence over target/event labels, with telemetry completeness checked before classification. This is a deterministic reporting fix and cannot move endpoint wall.",
+      "assumptions_used": ["A reached target cannot overwrite a simultaneous solver failure."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-013"],
+      "evidence_fingerprint": "sha256:9636ecacc8dfaef579aef23ce9038735c290b28f6344b9fcf2598ec228ce9ec3",
+      "counterevidence_refs": [],
+      "reproduction": ["Construct target=true plus failure!=null and missing telemetry; classifier must return failure, never target success."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-014",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[NO-GO FOR MICRO-OPTIMIZATION] F-ODE-ADJ3-014 is a genuine Jacobian/resource hazard, but current n=122 and dense collision coupling make sparse/direct tuning a cheap-segment target. Permit a block/sparse experiment only if a pre-profiled order-60 stalled window shows Jacobian factor/setup is dominant; otherwise it violates D-071.",
+      "assumptions_used": ["Collision event/source work dominates dense n^3 at current dimension unless measured otherwise."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-014", "native/rabbit_cpu/src/isotropic_boltzmann.rs:418-650", "native/rabbit_cpu/src/electron_spectral.rs:114-173,186-318", "native/rabbit_cpu/src/neutrino_self_spectral.rs:305-367,401-590"],
+      "evidence_fingerprint": "sha256:1bd8a8476d181b321bce076c4459bc3c1fd42cae0348864a60cffdeaa2255b4c",
+      "counterevidence_refs": ["Cargo.lock contains sparse matrix libraries, and a block preconditioner may become useful after representation growth or an analytic Jv."],
+      "reproduction": ["Profile exact order-60 stalled-window wall into source/Jacobian construction/factorization/solve/retry bins before any sparse code; reject if linear algebra is not dominant."],
+      "confidence": 0.95,
+      "unresolved": ["No current order-60 component profile was supplied by the assignment."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-015",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[ERROR-TAXONOMY REPAIR] F-ODE-ADJ3-015 needs stable mapping of diffsol failures into distinct configuration, RHS/Jacobian, nonlinear, linear, error-test, event, and budget reasons. If diffsol 0.16.0 does not expose a variant, preserve the upstream error as nested provenance instead of collapsing it.",
+      "assumptions_used": ["Exact upstream variants are library-version dependent and were not inferred beyond assigned source."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-015", "native/rabbit_cpu/src/ode.rs:360-482", "native/rabbit_cpu/Cargo.lock:diffsol"],
+      "evidence_fingerprint": "sha256:bd827e4a2425c3edbf21572f335acbfa31aa5cb9d5e58e62f4c6cd4533428e49",
+      "counterevidence_refs": ["The wrapper already distinguishes several pre/post conditions."],
+      "reproduction": ["Inject one failure per exposed diffsol category and require distinct stable reason plus preserved raw upstream text/code."],
+      "confidence": 0.95,
+      "unresolved": ["Exact diffsol 0.16.0 error enum/API must be checked during implementation.", "No endpoint speed claim."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-016",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[STRICT CAP NEEDS UPSTREAM HOOK OR REDEFINED CONTRACT] F-ODE-ADJ3-016 cannot be prevented exactly by checking cumulative diffsol counters only after a step; separate max_error_test_failures and max_nonlinear_solver_failures can each consume the configured cap. A strict total-attempt cap needs an upstream callback/hook or a deliberately partitioned conservative sub-budget and explicit remaining overshoot bound.",
+      "assumptions_used": ["An attempt cap means total accepted plus both rejection classes, not two independent caps."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-016", "native/rabbit_cpu/src/ode.rs:360-456"],
+      "evidence_fingerprint": "sha256:d19ab41b70bce6b6cebc203dc77a0055df6c8a1c6e9dbc0ed03132c4a2364d21",
+      "counterevidence_refs": ["Post-step checking bounds reported continuation but does not prove no internal overshoot."],
+      "reproduction": ["Alternate nonlinear and error-test failures near the cap and assert total internal attempts never exceed the declared hard maximum; if the API cannot expose/preempt them, mark the hard cap unsupported."],
+      "confidence": 0.97,
+      "unresolved": ["diffsol's exact preemption hooks in pinned 0.16.0 need implementation-time verification."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-017",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[WORK UNIT MUST BE FULL-COLLISION EQUIVALENTS] F-ODE-ADJ3-017 invalidates nfev-only algorithm comparisons because RHS calls hidden inside Jacobian/dfdt and event refinement are omitted. Use one existing result field or benchmark-local counter to report direct RHS, Jacobian-internal RHS equivalents, dfdt, event-refinement RHS, collision event contractions, and linear setups. Do not add a standalone telemetry subsystem.",
+      "assumptions_used": ["Collision work, not nominal steps, is the meaningful comparator."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-017", "native/rabbit_cpu/src/ode.rs:104-180,283-590,680-916"],
+      "evidence_fingerprint": "sha256:c662ece1d55c3af94bc8eacc99f63e7307c71605a4d83d7e1fb1bf603796e65e",
+      "counterevidence_refs": ["Wall time remains an independent end-to-end measure and requires no new counter plumbing."],
+      "reproduction": ["On a counted OdeSystem whose Jacobian calls RHS internally, compare reported categories to an external atomic count and exact wall."],
+      "confidence": 1.0,
+      "unresolved": ["Counters may be added only as part of an actual blocker-moving discriminator."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-018",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RAW-FAILURE CUSTODY REPAIR] F-ODE-ADJ3-018 needs the actual failing evaluation time/state/value, not merely the last accepted or step-start state. A bounded first-failure latch in the callback/system can preserve this without changing integration; every candidate should share the same contract.",
+      "assumptions_used": ["Raw failure means the exact first invalid callback evaluation."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-018", "native/rabbit_cpu/src/ode.rs:144-180,420-470,700-760"],
+      "evidence_fingerprint": "sha256:20c7bd260cf4239fd7a944e98805cfc8212daa241016bfe513174625c29890f8",
+      "counterevidence_refs": ["Last accepted state is still useful recovery provenance if labeled separately."],
+      "reproduction": ["Cause nonfinite RHS/Jacobian at a known intermediate state and assert exact bitwise failing t/y are stored separately from last accepted t/y."],
+      "confidence": 0.97,
+      "unresolved": ["Callback synchronization/overhead must remain bounded; no endpoint speed claim."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-019",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[DERIVATIVE VALIDATION REQUIRED] F-ODE-ADJ3-019 remains inconclusive at production N48/order settings. The current analytic occupation block plus rank-one Friedmann term should be checked against componentwise five-point/Richardson directional derivatives; photon-temperature and explicit-N derivatives need absolute-plus-relative steps, not relative-only steps. Complex-step is unsafe without proving every branch/math path analytic.",
+      "assumptions_used": ["The production derivative structure in current Rust source is the target.", "Toy GL6/low-order checks do not validate N48."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-019", "native/rabbit_cpu/src/isotropic_boltzmann.rs:554-650", "native/rabbit_cpu/src/electron_spectral.rs:610-650"],
+      "evidence_fingerprint": "sha256:0a954f4ae818bbe98f24289cfab0cc75befcfeeebc19bdc38af742905715d10f",
+      "counterevidence_refs": ["Analytic occupation-Jacobian component tests exist at smaller settings."],
+      "reproduction": ["At frozen production N48 states spanning equilibrium, transition, and tail, compare Jv and df/dN against a step ladder of componentwise five-point stencils; require an error plateau and locked weighted tolerance."],
+      "confidence": 0.95,
+      "unresolved": ["Production tolerances and state set must be prospectively sealed.", "This can validate correctness but is not by itself an 8305x remedy."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-020",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[TEST-HARNESS REPAIR] F-ODE-ADJ3-020 requires fixing assertion precedence and adding independent failure-injection cases for success/event/state/residual/work predicates. Shared NumPy/JAX formulations cannot be sole cross-validation because they can share the same method bug. This is gate hygiene, not endpoint progress.",
+      "assumptions_used": ["Independent implementation/method evidence is required for scientific promotion."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-020"],
+      "evidence_fingerprint": "sha256:a5d93c804b9c5ae7bdcf1b78488f8c6f4e541b8841753b355c3572cc2ef9afca",
+      "counterevidence_refs": ["Existing green tests still cover some mechanics."],
+      "reproduction": ["Mutate each terminal predicate and solver reason independently; every mutant must be killed by a direct assertion with unambiguous precedence."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-021",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[NO FRESH ENDPOINT AUTHORITY] F-ODE-ADJ3-021 cannot be resolved statically. Any candidate that passes a stalled-window discriminator remains diagnostic until an exact-head, exact-environment dual endpoint run and all gates pass. Environment patches/drift must be sealed before comparison.",
+      "assumptions_used": ["No trajectory command was authorized or run in this assignment."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-021", ".agent-harness/generated/STATUS_BOARD.md", "requirements.measured.txt"],
+      "evidence_fingerprint": "sha256:e3868ebc281a731e3dd1109f44516230d772eb93b5cf800a841b9396e19fe324",
+      "counterevidence_refs": ["Focused Rust tests may remain green but do not constitute dual endpoint evidence."],
+      "reproduction": ["After, and only after, a D-071 reopen, run the sealed Rust endpoint plus SciPy/BDF number-of-record comparator at exact head and record exact environment hashes."],
+      "confidence": 1.0,
+      "unresolved": ["Current runtime SciPy/NumPy differ from requirements.measured.txt, reinforcing the need for exact environment sealing."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-022",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[EVENT SIGN REPAIR] F-ODE-ADJ3-022 should replace the direction-zero sign product with explicit sign comparisons, preserving exact-zero handling, so subnormal opposite signs cannot underflow to zero without being classified correctly. This is a tiny correctness repair with no endpoint-wall claim.",
+      "assumptions_used": ["IEEE-754 underflow of previous*current is the identified mechanism."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-022", "native/rabbit_cpu/src/ode.rs:593-599"],
+      "evidence_fingerprint": "sha256:386f7b5d28c10f6f2058eadf9639b438d0befe20f0e65d5c1e52a146c1c349de",
+      "counterevidence_refs": ["Directed crossings already use comparisons rather than products."],
+      "reproduction": ["Use smallest positive and negative subnormals for adjacent event values in all three directions; require the mathematically correct crossing result."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-023",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[REFINEMENT CONVERGENCE CONTRACT] F-ODE-ADJ3-023 needs an explicit converged flag, final bracket width, event residual, and work accounting after the 60-iteration cap. Rodas refinement re-solves must be charged to a separate bounded budget. Do not infer convergence from loop exit alone.",
+      "assumptions_used": ["Both time-bracket and event-residual criteria are required."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-023", "native/rabbit_cpu/src/ode.rs:499-567,800-868"],
+      "evidence_fingerprint": "sha256:8b37470faa169def36cfa7bbbdffda896ceb16bcafec1ea15829feeadc500b2c",
+      "counterevidence_refs": ["The current implementation bounds loop iterations and rejects interpolation/invalid-state failures."],
+      "reproduction": ["Use flat, discontinuous, nonfinite, and badly scaled event functions; assert explicit nonconvergence when either bracket or residual criterion fails and exact refinement-work accounting."],
+      "confidence": 0.98,
+      "unresolved": ["The governing residual tolerance must be sourced from the event contract."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-024",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[BDF HISTORY DISCRIMINATOR] F-ODE-ADJ3-024 needs a same-problem comparison of current hmax-via-tstop chunking against a native maximum-step mechanism or an upstream diffsol path, recording order/history/restarts. Do not change chunking unless endpoint/state/event equality and work improve; generic hmax tuning is not D-071 progress.",
+      "assumptions_used": ["Repeated tstop may perturb multistep history, but incidence is unmeasured."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-024", "native/rabbit_cpu/src/ode.rs:283-590", "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html"],
+      "evidence_fingerprint": "sha256:04fff541c5804e81c626cdf8d022a47cb0f8cc80464ab5541c0c77d126923011",
+      "counterevidence_refs": ["Current focused mechanics tests may show deterministic behavior but not history equivalence."],
+      "reproduction": ["On a stiff same-physics short trajectory, compare order sequence, accepted/rejected steps, state/event residual, and wall for chunked tstop versus a true hmax implementation at identical tolerances."],
+      "confidence": 0.9,
+      "unresolved": ["Pinned diffsol 0.16.0 native maximum-step support is not established from assigned source.", "Even a positive segment result would not close D-071."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-025",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[BOUNDED RETRY DISCRIMINATOR] F-ODE-ADJ3-025 can test at most one predeclared smaller-h retry for a recoverable Rust Rodas linear solve; nonfinite system evaluations must remain hard failures unless a smaller step changes only an intermediate stage and preserves raw provenance. Retry incidence and benefit must be measured before implementation.",
+      "assumptions_used": ["A singular stage matrix may be step-size dependent; a nonfinite base-state RHS/Jacobian is not recoverable."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-025", "native/rabbit_cpu/src/ode.rs:605-617,680-760"],
+      "evidence_fingerprint": "sha256:d37ddc634c5665e1bd467e565d5d031de142920152bd832d9700dbe2b1da3e89",
+      "counterevidence_refs": ["Immediate failure is safer than unbounded retry and preserves fail-closed behavior."],
+      "reproduction": ["Inject a step-size-dependent singular stage and a base-state nonfinite Jacobian; permit one retry only for the former and require immediate exact raw failure for the latter."],
+      "confidence": 0.92,
+      "unresolved": ["Observed production incidence is unknown; without incidence it is not an endpoint candidate."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-026",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[FINITE-DIFFERENCE STEP REPAIR] F-ODE-ADJ3-026 needs a componentwise absolute-plus-relative perturbation with representability checks (nextafter/ULP floor) for positive subnormal temperature. The current relative-only step can round to zero. This is a correctness edge repair and is outside the observed endpoint range.",
+      "assumptions_used": ["The positive-subnormal case is outside the measured endpoint but within the public numerical contract."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-026", "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-578"],
+      "evidence_fingerprint": "sha256:a67a64694a211c69e3d6aa903596bbc10eda872a3ffa867575123125efe7564d",
+      "counterevidence_refs": ["Normal production temperatures give a representable relative step."],
+      "reproduction": ["Evaluate the derivative at smallest positive subnormal, near-min-normal, and ordinary temperatures; require distinct plus/minus points or explicit unsupported-domain failure."],
+      "confidence": 1.0,
+      "unresolved": ["No endpoint blocker movement."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-027",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[WRAPPER NORMALIZATION] F-ODE-ADJ3-027 requires one authoritative validation/failure/default contract across Python wrappers. Normalize at the existing adapter boundary or deprecate redundant wrappers; do not add another registry/gate. No solver algorithm should compensate for inconsistent inputs.",
+      "assumptions_used": ["Rust AOT is the active implementation target; Python is temporary/reference infrastructure."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-027", "src/rabbit/solver/rodas5p_adapter.py", "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"],
+      "evidence_fingerprint": "sha256:4cda818cc21470ae5a62b2220bfb2782320425104e6e8bbc7d132f01a9ed6253",
+      "counterevidence_refs": [],
+      "reproduction": ["Feed the same invalid/edge config through every surviving wrapper and require identical reason, default, event, and work semantics."],
+      "confidence": 0.98,
+      "unresolved": ["Wrapper retention versus deletion needs ownership analysis."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-028",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[EXACT REASON TESTS] F-ODE-ADJ3-028 needs exact failure-reason assertions and coverage of each solver branch. Add them only alongside the corresponding correctness fix; a standalone coverage instrument would violate anti-drift and cannot move endpoint wall.",
+      "assumptions_used": ["Source branch inventory in ode.rs is the current target."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-028", "native/rabbit_cpu/src/ode.rs"],
+      "evidence_fingerprint": "sha256:78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "counterevidence_refs": ["Several focused branch tests already exist in ode.rs."],
+      "reproduction": ["Mechanically enumerate stable reason strings and kill one branch mutant per missing case; avoid a new telemetry/readiness layer."],
+      "confidence": 0.97,
+      "unresolved": ["Exact uncovered branches require an authorized test-coverage run."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-031",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[HARNESS LIMIT, NOT ODE REMEDY] F-ODE-ADJ3-031 is outside numerical-algorithm scope. Preserve it as an evidence-completeness ceiling; do not change the ODE solver or add diagnostics to compensate for missing external execution authority.",
+      "assumptions_used": ["The original adjudication explicitly classified this as a harness limitation."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-031"],
+      "evidence_fingerprint": "sha256:42e45bb87da0e2117181fe4646a55f86797c45ce6a92ae610333c78cc06ed9a0",
+      "counterevidence_refs": [],
+      "reproduction": ["Resolve only through the governing harness/authority workflow, not an ODE code patch."],
+      "confidence": 1.0,
+      "unresolved": ["External authority remains unavailable in this assignment."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-032",
+      "claim_id": "ODE-A6",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[PRESERVE AUTHORITY BOUNDARY] F-ODE-ADJ3-032 remains pass: JAX stays a frozen parity/AD/Jacobian oracle with no forward-development, timing, endpoint, or promotion role. All ranked candidates are native-Rust discriminators and do not alter this boundary.",
+      "assumptions_used": ["Current STATUS_BOARD and anti-drift guardrail are authoritative."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-032", ".agent-harness/generated/STATUS_BOARD.md", "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"],
+      "evidence_fingerprint": "sha256:5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "counterevidence_refs": [],
+      "reproduction": ["Policy inspection only; no JAX execution was performed."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-033",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[DO NOT REOPEN CLOSED WORK] F-ODE-ADJ3-033 remains pass. The strict logit representation and exact full-Jacobian cache mechanics are retained; their historical 55.815 percent gain is material but insufficient for D-071 and must not be repackaged as a new candidate.",
+      "assumptions_used": ["The original closed-history adjudication is authoritative."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-033", "native/rabbit_cpu/src/ode.rs:184-203,295-349", "native/rabbit_cpu/src/isotropic_boltzmann.rs:360-386"],
+      "evidence_fingerprint": "sha256:79f0bd25b043cf2142a07d6e2436ded284f24a7fafe6bbe3b045eda282c78cc7",
+      "counterevidence_refs": [],
+      "reproduction": ["No rerun authorized; preserve the existing tests and historical evidence boundary."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-034",
+      "claim_id": "ODE-A1",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[MECHANICAL COMPLETENESS PRESERVED] F-ODE-ADJ3-034 remains pass as the original inventory boundary. This result maps all 34 original IDs exactly once and adds no newly discovered issue to expand acceptance.",
+      "assumptions_used": ["The original register's mechanical inventory is the finite universe for this assignment."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-034"],
+      "evidence_fingerprint": "sha256:561f3c3a88e9e342eade1da0d7e99867d10219ae873743ae827d89df70d0bd34",
+      "counterevidence_refs": [],
+      "reproduction": ["Compare the suffixes of F-MAC-ALGO-* against all 34 F-ODE-ADJ3-* suffixes and require set equality."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-MAC-ALGO-029",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[NORMALIZE OR REMOVE ORPHAN ERRORS] F-ODE-ADJ3-029 needs Diffrax invalid-solver and orphan wrapper surfaces to return the documented stable exception/reason or be removed from evidence paths. JAX/Diffrax are frozen, so no new algorithm work is justified.",
+      "assumptions_used": ["The frozen JAX boundary remains controlling."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-029", "requirements.measured.txt", "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"],
+      "evidence_fingerprint": "sha256:f08c84bab2c5a2594babe8d2bcfbdfff1cda0c3bc29b67a341a7fae7b2508046",
+      "counterevidence_refs": [],
+      "reproduction": ["Call each surviving public invalid-solver entry and assert one documented stable exception type plus no orphan success artifact."],
+      "confidence": 0.99,
+      "unresolved": ["Prefer deletion/containment to expanding a frozen backend."]
+    },
+    {
+      "finding_id": "F-MAC-ALGO-030",
+      "claim_id": "ODE-A6",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[NO NEW PROVENANCE PLUMBING] F-ODE-ADJ3-030 should be resolved by correcting stale prose and attaching version/config to an existing evidence envelope, not by adding a manifest/hash/readiness gate. It has zero plausible endpoint-wall movement.",
+      "assumptions_used": ["Anti-drift explicitly forbids standalone manifest/hash/gate plumbing unless older surface is consolidated and a runtime blocker moves."],
+      "evidence_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-030", "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md", "bbn_codex_anti_drift_cost_effective_policy.md"],
+      "evidence_fingerprint": "sha256:6ce3333a3bc1a19aaf3d434afb1c2eafd0811c1c885c9fc15ff1604f5686fcd8",
+      "counterevidence_refs": ["Exact source/config identity remains necessary; it should reuse current evidence surfaces."],
+      "reproduction": ["Inspect the surviving evidence writer and require exact config/version there; delete or correct stale prose in the same bounded change."],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ALGO.json"
+  ]
+}

@@ -1,0 +1,129 @@
+Script started on 2026-08-23 18:12:02+09:00 [COMMAND="/usr/bin/time -v env PYTHONPATH=src pytest -q tests/test_dynamic_collision_driver.py -k 'stored_state_requires_finite_positive_hubble or rhs_rejects_nonpositive_hubble_before_collision_work' -vv" <not executed on terminal>]
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree
+configfile: pyproject.toml
+collecting ... collected 19 items / 14 deselected / 5 selected                                
+
+tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[0.0] FAILED [ 20%]
+tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[-1.0] FAILED [ 40%]
+tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[nan] FAILED [ 60%]
+tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[inf] FAILED [ 80%]
+tests/test_dynamic_collision_driver.py::test_rhs_rejects_nonpositive_hubble_before_collision_work FAILED [100%]
+
+=================================== FAILURES ===================================
+____________ test_stored_state_requires_finite_positive_hubble[0.0] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x791c087d87d0>
+H = 0.0
+
+    @pytest.mark.parametrize("H", [0.0, -1.0, np.nan, np.inf])
+    def test_stored_state_requires_finite_positive_hubble(monkeypatch, H):
+        """Catches trusting an unevaluated or floored Hubble rate after solve success."""
+    
+        monkeypatch.setattr(driver, "solve_ivp", lambda _f, span, y0, **_kw: _fake_success(span, y0))
+        monkeypatch.setattr(driver, "hubble_3T", lambda *_args: H)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+tests/test_dynamic_collision_driver.py:171: Failed
+___________ test_stored_state_requires_finite_positive_hubble[-1.0] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x791c4720cb30>
+H = -1.0
+
+    @pytest.mark.parametrize("H", [0.0, -1.0, np.nan, np.inf])
+    def test_stored_state_requires_finite_positive_hubble(monkeypatch, H):
+        """Catches trusting an unevaluated or floored Hubble rate after solve success."""
+    
+        monkeypatch.setattr(driver, "solve_ivp", lambda _f, span, y0, **_kw: _fake_success(span, y0))
+        monkeypatch.setattr(driver, "hubble_3T", lambda *_args: H)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+tests/test_dynamic_collision_driver.py:171: Failed
+____________ test_stored_state_requires_finite_positive_hubble[nan] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x791bc63ecf80>
+H = nan
+
+    @pytest.mark.parametrize("H", [0.0, -1.0, np.nan, np.inf])
+    def test_stored_state_requires_finite_positive_hubble(monkeypatch, H):
+        """Catches trusting an unevaluated or floored Hubble rate after solve success."""
+    
+        monkeypatch.setattr(driver, "solve_ivp", lambda _f, span, y0, **_kw: _fake_success(span, y0))
+        monkeypatch.setattr(driver, "hubble_3T", lambda *_args: H)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+tests/test_dynamic_collision_driver.py:171: Failed
+____________ test_stored_state_requires_finite_positive_hubble[inf] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x791c087d87d0>
+H = inf
+
+    @pytest.mark.parametrize("H", [0.0, -1.0, np.nan, np.inf])
+    def test_stored_state_requires_finite_positive_hubble(monkeypatch, H):
+        """Catches trusting an unevaluated or floored Hubble rate after solve success."""
+    
+        monkeypatch.setattr(driver, "solve_ivp", lambda _f, span, y0, **_kw: _fake_success(span, y0))
+        monkeypatch.setattr(driver, "hubble_3T", lambda *_args: H)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+tests/test_dynamic_collision_driver.py:171: Failed
+__________ test_rhs_rejects_nonpositive_hubble_before_collision_work ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x791bc63ec3b0>
+
+    def test_rhs_rejects_nonpositive_hubble_before_collision_work(monkeypatch):
+        """Catches flooring H=0 and dividing collision work by an artificial 1e-100."""
+    
+        monkeypatch.setattr(driver, "hubble_3T", lambda *_args: 0.0)
+        collision_calls = []
+        def fake_collision(field, *_args):
+            collision_calls.append(1)
+            return np.zeros_like(field)
+    
+        monkeypatch.setattr(driver, "_collision_field", fake_collision)
+        rhs, Y, *_ = _make_rhs(_quad(8), collisions=True)
+        state = np.concatenate([1.0 / (np.exp(Y) + 1.0)] * 2 + [[2.0]])
+    
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+tests/test_dynamic_collision_driver.py:191: Failed
+=========================== short test summary info ============================
+FAILED tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[0.0]
+FAILED tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[-1.0]
+FAILED tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[nan]
+FAILED tests/test_dynamic_collision_driver.py::test_stored_state_requires_finite_positive_hubble[inf]
+FAILED tests/test_dynamic_collision_driver.py::test_rhs_rejects_nonpositive_hubble_before_collision_work
+======================= 5 failed, 14 deselected in 0.48s =======================
+Command exited with non-zero status 1
+	Command being timed: "env PYTHONPATH=src pytest -q tests/test_dynamic_collision_driver.py -k stored_state_requires_finite_positive_hubble or rhs_rejects_nonpositive_hubble_before_collision_work -vv"
+	User time (seconds): 3.67
+	System time (seconds): 0.09
+	Percent of CPU this job got: 539%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.69
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 87836
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 17123
+	Voluntary context switches: 62
+	Involuntary context switches: 715
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 18:12:03+09:00 [COMMAND_EXIT_CODE="1"]

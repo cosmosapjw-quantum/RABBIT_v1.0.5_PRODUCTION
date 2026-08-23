@@ -1,0 +1,7 @@
+Script started on 2026-08-23 18:26:29+09:00 [COMMAND="env PYTHONPATH=src:. JAX_PLATFORMS=cpu /tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -c 'import sys, numpy, scipy, pytest, jax, jaxlib, diffrax; print(sys.version); print(sys.executable); print(numpy.__version__, scipy.__version__, pytest.__version__, jax.__version__, jaxlib.__version__, diffrax.__version__); print(jax.devices())'" <not executed on terminal>]
+3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]
+/tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python
+2.4.4 1.17.1 9.0.3 0.10.0 0.10.0 0.7.2
+[CpuDevice(id=0)]
+
+Script done on 2026-08-23 18:26:30+09:00 [COMMAND_EXIT_CODE="0"]

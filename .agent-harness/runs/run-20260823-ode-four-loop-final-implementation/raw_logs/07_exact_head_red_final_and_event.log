@@ -1,0 +1,521 @@
+Script started on 2026-08-23 18:14:49+09:00 [COMMAND="/usr/bin/time -v env PYTHONPATH=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src pytest --noconftest -q --rootdir=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION -c /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/pyproject.toml /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py -k 'invalid_final_stored_state_never_reaches_observables or exactly_one_terminal_event_is_required' -vv" <not executed on terminal>]
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION
+configfile: pyproject.toml
+collecting ... collecting 31 items                                                            collected 31 items / 20 deselected / 11 selected                               
+
+::test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval] FAILED [  9%]
+::test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval] FAILED [ 18%]
+::test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval] FAILED [ 27%]
+::test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval] FAILED [ 36%]
+::test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval] FAILED [ 45%]
+::test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval] FAILED [ 54%]
+::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature] FAILED [ 63%]
+::test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature] FAILED [ 72%]
+::test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature] FAILED [ 81%]
+::test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature] FAILED [ 90%]
+::test_exactly_one_terminal_event_is_required FAILED                     [100%]
+
+=================================== FAILURES ===================================
+_ test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7837a295c7d0>
+row = 0, value = 0.0, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7837221ccce0>
+row = 0, value = 1.0, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7837a295c7d0>
+row = 0, value = -1e-09, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721b86ff0>
+row = 0, value = 1.000000001, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721b86fc0>
+row = 0, value = nan, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a18890>
+row = 0, value = inf, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a18a40>
+row = -1, value = 0.0, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a1a780>
+row = -1, value = -1.0, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a1a810>
+row = -1, value = nan, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_ test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a3e150>
+row = -1, value = inf, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+            result.t, result.y = result.t[-1:], result.y[:, -1:]
+            return result
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError) as caught:
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:199: Failed
+_________________ test_exactly_one_terminal_event_is_required __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x783721a3c050>
+
+    def test_exactly_one_terminal_event_is_required(monkeypatch):
+        """Catches accepting an ambiguous result containing duplicate terminal events."""
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            result = _fake_success(t_span, y0)
+            result.t_events = [np.array([result.t[-1], result.t[-1]])]
+            return result
+    
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+>       with pytest.raises(RuntimeError, match="exactly one endpoint event"):
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py:217: Failed
+=============================== warnings summary ===============================
+::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature]
+  /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src/rabbit/collisions/dynamic_collision_driver.py:342: RuntimeWarning: divide by zero encountered in scalar divide
+    N_eff = _NEFF_PREFAC / z_final**4 * (ratio_nue + 2.0 * ratio_nux)
+
+::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature]
+  /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src/rabbit/collisions/dynamic_collision_driver.py:343: RuntimeWarning: divide by zero encountered in scalar divide
+    T_nu_e_over_gamma = ratio_nue**0.25 / z_final
+
+::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature]
+  /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src/rabbit/collisions/dynamic_collision_driver.py:344: RuntimeWarning: divide by zero encountered in scalar divide
+    T_nu_x_over_gamma = ratio_nux**0.25 / z_final
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature]
+FAILED ::test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature]
+FAILED ::test_exactly_one_terminal_event_is_required - Failed: DID NOT RAISE ...
+================ 11 failed, 20 deselected, 3 warnings in 0.61s =================
+Command exited with non-zero status 1
+	Command being timed: "env PYTHONPATH=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src pytest --noconftest -q --rootdir=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION -c /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/pyproject.toml /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py -k invalid_final_stored_state_never_reaches_observables or exactly_one_terminal_event_is_required -vv"
+	User time (seconds): 3.54
+	System time (seconds): 0.10
+	Percent of CPU this job got: 423%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 89536
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 17437
+	Voluntary context switches: 62
+	Involuntary context switches: 970
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 168
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 18:14:50+09:00 [COMMAND_EXIT_CODE="1"]

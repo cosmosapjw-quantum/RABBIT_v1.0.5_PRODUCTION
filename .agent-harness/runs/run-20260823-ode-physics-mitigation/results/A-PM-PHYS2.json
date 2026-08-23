@@ -1,0 +1,483 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-PHYS2",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c0f-de99-7451-856d-20b4a83a9207",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physics-mitigation",
+    "assignment_id": "A-PM-PHYS2",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b8662fcf73e7dd06180489d5bdaa9085fa9375de3e09e9326bfb6d225524e019",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json",
+  "started_at": "2026-08-23T00:50:18Z",
+  "completed_at": "2026-08-23T00:58:23Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)",
+    "jq": "1.7",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "web_retrieval_date": "2026-08-23"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS2.json",
+    "read .agent-harness/generated/CONTEXT_PACK.md, then the assignment, independent-auditor role and RESULT_ENVELOPE template in the required order",
+    "read docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md and bbn_codex_anti_drift_cost_effective_policy.md",
+    "jq-select F-ODE-ADJ3-001,-002,-003,-009,-010,-011,-019,-026,-027,-033 from the sealed A-ODE-ADJ3 result",
+    "targeted rg and numbered source reads over only the assignment-named Python and Rust files",
+    "nl -ba tests/test_scipy_tier2_convergence_lock.py | sed -n '1,120p'",
+    "git rev-parse --show-toplevel HEAD; git status --short",
+    "sha256sum over every named local evidence input and the targeted convergence lock",
+    "python3 calculation of ln(10/0.005) = 7.600902459542082",
+    "open primary arXiv sources 1801.08023v3 and 1512.02205v2 and retrieve the thermodynamic, abundance, weak-freezeout, collision-sum-rule and spectral-feedback sections",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json",
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS2.json (VERIFY: PASS)",
+    "python3 .agent-harness/scripts/validate_harness.py (ok=true; this result pending normal SubagentStop receipt consumption)"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "adjudicated current ODE defect and gate evidence"
+    },
+    {
+      "path": ".agent-harness/generated/STATUS_BOARD.md",
+      "sha256": "5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "role": "current F10 and harness gate status"
+    },
+    {
+      "path": "src/rabbit/collisions/dynamic_collision_driver.py",
+      "sha256": "3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "role": "Python occupation, Hubble and endpoint-consumer touchpoints"
+    },
+    {
+      "path": "src/rabbit/drivers/full_coupled_typeI.py",
+      "sha256": "35897bd1f88d09d749e058d4cce80b6e0b262e4c885a255e66008508e585d795",
+      "role": "canonical Python state, event, weak/network and observable touchpoints"
+    },
+    {
+      "path": "src/rabbit/thermo/nudec_coupled.py",
+      "sha256": "4cda818cc21470ae5a62b2220bfb2782320425104e6e8bbc7d132f01a9ed6253",
+      "role": "temperature-form thermodynamic equations and fallback touchpoints"
+    },
+    {
+      "path": "src/rabbit/network/abundances.py",
+      "sha256": "ef7a7641c3fefe3495b4a3d0566888c357d98d1a791073f4cd6e265f110d6981",
+      "role": "legacy Python abundance flux and initialization touchpoints"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "role": "Rust logit, comoving transport, first law and passive elapsed-time touchpoints"
+    },
+    {
+      "path": "native/rabbit_cpu/src/flrw.rs",
+      "sha256": "2497062ee42121845aa7eb48415c2d899ffd8b01bdbca3280c775a58e833d0a1",
+      "role": "Rust three-temperature first law, positivity and finite-difference touchpoints"
+    },
+    {
+      "path": "native/rabbit_cpu/src/minimal_network.rs",
+      "sha256": "4e294f714c5bb92bbd843682bb9059e626743a5fc6abb380a3b401ad789d029d",
+      "role": "Rust stoichiometry, raw-state validation and analytic network Jacobian"
+    },
+    {
+      "path": "native/rabbit_cpu/src/minimal_bbn.rs",
+      "sha256": "4172cfc0c86c5a16857438e2e15e49970fd1609791914b04ec8df44776a51b5f",
+      "role": "Rust log-abundance and fail-closed observable consumer"
+    },
+    {
+      "path": "native/rabbit_cpu/src/thermal_bbn.rs",
+      "sha256": "2f913fe07ed3a14a255d82de107d14d599f05f19bad591d08b5b7b269b678b5f",
+      "role": "Rust thermal log-state, weak equilibrium and one-time Saha initialization"
+    },
+    {
+      "path": "tests/test_scipy_tier2_convergence_lock.py",
+      "sha256": "e2cb5d2d26c4fc2743541c6fa945759e1200e2dd8b204d990adaf12a93f56867",
+      "role": "retained tier-2 Yp resolution blocker"
+    },
+    {
+      "url": "https://arxiv.org/html/1801.08023",
+      "identifier": "arXiv:1801.08023v3",
+      "retrieved_at": "2026-08-23",
+      "role": "primary PRIMAT source for X_i definition, baryon normalization, FLRW thermodynamics, comoving neutrino energy and weak freezeout equations"
+    },
+    {
+      "url": "https://arxiv.org/html/1512.02205",
+      "identifier": "arXiv:1512.02205v2",
+      "retrieved_at": "2026-08-23",
+      "role": "primary no-oscillation multi-energy Boltzmann-BBN source for collision sum rules, spectral feedback and weak-rate sensitivity"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PM-PHYS2-001",
+      "claim_id": "PM-H1B",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CURRENT PYTHON DOMAIN DEFECT; EXISTING RUST REMEDY] Classical Fermi occupations must satisfy 0<=f<=1, with the finite-grid thermal states used here strictly inside (0,1), while physical expansion requires finite positive rho and H and, in Type I, Omega=1-Sigma^2>0. dynamic_collision_driver clips both RHS and endpoint occupations and replaces H by max(H,1e-100); full_coupled_typeI similarly clips weak-rate inputs and divides network rates by max(H,1e-100). These operations change the physical problem and can manufacture N_eff or abundances from an inadmissible raw state. The physics-preserving coordinate is u=log(f/(1-f)), f=sigmoid(u), with du/dN=C[f]/(H f(1-f)); f,u,N are dimensionless and C/H is dimensionless in natural units. This is already IMPLEMENTED in the Rust isotropic path, including strict-open decoding and raw failure on loss of representability, so the appropriate mitigation is to consume or port that structure, not add another clamp. H, rho, temperature and Omega failures must remain failures before collision, weak-rate or observable evaluation.",
+      "assumptions_used": [
+        "Natural units hbar=c=k_B=1; H and collision rate C have MeV units.",
+        "F10 is flat FLRW, classical diagonal no-QKE transport; no flavour coherence is inferred.",
+        "The Type-I Friedmann convention is H^2=(8*pi*G/3)rho/(1-Sigma^2).",
+        "Strict-open logit representability is a numerical contract for this finite grid, not a claim that exact f=0 or f=1 is physically impossible."
+      ],
+      "evidence_refs": [
+        "src/rabbit/collisions/dynamic_collision_driver.py:132-137,171-202,290-342",
+        "src/rabbit/drivers/full_coupled_typeI.py:784-802,897-916",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:352-386,535-550,668-704,1014-1040",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-009,F-ODE-ADJ3-033",
+        "https://arxiv.org/html/1512.02205:Eq.(1)-(2), classical occupation Boltzmann evolution"
+      ],
+      "evidence_fingerprint": "sha256:8cf84f364637f9237cce07c16ceda9c73cf5597efc44fcd42fdd16bc072253ef",
+      "counterevidence_refs": [
+        "dynamic_collision_driver.py does require solver success plus its temperature event and records clip excursion, but those diagnostics are nonbinding and endpoint f is already clipped.",
+        "Rust logit closure is retained as a closed bounded good path; it does not close the Python consumer defect."
+      ],
+      "reproduction": [
+        "STATIC: inspect the cited clips, H floors and Rust logit mapping.",
+        "FALSIFIER (not run): inject an accepted f=-ulp, f=1+ulp, H<=0 and H=NaN; every case must terminate before weak rates, collision moments or N_eff are consumed, with the raw state preserved.",
+        "FALSIFIER (not run): at FD equilibrium require the discrete collision action to be an exact/null-with-roundoff state and require every accepted decoded occupation to remain strictly open without clipping."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The logit equation amplifies tail stiffness through 1/[f(1-f)]; production EXP48 conditioning and wall time still require trajectory evidence.",
+        "No current-turn solver execution was authorized."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-002",
+      "claim_id": "PM-H1B",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RUST IMPLEMENTED; CROSS-PATH BLOCKER OPEN] For mass fractions X_i=A_i n_i/n_b, a nuclear reaction network should evolve dX_i/dN=(A_i/H) sum_r S_ir J_r. Exact nuclear stoichiometry gives sum_i dX_i/dN=0 and sum_i (Z_i/A_i)dX_i/dN=0. Rust already validates every reaction's baryon and nuclear-charge balance, uses an analytic abundance block, evolves every selected-31 active abundance as ln(X_i), preserves the 12-reaction Li6 exact-zero spectator explicitly, and keeps the signed polynomial stage extension distinct from strict physical input. The legacy Python abundance kernel has no finite/nonnegative input admission, and the canonical Python result computes Li6/H with max(X_Li6,0) and positive denominator floors. Physics-specific mitigation is therefore consolidation onto the Rust log-X plus stoichiometric structure and a raw endpoint consumer; runtime simplex projection, clipping, or a new generic positivity wrapper would regress the existing design. One-time construction of a normalized Saha initial state is categorically different from runtime repair.",
+      "assumptions_used": [
+        "X_i denotes pseudo-mass fraction, so sum_i X_i=1 is baryon normalization.",
+        "Nuclear charge is conserved by the nuclear block only; n<->p weak conversion changes nuclear charge and is balanced by the untracked lepton/electron bath.",
+        "All selected-31 active species receive strictly positive Saha seeds; exact-zero support needs an explicit dormant-species branch."
+      ],
+      "evidence_refs": [
+        "src/rabbit/network/abundances.py:22-33,62-107",
+        "src/rabbit/drivers/full_coupled_typeI.py:1544-1554",
+        "native/rabbit_cpu/src/minimal_network.rs:437-440,505-614,784-818,880-974,1145-1173,1347-1450",
+        "native/rabbit_cpu/src/minimal_bbn.rs:412-470,1038-1105",
+        "native/rabbit_cpu/src/thermal_bbn.rs:188-299,504-567",
+        "https://arxiv.org/html/1801.08023:Eq.(1), X_i=A_i n_i/n_b and sum_i X_i=1"
+      ],
+      "evidence_fingerprint": "sha256:69d48932c21492d087e5cc38b367c100782cb986a3525aa4b55c9de55993cbb0",
+      "counterevidence_refs": [
+        "The Python phase handoff seeds trace nuclei with positive values and reports a mass residual, but neither is a binding raw endpoint admission gate.",
+        "Rust source tests record the desired invariants, but they were not rerun in this review."
+      ],
+      "reproduction": [
+        "STATIC: compare Python polynomial use and floored observables with the cited Rust strict/stage/log paths.",
+        "FALSIFIER (not run): for both nuclear-only and weak+nuclear RHS, require baryon residual scaled by sum|dX| near roundoff; require nuclear charge only for the nuclear block, then verify the combined weak charge change equals the analytically expected n<->p flow.",
+        "FALSIFIER (not run): seed one active abundance negative, NaN, and exact zero; negative/NaN must fail raw, while exact zero is accepted only for an explicitly dormant spectator and no observable may be emitted."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Python and Rust consumers are not yet uniformly fail-closed.",
+        "Log coordinates cannot represent a genuinely activating exact-zero species without a separately derived activation rule."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-003",
+      "claim_id": "PM-H3B",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[DERIVED, NOT IMPLEMENTED] The thermal 3T equations can be reformulated in energy variables to remove the T^3 denominator that conditions the low-temperature temperature form. With Q positive for energy gained by neutrinos, d rho_nue/dN=-4 rho_nue+Q_nue/H, d rho_nux_bank/dN=-4 rho_nux_bank+Q_nux_bank/H, and d rho_em/dN=-3(rho_em+P_em)-Q_total/H. Here rho is MeV^4, Q is MeV^5 and Q/H is MeV^4 per e-fold. Equivalently, d(a^4 rho_nu)/dN=a^4 Q/H. Recover T_gamma from a prospectively verified monotone electromagnetic EOS rho_em(T); this replaces division by d rho/dT in the RHS and permits analytic inverse-EOS derivatives. It applies directly to thermal three-temperature closures and to the photon coordinate of a spectral run, but a single rho_nu cannot replace the full f(q) state because energy-equivalent distortions need not give equal weak rates. It would also eliminate the relative-only temperature finite-difference underflow only if its Jacobian is analytic or uses a nonzero domain-safe scale.",
+      "assumptions_used": [
+        "Flat FLRW first-law form and the code's sign convention Q>0 into neutrinos.",
+        "Massless thermal neutrino pairs obey P_nu=rho_nu/3 and rho_nu proportional to T_nu^4.",
+        "The selected electromagnetic EOS is strictly increasing over the sealed 10 to 0.005 MeV interval; this must be verified rather than assumed outside it."
+      ],
+      "evidence_refs": [
+        "src/rabbit/thermo/nudec_coupled.py:121-142,145-226,229-307",
+        "native/rabbit_cpu/src/flrw.rs:267-348,351-387,676-729",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:471-504,970-1008",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-026",
+        "https://arxiv.org/html/1801.08023:Eq.(62), comoving neutrino energy evolution and opposite plasma/neutrino transfer"
+      ],
+      "evidence_fingerprint": "sha256:33a4cc77fb73268e94799a7c6b36bf99074ffd9311197352ba5a0dc4a08edecd",
+      "counterevidence_refs": [
+        "Current Rust FLRW source already closes the combined first law at representative states and production T_end=0.005 MeV is far from the subnormal trigger.",
+        "EOS inversion may cost more than the removed derivative division and can introduce a new branch/root problem."
+      ],
+      "reproduction": [
+        "DERIVATION: substituting rho_nu=K T_nu^4 into the current dT_nu/dN equation yields d rho_nu/dN=-4 rho_nu+Q/H; summing with the EM equation cancels Q exactly and gives d rho_tot/dN=-3(rho_tot+P_tot).",
+        "FALSIFIER (not run): across 10, 3, 1, 0.7, 0.1 and 0.005 MeV, prove d rho_em/dT>0, round-trip T->rho->T to the solver tolerance, and compare BDF/Rodas endpoints and Yp/DH/N_eff against the temperature-state reference without calibration.",
+        "FALSIFIER (not run): perturb spectra with equal energy moment but different high-q shape; any rho-only weak-rate agreement claim must fail."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "No implementation, same-case endpoint timing, or EOS-inversion conditioning evidence exists in this assignment.",
+        "This is a correctness/conditioning candidate, not yet a D-071 asymptotic remedy."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-004",
+      "claim_id": "PM-H3B",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[DERIVED, CONDITIONALLY APPLICABLE] If photon cooling is strictly monotone, use x=-ln(T_gamma/T_ref) as the independent variable. Defining F_T=dT_gamma/dN and alpha=dx/dN=-F_T/T_gamma, the transformed system is dN/dx=1/alpha, dz/dx=F_z/alpha and dt/dx=1/(H alpha). T_gamma=T_ref exp(-x), so T_ref=10 MeV and T_end=0.005 MeV give a fixed terminal x_end=ln(2000)=7.600902459542082; the handoff is likewise a fixed x. This removes temperature root finding, equal-start event ambiguity and event-refiner exposure. It is physically admissible only under a prospective trajectory bound alpha>=alpha_min>0; if heat transfer or an invalid state loses that margin, the run must fail rather than divide by a small/negative alpha. FullCoupledConfig currently does not enforce finite T_start>T_handoff>T_end>0, and both phases remain temperature-root events.",
+      "assumptions_used": [
+        "Photon temperature is a one-to-one clock over the admitted F10 trajectory.",
+        "The reference temperature and all terminal temperatures use MeV consistently.",
+        "H is expressed in the matching time unit when dt/dx is evaluated."
+      ],
+      "evidence_refs": [
+        "src/rabbit/drivers/full_coupled_typeI.py:1075-1184,1364-1399,1528-1547",
+        "native/rabbit_cpu/src/flrw.rs:315-329,1165-1205",
+        "https://arxiv.org/html/1801.08023:Eq.(30), monotone a(T) relation in the standard entropy closure and numerical T(a) inversion",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-011"
+      ],
+      "evidence_fingerprint": "sha256:043e9b5d23ee674ba98955d2ce1b457a0e36388ba56da9752d19aa3ab94ee9d7",
+      "counterevidence_refs": [
+        "The present event route rejects ordinary missed events and current Rust endpoint tests resolve the frozen event.",
+        "Monotonicity is physically expected in standard BBN but has not been proven for every coupled/anisotropic candidate state."
+      ],
+      "reproduction": [
+        "DERIVATION: apply the chain rule d/dx=(dN/dx)d/dN with alpha=-F_T/T_gamma.",
+        "FALSIFIER (not run): compare N(T), cosmic time, raw abundance histories and endpoint observables between N-clock and x-clock on collisionless, 3T and spectral F10 cases; equality must be tolerance-ladder stable.",
+        "FALSIFIER (not run): inject a source that makes alpha<=0 or alpha<alpha_min; the transformed runner must stop with raw state and no observable, not cross the singular surface."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "The monotonicity margin has not been measured on the actual stalled/activation trajectory.",
+        "A clock change does not reduce collision-kernel cost and by itself cannot overcome the approximately 8305x D-071 projection miss."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-005",
+      "claim_id": "PM-H1B",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CURRENT PHYSICAL-PREFIX/JVP DEFECT; DERIVED REMEDY] Cosmic elapsed time obeys dt/dN=1/H but is passive in the current F10 isotropic physics RHS: its value does not feed the EOS, collision action, Hubble rate or abundances. Nevertheless it is stored beside T_gamma and logits, and the failed physical-prefix diagnostic used a global norm dominated by an approximately 4.3e18 elapsed-time coordinate; epsilon=4.318e15 then displaced the independent N coordinate to about -6.898e7 and left the strict occupation domain. A physics-admissible JVP must hold independent N fixed, omit passive t from the nonlinear/Krylov state, and obtain t by accepted-step quadrature/readout. In scaled variables y=S z, perturb y by epsilon S v_z with dimensionless, per-block error scales S, never by a raw mixed-unit global norm; cap the perturbation by positive-temperature and decodable-logit margins. Analytic/block JVPs are preferable. This directly addresses the invalid receipt, but it does not supply the absent reaction-tail trajectory or the many-orders-of-magnitude speedup required by D-071.",
+      "assumptions_used": [
+        "The current F10 equations are autonomous in elapsed cosmic time, so partial F_phys/partial t=0.",
+        "N=ln(a) is the independent variable and is not a state direction for partial F/partial y.",
+        "Any future explicitly time-dependent physics would invalidate passive-time elimination and require a separate derivation."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:33-35,418-504,535-550,657-677",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-002",
+        ".agent-harness/generated/STATUS_BOARD.md:G-F10-INDEPENDENT-FLRW"
+      ],
+      "evidence_fingerprint": "sha256:c8c82330a7b681488690b57dea6a9b151cae27c064738ddc42c824b702cf1ca6",
+      "counterevidence_refs": [
+        "Elapsed time is an endpoint-consumed physical observable, so it must still be accurately integrated or reconstructed; removing it from the nonlinear norm is not permission to drop it.",
+        "The static diagnostic did preserve its failure receipts; artifact absence is not alleged."
+      ],
+      "reproduction": [
+        "STATIC: verify that physical_state_impl ignores state[ELAPSED_SECONDS_INDEX] while write_rhs sets only its derivative.",
+        "FALSIFIER (not run): rerun the sealed creep state with fixed N and passive time excluded; require all perturbed states to decode, JVP convergence under epsilon/2 and 2*epsilon, and agreement with an analytic or high-precision directional derivative.",
+        "FALSIFIER (not run): integrate t afterward from 1/H and require endpoint time agreement with the augmented-state reference across the tolerance ladder."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No admissible trajectory prefix or reaction-tail authority exists.",
+        "No measured activation/cold endpoint improvement exists."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-006",
+      "claim_id": "PM-H3B",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CURRENT ADMISSION GAP; SPECIFIED CONSOLIDATED REMEDY] Physics observables must be downstream of a single raw-state admission sequence: (1) finite ordered inputs T_start>T_handoff>T_end>0 and finite positive controls; (2) solver success and the expected directed event; (3) bounded event residual; (4) finite raw terminal state; (5) T_gamma,T_nu,n_b,rho,H>0, Omega=1-Sigma^2>0, occupations in their declared domain and X_i>=0; (6) baryon normalization and block-appropriate conservation; (7) prospectively bounded cooling monotonicity; then and only then (8) raw Yp, D/H, Li/H and N_eff. The Rust minimal observable consumer already implements success/event/finite/nonnegative/baryon/hydrogen admission without clipping, while canonical Python computes floored ratios after only ordinary event classification. In flat FLRW, add the local first-law residual R_E=d rho_tot/dN+3(rho_tot+P_tot), normalized by a declared physical scale, plus equal-and-opposite plasma/neutrino transfer. Do not reuse R_E unchanged away from Sigma=0: Type-I anisotropic stress/shear work has convention-dependent signs and must be derived against the project geometry before admission. This should replace/consolidate scattered diagnostics, not create a new readiness layer.",
+      "assumptions_used": [
+        "Raw state means the state emitted by the solver/coordinate decoder before any clipping, flooring or endpoint renormalization.",
+        "FLRW total stress is isotropic; anisotropic Type-I continuity requires its own derived shear-work term.",
+        "Tolerance values must be prospectively sealed and scale-aware; this review does not invent numerical caps."
+      ],
+      "evidence_refs": [
+        "src/rabbit/drivers/full_coupled_typeI.py:1075-1184,1378-1399,1528-1554",
+        "src/rabbit/collisions/dynamic_collision_driver.py:290-342",
+        "native/rabbit_cpu/src/minimal_bbn.rs:1051-1105,1386-1448",
+        "native/rabbit_cpu/src/flrw.rs:705-729",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:970-1008,2198-2248",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-009,F-ODE-ADJ3-011"
+      ],
+      "evidence_fingerprint": "sha256:1394e57870e6bd3b4e6b6ef607b22bdd6797fb763b193042682165ac0becf036",
+      "counterevidence_refs": [
+        "Both canonical Python phases reject ordinary missed events; the deficiency is the physical residual and raw-consumer contract after nominal event success.",
+        "Physics invariants cannot by themselves preserve a solver exception, partial trajectory and counters; software failure provenance remains separately necessary."
+      ],
+      "reproduction": [
+        "FALSIFIER (not run): inject solver failure, missed event, event residual excess, nonfinite state, negative abundance, occupation violation, Omega<=0, nonmonotone T and first-law imbalance one at a time; no case may emit any observable.",
+        "FALSIFIER (not run): perturb an otherwise admitted endpoint within and outside each sealed tolerance and demonstrate a sharp deterministic admission boundary without mutation of the raw state.",
+        "FALSIFIER (not run): at Sigma=0 verify the FLRW residual; at nonzero shear require the separately derived Type-I balance rather than silently applying the FLRW formula."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Canonical Python has no unified raw-state consumer or sealed residual caps.",
+        "A full Type-I energy-continuity residual is outside the named evidence slice and remains to be derived before use."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-007",
+      "claim_id": "PM-H5B",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED TIER-2 SCIENCE BLOCKER; PHYSICS-TARGETED REMEDY PROPOSED] The strict xfail records unresolved Yp resolution drift; its prose cites about 3.5% from N_q=16 to 32, while the executable assertion actually compares N_q=24 to 32 against 1e-3. Refinement based only on an unweighted f norm or total neutrino energy is physically insufficient: high-energy electron-neutrino distortions can change n<->p rates even when their contribution to rho_nu is small. Use one conservative quadrature/deposition for collision gain/loss and plasma debit, and select/refine nodes against the actual dimensionless couplings Q/(H rho), lambda_np/H and lambda_pn/H over the freezeout interval, followed by Yp, D/H and N_eff convergence. Near detailed balance, evaluate a gain-loss pair G-L through a log-affinity A=ln(G/L) and L*expm1(A) when safe, including Pauli log terms, so the equilibrium null is not lost to cancellation; retain a direct separated branch for zero fluxes or large affinity. This is PROPOSED until validated on the actual 2-to-2 operator and activation/cold endpoint.",
+      "assumptions_used": [
+        "The weak rates consume the evolved electron-neutrino and antineutrino spectra.",
+        "No-QKE classical transport remains the controlling scope.",
+        "Existing 1e-3 xfail tolerance is a minimum convergence lock and must not be loosened; precision Yp authority may require a tighter prospective target."
+      ],
+      "evidence_refs": [
+        "tests/test_scipy_tier2_convergence_lock.py:1-39",
+        "src/rabbit/drivers/full_coupled_typeI.py:880-916",
+        "src/rabbit/collisions/dynamic_collision_driver.py:198-225",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-003",
+        "https://arxiv.org/html/1512.02205:Eq.(1)-(2), lines on high-energy distortion/n-p feedback, Eq.(16)-(20) collision sum rules"
+      ],
+      "evidence_fingerprint": "sha256:5ce2a070ab5f730eea2dc72bedd465f7308e99021a49979bf94c7d91e9474c56",
+      "counterevidence_refs": [
+        "The strict xfail is transparent and will fail on unexpected pass; concealment is not alleged.",
+        "Energy closure by construction in dynamic_collision_driver is a useful invariant but does not establish weak-rate or Yp resolution convergence."
+      ],
+      "reproduction": [
+        "FALSIFIER (not run): run one prospectively frozen N_q/y_max ladder including 16,24,32 and a finer holdout; require nested convergence of Q/(H rho), both weak rates/H, Yp, D/H and N_eff without changing physics or tolerance.",
+        "FALSIFIER (not run): construct equal-energy spectral perturbations concentrated below and above the weak threshold; a mesh accepted by energy alone but not by lambda_np/lambda_pn must be rejected.",
+        "FALSIFIER (not run): at thermal FD equilibrium require gain-loss null, number/energy/lepton-number sum rules, and agreement of affinity and direct kernels away from cancellation.",
+        "FALSIFIER (not run): measure same-case activation/cold endpoint wall; a segment-only kernel improvement is not endpoint progress."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Current-head drift magnitude was not rerun.",
+        "No affinity-form kernel or observable-weighted production grid is implemented in the named paths.",
+        "The source narrative and executable convergence pair should be reconciled without weakening the assertion."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-008",
+      "claim_id": "PM-H5B",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "[DERIVED AND IMPLEMENTED BOUNDED STRUCTURE; RETAINED EVIDENCE, NOT FRESHLY RERUN] Before nuclei form, dX_n/dt=-lambda_np X_n+lambda_pn(1-X_n), so the exact rate equilibrium is X_n*=lambda_pn/(lambda_np+lambda_pn); at zero chemical potentials the high-temperature thermodynamic limit is X_n=1/[1+exp(Delta m/T)]. With nuclei present, use the local free-nucleon null lambda_np X_n=lambda_pn X_p rather than assuming X_p=1-X_n. Rust thermal initialization uses the rate ratio, the minimal path exposes the thermodynamic formula, the network adds weak flow with equal and opposite n/p mass-fraction changes, and nuclear stoichiometry separately conserves baryon and nuclear charge. The one-time Saha projection at handoff is explicitly an initial NSE construction and the endpoint consumer performs no renormalization. These are the correct physics-specific foundations and should be retained; they do not establish precision weak-rate or endpoint authority.",
+      "assumptions_used": [
+        "Lambda rates are finite, nonnegative and their sum is positive.",
+        "The equilibrium Boltzmann ratio uses vanishing relevant chemical potentials and the project's neutron-proton mass splitting convention.",
+        "Saha/NSE is an initialization manifold near the selected handoff, not a runtime constraint after freezeout."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/thermal_bbn.rs:412-428,504-567",
+        "native/rabbit_cpu/src/minimal_bbn.rs:605-607,625-686,1295-1357",
+        "native/rabbit_cpu/src/minimal_network.rs:784-800,906-925,1725-1742",
+        "https://arxiv.org/html/1801.08023:Eq.(92)-(96) weak freezeout and Appendix A.4 NSE chemical equilibrium",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-033"
+      ],
+      "evidence_fingerprint": "sha256:61e33ada81a0c02c2b81abe69c9d6ae6399ef4f1756f6ed868f3dad3ee143f1a",
+      "counterevidence_refs": [
+        "The current thermal weak model is explicitly not a precision-abundance authority, and no current-turn test was run.",
+        "A weak block changes nuclear charge; only total charge including leptons is conserved."
+      ],
+      "reproduction": [
+        "STATIC/DERIVED: substitute X_n* into the phase-1 RHS and obtain zero exactly in algebra.",
+        "FALSIFIER (not run): over representative T around 10, 3, 1 and 0.7 MeV, require rate-equilibrium RHS null and verify lambda_pn/lambda_np approaches exp(-Delta m/T) only under the declared equilibrium assumptions.",
+        "FALSIFIER (not run): split nuclear and weak RHS; require baryon conservation for both, nuclear charge conservation only for the nuclear block, and the analytically expected nuclear-charge change for the weak block.",
+        "FALSIFIER (not run): perturb the Saha seed and show the runtime trajectory evolves freely without repeated normalization or endpoint repair."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "No fresh executable validation was authorized; pass is limited to the derived/static structure and retained bounded evidence.",
+        "Radiative/finite-mass weak corrections and full scientific endpoint convergence remain separate gates."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-009",
+      "claim_id": "PM-H5B",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[LIMIT CONTRACT PARTLY IMPLEMENTED; FULL CROSS-PATH VALIDATION ABSENT] Three metamorphic limits should be mandatory physical falsifiers. First, with Sigma_plus=Sigma_minus=0 and isotropic occupations, anisotropic stress and shear derivatives must vanish and H must reduce to the flat FLRW value. Second, the LRS submanifold Sigma_minus=Pi_minus=0 must remain invariant; the characteristic Python branch currently enforces the restriction and sets Pi_minus=0, but that is not a trajectory-level proof of the generic-to-LRS limit. Third, with q=a p and all collision actions disabled, df(q)/dN=0 and a^4 rho_nu is constant; this identity is IMPLEMENTED and source-tested in Rust. The flat FLRW first-law residual is safe only on the first limit. Non-LRS full-collision or QKE support must not be inferred from these tests.",
+      "assumptions_used": [
+        "Massless collisionless neutrinos and comoving momentum q=a p.",
+        "The project's shear/stress normalization is held fixed; no silent convention or sign change is allowed.",
+        "Characteristic transport remains LRS-only in the current public configuration."
+      ],
+      "evidence_refs": [
+        "src/rabbit/drivers/full_coupled_typeI.py:811-821,1075-1149",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1-12,100-130,825-845",
+        "native/rabbit_cpu/src/flrw.rs:267-348,705-729",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:hard scope and no-QKE/non-LRS promotion boundaries"
+      ],
+      "evidence_fingerprint": "sha256:a7574594b0623d58e09c001a9ff9e8f41590669c4c200678122bca64d59aa904",
+      "counterevidence_refs": [
+        "The exact collisionless comoving scaling has a focused Rust source test.",
+        "Configuration rejection of non-LRS characteristic input prevents one misuse but does not compare the generic implementation's LRS limit."
+      ],
+      "reproduction": [
+        "FALSIFIER (not run): evaluate the full RHS at Sigma=0 with isotropic FD data and require zero anisotropic stress/shear RHS plus bitwise or tolerance-declared H agreement with FLRW.",
+        "FALSIFIER (not run): start the generic Type-I path at Sigma_minus=Pi_minus=0 and require those coordinates remain zero while all shared observables match the LRS path across a tolerance ladder.",
+        "FALSIFIER (not run): disable every collision channel for an arbitrary admissible spectrum and require df/dN=0 and constant a^4 rho_nu at every accepted state, not only at endpoint."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "The named evidence does not contain a fresh generic-to-LRS trajectory comparison.",
+        "The full Type-I energy-balance sign convention was not rederived in this bounded slice."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS2-010",
+      "claim_id": "PM-H3B",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[SCIENTIFIC CEILING AND PRIORITY] None of the reviewed physics remedies reopens G-F10-INDEPENDENT-FLRW. The retained order-60/ymax-30 domain holdout stopped near N=0.1653 after 64,800 s without evaluating a scientific predicate; the post-drop projection is about 3.27e7 RHS calls, 4.58 years and an approximately 8305x miss. Logit/log-X coordinates, raw admission, passive-time removal, an energy-state thermal closure and a monotone temperature clock are correctness or conditioning moves; observable-weighted quadrature and affinity-form gain/loss may improve physics and cost, but have no measured endpoint factor. Priority is therefore: P0 remove false physical success and invalid JVP perturbations by reusing Rust structures; P1 test one Rust energy/clock or collision-kernel candidate only against the measured activation/cold wall and BBN falsifiers; retain D-071 closed unless a materially new asymptotic/reduction/surrogate method completes a prospectively sealed trajectory discriminator with margin. Generic optimization, hardware, longer budget, static states or segment-only timing do not qualify.",
+      "assumptions_used": [
+        "D-071 and the current gate registry are authoritative.",
+        "No new trajectory, endpoint, performance or promotion execution was authorized.",
+        "Rust AOT is the active repeated-run target, SciPy/BDF the temporary number-of-record and JAX a frozen oracle."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/STATUS_BOARD.md:13-20",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-001,F-ODE-ADJ3-002",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:Hard Rule, BD397 rule, measured-blocker requirements",
+        "bbn_codex_anti_drift_cost_effective_policy.md:Hard Scope, Blocker Movement Ratio, Minimum Evidence"
+      ],
+      "evidence_fingerprint": "sha256:0e1cc97021b3a2736544cdf5a8d234de7a31a310ac54753a9acdc8fd92191a60",
+      "counterevidence_refs": [
+        "Current Rust catalogue, bounded covariance/metrology and performance gates remain PASS within their stated scope.",
+        "The order-48 base phase and static receipts provide useful reproducibility and localization evidence, but not independent trajectory authority."
+      ],
+      "reproduction": [
+        "RETAINED: inspect the cited D-071 adjudication and gate status; no new execution was performed.",
+        "REOPEN FALSIFIER (not run): prospectively seal the new method, exact physics/grid/domain, wall cap, failure taxonomy and independent holdout before results; require the actual order-60/ymax-30 trajectory predicate to complete within budget with margin and raw invariants admitted.",
+        "PROGRESS FALSIFIER (not run): report same-case activation/cold endpoint wall, RHS/JVP/collision counts and raw observable deltas; reject any candidate whose gain is segment-only or whose correctness relies on relaxed tolerances."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "G-F10-INDEPENDENT-FLRW remains FAIL/CLOSED_ON_CURRENT_MEASUREMENT.",
+        "G-HARNESS-INTEGRITY remains FAIL.",
+        "No proposal here has demonstrated the required asymptotic improvement."
+      ]
+    }
+  ],
+  "completeness_ceiling": {
+    "frozen_target": "Exact HEAD 78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b; only the assignment-named Python/Rust files, sealed A-ODE-ADJ3 result, status board, anti-drift policies, targeted tier-2 test, and two primary no-QKE/BBN papers.",
+    "coverage": "Assigned physics domains were covered explicitly: occupation and Hubble state domains, abundance positivity and baryon/charge structure, thermodynamic first law and monotonicity, temperature terminal surfaces, raw-state admission, FLRW/LRS/collisionless limits, weak equilibrium, Saha initialization, network detailed balance/convergence, and the D-071 applicability ceiling.",
+    "not_claimed": "No repo-wide rediscovery, sibling-result inspection, new solver run, test run, endpoint, benchmark, current tier-2 drift measurement, Type-I anisotropic energy-continuity derivation, QKE analysis, implementation or promotion. Equations labeled DERIVED/PROPOSED are not VALIDATED. Primary literature is directly applicable to flat homogeneous/isotropic classical Boltzmann BBN; its use for Type I is limited to the explicit FLRW/LRS limiting tests.",
+    "workspace_state": "The pre-existing worktree had modified .agent-harness context files and an untracked RABBIT_diagnosis_report.bundle; they were not edited or removed. Only this assignment's unique result JSON was written.",
+    "token_use": "UNAVAILABLE: the harness exposes no exact token counter."
+  },
+  "human_summary": "FAIL for present solver/physics authority, with a concrete mitigation hierarchy. Python clipping and H floors must be removed from physical consumers; the existing Rust logit/log-X, strict raw failure, stoichiometric conservation and fail-closed observable path are the implementation baseline, not work to duplicate. Energy-density variables and a monotone photon-temperature clock are mathematically coherent under stated EOS/monotonicity conditions but remain unimplemented and unbenchmarked. Passive cosmic time and independent N must not contaminate JVP norms. The tier-2 Yp xfail needs collision/weak-observable-weighted quadrature and detailed-balance tests, not tolerance relaxation. FLRW first-law, collisionless q=ap, LRS invariance, weak equilibrium and blockwise conservation provide BBN-shaped falsifiers. None of these results earns a D-071 reopen or public/QKE/non-LRS promotion.",
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json"
+  ]
+}

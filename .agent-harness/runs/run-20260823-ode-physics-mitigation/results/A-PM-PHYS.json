@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-PHYS",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c09-2cce-7333-98c6-8bbfb21f3897",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physics-mitigation",
+    "assignment_id": "A-PM-PHYS",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:2790d2d79a46f975bfc060319382a9cb1f570bcc15a674bf1205654ae6950426",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS.json",
+  "started_at": "2026-08-23T00:33:05Z",
+  "completed_at": "2026-08-23T00:39:03Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "web_retrieval": "NOT_RUN_REQUIRED_INPUT_MISSING"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS.json  # VERIFY: PASS",
+    "wc -l src/rabbit/drivers/full_coupled_typeI.py src/rabbit/collisions/dynamic_collision_driver.py src/rabbit/thermo/nudec_coupled.py src/rabbit/network/bbn.py native/rabbit_cpu/src/minimal_bbn.rs native/rabbit_cpu/src/thermal_bbn.rs native/rabbit_cpu/src/flrw.rs  # src/rabbit/network/bbn.py: No such file or directory",
+    "test -f src/rabbit/network/bbn.py  # exit 1",
+    "python /home/cosmosapjw/.codex/bounded-work-harness/bounded_work.py check /tmp/rabbit-pm-phys.XrsM2o/CONTRACT.json  # PASS",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS.json >/dev/null  # exit 0",
+    "python3 .agent-harness/scripts/validate_harness.py  # ok=true; pending until SubagentStop"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS.json",
+      "sha256": "2790d2d79a46f975bfc060319382a9cb1f570bcc15a674bf1205654ae6950426",
+      "role": "sealed assignment proving src/rabbit/network/bbn.py is a required input"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "sealed audit read only through the finding inventory before the required-input stop"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PM-PHYS-INPUT-001",
+      "claim_id": "PM-H1",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The physical-state-domain and abundance/occupation-constraint remedy review cannot be completed under the sealed assignment because required input src/rabbit/network/bbn.py is absent at current HEAD. No substitute path was inferred and no physics remedy is claimed.",
+      "assumptions_used": [
+        "The assignment required_inputs list and injected missing-file hard stop are binding.",
+        "A similarly named or moved network implementation cannot be substituted without a corrected sealed assignment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS.json:required_inputs",
+        "command:test -f src/rabbit/network/bbn.py:exit=1"
+      ],
+      "evidence_fingerprint": "sha256:2790d2d79a46f975bfc060319382a9cb1f570bcc15a674bf1205654ae6950426",
+      "counterevidence_refs": [
+        "Other named driver, collision, thermo, and Rust files exist, but they do not discharge the missing network input."
+      ],
+      "reproduction": [
+        "test -f src/rabbit/network/bbn.py; expected exit code 1 at the reviewed tree"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Correct the required path or restore the required file, rebuild context, and mint a fresh assignment before resuming PM-H1."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS-INPUT-002",
+      "claim_id": "PM-H3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The thermodynamic-monotonicity and terminal-temperature-event remedy review is incomplete because the same sealed required network input is absent. The audit's event defects were not promoted into a proposed fix without the full named physics coupling surface and primary-source pass.",
+      "assumptions_used": [
+        "Terminal-event correctness must be checked against the complete named coupled physics surface, not solver semantics alone.",
+        "The injected bootstrap requires status error on a missing required file."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS.json:required_inputs",
+        "command:test -f src/rabbit/network/bbn.py:exit=1"
+      ],
+      "evidence_fingerprint": "sha256:2790d2d79a46f975bfc060319382a9cb1f570bcc15a674bf1205654ae6950426",
+      "counterevidence_refs": [
+        "The sealed audit identifies event false-success classes, but the assignment requires a physics-specific remedy mapping rather than a solver-only restatement."
+      ],
+      "reproduction": [
+        "test -f src/rabbit/network/bbn.py; expected exit code 1 at the reviewed tree"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Correct the required path or restore the required file, rebuild context, and mint a fresh assignment before resuming PM-H3."
+      ]
+    },
+    {
+      "finding_id": "F-PM-PHYS-INPUT-003",
+      "claim_id": "PM-H5",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The FLRW/LRS-limit and weak/network-equilibrium/conservation remedy review is blocked directly by the absent required network implementation input. No equilibrium equation, conservation invariant, implementation touchpoint, or falsifying BBN-shaped test is asserted from an incomplete sealed slice.",
+      "assumptions_used": [
+        "Network equilibrium and conservation mappings require the exact named network implementation bytes.",
+        "Absence of a required input is a gap, not negative scientific evidence."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-PHYS.json:required_inputs",
+        "command:test -f src/rabbit/network/bbn.py:exit=1"
+      ],
+      "evidence_fingerprint": "sha256:2790d2d79a46f975bfc060319382a9cb1f570bcc15a674bf1205654ae6950426",
+      "counterevidence_refs": [
+        "Named Rust BBN and FLRW files exist, but the sealed cross-language mapping explicitly also requires src/rabbit/network/bbn.py."
+      ],
+      "reproduction": [
+        "test -f src/rabbit/network/bbn.py; expected exit code 1 at the reviewed tree"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Correct the required path or restore the required file, rebuild context, and mint a fresh assignment before resuming PM-H5."
+      ]
+    }
+  ],
+  "errors": [
+    "Required input missing at current HEAD: src/rabbit/network/bbn.py. The sealed bootstrap mandates status error and forbids substantive continuation when a required file is absent."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS.json"
+  ]
+}

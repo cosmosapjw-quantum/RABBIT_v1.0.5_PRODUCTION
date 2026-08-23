@@ -1,0 +1,376 @@
+Script started on 2026-08-23 18:21:11+09:00 [COMMAND="/usr/bin/time -v env PYTHONPATH=src pytest -m 'production and not slow' -q --tb=line --durations=25" <not executed on terminal>]
+
+==================================== ERRORS ====================================
+__________ ERROR collecting tests/test_ap_preconditioned_dispatch.py ___________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_ap_preconditioned_dispatch.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ap_preconditioned_dispatch.py:23: in <module>
+    import jax.numpy as jnp
+E   ModuleNotFoundError: No module named 'jax'
+_______________ ERROR collecting tests/test_ap_preconditioner.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_ap_preconditioner.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ap_preconditioner.py:26: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+_____________ ERROR collecting tests/test_ap_rosenbrock_full_hm.py _____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_ap_rosenbrock_full_hm.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ap_rosenbrock_full_hm.py:15: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+_______ ERROR collecting tests/test_ap_rosenbrock_full_hm_closed_form.py _______
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_ap_rosenbrock_full_hm_closed_form.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ap_rosenbrock_full_hm_closed_form.py:20: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+____________ ERROR collecting tests/test_classB_live_weak_helper.py ____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_classB_live_weak_helper.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_classB_live_weak_helper.py:17: in <module>
+    import jax.numpy as jnp
+E   ModuleNotFoundError: No module named 'jax'
+_______________ ERROR collecting tests/test_collision_hm_full.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_collision_hm_full.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_collision_hm_full.py:19: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+________ ERROR collecting tests/test_collision_rate_backend_dispatch.py ________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_collision_rate_backend_dispatch.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_collision_rate_backend_dispatch.py:5: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+________________ ERROR collecting tests/test_dhs_correction.py _________________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dhs_correction.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_dhs_correction.py:18: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+_________ ERROR collecting tests/test_electron_mass_suppression_jax.py _________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_electron_mass_suppression_jax.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_electron_mass_suppression_jax.py:18: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+__________ ERROR collecting tests/test_f10_physical_prefix_fixture.py __________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_f10_physical_prefix_fixture.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_f10_physical_prefix_fixture.py:16: in <module>
+    from scripts.audit import f10_physical_prefix_fixture as fixture
+E   ModuleNotFoundError: No module named 'scripts.audit'
+__________ ERROR collecting tests/test_finite_mass_rate_correction.py __________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_finite_mass_rate_correction.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_finite_mass_rate_correction.py:33: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+____________________ ERROR collecting tests/test_fisher.py _____________________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_fisher.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_fisher.py:27: in <module>
+    from rabbit.inference.fisher import (
+src/rabbit/inference/fisher.py:52: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+______________ ERROR collecting tests/test_hm_matrix_elements.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_hm_matrix_elements.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_hm_matrix_elements.py:19: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+____________ ERROR collecting tests/test_hm_partner_integration.py _____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_hm_partner_integration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_hm_partner_integration.py:21: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+__________________ ERROR collecting tests/test_j02_jax_rhs.py __________________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_j02_jax_rhs.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_j02_jax_rhs.py:21: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+________________ ERROR collecting tests/test_j04_jax_rodas5p.py ________________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_j04_jax_rodas5p.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_j04_jax_rodas5p.py:23: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+______________ ERROR collecting tests/test_j08_gradient_bridge.py ______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_j08_gradient_bridge.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_j08_gradient_bridge.py:20: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+______________ ERROR collecting tests/test_jax_classA_geometry.py ______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_jax_classA_geometry.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_jax_classA_geometry.py:20: in <module>
+    from rabbit.jax.geometry_classA_jax import (
+src/rabbit/jax/geometry_classA_jax.py:22: in <module>
+    from jax import config as jax_config
+E   ModuleNotFoundError: No module named 'jax'
+________ ERROR collecting tests/test_jax_classA_transport_reduction.py _________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_jax_classA_transport_reduction.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_jax_classA_transport_reduction.py:13: in <module>
+    import jax.numpy as jnp
+E   ModuleNotFoundError: No module named 'jax'
+__________ ERROR collecting tests/test_jax_classA_typeI_reduction.py ___________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_jax_classA_typeI_reduction.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_jax_classA_typeI_reduction.py:8: in <module>
+    from rabbit.jax.geometry_classA_jax import TYPE_MASKS, compute_classA_geometry_rhs_jax
+src/rabbit/jax/geometry_classA_jax.py:22: in <module>
+    from jax import config as jax_config
+E   ModuleNotFoundError: No module named 'jax'
+_________ ERROR collecting tests/test_jax_solver_runner_cache_guard.py _________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_jax_solver_runner_cache_guard.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_jax_solver_runner_cache_guard.py:1: in <module>
+    import jax.numpy as jnp
+E   ModuleNotFoundError: No module named 'jax'
+_______________ ERROR collecting tests/test_jax_transport_ops.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_jax_transport_ops.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_jax_transport_ops.py:2: in <module>
+    import jax.numpy as jnp
+E   ModuleNotFoundError: No module named 'jax'
+______________ ERROR collecting tests/test_joint_3d_inference.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_joint_3d_inference.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_joint_3d_inference.py:5: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+______________ ERROR collecting tests/test_joint_3d_native_ad.py _______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_joint_3d_native_ad.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_joint_3d_native_ad.py:20: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+____________ ERROR collecting tests/test_kernel_backend_contract.py ____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_kernel_backend_contract.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_kernel_backend_contract.py:5: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+_____________ ERROR collecting tests/test_li7h_identifiability.py ______________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_li7h_identifiability.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_li7h_identifiability.py:14: in <module>
+    from rabbit.inference.fisher import bbn_fisher
+src/rabbit/inference/fisher.py:52: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+____________ ERROR collecting tests/test_sigma_h_identifiability.py ____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_sigma_h_identifiability.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_sigma_h_identifiability.py:21: in <module>
+    from rabbit.inference.joint_3d_inference import (
+src/rabbit/inference/joint_3d_inference.py:35: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+__________ ERROR collecting tests/test_synthetic_recovery_full_3d.py ___________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_synthetic_recovery_full_3d.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_synthetic_recovery_full_3d.py:31: in <module>
+    from rabbit.inference.fisher import (
+src/rabbit/inference/fisher.py:52: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+_____ ERROR collecting tests/test_three_temperature_closure_invariants.py ______
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_three_temperature_closure_invariants.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_three_temperature_closure_invariants.py:6: in <module>
+    from rabbit.jax.nudec_coupled_jax import N_eff_from_3T_jax
+src/rabbit/jax/nudec_coupled_jax.py:17: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+___________ ERROR collecting tests/test_v32_mangano_gap_envelope.py ____________
+ImportError while importing test module '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_v32_mangano_gap_envelope.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_v32_mangano_gap_envelope.py:28: in <module>
+    import jax
+E   ModuleNotFoundError: No module named 'jax'
+=========================== short test summary info ============================
+ERROR tests/test_ap_preconditioned_dispatch.py
+ERROR tests/test_ap_preconditioner.py
+ERROR tests/test_ap_rosenbrock_full_hm.py
+ERROR tests/test_ap_rosenbrock_full_hm_closed_form.py
+ERROR tests/test_classB_live_weak_helper.py
+ERROR tests/test_collision_hm_full.py
+ERROR tests/test_collision_rate_backend_dispatch.py
+ERROR tests/test_dhs_correction.py
+ERROR tests/test_electron_mass_suppression_jax.py
+ERROR tests/test_f10_physical_prefix_fixture.py
+ERROR tests/test_finite_mass_rate_correction.py
+ERROR tests/test_fisher.py
+ERROR tests/test_hm_matrix_elements.py
+ERROR tests/test_hm_partner_integration.py
+ERROR tests/test_j02_jax_rhs.py
+ERROR tests/test_j04_jax_rodas5p.py
+ERROR tests/test_j08_gradient_bridge.py
+ERROR tests/test_jax_classA_geometry.py
+ERROR tests/test_jax_classA_transport_reduction.py
+ERROR tests/test_jax_classA_typeI_reduction.py
+ERROR tests/test_jax_solver_runner_cache_guard.py
+ERROR tests/test_jax_transport_ops.py
+ERROR tests/test_joint_3d_inference.py
+ERROR tests/test_joint_3d_native_ad.py
+ERROR tests/test_kernel_backend_contract.py
+ERROR tests/test_li7h_identifiability.py
+ERROR tests/test_sigma_h_identifiability.py
+ERROR tests/test_synthetic_recovery_full_3d.py
+ERROR tests/test_three_temperature_closure_invariants.py
+ERROR tests/test_v32_mangano_gap_envelope.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 30 errors during collection !!!!!!!!!!!!!!!!!!!
+73 skipped, 1227 deselected, 30 errors in 5.40s
+Command exited with non-zero status 2
+	Command being timed: "env PYTHONPATH=src pytest -m production and not slow -q --tb=line --durations=25"
+	User time (seconds): 8.88
+	System time (seconds): 0.24
+	Percent of CPU this job got: 155%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 146104
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 37879
+	Voluntary context switches: 228
+	Involuntary context switches: 866
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 17960
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2
+
+Script done on 2026-08-23 18:21:17+09:00 [COMMAND_EXIT_CODE="2"]

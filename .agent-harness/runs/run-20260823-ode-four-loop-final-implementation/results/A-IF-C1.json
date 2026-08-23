@@ -1,0 +1,228 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "assignment_id": "A-IF-C1",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02de0-3a58-7ec2-82a3-f724326730a7",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-four-loop-final-implementation",
+    "assignment_id": "A-IF-C1",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d4a13ac644c0e45b16d2c99166ff8b594dcc135975901bc35ecfe342f66e6229",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json",
+  "started_at": "2026-08-23T09:11:11Z",
+  "completed_at": "2026-08-23T09:13:32Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "targeted read-only C1 contract audit; no tests, trajectory, endpoint, or implementation execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-C1.json # VERIFY: PASS",
+    "bounded nl/sed reads of the assignment-listed context, role, result template, C1 source, focused test, and final coding-harness disposition only",
+    "sha256sum of the assignment-listed C1 source, focused test, final disposition, role, and result template",
+    "python3 --version; sha256sum --version; date -u"
+  ],
+  "artifacts": [
+    {
+      "path": "src/rabbit/collisions/dynamic_collision_driver.py",
+      "sha256": "3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "role": "exact pre-fix C1 implementation surface"
+    },
+    {
+      "path": "tests/test_dynamic_collision_driver.py",
+      "sha256": "619a3d110382df34ae5010d83f9ef9901f16e2998f105c3dab48117abed42a7f",
+      "role": "exact focused-test surface and existing interaction set"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+      "sha256": "c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "role": "final C1 PROMOTE_FOR_LATER_IMPLEMENTATION disposition"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-IF-C1-001",
+      "claim_id": "IF-C1-CONTRACT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The pre-fix control/data flow is mechanically located. _make_rhs deliberately clips trial/probe f banks before evaluator use, maps the clipped values into the thermal frame, observes raw H only inside the probe-inclusive closure, and floors H for division. After solve_ivp returns, integrate_flrw_decoupling instead indexes the last stored t/y column and clips the final f banks before it checks solver success and terminal-event admission. Nonfinal raw columns affect only max_clip_excursion telemetry, which is never enforced in production, and no accepted column receives a finite/open-domain/T_gamma/H admission. Consequently a nominal success+event can sanitize an invalid final bank or retain an invalid nonfinal sample, while a failed or empty solver result can be postprocessed before the intended RuntimeError boundary.",
+      "assumptions_used": [
+        "sol.y columns are solve_ivp's stored accepted/output samples; internal Radau finite-difference and rejected-step probes enter through rhs but are not necessarily stored in sol.y.",
+        "C1 changes admission semantics only; C2 event-refinement semantics and C3 trajectory acceleration remain out of scope."
+      ],
+      "evidence_refs": [
+        "src/rabbit/collisions/dynamic_collision_driver.py:151-169",
+        "src/rabbit/collisions/dynamic_collision_driver.py:171-202",
+        "src/rabbit/collisions/dynamic_collision_driver.py:278-321",
+        "src/rabbit/collisions/dynamic_collision_driver.py:323-360",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:102-123"
+      ],
+      "evidence_fingerprint": "sha256:3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "counterevidence_refs": [
+        "tests/test_dynamic_collision_driver.py:68-70 and 86-88 assert returned telemetry, but a caller that does not run those tests receives no production rejection.",
+        "src/rabbit/collisions/dynamic_collision_driver.py:328-340 rejects materially negative endpoint moments, but it operates after final-state clipping and does not admit every raw stored column."
+      ],
+      "reproduction": [
+        "Read src/rabbit/collisions/dynamic_collision_driver.py:171-191 to follow probe-side f clipping and H flooring.",
+        "Read src/rabbit/collisions/dynamic_collision_driver.py:290-321 in execution order: last-column access and final f clipping precede solver/event admission.",
+        "Read src/rabbit/collisions/dynamic_collision_driver.py:299-309: stored-sample excursion and probe-inclusive H are converted to result telemetry without a fail-closed condition."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-IF-C1-002",
+      "claim_id": "IF-C1-CONTRACT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The smallest discriminating test battery is a lightweight monkeypatched solve_ivp fixture, not a trajectory: (1) unsuccessful/no-event plus empty stored arrays must raise RuntimeError before any last-column access; (2) success+event with a strictly invalid nonfinal raw f column and a valid final column must raise RawStateAdmissionError; (3) success+event with an exactly-boundary or out-of-domain final raw f value must raise RawStateAdmissionError rather than clip; and (4) success+event with otherwise valid columns but finite nonpositive or nonfinite recomputed H on one nonfinal column must raise RawStateAdmissionError. A direct _make_rhs probe carrying out-of-range trial f is the necessary green mutant: it must remain evaluator-clipped and must not raise the stored-sample exception. A valid fake solve that invokes rhs once on the valid initial column pins unchanged physical readouts, final arrays, result shape, and exception-free behavior.",
+      "assumptions_used": [
+        "The fake solver reports success and a nonempty terminal-event array for raw-admission cases, so the tests isolate C1 rather than C2 event accuracy.",
+        "Use exact mutants with no tolerance choice: a negative subnormal or exact 0/1 f boundary, H=0 or NaN, and an empty failed-solver payload.",
+        "The fake solver does not execute an endpoint or expensive collision trajectory."
+      ],
+      "evidence_refs": [
+        "src/rabbit/collisions/dynamic_collision_driver.py:171-181",
+        "src/rabbit/collisions/dynamic_collision_driver.py:187-202",
+        "src/rabbit/collisions/dynamic_collision_driver.py:278-321",
+        "tests/test_dynamic_collision_driver.py:32-40",
+        "tests/test_dynamic_collision_driver.py:121-140",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:103-106",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:167-190"
+      ],
+      "evidence_fingerprint": "sha256:c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "counterevidence_refs": [
+        "tests/test_dynamic_collision_driver.py:124-128 covers a real missing-event run but does not discriminate admission-before-postprocessing on an empty/malformed failed result.",
+        "tests/test_dynamic_collision_driver.py:68-70 and 86-88 inspect only returned max_clip_excursion/min_hubble; they do not require the integrator itself to reject raw stored-state corruption."
+      ],
+      "reproduction": [
+        "Monkeypatch the module's solve_ivp with a SimpleNamespace-compatible result constructed from the provided y0; use three stored columns so a bad middle column and a good final column are distinguishable.",
+        "For the nonfinal f mutant, set one middle-bank entry to -np.nextafter(0.0, np.inf); current code returns because the final column remains valid and the excursion is merely telemetry.",
+        "For the final f mutant, set one final-bank entry to exactly 0.0 or 1.0; current code clips/uses it, whereas the strict stored-state contract must reject it.",
+        "For the H mutant, make the fake solver avoid the suspect middle column and monkeypatch hubble_3T to return 0.0 or NaN only for that column's T_gamma; only a post-solve per-column recomputation can kill it.",
+        "Call _make_rhs(..., collisions=False) directly with trial f outside [0,1] and positive T_gamma; assert finite output and no RawStateAdmissionError to prevent accidental movement of the admission boundary into Radau probes."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-IF-C1-003",
+      "claim_id": "IF-C1-CONTRACT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The compatible two-boundary implementation contract is coherent. Boundary 1 admits solver success and a nonempty terminal event before reading the last column. Boundary 2 then checks every raw stored time/state column for structural consistency and finiteness, requires both dimensionless occupation banks to lie strictly inside 0<f<1 and T_gamma>0 MeV, reconstructs finite positive z=exp(N)T_gamma, follows the same comoving-to-thermal diagnostic path only after the raw check, and requires the resulting unfloored H to be finite and strictly positive. Only after both boundaries may endpoint moments and N_eff be formed from the accepted final values. RawStateAdmissionError must subclass RuntimeError; integrate_flrw_decoupling, _make_rhs, DecouplingResult, solver/event settings, probe-side clamps/H_safe, collision fields, plasma factors 2 and 4, 1/(2 pi^2), interpolation support, endpoint temperature, and all tolerances remain unchanged.",
+      "assumptions_used": [
+        "The strict open occupation domain is the final disposition's controlling boundary; contact at exactly 0 or 1 is a failure, not an epsilon policy decision.",
+        "Interpolation's explicit right-tail zero is evaluator support behavior, not a stored-grid occupation, so it remains allowed after the raw stored state has passed.",
+        "Per-column H admission uses the raw accepted column before any H_safe floor; the existing probe monitor may remain telemetry and cannot substitute for accepted-column admission."
+      ],
+      "evidence_refs": [
+        "src/rabbit/collisions/dynamic_collision_driver.py:9-45",
+        "src/rabbit/collisions/dynamic_collision_driver.py:97-129",
+        "src/rabbit/collisions/dynamic_collision_driver.py:132-148",
+        "src/rabbit/collisions/dynamic_collision_driver.py:187-231",
+        "src/rabbit/collisions/dynamic_collision_driver.py:236-288",
+        "src/rabbit/collisions/dynamic_collision_driver.py:323-360",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:103-106",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:119-123"
+      ],
+      "evidence_fingerprint": "sha256:3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "counterevidence_refs": [
+        "No executed focused/regression evidence exists in the final disposition; it labels C1 SPECIFIED only.",
+        "A newly observed boundary contact on a current valid stored trajectory is not authority to introduce an epsilon or widen the domain."
+      ],
+      "reproduction": [
+        "Compare the proposed admission invariants to the state layout at src/rabbit/collisions/dynamic_collision_driver.py:151-164 and the physical readout path at 323-360.",
+        "Verify compatibility against tests/test_dynamic_collision_driver.py:124-128: a RawStateAdmissionError(RuntimeError) preserves existing RuntimeError catch behavior.",
+        "Verify the energy/sign/multiplicity invariants remain localized outside C1 at src/rabbit/collisions/dynamic_collision_driver.py:204-225."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Whether an existing real collision-on stored trajectory touches the strict boundary is intentionally left for the authorized focused/regression run; any contact is a scientific stop, not a contract amendment."
+      ]
+    },
+    {
+      "finding_id": "F-IF-C1-004",
+      "claim_id": "IF-C1-CONTRACT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The expected patch is exactly two files and no more than 40 net lines: dynamic_collision_driver.py adds the specific RuntimeError subclass and one compact private stored-solution admission helper, moves solver/event admission ahead of last-column postprocessing, invokes raw admission once, and uses the admitted final column without sanitizing it; test_dynamic_collision_driver.py adds a compact fake-solver fixture/parameterized red matrix plus the probe and valid-path canaries. No other source, export, registry, gate, documentation, solver, event, trajectory, or endpoint file is needed. The rollback unit is those same two files.",
+      "assumptions_used": [
+        "The <=40-net-line cap and two-file rollback are binding acceptance constraints from the final disposition, not estimates to be silently exceeded.",
+        "Tests may import RawStateAdmissionError directly from its defining module; no package-level export is required."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:102-106",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:167-190",
+        "src/rabbit/collisions/dynamic_collision_driver.py:151-233",
+        "src/rabbit/collisions/dynamic_collision_driver.py:278-360",
+        "tests/test_dynamic_collision_driver.py:1-270"
+      ],
+      "evidence_fingerprint": "sha256:c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "counterevidence_refs": [
+        "The current final disposition contains no implementation diff or executed test evidence and explicitly grants no gate or endpoint authority.",
+        "Adding a new public API/export, telemetry surface, tolerance knob, or event refinement would exceed C1 and collide with C2 or anti-drift scope."
+      ],
+      "reproduction": [
+        "Limit the production edit to the post-solve boundary at src/rabbit/collisions/dynamic_collision_driver.py:290-321 plus a local exception/helper near the same module.",
+        "Limit tests to tests/test_dynamic_collision_driver.py and mechanically require changed-file equality with the two declared paths and net line count <=40 before retention."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-IF-C1-005",
+      "claim_id": "IF-C1-CONTRACT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Likely existing-test interactions are bounded and explicit. The existing failed-integration test continues to pass because the new specific exception is a RuntimeError and solver/event failure remains the first boundary. Collisionless, n_q-convergence, frame-scale, flavour-ordering, conservation, interpolation, and pure-base tests should be numerically unchanged on admitted paths because C1 does not alter rhs physics or postprocessing formulae. Existing max_clip_excursion<1e-6 assertions become weaker compatibility canaries: an admitted path should have zero excursion, while any current path with even a tiny stored-state boundary violation now fails earlier. min_hubble_MeV and its >0 checks remain API/telemetry compatibility; accepted-column H must be independently recomputed for admission rather than inferred from the probe-inclusive monitor. The main residual risk is that the present slow collision-on trajectory may expose a genuine strict-boundary contact; the mandated response is preserve the raw failure and stop for scientific adjudication, not clip, relax, or tune.",
+      "assumptions_used": [
+        "Valid-path identity covers the physical readouts, endpoint arrays, function signatures, dataclass fields, and exception compatibility; C1 is not authority to recalibrate any expected physics band.",
+        "Focused and regression tests were not run in this read-only assignment."
+      ],
+      "evidence_refs": [
+        "tests/test_dynamic_collision_driver.py:56-70",
+        "tests/test_dynamic_collision_driver.py:76-118",
+        "tests/test_dynamic_collision_driver.py:124-149",
+        "tests/test_dynamic_collision_driver.py:152-270",
+        "src/rabbit/collisions/dynamic_collision_driver.py:109-129",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:78-85",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json:119-137"
+      ],
+      "evidence_fingerprint": "sha256:619a3d110382df34ae5010d83f9ef9901f16e2998f105c3dab48117abed42a7f",
+      "counterevidence_refs": [
+        "The three slow collision-on tests execute separate endpoint integrations, so their compatibility is a later validation obligation and was not inferred from green status here.",
+        "The current max_clip_excursion threshold permits small returned violations; C1 intentionally strengthens runtime behavior from telemetry-only to strict admission."
+      ],
+      "reproduction": [
+        "After implementation authority, first run the fake-solver/probe discriminators only; then the full focused module excluding slow tests; then the existing slow collision-on tests exactly as written if budget/authority permits.",
+        "Compare valid-path DecouplingResult scalar fields and final arrays to the pre-fix fixture values without changing any physics tolerance or expected band.",
+        "If any real accepted column is nonfinite, has f<=0 or f>=1, T_gamma<=0, or unfloored H<=0, retain the exact column/index/value and stop."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Executed behavior of the real current collision-on stored trajectory under strict raw admission remains unverified by assignment design."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json"
+  ]
+}

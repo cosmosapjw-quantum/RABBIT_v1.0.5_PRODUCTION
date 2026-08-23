@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "candidate_worktree": "/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree",
+  "candidate_branch": "codex/ode-c1-raw-state-20260823",
+  "candidate_disposition": "REJECTED_NOT_ADMITTED_STOP_INVALID",
+  "environment": {
+    "os": "Linux 7.0.0-29-generic x86_64",
+    "cpu": "AMD Ryzen 9 5900X 12-Core Processor",
+    "logical_cpus": 24,
+    "memory_gib": 94,
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3",
+    "jax": "0.10.0",
+    "jaxlib": "0.10.0",
+    "diffrax": "0.7.2",
+    "jax_device": "CpuDevice(id=0)",
+    "requirements_measured_sha256": "b8996835e148f086bf1e6cc2be6a2eee4a91d525421a1e67c687008dcbe2050b",
+    "base_lock_sha256": "fd84fa522d34b5732b063e5f930601cd11ebe86bcf5d53d1452acf146cb094d2"
+  },
+  "candidate_diff": {
+    "production_added": 82,
+    "production_deleted": 43,
+    "production_net": 39,
+    "test_added": 146,
+    "test_deleted": 0,
+    "total_added": 228,
+    "total_deleted": 43,
+    "total_net": 185,
+    "files": [
+      "src/rabbit/collisions/dynamic_collision_driver.py",
+      "tests/test_dynamic_collision_driver.py"
+    ],
+    "patch_sha256": "a12a2c772c288fecb6a74b27d2a7133f2d839273a110276b7a24f850ef96a849",
+    "diff_check": "PASS"
+  },
+  "tdd_and_focused_runs": [
+    {"log":"01_baseline_target_not_slow.log","status":"PASS","summary":"10 passed, 3 deselected in 4.19s","exit":0},
+    {"log":"02_tdd_red_invalid_nonfinal.log","status":"EXPECTED_RED","summary":"1 failed: pre-fix did not raise on invalid nonfinal stored state, 0.54s","exit":1},
+    {"log":"03_tdd_green_invalid_nonfinal.log","status":"PASS","summary":"1 passed in 0.57s","exit":0},
+    {"log":"04_tdd_red_hubble.log","status":"EXPECTED_RED","summary":"5 failed: pre-fix did not reject nonpositive/nonfinite H, 14 deselected, 0.48s","exit":1},
+    {"log":"05_tdd_green_hubble.log","status":"PASS","summary":"5 passed, 14 deselected in 0.46s","exit":0},
+    {"log":"06_exact_head_mutation_red_final_and_event.log","status":"INADMISSIBLE_CONTAMINATED","summary":"10 failed, 1 passed, 20 deselected; worktree conftest contaminated exact-HEAD import","exit":1},
+    {"log":"07_exact_head_red_final_and_event.log","status":"EXPECTED_RED","summary":"corrected --noconftest exact-HEAD discriminator: 11 failed, 20 deselected, 3 warnings in 0.61s","exit":1},
+    {"log":"08_c1_adversarial_green.log","status":"PASS","summary":"18 passed, 13 deselected in 0.49s","exit":0},
+    {"log":"09_target_not_slow_green.log","status":"PASS","summary":"28 passed, 3 deselected in 4.22s","exit":0},
+    {"log":"10_target_full_green.log","status":"FAIL_MISNAMED_LOG","summary":"3 failed, 28 passed in 55.07s; filename predates outcome and does not grant green status","exit":1},
+    {"log":"11_exact_head_target_full_baseline.log","status":"PASS","summary":"exact HEAD: 13 passed in 55.08s","exit":0},
+    {"log":"19_dynamic_collision_module_measured_env.log","status":"FAIL_CANDIDATE_ATTRIBUTABLE","summary":"3 failed, 28 passed in 49.91s","exit":1,"max_rss_kib":108812},
+    {"log":"20_exact_head_dynamic_collision_measured_env.log","status":"PASS","summary":"exact HEAD: 13 passed in 49.57s","exit":0,"max_rss_kib":107616}
+  ],
+  "gate_and_suite_runs": [
+    {"log":"12_production_not_slow_gate.log","status":"COLLECTION_ERROR_ENVIRONMENT","summary":"30 collection errors, 73 skipped, 1227 deselected in 5.40s; system Python lacked JAX and PYTHONPATH omitted repository root","exit":2},
+    {"log":"15_production_not_slow_measured_env_retry.log","status":"PASS","summary":"396 passed, 8 skipped, 2317 deselected in 159.14s","exit":0,"wall_seconds":162.55,"max_rss_kib":1800700},
+    {"log":"16_gold_measured_env.log","status":"FAIL_BASELINE_NOT_C1","summary":"5 failed, 100 passed, 2 skipped, 2614 deselected in 1213.43s","exit":1,"wall_seconds":1230.20,"max_rss_kib":13521376},
+    {"log":"17_exact_head_gold_failure_attribution.log","status":"FAIL_REPRODUCED_ON_EXACT_HEAD","summary":"the same 5 selected gold failures reproduced byte-for-value on exact HEAD in 196.99s","exit":1,"wall_seconds":200.92,"max_rss_kib":3360264},
+    {"log":"18_full_default_measured_env.log","status":"FAIL","summary":"54 failed, 2587 passed, 80 skipped, 9 warnings in 4614.27s","exit":1,"wall_seconds":4662,"max_rss_kib":38324268}
+  ],
+  "full_suite_failure_groups": [
+    {"group":"candidate C1 raw-state admission","count":3,"attribution":"C1_DIRECT","module":"tests/test_dynamic_collision_driver.py","root":"real collision-on trajectory contains negative tail occupations; exact HEAD module passes"},
+    {"group":"inference stale/missing solver symbols","count":25,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_inference_prediction_validation.py","root":"canonical_batch_forward_solver and canonical_batch_forward_solver_3d attributes absent"},
+    {"group":"native Tier-1 environment/history","count":10,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_native_tier1_vertical_slice.py","root":"nine extension-unavailable cases plus one missing Git revision 0496e5e"},
+    {"group":"JAX remap numerical envelopes","count":3,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_jax_kernel_remap_preconditioned.py","root":"two selected failures exactly reproduced on HEAD; one additional grid-envelope miss"},
+    {"group":"gold numerical drift","count":3,"attribution":"EXACT_HEAD_REPRODUCED","module":"tests/gold","root":"Type III/IV/IX values identical on candidate and exact HEAD"},
+    {"group":"capability/docs stale contracts","count":3,"attribution":"NOT_C1_CHANGED_SURFACE","module":"registry and canonical-doc tests","root":"expected historical/provenance strings are absent"},
+    {"group":"gradient bridge contracts","count":3,"attribution":"NOT_C1_CHANGED_SURFACE","module":"constraint regression and JAX gradient bridge","root":"negative tau gradient and rhs_factory calling-convention mismatch"},
+    {"group":"factorized Jacobian shape drift","count":2,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_pr_t3a_collisionless_driver.py","root":"observed core shapes 24x31 and 23x21 versus expected 24x25 and 23x17"},
+    {"group":"cross-code FLRW anchor","count":1,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_cross_code_live.py","root":"Yp gap 1.0513455e-3 exceeds 5e-4"},
+    {"group":"strict expected-failure inversion","count":1,"attribution":"NOT_C1_CHANGED_SURFACE","module":"tests/test_scipy_tier2_convergence_lock.py","root":"XPASS(strict)"}
+  ],
+  "collision_on_trajectory": {
+    "solver_success": true,
+    "terminal_event_count": 1,
+    "stored_points": 234,
+    "nfev": 3722,
+    "njev": 136,
+    "nlu": 586,
+    "invalid_occupation_entries": 2096,
+    "negative_entries": 2096,
+    "nonfinite_entries": 0,
+    "zero_entries": 0,
+    "at_or_above_one_entries": 0,
+    "samples_with_invalid": 231,
+    "invalid_sample_range": [3, 233],
+    "minimum_hex": "-0x1.8bb068b83059ap-48",
+    "minimum_decimal": -5.491289338418672e-15,
+    "maximum_hex": "0x1.041decc44b490p-1",
+    "first_rejected_sample": {
+      "index": 3,
+      "N": -2.302557321652884,
+      "component": "f_nue[22]",
+      "value": -2.3008216172341183e-30,
+      "q_hex": "0x1.17d95573a6b64p+6",
+      "initial_fd_hex": "0x1.0bf35ab5ee934p-101"
+    },
+    "affected_tail_components": {
+      "f_nue[22]":231,
+      "f_nue[20]":230,
+      "f_nue[21]":228,
+      "f_nux[20]":228,
+      "f_nue[19]":227,
+      "f_nux[22]":227,
+      "f_nux[19]":223,
+      "f_nux[21]":222,
+      "f_nux[23]":213,
+      "f_nue[23]":52,
+      "f_nue[18]":15
+    },
+    "exact_head_return": {
+      "N_eff_hex":"0x1.8201af212b61cp+1",
+      "N_final_hex":"0x1.3c4a4a8438027p+2",
+      "T_gamma_final_hex":"0x1.47ae147ae147bp-7"
+    },
+    "candidate_return": null,
+    "interpretation": "Cartesian raw-f integration with scalar atol=1e-10 does not preserve the strict Pauli box in exponentially small tail coordinates. The candidate correctly observes this but incorrectly treats the current baseline trajectory as admissible under an incompatible strict contract."
+  },
+  "collisionless_trajectory": {
+    "solver_success": true,
+    "terminal_event_count": 1,
+    "stored_points": 146,
+    "nfev": 1038,
+    "njev": 3,
+    "nlu": 26,
+    "invalid_occupation_entries": 0,
+    "minimum_hex": "0x1.572efef6863bap-118",
+    "N_eff_hex": "0x1.7f28410f9c22ap+1"
+  },
+  "valid_fake_identity": {
+    "byte_identical": true,
+    "exact_head_sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0",
+    "candidate_sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0"
+  },
+  "acceptance_result": {
+    "AC_01_evidence_map": "PASS",
+    "AC_02_recorded_red": "PASS",
+    "AC_03_two_file_production_net_le_40": "PASS_LITERAL_PRODUCTION_NET_39_BUT_FAIL_GOVERNING_TOTAL_NET_CAP_185_GT_40_AND_SCOPE",
+    "AC_04_focused_adversarial_green": "PASS",
+    "AC_05_complete_focused_module": "FAIL",
+    "AC_06_production_and_gold_run": "PASS_RUN_ONLY; production PASS, gold baseline FAIL",
+    "AC_07_full_default_no_attributable_regression": "FAIL",
+    "AC_08_independent_review": "PASS_SUBSTANTIVE_REVIEW_WITH_DOCUMENTED_DEDICATED_RUNTIME_HOST_REPLACEMENT; DISPOSITION_REJECT_STOP_INVALID",
+    "AC_09_external_report": "PASS_RUN_LOCAL_EXTERNAL_AUDIT_PACKET_COMPLETED",
+    "AC_10_claim_validation_ledgers": "PASS_RUN_LOCAL_ONLY; CANONICAL_LEDGERS_UNCHANGED_BECAUSE_NO_RETAINED_CLAIM_MOVED",
+    "bounded_decision": "STOP_INVALID"
+  },
+  "independent_adjudication": {
+    "assignment_id": "A-IF-REVIEW2",
+    "runtime_agent_type": "default",
+    "sealed_review_role": "adjudicator",
+    "result_sha256": "c84de9341601ccb91dfd257f7311ac427275b767f033467f0043601406a40932",
+    "decision": "REJECT_STOP_INVALID",
+    "dedicated_runtime_attempt": "HOST_BOUNDARY_ERROR_ONLY_UNCONSUMED_RECEIPT",
+    "accepted_blocker_movement": 0,
+    "accepted_gate_movement": 0
+  },
+  "harness_closeout": {
+    "validate_harness_exit": 0,
+    "validate_harness_ok": true,
+    "pending_result_count": 0,
+    "current_run_open_admission": "A-IF-REVIEW",
+    "current_run_open_admission_reason": "DEDICATED_ADJUDICATOR_RUNTIME_FAILED_BEFORE_SUBSTANTIVE_WORK; RECEIPT_PRESERVED_FAIL_CLOSED",
+    "replacement_assignment_verification": "PASS",
+    "replacement_admission_consumed": true,
+    "logs": [
+      "raw_logs/21_harness_validation.log",
+      "raw_logs/22_review2_assignment_verification.log"
+    ]
+  },
+  "checkout_custody": {
+    "original_checkout_restored": true,
+    "final_tracked_changes": 0,
+    "preserved_preexisting_untracked": [
+      "RABBIT_diagnosis_report.bundle"
+    ],
+    "candidate_isolated": true,
+    "commit_push_merge": false,
+    "artifact": "artifacts/ORIGINAL_CHECKOUT_CUSTODY.json"
+  }
+}

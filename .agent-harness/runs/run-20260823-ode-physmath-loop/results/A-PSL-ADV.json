@@ -1,0 +1,530 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-ADV",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02d76-856d-7ff3-b83e-0e31081313cc",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physmath-loop",
+    "assignment_id": "A-PSL-ADV",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:31a552c28e398dd087d472c7f6747508ee1a863ccb4bdf2706edfff9544d2c4c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json",
+  "started_at": "2026-08-23T07:15:33Z",
+  "completed_at": "2026-08-23T07:16:09Z",
+  "tool_versions": {
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python": "3.12.3",
+    "jq": "1.7",
+    "review_mode": "read-only Phase 5 adversarial review",
+    "tests_executed": "none"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-ADV.json",
+    "read .agent-harness/generated/CONTEXT_PACK.md, the registered assignment, sealed role/template, and only the required evidence inputs",
+    "jq inspection of all 46 Phase-3 claim_audit entries and all seven normalized findings in A-PSL-CLAIM-AUDIT.json",
+    "sha256sum over the research record, evidence ledger, hypothesis graph, negative-results register, claim audit, D-071, V2, and both anti-drift policies",
+    "python3 --version; jq --version; git rev-parse HEAD"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/state/HYPOTHESIS_GRAPH.md",
+      "role": "exact H0-H6 candidate set under adversarial review",
+      "sha256": "23784540fd8641117c441abf552cca9280ceafb26ea6f5a8c950e0617cfd73d8"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+      "role": "independent Phase-3 premise sanitation",
+      "sha256": "78a97db76bf816a67da2761a135377ecd85b1477f5198290d7e5743aeae97865"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "role": "binding trajectory-instrument failure and reopen ceiling",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "role": "fixed-tail, generic-Jacobian, and unmeasured-creep negative evidence",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c"
+    },
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md",
+      "role": "anti-relabeling negative-result register",
+      "sha256": "f8759b2ba327eee071794d4de3af1b24ddedab0c2fe7e321cb504caf03feea6b"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "role": "endpoint-consumed and anti-wrapper scope boundary",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "role": "measured blocker movement and segment-only claim boundary",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149"
+    }
+  ],
+  "phase_boundary": {
+    "phase": 5,
+    "task_completed": "independent adversarial review",
+    "candidate_producer_role": false,
+    "candidate_improvement_performed": false,
+    "final_decision_issued": false,
+    "production_or_shared_state_changed": false,
+    "scientific_execution_performed": false,
+    "authority_statement": "The classifications below decide only eligibility for Phase 6 in the narrowed scope stated. They are not PROMOTE, HOLD, REJECT, implementation, validation, trajectory, endpoint, gate, or public-claim decisions."
+  },
+  "evidence_universe": {
+    "combined_review_input_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+    "claim_audit_counts": {
+      "SUPPORTED": 20,
+      "PARTIALLY_SUPPORTED": 8,
+      "CONTESTED": 1,
+      "UNSUPPORTED": 9,
+      "MISATTRIBUTED": 4,
+      "INFERENCE_ONLY": 4
+    },
+    "binding_ceiling": "D-071 remains FAIL/CLOSED_ON_CURRENT_MEASUREMENT. The order-60 domain-holdout instrument evaluated no scientific predicate, and its retained post-drop extrapolation is order-of-magnitude impracticality with unquantified model uncertainty, not a completion date or a physics refutation.",
+    "binding_negative": "V2 rejects fixed momentum-cut tail slaving and generic Jacobian construction removal as endpoint remedies. It does not prove every invariant-aware reduction impossible and it does not identify the creep mechanism.",
+    "claim_ceiling": "Rust AOT remains the active target, SciPy/BDF the temporary number-of-record, JAX a frozen local oracle. QKE, F-11, public production, publication authority, new trajectory/endpoint output, tolerance changes, and D-071 reopening are outside this review."
+  },
+  "candidate_reviews": [
+    {
+      "hypothesis_id": "H0",
+      "classification": "DEFENDED",
+      "phase6_eligible": false,
+      "phase6_role": "retain as the mandatory null/control against which H2-H5 must be tested; it is not a remedy candidate",
+      "evidence_support": "D-071 directly establishes an unmeasured stalled regime and a non-viable current instrument; V2 directly establishes that earlier mechanism narratives concern a pre-creep window and that fixed-tail/Jacobian-only accounts do not explain the distinguishing pathology.",
+      "logic": "The epistemic conclusion is sound if read as 'do not select a remedy before a discriminator'. The phrase 'only warranted near-term work' must not be read to forbid the very prospectively sealed materially-new-method discriminators that D-071 permits.",
+      "physics": "No physical proposition is asserted or refuted. The base order-48 phase completed; the order-60/ymax-30 domain holdout alone stalled. Therefore no physics mechanism may be inferred from timeout or same-host byte agreement.",
+      "novelty_or_relabeling": "H0 is an explicit null, not a relabeling of an old method. Its novelty is procedural rather than physical.",
+      "assumption_burden": "Low: only the retained evidence boundary and the distinction between instrument failure and physics are needed.",
+      "testability": "High as a comparator: H0 loses if a prospectively sealed discriminator establishes a robust, grid-stable, endpoint-relevant mechanism with budget margin.",
+      "robustness": "Robust to the large projection uncertainty because it uses only the absence of a diagnosed mechanism and the observed non-completion, not the exact 4.58-year number.",
+      "null_and_systematic_alternatives": [
+        "per-RHS collision cost",
+        "rejected-step or Newton dynamics",
+        "finite-difference derivative pathology",
+        "grid/domain conditioning",
+        "missing accepted-step/solver-state evidence"
+      ],
+      "tractability": "High; it requires no new production surface.",
+      "overformalization_risk": "Low if the discriminator set stays bounded; high if it becomes another telemetry/gate programme without a decision-changing experiment.",
+      "surviving_scope": "Null control and stop rule only."
+    },
+    {
+      "hypothesis_id": "H1",
+      "classification": "TRADEOFF",
+      "phase6_eligible": true,
+      "phase6_role": "validate only the physical-coordinate and invariant-admission layer; treat terminal-cause precedence as a separate software contract",
+      "evidence_support": "Current Rust supports a stable logit conversion and strict-open raw failure, while the audited issue set supports the need for failure/event precedence and no post-failure observable consumption. No evidence maps that protection to every current Python/NumPy caller.",
+      "logic": "The two-layer separation is coherent and avoids claiming that physics defines software status. It can remove a known false-success class only if the failing raw state and last accepted state remain distinct and every consumer uses the admission certificate.",
+      "physics": "Mathematically, logistic inversion maps finite u to 0<f<1, but binary64 underflow/overflow can return exact 0 or 1 and must fail raw. Network abundance positivity and normalization are different domains and are not supplied by the spectral logit. Conservation and first-law residuals must be channel-valid rather than universal.",
+      "novelty_or_relabeling": "The combination is useful architecture, but not a new physics method. If presented as a physics-specific complete solver remedy, it becomes a relabeling of typed software admission and should be rejected.",
+      "assumption_burden": "Moderate: representability over visited states, exact/controlled invariants, complete caller coverage, and coordinate-aware error scaling.",
+      "testability": "High through known missed-event, contradictory-status, nonfinite, refinement-exhaustion, clipped-negative, and partial-failure mutants, with a software-only typed-outcome comparator.",
+      "robustness": "Requires extreme-tail cases and tolerance-coordinate sensitivity; happy-path strict-domain tests alone are insufficient.",
+      "null_and_systematic_alternatives": [
+        "software-only typed terminal outcome with unchanged physical coordinates",
+        "coordinate saturation causing a new false rejection",
+        "a caller consuming a stale last-accepted state after a later raw failure"
+      ],
+      "tractability": "Good for a bounded mutant table; poor if expanded into cross-backend policy plumbing.",
+      "overformalization_risk": "Medium because outcome taxonomies can grow into gate-only surface.",
+      "surviving_scope": "Correctness/fail-closed candidate only; zero D-071, speed, trajectory, endpoint, or public authority."
+    },
+    {
+      "hypothesis_id": "H2",
+      "classification": "NEEDS_MORE_EVIDENCE",
+      "phase6_eligible": true,
+      "phase6_role": "flat-FLRW equation and transversality feasibility only; no coordinate conversion or trajectory execution",
+      "evidence_support": "The local and primary evidence supports finite-mass FLRW thermodynamics and temperature evolution, but not a full-path EOS inverse, a positive lower bound for alpha=-d ln(T_gamma)/dN, a conditioning gain, or any nonzero-shear extension.",
+      "logic": "Changing to x=-ln(T_gamma/Tref) removes one physical endpoint root only when the branch is transverse. It does not replace failure/status/direction/refinement semantics and does not reduce collision-kernel cost by construction.",
+      "physics": "With Q positive into neutrinos, d rho_nu/dN=-4 rho_nu+Q/H and d rho_em/dN=-3(rho_em+P_em)-Q/H are sign- and dimension-consistent: rho is MeV^4, Q/H is MeV^4, and d rho_em/dT is MeV^3. Then dT/dN has MeV and alpha is dimensionless. The sum convention for Q must cover exactly the same neutrino blocks as the electromagnetic debit. A small or sign-changing alpha makes dN/dx singular and can worsen stiffness.",
+      "novelty_or_relabeling": "Energy variables and temperature clocks are standard coordinate choices. The candidate is distinct only if it demonstrates better conditioning on the current equations; otherwise it is a coordinate relabeling.",
+      "assumption_burden": "High: positive finite heat capacity, single-valued inversion, a sealed alpha margin on the entire admitted branch, correct Q aggregation, and no hidden shear work.",
+      "testability": "Good locally through EOS round-trip, derivative ladders, first-law residual, and alpha margin on a frozen state family; poor as an endpoint claim without a separately authorized full path.",
+      "robustness": "Must include electron-annihilation transition states, collision-transfer extrema, and numerical inverse branch checks, not equilibrium points only.",
+      "null_and_systematic_alternatives": [
+        "current T_gamma-in-N evolution with analytic thermodynamic derivatives",
+        "a certified event refiner without coordinate change",
+        "apparent cancellation improvement caused only by rescaling tolerances"
+      ],
+      "tractability": "Moderate for derivation and state-set tests; potentially poor for production because every collision evaluation remains.",
+      "overformalization_risk": "Medium; a clock certificate is useful only if it decides use of the coordinate, not if it becomes a standalone readiness gate.",
+      "fatal_issue_or_surviving_scope": "No present evidence supports the transversality premise. Proceed only to a kill-first flat-FLRW feasibility derivation."
+    },
+    {
+      "hypothesis_id": "H3",
+      "classification": "TRADEOFF",
+      "phase6_eligible": true,
+      "phase6_role": "one representative current channel, exact gain/loss identity, support branches, stoichiometric left invariants, scaled Jv ladder, and endpoint-consumed cost accounting only",
+      "evidence_support": "Primary literature supports structured differentiation as a mechanism and current Rust contains analytic blocks. It does not support transfer of the reported N/5 factor, a current affinity form, a full matrix-free Jv, or exact current-channel nullspaces. V2 rules out a Jacobian-only D-071 conclusion.",
+      "logic": "Affinity evaluation and structured derivatives can jointly improve cancellation and local derivative work, but they are separate claims and must be discriminated separately. A speed win does not validate detailed balance, and a correct Jv does not imply step-count reduction.",
+      "physics": "A=log(G/L) is defined only where both gain and loss are positive. Support endpoints, zero kernels, and underflow require explicit branches; L*expm1(A) is not uniformly safe when L is the wrong scale. Nullspaces are reaction-specific: elastic scattering conserves neutrino number while exchanging energy with the bath; pair annihilation does not conserve neutrino number or neutrino energy alone; self 2-to-2 channels conserve only the stoichiometrically valid totals. Independent-N and state directions must be scaled separately, and passive time must not enter nonlinear geometry.",
+      "novelty_or_relabeling": "Current-channel derivation is substantive; merely exposing the existing dense Jacobian under a Jv name or reusing a source-specific speed factor is relabeling.",
+      "assumption_burden": "High for exact channel conventions, support branches, scaling, and active-path linear algebra; lower for a one-channel discriminator.",
+      "testability": "High at one channel with high-precision gain/loss and centered-direction references, invariant-row annihilation, hidden-work accounting, and raw parity.",
+      "robustness": "Must cover near-equilibrium cancellation, resolved nonequilibrium, threshold/support edges, multiple epsilon decades, grid changes, and semantic sign/multiplicity mutants.",
+      "null_and_systematic_alternatives": [
+        "existing analytic dense blocks plus scale-admissible centered differences",
+        "hidden dense Jacobian assembly behind a Jv interface",
+        "local speedup in a non-dominant segment",
+        "reduced cancellation error without any solver-step benefit"
+      ],
+      "tractability": "Good for a bounded one-channel derivation; uncertain for a full endpoint-consumed Rust path.",
+      "overformalization_risk": "Medium-high if it creates a new backend or derivative framework before same-case activation/cold evidence.",
+      "surviving_scope": "Local correctness/performance experiment only. Even a greater-than-10-percent same-case result does not satisfy a D-071 reopen condition."
+    },
+    {
+      "hypothesis_id": "H4",
+      "classification": "NEEDS_MORE_EVIDENCE",
+      "phase6_eligible": true,
+      "phase6_role": "derive or refute a smallest reaction-tail majorant and weak-rate weighting on a tiny exact channel/state family; do not construct the global certificate or a new gate",
+      "evidence_support": "Coupled BBN literature supports the need to retain spectral weak-rate effects and multiple observables. It does not supply a current-kernel tail theorem. Positive quadrature and equilibrium moments do not imply a nonlinear lost-collision or final-abundance enclosure.",
+      "logic": "H4 is a genuine prerequisite for a domain-reduced H5 only if it bounds both direct source truncation and propagated feedback. A numerical extended-domain comparison is an oracle test, not by itself a rigorous enclosure. Requiring final Yp, D/H, and Neff intervals before any feasibility result can also become circular and overbroad.",
+      "physics": "The tail bound must include actual finite-mass thresholds, polynomial matrix-element growth, Pauli blocking, off-grid routed momenta, electron bath factors, and channel signs. Energy weighting alone cannot control the distinct weak-rate kernels. Propagation through the nonlinear stiff trajectory requires a justified adjoint, stability, or interval argument; simple local moment decay is insufficient.",
+      "novelty_or_relabeling": "A joint reaction/weak/observable certificate is distinct from the rejected energy-tail argument. An energy-only or FD-moment bound renamed 'observable-aware' is a rejected shortcut.",
+      "assumption_burden": "Very high: a uniform admissible state family, independently controlled extended-domain reference, stable sensitivity propagation, and all observable norms/caps fixed before output.",
+      "testability": "A local containing/contracting bound is testable; the full propagated claim is not testable in this cycle because fresh trajectory/endpoint execution is out of scope.",
+      "robustness": "Must test non-equilibrium tails, positive and negative channel contributions, weak-rate versus energy-selected domains, and a stricter independent domain oracle.",
+      "null_and_systematic_alternatives": [
+        "direct full-domain computation",
+        "a loose bound that always contains but never decides",
+        "cancellation in signed observables hiding large absolute lost action",
+        "sensitivity growth making local tail smallness irrelevant"
+      ],
+      "tractability": "Unproven and plausibly poor; a global rigorous certificate may cost more than the computation it is meant to replace.",
+      "overformalization_risk": "High under the anti-drift rule. Any Phase-6 work must be a kill-first mathematical feasibility check with no wrapper/manifest/gate surface.",
+      "fatal_issue_or_surviving_scope": "No current enclosure exists. Only the smallest exact majorant feasibility question survives."
+    },
+    {
+      "hypothesis_id": "H5",
+      "classification": "NEEDS_MORE_EVIDENCE",
+      "phase6_eligible": true,
+      "phase6_role": "zero/new-production-code derivation of exact reaction/bath invariants, equilibrium manifold, entropy metric, and a grid/regime-stable projected coercivity or pseudospectral discriminator; no AP implementation, handoff, prefix, or endpoint run",
+      "evidence_support": "Generic AP literature supplies only method preconditions. Current applicability, exact Q, projected spectrum, handoff, and response enclosure are absent. V2 provides strong negative evidence against fixed momentum-cut slaving: no usable gap, a completing control with the same structure, only three rigorously separated dimensions, dense nonlinear tail coupling, loss of separation during decoupling, and at most about 1.25x.",
+      "logic": "H5 is the only hypothesis aimed at asymptotic wall movement, but logical non-exclusion is not positive evidence. It is materially different from fixed-tail slaving only if its macro space is derived from exact collision/bath invariants and its micro decay is proved or measured in a physically appropriate metric across the full switching regime.",
+      "physics": "Electron channels exchange energy and particle content with the bath, so the macro manifold must include the coupled thermodynamic variables and only true stoichiometric invariants. Expansion and decoupling make the collision scale time-dependent and eventually remove stiffness. Eigenvalue separation alone is insufficient for a non-normal discrete collision Jacobian: the entropy-Hessian/mass metric, eigenvector conditioning, transient growth, pseudospectrum or a coercivity/logarithmic-norm bound must be addressed. Positivity, Pauli bounds, detailed balance, first law, initial layer, overlap, and collisionless handoff remain independent obligations.",
+      "novelty_or_relabeling": "A collision-invariant entropy-metric decomposition could be materially new. A fixed-y cut, the old three-mode tail, an eigenvalue-ratio plot alone, or generic IMEX/AP terminology is a rejected shortcut and must inherit N-001/N-007.",
+      "assumption_burden": "Extreme: exact invariants and equilibrium, a stable non-normal fast/slow separation over a frozen regime, controlled initialization and switching, H4 response/tail bounds, and endpoint-consumed Rust realization.",
+      "testability": "The first derivation/spectrum discriminator is cheap relative to implementation and can kill the route. The stated N=0.14/0.22 to N>=0.25 budget discriminator would require a separate prospective contract and execution authority and cannot run in Phase 6 here.",
+      "robustness": "Must compare the stalled and completing configurations, multiple grids, pre-creep/creep/decoupling regimes, metric choices fixed a priori, non-normal transient bounds, and the H0 null. A gap at one state is non-evidence.",
+      "null_and_systematic_alternatives": [
+        "H0 unmeasured solver pathology",
+        "H3 local derivative/cancellation defect",
+        "a spectral gap caused by discretization or scaling",
+        "eigenvalue separation with destructive non-normal transient growth",
+        "a reduction whose overhead or overlap window erases theoretical savings"
+      ],
+      "tractability": "Low until the kill-first discriminator passes; full implementation is presently unjustified.",
+      "overformalization_risk": "Very high if AP abstractions are built before operator hypotheses are established.",
+      "fatal_issue_or_surviving_scope": "There is no current positive applicability evidence. Only a derivation-first falsifier may advance."
+    },
+    {
+      "hypothesis_id": "H6",
+      "classification": "TRADEOFF",
+      "phase6_eligible": true,
+      "phase6_role": "audit exact limiting-case domains and independence, then specify a minimal counterexample table; no claim of mutant efficacy until execution",
+      "evidence_support": "Current source and primary/official references support bounded collisionless, strict-domain, first-law, EOS, stoichiometric, normalization, and event-API ingredients. They do not establish independence, trajectory authority, or that the proposed mutants are killed.",
+      "logic": "Independent limits and semantic mutants are strong falsifiers but weak validators: surviving them does not establish trajectory correctness, while failing one can decisively reject a path. The candidate must preserve this one-sided evidentiary role.",
+      "physics": "df(q)/dN=0 is exact only for collisionless transport in comoving q. A common-FD collision null requires a common temperature and channel-compatible chemical potentials. Finite-mass first-law signs require Q into neutrinos and the equal electromagnetic debit. Stoichiometric baryon/charge identities apply to the selected nuclear network. FLRW/LRS limiting claims may not be imported into the present isotropic F-10 slice without an explicit equation map.",
+      "novelty_or_relabeling": "The architecture is conventional verification, but independent derivation and targeted retained counterexamples can add real discrimination. Cross-backend parity or static receipts renamed 'metamorphic validation' are rejected shortcuts.",
+      "assumption_burden": "Moderate: exact domain of every invariant, an oracle independent of the mutated path, and mutants representing retained defect classes.",
+      "testability": "High for a small table with expected failures and negative controls; efficacy remains unmeasured until each named mutant is actually killed.",
+      "robustness": "Requires semantic mutants for event direction/status, sign/multiplicity, clipping, post-failure consumption, and conservation, plus good-path specificity checks to avoid tests that simply reject everything.",
+      "null_and_systematic_alternatives": [
+        "shared defective implementation in oracle and subject",
+        "an invariant asserted outside its channel or shear domain",
+        "a mutant too weak to perturb the observed output",
+        "mutation score inflation through redundant mutants"
+      ],
+      "tractability": "Good if no production code changes and the table is bounded; poor if expanded into a generic mutation framework.",
+      "overformalization_risk": "Medium-high under the anti-wrapper rule.",
+      "surviving_scope": "Falsification architecture only; not trajectory, endpoint, or scientific validation."
+    }
+  ],
+  "cross_candidate_findings": [
+    {
+      "finding": "No sanitized H0-H6 candidate is classified REJECTED_SHORTCUT as written because each explicitly carries a narrow claim ceiling. The corresponding shortcut form is nevertheless identified for every family and must fail immediately if reintroduced."
+    },
+    {
+      "finding": "H1 and H6 address correctness and false-green control; H2 and H3 address conditional local conditioning/cost; H4 is a feasibility certificate; H5 alone could in principle address the asymptotic D-071 wall. None of the first five may borrow H5's endpoint relevance."
+    },
+    {
+      "finding": "H5 depends on H4 for observable/tail safety, but H4's full propagated certificate is outside the current execution authority. Therefore Phase 6 can test mathematical feasibility only; no implementation ordering or endpoint route is authorized."
+    },
+    {
+      "finding": "The strongest omitted technical adversary in H5 is non-normality. A grid-stable eigenvalue gap alone cannot establish fast relaxation or a safe slow manifold; Phase 6 must use a fixed physical metric and address conditioning/transient growth."
+    },
+    {
+      "finding": "The strongest omitted technical adversary in H3 is support/zero handling. A log gain/loss affinity is not defined at kernel or occupation zeros and can replace cancellation with overflow unless its branch algebra is derived and tested."
+    },
+    {
+      "finding": "The strongest governance adversary in H3-H6 is anti-drift: a segment-only local result, a new derivative/backend framework, a certificate gate, an AP abstraction, or a mutation framework is not blocker movement unless it changes the endpoint-consumed path or remains a bounded kill-first discriminator."
+    }
+  ],
+  "phase6_eligibility_summary": {
+    "control_only": [
+      "H0"
+    ],
+    "eligible_in_narrowed_scope": [
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "H6"
+    ],
+    "eligible_for_production_implementation": [],
+    "eligible_for_trajectory_or_endpoint_execution": [],
+    "eligible_to_reopen_D071": [],
+    "eligible_for_public_or_scientific_promotion": [],
+    "phase6_priority_by_epistemic_leverage": [
+      "H5 kill-first invariant/entropy-metric/non-normal spectrum derivation against H0",
+      "H3 one-channel support-safe affinity and scaled-Jv derivation",
+      "H2 flat-FLRW EOS-inverse and alpha-transversality derivation",
+      "H4 smallest exact tail-majorant feasibility check",
+      "H1 strict-coordinate branch and invariant-admission audit",
+      "H6 exact-domain and oracle-independence audit"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-PSL-ADV-000",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Phase 5 is complete without candidate improvement or a final promotion decision. H0 is DEFENDED as a null/control; H1, H3, and H6 are TRADEOFF; H2, H4, and H5 NEED_MORE_EVIDENCE. H1-H6 may enter Phase 6 only in the narrowed non-implementation scopes recorded above. No candidate has production, trajectory, endpoint, gate-reopen, public, or scientific-promotion authority.",
+      "assumptions_used": [
+        "The Phase-3 claim audit correctly removed unsupported and misattributed premises.",
+        "D-071 and V2 remain binding and no hidden sibling result was consulted.",
+        "Phase-5 classifications are not final PROMOTE/HOLD/REJECT decisions."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/HYPOTHESIS_GRAPH.md",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+        "bbn_codex_anti_drift_cost_effective_policy.md"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "No new code, test, benchmark, trajectory, endpoint, or physical output was produced.",
+        "H2-H5 lack at least one current-operator premise required for their stronger form."
+      ],
+      "reproduction": [
+        "Read H0-H6 exactly as frozen and map each factual premise to the 46-entry Phase-3 claim audit.",
+        "Reject any interpretation that conflicts with D-071's three conjunctive reopen requirements or V2's fixed-tail/Jacobian-only negatives."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Physics/math validation remains Phase 6 work.",
+        "No final candidate decision is authorized in this phase."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H0",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H0 classification: DEFENDED as the mandatory epistemic null/control, not as a remedy candidate. Its force is independent of the exact extrapolated completion time and rests on the unmeasured creep mechanism and non-completing instrument.",
+      "assumptions_used": [
+        "Instrument failure is distinct from physical falsification.",
+        "Prospective materially-new-method discriminators remain allowed in principle but not authorized for execution here."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:52-147",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:22-113"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "D-071 does not prove that no materially new method can exist."
+      ],
+      "reproduction": [
+        "Verify that the base order-48 phase completed and only the order-60 domain holdout stalled; verify that no top-level checks block exists."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The creep mechanism remains unmeasured."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H1",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H1 classification: TRADEOFF. The two-layer contract is coherent for false-success prevention, but its physics layer is local and its terminal precedence layer is software semantics. It must beat a software-only typed-outcome comparator and expose coordinate saturation rather than hiding it.",
+      "assumptions_used": [
+        "Finite u is intended to decode to strict-open occupation.",
+        "Raw failing state and last accepted state are distinct evidence."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R1-001..005",
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md:N-005,N-006"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "No audited map shows every Python/NumPy caller consuming the same admission contract."
+      ],
+      "reproduction": [
+        "At Phase 6, audit strict-domain limits, saturation branches, physical residual scope, and compare against unchanged-coordinate typed admission."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Cross-stack caller coverage and coordinate-error scaling remain unproved."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H2",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "H2 classification: NEEDS_MORE_EVIDENCE. The FLRW signs and dimensions are coherent, but the coordinate is inadmissible without a full-branch EOS inverse and alpha>0 margin, and it does not address general event semantics or collision cost.",
+      "assumptions_used": [
+        "Q is positive into exactly the neutrino blocks debited from the electromagnetic bath.",
+        "The review is limited to flat FLRW and does not import a shear term."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R2-001..007",
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md:N-005"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "No sealed full-path alpha bound, inverse certificate, or current conditioning measurement exists."
+      ],
+      "reproduction": [
+        "Derive dT_gamma/dN and dN/dx with units and signs; kill the candidate on any nonpositive alpha margin or ambiguous EOS branch."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Transversality, inversion conditioning, and benefit against analytic T-in-N remain open."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H3",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "H3 classification: TRADEOFF. A one-channel support-safe affinity and structured-derivative derivation is worth Phase-6 scrutiny, but current detailed balance, nullspaces, full scaled Jv, and any transferable speed factor are absent, and Jacobian-only endpoint claims are closed.",
+      "assumptions_used": [
+        "Gain/loss and conserved rows are derived per current reaction, not imposed universally.",
+        "All hidden dense work is charged as full-RHS-equivalent cost."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R3-001..009",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:70-86"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "Deleting Jacobian construction entirely still misses the wall budget by 77x-694x in V2's retained analysis."
+      ],
+      "reproduction": [
+        "At Phase 6, include zero-support branches, near-equilibrium and nonequilibrium states, invariant-row checks, epsilon ladders, and a dense-FD comparator."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Current-channel affinity, support algebra, and endpoint-consumed cost benefit are unproved."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H4",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "H4 classification: NEEDS_MORE_EVIDENCE. Coupled-observable sensitivity supports the need for more than energy moments, but no current tail theorem or propagated abundance enclosure exists, and a global certificate risks being more expensive and more elaborate than the computation it would justify.",
+      "assumptions_used": [
+        "Tail control must cover the actual finite-mass kernels and weak-rate functionals.",
+        "A numerical oracle comparison is not automatically a rigorous bound."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R4-001..007",
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md:N-003"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "Positive quadrature and FD equilibrium moments do not control nonlinear collision tails or final yields."
+      ],
+      "reproduction": [
+        "At Phase 6, attempt only a tiny exact lost-action majorant and require containment under an independently extended domain; stop before global certificate plumbing."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Uniform state envelope, weak-kernel bound, sensitivity propagation, and tractable tightness remain open."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H5",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "H5 classification: NEEDS_MORE_EVIDENCE. It is potentially materially new only if exact coupled invariants and an entropy-metric, non-normality-aware separation exist across the relevant regime. Current positive applicability evidence is zero; fixed-cut slaving, eigenvalue-gap-only evidence, and generic AP terminology are rejected shortcut forms.",
+      "assumptions_used": [
+        "The discrete collision operator may be non-normal.",
+        "Electron-bath exchange changes which variables and invariants belong to the macro manifold.",
+        "D-071's prospective-contract and stalled-phase-discriminator requirements remain binding."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R5-001..007",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:22-113",
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md:N-001,N-007"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "V2's completing control shares the tested gap pathology; the only rigorous gap removes three of 182 dimensions; the separation disappears during decoupling."
+      ],
+      "reproduction": [
+        "At Phase 6, derive exact reaction/bath Q and equilibrium, fix the entropy/mass metric, and compare coercivity/pseudospectral behavior across grids and stalled/completing regimes before any reduction code."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Every applicability premise, H4 safety dependency, handoff, and budget margin remains unproved."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-ADV-H6",
+      "claim_id": "PSL-ADV",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H6 classification: TRADEOFF. Independently derived limits and retained-defect mutants are valuable one-sided falsifiers, but they are not validators, and their efficacy and oracle independence are unexecuted.",
+      "assumptions_used": [
+        "Every invariant is restricted to its exact model and channel.",
+        "The oracle does not reuse the same defective code path."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:CA-R6-001..008",
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/NEGATIVE_RESULTS.md:N-004"
+      ],
+      "evidence_fingerprint": "sha256:ec0373cf65ecd774aeeae9d6df6aa12952eaa4e2bae197d070ecdfb5b311deb5",
+      "counterevidence_refs": [
+        "No mutant suite has run, and static limits do not constitute trajectory evidence."
+      ],
+      "reproduction": [
+        "At Phase 6, derive the exact domain of each limit and map each mutant to one independent oracle plus a good-path specificity control."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Mutant representativeness, independence, sensitivity, and kill rate remain unmeasured."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json"
+  ]
+}

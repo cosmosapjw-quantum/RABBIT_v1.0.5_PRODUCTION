@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "assignment_id": "A-IF-REVIEW",
+  "runtime_agent_type": "adjudicator",
+  "status": "HOST_RUNTIME_ERROR_BEFORE_SUBSTANTIVE_WORK",
+  "http_status": 400,
+  "error_type": "invalid_request_error",
+  "message": "The 'gpt-5.6' model is not supported when using Codex with a ChatGPT account.",
+  "scientific_or_code_verdict": null,
+  "result_envelope_written": false,
+  "admission_receipt_consumed": false,
+  "replacement_assignment": "A-IF-REVIEW2",
+  "replacement_runtime_agent_type": "default",
+  "replacement_review_role": "adjudicator",
+  "claim_ceiling": "This artifact documents a host boundary only. It is not an independent review and cannot satisfy AC-08. The unconsumed receipt is retained rather than forged or silently deleted."
+}

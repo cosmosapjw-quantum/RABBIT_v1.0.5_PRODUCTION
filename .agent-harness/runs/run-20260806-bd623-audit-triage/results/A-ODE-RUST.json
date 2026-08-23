@@ -1,0 +1,612 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-RUST",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02a3e-9f18-7482-98b0-3292d40ec517",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260806-bd623-audit-triage",
+    "assignment_id": "A-ODE-RUST",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:c6c6ec044e83605b0d12e4943373b6aff02b1f9576cebf852db50ae3603d184a",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json",
+  "started_at": "2026-08-22T16:06:00Z",
+  "completed_at": "2026-08-22T16:28:00Z",
+  "tool_versions": {
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)",
+    "python": "3.12.3",
+    "diffsol": "0.16.0",
+    "nalgebra": "0.35.0"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-RUST.json  # VERIFY: PASS",
+    "git rev-parse HEAD && rustc --version && cargo --version && python3 --version",
+    "cargo test --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture  # 27 passed, 0 failed",
+    "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture  # 27 passed, 0 failed",
+    "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml flrw::tests:: -- --nocapture  # 22 passed, 0 failed",
+    "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests:: -- --nocapture --skip both_solvers_consume_the_classical_collision_action_to_an_flrw_event --skip rodas5p_hmax_sensitivity_diagnostic  # 12 passed, 0 failed",
+    "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests:: -- --list  # 14 tests listed",
+    "cargo clippy --release --manifest-path native/rabbit_cpu/Cargo.toml --lib -- -D warnings  # PASS",
+    "rg -n '^\\s*fn [a-zA-Z0-9_]+' native/rabbit_cpu/src/ode.rs",
+    "rg -n 'solve_ivp|_rabbit_cpu|ode::|Rodas|BDF|diffrax' tests/test_native_tier1_vertical_slice.py tests/test_native_ad_parity.py tests/test_joint_3d_native_ad.py",
+    "targeted line review of native/rabbit_cpu/src/{ode,flrw,isotropic_boltzmann}.rs and pinned diffsol-0.16.0/src/ode_solver/bdf.rs",
+    "sha256sum native/rabbit_cpu/Cargo.toml native/rabbit_cpu/src/ode.rs native/rabbit_cpu/src/flrw.rs native/rabbit_cpu/src/isotropic_boltzmann.rs docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md tests/test_native_tier1_vertical_slice.py tests/test_native_ad_parity.py tests/test_joint_3d_native_ad.py .agent-harness/generated/CONTEXT_PACK.md"
+  ],
+  "artifacts": [
+    {
+      "path": "native/rabbit_cpu/Cargo.toml",
+      "sha256": "c57e34522ace791e8a23fc3f2602c005ea747061e4d52685008d8860394842c0",
+      "role": "pinned Rust ODE dependency and release configuration"
+    },
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "sha256": "78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "role": "crate-private BDF and Rodas5P implementation and conformance tests"
+    },
+    {
+      "path": "native/rabbit_cpu/src/flrw.rs",
+      "sha256": "2497062ee42121845aa7eb48415c2d899ffd8b01bdbca3280c775a58e833d0a1",
+      "role": "ideal and three-temperature Rust ODE consumers"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "role": "collisionless and full spectral Rust endpoint consumers"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md",
+      "sha256": "900b5ebc2ff0b624fd71eba8b5b272f9a158cc8826ca3cd68874bd72425ca284",
+      "role": "F-01 solver contract and historical closeout authority"
+    },
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "236f553252b09212b7126e6df04930b3b2475089c899d17c82e0848deafb018b",
+      "role": "current frozen decisions, endpoint evidence and gate status"
+    },
+    {
+      "path": "/home/cosmosapjw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diffsol-0.16.0/src/ode_solver/bdf.rs",
+      "sha256": "376fd1c93b2b57574638866ee91c60464ea424eb2454da1331411d674dd7d829",
+      "role": "exact pinned BDF dependency behavior used by the wrapper"
+    },
+    {
+      "path": "tests/test_native_tier1_vertical_slice.py",
+      "sha256": "26460d834c67a0f5987d0cf01eafc3fe56da8b1e7d43b3cd38e1a6b893f390d1",
+      "role": "mapped Python native-RHS test, not Rust ODE execution"
+    },
+    {
+      "path": "tests/test_native_ad_parity.py",
+      "sha256": "71af68c61945e9f08f82a464c3e7c182a9527e0eeae081374c263f08227f0cfc",
+      "role": "mapped JAX/Diffrax test, not Rust ODE execution"
+    },
+    {
+      "path": "tests/test_joint_3d_native_ad.py",
+      "sha256": "0c66974e8af43a9fb8dc8a9cbf8bc3e67acfb7f48e6ca43984d812f48c74f7f9",
+      "role": "mapped inference dispatch test, not Rust ODE execution"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "ODE-RUST-01",
+      "claim_id": "ODE-A2",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Bounded current-HEAD solver-mechanics baseline passes: the Rust core implements both pinned diffsol BDF and an eight-stage nonautonomous Rodas5P with df/dt, vector tolerances, state/event checks and deterministic counters. All 27 focused ODE tests pass in debug and release, including nonautonomous exactness, observed Rodas order >=4.5, stiff scalar, Robertson, bidirectional/wrong-direction events, nonfinite inputs, Rodas linear/step-floor failures, exact-cache behavior and same-host bitwise repeats; release Clippy is clean. This is F-01 mechanics evidence only, not endpoint or physics authority.",
+      "assumptions_used": [
+        "Current HEAD and pinned dependency versions are the audit target.",
+        "Passing focused tests supports only the explicitly exercised cases."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:188-213",
+        "native/rabbit_cpu/src/ode.rs:65-218",
+        "native/rabbit_cpu/src/ode.rs:972-1918"
+      ],
+      "evidence_fingerprint": "sha256:7af74bd7eeab63465cff88a56f2c2f42a52c15acc9e9ad3fb7e79e88315be193",
+      "counterevidence_refs": [
+        "ODE-RUST-02 through ODE-RUST-07 record uncovered contract defects and gaps."
+      ],
+      "reproduction": [
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture",
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture",
+        "cargo clippy --release --manifest-path native/rabbit_cpu/Cargo.toml --lib -- -D warnings"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "ODE-RUST-02",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The BDF path does not satisfy the F-01 fail-loud outcome taxonomy. All non-nonfinite initialization errors collapse to bdf_initialise and every dependency step error collapses to bdf_solve, so a BDF linear-solver failure, step-size-floor failure, and other diffsol failures are not distinguishable. The focused suite has Rodas-specific singular-linear and h_min tests but no BDF counterpart for either required outcome.",
+      "assumptions_used": [
+        "F-01's separate linear and step-floor outcomes apply to each solver path that can produce them."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:190-210",
+        "native/rabbit_cpu/src/ode.rs:360-376",
+        "native/rabbit_cpu/src/ode.rs:448-471",
+        "native/rabbit_cpu/src/ode.rs:1483-1562"
+      ],
+      "evidence_fingerprint": "sha256:bd827e4a2425c3edbf21572f335acbfa31aa5cb9d5e58e62f4c6cd4533428e49",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:1386-1403 exercises only a simple BDF max-attempt exit."
+      ],
+      "reproduction": [
+        "rg -n 'bdf_initialise|bdf_solve|singular_linear|step_floor|h_min' native/rabbit_cpu/src/ode.rs"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Preserve and map the concrete diffsol error variant without weakening fail-closed behavior.",
+        "Add BDF-specific linear and step-floor conformance cases."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-03",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "BDF max_attempts is not a strict total-attempt ceiling. The wrapper checks the aggregate only before and after solver.step(), while one diffsol BDF step internally loops through error-test and nonlinear retries. Each internal failure category is independently given the full max_attempts allowance, so a mixed/internal retry sequence can consume more than the declared total before control returns and is reported. The existing max_attempts=1 test covers an accepted-step path and does not falsify this overshoot construction.",
+      "assumptions_used": [
+        "The F-01 phrase total attempt budget means accepted plus all rejected/nonlinear attempts may not exceed the configured value."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:194-210",
+        "native/rabbit_cpu/src/ode.rs:363-365",
+        "native/rabbit_cpu/src/ode.rs:395-458",
+        "/home/cosmosapjw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diffsol-0.16.0/src/ode_solver/bdf.rs:1274-1458",
+        "native/rabbit_cpu/src/ode.rs:1386-1403"
+      ],
+      "evidence_fingerprint": "sha256:d19ab41b70bce6b6cebc203dc77a0055df6c8a1c6e9dbc0ed03132c4a2364d21",
+      "counterevidence_refs": [
+        "The wrapper detects and fails after an overshoot rather than silently returning success."
+      ],
+      "reproduction": [
+        "Inspect wrapper aggregate checks at ode.rs:395-458 against diffsol's internal retry loop at bdf.rs:1311-1448."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "A prospective mixed nonlinear/error-rejection probe is needed to quantify the maximum overshoot on this dependency version."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-04",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "Directionless event detection is numerically unsafe because it tests previous*current < 0. Opposite-sign tiny finite values can multiply to signed zero, making both clauses false and missing a real crossing. Direction-specific events use direct comparisons and are not exposed to this product-underflow defect; the production cold endpoint is direction -1, so this is a generic F-01 defect rather than a demonstrated F-10 endpoint failure.",
+      "assumptions_used": [
+        "Finite subnormal event values are admissible because the event contract imposes no magnitude floor."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:593-598",
+        "native/rabbit_cpu/src/ode.rs:1744-1768",
+        ".agent-harness/generated/CONTEXT_PACK.md:35"
+      ],
+      "evidence_fingerprint": "sha256:386f7b5d28c10f6f2058eadf9639b438d0befe20f0e65d5c1e52a146c1c349de",
+      "counterevidence_refs": [
+        "The exact-zero endpoint and ordinary-scale crossing tests pass for both solvers."
+      ],
+      "reproduction": [
+        "Evaluate event_fires(f64::MIN_POSITIVE, -f64::MIN_POSITIVE, 0): the product underflows to -0.0 and the crossing predicate is false."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Replace product-sign detection with explicit sign comparisons and add subnormal/underflow tests."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-05",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Both event refiners stop after at most 60 bisections but do not record whether the interval criterion was reached, do not verify a final event residual/bracket invariant, and still return event_reached=true after loop exhaustion. Rodas refinement also performs up to 60 extra linear solves outside max_attempts. Frozen production h_max=0.04 makes the time-interval criterion comfortably reachable and focused event tests pass, but the generic interface accepts arbitrary finite h_max and has no certified exhaustion outcome.",
+      "assumptions_used": [
+        "A refined event contract requires either a verified convergence predicate or an explicit failure."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:125-140",
+        "native/rabbit_cpu/src/ode.rs:499-567",
+        "native/rabbit_cpu/src/ode.rs:800-868",
+        "native/rabbit_cpu/src/ode.rs:601-603"
+      ],
+      "evidence_fingerprint": "sha256:8b37470faa169def36cfa7bbbdffda896ceb16bcafec1ea15829feeadc500b2c",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:1581-1768 covers ordinary downward, upward, wrong-direction, initial and exact-endpoint events.",
+        ".agent-harness/generated/CONTEXT_PACK.md:35 fixes production h_max at 0.04."
+      ],
+      "reproduction": [
+        "Static inspection: neither 60-iteration loop has a converged flag or post-loop interval/event assertion."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Define whether event refinement work is part of the total attempt budget.",
+        "Add a forced-exhaustion test and explicit event_refinement failure."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-06",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Reported RHS/resource counters are not workload counters. CountingSystem deliberately excludes RHS calls made inside jacobian and counts a fused rhs_and_jacobian as one RHS call. The N48 consumer's Jacobian performs two additional full RHS evaluations for its temperature column and dfdt performs two more, so printed endpoint rhs_evaluations materially understates expensive collision/thermodynamic evaluations. Rodas also increments linear_setups before checking whether f/J/dfdt is finite, and can report a setup when no LU factorization was built. The test suite locks trait-level call semantics, not actual computational work.",
+      "assumptions_used": [
+        "Counters printed beside endpoint wall time are expected to support resource/stiffness diagnosis rather than only trait-dispatch accounting."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:144-181",
+        "native/rabbit_cpu/src/ode.rs:699-740",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:554-577",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:696-715",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1305-1315",
+        "native/rabbit_cpu/src/ode.rs:1882-1918"
+      ],
+      "evidence_fingerprint": "sha256:c662ece1d55c3af94bc8eacc99f63e7307c71605a4d83d7e1fb1bf603796e65e",
+      "counterevidence_refs": [
+        "The current names can be interpreted narrowly as outer OdeSystem method-call counts; that narrower meaning is internally deterministic."
+      ],
+      "reproduction": [
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests::solver_counters_report_trait_level_rhs_and_dfdt_calls -- --nocapture",
+        "Inspect nested self.rhs calls in isotropic_boltzmann.rs:566-574 and 707-715."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Either rename counters to trait_calls or instrument actual physical/RHS evaluations without adding standalone telemetry plumbing.",
+        "Increment linear_setups only when factorization is constructed."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-07",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The raw-failure-state contract is only partially met. BDF retains sticky booleans for nonfinite RHS/Jacobian callbacks but not the callback time/state, then returns solver.state() after step(); Rodas returns the accepted step-start state when an intermediate stage RHS, stage vector, candidate or error norm is nonfinite. Thus failures preserve a safe last accepted state but not necessarily the last raw finite/nonfinite evaluation state that triggered the failure. Existing tests use failures at the initial/step-start point and therefore do not exercise this distinction.",
+      "assumptions_used": [
+        "The plan's last raw finite or nonfinite state means the actual failing evaluation state, not merely the last accepted state."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:125-134",
+        "native/rabbit_cpu/src/ode.rs:295-310",
+        "native/rabbit_cpu/src/ode.rs:418-435",
+        "native/rabbit_cpu/src/ode.rs:646-675",
+        "native/rabbit_cpu/src/ode.rs:749-760",
+        "native/rabbit_cpu/src/ode.rs:1405-1496"
+      ],
+      "evidence_fingerprint": "sha256:20c7bd260cf4239fd7a944e98805cfc8212daa241016bfe513174625c29890f8",
+      "counterevidence_refs": [
+        "All failure paths avoid clipping and do return a raw solver-owned state/time rather than fabricated success."
+      ],
+      "reproduction": [
+        "Static inspection shows no storage for BDF callback x/t or Rodas stage_y/t when a callback becomes nonfinite."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "Clarify contract terminology if last accepted state was intended.",
+        "Otherwise retain failing callback/stage time and state in OdeResult and add an internal-stage failure probe."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-08",
+      "claim_id": "ODE-A2",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The retained BDF full-Jacobian cache matches frozen decision D-011: it is solver-local, exact bitwise in finite t and every finite state component, discarded on mismatch/nonfinite input, and never reused across solves. Focused tests verify one full Jacobian per exact point and reject one-ULP, signed-zero, dimension and nonfinite key changes. Canonical evidence records bitwise-identical endpoint outputs and a 55.815% endpoint improvement, so the historical duplicate-dense-column blocker is closed within its declared scope.",
+      "assumptions_used": [
+        "The canonical context pack is current for the retained endpoint performance result."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:184-197",
+        "native/rabbit_cpu/src/ode.rs:295-350",
+        "native/rabbit_cpu/src/ode.rs:1132-1211",
+        ".agent-harness/generated/CONTEXT_PACK.md:83",
+        ".agent-harness/generated/CONTEXT_PACK.md:196"
+      ],
+      "evidence_fingerprint": "sha256:92b5999a1d427063dfd6af29624becdc06c2bb7f4979165d219f2e24c9b79e0d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests::bdf_reuses_full_jacobian_across_dense_columns -- --nocapture",
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests::jacobian_cache_key_requires_one_finite_bitwise_point -- --nocapture"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "ODE-RUST-09",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "BDF h_max is enforced conservatively by repeated stop-time segmentation at current_t+h_max, so accepted steps cannot cross the ceiling; however this also forces exact chunk boundaries and perturbs BDF history/order rather than acting only as a native maximum-step option. In pinned diffsol, snapping to tstop intentionally ignores a StepSizeTooSmall error. The ignored h_max diagnostic is therefore half-wrong: set_stop_time is an effective ceiling, but its warned chunking/fairness asymmetry is real. No focused test isolates forced-boundary effects or the h_min/tstop exception.",
+      "assumptions_used": [
+        "Dependency source at the pinned diffsol 0.16.0 registry path is the code Cargo executes."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:379-413",
+        "/home/cosmosapjw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diffsol-0.16.0/src/ode_solver/bdf.rs:508-565",
+        "/home/cosmosapjw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diffsol-0.16.0/src/ode_solver/bdf.rs:694-730",
+        "/home/cosmosapjw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diffsol-0.16.0/src/ode_solver/bdf.rs:1576-1583",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1369-1383"
+      ],
+      "evidence_fingerprint": "sha256:04fff541c5804e81c626cdf8d022a47cb0f8cc80464ab5541c0c77d126923011",
+      "counterevidence_refs": [
+        "The current frozen h_max=0.04 endpoint has accepted regression anchors in canonical evidence."
+      ],
+      "reproduction": [
+        "Inspect solve_bdf chunk_end/set_stop_time against diffsol handle_tstop and _update_step_size."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Decide whether terminal/chunk snap steps below h_min are contractually allowed.",
+        "Correct the diagnostic comment and add a bounded BDF h_max mesh/attempt test; do not add a new standalone gate."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-10",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Production N48 Jacobian/explicit-N evidence is incomplete. The full spectral consumer uses a two-point finite-difference photon-temperature column and a fixed-step two-point df/dN, while analytic formulas cover only the occupation block. The direct stencil parity test runs on a 2-node Gauss-Laguerre toy, and the test named selected_spectral_rule... actually constructs a 6-node Gauss-Laguerre grid rather than selected_decoupling's EXP48 rule. The expensive N48 dual-solver endpoint exercises these paths but is same-code regression and does not independently validate derivative accuracy or stiffness behavior at the production state dimension.",
+      "assumptions_used": [
+        "Derivative validation must cover the selected production grid and representative evolved states to support N48 stiffness/accuracy claims."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:60-72",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:554-660",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:663-717",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1043-1114",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1166-1228",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1230-1367",
+        ".agent-harness/generated/CONTEXT_PACK.md:84-86"
+      ],
+      "evidence_fingerprint": "sha256:0a954f4ae818bbe98f24289cfab0cc75befcfeeebc19bdc38af742905715d10f",
+      "counterevidence_refs": [
+        "The live lightweight derivative tests pass, with the explicit-N ladder residuals below 3e-4.",
+        "Canonical current evidence records passing N48 endpoint anchors."
+      ],
+      "reproduction": [
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests::classical_spectral_flrw_jacobian_and_time_derivative_match_stencils -- --nocapture",
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests::selected_spectral_rule_has_a_bounded_explicit_lna_derivative_step_ladder -- --nocapture"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No representative EXP48 full-Jacobian/dfdt step ladder is present in the mapped source.",
+        "No independent derivative oracle covers the production N48 consumer."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-11",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "Two consumers admit finite positive states for which their finite-difference Jacobian step becomes zero. ThreeTemperatureFlrwSystem accepts any positive finite temperature but uses 1e-5*abs(T) with no absolute floor; the full isotropic system likewise accepts any positive finite photon temperature and uses 1e-5*T. For sufficiently small subnormal valid T, the perturbation underflows to zero and the centered quotient divides by zero. IdealFlrwSystem already avoids this with a 1e-10 floor. This is a real generic valid-domain defect, though the frozen 10 MeV to 0.005 MeV endpoint is far from the trigger.",
+      "assumptions_used": [
+        "state_is_valid defines the callable domain of each OdeSystem implementation."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/flrw.rs:181-205",
+        "native/rabbit_cpu/src/flrw.rs:351-390",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-577",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:668-677"
+      ],
+      "evidence_fingerprint": "sha256:a67a64694a211c69e3d6aa903596bbc10eda872a3ffa867575123125efe7564d",
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:35 freezes a production temperature floor of 0.005 MeV."
+      ],
+      "reproduction": [
+        "For a positive subnormal T, evaluate 1e-5*T: it rounds to 0.0, making (plus-minus)/(2*step) undefined."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Add a scale-aware absolute FD floor or narrow state_is_valid, with a boundary regression test."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-12",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "None of the three mapped Python native/AD tests executes native/rabbit_cpu/src/ode.rs. The Tier-1 vertical slice imports _rabbit_cpu for a native RHS/workspace but integrates the endpoint with scipy.solve_ivp; native_ad_parity exercises JAX Diffrax and a JAX Rodas implementation; joint_3d_native_ad checks dispatch and documented NotImplemented behavior. They therefore provide zero corroborating execution coverage for the crate-private Rust BDF/Rodas core. This is not a missing Python binding defect because F-01 explicitly forbids adding one; it is an evidence-routing mismatch.",
+      "assumptions_used": [
+        "Mapped tests are being assessed only for what code they execute, not for their validity in their own programmes."
+      ],
+      "evidence_refs": [
+        "tests/test_native_tier1_vertical_slice.py:49",
+        "tests/test_native_tier1_vertical_slice.py:164-175",
+        "tests/test_native_tier1_vertical_slice.py:363-412",
+        "tests/test_native_ad_parity.py:1-25",
+        "tests/test_native_ad_parity.py:74-90",
+        "tests/test_joint_3d_native_ad.py:1-15",
+        "tests/test_joint_3d_native_ad.py:41-66",
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:213-218"
+      ],
+      "evidence_fingerprint": "sha256:b62c10e50333b4b196c1d7adbff723afc21a852be44ef5dd4f809b7ff4bd8a53",
+      "counterevidence_refs": [
+        "Rust unit tests and Rust FLRW/isotropic endpoint consumers directly exercise the intended core."
+      ],
+      "reproduction": [
+        "rg -n 'solve_ivp|_rabbit_cpu|ode::|Rodas|BDF|diffrax' tests/test_native_tier1_vertical_slice.py tests/test_native_ad_parity.py tests/test_joint_3d_native_ad.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Do not count these Python tests toward Rust ODE acceptance evidence."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-13",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "This live audit did not rerun the expensive full selected-decoupling N48 dual-solver endpoint. It ran 12 of 14 isotropic tests, deliberately skipping that endpoint and the ignored h_max diagnostic. The current canonical pack records the current Rust release suite at 238 passed/0 failed/2 ignored and supplies completed-catalogue BDF/Rodas anchors, so there is current repository evidence but no fresh full-endpoint execution receipt from this assignment. No conclusion in this envelope upgrades that stored evidence to independent validation.",
+      "assumptions_used": [
+        "The canonical pack was built at the assignment context version and is the current shared evidence source.",
+        "Avoiding an approximately 20-minute endpoint rerun is required by the bounded assignment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:80-86",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1230-1367",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1369-1439"
+      ],
+      "evidence_fingerprint": "sha256:e3868ebc281a731e3dd1109f44516230d772eb93b5cf800a841b9396e19fe324",
+      "counterevidence_refs": [
+        "Live focused results: ODE 27/27 debug and release, FLRW 22/22 release, lightweight isotropic 12/12."
+      ],
+      "reproduction": [
+        "Not run in this assignment: cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests::both_solvers_consume_the_classical_collision_action_to_an_flrw_event -- --nocapture"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Fresh exact-HEAD full-endpoint execution remains outside this bounded audit receipt."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-14",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Two prominent historical Rust ODE blockers are closed and must not be relisted as open: direct-occupation far-tail Rodas nonfinite failure was replaced by strict-open logit coordinates with raw failure on unrepresentable maps, and the BDF repeated full-Jacobian evaluation at identical dense-column points was closed by the exact local cache. The current canonical boundary also records all nine catalogue rows and both current same-code endpoint anchors. These are implementation/regression closures only.",
+      "assumptions_used": [
+        "No current finding falsifies the logit representation or exact cache invariants."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:909-920",
+        ".agent-harness/generated/CONTEXT_PACK.md:32",
+        ".agent-harness/generated/CONTEXT_PACK.md:82-85",
+        ".agent-harness/generated/CONTEXT_PACK.md:196",
+        "native/rabbit_cpu/src/ode.rs:1132-1211"
+      ],
+      "evidence_fingerprint": "sha256:79f0bd25b043cf2142a07d6e2436ded284f24a7fafe6bbe3b045eda282c78cc7",
+      "counterevidence_refs": [
+        "ODE-RUST-10 records remaining production derivative evidence gaps."
+      ],
+      "reproduction": [
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture"
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "ODE-RUST-15",
+      "claim_id": "ODE-A4",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The binding scientific blocker is external authority, not same-code solver mechanics: G-F10-INDEPENDENT-FLRW remains FAIL and CLOSED_ON_CURRENT_MEASUREMENT under D-071. The order-60 independent BDF domain-holdout instrument exhausted its frozen wall budget without evaluating a scientific predicate; the retained post-drop rate projects about 3.27e7 additional evaluations, 4.58 years and an approximately 8305x miss. Same-code Rust BDF/Rodas agreement, bitwise repeats and green unit tests cannot close this gate. Reopening requires a materially new method, a prospectively sealed contract and a bounded end-to-end discriminator; optimization, hardware or a larger budget are explicitly insufficient.",
+      "assumptions_used": [
+        "Current gate registry and frozen decision D-071 govern authority status."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:63",
+        ".agent-harness/generated/CONTEXT_PACK.md:261",
+        ".agent-harness/generated/CONTEXT_PACK.md:350-390"
+      ],
+      "evidence_fingerprint": "sha256:b04f87f531c6370a8ac6b18fcb39707c946209f8159b03109c2d7bf831d208a2",
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:84 records same-code BDF/Rodas anchors, explicitly bounded as regression readouts at line 85."
+      ],
+      "reproduction": [
+        "Read the machine-readable G-F10-INDEPENDENT-FLRW gate record and D-071 disposition in CONTEXT_PACK.md:350-390."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The underlying physical proposition remains unanswered; D-071 closes the current instrument, not the question."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-16",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Rodas error handling is asymmetric: tolerance rejection and invalid candidate state reduce h and retry, but any LU solve failure or nonfinite intermediate stage/RHS/candidate/error norm terminates immediately at the step start. This is fail-loud and the singular-linear test intentionally locks it, so it is not a demonstrated F-01 violation; nevertheless an h-specific ill-conditioned W matrix or transient stage-domain excursion that would recover at smaller h becomes a hard endpoint failure. There is no production-shaped adversarial test distinguishing irrecoverable from step-size-recoverable failures.",
+      "assumptions_used": [
+        "Some intermediate failures can be step-size dependent even when the start state and Jacobian are valid."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:626-677",
+        "native/rabbit_cpu/src/ode.rs:749-760",
+        "native/rabbit_cpu/src/ode.rs:768-905",
+        "native/rabbit_cpu/src/ode.rs:1498-1538"
+      ],
+      "evidence_fingerprint": "sha256:d37ddc634c5665e1bd467e565d5d031de142920152bd832d9700dbe2b1da3e89",
+      "counterevidence_refs": [
+        "Fail-loud linear/nonfinite outcomes are explicitly required and all current focused tests pass."
+      ],
+      "reproduction": [
+        "Static branch comparison: rodas_attempt Err returns immediately at ode.rs:749-760, while error>1 and invalid candidates shrink h at ode.rs:768-905."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "A bounded production-shaped probe is needed before changing this conservative policy."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-17",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "The shared configuration-provenance contract is not embodied by the F-01 interface: OdeConfig is a mutable-field crate struct with no serialization implementation, and OdeResult carries no configuration snapshot or digest. Endpoint tests hardcode controls and broader evidence can bind source/binary hashes, but a result alone cannot prove which tolerances, step bounds or budget produced it. This is a provenance/interface gap, not a numerical failure and does not justify adding a new standalone manifest or gate.",
+      "assumptions_used": [
+        "The shared contract requiring immutable, serializable configuration included in comparison artifacts applies to solver comparison results."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:125-140",
+        "native/rabbit_cpu/src/ode.rs:72-116",
+        "native/rabbit_cpu/Cargo.toml:12-17",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1248-1267"
+      ],
+      "evidence_fingerprint": "sha256:6ce3333a3bc1a19aaf3d434afb1c2eafd0811c1c885c9fc15ff1604f5686fcd8",
+      "counterevidence_refs": [
+        "Frozen test source and source/binary hashes provide indirect provenance in sealed evidence workflows."
+      ],
+      "reproduction": [
+        "Inspect OdeConfig/OdeResult derives and fields; no serde/config field is present."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Integrate config identity into an existing result/evidence surface rather than adding new gate plumbing."
+      ]
+    },
+    {
+      "finding_id": "ODE-RUST-18",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "The isotropic_boltzmann module-level capability description is stale: it says F10C contains only identical same-flavour nu-nu and antinu-antinu scattering and that cross-flavour and neutrino-antineutrino channels are absent, while the current canonical boundary states that all nine frozen catalogue rows execute through the completed aggregation. This does not change runtime bytes but can cause auditors or maintainers to mis-scope the endpoint consumer.",
+      "assumptions_used": [
+        "The current canonical context pack supersedes the older module prose."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1-12",
+        ".agent-harness/generated/CONTEXT_PACK.md:82-84"
+      ],
+      "evidence_fingerprint": "sha256:8a0fd0258d2478c736aa04a6a907c4642c61aa7db401a8255ca9eebe4c6411d6",
+      "counterevidence_refs": [
+        "The runtime catalogue tests and canonical evidence describe the implemented scope correctly."
+      ],
+      "reproduction": [
+        "Compare isotropic_boltzmann.rs:8-12 with CONTEXT_PACK.md:82-84."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Correct the existing module doc when a production-code/document patch is authorized."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json"
+  ]
+}

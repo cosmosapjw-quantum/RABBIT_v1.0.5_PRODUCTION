@@ -1,0 +1,279 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-ADJ",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c22-b3fe-78d1-ab94-9f67ffb3220e",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physics-mitigation",
+    "assignment_id": "A-PM-ADJ",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ee3b33dd57190de943edc5cd300bf7816ec68d7483e613a3e1573adcbe91e9ec",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+  "started_at": "2026-08-23T01:00:51Z",
+  "completed_at": "2026-08-23T01:10:54Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "exact_token_counter": "UNAVAILABLE: collaboration harness/API exposes no exact token counter"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-ADJ.json  # VERIFY: PASS",
+    "read .agent-harness/generated/CONTEXT_PACK.md completely, then the sealed assignment, adjudicator role, and RESULT_ENVELOPE template",
+    "read STATUS_BOARD, both anti-drift policies, BD622 V2 option-3 closure, and D-071 trajectory closure",
+    "jq-sliced complete inspection of all 34 A-ODE-ADJ3 findings and all 22 findings in A-PM-TRANSPORT, A-PM-NUMERIC, and A-PM-PHYS2",
+    "rg '^\\| (C|H|M|L)[0-9]+' /tmp/rabbit-ode-physics-mitigation-research-20260823.md | wc -l  # 32",
+    "sha256sum over every required evidence input",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+    "python3 .agent-harness/scripts/validate_harness.py",
+    "python /home/cosmosapjw/.codex/bounded-work-harness/bounded_work.py check /tmp/rabbit_pm_adj_contract.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "21b99af3f628d9f5c2a01ca038d59e15e7b9e1d359a305471a19eb64a4c31824",
+      "role": "canonical shared context at the assigned context version"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-ADJ.json",
+      "sha256": "ee3b33dd57190de943edc5cd300bf7816ec68d7483e613a3e1573adcbe91e9ec",
+      "role": "sealed adjudication assignment"
+    },
+    {
+      "path": ".agent-harness/generated/STATUS_BOARD.md",
+      "sha256": "5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "role": "sole current gate and claim authority"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "adjudicated 34-record ODE inventory and 30 numbered open-root findings"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "role": "binding trajectory-instrument failure and reopen ceiling"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+      "role": "binding no-route result for fixed momentum-tail slaving and Jacobian-tuning limits"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f",
+      "role": "Rust-first, endpoint-consumed, no-wrapper, no-QKE authority"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149",
+      "role": "candidate cost and blocker-movement authority"
+    },
+    {
+      "path": "/tmp/rabbit-ode-physics-mitigation-research-20260823.md",
+      "sha256": "7474018cdd5cf86bc55b870c6168c14bdb4c418046c95afe3c54b9e7b229508b",
+      "role": "frozen six-family synthesis, 32-root table, caller grouping, and candidate ranking"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json",
+      "sha256": "5c330b29bb40041905adc762b4d14eee82f40ab8de952204865f592921a6938a",
+      "role": "blind collision, transport, AP, JVP, and tail review"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json",
+      "sha256": "5864f79e5d64cf4af46b34758e9f67b628c37b965f5b6ef9d79ba2dc17880f06",
+      "role": "blind stiff-solver, event, adjoint, and validation review"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json",
+      "sha256": "4db441207376535b5531b54fb96c4271d6c208ba5ec9a4827607418264d98dc8",
+      "role": "blind BBN, thermodynamics, domain, conservation, and limiting-case review"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PM-ADJ-001",
+      "claim_id": "PM-ADJ-32",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[ADJUDICATED OVERALL FAIL; RESEARCH MAP ONLY] The three blind results converge after evidence-level review: the synthesis is a useful bounded mitigation map after the corrections below, but no proposed remedy is IMPLEMENTED or VALIDATED as blocker movement and none reopens G-F10-INDEPENDENT-FLRW. Current authority remains G-F10-INDEPENDENT-FLRW=FAIL/CLOSED_ON_CURRENT_MEASUREMENT and G-HARNESS-INTEGRITY=FAIL. The retained order-60/ymax-30 holdout evaluated no scientific predicate and the defensible post-drop estimate is about 3.27e7 further evaluations, 4.58 years, and an approximately 8305x miss with unquantified model uncertainty. This is an instrument failure, not a refutation of the physical proposition. Existing catalogue, covariance-metrology, performance, scope, radial, and regression PASS gates remain bounded exactly as the generated board states; no public, QKE, production, or full-authority claim follows.",
+      "assumptions_used": [
+        "The generated status board is the sole current status authority.",
+        "No trajectory, endpoint, performance benchmark, or scientific promotion execution was authorized or performed.",
+        "Agreement was assessed by reading the cited evidence and equations, not by trusting sibling-authored fingerprints or summaries."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/STATUS_BOARD.md:11-46",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:81-147",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:116-124",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json:F-PM-TRANSPORT-005",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json:F-PM-NUMERIC-001",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json:F-PM-PHYS2-010"
+      ],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": [
+        "The order-48 base phase completed, the Rust mechanics baseline is green in retained evidence, and six other F-10 gates are PASS; these facts do not supply the missing evolved domain/tail uncertainty or independent endpoint authority.",
+        "D-071 explicitly leaves the underlying physical proposition open."
+      ],
+      "reproduction": [
+        "Read the generated board and D-071 sections 2.4-4; require any claimed reopen to satisfy all three registered conjuncts rather than a local speed or correctness result.",
+        "Falsifier: a materially new method under a prospectively sealed contract must complete a bounded discriminator covering the stalled phase and project the full endpoint inside the existing 64800 s budget with nonzero uncertainty margin."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No admitted method satisfies the D-071 reopen conjuncts.",
+        "The physical proposition remains untested by a completed structurally independent full-spectral endpoint."
+      ]
+    },
+    {
+      "finding_id": "F-PM-ADJ-002",
+      "claim_id": "PM-ADJ-32",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "[MECHANICAL ROOT COMPLETENESS PASS WITH CALLER CORRECTION] The frozen table contains exactly 32 unique normalized roots: C1-C7, H1-H15, M1-M8, and L1-L2. It maps F-ODE-ADJ3-001 through -030 plus the previously normalized gradient baseline-status root H15 and adaptive-tape root M8. F-ODE-ADJ3-031 is an external harness limitation, -032 is the policy boundary, -033 records closed/good paths, and -034 is the static completeness register; none is another open ODE root. The affected-caller normalization is accepted with one explicit correction: src/rabbit/transport/stageAB_analysis.py is fail-loud and is not the partial-state defect; scripts/run_stageAB_transport_probe_pr1.py is the H3/H4 partial-state consumer. The eight failure-only/no-certified-event script surfaces are scripts/probe_tier2_bridge_only.py, scripts/trace_scipy_phase1_characteristic_general.py, scripts/trace_scipy_typeI_phase1_external.py, scripts/trace_species_rays_phase1.py, scripts/trace_tier2_branch_point.py, scripts/run_characteristic_ablation.py, scripts/run_nonlinear_ablation.py, and scripts/stress_test_characteristic.py, mapping to C4/C5/C7/H3. Retired JAX partial-observable and batch lanes remain within H1/H3/H5/H10/H15/M8. No 33rd causal root is required. One missing explicit counterexample in the prose table must be attached to H13/M8: gradient_check reports zero relative error whenever both gradients are below 1e-8 even when their absolute disagreement is nonzero; fix it with a finite mixed absolute/relative criterion and do not create a new root for the same validation-admission cause.",
+      "assumptions_used": [
+        "The parent-provided targeted caller normalization is accepted as the current source mapping; this assignment prohibited source-level rediscovery outside its named evidence.",
+        "Root identity is causal, so a newly explicit counterexample under an existing validation-admission cause does not automatically create a new root."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:75-114",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-001..F-ODE-ADJ3-034",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json:F-PM-NUMERIC-006,F-PM-NUMERIC-007",
+        "A-PM-ADJ parent targeted-caller clarification message, 2026-08-23"
+      ],
+      "evidence_fingerprint": "sha256:7474018cdd5cf86bc55b870c6168c14bdb4c418046c95afe3c54b9e7b229508b",
+      "counterevidence_refs": [
+        "Generated code, external consumers, and dynamically supplied callables remain outside the A-ODE-ADJ3 static completeness ceiling.",
+        "The synthesis's phrase 'stage-A/B partial-state consumer' was ambiguous until the caller correction above."
+      ],
+      "reproduction": [
+        "rg '^\\| (C|H|M|L)[0-9]+' /tmp/rabbit-ode-physics-mitigation-research-20260823.md | wc -l  # 32",
+        "jq -r '.findings[].finding_id' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json | sort -V  # contiguous 001..034",
+        "Falsifier: produce an in-scope source caller or causal defect at the bound HEAD that cannot be assigned to any of the 32 roots without changing the root's cause or remedy."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Only external/generated/dynamic consumers remain outside the declared static ceiling."
+      ]
+    },
+    {
+      "finding_id": "F-PM-ADJ-003",
+      "claim_id": "PM-ADJ-32",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "[PHYSICS/MATH AUDIT PASS WITH BINDING ASSUMPTIONS] The core derived equations are dimensionally and sign consistent under the stated conventions. For u=log(f/(1-f)), df/dN=C/H gives du/dN=C/[H f(1-f)]; u,N,f are dimensionless and C/H is dimensionless, with the expected tail-conditioning hazard. With Q>0 into neutrinos, d rho_nu/dN=-4 rho_nu+Q/H and d rho_em/dN=-3(rho_em+P_em)-Q/H have MeV^4 per e-fold units because rho and P are MeV^4 while Q/H is MeV^4, and their sum gives the FLRW first law; for an isolated finite-mass component d(a^4 rho)/dN=a^4(rho-3P). For x=-ln(T_gamma/T_ref), alpha=-d ln(T_gamma)/dN>0 implies dN/dx=1/alpha and dt/dx=1/(H alpha) only after the natural-unit-to-seconds conversion is handled consistently. For a 1+2<->3+4 Fermi bracket, A=u3+u4-u1-u2 and L*expm1(A)=G-L are correct only with the reaction's actual leg and chemical-potential convention and a separate zero-flux branch. The neutron equilibrium X_n=lambda_pn/(lambda_np+lambda_pn), collisionless df(q)/dN=0 for q=ap, and the simple transverse-event sensitivity formula are also correct under their stated domains. Binding caveats: do not apply the flat-FLRW energy residual at nonzero Type-I shear without deriving the shear-work sign; do not assert neutrino number or neutrino-only energy conservation for electron-pair channels; and do not promote f<=exp(-y) equilibrium moment bounds into nonlinear reaction-tail authority."
+      ,"assumptions_used": [
+        "Natural units c=hbar=k_B=1, N=ln(a), q=ap, massless diagonal neutrinos, finite-mass electromagnetic bath, and Q positive into neutrinos.",
+        "The project's Type-I Friedmann/shear normalization is unchanged.",
+        "Temperature-clock and event-sensitivity formulas apply only on a simple, monotone, transverse branch with a denominator bounded away from zero."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:68-73",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json:F-PM-PHYS2-001..F-PM-PHYS2-009",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json:F-PM-TRANSPORT-001..F-PM-TRANSPORT-004",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json:F-PM-NUMERIC-002,F-PM-NUMERIC-006"
+      ],
+      "evidence_fingerprint": "sha256:4db441207376535b5531b54fb96c4271d6c208ba5ec9a4827607418264d98dc8",
+      "counterevidence_refs": [
+        "The equations establish admissible formulations, not their numerical conditioning or endpoint cost.",
+        "An energy-equivalent spectrum need not yield equal weak rates, and a temperature clock does not reduce collision cost."
+      ],
+      "reproduction": [
+        "Differentiate f=sigmoid(u), sum the neutrino and electromagnetic energy equations, and apply d/dx=(dN/dx)d/dN.",
+        "Falsifiers: any nonpositive EOS derivative, loss of alpha>0, failed first-law/channel-null residual, failed detailed-balance null, or equal-energy spectra with unequal weak rates rejects the corresponding stronger claim."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "The full nonzero-shear Type-I energy-continuity residual remains underived in the admitted evidence.",
+        "No proposed energy coordinate, temperature clock, affinity kernel, AP split, or tail enclosure has endpoint execution evidence."
+      ]
+    },
+    {
+      "finding_id": "F-PM-ADJ-004",
+      "claim_id": "PM-ADJ-32",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "[DEAD-END AND GENERIC-REMEDY REJECTION PASS] Fixed momentum-tail algebraic slaving is rejected, not a live candidate: the measured separation ratio is at most 0.596, the completing control has the same structure, only three of 182 dimensions form a genuinely gapped tail, the useful closure is a 54-equation nonlinear solve, and the one-iteration cost model gives at most 1.25x against an approximately 8305x miss. Jacobian construction/linear algebra is diagnostic or local performance work only: deleting construction entirely still misses the budget by 77x-694x, and Rodas5P, lagged/frozen Jacobians, banded/Krylov, and AD do not become D-071 remedies from generic method labels. Also rejected as present solutions are tolerance loosening, faster hardware, more cores, a larger budget, clipping/flooring/projection, energy-only tail or grid criteria across weak freezeout, invented neutrino invariants for electron channels, a full network rewrite over the existing Rust log-X/stoichiometric design, an unbounded temperature clock, logit alone as a tail cure, JAX/Diffrax forward promotion, and new wrapper/gate/telemetry surfaces. A collision-invariant AP or rigorous tail-bound method is not logically identical to the rejected momentum-cut slaving, but it remains PROPOSED and must first survive an exact discrete-nullspace, projected-spectrum, reaction-tail, overlap, and stalled-phase discriminator; the coefficient-free Gamma/H estimate is not separation evidence.",
+      "assumptions_used": [
+        "BD622 V2 option-3 is the controlling negative result for fixed momentum-cut slaving and Jacobian tuning.",
+        "D-071's reopen conditions are conjunctive and cannot be replaced by local performance evidence."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:24-101",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:131-147",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:118-122",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json:F-PM-TRANSPORT-001,F-PM-TRANSPORT-004",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json:F-PM-NUMERIC-001,F-PM-NUMERIC-003"
+      ],
+      "evidence_fingerprint": "sha256:3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+      "counterevidence_refs": [
+        "A materially different invariant-aware AP method or rigorous surrogate/domain bound could satisfy D-071 in principle; no such evidence exists yet.",
+        "Analytic/scaled JVP work may still repair the invalid static diagnostic or improve the active Rust path locally."
+      ],
+      "reproduction": [
+        "Recompute or inspect rho(y*) across every admissible cut and compare the completing 48/24 control before claiming a gap.",
+        "Falsifier for any revived reduction: a prospectively fixed projected non-null spectrum must show a grid-stable usable separation, overlap errors and all channel/first-law invariants must remain inside frozen caps, and the stalled-phase discriminator plus uncertainty margin must fit 64800 s."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The actual creep mechanism remains unmeasured; V2 is diagnostic-only and cannot reopen the gate."
+      ]
+    },
+    {
+      "finding_id": "F-PM-ADJ-005",
+      "claim_id": "PM-ADJ-32",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "[THREE-CANDIDATE RANKING, BOUNDED AND DOWNCLAIMED] Rank no more than these three. (1) PR-A, correctness-first and narrow: repair the existing NumPy/canonical outcome path in place with a typed terminal cause, failure-before-event precedence, successful finite bracket refinement plus unit-bearing residual, raw final-state/domain/balance admission, and no post-failure observables, clipping, H floors, or denominator floors. It moves critical false-success roots but makes no endpoint-speed or D-071 claim. (2) PR-B, active Rust endpoint-consumed derivative slice: hold independent N fixed, exclude passive elapsed time from nonlinear/JVP geometry while retaining its quadrature, add scale-admissible analytic or centered T/N/collision Jv checks against dense and independent high-precision references, and select Schur/sparse/Krylov only after measuring the exact N48 pattern. Reject it as blocker movement if same-case activation/cold full-RHS-equivalent calls or wall improve by less than 10 percent, if any raw parity/invariant fails, or if a hidden dense fallback supplies the result; even a pass is local performance/correctness, not D-071 reopening. (3) PR-C, conditional discriminator only, not an implementation PR yet: in an existing audit surface derive the current channel detailed-balance identities and exact discrete left nullspaces, measure the projected non-null collision spectrum and reaction-tail bound across the stalled band, and stop on absent grid-stable separation. Only a pre-output PASS may request one Rust AP/rigorous-surrogate vertical slice with observable-aware overlap and the registered stalled-phase budget. This ordering maximizes correctness and active-path information per added line while preventing speculative AP code growth.",
+      "assumptions_used": [
+        "Every future PR must provide added/deleted/net lines, token_use_exact or UNAVAILABLE with reason, affected files, blocker movement ratio, and a cost-effectiveness verdict.",
+        "PR-A and PR-B must use existing result/test/runtime surfaces rather than new readiness or telemetry plumbing.",
+        "PR-C has no implementation authority unless its zero/new-production-code discriminator passes prospectively."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:116-122",
+        "bbn_codex_anti_drift_cost_effective_policy.md:24-132",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:15-59,489-519",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json:F-PM-NUMERIC-003..F-PM-NUMERIC-005",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json:F-PM-TRANSPORT-001,F-PM-TRANSPORT-002,F-PM-TRANSPORT-005",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json:F-PM-PHYS2-005..F-PM-PHYS2-007,F-PM-PHYS2-010"
+      ],
+      "evidence_fingerprint": "sha256:5864f79e5d64cf4af46b34758e9f67b628c37b965f5b6ef9d79ba2dc17880f06",
+      "counterevidence_refs": [
+        "PR-A is correctness movement only and can drift if expanded into a cross-repository wrapper rewrite.",
+        "PR-B cannot close an approximately 8305x step-count miss by ordinary optimization and must not be reported as endpoint progress.",
+        "PR-C may terminate immediately as NO_ROUTE if the exact discrete spectrum/nullspaces/tail bound fail."
+      ],
+      "reproduction": [
+        "PR-A falsifiers: initial-zero, NaN, fractional/wrong-direction, all-refinement-failed, contradictory success/event, failed-partial-state, invalid-domain, and nonfinite-observable probes must all fail without emitting an observable.",
+        "PR-B falsifiers: an h,h/2,h/4 physically scaled Jv ladder at early/activation/cold states must converge against two independent axes and preserve detailed-balance/invariant/first-law caps; same-case wall/call movement below 10 percent is NO_PROGRESS.",
+        "PR-C falsifiers: absent exact channel nullspaces, absent grid-stable non-null separation, unbounded reaction tail, non-well-prepared overlap, any invariant/first-law failure, or a stalled-phase/endpoint projection outside 64800 s with margin terminates the route."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No exact line estimate or implementation authority exists until each candidate is separately scoped against the live dirty-tree custody and governing owner decision.",
+        "No candidate has executed its falsifier in this research-only run."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json"
+  ]
+}

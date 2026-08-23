@@ -1,0 +1,179 @@
+Script started on 2026-08-23 18:24:09+09:00 [COMMAND="/usr/bin/time -v /tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pip install -r requirements.measured.txt" <not executed on terminal>]
+Collecting absl-py==2.4.0 (from -r requirements.measured.txt (line 23))
+  Downloading absl_py-2.4.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting blackjax==1.5 (from -r requirements.measured.txt (line 24))
+  Downloading blackjax-1.5-py3-none-any.whl.metadata (6.6 kB)
+Collecting contourpy==1.3.3 (from -r requirements.measured.txt (line 25))
+  Using cached contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+Collecting cycler==0.12.1 (from -r requirements.measured.txt (line 26))
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting diffrax==0.7.2 (from -r requirements.measured.txt (line 27))
+  Downloading diffrax-0.7.2-py3-none-any.whl.metadata (18 kB)
+Collecting equinox==0.13.7 (from -r requirements.measured.txt (line 28))
+  Downloading equinox-0.13.7-py3-none-any.whl.metadata (18 kB)
+Collecting execnet==2.1.2 (from -r requirements.measured.txt (line 29))
+  Downloading execnet-2.1.2-py3-none-any.whl.metadata (2.9 kB)
+Collecting fonttools==4.62.1 (from -r requirements.measured.txt (line 30))
+  Downloading fonttools-4.62.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (117 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.5/117.5 kB 604.4 kB/s eta 0:00:00
+
+Collecting iniconfig==2.3.0 (from -r requirements.measured.txt (line 31))
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting jax==0.10.0 (from -r requirements.measured.txt (line 32))
+  Downloading jax-0.10.0-py3-none-any.whl.metadata (13 kB)
+Collecting jaxlib==0.10.0 (from -r requirements.measured.txt (line 33))
+  Downloading jaxlib-0.10.0-cp312-cp312-manylinux_2_27_x86_64.whl.metadata (1.3 kB)
+Collecting jaxtyping==0.3.9 (from -r requirements.measured.txt (line 34))
+  Downloading jaxtyping-0.3.9-py3-none-any.whl.metadata (7.4 kB)
+Collecting kiwisolver==1.5.0 (from -r requirements.measured.txt (line 35))
+  Using cached kiwisolver-1.5.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.1 kB)
+Collecting lineax==0.1.1 (from -r requirements.measured.txt (line 36))
+  Downloading lineax-0.1.1-py3-none-any.whl.metadata (17 kB)
+Collecting matplotlib==3.10.8 (from -r requirements.measured.txt (line 37))
+  Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.8/52.8 kB 971.4 kB/s eta 0:00:00
+
+Collecting maturin==1.13.1 (from -r requirements.measured.txt (line 38))
+  Downloading maturin-1.13.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl.metadata (16 kB)
+Collecting ml_dtypes==0.5.4 (from -r requirements.measured.txt (line 39))
+  Using cached ml_dtypes-0.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.9 kB)
+Collecting mpmath==1.3.0 (from -r requirements.measured.txt (line 40))
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting numpy==2.4.4 (from -r requirements.measured.txt (line 41))
+  Downloading numpy-2.4.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting opt_einsum==3.4.0 (from -r requirements.measured.txt (line 42))
+  Using cached opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting optax==0.2.8 (from -r requirements.measured.txt (line 43))
+  Downloading optax-0.2.8-py3-none-any.whl.metadata (7.9 kB)
+Collecting optimistix==0.1.0 (from -r requirements.measured.txt (line 44))
+  Downloading optimistix-0.1.0-py3-none-any.whl.metadata (18 kB)
+Collecting packaging==26.0 (from -r requirements.measured.txt (line 45))
+  Downloading packaging-26.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting pillow==12.2.0 (from -r requirements.measured.txt (line 46))
+  Downloading pillow-12.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+Collecting pluggy==1.6.0 (from -r requirements.measured.txt (line 47))
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting Pygments==2.20.0 (from -r requirements.measured.txt (line 48))
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pyparsing==3.3.2 (from -r requirements.measured.txt (line 49))
+  Using cached pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting pytest==9.0.3 (from -r requirements.measured.txt (line 50))
+  Downloading pytest-9.0.3-py3-none-any.whl.metadata (7.6 kB)
+Collecting pytest-xdist==3.8.0 (from -r requirements.measured.txt (line 51))
+  Downloading pytest_xdist-3.8.0-py3-none-any.whl.metadata (3.0 kB)
+Collecting python-dateutil==2.9.0.post0 (from -r requirements.measured.txt (line 52))
+  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting scipy==1.17.1 (from -r requirements.measured.txt (line 53))
+  Using cached scipy-1.17.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting setuptools==82.0.1 (from -r requirements.measured.txt (line 54))
+  Downloading setuptools-82.0.1-py3-none-any.whl.metadata (6.5 kB)
+Collecting six==1.17.0 (from -r requirements.measured.txt (line 55))
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting typing_extensions==4.15.0 (from -r requirements.measured.txt (line 56))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting wadler_lindig==0.1.7 (from -r requirements.measured.txt (line 57))
+  Downloading wadler_lindig-0.1.7-py3-none-any.whl.metadata (17 kB)
+Downloading absl_py-2.4.0-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.8/135.8 kB 1.1 MB/s eta 0:00:00
+
+Downloading blackjax-1.5-py3-none-any.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 2.4 MB/s eta 0:00:00
+
+Using cached contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (362 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading diffrax-0.7.2-py3-none-any.whl (199 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 199.7/199.7 kB 3.8 MB/s eta 0:00:00
+
+Downloading equinox-0.13.7-py3-none-any.whl (182 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 182.1/182.1 kB 4.0 MB/s eta 0:00:00
+
+Downloading execnet-2.1.2-py3-none-any.whl (40 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.7/40.7 kB 3.8 MB/s eta 0:00:00
+
+Downloading fonttools-4.62.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 2.9 MB/s eta 0:00:00
+
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading jax-0.10.0-py3-none-any.whl (3.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 2.2 MB/s eta 0:00:00
+
+Downloading jaxlib-0.10.0-cp312-cp312-manylinux_2_27_x86_64.whl (85.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 MB 2.2 MB/s eta 0:00:00
+
+Downloading jaxtyping-0.3.9-py3-none-any.whl (56 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 kB 2.2 MB/s eta 0:00:00
+
+Using cached kiwisolver-1.5.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+Downloading lineax-0.1.1-py3-none-any.whl (77 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.6/77.6 kB 2.2 MB/s eta 0:00:00
+
+Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 1.9 MB/s eta 0:00:00
+
+Downloading maturin-1.13.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl (10.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 2.1 MB/s eta 0:00:00
+
+Using cached ml_dtypes-0.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.0 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Downloading numpy-2.4.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 2.3 MB/s eta 0:00:00
+
+Using cached opt_einsum-3.4.0-py3-none-any.whl (71 kB)
+Downloading optax-0.2.8-py3-none-any.whl (402 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 403.0/403.0 kB 2.1 MB/s eta 0:00:00
+
+Downloading optimistix-0.1.0-py3-none-any.whl (101 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 101.7/101.7 kB 2.3 MB/s eta 0:00:00
+
+Downloading packaging-26.0-py3-none-any.whl (74 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 kB 2.4 MB/s eta 0:00:00
+
+Downloading pillow-12.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 2.2 MB/s eta 0:00:00
+
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Using cached pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading pytest-9.0.3-py3-none-any.whl (375 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 375.2/375.2 kB 2.2 MB/s eta 0:00:00
+
+Downloading pytest_xdist-3.8.0-py3-none-any.whl (46 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 2.0 MB/s eta 0:00:00
+
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Using cached scipy-1.17.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.2 MB)
+Downloading setuptools-82.0.1-py3-none-any.whl (1.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 2.2 MB/s eta 0:00:00
+
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 2.0 MB/s eta 0:00:00
+
+Downloading wadler_lindig-0.1.7-py3-none-any.whl (20 kB)
+Installing collected packages: mpmath, wadler_lindig, typing_extensions, six, setuptools, pyparsing, Pygments, pluggy, pillow, packaging, opt_einsum, numpy, maturin, kiwisolver, iniconfig, fonttools, execnet, cycler, absl-py, scipy, python-dateutil, pytest, ml_dtypes, jaxtyping, contourpy, pytest-xdist, matplotlib, jaxlib, jax, optax, equinox, lineax, blackjax, optimistix, diffrax
+Successfully installed Pygments-2.20.0 absl-py-2.4.0 blackjax-1.5 contourpy-1.3.3 cycler-0.12.1 diffrax-0.7.2 equinox-0.13.7 execnet-2.1.2 fonttools-4.62.1 iniconfig-2.3.0 jax-0.10.0 jaxlib-0.10.0 jaxtyping-0.3.9 kiwisolver-1.5.0 lineax-0.1.1 matplotlib-3.10.8 maturin-1.13.1 ml_dtypes-0.5.4 mpmath-1.3.0 numpy-2.4.4 opt_einsum-3.4.0 optax-0.2.8 optimistix-0.1.0 packaging-26.0 pillow-12.2.0 pluggy-1.6.0 pyparsing-3.3.2 pytest-9.0.3 pytest-xdist-3.8.0 python-dateutil-2.9.0.post0 scipy-1.17.1 setuptools-82.0.1 six-1.17.0 typing_extensions-4.15.0 wadler_lindig-0.1.7
+	Command being timed: "/tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pip install -r requirements.measured.txt"
+	User time (seconds): 19.09
+	System time (seconds): 2.64
+	Percent of CPU this job got: 21%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:43.49
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 189332
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 85248
+	Voluntary context switches: 51160
+	Involuntary context switches: 1144
+	Swaps: 0
+	File system inputs: 90448
+	File system outputs: 2492248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+Script done on 2026-08-23 18:25:53+09:00 [COMMAND_EXIT_CODE="0"]

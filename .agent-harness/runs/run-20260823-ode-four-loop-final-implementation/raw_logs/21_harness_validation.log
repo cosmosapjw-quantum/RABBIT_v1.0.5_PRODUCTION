@@ -1,0 +1,22 @@
+Script started on 2026-08-23 20:31:04+09:00 [COMMAND="python3 .agent-harness/scripts/validate_harness.py" <not executed on terminal>]
+{
+  "ok": true,
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "active_run": "run-20260823-ode-four-loop-final-implementation",
+  "open_admissions": [
+    "run-20260729-f10-d067-admission-canary/A-D067-CANARY-C2-VICTIM",
+    "run-20260803-f10-d070-canary-c9/A-D070-OB2",
+    "run-20260804-f10-d070-canary-c10/A-D070-C10-B",
+    "run-20260804-f10-d070-canary-c13/A-D070-C13-B",
+    "run-20260806-bd623-audit-triage/A-ODE-ADJ",
+    "run-20260823-ode-four-loop-final-implementation/A-IF-REVIEW",
+    "run-20260823-ode-math-algo-code-independent/A-MAC-ADJ"
+  ],
+  "pending_result_count": 0,
+  "pending_results": [],
+  "legacy_results_manifest": "ok (136 pinned); pinned by declared fact and digest (136)",
+  "ssot_consistency": "ok",
+  "canary_freshness": "ok"
+}
+
+Script done on 2026-08-23 20:31:05+09:00 [COMMAND_EXIT_CODE="0"]

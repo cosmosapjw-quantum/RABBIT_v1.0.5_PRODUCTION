@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "generated_at_utc": "2026-08-23T09:08:14Z",
+  "evidence_universe": [
+    {
+      "loop": 1,
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "status": "FAIL",
+      "role": "34-ID observed ODE-defect inventory and completeness ceiling"
+    },
+    {
+      "loop": 2,
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+      "sha256": "d47308b4bb991a4a0c879b7a14b06a958143c3dbe7b46a1cb7bdd43e9c2e675a",
+      "status": "FAIL_RESEARCH_MAP_ONLY",
+      "role": "physics-specific remedy and rejection map"
+    },
+    {
+      "loop": 3,
+      "path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json",
+      "sha256": "1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "status": "FAIL_NO_IMPLEMENTATION_OR_GATE_REOPEN",
+      "role": "independent mathematics, algorithm, and coding adjudication"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+      "sha256": "c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630",
+      "status": "PASS_DESIGN_ONLY",
+      "role": "34-ID candidate design ledger"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json",
+      "sha256": "1090179e537c0b760f404e2b322517c5cea7703fbf5ec6b35934505e18bfa7c1",
+      "status": "FAIL_PRE_REPAIR",
+      "role": "adversarial contradiction record"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+      "sha256": "c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "status": "PASS_RESEARCH_LOOP_COMPLETE",
+      "role": "final coding-harness dispositions before implementation"
+    }
+  ],
+  "loop_conclusions": {
+    "loop_1": "34 findings preserved exactly; 30 normalized open roots plus one harness limitation, one policy boundary, one closed-history item, and one inventory item",
+    "loop_2": "32 physics roots mapped; only convention-complete formulations retained; clipping, tolerance loosening, generic tuning, hardware, tail slaving, and forward JAX promotion rejected as remedies",
+    "loop_3": "182-state Python and 122-state folded Rust identities are non-substitutable; dense finite-difference optimization is a no-go; candidates P1-P3 remain correctness/reference/discriminator work",
+    "loop_4": "C1 was SPECIFIED for later implementation; C2 and C3 require REWORK; no Phase-5, endpoint, trajectory, or gate movement was run"
+  },
+  "finding_routes": [
+    {"id":"001","prior":"fail","route":"C3_REWORK"},
+    {"id":"002","prior":"fail","route":"C3_REWORK"},
+    {"id":"003","prior":"fail","route":"RETAINED_BLOCKER"},
+    {"id":"004","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"005","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"006","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"007","prior":"fail","route":"C2_REWORK"},
+    {"id":"008","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"009","prior":"fail","route":"C1_IMPLEMENTATION_EXPERIMENT"},
+    {"id":"010","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"011","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"012","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"013","prior":"fail","route":"C2_REWORK"},
+    {"id":"014","prior":"fail","route":"DECISIVE_EXPERIMENT"},
+    {"id":"015","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"016","prior":"fail","route":"DECISIVE_EXPERIMENT"},
+    {"id":"017","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"018","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"019","prior":"inconclusive","route":"DECISIVE_EXPERIMENT"},
+    {"id":"020","prior":"fail","route":"C2_REWORK"},
+    {"id":"021","prior":"inconclusive","route":"DECISIVE_EXPERIMENT"},
+    {"id":"022","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"023","prior":"inconclusive","route":"FUTURE_COMPANION"},
+    {"id":"024","prior":"inconclusive","route":"DECISIVE_EXPERIMENT"},
+    {"id":"025","prior":"inconclusive","route":"DECISIVE_EXPERIMENT"},
+    {"id":"026","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"027","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"028","prior":"inconclusive","route":"FUTURE_COMPANION"},
+    {"id":"029","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"030","prior":"fail","route":"FUTURE_COMPANION"},
+    {"id":"031","prior":"inconclusive","route":"EXTRINSIC_HARNESS_ISSUE"},
+    {"id":"032","prior":"pass","route":"CLOSED_PRESERVE"},
+    {"id":"033","prior":"pass","route":"CLOSED_PRESERVE"},
+    {"id":"034","prior":"pass","route":"CLOSED_PRESERVE"}
+  ],
+  "preimplementation_status": {
+    "C1": "PROMOTE_FOR_LATER_IMPLEMENTATION_SPECIFIED_ONLY",
+    "C2": "REWORK",
+    "C3": "REWORK",
+    "gates": {"pass": 6, "fail": 2},
+    "retained_fail_gates": ["G-F10-INDEPENDENT-FLRW", "G-HARNESS-INTEGRITY"]
+  },
+  "claim_ceiling": "No source in this evidence universe establishes implemented blocker movement, D-071 reopen, endpoint authority, scientific promotion, QKE support, public production support, or gate movement.",
+  "completeness_ceiling": "The mechanical audit does not prove absence in generated code, external consumers, runtime higher-order callables, or unlisted non-Python extensions."
+}

@@ -1,0 +1,345 @@
+Script started on 2026-08-23 18:16:31+09:00 [COMMAND="/usr/bin/time -v env PYTHONPATH=src pytest -q tests/test_dynamic_collision_driver.py --durations=0" <not executed on terminal>]
+.FFF...........................                                          [100%]
+=================================== FAILURES ===================================
+_________ test_collision_on_reaches_endpoint_physical_neff_no_collapse _________
+
+    @pytest.mark.slow
+    def test_collision_on_reaches_endpoint_physical_neff_no_collapse():
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+T_gamma_init_MeV = 10.0, n_q = 24, collisions = True, T_gamma_stop_MeV = 0.01
+rtol = 1e-08, atol = 1e-10, N_span_max = 12.0, max_step = 0.5
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+____________________ test_collision_on_frame_scale_is_tight ____________________
+
+    @pytest.mark.slow
+    def test_collision_on_frame_scale_is_tight():
+        # FINDING 4: Gate A never exercises the frame resample (its ν moments are a pinned
+        # identity). The collision-on run does; a frame-scale bug the wide N_eff band absorbs
+        # shifts T_ν/T_γ off (4/11)^{1/3}. They land ~0.715–0.719, so abs 0.01 is tight.
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+T_gamma_init_MeV = 10.0, n_q = 24, collisions = True, T_gamma_stop_MeV = 0.01
+rtol = 1e-08, atol = 1e-10, N_span_max = 12.0, max_step = 0.5
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+___________________________ test_nue_warmer_than_nux ___________________________
+
+    @pytest.mark.slow
+    def test_nue_warmer_than_nux():
+        # ν_e (charged + neutral current) couples longer than ν_x (neutral current only),
+        # so it stays warmer relative to the photon bath. Spike: 0.7204 vs 0.7169.
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+T_gamma_init_MeV = 10.0, n_q = 24, collisions = True, T_gamma_stop_MeV = 0.01
+rtol = 1e-08, atol = 1e-10, N_span_max = 12.0, max_step = 0.5
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+============================== slowest durations ===============================
+18.48s call     tests/test_dynamic_collision_driver.py::test_collision_on_reaches_endpoint_physical_neff_no_collapse
+16.45s call     tests/test_dynamic_collision_driver.py::test_collision_on_frame_scale_is_tight
+15.97s call     tests/test_dynamic_collision_driver.py::test_nue_warmer_than_nux
+0.95s call     tests/test_dynamic_collision_driver.py::test_collisionless_neff_is_nq_convergent[16]
+0.82s call     tests/test_dynamic_collision_driver.py::test_collisionless_recovers_analytic_neff_3
+0.82s call     tests/test_dynamic_collision_driver.py::test_collisionless_neff_is_nq_convergent[32]
+0.82s call     tests/test_dynamic_collision_driver.py::test_collisionless_neff_is_nq_convergent[48]
+0.17s call     tests/test_dynamic_collision_driver.py::test_collisionless_neff_is_nq_convergent[24]
+0.08s call     tests/test_dynamic_collision_driver.py::test_failed_integration_fails_closed
+
+(84 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ============================
+FAILED tests/test_dynamic_collision_driver.py::test_collision_on_reaches_endpoint_physical_neff_no_collapse
+FAILED tests/test_dynamic_collision_driver.py::test_collision_on_frame_scale_is_tight
+FAILED tests/test_dynamic_collision_driver.py::test_nue_warmer_than_nux - rab...
+3 failed, 28 passed in 55.07s
+Command exited with non-zero status 1
+	Command being timed: "env PYTHONPATH=src pytest -q tests/test_dynamic_collision_driver.py --durations=0"
+	User time (seconds): 58.01
+	System time (seconds): 0.21
+	Percent of CPU this job got: 105%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:55.30
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 101708
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 45310
+	Voluntary context switches: 66
+	Involuntary context switches: 1755
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 18:17:26+09:00 [COMMAND_EXIT_CODE="1"]

@@ -1,0 +1,44 @@
+# RESEARCH_STATE
+
+PROJECT: Untitled Research Project
+VERSION: 0.1
+CURRENT_PHASE: intake
+LAST_UPDATED: 2026-07-12
+
+## Primary question
+
+PRIMARY_RQ:
+
+## Subquestions
+
+- 
+
+## Scope
+
+IN_SCOPE:
+
+OUT_OF_SCOPE:
+
+## Hypothesis status
+
+ACTIVE_HYPOTHESES:
+
+PROMOTED:
+
+ON_HOLD:
+
+REJECTED:
+
+## Blockers
+
+KEY_BLOCKERS:
+
+MISSING_EVIDENCE:
+
+## Gate
+
+CURRENT_COMPLETION_BAR:
+
+NEXT_GATE:
+
+NEXT_MINIMAL_ACTION:

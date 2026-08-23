@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "repository": "/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION",
+  "base_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "base_branch": "diagnosis_report",
+  "restored_at": "2026-08-23T11:32:28Z",
+  "restoration": {
+    "active_run_sha256": "aaee0d9b5fb8c55b7065af2dcfa13b7f336cfd2b800fa289b54c69a1bb48d4e2",
+    "context_index_sha256": "8c5c31139835877ee4b4b3dd09666b3542884975bb0983c653498fb99e6ec9fa",
+    "context_pack_sha256": "eb6d2f96da05ca0be4693a57416fbf847f803d29edd581a71b7ba6fa5a422b33",
+    "all_match_pre_run_backup": true
+  },
+  "final_git_status_short": [
+    "?? RABBIT_diagnosis_report.bundle"
+  ],
+  "user_preexisting_state_preserved": true,
+  "production_code_changed_in_original_checkout": false,
+  "commit_created": false,
+  "push_or_merge_performed": false,
+  "candidate_worktree": "/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree",
+  "candidate_branch": "codex/ode-c1-raw-state-20260823",
+  "candidate_changed_files": [
+    "src/rabbit/collisions/dynamic_collision_driver.py",
+    "tests/test_dynamic_collision_driver.py"
+  ],
+  "candidate_disposition": "REJECTED_ISOLATED_EVIDENCE_ONLY"
+}

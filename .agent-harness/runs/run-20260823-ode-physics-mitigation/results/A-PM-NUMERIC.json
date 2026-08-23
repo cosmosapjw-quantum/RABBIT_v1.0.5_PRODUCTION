@@ -1,0 +1,432 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-NUMERIC",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c09-62b2-7d60-ba1c-a234b7e3982a",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physics-mitigation",
+    "assignment_id": "A-PM-NUMERIC",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3d39ad383238ae6a827143db74a7a12bd1434dbaece3cc9ad24d5f2df2582435",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json",
+  "started_at": "2026-08-23T00:49:07Z",
+  "completed_at": "2026-08-23T00:55:00Z",
+  "tool_versions": {
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python": "3.12.3",
+    "scipy": "1.17.1 (sealed venv; system python had 1.17.0)",
+    "jax": "0.10.0 (sealed venv)",
+    "diffrax": "0.7.2 (sealed venv)",
+    "diffsol": "0.16.0 (Cargo.lock and local registry source)",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)",
+    "web_source_access_date": "2026-08-23",
+    "exact_token_counter": "UNAVAILABLE: collaboration harness/API exposes no exact token counter"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-NUMERIC.json  # VERIFY: PASS",
+    "git rev-parse HEAD && git status --short",
+    "venv/bin/python -c 'import sys,scipy,jax,diffrax; print(sys.version, scipy.__version__, jax.__version__, diffrax.__version__)'  # 3.12.3 / 1.17.1 / 0.10.0 / 0.7.2",
+    "rg/nl targeted static inspection of the five assigned Python solver/JAX files, native/rabbit_cpu/src/ode.rs, exact diffsol-0.16.0 local source, the three admitted prior audit results, and controlling guardrails",
+    "sha256sum of every local artifact listed below",
+    "Official-source web review: SciPy 1.17.0 API plus 1.17.1 release note; diffsol 0.16.0 release/repository; JAX 0.10.0 release and while_loop/jvp docs; Diffrax 0.7.2 release and controller/event/adjoint docs; primary BDF, Rosenbrock-Krylov, Rosenbrock-adjoint, hybrid-event-sensitivity, and geometric-integration sources (URLs in findings)",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json  # PASS after final timestamp update",
+    "python3 .agent-harness/scripts/validate_harness.py  # PASS after final timestamp update"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "10347fed42bf3d1650d529004cbfdd8da48bc3962c0a20d142d69678b5fddd42",
+      "role": "canonical gate, decision, convention, and policy context"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-NUMERIC.json",
+      "sha256": "3d39ad383238ae6a827143db74a7a12bd1434dbaece3cc9ad24d5f2df2582435",
+      "role": "sealed assignment contract"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "admitted exhaustive ODE defect and blocker inventory"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json",
+      "sha256": "df8913e2ea9023abbb841b99b91f9bb3f929b435b5fa4601cf209f706dcf094d",
+      "role": "admitted ODE test-quality and false-green evidence"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json",
+      "sha256": "e1d2ea763c9562aca4e489ec3d1674370d0107e1d9267aa43efa1b84ed665c79",
+      "role": "admitted exact diffsol/Rust failure-semantics evidence"
+    },
+    {
+      "path": "requirements.measured.txt",
+      "sha256": "b8996835e148f086bf1e6cc2be6a2eee4a91d525421a1e67c687008dcbe2050b",
+      "role": "measured Python dependency versions"
+    },
+    {
+      "path": "native/rabbit_cpu/Cargo.lock",
+      "sha256": "af38eb9fa2c536cf93b76b63e10302431bef4487c444c6a21e3388360c4d4fae",
+      "role": "exact Rust dependency versions"
+    },
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "sha256": "78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "role": "current Rust BDF/Rodas implementation and result contract"
+    },
+    {
+      "path": "src/rabbit/solver/rodas5p.py",
+      "sha256": "7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "role": "current NumPy Rodas error, Jacobian, event, and loop implementation"
+    },
+    {
+      "path": "src/rabbit/solver/rodas5p_adapter.py",
+      "sha256": "d6e3beb068e12bb0229b8b30057528af4292aa9105811dc2b676d219d8df2d43",
+      "role": "current SciPy-shaped adapter and telemetry projection"
+    },
+    {
+      "path": "src/rabbit/solver/ivp_outcome.py",
+      "sha256": "9636ecacc8dfaef579aef23ce9038735c290b28f6344b9fcf2598ec228ce9ec3",
+      "role": "current downstream solve-outcome classifier"
+    },
+    {
+      "path": "src/rabbit/jax/gradient_bridge.py",
+      "sha256": "497ecbb48a80126405593ef9d051db1e7b10e66d20b021a1991bb3f0e1246f9f",
+      "role": "current adjoint selection and gradient checker"
+    },
+    {
+      "path": "src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+      "sha256": "4565e179c9e3c3d8a722fe625311d38bc42a2bcf6b8aabf538f6f8b13df5abda",
+      "role": "current fixed-tape replay and approximate tape extractor"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f",
+      "role": "controlling Rust/JAX and blocker-movement boundary"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149",
+      "role": "cost, raw-failure, and endpoint-evidence policy"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PM-NUMERIC-001",
+      "claim_id": "PM-H6",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_SCIENTIFIC_BLOCKER] G-F10-INDEPENDENT-FLRW remains FAIL and CLOSED_ON_CURRENT_MEASUREMENT. D-071 records no evaluated predicate and projects the stalled order-60/y_max=30 holdout at about 3.27e7 additional evaluations and 4.58 years, so generic BDF/Rodas tuning, sparse linear algebra, faster hardware, or a larger budget cannot reopen it. One qualifying PROPOSED numerical-physics route is an asymptotic tail split: evolve the nonequilibrium distortion only on a compact momentum core; derive a positive exponential envelope for the unevolved tail; bound its number, energy, collision-source, and endpoint-observable contributions analytically (for example by incomplete-gamma-type moment bounds); and propagate that bound through the endpoint observable. A monotone-temperature independent variable is another PROPOSED reduction only if its transversality denominator is bounded away from zero. Either route must be frozen before output and first pass a bounded discriminator covering the phase that stalled with a conservative end-to-end projection inside the existing wall budget. No such proof, implementation, discriminator, or endpoint exists, so the physical question is not advanced by this research map.",
+      "assumptions_used": [
+        "The binding D-071 numbers and reopen conditions are authoritative for this assignment.",
+        "A tail split would require, but does not currently possess, a proved envelope for the nonlinear collision operator rather than an empirical truncation fit.",
+        "A temperature reparameterization is regular only on a branch where the physical temperature is monotone and its derivative is bounded away from zero.",
+        "QKE, public production, and JAX forward development remain out of scope."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:261",
+        ".agent-harness/generated/STATUS_BOARD.md:15",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-001",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-15",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:25-33",
+        "bbn_codex_anti_drift_cost_effective_policy.md:119-132"
+      ],
+      "evidence_fingerprint": "sha256:6ee492133e63461948281d539b8725bd937f92db8dab666d43e78a41faa65be5",
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:248-250 records valuable matched-resolution endpoint and covariance evidence, but D-065/D-071 explain why it is not an evolved half-line-tail or independent-authority proof.",
+        "D-071 explicitly closes the instrument, not the underlying physical proposition."
+      ],
+      "reproduction": [
+        "rg -n 'D-071|G-F10-INDEPENDENT-FLRW' .agent-harness/generated/CONTEXT_PACK.md .agent-harness/generated/STATUS_BOARD.md",
+        "jq '.findings[] | select(.finding_id==\"F-ODE-ADJ3-001\" or .finding_id==\"ODE-RUST-15\")' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Prove a collision-compatible tail envelope and computable observable error bound.",
+        "Choose and prospectively seal a discriminator that directly covers the stalled phase.",
+        "Obtain owner authorization before any new trajectory or endpoint execution."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-002",
+      "claim_id": "PM-H6",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[NUMERICAL_PHYSICS_CONTRACT_GAP] The solver-local error tests are not yet a physics-defined accuracy contract. NumPy Rodas uses one scalar raw-coordinate weighted RMS norm; Rust permits vector atols but applies the same raw-coordinate formula; the prior audit also found clipping/flooring that can erase physical violations. The minimal remedy is to derive each state weight from a declared physical error budget and coordinate map, then supplement LTE control with unmodified-candidate domain and balance checks. DERIVED example: for a logit occupation f=sigma(u), delta_f is approximately f(1-f) delta_u, so an occupation-space budget must be pulled back through that derivative or, more robustly, computed from the decoded embedded-pair difference; saturated-tail coordinates must not dominate merely because u is large. Temperatures, abundances, and the physical clock/quadrature require their own dimensional budgets. Candidate acceptance must require finite T>0, decoded 0<f<1, permitted abundance bounds, and only genuine exact or differential balance laws (not a falsely assumed invariant), with rejection and step shrink on violation; it must never clip, floor, or project the reported state. Solver-specific norms need not be made identical, but the decoded observable/balance envelope must be shared and prospectively frozen. This is not implemented or validated.",
+      "assumptions_used": [
+        "The occupation coordinate decoder is differentiable in the strict-open physical interior; near saturation, decoded pair differences are safer than a first-order pullback.",
+        "Only analytically established conservation or balance laws may gate acceptance; cosmological expansion terms must not be mislabeled as conservation failures.",
+        "Tolerance changes require a prospective endpoint and observable error budget, not calibration to another solver's output."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p.py:101-140",
+        "src/rabbit/solver/rodas5p.py:214-220",
+        "native/rabbit_cpu/src/ode.rs:73-127",
+        "native/rabbit_cpu/src/ode.rs:919-927",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-009",
+        "SciPy 1.17.0 solve_ivp tolerance/Jacobian contract, applicable to 1.17.1 because 1.17.1 has no new features: https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html (accessed 2026-08-23)",
+        "SciPy 1.17.1 official release note: https://github.com/scipy/scipy/releases/tag/v1.17.1 (accessed 2026-08-23)",
+        "Diffrax PIDController custom-norm and fail-vs-force dtmin contract: https://docs.kidger.site/diffrax/api/stepsize_controller/ (accessed 2026-08-23)",
+        "diffsol 0.16.0 official release, including max-norm error-control change: https://github.com/martinjrobins/diffsol/releases/tag/v0.16.0 (accessed 2026-08-23)",
+        "Hairer, Lubich, Wanner, structure-preserving and invariant methods: https://link.springer.com/book/10.1007/978-3-662-05018-7 (accessed 2026-08-23)"
+      ],
+      "evidence_fingerprint": "sha256:a4cfa7af7a6bef2b650b6e33e241847b4966cad575342e12f86be4156b5a4316",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:82-100 already rejects invalid scalar/vector tolerances and native/rabbit_cpu/src/ode.rs:123-127 exposes a state validity hook.",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-01 records a strong bounded mechanics baseline, but not a decoded physics error budget."
+      ],
+      "reproduction": [
+        "nl -ba src/rabbit/solver/rodas5p.py | sed -n '101,140p;214,220p'",
+        "nl -ba native/rabbit_cpu/src/ode.rs | sed -n '73,127p;919,927p'",
+        "jq '.findings[] | select(.finding_id==\"F-ODE-ADJ3-009\")' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Allocate the observable-level error budget across occupation, thermo, network, and clock components.",
+        "Derive step-local discrete residual bounds for the actual cosmological balance laws.",
+        "Demonstrate that any new rejection check preserves convergence and does not create a hidden projection/calibration path."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-003",
+      "claim_id": "PM-H6",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[CONDITIONAL_STIFF_SOLVER_REMEDY] Sparse/block or Krylov linear algebra is a plausible Rust endpoint-performance remedy but no present evidence selects one. NumPy Rodas constructs a dense one-sided finite-difference Jacobian and its adapter deliberately passes jac_fn=None; Rust exposes a dense row-major Jacobian and nalgebra LU. Before adding a backend or knob, run scaled JVP/finite-difference ladders at actual N48 early, activation, and cold-prefix states, map the measured nonzero/block pattern, and verify invariant left-null directions. If the pattern is genuinely sparse, use an exact sparse direct solve; if an exact small-thermo/large-spectral block structure exists, test a Schur/block preconditioner; if coupling is dense but Jv is accurate and cheap, a matrix-free Rosenbrock-Krylov candidate is mathematically motivated by the primary Rosenbrock-K paper. Expose the existing jac_fn path through the NumPy adapter for oracle tests, and use JAX jvp only as the frozen local Jacobian oracle. Admission requires the same physics, full endpoint wall/counter evidence, raw-state parity, and no segment-only promotion. Even a successful speedup would move the Rust endpoint-performance lane, not satisfy D-071's materially-new-physics-method reopen condition.",
+      "assumptions_used": [
+        "No sparsity or arrowhead structure is assumed until measured on the exact production state ordering and collision catalogue.",
+        "A matrix-free Krylov method is only competitive if accurate Jv products and a robust preconditioner exist on the stiff activation/cold phases.",
+        "Rust AOT remains the implementation target; JAX is used only to falsify derivatives locally."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p.py:131-140",
+        "src/rabbit/solver/rodas5p_adapter.py:94-121",
+        "native/rabbit_cpu/src/ode.rs:123-203",
+        "native/rabbit_cpu/src/ode.rs:626-677",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-014",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-019",
+        "SciPy 1.17.0 official callable/sparse Jacobian and jac_sparsity API: https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html (accessed 2026-08-23)",
+        "diffsol official solver capability documentation (dense/sparse algebra, BDF, events, sensitivities): https://github.com/martinjrobins/diffsol (accessed 2026-08-23); exact local crate is 0.16.0",
+        "Tranquilli and Sandu, Rosenbrock-Krylov Methods for Large Systems of Differential Equations: https://epubs.siam.org/doi/10.1137/130923336 (accessed 2026-08-23)",
+        "JAX jvp official forward-mode JVP API: https://docs.jax.dev/en/latest/_autosummary/jax.jvp.html (accessed 2026-08-23)",
+        ".agent-harness/generated/CONTEXT_PACK.md:83-84",
+        ".agent-harness/generated/CONTEXT_PACK.md:261"
+      ],
+      "evidence_fingerprint": "sha256:931c7123e6b7ade2ff146a1437d1e3b09ac1294f91ac62bdb726fec32e5e1c4f",
+      "counterevidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md:83 records already-real 55.815% exact BDF-cache and 22.102% aggregation endpoint gains, so another unprofiled linear-algebra change risks local-minimum drift.",
+        "The current collision coupling may be dense; SciPy/diffsol sparse capability does not prove this problem is sparse."
+      ],
+      "reproduction": [
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests::classical_spectral_flrw_jacobian_and_time_derivative_match_stencils -- --nocapture",
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml isotropic_boltzmann::tests::selected_spectral_rule_has_a_bounded_explicit_lna_derivative_step_ladder -- --nocapture",
+        "Run a prospective exact-state Jv ladder v_i proportional to the decoded physical error scale at early, activation, and cold-prefix states; compare Jv with centered differences over h,h/2,h/4 and record invariant-null residuals before selecting a linear solver."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Actual N48 Jacobian density, block structure, spectrum, and preconditioner quality are unmeasured in the admitted evidence.",
+        "No whole-endpoint before/after wall, memory, or exact-observable comparison exists for a sparse/block/Krylov candidate.",
+        "A Rosenbrock-Krylov implementation would be a new numerical method and needs its own order/stability/parity evidence."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-004",
+      "claim_id": "PM-H7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[SOFTWARE_ONLY_EVENT_AND_OUTCOME_DEFECT] The NumPy event/outcome path can still publish false success. It misses initial/exact zeros for direction zero, permits nonfinite event values, treats any event as terminal, integer-casts a valid fractional direction, can manufacture an event after every refinement probe fails, infers the event from a message string, reports success from that inference, and lets target_reached override a contradictory solver failure; len(t) is stored-point count, not accepted-step count. Repair this in the existing solver result rather than a new gate: use a typed terminal cause (reached_end, certified_event, failed); for the physical endpoint use the finite unit-bearing surface g=T_gamma-0.005 MeV with decreasing direction and a documented transversality floor; handle initial zero; normalize a finite direction by sign without integer truncation; use direct inclusive sign comparisons rather than a product; reject unsupported multiple/nonterminal semantics or implement them fully; refine only with successful finite states while preserving two evaluated bracket endpoints; and return event success only if bracket width, |g| residual, final state, and physical invariants pass. Any refinement failure is solver failure. The adapter must project the typed cause, and the consumer must give failure precedence before reading endpoint state. These are correctness repairs only and cannot close the independent physics gate.",
+      "assumptions_used": [
+        "T_gamma is the intended endpoint observable and is decreasing on the admitted physical branch.",
+        "The adapter may intentionally support only one terminal continuous event if all other SciPy semantics fail loudly.",
+        "A certified root requires both a numerical bracket/time condition and a physics-unit residual condition."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p.py:249-295",
+        "src/rabbit/solver/rodas5p.py:298-348",
+        "src/rabbit/solver/rodas5p_adapter.py:55-76",
+        "src/rabbit/solver/rodas5p_adapter.py:94-152",
+        "src/rabbit/solver/ivp_outcome.py:4-35",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-007",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-011",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-013",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json#F-ODE-TEST-02",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json#F-ODE-TEST-09",
+        "SciPy 1.17.0 official event/status/counter contract: https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html (accessed 2026-08-23)",
+        "Diffrax event/root-finder contract for the independent JAX oracle: https://docs.kidger.site/diffrax/api/events/ (accessed 2026-08-23)"
+      ],
+      "evidence_fingerprint": "sha256:71c4942cc070f0c37cd4eadad4faf78ea7ecc99bffa69967b26e9f31db9c7227",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:240-270 already rejects nonfinite initial state/event and accepts an exact initial zero.",
+        "native/rabbit_cpu/src/ode.rs:787-868 fails loudly on Rust Rodas refinement errors, but still lacks post-loop residual/convergence certification."
+      ],
+      "reproduction": [
+        "Compare scipy.solve_ivp and solve_ivp_rodas5p on y'=-y, y0=[1], event=y[0]-1: prior admitted evidence records SciPy status=1 at t=0 but adapter status=0 at t=1.",
+        "Run the prior admitted NaN-event, event.direction=0.5, forced-refinement-failure, and target_reached=True/success=False contradiction probes recorded in F-ODE-TEST-02 and F-ODE-ADJ3-013.",
+        "Static inspect nl -ba src/rabbit/solver/rodas5p.py | sed -n '249,348p'; nl -ba src/rabbit/solver/rodas5p_adapter.py | sed -n '94,152p'; nl -ba src/rabbit/solver/ivp_outcome.py | sed -n '4,35p'."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze a unit-bearing event residual and bracket-width budget derived from endpoint observable tolerances.",
+        "Decide whether the adapter contract is exactly one terminal event or full SciPy-compatible event semantics.",
+        "Audit every endpoint consumer so no partial state is used before certified outcome and invariant checks."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-005",
+      "claim_id": "PM-H7",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[SOFTWARE_ONLY_FAILURE_RECOVERY_AND_TELEMETRY_DEFECT] Rust BDF/Rodas failure and work accounting remain too coarse for fail-closed scientific use. BDF maps dependency errors to bdf_initialise/bdf_solve, sets separate internal diffsol error-test and nonlinear-failure caps equal to one advertised max_attempts, and therefore cannot enforce that name as a strict combined budget. Rodas immediately terminates on every LU or nonfinite-stage attempt error while only LTE and invalid-candidate failures shrink h; linear_setups is incremented before a setup is known to occur. CountingSystem omits RHS work nested in Jacobian/dfdt implementations. Failure results preserve the last accepted state but not the failing evaluation. The bounded remedy is a typed taxonomy plus a deterministic retry discriminator: invalid inputs and nonfinite start/event data are fatal; an LU/nonlinear failure with finite start RHS/J/dfdt may refresh the Jacobian, shrink h, and retry under one strict total work budget; any persistent nonfinite probe or h_min exhaustion is fatal. If diffsol 0.16.0 cannot expose/interrupt inner retries, rename the wrapper budget to its honest between-step semantics or patch the dependency rather than claim strictness. Consolidate existing result fields to carry accepted/rejected/attempt totals, real RHS/J/Jv/dfdt/LU/refinement work, last accepted state, and separately the failing t/stage/state/reason. Preserve raw values. Repeated set_stop_time h_max chunking also needs an order/history and StepSizeTooSmall semantic test. None of these software repairs supplies independent physics authority.",
+      "assumptions_used": [
+        "Retry is allowed only when the step-start state and physics callbacks are finite and the failure class is plausibly step-size dependent.",
+        "Strict total work means every internal rejected/error/nonlinear attempt, not merely successful public step calls.",
+        "Configuration provenance should be consolidated into the existing result/receipt surface rather than a new standalone manifest under the anti-drift rule."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:144-217",
+        "native/rabbit_cpu/src/ode.rs:350-470",
+        "native/rabbit_cpu/src/ode.rs:485-590",
+        "native/rabbit_cpu/src/ode.rs:626-677",
+        "native/rabbit_cpu/src/ode.rs:680-760",
+        "native/rabbit_cpu/src/ode.rs:919-969",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-02",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-03",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-05",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-06",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-07",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-09",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-16",
+        "Exact dependency release: https://github.com/martinjrobins/diffsol/releases/tag/v0.16.0 (accessed 2026-08-23)",
+        "Exact API source inspected locally at diffsol-0.16.0/src/ode_solver/bdf.rs and method.rs; public documentation root: https://docs.rs/diffsol/0.16.0/diffsol/ (accessed 2026-08-23)",
+        "diffsol official BDF/event/statistics/sparse capability overview: https://github.com/martinjrobins/diffsol (accessed 2026-08-23)",
+        "Shampine and Reichelt, The MATLAB ODE Suite: https://epubs.siam.org/doi/10.1137/S1064827594276424 (accessed 2026-08-23)"
+      ],
+      "evidence_fingerprint": "sha256:c958b0a1a3234258c7f4844519972ff535594de24b0fd4ae1dfe5846ab31185e",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:82-100 has strong input/config validation, and the prior Rust audit records 27/27 bounded mechanics tests passing.",
+        "native/rabbit_cpu/src/ode.rs:768-905 already retries LTE rejection and invalid candidates, demonstrating a bounded recovery mechanism exists for two classes."
+      ],
+      "reproduction": [
+        "Inspect native/rabbit_cpu/src/ode.rs:350-470 against exact diffsol-0.16.0 bdf.rs:1274-1462 to observe the separate internal failure loops and aggregate wrapper check.",
+        "Static branch comparison: rodas_attempt Err returns immediately at native/rabbit_cpu/src/ode.rs:749-760 while invalid-candidate/LTE branches shrink h at 768-905.",
+        "cargo test --release --manifest-path native/rabbit_cpu/Cargo.toml ode::tests::solver_counters_report_trait_level_rhs_and_dfdt_calls -- --nocapture, then inspect the nested production RHS calls cited by ODE-RUST-06.",
+        "Compare the repeated set_stop_time chunks at native/rabbit_cpu/src/ode.rs:379-590 with exact diffsol-0.16.0 handle_tstop/set_stop_time, and add chunked-vs-unchunked analytic plus real-prefix parity tests."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "diffsol 0.16.0 does not expose a proven strict combined inner-attempt interrupt through the currently used API.",
+        "The recoverable-vs-fatal Rodas discriminator needs adversarial singular, domain, and transient-large-step tests.",
+        "Work counters must be attached at the actual expensive physics-kernel boundary, not inferred from solver callbacks."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-006",
+      "claim_id": "PM-H8",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[ADJOINT_AND_TAPE_AUTHORITY_DEFECT] lax.scan can differentiate the fixed predetermined Rodas map, but the current surface overstates that result as full-precision correct and production-inference-ready. The offline extractor uses a different step-doubling controller, accepts any step once h<1e-10 even if error exceeds one, counts only accepted steps, can return a zero-padded incomplete tape without terminal status, and never carries event semantics. Therefore its VJP is the discrete derivative conditional on that approximate frozen schedule, not the adaptive solve or an event-defined endpoint. Repair requires the actual adaptive execution to return its accepted signed h tape together with final time, accepted/rejected/attempt counts, terminal cause, and raw failure; replay must verify sum(h), final-state parity, finite stages, and the same terminal event. DERIVED for a simple transverse event g(t*,y(t*,theta),theta)=0: dt*/dtheta=-(g_y S^-+g_theta)/(g_t+g_y f^-), and endpoint-state sensitivity adds f^- dt*/dtheta; if the denominator is not bounded away from zero, the event gradient is inconclusive. Resets require the corresponding saltation/jump term. Diffrax 0.7.2 RecursiveCheckpointAdjoint is a useful independent JAX discretize-then-optimize oracle, not production authority; JAX officially confirms dynamic while_loop has no reverse-mode derivative. The JAX lane remains frozen and must not become a new forward runtime target.",
+      "assumptions_used": [
+        "The event function and vector field are differentiable at a simple crossing and g_t+g_y f is nonzero.",
+        "S^- denotes the fixed-time pre-event state sensitivity; resets or discontinuous dynamics require an additional jump/saltation map.",
+        "A frozen accepted-step tape may validate a discrete map but does not include derivatives of adaptive branch or event-location decisions unless those are represented explicitly.",
+        "JAX and Diffrax remain local oracle implementations under the controlling policy."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/gradient_bridge.py:1-40",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:1-49",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:88-202",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:205-283",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:290-373",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22",
+        "JAX 0.10.0 official release: https://github.com/jax-ml/jax/releases/tag/jax-v0.10.0 (accessed 2026-08-23)",
+        "JAX while_loop official reverse-mode limitation: https://docs.jax.dev/en/latest/_autosummary/jax.lax.while_loop.html (accessed 2026-08-23)",
+        "Diffrax 0.7.2 official release: https://github.com/patrick-kidger/diffrax/releases/tag/v0.7.2 (accessed 2026-08-23)",
+        "Diffrax RecursiveCheckpointAdjoint official contract: https://docs.kidger.site/diffrax/api/adjoints/ (accessed 2026-08-23)",
+        "Daescu, Carmichael, Sandu, Adjoint Implementation of Rosenbrock Methods: https://www.sciencedirect.com/science/article/pii/S0021999100966221 (accessed 2026-08-23)",
+        "Dunster et al., event-time sensitivity from the implicit function theorem: https://academic.oup.com/bioinformatics/article/33/7/1049/2769435 (accessed 2026-08-23)"
+      ],
+      "evidence_fingerprint": "sha256:385dcc6e918d752ddb63d54ffc63facc02f3d60dbe4cd56f368be68a27e571bb",
+      "counterevidence_refs": [
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:143-202 is a legitimate differentiable fixed-tape map when its inputs and steps are finite and the schedule is authoritative.",
+        "Diffrax documentation describes RecursiveCheckpointAdjoint as its preferred low-memory method, supporting its use as an oracle on bounded cases."
+      ],
+      "reproduction": [
+        "Construct a case where max_steps accepted steps end before t1; extract_h_tape_from_adaptive_solve returns a tape/count with no failure status at src/rabbit/jax/solver_jax_rodas5p_adjoint.py:329-373.",
+        "Construct a step with error>1 at h<1e-10; line 359 accepts it by the explicit or condition.",
+        "For y'=-lambda y with terminal g=y-y_star, compare the analytic transverse event gradient with fixed-tape replay, actual adaptive fixed-endpoint sensitivity, and Diffrax Event plus RecursiveCheckpointAdjoint; include a grazing event whose transversality denominator vanishes and must fail closed."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The production adaptive solver does not currently emit an authoritative accepted-step tape and terminal certificate.",
+        "No event-time/saltation derivative is implemented or validated.",
+        "Claims in module prose and bridge defaults must be reconciled with the frozen-JAX policy without creating a new wrapper/gate."
+      ]
+    },
+    {
+      "finding_id": "F-PM-NUMERIC-007",
+      "claim_id": "PM-H8",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[VALIDATION_FALSE_GREEN_AND_MISSING_INDEPENDENT_LIMITS] gradient_check sets rel_errors=0 whenever both gradients have magnitude below 1e-8, regardless of their absolute disagreement, so a wrong small gradient passes. Replace this with a finite mixed criterion: abs_diff<=abs_tol OR abs_diff<=rel_tol*scale, report both errors, and never overwrite a measured discrepancy with zero. Require a perturbation ladder h,h/2,h/4 (and complex-step only for demonstrably holomorphic branch-free reduced models), observed convergence/stability, and a nonfinite guard. The independent reduced-limit matrix should include: an analytic nonautonomous stiff scalar; Robertson mass conservation; a BBN collisionless/free-streaming radiation limit with fixed comoving occupations and analytic temperature/event scaling; common-temperature detailed-balance equilibrium; an analytic stiff relaxation/reaction mode with positivity and invariant checks; exact-zero, wrong-direction, transverse, and grazing events; and actual N48 early/activation/cold-prefix states with physically scaled JVP-centered-FD ladders and invariant left-null tests. Cross axes should be Rust diffsol-BDF/Rodas, SciPy 1.17.1 BDF/Radau or direct sensitivity equations, and Diffrax 0.7.2 Kvaerno/RecursiveCheckpointAdjoint as a JAX oracle. Tolerance/node/order ladders must reach declared observables and preserve raw failures. The admitted broad green suites do not close this: a strict slow Type-I tier-2 residual-collision test still records about 3.5% Yp drift versus a <1e-3 criterion, and the prior 100-pass bundle had common-mode/coverage limits. No validation or promotion claim is available until those gaps close.",
+      "assumptions_used": [
+        "Near-zero gradients require an absolute error budget tied to the observable and parameter units.",
+        "Complex-step is valid only for holomorphic code paths without clipping, comparisons, real casting, or event branch discontinuities.",
+        "Reduced-limit agreement is diagnostic unless the exact production physics path and endpoint observables are exercised separately."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/gradient_bridge.py:491-566",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-003",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-019",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-020",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json#F-ODE-TEST-06",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json#F-ODE-TEST-07",
+        "SciPy 1.17.0 official BDF/Radau/tolerance/Jacobian documentation: https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html (accessed 2026-08-23)",
+        "Diffrax official adjoint contract: https://docs.kidger.site/diffrax/api/adjoints/ (accessed 2026-08-23)",
+        "Daescu, Sandu, Carmichael, numerical validation of discrete-adjoint gradients against finite differences and direct sensitivities: https://iro.uiowa.edu/esploro/outputs/journalArticle/Direct-and-adjoint-sensitivity-analysis-of/9984003457402771 (accessed 2026-08-23)",
+        "Shampine and Reichelt primary stiff ODE suite source: https://epubs.siam.org/doi/10.1137/S1064827594276424 (accessed 2026-08-23)"
+      ],
+      "evidence_fingerprint": "sha256:ca37b1d853712ca95ad125ede40305856afe75de2f73a80f35b21dc562e6ba39",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json#ODE-RUST-01 records 27/27 focused Rust mechanics tests and exact stiff/nonautonomous/Robertson cases.",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json#F-ODE-TEST-06 records 100 bounded passes, but explicitly marks acceptance incomplete."
+      ],
+      "reproduction": [
+        "Use a callable whose two finite gradients are 9e-9 and -9e-9; current gradient_check reports scale<1e-8 and rel_error=0 at src/rabbit/jax/gradient_bridge.py:550-565 despite abs_diff=1.8e-8.",
+        "Run the strict slow Type-I tier-2 residual-collision test named in F-ODE-TEST-07 under the exact sealed environment; do not remove xfail or loosen its criterion.",
+        "Run the two exact N48 derivative tests listed by ODE-RUST-10, then extend prospectively to retained early/activation/cold-prefix states and a centered h,h/2,h/4 ladder with decoded physical scaling."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No mixed-unit absolute gradient thresholds are frozen for the actual inference observables.",
+        "No authoritative actual-trajectory N48 JVP ladder or event-gradient suite exists.",
+        "The strict tier-2 residual-collision convergence blocker remains open and was not rerun in this research-only assignment.",
+        "A fresh exact-head endpoint is still required before any solver or gradient promotion."
+      ]
+    }
+  ],
+  "errors": [
+    "NO_EXECUTION_VALIDATION: this assignment was an independent research/remedy map. No solver test, benchmark, trajectory, endpoint, or gradient run was executed; all current defect verdicts are source-bound to the admitted prior audit artifacts and static current-source inspection.",
+    "SCIPY_DOC_VERSION_NOTE: SciPy 1.17.1 has no separate API-doc tree; its official release says it is a bug-fix release with no new features relative to 1.17.0, so the official 1.17.0 API pages were used and the sealed venv version was independently printed as 1.17.1.",
+    "DIFFSOL_DOC_ACCESS_NOTE: exact docs.rs 0.16.0 deep links were not rendered by the web tool. Exact Cargo.lock/local registry source was inspected, and official v0.16.0 release plus repository documentation are cited.",
+    "ANTI_DRIFT_COST_NOTE: no PR or production/shared edit was authorized. Production added/deleted/net lines are 0/0/0; runtime_behavior_changed=no; physics_behavior_changed=no; known_blocker_reduced=no; blocker_movement_ratio=0.00; validation_strengthened=no (recommendations only); cost_effectiveness_verdict=NO_PROGRESS for executable blocker movement. token_use_exact=UNAVAILABLE because the harness/API exposes no exact counter."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json"
+  ]
+}

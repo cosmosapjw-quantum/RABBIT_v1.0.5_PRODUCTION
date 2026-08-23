@@ -1,0 +1,865 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-CLAIM-AUDIT",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02d68-9ed7-7050-b6b4-40574942693a",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physmath-loop",
+    "assignment_id": "A-PSL-CLAIM-AUDIT",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:029069970799c578fdbd27e2960ef705f81501a2fd7bfa6b810ee77e9da35e01",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+  "started_at": "2026-08-23T06:57:00Z",
+  "completed_at": "2026-08-23T07:04:00Z",
+  "tool_versions": {
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "scipy_documentation": "1.17.0",
+    "primary_source_access_date": "2026-08-23",
+    "web_source_policy": "primary or official sources only",
+    "tests_executed": "none; read-only claim-source audit"
+  },
+  "commands": [
+    "cat .agent-harness/generated/CONTEXT_PACK.md; read assignment; python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-CLAIM-AUDIT.json",
+    "read the sealed RESULT_ENVELOPE template, independent-auditor role, research record, evidence ledger, A-PSL-EVIDENCE, A-PM-ADJ, D-071, V2, and named Rust source files",
+    "targeted nl/rg inspection of exact R1-R6 Rust ranges and A-ODE-ADJ3 false-success findings",
+    "web open/find against arXiv:1801.08023v3, arXiv:2008.01074v2, arXiv:1009.2757, arXiv:1512.02205v2, and official SciPy 1.17.0 solve_ivp documentation",
+    "sha256sum over every sealed local evidence input"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json",
+      "role": "Phase-2 claim-source map under audit",
+      "sha256": "601d2b254293d134a67ad1c4ff8ba934d8c17d03e8c05f8428d2884732f3cc7b"
+    },
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/state/EVIDENCE_LEDGER.md",
+      "role": "Phase-2 ledger under audit",
+      "sha256": "c1279b8e54162caab9baa7dc96a66736e76981e227121df0dac1616a3a5ef325"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+      "role": "seed lineage and prior bounded claim ceiling",
+      "sha256": "d47308b4bb991a4a0c879b7a14b06a958143c3dbe7b46a1cb7bdd43e9c2e675a"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "role": "current trajectory-instrument and reopen boundary",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "role": "fixed-tail and Jacobian-only negative result",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c"
+    },
+    {
+      "path": "native/rabbit_cpu/src/flrw.rs",
+      "role": "current thermodynamics, energy-transfer, domain and first-law source",
+      "sha256": "2497062ee42121845aa7eb48415c2d899ffd8b01bdbca3280c775a58e833d0a1"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "role": "current spectral coordinate, collision derivative, quadrature and admission source",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236"
+    },
+    {
+      "path": "native/rabbit_cpu/src/thermal_bbn.rs",
+      "role": "current analytic-network and finite-difference thermal Jacobian source",
+      "sha256": "2f913fe07ed3a14a255d82de107d14d599f05f19bad591d08b5b7b269b678b5f"
+    },
+    {
+      "path": "native/rabbit_cpu/src/minimal_network.rs",
+      "role": "current stoichiometric baryon and charge conservation source",
+      "sha256": "4e294f714c5bb92bbd843682bb9059e626743a5fc6abb380a3b401ad789d029d"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-00",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Phase 3 is complete at claim granularity. Forty-six R1-R6 and controlling claim-source pairs were independently checked against current source and original or official sources. The audit assigns 20 SUPPORTED, 8 PARTIALLY_SUPPORTED, 1 CONTESTED, 9 UNSUPPORTED, 4 MISATTRIBUTED, and 4 INFERENCE_ONLY labels. Seed existence is not treated as remedy validity. D-071 remains a post-drop extrapolation with unquantified model uncertainty and no evaluated scientific predicate, not a completion prediction or a physics result. No hypothesis was constructed, ranked, or promoted.",
+      "assumptions_used": [
+        "Current local source and registered audit documents establish repository facts; papers establish only claims within their stated equations and models.",
+        "Natural units, N=ln(a), q=ap, flat-FLRW no-QKE F-10 scope, finite electron mass, and Q positive into neutrinos are unchanged.",
+        "Absence claims are bounded to the sealed evidence set unless an exact current-source search is cited."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:80-147",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:22-113",
+        "https://arxiv.org/html/1801.08023v3",
+        "https://arxiv.org/html/2008.01074v2",
+        "https://arxiv.org/html/1009.2757",
+        "https://arxiv.org/abs/1512.02205",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:601d2b254293d134a67ad1c4ff8ba934d8c17d03e8c05f8428d2884732f3cc7b",
+      "counterevidence_refs": [
+        "No new trajectory, endpoint, code, test, benchmark, or gate execution occurred in this assignment.",
+        "A mechanism citation cannot establish current-operator applicability, full-prefix cost movement, or endpoint authority."
+      ],
+      "reproduction": [
+        "Filter claim_audit by label and require every UNSUPPORTED, MISATTRIBUTED, and CONTESTED item to have phase4_action=REMOVE_PREMISE or REMOVE_CITATION.",
+        "Require every PARTIALLY_SUPPORTED item to retain its stated model and evidence boundary."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact current channel nullspaces, projected non-null spectrum, reaction-tail and abundance enclosure, and a full-path temperature-clock certificate remain absent from the audited evidence."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R1",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R1 survives source audit only as two separated statements: the Rust spectral path has a stable logit conversion with strict-open raw failure, and the Python false-success taxonomy requires a software outcome contract. Neither statement proves that a coordinate change repairs all solver paths. PRIMAT baryon conservation is unrelated to R1 and is removed as a citation.",
+      "assumptions_used": [
+        "Finite floating-point saturation to f=0 or f=1 is an admission failure, not a value to clip.",
+        "Failure/status precedence is software semantics, not a consequence of Fermi statistics."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:352-386,1013-1040",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-004..013"
+      ],
+      "evidence_fingerprint": "sha256:bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "counterevidence_refs": [
+        "Open coordinates can still saturate numerically and do not define terminal-cause precedence.",
+        "PRIMAT arXiv:1801.08023v3:217-222 concerns baryon normalization, not occupation coordinates or solver admission."
+      ],
+      "reproduction": [
+        "Inspect occupation_from_logit, occupation_values, and the underflow test; separately inspect the adjudicated false-success findings."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No audited evidence maps every NumPy/Python outcome surface to the Rust physical-state admission path."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R2",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "R2 has direct support for flat-FLRW finite-mass electromagnetic thermodynamics and energy-transfer temperature equations. PRIMAT supports plasma-temperature/scale-factor relations and numerical inversion in its stated FLRW models. It does not prove a sealed positive lower bound for alpha=-d ln(T_gamma)/dN, a globally single-valued inversion for the current collision-coupled path, or any nonzero-shear extension. SciPy event documentation supports only software event semantics, not cosmological transversality.",
+      "assumptions_used": [
+        "Q>0 is energy transfer into neutrinos, giving the opposite electromagnetic debit.",
+        "A temperature coordinate is admissible only on a monotone branch with alpha bounded away from zero."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/flrw.rs:267-340,480-550",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:420-525",
+        "https://arxiv.org/html/1801.08023v3#S2.SS2",
+        "https://arxiv.org/html/1801.08023v3#S2.SS6",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:2497062ee42121845aa7eb48415c2d899ffd8b01bdbca3280c775a58e833d0a1",
+      "counterevidence_refs": [
+        "The transfer term can alter the sign margin; the named evidence contains no full-path alpha lower bound.",
+        "The primary paper is FLRW and does not derive Type-I shear work."
+      ],
+      "reproduction": [
+        "From the local equations compute dT_gamma/dN=[-3(rho_em+P_em)-Q/H]/(d rho_em/dT); only form dN/dx=1/alpha after certifying alpha>0 with margin."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A sealed full-path alpha bound and EOS inversion certificate are missing."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R3",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "R3 retains a mechanism-level derivative fact only. Froustey-Pitrou-Volpe derive O(N^4) finite-difference collision-Jacobian cost versus O(N^3) structured differentiation and report N/5 in their implementation. Current Rust has analytic occupation/network blocks and finite-difference temperature/density blocks. No cited source establishes a scale-admissible matrix-free Jv, an affinity/expm1 formulation, or exact per-channel discrete nullspaces for current bytes, and the paper's N/5 is not a RABBIT speed prediction. V2 directly conflicts with treating Jacobian work as a D-071 endpoint remedy.",
+      "assumptions_used": [
+        "Electron-pair channels exchange energy with the electromagnetic bath; a universal neutrino-energy nullspace is invalid.",
+        "QKE and flavour-oscillation claims are excluded; only the classical collision-derivative algebra is compared."
+      ],
+      "evidence_refs": [
+        "https://arxiv.org/html/2008.01074v2#S4.SS1",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:554-660",
+        "native/rabbit_cpu/src/thermal_bbn.rs:247-298,326-385",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:70-86",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:131-147",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:97d13a44832584c7e660b37a9e7f376521941b5902460f3e1118a3dd3d00a504",
+      "counterevidence_refs": [
+        "V2 reports a 77x-694x miss even with Jacobian construction deleted.",
+        "SciPy documents dense/sparse Jacobian interfaces, not a matrix-free Jv contract or physical nullspaces."
+      ],
+      "reproduction": [
+        "Read arXiv:2008.01074v2 section 4.1 lines 285-304 and compare its stated implementation to the current Rust write_jacobian and thermal_bbn jacobian blocks."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Current channel-specific detailed balance, left nullspaces, and scaled full Jv remain to be derived rather than assumed."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R4",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R4 is supported only at the requirement level. Grohs et al. directly demonstrate coupled multi-energy transport feedback into thermodynamics, scale-factor/temperature phasing, n/p, light-element histories and N_eff; PRIMAT explicitly says an energy-density treatment cannot fully capture weak-rate effects of spectral distortion. Current positive quadrature nodes/weights and FD moment tests do not imply a reaction-tail, weak-rate, or abundance enclosure. No audited source supplies the requested simultaneous rigorous enclosure.",
+      "assumptions_used": [
+        "The certificate must cover the actual finite-mass reaction kernels and the outputs consumed by BBN.",
+        "A design requirement inferred from coupled sensitivity is not itself a proved error theorem."
+      ],
+      "evidence_refs": [
+        "https://arxiv.org/abs/1512.02205",
+        "https://arxiv.org/html/1801.08023v3#S2.SS6",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:733-765,824-834"
+      ],
+      "evidence_fingerprint": "sha256:2bbce70c13b980e79395b26c3d181268bd81ad0d2055130347765beca5f36613",
+      "counterevidence_refs": [
+        "Neither paper derives a RABBIT-specific tail bound.",
+        "Positive quadrature and equilibrium moment convergence do not control nonlinear collision loss or weak kernels."
+      ],
+      "reproduction": [
+        "Compare Grohs et al. abstract statements on coupled observables and PRIMAT section II.6's weak-rate limitation with the exact scope of the local moment tests."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Reaction-tail, weak-kernel, Yp, D/H and N_eff propagated bounds are absent."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R5",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "R5's AP source is valid only as a generic checklist for hyperbolic relaxation systems: constant conserved rows QR=0, a uniquely parameterized equilibrium manifold, consistent/well-prepared data, and stiff-accuracy caveats. It does not establish those properties for the current Fermi collision operator. V2 directly rejects the tested fixed momentum-cut slaving route, including its absent usable gap, three-dimensional genuinely gapped tail and at-most 1.25x model. V2 neither proves another invariant-aware AP route works nor universally rules one out. Applicability therefore cannot enter Phase 4 as a premise; only the need to derive Q and measure the projected spectrum may proceed.",
+      "assumptions_used": [
+        "Generic AP theorems apply only after their operator hypotheses are verified for the actual discretization.",
+        "Logical non-exclusion is not positive evidence of existence or usefulness."
+      ],
+      "evidence_refs": [
+        "https://arxiv.org/html/1009.2757#S3.SS1",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:22-101",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:131-147"
+      ],
+      "evidence_fingerprint": "sha256:3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+      "counterevidence_refs": [
+        "The AP paper studies a different equation class and supplies no current RABBIT spectrum or channel invariant.",
+        "V2 finds no momentum-cut separation and says the stall mechanism remains unmeasured."
+      ],
+      "reproduction": [
+        "Read arXiv:1009.2757 equations (14)-(15), the initial-layer discussion, and stiff-accuracy remark; then compare each precondition to the missing-evidence list."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Exact current Q, a grid-stable projected non-null spectrum, overlap/handoff and response enclosure are absent."
+      ]
+    },
+    {
+      "finding_id": "PSL-CLAIM-AUDIT-R6",
+      "claim_id": "PSL-CLAIM-AUDIT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R6 has supported bounded falsifier ingredients: local collisionless temperature/time signs, strict-open raw failure, combined first law, EOS limits, and exact stoichiometric baryon/charge checks; PRIMAT independently states baryon normalization; SciPy documents event crossing, counters and termination status. One line citation is corrected: collisionless df(q)/dN=0 follows from rhs occupation entries remaining zero at isotropic_boltzmann.rs:231-237, not from lines 192-209. Static limits and API documentation do not certify a trajectory, independence, or mutant-killing power; that stronger premise is removed.",
+      "assumptions_used": [
+        "Each invariant is asserted only in its model and channel domain.",
+        "A proposed metamorphic test is not effective evidence until it kills a specified mutant or counterexample."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:192-209,231-237,1013-1040",
+        "native/rabbit_cpu/src/flrw.rs:704-754,891-927",
+        "native/rabbit_cpu/src/minimal_network.rs:784-800,1153-1173,1729-1743",
+        "https://arxiv.org/html/1801.08023v3#S1",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:e1f0e8229095c0b3a84df2cb617218f39e3b3d49e2c6d42e6d80fe78c3094b10",
+      "counterevidence_refs": [
+        "Static physical-prefix/JVP receipts are not trajectories.",
+        "SciPy success/status semantics do not establish RABBIT raw physical admission."
+      ],
+      "reproduction": [
+        "Inspect the cited local tests and functions; separately read SciPy event and return-value documentation."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No executed mutant suite shows that the proposed R6 falsifiers catch the retained stall or false-success classes."
+      ]
+    }
+  ],
+  "claim_audit": [
+    {
+      "audit_id": "CA-00-001",
+      "seed": "CONTROL",
+      "evidence_id": "E-001",
+      "claim": "The post-drop creep window yields 32,704,637 further evaluations, 144,574,895 seconds, and an 8,305x miss relative to the frozen projection.",
+      "source_refs": ["docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:80-113"],
+      "label": "SUPPORTED",
+      "support_scope": "Supported as a retained-window extrapolation with a rounding envelope and unquantified model uncertainty, not as a completion date.",
+      "conflict_or_gap": "The unexplained N drop and missing step/rejection/error data remain outside the estimate.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-00-002",
+      "seed": "CONTROL",
+      "evidence_id": "E-001",
+      "claim": "The retained order-60 run evaluated no scientific predicate.",
+      "source_refs": ["docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:96-100", "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:117-127"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "The claim is supported by lines 117-127, but the ledger's lines 96-100 support only the extrapolation numbers.",
+      "conflict_or_gap": "The original citation range is incomplete.",
+      "phase4_action": "REFORMULATE_WITH_CORRECT_CITATION"
+    },
+    {
+      "audit_id": "CA-00-003",
+      "seed": "CONTROL",
+      "evidence_id": "E-002",
+      "claim": "The prior adjudication and current research contract define R1-R6 as seed inputs while preserving the gate ceiling.",
+      "source_refs": [".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json:F-PM-ADJ-001,F-PM-ADJ-003,F-PM-ADJ-004", "/tmp/rabbit-ode-physmath-loop-20260823/RESEARCH_RECORD.md:20-69"],
+      "label": "SUPPORTED",
+      "support_scope": "Supported only as provenance and scope; seed inclusion is not evidence of remedy validity.",
+      "conflict_or_gap": "No prior disposition is inherited as a Phase-3 support label.",
+      "phase4_action": "KEEP_CONTEXT_ONLY"
+    },
+    {
+      "audit_id": "CA-R1-001",
+      "seed": "R1",
+      "evidence_id": "E-101",
+      "claim": "Current Rust stores spectral occupations in logit coordinates, maps them stably, and rejects finite-precision f=0 or f=1 raw.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:352-386,1013-1040"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct current-source and test support for the Rust spectral physical-state path.",
+      "conflict_or_gap": "The map still saturates in extreme tails, which is intentionally surfaced as failure.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R1-002",
+      "seed": "R1",
+      "evidence_id": "E-101",
+      "claim": "The Rust strict-open coordinate path is a complete fail-closed admission remedy for every current ODE caller.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:352-386,663-704"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "It supports one Rust path and NaN RHS on physical-state failure, not cross-stack terminal classification or accepted-state validation for all Python/NumPy callers.",
+      "conflict_or_gap": "Outcome semantics and caller admission are separate obligations.",
+      "phase4_action": "REFORMULATE_AS_LOCAL_REPRESENTATION_ONLY"
+    },
+    {
+      "audit_id": "CA-R1-003",
+      "seed": "R1",
+      "evidence_id": "E-102",
+      "claim": "Current adjudicated source contains false-success, missing-event, and post-failure observable defects.",
+      "source_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-004..013,F-ODE-ADJ3-020,F-ODE-ADJ3-027"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct local audit support for the named software defects.",
+      "conflict_or_gap": "The ledger should cite exact finding IDs rather than 'current audit false-success findings'.",
+      "phase4_action": "KEEP_WITH_EXACT_CITATION"
+    },
+    {
+      "audit_id": "CA-R1-004",
+      "seed": "R1",
+      "evidence_id": "E-102",
+      "claim": "Failure-before-event precedence and suppression of post-failure observables follow from transport physics.",
+      "source_refs": [".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-004..013"],
+      "label": "INFERENCE_ONLY",
+      "support_scope": "They are defensible software contract consequences of the counterexamples, not laws derived from FLRW or Fermi statistics.",
+      "conflict_or_gap": "Calling them physics-specific would collapse a required evidence boundary.",
+      "phase4_action": "KEEP_AS_SOFTWARE_OBLIGATION_NOT_PHYSICS_PREMISE"
+    },
+    {
+      "audit_id": "CA-R1-005",
+      "seed": "R1",
+      "evidence_id": "A-PSL-EVIDENCE:R1-PRIMAT",
+      "claim": "PRIMAT's baryon-normalization equation supports R1 occupation coordinates or solver admission.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3 lines 217-222"],
+      "label": "MISATTRIBUTED",
+      "support_scope": "The source supports baryon normalization only.",
+      "conflict_or_gap": "It has no evidentiary link to spectral logit coordinates, Pauli admission, status precedence, or event handling.",
+      "phase4_action": "REMOVE_CITATION"
+    },
+    {
+      "audit_id": "CA-R2-001",
+      "seed": "R2",
+      "evidence_id": "E-201",
+      "claim": "Current Rust implements finite-electron-mass electromagnetic EOS derivatives and collision-energy-transfer temperature equations in flat FLRW.",
+      "source_refs": ["native/rabbit_cpu/src/flrw.rs:267-340,480-550", "native/rabbit_cpu/src/isotropic_boltzmann.rs:420-525"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct source support under the local sign convention Q>0 into neutrinos.",
+      "conflict_or_gap": "This is an implementation fact, not an inversion or monotonicity certificate.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R2-002",
+      "seed": "R2",
+      "evidence_id": "E-202",
+      "claim": "PRIMAT derives FLRW number/energy/entropy evolution, finite-mass plasma thermodynamics, a(T), and numerical T(a) inversion in its stated models.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3 sections II.1-II.6"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct support for the flat-FLRW thermodynamic framework and model-specific inversion.",
+      "conflict_or_gap": "The standard entropy-conserving formula and the incomplete-decoupling numerical relation are model-specific.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R2-003",
+      "seed": "R2",
+      "evidence_id": "E-202",
+      "claim": "PRIMAT directly validates an energy-coordinate monotone temperature clock for the current full collision-coupled RABBIT path.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3 sections II.2,II.6,V.3.5"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "It supports temperature as a useful coordinate and the importance of the time-temperature relation, but not the current operator's global transversality or conditioning.",
+      "conflict_or_gap": "No sealed lower bound for alpha and no current-path inversion error bound are supplied.",
+      "phase4_action": "REFORMULATE_AS_CONDITIONAL"
+    },
+    {
+      "audit_id": "CA-R2-004",
+      "seed": "R2",
+      "evidence_id": "E-202",
+      "claim": "The primary paper proves alpha=-d ln(T_gamma)/dN has a positive global lower bound and the EOS inverse is single-valued on the current Type-I path.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3"],
+      "label": "UNSUPPORTED",
+      "support_scope": "No such bound or Type-I derivation appears in the cited source.",
+      "conflict_or_gap": "The paper is FLRW; nonzero shear and current full-path collision transfer are outside this proof claim.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R2-005",
+      "seed": "R2",
+      "evidence_id": "E-203",
+      "claim": "No sealed positive-alpha bound or EOS-inversion certificate is present for the relevant path.",
+      "source_refs": ["/tmp/rabbit-ode-physmath-loop-20260823/state/EVIDENCE_LEDGER.md", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "Confirmed for the sealed evidence set and named current source; not asserted as a theorem about every unindexed repository artifact.",
+      "conflict_or_gap": "Absence claims require an explicit evidence-universe boundary.",
+      "phase4_action": "KEEP_AS_SCOPED_EVIDENCE_GAP"
+    },
+    {
+      "audit_id": "CA-R2-006",
+      "seed": "R2",
+      "evidence_id": "A-PSL-EVIDENCE:R2-SCIPY",
+      "claim": "SciPy solve_ivp events are detected from per-step sign changes and multiple crossings within one step may be missed.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 84-96"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct official API documentation for SciPy 1.17.0.",
+      "conflict_or_gap": "This says nothing about cosmological monotonicity.",
+      "phase4_action": "KEEP_AS_SOFTWARE_LIMIT"
+    },
+    {
+      "audit_id": "CA-R2-007",
+      "seed": "R2",
+      "evidence_id": "A-PSL-EVIDENCE:R2-SCIPY",
+      "claim": "SciPy event documentation proves alpha>0 or certifies the proposed physical temperature clock.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"],
+      "label": "MISATTRIBUTED",
+      "support_scope": "The documentation describes numerical event semantics only.",
+      "conflict_or_gap": "Physical transversality must come from EOS and trajectory analysis.",
+      "phase4_action": "REMOVE_CITATION_FOR_PHYSICS_CLAIM"
+    },
+    {
+      "audit_id": "CA-R3-001",
+      "seed": "R3",
+      "evidence_id": "E-301",
+      "claim": "Froustey-Pitrou-Volpe derive O(N^4) finite-difference collision-Jacobian cost, O(N^3) structured cost, and report an N/5 speed-up in their implementation.",
+      "source_refs": ["https://arxiv.org/html/2008.01074v2 section 4.1 lines 285-304"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct support for the cited paper's isotropic two-body collision formulation and implementation measurement.",
+      "conflict_or_gap": "The paper includes QKE/flavour machinery and its constants do not transfer automatically.",
+      "phase4_action": "KEEP_WITH_SOURCE_SCOPE"
+    },
+    {
+      "audit_id": "CA-R3-002",
+      "seed": "R3",
+      "evidence_id": "E-301",
+      "claim": "The paper supplies mechanism-level evidence that analytic differentiation can preserve the collision evaluation's cubic momentum-grid complexity in a classical no-QKE investigation.",
+      "source_refs": ["https://arxiv.org/html/2008.01074v2 section 4.1 lines 286-304"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "The derivative algebra explicitly begins with one flavour and two-body collisions, but current kernels, folding, state scaling and implementation are not identical.",
+      "conflict_or_gap": "This is analogy, not current-byte validation.",
+      "phase4_action": "KEEP_AS_MECHANISM_ANALOGY"
+    },
+    {
+      "audit_id": "CA-R3-003",
+      "seed": "R3",
+      "evidence_id": "E-301",
+      "claim": "The reported N/5 factor predicts RABBIT active-path or endpoint speed-up.",
+      "source_refs": ["https://arxiv.org/html/2008.01074v2 section 4.1 line 303"],
+      "label": "UNSUPPORTED",
+      "support_scope": "The factor is an implementation-specific measurement in the paper.",
+      "conflict_or_gap": "No matched RABBIT benchmark, call accounting or scale transfer exists.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R3-004",
+      "seed": "R3",
+      "evidence_id": "E-302",
+      "claim": "Current Rust contains analytic spectral occupation derivatives, an analytic abundance block, and finite-difference temperature/density columns.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:554-660", "native/rabbit_cpu/src/thermal_bbn.rs:247-298,326-385"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct current-source support.",
+      "conflict_or_gap": "These are assembled Jacobian blocks, not a full matrix-free Jv certificate.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R3-005",
+      "seed": "R3",
+      "evidence_id": "E-302",
+      "claim": "Current source already provides a scale-admissible full Jv and exact channel-specific discrete left nullspaces.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:554-660", "native/rabbit_cpu/src/thermal_bbn.rs:247-385"],
+      "label": "UNSUPPORTED",
+      "support_scope": "The named source provides neither artifact.",
+      "conflict_or_gap": "Electron channels and self-collision channels require different conservation rows.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R3-006",
+      "seed": "R3",
+      "evidence_id": "A-PSL-EVIDENCE:R3-SCIPY",
+      "claim": "SciPy 1.17.0 exposes callable dense/sparse Jacobians and sparsity information for stiff solvers.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 126-141"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct official API support.",
+      "conflict_or_gap": "This is an interface fact, not a performance or physics result.",
+      "phase4_action": "KEEP_AS_INTERFACE_CONTEXT"
+    },
+    {
+      "audit_id": "CA-R3-007",
+      "seed": "R3",
+      "evidence_id": "A-PSL-EVIDENCE:R3-SCIPY",
+      "claim": "The SciPy Jacobian interface establishes a matrix-free Jv contract or current collision nullspaces.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"],
+      "label": "MISATTRIBUTED",
+      "support_scope": "The source documents neither claim.",
+      "conflict_or_gap": "A callable full Jacobian is not the same as a matrix-free Jv.",
+      "phase4_action": "REMOVE_CITATION"
+    },
+    {
+      "audit_id": "CA-R3-008",
+      "seed": "R3",
+      "evidence_id": "E-303",
+      "claim": "Structured Jacobian work by itself is a viable D-071 endpoint remedy.",
+      "source_refs": ["docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:70-86", "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:131-147"],
+      "label": "CONTESTED",
+      "support_scope": "Mechanism literature supports local derivative efficiency, but binding local evidence says deleting construction still misses by 77x-694x and generic optimization does not reopen.",
+      "conflict_or_gap": "The claim conflicts with current authority and measurement.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R3-009",
+      "seed": "R3",
+      "evidence_id": "A-PSL-EVIDENCE:R3-AFFINITY",
+      "claim": "A detailed-balance affinity/expm1 form and channel-valid discrete nullspaces are already established for current bytes.",
+      "source_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json:PSL-EVIDENCE-R3"],
+      "label": "UNSUPPORTED",
+      "support_scope": "The Phase-2 result itself lists these as missing.",
+      "conflict_or_gap": "They are proposed derivation targets, not evidence-backed facts.",
+      "phase4_action": "REMOVE_PREMISE_DERIVE_FIRST"
+    },
+    {
+      "audit_id": "CA-R4-001",
+      "seed": "R4",
+      "evidence_id": "E-401",
+      "claim": "Grohs et al. couple multi-energy neutrino transport to plasma thermodynamics and a nuclear network and report feedback into phasing, n/p, abundances and N_eff.",
+      "source_refs": ["https://arxiv.org/abs/1512.02205 abstract"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct primary-source support in a no-oscillation multi-energy BBN calculation.",
+      "conflict_or_gap": "It is a sensitivity demonstration, not an error-bound theorem.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R4-002",
+      "seed": "R4",
+      "evidence_id": "A-PSL-EVIDENCE:R4-PRIMAT",
+      "claim": "An energy-density treatment alone cannot fully capture weak-rate effects of neutrino spectral distortions.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3 section II.6 lines 671-675"],
+      "label": "SUPPORTED",
+      "support_scope": "The primary source states this limitation explicitly.",
+      "conflict_or_gap": "It does not quantify a current RABBIT weak-rate error.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R4-003",
+      "seed": "R4",
+      "evidence_id": "E-401",
+      "claim": "A valid next certificate must jointly bound energy transfer, weak rates, Yp, D/H and N_eff.",
+      "source_refs": ["https://arxiv.org/abs/1512.02205", "https://arxiv.org/html/1801.08023v3 section II.6"],
+      "label": "INFERENCE_ONLY",
+      "support_scope": "This is a conservative verification requirement inferred from coupled sensitivities, not a theorem stated by either paper.",
+      "conflict_or_gap": "The exact propagated norm and constants still require derivation.",
+      "phase4_action": "KEEP_ONLY_AS_LABELED_DESIGN_REQUIREMENT"
+    },
+    {
+      "audit_id": "CA-R4-004",
+      "seed": "R4",
+      "evidence_id": "E-402",
+      "claim": "Current spectral source has positive selected quadrature weights/nodes and FD number/energy moment tests.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:733-765"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct current-source test support.",
+      "conflict_or_gap": "The tests concern equilibrium moments and selected-grid construction.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R4-005",
+      "seed": "R4",
+      "evidence_id": "E-402",
+      "claim": "Positive quadrature and FD moment convergence imply a rigorous nonlinear collision-tail and abundance bound.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:733-765,824-834"],
+      "label": "UNSUPPORTED",
+      "support_scope": "The cited tests do not exercise reaction tails, weak kernels, or yield propagation.",
+      "conflict_or_gap": "Moment agreement is not a nonlinear operator enclosure.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R4-006",
+      "seed": "R4",
+      "evidence_id": "E-403",
+      "claim": "No audited source supplies a simultaneous RABBIT-specific enclosure for collision action, weak rates and final observables.",
+      "source_refs": ["/tmp/rabbit-ode-physmath-loop-20260823/state/EVIDENCE_LEDGER.md", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "Confirmed within the sealed evidence universe only.",
+      "conflict_or_gap": "It is not a claim about all unpublished or unindexed work.",
+      "phase4_action": "KEEP_AS_SCOPED_EVIDENCE_GAP"
+    },
+    {
+      "audit_id": "CA-R4-007",
+      "seed": "R4",
+      "evidence_id": "E-403",
+      "claim": "A current rigorous reaction-tail and propagated-observable enclosure exists.",
+      "source_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json:missing_evidence"],
+      "label": "UNSUPPORTED",
+      "support_scope": "The audited evidence explicitly identifies the artifact as missing.",
+      "conflict_or_gap": "No bound may be assumed in later phases.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R5-001",
+      "seed": "R5",
+      "evidence_id": "E-501",
+      "claim": "Boscarino-Pareschi-Russo require QR(U)=0, a uniquely parameterized equilibrium manifold, and discuss well-prepared data and stiff-accuracy limitations.",
+      "source_refs": ["https://arxiv.org/html/1009.2757 section 3.1 equations 14-15 and remarks i-ii"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct primary-source support for its hyperbolic relaxation class.",
+      "conflict_or_gap": "The theorem's equation class and hypotheses must not be silently transferred.",
+      "phase4_action": "KEEP_WITH_SOURCE_SCOPE"
+    },
+    {
+      "audit_id": "CA-R5-002",
+      "seed": "R5",
+      "evidence_id": "E-501",
+      "claim": "The AP paper provides a useful checklist for auditing a proposed current-operator reduction.",
+      "source_refs": ["https://arxiv.org/html/1009.2757 section 3.1"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "Its conditions are relevant by analogy, but additional kinetic/Fermi/operator-specific requirements are needed.",
+      "conflict_or_gap": "A checklist is not an applicability proof.",
+      "phase4_action": "KEEP_AS_ANALOGICAL_CHECKLIST"
+    },
+    {
+      "audit_id": "CA-R5-003",
+      "seed": "R5",
+      "evidence_id": "E-501",
+      "claim": "The current RABBIT operator already satisfies exact Q, unique equilibrium, well-prepared handoff and stiff-accuracy conditions.",
+      "source_refs": ["https://arxiv.org/html/1009.2757", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json:missing_evidence"],
+      "label": "UNSUPPORTED",
+      "support_scope": "No current-operator derivation or measurement is cited.",
+      "conflict_or_gap": "These are prerequisites to test, not premises.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R5-004",
+      "seed": "R5",
+      "evidence_id": "E-502",
+      "claim": "The tested fixed momentum-tail slaving has no usable separation, only three genuinely gapped dimensions, and at most 1.25x in its cost model.",
+      "source_refs": ["docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:22-68,95-101"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct local authority for the tested order-60 fixed-cut route.",
+      "conflict_or_gap": "The measurement is not a theorem about every possible coordinate or invariant-aware reduction.",
+      "phase4_action": "KEEP_AS_NEGATIVE_RESULT"
+    },
+    {
+      "audit_id": "CA-R5-005",
+      "seed": "R5",
+      "evidence_id": "E-502",
+      "claim": "V2 proves that every collision-invariant micro-macro or AP method is impossible.",
+      "source_refs": ["docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md"],
+      "label": "UNSUPPORTED",
+      "support_scope": "V2 rejects a fixed momentum-cut construction and explicitly leaves the stall mechanism unmeasured.",
+      "conflict_or_gap": "Universal exclusion exceeds the source scope.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R5-006",
+      "seed": "R5",
+      "evidence_id": "E-502",
+      "claim": "A materially different invariant-aware AP method remains logically possible.",
+      "source_refs": ["docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:137-147", "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:95-101"],
+      "label": "INFERENCE_ONLY",
+      "support_scope": "The sources do not exclude the class, but non-exclusion is not positive evidence that a usable method exists.",
+      "conflict_or_gap": "No current Q, projected gap, handoff or enclosure is available.",
+      "phase4_action": "DO_NOT_USE_AS_APPLICABILITY_PREMISE"
+    },
+    {
+      "audit_id": "CA-R5-007",
+      "seed": "R5",
+      "evidence_id": "E-503",
+      "claim": "Exact current channel Q, projected spectra, overlap/handoff and response enclosure are absent from the audited evidence.",
+      "source_refs": ["/tmp/rabbit-ode-physmath-loop-20260823/state/EVIDENCE_LEDGER.md", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json"],
+      "label": "PARTIALLY_SUPPORTED",
+      "support_scope": "Confirmed for the sealed evidence universe and named source ranges.",
+      "conflict_or_gap": "The absence statement must remain source-bounded.",
+      "phase4_action": "KEEP_AS_SCOPED_EVIDENCE_GAP"
+    },
+    {
+      "audit_id": "CA-R6-001",
+      "seed": "R6",
+      "evidence_id": "E-601",
+      "claim": "Current local source contains collisionless temperature/time sign checks, strict-open raw failure, combined first-law tests and electromagnetic limiting-case tests.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:192-209,1013-1040", "native/rabbit_cpu/src/flrw.rs:704-754,891-927"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct current-source support within each test's model.",
+      "conflict_or_gap": "These tests are static or bounded and are not trajectory authority.",
+      "phase4_action": "KEEP_AS_BOUNDED_FALSIFIER_INGREDIENTS"
+    },
+    {
+      "audit_id": "CA-R6-002",
+      "seed": "R6",
+      "evidence_id": "E-601",
+      "claim": "Collisionless df(q)/dN=0 is supported by isotropic_boltzmann.rs:192-209.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs:192-209", "native/rabbit_cpu/src/isotropic_boltzmann.rs:231-237"],
+      "label": "MISATTRIBUTED",
+      "support_scope": "The property is supported in the same file because rhs leaves occupation components at zero, but the cited lines 192-209 only validate temperature/time outputs.",
+      "conflict_or_gap": "Exact line attribution is wrong.",
+      "phase4_action": "REFORMULATE_WITH_CORRECT_CITATION"
+    },
+    {
+      "audit_id": "CA-R6-003",
+      "seed": "R6",
+      "evidence_id": "E-601-NETWORK",
+      "claim": "The current minimal network validates reaction-wise baryon/charge conservation and closed-RHS conservation.",
+      "source_refs": ["native/rabbit_cpu/src/minimal_network.rs:784-800,1153-1173,1729-1743"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct source and test support for the selected current network.",
+      "conflict_or_gap": "This does not validate the transport trajectory or abundance accuracy.",
+      "phase4_action": "KEEP_WITH_SCOPE"
+    },
+    {
+      "audit_id": "CA-R6-004",
+      "seed": "R6",
+      "evidence_id": "A-PSL-EVIDENCE:R6-PRIMAT",
+      "claim": "PRIMAT defines Xi=Ai ni/nb and states baryon conservation sum Xi=1.",
+      "source_refs": ["https://arxiv.org/html/1801.08023v3 lines 217-222"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct independent physical normalization statement.",
+      "conflict_or_gap": "It is not evidence that the current code enforces the identity; local source supplies that evidence separately.",
+      "phase4_action": "KEEP_AS_INDEPENDENT_PHYSICAL_ANCHOR"
+    },
+    {
+      "audit_id": "CA-R6-005",
+      "seed": "R6",
+      "evidence_id": "E-602",
+      "claim": "SciPy events use per-step sign changes and may miss multiple crossings within a step.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 84-96"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct official documentation.",
+      "conflict_or_gap": "It does not describe custom Rust or NumPy Rodas event refiners.",
+      "phase4_action": "KEEP_AS_API_BOUNDARY"
+    },
+    {
+      "audit_id": "CA-R6-006",
+      "seed": "R6",
+      "evidence_id": "E-602",
+      "claim": "SciPy returns explicit nfev, njev, nlu, status, message and success semantics.",
+      "source_refs": ["https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 175-208"],
+      "label": "SUPPORTED",
+      "support_scope": "Direct official documentation for SciPy 1.17.0.",
+      "conflict_or_gap": "success=True also covers interval completion without a terminal event, so callers must check their required cause separately.",
+      "phase4_action": "KEEP_AS_API_BOUNDARY"
+    },
+    {
+      "audit_id": "CA-R6-007",
+      "seed": "R6",
+      "evidence_id": "E-601+E-602",
+      "claim": "The static physical limits and official API semantics certify a full trajectory or an independent endpoint.",
+      "source_refs": ["native/rabbit_cpu/src/isotropic_boltzmann.rs", "native/rabbit_cpu/src/flrw.rs", "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html"],
+      "label": "UNSUPPORTED",
+      "support_scope": "None of the sources establishes trajectory completion or structural independence.",
+      "conflict_or_gap": "D-071 evaluated no scientific predicate and remains controlling.",
+      "phase4_action": "REMOVE_PREMISE"
+    },
+    {
+      "audit_id": "CA-R6-008",
+      "seed": "R6",
+      "evidence_id": "A-PSL-EVIDENCE:R6-MUTANTS",
+      "claim": "The proposed metamorphic falsifier set catches the retained stall and false-success classes.",
+      "source_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json:PSL-EVIDENCE-R6"],
+      "label": "INFERENCE_ONLY",
+      "support_scope": "The tests are proposed reproduction targets; none was executed in Phase 2 or 3.",
+      "conflict_or_gap": "Mutant-killing power and trajectory discrimination remain unmeasured.",
+      "phase4_action": "DO_NOT_USE_AS_FACTUAL_PREMISE"
+    }
+  ],
+  "label_counts": {
+    "SUPPORTED": 20,
+    "PARTIALLY_SUPPORTED": 8,
+    "CONTESTED": 1,
+    "UNSUPPORTED": 9,
+    "MISATTRIBUTED": 4,
+    "INFERENCE_ONLY": 4,
+    "TOTAL": 46
+  },
+  "premise_sanitation": {
+    "R1": [
+      "Remove PRIMAT baryon normalization as support for occupation coordinates or solver admission.",
+      "Keep physical coordinates and software outcome taxonomy as separate premises."
+    ],
+    "R2": [
+      "Remove any global alpha>0, EOS invertibility, or nonzero-shear claim.",
+      "Retain the temperature clock only as a conditional object requiring a sealed transversality certificate."
+    ],
+    "R3": [
+      "Remove N/5 as a RABBIT prediction, remove claims that full Jv/nullspaces/affinity are already established, and remove Jacobian-only D-071 remedy status.",
+      "Retain only the structured-derivative mechanism analogy and exact current block inventory."
+    ],
+    "R4": [
+      "Remove any implication from equilibrium moment tests to nonlinear reaction-tail or abundance enclosure.",
+      "Retain coupled-observable sensitivity and explicitly label the joint-certificate rule as a design inference."
+    ],
+    "R5": [
+      "Remove current-operator AP applicability and universal impossibility claims.",
+      "Retain V2 as a fixed-cut negative result and require exact Q/spectrum/handoff derivation before applicability can be claimed."
+    ],
+    "R6": [
+      "Correct the collisionless df(q)/dN citation to lines 231-237.",
+      "Remove any static-to-trajectory or unexecuted-mutant efficacy inference."
+    ]
+  },
+  "citation_conflicts": [
+    "R1: PRIMAT baryon normalization is unrelated to occupation coordinates and solver admission.",
+    "R2: SciPy event semantics cannot establish a physical monotonicity or EOS-inversion bound.",
+    "R3: Froustey's implementation-specific N/5 speed-up conflicts in scope with D-071/V2 if promoted to an endpoint remedy.",
+    "R3: SciPy's Jacobian interface is not a matrix-free Jv or nullspace certificate.",
+    "R5: generic AP sufficient conditions do not establish current Fermi-operator applicability; V2 rejects only the tested fixed-cut route.",
+    "R6: isotropic_boltzmann.rs:192-209 does not establish df(q)/dN=0; lines 231-237 do."
+  ],
+  "phase_boundary": {
+    "phase_completed": 3,
+    "hypotheses_constructed": false,
+    "candidates_ranked": false,
+    "candidates_promoted": false,
+    "production_or_shared_state_modified": false,
+    "scientific_execution_performed": false
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json"
+  ]
+}

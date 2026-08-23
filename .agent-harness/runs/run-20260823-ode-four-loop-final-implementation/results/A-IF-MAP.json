@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "assignment_id": "A-IF-MAP",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02ddf-fc44-79c3-bce5-6f4f2b37595c",
+  "agent_type": "context_mapper",
+  "runtime_agent_type": "context_mapper",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-four-loop-final-implementation",
+    "assignment_id": "A-IF-MAP",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:387f024c5f743e25f65929cf4eb0b16c4ffd082ef2659827408f51219b563392",
+    "runtime_agent_type": "context_mapper",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-MAP.json",
+  "started_at": "2026-08-23T09:03:34Z",
+  "completed_at": "2026-08-23T09:08:14Z",
+  "tool_versions": {"python": "3.12.3", "jq": "1.7", "sha256sum": "GNU coreutils 9.4"},
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-MAP.json # VERIFY: PASS",
+    "read only the six registered result envelopes plus context pack, role, and template",
+    "jq targeted extraction of 34-ID findings, candidate/disposition ledgers, gate ceilings, and evidence fingerprints",
+    "sha256sum registered result envelopes"
+  ],
+  "artifacts": [
+    {"path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json", "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9", "role": "baseline 34-ID observed-defect inventory and completeness ceiling"},
+    {"path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json", "sha256": "d47308b4bb991a4a0c879b7a14b06a958143c3dbe7b46a1cb7bdd43e9c2e675a", "role": "physics-specific remedy/rejection map; 32 normalized roots"},
+    {"path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json", "sha256": "1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842", "role": "independent math-algorithm-code adjudication and ranked candidates"},
+    {"path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json", "sha256": "c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630", "role": "34-ID design ledger"},
+    {"path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json", "sha256": "1090179e537c0b760f404e2b322517c5cea7703fbf5ec6b35934505e18bfa7c1", "role": "adversarial contradiction record"},
+    {"path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json", "sha256": "c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21", "role": "repaired final coding/harness dispositions"}
+  ],
+  "four_loop_map": {
+    "loop_1_observed_inventory": {"source": "A-ODE-ADJ3", "status": "FAIL", "head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b", "coverage": "34 IDs exactly; 30 normalized open roots plus 031 harness limitation, 032 policy boundary, 033 closed history, 034 inventory", "mechanical_scope": "33 direct scipy.solve_ivp import-bearing files, 42 calls, 136 resolved entrypoint calls in 47 files; no relevant dynamic aliases found"},
+    "loop_2_physics_mitigation": {"source": "A-PM-ADJ", "status": "FAIL_RESEARCH_MAP_ONLY", "root_count": 32, "roots": "C1-C7,H1-H15,M1-M8,L1-L2", "valid_formulations_only": ["logit evolution du/dN=C/[H f(1-f)]", "FLRW first-law signs with Q positive into neutrinos", "temperature-clock conversion on a monotone transverse branch", "reaction affinity with actual leg convention and zero-flux branch"], "rejected_as_remedies": ["fixed momentum-tail slaving", "generic Jacobian/linear-algebra tuning", "tolerance loosening, clipping/flooring, extra budget/hardware", "energy-only tail criteria", "JAX/Diffrax forward promotion", "new wrapper/gate/telemetry surfaces"]},
+    "loop_3_independent_math_algorithm_code": {"source": "A-MAC-ADJ2", "status": "FAIL_NO_IMPLEMENTATION_OR_GATE_REOPEN", "state_reconciliation": "independent Python order-60 is 182 states (3x60+T+time); folded Rust is 122 (2x60+T+time), hence non-substitutable for D-071", "dense_fd_no_go": "even maximally generous 365x removal leaves 89601.745 RHS-equivalents and 396095.603 s, 22.75x and 6.11x above frozen projections/cap", "ranked": ["P1 raw accepted-state admission: F-009; correctness only", "P2 typed NumPy Rodas event/admission: F-007,F-012,F-013,F-020; opt-in/reference only", "P3 rigorous moment-constrained slow-manifold discriminator: F-001,F-002; PROPOSED static discriminator only"]},
+    "loop_4_coding_harness": {"sources": ["A-CH-DESIGN","A-CH-ADV","A-CH-DECIDE"], "design_status": "PASS design-only", "adversarial_status": "FAIL before repair", "final_status": "PASS_RESEARCH_LOOP_COMPLETE", "execution_truth": "Phase-5 implementation, focused/regression tests, trajectory, endpoint, and diff validation all CANCELLED_NOT_RUN/NOT_RUN", "final_candidate_disposition": {"C1": "PROMOTE_FOR_LATER_IMPLEMENTATION, two-file net<=40 raw stored-sample admission repair; SPECIFIED only", "C2": "REWORK; event tolerances/scales, budgets, consumer assumptions, and <=200-net split absent; F-012 rerouted to future companion", "C3": "REWORK/no-code; 182/122 transfer, branch/rank/coercivity/remainder, positivity/conservation, full-grid tail, adjoint QoI, and certificate cost absent"}}
+  },
+  "id_routing": [
+    ["001","ODE-A3","fail","C3 REWORK","D-071 stalled holdout; no predicate"], ["002","ODE-A3","fail","C3 REWORK","static JVP only; no prefix"], ["003","ODE-A7","fail","retained blocker","strict slow convergence xfail"], ["004","ODE-A2","fail","future companion","Class-A phase admission"], ["005","ODE-A2","fail","future companion","tilted/FLRW terminal admission"], ["006","ODE-A2","fail","future companion","convergence consumer"], ["007","ODE-A2","fail","C2 REWORK","fabricated Rodas event"], ["008","ODE-A5","fail","future companion","frozen JAX oracle only"], ["009","ODE-A2","fail","C1 later implementation","raw state admission"], ["010","ODE-A2","fail","future companion","post-failure consumption"], ["011","ODE-A2","fail","future companion","canonical phase matrix"], ["012","ODE-A2","fail","future companion","C2 cap withdrawn"], ["013","ODE-A2","fail","C2 REWORK","outcome precedence/counters"], ["014","ODE-A3","fail","decisive experiment","generic optimization no-go"], ["015","ODE-A2","fail","future companion","Rust failure taxonomy"], ["016","ODE-A2","fail","decisive experiment","diffsol retries"], ["017","ODE-A2","fail","future companion","Rust work accounting"], ["018","ODE-A2","fail","future companion","failure snapshot"], ["019","ODE-A3","inconclusive","decisive experiment","N48 derivative ladder"], ["020","ODE-A7","fail","C2 REWORK","properties/mutants"], ["021","ODE-A6","inconclusive","decisive experiment","exact-head dual endpoint"], ["022","ODE-A2","fail","future companion","Rust sign event"], ["023","ODE-A2","inconclusive","future companion","event certificate"], ["024","ODE-A2","inconclusive","decisive experiment","hmax/tstop semantics"], ["025","ODE-A2","inconclusive","decisive experiment","recoverability"], ["026","ODE-A3","fail","future companion","subnormal finite difference"], ["027","ODE-A2","fail","future companion","consolidated validator"], ["028","ODE-A7","inconclusive","future companion","Rust reason fixtures"], ["029","ODE-A7","fail","future companion","Diffrax API"], ["030","ODE-A6","fail","future companion","effective config/prose"], ["031","ODE-A6","inconclusive","extrinsic harness issue","not ODE code"], ["032","ODE-A6","pass","closed preserve","gate/role policy"], ["033","ODE-A4","pass","closed preserve","historical bounded closures"], ["034","ODE-A1","pass","closed preserve","inventory"]
+  ],
+  "status_ceiling_and_residuals": {
+    "current_gates": "6 PASS (radial, regression, performance, catalogue, matched-family covariance-metrology, scope); 2 FAIL (G-F10-INDEPENDENT-FLRW, G-HARNESS-INTEGRITY), unchanged",
+    "scientific_ceiling": "No proposed remedy is IMPLEMENTED or VALIDATED as blocker movement. No D-071 reopen, endpoint, trajectory, scientific promotion, public production, QKE, or gate movement is earned.",
+    "D071": "order-60/ymax-30 holdout stopped near N=0.1653 after 64800 s; projected 3.27e7 additional evaluations, 4.58 years, 8305x miss; no log-derived restart.",
+    "physical_prefix": "four static states/nine full-RHS-equivalent calls; one JVP inadmissible, three Arnoldi dimension-one breakdowns, no reaction-tail authority, physical_prefix_executed=false.",
+    "completeness_limit": "No proof for generated code, external consumers, runtime higher-order callables, or unlisted non-Python extensions; no new scientific execution was authorized."
+  },
+  "findings": [
+    {"finding_id":"IF-MAP-001","claim_id":"IF-EVIDENCE-MAP","verdict":"pass","severity":"high","statement":"All 34 F-ODE-ADJ3 IDs are preserved once; final category counts are selected/later C1=1, C2=3, retained/decisive=7, companion/future=17, closed=3, extrinsic=1, with F-012 rerouted from C2 to companion.","assumptions_used":["Registered result envelopes are the entire evidence universe."],"evidence_refs":["A-ODE-ADJ3","A-CH-DESIGN#/phase3_design/seed_coverage_ledger","A-CH-DECIDE#/adjudication/repaired_ledger"],"evidence_fingerprint":"sha256:c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21","counterevidence_refs":["A-CH-ADV pre-repair MAJOR_REVISIONS record"],"reproduction":["Compare id_routing numeric range 001..034."],"confidence":1.0,"unresolved":[]},
+    {"finding_id":"IF-MAP-002","claim_id":"IF-EVIDENCE-MAP","verdict":"inconclusive","severity":"critical","statement":"The four loops contain proposals and fail-closed dispositions, not validated blocker movement; D-071 and harness integrity remain FAIL.","assumptions_used":["Generated status board remains the sole status authority."],"evidence_refs":["A-PM-ADJ:F-PM-ADJ-001","A-MAC-ADJ2#/adjudication_summary","A-CH-DECIDE#/adjudication"],"evidence_fingerprint":"sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d","counterevidence_refs":["Six scoped gates are PASS."],"reproduction":["Read status_ceiling_and_residuals."],"confidence":1.0,"unresolved":["All listed residual certificate, execution, and authority prerequisites."]}
+  ],
+  "errors": [],
+  "files_written": [".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-MAP.json"]
+}

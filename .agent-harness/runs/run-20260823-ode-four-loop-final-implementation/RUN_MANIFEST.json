@@ -1,0 +1,407 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-23T11:34:20Z",
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "repository": {
+    "root": "/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION",
+    "base_branch": "diagnosis_report",
+    "base_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "original_final_tracked_changes": 0,
+    "preserved_preexisting_untracked": [
+      "RABBIT_diagnosis_report.bundle"
+    ],
+    "commit_created": false,
+    "push_or_merge_performed": false
+  },
+  "context": {
+    "implementation_context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "pre_run_active_run_sha256_restored": "aaee0d9b5fb8c55b7065af2dcfa13b7f336cfd2b800fa289b54c69a1bb48d4e2",
+    "pre_run_context_index_sha256_restored": "8c5c31139835877ee4b4b3dd09666b3542884975bb0983c653498fb99e6ec9fa",
+    "pre_run_context_pack_sha256_restored": "eb6d2f96da05ca0be4693a57416fbf847f803d29edd581a71b7ba6fa5a422b33"
+  },
+  "bounded_contract": {
+    "work_unit": "ODE-FOUR-LOOP-FINAL-IMPLEMENTATION-20260823",
+    "acceptance_sha256": "842c695c6efccb05fd3a19d87876ca6a9faa499364a9cec3772b500ac994ceed",
+    "final_decision": "STOP_INVALID",
+    "accepted_blocker_movement": 0,
+    "accepted_gate_movement": 0
+  },
+  "governing_loop_results": [
+    {
+      "loop": 1,
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "34-ID ODE issue/blocker inventory"
+    },
+    {
+      "loop": 2,
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+      "sha256": "d47308b4bb991a4a0c879b7a14b06a958143c3dbe7b46a1cb7bdd43e9c2e675a",
+      "role": "physics-specific mitigation research"
+    },
+    {
+      "loop": 3,
+      "path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json",
+      "sha256": "1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "role": "independent math, algorithm, and coding research"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+      "sha256": "c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630",
+      "role": "coding-harness design"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json",
+      "sha256": "1090179e537c0b760f404e2b322517c5cea7703fbf5ec6b35934505e18bfa7c1",
+      "role": "coding-harness adversarial review"
+    },
+    {
+      "loop": 4,
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+      "sha256": "c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "role": "coding-harness final preimplementation disposition"
+    }
+  ],
+  "candidate": {
+    "worktree": "/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree",
+    "branch": "codex/ode-c1-raw-state-20260823",
+    "disposition": "REJECTED_NOT_ADMITTED_EVIDENCE_ONLY",
+    "changed_files": [
+      {
+        "path": "/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/collisions/dynamic_collision_driver.py",
+        "sha256": "6b33486fb4fa1fce2872db0edeed14683cd3817927126be1026a371daf39158e"
+      },
+      {
+        "path": "/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_dynamic_collision_driver.py",
+        "sha256": "67ec0b39fbdd69f39ce840f418da292dd42720fbc097a56e7c0945119a8c2dd8"
+      }
+    ],
+    "patch_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/C1_REJECTED_CANDIDATE.patch",
+    "patch_sha256": "a12a2c772c288fecb6a74b27d2a7133f2d839273a110276b7a24f850ef96a849",
+    "diff": {
+      "production_added": 82,
+      "production_deleted": 43,
+      "production_net": 39,
+      "tests_added": 146,
+      "tests_deleted": 0,
+      "tests_net": 146,
+      "total_added": 228,
+      "total_deleted": 43,
+      "total_net": 185,
+      "governing_total_net_cap": 40,
+      "diff_check": "PASS"
+    }
+  },
+  "decisive_execution": {
+    "exact_head_focused": "13 passed",
+    "candidate_focused": "3 failed, 28 passed",
+    "production_not_slow": "396 passed, 8 skipped",
+    "gold_candidate": "5 failed, 100 passed, 2 skipped",
+    "gold_exact_head_selected_replay": "same five failures reproduced",
+    "full_default_candidate": "54 failed, 2587 passed, 80 skipped",
+    "collision_on_invalid_stored_occupations": 2096,
+    "collision_on_invalid_samples": "3-233 inclusive",
+    "first_rejection": "sample=3,N=-2.302557321652884,f_nue[22]=-2.3008216172341183e-30",
+    "minimum_occupation": -5.491289338418672e-15,
+    "collisionless_invalid_stored_occupations": 0
+  },
+  "independent_adjudication": {
+    "assignment_id": "A-IF-REVIEW2",
+    "result_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-REVIEW2.json",
+    "result_sha256": "c84de9341601ccb91dfd257f7311ac427275b767f033467f0043601406a40932",
+    "disposition": "REJECT_STOP_INVALID",
+    "dedicated_runtime_host_boundary_artifact": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/A-IF-REVIEW_HOST_BOUNDARY.json",
+    "dedicated_runtime_receipt_open_fail_closed": true,
+    "replacement_receipt_consumed": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3",
+    "jax": "0.10.0",
+    "jaxlib": "0.10.0",
+    "diffrax": "0.7.2",
+    "jax_device": "CPU",
+    "cpu": "AMD Ryzen 9 5900X 12-Core Processor",
+    "logical_cpus": 24,
+    "memory_gib": 94,
+    "os": "Linux 7.0.0-29-generic x86_64",
+    "requirements_measured": {
+      "path": "requirements.measured.txt",
+      "sha256": "b8996835e148f086bf1e6cc2be6a2eee4a91d525421a1e67c687008dcbe2050b"
+    },
+    "requirements_lock": {
+      "path": "requirements.lock",
+      "sha256": "fd84fa522d34b5732b063e5f930601cd11ebe86bcf5d53d1452acf146cb094d2"
+    }
+  },
+  "claim_ceiling": {
+    "bounded_raw_trajectory_diagnosis": "VALIDATED_FOR_DECLARED_NQ24_CONFIGURATION_ONLY",
+    "candidate_repair": "REJECTED",
+    "endpoint_authority": "NONE",
+    "scientific_or_public_production_promotion": "NOT_EARNED",
+    "d071_reopen": false,
+    "qke_support": "FORBIDDEN_OUT_OF_SCOPE",
+    "gate_board": "6 PASS / 2 FAIL unchanged",
+    "retained_fail_gates": [
+      "G-F10-INDEPENDENT-FLRW",
+      "G-HARNESS-INTEGRITY"
+    ]
+  },
+  "file_inventory_note": "All current-run files except this manifest and its sidecar are listed with byte size and SHA-256. The manifest excludes itself to avoid self-reference.",
+  "file_inventory": [
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/ADMISSIONS.jsonl",
+      "bytes": 3759,
+      "sha256": "c1351b9f563569dc820abb8a51e0bf14a43a1d864dedb0aa91f9aeb08405e632"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/CLAIM_LEDGER.md",
+      "bytes": 2214,
+      "sha256": "236ea8ef4c3d3675448812b278206c4e33b5682d42c0a9482c0fa1e394a6b01c"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/FINAL_EXTERNAL_AUDIT_REPORT.md",
+      "bytes": 33502,
+      "sha256": "620362fd3ca077c9a62af61183e24ad99e45e6dad96f66cc0a408d20b64901bb"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/RUN_PLAN.json",
+      "bytes": 881,
+      "sha256": "9748aba32b2ab631ea4c2ff15f18440188a54866390a8d9f3e88c47211f682c5"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/VALIDATION_LEDGER.md",
+      "bytes": 2445,
+      "sha256": "6fe7a7996330203ec8523689587c1b1a9d358ade2d5fcd93df936727027aa402"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/A-IF-REVIEW_HOST_BOUNDARY.json",
+      "bytes": 826,
+      "sha256": "4c160326c3913e4ff3c982c8ac390c987f8e1cd98bebc26e9c02dd6cfe43c36f"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/C1_REJECTED_CANDIDATE.patch",
+      "bytes": 16783,
+      "sha256": "a12a2c772c288fecb6a74b27d2a7133f2d839273a110276b7a24f850ef96a849"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/FOUR_LOOP_EVIDENCE_MAP.json",
+      "bytes": 5734,
+      "sha256": "92f4739c1722f012ae8f57499136ee6cc038dc595943a43d1c235007ddbbb56c"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/ORIGINAL_CHECKOUT_CUSTODY.json",
+      "bytes": 1152,
+      "sha256": "9cd94f8611fdb783e5d1dce6d558f7f6f848a804ecae0e272da04317fd792c16"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/VALIDATION_SUMMARY.json",
+      "bytes": 10821,
+      "sha256": "928481b27be3c4071dfa6a481d09fe2c89674ae2befeb843cdf729e8696750ec"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/WORK_CONTRACT.json",
+      "bytes": 5721,
+      "sha256": "76d1cf3b9141804e7ad0831cd05381095ba49b265a2711c68ec9d5a4c519f7a2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collision_on.json",
+      "bytes": 566190,
+      "sha256": "1495d0aa53560773a223dfabcf5eb149c23b567a340b7f9bab08630067c8d8e3"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collisionless.json",
+      "bytes": 937,
+      "sha256": "4e2d29a06d41660aa76f99da2c83229d3a660d049e7bac67030b07f71424b4b5"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_exact_head_collision_on.json",
+      "bytes": 565985,
+      "sha256": "2da11255f25761e4b7e7ea330eda2c4948013e4d1df00c5e127720a90f9a678e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_probe.py",
+      "bytes": 3547,
+      "sha256": "756af14f2ad378575e391660a1e54346876fec2982884db0eae3aea5f1c204c8"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/rejected_c1_postimage/src/rabbit/collisions/dynamic_collision_driver.py",
+      "bytes": 18890,
+      "sha256": "6b33486fb4fa1fce2872db0edeed14683cd3817927126be1026a371daf39158e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/rejected_c1_postimage/tests/test_dynamic_collision_driver.py",
+      "bytes": 18537,
+      "sha256": "67ec0b39fbdd69f39ce840f418da292dd42720fbc097a56e7c0945119a8c2dd8"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/valid_dummy_c1.json",
+      "bytes": 607,
+      "sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/valid_dummy_exact_head.json",
+      "bytes": 607,
+      "sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/valid_dummy_probe.py",
+      "bytes": 1316,
+      "sha256": "5272d20bd38145c39eedc3f2a57f24d13e1a76efe36c67130e89cb2e3b68c6df"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-C1.json",
+      "bytes": 2177,
+      "sha256": "d4a13ac644c0e45b16d2c99166ff8b594dcc135975901bc35ecfe342f66e6229"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-MAP.json",
+      "bytes": 2499,
+      "sha256": "387f024c5f743e25f65929cf4eb0b16c4ffd082ef2659827408f51219b563392"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-REVIEW.json",
+      "bytes": 4457,
+      "sha256": "c57b56c8f649ff5d00815b10ed473ae90902f8b11fc63dc5d865352cf2123b0a"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-REVIEW2.json",
+      "bytes": 4590,
+      "sha256": "e4d465ed4c1383ff95c2cf18d318781739b8cc232488e4ef23af0babbeab004e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/00_environment.log",
+      "bytes": 7154,
+      "sha256": "86411735fcfb770d58e5047f551a6741817a19f10f1299a5b1cf1e4e2512b768"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/01_baseline_target_not_slow.log",
+      "bytes": 1966,
+      "sha256": "866585254d89a17c1a3a51f78eb90ea0505a9c9b0c57db26d5dea437cf2168d3"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/02_tdd_red_invalid_nonfinal.log",
+      "bytes": 2865,
+      "sha256": "c3e4832e741b0b5df1b0807f8bc85bf4f349ac11c73926fffa413cdd0d46c4be"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/03_tdd_green_invalid_nonfinal.log",
+      "bytes": 1834,
+      "sha256": "c4b1e8b7105ac71eb2e16ab7a6616f7e5e94e4e798d79bae000ddf1a1458aaf8"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/04_tdd_red_hubble.log",
+      "bytes": 6835,
+      "sha256": "583429eb0125ef7e37314f3f7b1bcccbb2c81d7af0c82b6f61cafe07c6219ea3"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/05_tdd_green_hubble.log",
+      "bytes": 2272,
+      "sha256": "fc1596a9bf4b0d51964add8ba99f04c2c9b3e967681c3132cb5397d5e9d9da55"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/06_exact_head_mutation_red_final_and_event.log",
+      "bytes": 29378,
+      "sha256": "580623653104646aa05a3600e64704fc72e90ef8086f5508f0ee4b255d81bb5c"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/07_exact_head_red_final_and_event.log",
+      "bytes": 28041,
+      "sha256": "877c8a93e8441f25ae09084afbf5dd441e4d3b868642760124f397500184d72b"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/08_c1_adversarial_green.log",
+      "bytes": 4284,
+      "sha256": "4dd46935ac54bfa9f4dc0705d111232d2c00a7152c85914d591011cf47bd1f5e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/09_target_not_slow_green.log",
+      "bytes": 1962,
+      "sha256": "5b9de7f2687200a04a47c685098190bcf152e99d2df23f3af1d5ecacd02310e6"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/10_target_full_green.log",
+      "bytes": 18017,
+      "sha256": "6f91a03d9eda1c75e40ed40fe93e76057a5c33fad146c7a6287e6364f44b350c"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/11_exact_head_target_full_baseline.log",
+      "bytes": 2319,
+      "sha256": "dfe0e6a2789d8bff15fbf2728dcc53dcdfe6d56484411a48f32c27c55fc31122"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/12_production_not_slow_gate.log",
+      "bytes": 21719,
+      "sha256": "eafdece5bc5425bafb25696646f87735197c585e533f79a602510d2da753e257"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/13_measured_environment_install.log",
+      "bytes": 13466,
+      "sha256": "4e53fe0961deb02026f036db4f1d9156f4d8f1a840b266297747ae89e787d39b"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/14_measured_environment_verify.log",
+      "bytes": 661,
+      "sha256": "b1841877d1e59c103846ef5afb2b4d6496f73203fa7793a82585a2ad61112384"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/15_production_not_slow_measured_env_retry.log",
+      "bytes": 1725,
+      "sha256": "39fafbf50e5114f74a5decfeea2b1a143aeb6c6971df1434f5e6eb63445c598b"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/16_gold_measured_env.log",
+      "bytes": 4189,
+      "sha256": "6b8fedcecf0ac89ec9e5afcba9b25a85583bc1968b4896b7e01adc7d359c6150"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/17_exact_head_gold_failure_attribution.log",
+      "bytes": 5119,
+      "sha256": "dab2b06ea77858c0f22f514a11a2a77c1997147668785b54413e34433be42b71"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/18_full_default_measured_env.log",
+      "bytes": 154913,
+      "sha256": "51da9b55cc531cda99549c4c9d9ea4552c6222f1428132be8c868a45c54702e1"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/19_dynamic_collision_module_measured_env.log",
+      "bytes": 16639,
+      "sha256": "5cf6994649164b2de42d7f95c32ca19440d874e55dd7434f8282b8786f3d07e2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/20_exact_head_dynamic_collision_measured_env.log",
+      "bytes": 1275,
+      "sha256": "cd86a43f0cbad5298d0a4f004bc94fe0a7533a051079919dd386e9efcb512060"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/21_harness_validation.log",
+      "bytes": 1022,
+      "sha256": "ecc7a86fa5a2d99e11a3877c2bd5af1144b406cfcf3377174dc412912544b85f"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/22_review2_assignment_verification.log",
+      "bytes": 602,
+      "sha256": "4d7bee701567bf0068f60cf91cfcebf5bccf1c02ed2c3a39def66d09bf97e075"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json",
+      "bytes": 18902,
+      "sha256": "4e908ac7c057b0126648692b1fedc59d5b6f54120484348f517239274dbb0de4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-MAP.json",
+      "bytes": 11063,
+      "sha256": "1eaae3ca83c5687d98ea262a07f18a2886f486092f01fe82178e5e7ffdf14518"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-REVIEW2.json",
+      "bytes": 26047,
+      "sha256": "c84de9341601ccb91dfd257f7311ac427275b767f033467f0043601406a40932"
+    }
+  ]
+}

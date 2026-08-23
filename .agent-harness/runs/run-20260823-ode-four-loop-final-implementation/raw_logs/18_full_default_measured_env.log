@@ -1,0 +1,2977 @@
+Script started on 2026-08-23 18:53:54+09:00 [COMMAND="env PYTHONPATH=src:. JAX_PLATFORMS=cpu /usr/bin/time -v /tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pytest -q" <not executed on terminal>]
+...F.........F..F....................................................... [  2%]
+................................s..........s............................ [  5%]
+..........F............................................................. [  7%]
+........................................................................ [ 10%]
+........................................................................ [ 13%]
+.................................................................sssssss [ 15%]
+ssssssssssssssss...................................sssssssssssssssssssss [ 18%]
+s....................................................................... [ 21%]
+.....................F......................ssF......................... [ 23%]
+..............................................FFF....................... [ 26%]
+........................................................................ [ 29%]
+............................................................sssssssssss. [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+..................................................................F..... [ 39%]
+....FF.........FFFFFFFFFFFFFFFFFFFFFF................................... [ 42%]
+............................................FF.....sssssssss.FF......... [ 45%]
+..................................................................FFF... [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+.................................................FFF.FFFFFFF............ [ 55%]
+........................................................................ [ 58%]
+..................ss...s................................................ [ 60%]
+............sss......................................................... [ 63%]
+......F.....F........................................................... [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 71%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+...................................................sss.................. [ 79%]
+.................................................................F...... [ 82%]
+........................................................................ [ 84%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+.......................................................                  [100%]
+=================================== FAILURES ===================================
+_____ test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields _____
+
+    def test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields():
+        from rabbit.jax.run_tilted_bbn import TiltedBBNConfig, run_tilted_bbn
+    
+        baseline_gold = _gold("tilted_typeIII_N0_A1e5_sigma001_v1e7")
+        gold = _gold("tilted_typeIII_N2_1em4_N3_m1em4_A1e5_sigma001_v1e7")
+        baseline = run_tilted_bbn(
+            TiltedBBNConfig(
+                bianchi_type="TYPE_V",
+                v0=baseline_gold["v0"],
+                Sigma_H_plus=baseline_gold["Sigma_H"],
+                A_init=baseline_gold["A_init"],
+                N_q=6,
+                correction_level=0,
+            )
+        )
+        curved = run_tilted_bbn(
+            TiltedBBNConfig(
+                bianchi_type="TYPE_III",
+                v0=gold["v0"],
+                Sigma_H_plus=gold["Sigma_H"],
+                A_init=gold["A_init"],
+                N2_init=gold["N2_init"],
+                N3_init=gold["N3_init"],
+                N_q=6,
+                correction_level=0,
+            )
+        )
+    
+        assert baseline.success is True
+        assert curved.success is True
+        assert baseline.Yp == pytest.approx(baseline_gold["Yp"], rel=1.0e-10)
+        assert curved.Yp == pytest.approx(gold["Yp"], rel=1.0e-10)
+        assert curved.DH == pytest.approx(gold["DH"], rel=1.0e-10)
+        # Difference-tolerance reconciled with upstream rel=1e-10 noise floor:
+        # rel=1e-10 of Y_p ~ 0.24 gives ~2.4e-11 absolute on each component, so
+        # the difference (curved.Yp - baseline.Yp) can drift up to ~5e-11 even
+        # when individual values pass. The original abs=5e-13 was below this
+        # floor and silently broke on small JAX/optimization upstream changes
+        # (regression caught in v3.2 hostile re-audit, 2026-05-05). Relax to
+        # abs=1e-10 to match upstream precision; the test still detects
+        # meaningful regressions (>1e-10 drifts) but no longer fails on
+        # bit-precision arithmetic noise.
+        assert curved.Yp - baseline.Yp == pytest.approx(gold["DYp_N23"], rel=1.0e-7, abs=1.0e-10)
+>       assert curved.DH - baseline.DH == pytest.approx(gold["DDH_N23"], rel=1.0e-7, abs=1.0e-12)
+E       assert 8.668809902483382e-09 == 8.67504437776...e-09 ± 1.0e-12
+E         
+E         comparison failed
+E         Obtained: 8.668809902483382e-09
+E         Expected: 8.675044377764112e-09 ± 1.0e-12
+
+tests/gold/test_typeIII_tilted_bbn.py:79: AssertionError
+________________ test_typeIV_tilted_A_and_N1_couple_into_yields ________________
+
+    def test_typeIV_tilted_A_and_N1_couple_into_yields():
+        from rabbit.jax.run_tilted_bbn import TiltedBBNConfig, run_tilted_bbn
+    
+        gold = _gold("tilted_typeIV_N1e3_A1e5_sigma001_v1e7")
+        baseline = run_tilted_bbn(
+            TiltedBBNConfig(
+                bianchi_type="TYPE_IV",
+                v0=gold["v0"],
+                Sigma_H_plus=gold["Sigma_H"],
+                A_init=gold["A_init"],
+                N1_init=0.0,
+                N_q=6,
+                correction_level=0,
+            )
+        )
+        coupled = run_tilted_bbn(
+            TiltedBBNConfig(
+                bianchi_type="TYPE_IV",
+                v0=gold["v0"],
+                Sigma_H_plus=gold["Sigma_H"],
+                A_init=gold["A_init"],
+                N1_init=gold["N1_init"],
+                N_q=6,
+                correction_level=0,
+            )
+        )
+    
+        assert baseline.success is True
+        assert coupled.success is True
+        assert coupled.Yp == pytest.approx(gold["Yp"], rel=1.0e-10)
+        assert coupled.DH == pytest.approx(gold["DH"], rel=1.0e-10)
+>       assert coupled.Yp - baseline.Yp == pytest.approx(gold["DYp_N1"], rel=1.0e-8)
+E       assert 4.791365009776394e-05 == 4.79136339164...e-05 ± 1.0e-12
+E         
+E         comparison failed
+E         Obtained: 4.791365009776394e-05
+E         Expected: 4.791363391642989e-05 ± 1.0e-12
+
+tests/gold/test_typeIV_tilted_bbn.py:86: AssertionError
+__________ test_typeIX_orthogonal_same_sign_curvature_changes_yields ___________
+
+    def test_typeIX_orthogonal_same_sign_curvature_changes_yields():
+        from rabbit.jax.driver_classA import JAXClassAConfig, run_classA_jax
+    
+        baseline_gold = _gold("classA_typeIX_N0_sigma001")
+        gold = _gold("classA_typeIX_N1_1em4_N2_1em4_N3_1em4_sigma001")
+        baseline = run_classA_jax(
+            JAXClassAConfig(
+                bianchi_type="TYPE_IX",
+                Sigma_H_plus=baseline_gold["Sigma_H"],
+                N1_init=0.0,
+                N2_init=0.0,
+                N3_init=0.0,
+                N_q=20,
+                correction_level=0,
+                transport_mode="linearized",
+            )
+        )
+        curved = run_classA_jax(
+            JAXClassAConfig(
+                bianchi_type="TYPE_IX",
+                Sigma_H_plus=gold["Sigma_H"],
+                N1_init=gold["N1_init"],
+                N2_init=gold["N2_init"],
+                N3_init=gold["N3_init"],
+                N_q=20,
+                correction_level=0,
+            )
+        )
+    
+        assert baseline.success is True
+        assert curved.success is True
+        assert curved.Yp == pytest.approx(gold["Yp"], rel=1.0e-10)
+        assert curved.DH == pytest.approx(gold["DH"], rel=1.0e-10)
+        assert curved.Yp - baseline.Yp == pytest.approx(gold["DYp_N123"], rel=1.0e-7, abs=5.0e-13)
+        assert curved.DH - baseline.DH == pytest.approx(gold["DDH_N123"], rel=1.0e-7, abs=5.0e-15)
+        assert curved.metadata["N1_final"] > 0.0
+        assert curved.metadata["N2_final"] > 0.0
+        assert curved.metadata["N3_final"] > 0.0
+        assert curved.metadata["curvature_K_init"] < 0.0
+>       assert curved.metadata["curvature_K_final"] == pytest.approx(gold["curvature_K_final"], rel=1.0e-10)
+E       assert -0.019949532896712818 == -0.01994953295926255 ± 2.0e-12
+E         
+E         comparison failed
+E         Obtained: -0.019949532896712818
+E         Expected: -0.01994953295926255 ± 2.0e-12
+
+tests/gold/test_typeIX_orthogonal_bbn.py:95: AssertionError
+__________ test_augmented_pstf_feature_registry_labels_staging_scope ___________
+
+    def test_augmented_pstf_feature_registry_labels_staging_scope():
+        assert AUGMENTED_FEATURE_KEY in FEATURE_BY_KEY
+    
+        feat = FEATURE_BY_KEY[AUGMENTED_FEATURE_KEY]
+        assert feat.tier == "substrate"
+        assert feat.validation_mode == "diagnostic"
+        assert feat.surface_class == "diagnostic"
+        assert "AP0-AP81" in feat.evidence_summary
+        # BD612-F2: evidence_summary must LEAD with the honest deflation (rendered
+        # surface truncates to the first 70 chars) — deleted capability must not read
+        # as current.
+        assert feat.evidence_summary.startswith("HISTORICAL AP0-AP81 stage-record")
+        assert "deleted in " in feat.evidence_summary
+        assert "NOT current capability" in feat.evidence_summary
+        assert "characteristic_rays_nonlrs_jax" in feat.evidence_summary
+        assert "ell_max" in feat.evidence_summary
+        assert "deterministic JSON artifact runner" in feat.evidence_summary
+        assert "collision-moment thermo feedback hook" in feat.evidence_summary
+        assert "diagonal no-QKE nu-nu thermo source factory" in feat.evidence_summary
+        assert "monopole nu-e plus pair-process thermo source factory" in feat.evidence_summary
+        assert "combined source factory" in feat.evidence_summary
+        assert "collision-feedback artifact runner" in feat.evidence_summary
+        assert "standard-relative observable deltas" in feat.evidence_summary
+        assert "stage-scoped landed" in feat.evidence_summary
+        assert "bounded LRS CL3 weak-rate multiplier" in feat.evidence_summary
+        assert "per-q angular weak-rate input objects" in feat.evidence_summary
+        assert "moment-input angular weak-rate mode" in feat.evidence_summary
+        assert "non-LRS S2 plus/minus basis" in feat.evidence_summary
+        assert "deterministic weak-rate candidate/convergence gate" in feat.evidence_summary
+        assert "non-LRS S2 nonlinear transport logit-RHS operator" in feat.evidence_summary
+        assert "non-LRS nonlinear transport solve shell" in feat.evidence_summary
+        assert "nonlinear non-LRS 3T weak/network candidate shell" in feat.evidence_summary
+        assert "opt-in nonlinear angular collision-feedback 3T wrapper" in feat.evidence_summary
+        assert "radial `C_modes` hierarchy payloads" in feat.evidence_summary
+        assert "AP6 `pstf_radial` process-source budget case" in feat.evidence_summary
+        assert "LRS charge-neutral AP6 `pstf_radial` source-budget case" in feat.evidence_summary
+        assert "non-LRS AP6 `pstf_radial` process-source budget case" in feat.evidence_summary
+        assert "non-LRS charge-neutral AP6 `pstf_radial` source-budget case" in feat.evidence_summary
+        assert "AP56 AP55 LRS/non-LRS fixed and charge-neutral radial budget summaries" in feat.evidence_summary
+        assert "AP57 AP6 radial source-budget sanity case" in feat.evidence_summary
+        assert "AP57 LRS charge-neutral AP6 radial source-budget sanity case" in feat.evidence_summary
+        assert "AP57 non-LRS AP6 radial source-budget sanity case" in feat.evidence_summary
+        assert "AP57 non-LRS charge-neutral AP6 radial source-budget sanity case" in feat.evidence_summary
+        assert "nonlinear non-LRS `pstf_radial` collision-feedback 3T wrapper" in feat.evidence_summary
+        assert "opt-in AP65 combined angular+pstf_radial nonlinear collision wrapper/artifact" in feat.evidence_summary
+        assert "AP4/AP65 combined-source full-span candidate gate" in feat.evidence_summary
+        assert "real `live_rhs` two-span and warm-preset `N_span=1e-8` budgeted evidence" in feat.evidence_summary
+        assert "named `piecewise_physical_preview` preset" in feat.evidence_summary
+        assert "piecewise source-refresh refinement artifact" in feat.evidence_summary
+        assert "`piecewise_frozen` source-refresh gate with nonuniform state handoff through `N_span=1e-3`" in feat.evidence_summary
+        assert "charge-neutral `N_span=1e-4` evolved charge-asymmetry handoff evidence" in feat.evidence_summary
+        assert "fixed/charge-neutral electron chemical-potential forwarding" in feat.evidence_summary
+        assert "terminal electron-mu/charge-asymmetry observables" in feat.evidence_summary
+        assert "combined-source source-policy span-profile artifact/CLI" in feat.evidence_summary
+        assert "publication-candidate convergence matrix" in feat.evidence_summary
+        assert "source-model" in feat.evidence_summary
+        assert "component `combined_*_dA_abs_max_final` diagnostics" in feat.evidence_summary
+        assert "`pstf_radial` source-budget observables" in feat.evidence_summary
+        assert "fixed/charge-neutral electron-bath controls" in feat.evidence_summary
+        assert "terminal electron-mu/charge-asymmetry observables" in feat.evidence_summary
+        assert "collision_dA_abs_max_final" in feat.evidence_summary
+        assert "known-limit validation atlas" in feat.evidence_summary
+        assert "AP66 source-model evidence links" in feat.evidence_summary
+        assert "AP67 radial momentum-delta forwarding into AP65/AP66" in feat.evidence_summary
+        assert "fixed/charge-neutral electron-bath controls" in feat.evidence_summary
+        assert "fail-closed radial source-budget rows" in feat.evidence_summary
+        assert "guarded inference adapter" in feat.evidence_summary
+        assert "selectable angular-only or combined angular+`pstf_radial` source models" in feat.evidence_summary
+        assert "electron-bath control forwarding" in feat.evidence_summary
+        assert "radial-control forwarding" in feat.evidence_summary
+        assert "augmented SMC likelihood schema" in feat.evidence_summary
+        assert "source-model/radial/electron-bath solver controls" in feat.evidence_summary
+        assert "radial momentum-delta" in feat.evidence_summary
+        assert "combined-source charge-neutral smoke likelihood evidence" in feat.evidence_summary
+        assert "smoke tempered SMC runner" in feat.evidence_summary
+        assert "AP69 source-model/source-refresh/radial/electron-bath control metadata preservation" in feat.evidence_summary
+        assert "scalar-QED control metadata preservation" in feat.evidence_summary
+        assert "runtime/cache controls" in feat.evidence_summary
+        assert "source-model/source-refresh/radial/electron-bath-control-aware cache keys" in feat.evidence_summary
+        assert "scalar-QED-aware cache context" in feat.evidence_summary
+        assert "AP69 source/source-refresh/radial/electron-bath dry-run controls" in feat.evidence_summary
+        assert "N_span-end, scalar-QED, radial momentum-delta, and piecewise_frozen subspan controls" in feat.evidence_summary
+        assert "last successful prediction metadata preservation" in feat.evidence_summary
+        assert "synthetic null/injection SMC validation" in feat.evidence_summary
+        assert "source-model/source-refresh/N_span/radial/electron-bath-control provenance" in feat.evidence_summary
+        assert "scalar-QED provenance" in feat.evidence_summary
+        assert "radial momentum-delta provenance" in feat.evidence_summary
+        assert "figure-ready publication artifact tables" in feat.evidence_summary
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath-control row context" in feat.evidence_summary
+        assert "diagnostic augmented publication plots" in feat.evidence_summary
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath plot provenance" in feat.evidence_summary
+        assert "reproducibility bundle" in feat.evidence_summary
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath bundle provenance" in feat.evidence_summary
+        assert "final readiness audit" in feat.evidence_summary
+        assert "not_promoted" in feat.evidence_summary
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath readiness-ledger provenance" in feat.evidence_summary
+        assert "coupled weak-rate gate" in feat.evidence_summary
+        assert "AP65 3T solve" in feat.evidence_summary
+        assert "electron-bath control forwarding" in feat.evidence_summary
+        assert "same CL3 weak kernel" in feat.evidence_summary
+        assert "required input to the readiness audit" in feat.notes
+        assert "AP77 electron-bath control provenance" in feat.notes
+        assert "profile-level coupled weak-rate convergence artifact" in feat.evidence_summary
+        assert "FB-20 adds an optional production-candidate gate" in feat.evidence_summary
+        assert "AP79 full-chain readiness evidence and AP80 extended weak-rate profiles" in feat.evidence_summary
+        assert "FB-08 electron-bath/scalar-QED chained cross-product rows" in feat.evidence_summary
+        assert "evolved charge-asymmetry and scalar-QED one-hot diagnostics" in feat.evidence_summary
+        assert "FB-09 chained N_q/N_mu/N_phi resolution ladder rows" in feat.evidence_summary
+        assert "terminal BBN observable deltas and source-budget metadata" in feat.evidence_summary
+        assert "quartic-cancelled six-monomial Pauli statistical factor" in feat.evidence_summary
+        assert "local PSTF six-monomial angular contraction" in feat.evidence_summary
+        assert "G_mumu" in feat.evidence_summary
+        assert "channel `K` assembly" in feat.evidence_summary
+        assert "radial-grid p2/p3 contraction" in feat.evidence_summary
+        assert "radial channel kernel-grid assembly" in feat.evidence_summary
+        assert "unit-direction momentum-delta" in feat.evidence_summary
+        assert "p-dependent radial" in feat.evidence_summary
+        assert "static angular-geometry reuse" in feat.evidence_summary
+        assert "p4" in feat.evidence_summary
+        assert "concrete moment and kinetic-source amplitude deltas" in feat.evidence_summary
+        assert "charge-neutrality radial sources preserving `dA_modes` hierarchy payloads" in feat.evidence_summary
+        assert "collision_dA_abs_max` kinetic-source amplitude rows and deltas" in feat.evidence_summary
+        assert "final `collision_dA_abs_max_final` kinetic-source observables" in feat.evidence_summary
+        assert "combined angular+`pstf_radial` component `dA`" in feat.notes
+        assert "terminal electron-bath observables" in feat.notes
+        assert "source-model provenance" in feat.notes
+        assert "radial momentum-delta forwarding into AP65/AP66" in feat.notes
+        assert "selectable angular-only or combined angular+`pstf_radial` source models" in feat.notes
+        assert "fixed source-model/radial/electron-bath solver controls" in feat.notes
+        assert "radial momentum-delta" in feat.notes
+        assert "AP69 source-model/source-refresh/radial/electron-bath control metadata preservation" in feat.notes
+        assert "scalar-QED control metadata preservation" in feat.notes
+        assert "source-model/source-refresh/radial/electron-bath-control-aware cache keys" in feat.notes
+        assert "scalar-QED-aware cache context" in feat.notes
+        assert "last successful prediction metadata preservation" in feat.notes
+        assert "source-model/source-refresh/N_span/radial/electron-bath-control provenance" in feat.notes
+        assert "scalar-QED provenance" in feat.notes
+        assert "radial momentum-delta provenance" in feat.notes
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath-control row context" in feat.notes
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath plot provenance" in feat.notes
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath bundle provenance" in feat.notes
+        assert "source-model/source-refresh/N_span/radial-momentum-delta/electron-bath readiness-ledger provenance" in feat.notes
+        assert "diagonal no-QKE 2-to-2 collision kernels" in feat.evidence_summary
+        assert "staged NumPy AP19/AP33/AP35/AP41 diagonal-nu-nu source bridge" in feat.evidence_summary
+        assert "all-nine ordered pairwise bank coverage" in feat.evidence_summary
+        assert "identical-bank self-scattering diagnostics" in feat.evidence_summary
+        assert "weighted-energy closure projection" in feat.notes
+        assert "all nine ordered bank pairs" in feat.notes
+        assert "same-bank number/energy-neutral projection" in feat.notes
+        assert "off-diagonal number-neutral projection" in feat.notes
+        assert "all-nine radial number conservation" in feat.notes
+        assert "unordered-pair energy-neutral closure" in feat.notes
+        assert "preserves relative energy exchange" in feat.notes
+        assert "fixed-point redistribution helper remains legacy comparison" in feat.notes
+        assert "six-monomial polynomial" in feat.notes
+        assert "K34" in feat.notes
+        assert "G_mu" in feat.notes
+        assert "Pi_ij Pi_kl" in feat.notes
+        assert "p4 = E1 + E2 - E3" in feat.notes
+        assert "radial `C_modes` to `dA_modes` hierarchy payload mapping" in feat.notes
+        assert "concrete moment and kinetic-source amplitude deltas" in feat.notes
+        assert "charge-neutrality radial sources preserving `dA_modes` hierarchy payloads" in feat.notes
+        assert "finite-mu-scaled isotropic QED" in feat.notes
+        assert "exact_finite_mu_scalar" in feat.notes
+        assert "signed-`mu_e` `nu-e` scattering and pair-process Pauli blocking" in feat.evidence_summary
+        assert "AP18/AP40 callback forwarding" in feat.evidence_summary
+        assert "signed-`mu_e` `nu-e` scattering and pair-process Pauli blocking" in feat.notes
+        assert "AP18/AP40 callback forwarding" in feat.notes
+        assert "collision_dA_abs_max` kinetic-source amplitude rows and deltas" in feat.notes
+        assert "collision_dA_abs_max_final" in feat.notes
+        assert "invalid-kinematic zeroing" in feat.notes
+        assert "momentum-delta weights" in feat.notes
+        assert "unit-direction momentum-delta" in feat.notes
+        assert "p-dependent radial Gaussian" in feat.notes
+        assert "q=(3,4,5)" in feat.notes
+        assert "FB-20 adds an optional production-candidate gate artifact" in feat.notes
+        assert "still leaves public dispatch, production SMC validation, and promotion decision disabled" in feat.notes
+        assert "AP6 `pstf_radial` source moments plus kinetic `dA` amplitude" in feat.notes
+        assert "weak-rate candidate sub-gate" in feat.evidence_summary
+        assert "collision-feedback candidate sub-gate" in feat.evidence_summary
+        assert "AP36 LRS source-policy routing" in feat.evidence_summary
+        assert "span-ladder candidate gate" in feat.evidence_summary
+        assert "collision-feedback 3T convergence runners" in feat.evidence_summary
+        assert "collision source-moment control-variate reports" in feat.evidence_summary
+        assert "LRS angular-node nu-e scattering projection bridge" in feat.evidence_summary
+        assert "elastic-scattering number closure" in feat.evidence_summary
+        assert "LRS angular projection path to the electromagnetic pair-process" in feat.evidence_summary
+        assert "number-closed scattering" in feat.evidence_summary
+        assert "AP81 pairwise diagonal no-QKE nu-nu 2-to-2 reference" in feat.evidence_summary
+        assert "generic angular-node v2 contracts" in feat.evidence_summary
+        assert "explicit AP18 3T thermo-source callback" in feat.evidence_summary
+        assert "LRS angular-collision 3T direct wrapper" in feat.evidence_summary
+        assert "LRS direct wrapper in the collision-feedback artifact" in feat.evidence_summary
+        assert "source-update policy" in feat.evidence_summary
+        assert "source-only non-LRS coevolution shell" in feat.evidence_summary
+        assert "source-only non-LRS weak/network shell" in feat.evidence_summary
+        assert "source-only non-LRS 3T thermo/Hubble shell" in feat.evidence_summary
+        assert "non-LRS collision-moment thermo feedback hook" in feat.evidence_summary
+        assert "optional projected collision `dA_modes` hierarchy term" in feat.evidence_summary
+        assert "non-LRS S2 angular collision thermo-source factory" in feat.evidence_summary
+        assert "non-LRS collision-feedback artifact runner" in feat.evidence_summary
+        assert "non-LRS collision-feedback convergence runners" in feat.evidence_summary
+        assert "non-LRS collision-feedback candidate gate" in feat.evidence_summary
+        assert "source-update policy artifact" in feat.evidence_summary
+        assert "source-update policy candidate gate" in feat.evidence_summary
+        assert "angular collision-feedback 3T solve wrapper" in feat.evidence_summary
+        assert "artifact reuse of that wrapper" in feat.evidence_summary
+        assert "direct wrapper artifact runner" in feat.evidence_summary
+        assert "direct wrapper candidate gate" in feat.evidence_summary
+        assert "direct wrapper outcome policy/report runner" in feat.evidence_summary
+        assert "pre-budget direct solver-matrix artifact" in feat.evidence_summary
+        assert "source-update policy promotion study" in feat.evidence_summary
+        assert "pre-budget direct-wrapper convergence artifact" in feat.evidence_summary
+        assert "direct non-LRS `pstf_radial` collision-feedback 3T wrapper" in feat.evidence_summary
+        assert "AP4/AP65 combined full-span candidate gate observables" in feat.notes
+        assert "AP4/AP65 radial closure observables" in feat.notes
+        assert "real `live_rhs` two-span ladder" in feat.notes
+        assert "deterministic warm-preset `N_span=1e-8` ladder" in feat.notes
+        assert "frozen-source Radau physical-preview preset" in feat.notes
+        assert "isolated `N_span=1e-3` diagnostic evidence" in feat.notes
+        assert "named `piecewise_physical_preview` preset" in feat.notes
+        assert "piecewise refinement artifact" in feat.notes
+        assert "`piecewise_frozen` source-refresh gate" in feat.notes
+        assert "evolved electron charge-asymmetry state through a real `N_span=1e-4` smoke row" in feat.notes
+        assert "shared AP6 radial-grid cache reuse" in feat.notes
+        assert "FB-08 runs the fixed/charge-neutral electron-bath and finite/exact scalar-QED cross-product over chained rows" in feat.notes
+        assert "scalar-QED one-hot diagnostics in every row" in feat.notes
+        assert "FB-09 runs smoke chained N_q/N_mu/N_phi ladders" in feat.notes
+        assert "source-evaluation and replay-budget metadata for every ladder point" in feat.notes
+        assert "charge-neutral e-/e+ bath forwarding" in feat.notes
+        assert "terminal electron-mu/charge-asymmetry maxima" in feat.notes
+        assert "companion AP4/AP65 source-policy span profile" in feat.notes
+        assert "collision-source budget report" in feat.evidence_summary
+        assert "candidate evidence bundle" in feat.evidence_summary
+        assert "physical sanity matrix" in feat.evidence_summary
+        assert "QKE out of scope" in feat.evidence_summary
+        assert "AP6 radial number/pair-energy closure observables" in feat.evidence_summary
+        assert "frozen-source Radau physical-preview short-span evidence" in feat.evidence_summary
+        assert "piecewise_frozen nonuniform N_span=1e-3 source-refresh evidence" in feat.evidence_summary
+>       assert "angular and pstf_radial collision sources carry optional kinetic dA" in feat.short_summary
+E       AssertionError: assert 'angular and pstf_radial collision sources carry optional kinetic dA' in 'Historical AP/FB substrate was deflated at BD612; the surviving default-off v1 ell2 path is electron-minus-only and NOT VALIDATED; public dispatch and endpoint-product support remain closed; QKE and publication claims are forbidden.'
+E        +  where 'Historical AP/FB substrate was deflated at BD612; the surviving default-off v1 ell2 path is electron-minus-only and NOT VALIDATED; public dispatch and endpoint-product support remain closed; QKE and publication claims are forbidden.' = FeatureCapability(key='typeI_augmented_pstf_noqke_staging', name='Type I augmented-PSTF no-QKE staging', tier='substra...rgy exchange, and the older fixed-point redistribution helper remains legacy comparison plumbing.', layered_scope=None).short_summary
+
+tests/test_augmented_pstf_capability_registry.py:308: AssertionError
+_________ TestGradientBridgeLock.test_gradient_finite_and_correct_sign _________
+
+self = <test_constraint_regression.TestGradientBridgeLock object at 0x72f8283f0650>
+gold = {'constraint_95cl': {'CL2': {'Sigma_H_upper': 0.66, 'tolerance': 0.05}}, 'description': 'Production constraint regress..., ...}, 'flrw_gold': {'CL0': {'Yp': 0.2423494, 'tolerance': 1e-05}, 'CL2': {'Yp': 0.2480311, 'tolerance': 1e-05}}, ...}
+
+    def test_gradient_finite_and_correct_sign(self, gold):
+        from rabbit.inference.bbn_inference import _scipy_forward_solve
+        import jax
+        jax.config.update("jax_enable_x64", True)
+        import jax.numpy as jnp
+    
+        g = gold["gradient_bridge"]
+        YP_OBS, YP_ERR = 0.2449, 0.004
+        DH_OBS, DH_ERR = 2.547e-5, 0.029e-5
+        ETA_OBS, TAUN_OBS = 6.104, 878.4
+    
+        @jax.custom_vjp
+        def fwd(p):
+            r = _scipy_forward_solve(0.0, float(p[0])*1e-10, float(p[1]), 20, 0)
+            return jnp.array([r["Yp"], r["DH"]]) if r["success"] else jnp.array([0., 0.])
+        def fwd_f(p):
+            y = fwd.__wrapped__(p); return y, p
+        def fwd_b(p, g_):
+            gr = jnp.zeros(2)
+            for i in range(2):
+                e = jnp.maximum(jnp.abs(p[i])*1e-5, 1e-15)
+                yp = fwd.__wrapped__(p.at[i].set(p[i]+e))
+                ym = fwd.__wrapped__(p.at[i].set(p[i]-e))
+                gr = gr.at[i].set(jnp.sum(g_*(yp-ym)/(2*e)))
+            return (gr,)
+        fwd.defvjp(fwd_f, fwd_b)
+    
+        def lp(p):
+            o = fwd(p)
+            return (-0.5*((o[0]-YP_OBS)/YP_ERR)**2
+                    - 0.5*((o[1]-DH_OBS)/DH_ERR)**2)
+    
+        init = jnp.array([ETA_OBS, TAUN_OBS])
+        val, grad = jax.value_and_grad(lp)(init)
+    
+        assert jnp.all(jnp.isfinite(grad)), f"grad not finite: {grad}"
+        # Sign check
+        assert float(grad[0]) < 0, f"∂/∂η₁₀ should be negative: {grad[0]}"
+>       assert float(grad[1]) > 0, f"∂/∂τ_n should be positive: {grad[1]}"
+E       AssertionError: ∂/∂τ_n should be positive: -0.041599406554197645
+E       assert -0.041599406554197645 > 0
+E        +  where -0.041599406554197645 = float(Array(-0.04159941, dtype=float64))
+
+tests/test_constraint_regression.py:146: AssertionError
+________________________ test_flrw_yp_matches_alterbbn _________________________
+
+    @pytest.mark.cross_code
+    @pytest.mark.skipif(
+        not has_alterbbn_image(),
+        reason=(
+            "AlterBBN docker image not present. Provide rabbit/alterbbn:2.4 "
+            "locally or `docker pull rabbit/alterbbn:2.4` if a registry is configured."
+        ),
+    )
+    def test_flrw_yp_matches_alterbbn():
+        """RABBIT FLRW Y_p agrees with AlterBBN 2.4 to within 5e-4."""
+        from rabbit.external.alterbbn import run_alterbbn
+        from rabbit.inference.forward_likelihood import canonical_forward_solver
+    
+        alter_out = run_alterbbn(eta=6.104e-10, tau_n=878.4, n_eff=3.044)
+        rabbit_pred = canonical_forward_solver(
+            Sigma_H=0.0,
+            eta=6.104e-10,
+            tau_n=878.4,
+            correction_level=2,
+            backend="scipy",
+        )
+        yp_gap = abs(float(rabbit_pred.Yp) - alter_out.Y_p)
+        dh_gap_rel = abs(float(rabbit_pred.DH) - alter_out.DH) / alter_out.DH
+>       assert yp_gap < 5.0e-4, (
+            f"AlterBBN Y_p gap widened: RABBIT={rabbit_pred.Yp:.6f}, "
+            f"AlterBBN={alter_out.Y_p:.6f}, gap={yp_gap:.3e}"
+        )
+E       AssertionError: AlterBBN Y_p gap widened: RABBIT=0.248031, AlterBBN=0.246980, gap=1.051e-03
+E       assert 0.0010513455427583474 < 0.0005
+
+tests/test_cross_code_live.py:121: AssertionError
+_________ test_collision_on_reaches_endpoint_physical_neff_no_collapse _________
+
+    @pytest.mark.slow
+    def test_collision_on_reaches_endpoint_physical_neff_no_collapse():
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+____________________ test_collision_on_frame_scale_is_tight ____________________
+
+    @pytest.mark.slow
+    def test_collision_on_frame_scale_is_tight():
+        # FINDING 4: Gate A never exercises the frame resample (its ν moments are a pinned
+        # identity). The collision-on run does; a frame-scale bug the wide N_eff band absorbs
+        # shifts T_ν/T_γ off (4/11)^{1/3}. They land ~0.715–0.719, so abs 0.01 is tight.
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+___________________________ test_nue_warmer_than_nux ___________________________
+
+    @pytest.mark.slow
+    def test_nue_warmer_than_nux():
+        # ν_e (charged + neutral current) couples longer than ν_x (neutral current only),
+        # so it stays warmer relative to the photon bath. Spike: 0.7204 vs 0.7169.
+>       res = integrate_flrw_decoupling(n_q=24, collisions=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dynamic_collision_driver.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def integrate_flrw_decoupling(
+        *,
+        T_gamma_init_MeV: float = 10.0,
+        n_q: int = 32,
+        collisions: bool = True,
+        T_gamma_stop_MeV: float = 1.0e-2,
+        rtol: float = 1.0e-8,
+        atol: float = 1.0e-10,
+        N_span_max: float = 12.0,
+        max_step: float = 0.5,
+    ) -> DecouplingResult:
+        """Integrate FLRW neutrino decoupling in the comoving frame to the endpoint.
+    
+        Starts deep in the coupled regime (T_γ,init = 10 MeV, f = Fermi–Dirac in comoving y) and
+        integrates N = ln a with a stiff Radau solver until the plasma cools below
+        ``T_gamma_stop_MeV`` (terminal event). Returns a frozen ``DecouplingResult`` with N_eff and
+        the per-bank T_ν/T_γ. ``collisions=False`` gives the pure-entropy frame check (Gate A);
+        ``collisions=True`` gives the blocker-fixed acceptance (Gate B).
+    
+        Fails closed (``RuntimeError``) if the terminal event does not fire or the solver reports
+        failure (a finite N_eff would be unphysical), or if an endpoint bank spectral energy moment
+        is negative (the heavy-bank-collapse symptom) — it never silently returns garbage N_eff."""
+        quad = build_fixed_collision_quadrature(
+            N_q=n_q, N_nue_y2=n_q, N_nue_y3=n_q, N_pair_y2=n_q, N_pair_leg=16
+        )
+        rhs, Y, q_nodes, q_weights, monitor = _make_rhs(quad, collisions)
+        n = Y.size
+    
+        # a_init so z_init = a_init·T_γ,init = 1 ⟹ N_init = ln(1/T_γ,init); then q = y at N_init.
+        a_init = 1.0 / float(T_gamma_init_MeV)
+        N_init = np.log(a_init)
+    
+        # Initial comoving distribution: FD in y (z_init = 1 ⟹ q = y ⟹ f = 1/(exp(Y)+1)).
+        f0 = 1.0 / (np.exp(Y) + 1.0)
+        state0 = np.concatenate([f0.copy(), f0.copy(), [float(T_gamma_init_MeV)]])
+    
+        def event_Tstop(N, state):
+            return state[2 * n] - float(T_gamma_stop_MeV)
+    
+        event_Tstop.terminal = True
+        event_Tstop.direction = -1
+    
+        sol = solve_ivp(
+            rhs,
+            (N_init, N_init + float(N_span_max)),
+            state0,
+            method="Radau",
+            rtol=rtol,
+            atol=atol,
+            events=event_Tstop,
+            dense_output=False,
+            max_step=max_step,
+        )
+    
+        solver_success = bool(sol.success)
+        solver_message = str(sol.message)
+        event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
+        reached_endpoint = solver_success and event_count == 1
+        if not reached_endpoint:
+            raise RuntimeError(
+                "FLRW decoupling integration did not reach exactly one endpoint event "
+                f"(N_eff would be unphysical): solver_success={solver_success}, "
+                f"message={solver_message!r}, terminal_event_count={event_count}."
+            )
+    
+        times = np.asarray(sol.t)
+        states = np.asarray(sol.y)
+        if times.size == 0 or states.shape != (2 * n + 1, times.size):
+            raise RawStateAdmissionError(
+                "malformed_stored_trajectory", sample_index=None, N=np.nan,
+                component="sol.y", value=states.size, state=states,
+            )
+        for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
+            f_sample = state[: 2 * n]
+            bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
+            if bad.size:
+                j = int(bad[0])
+                bank = "f_nue" if j < n else "f_nux"
+>               raise RawStateAdmissionError(
+                    "occupation_outside_strict_open_interval", sample_index=sample_index,
+                    N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
+                )
+E               rabbit.collisions.dynamic_collision_driver.RawStateAdmissionError: raw stored state rejected: reason=occupation_outside_strict_open_interval, sample=3, N=-2.302557321652884, component=f_nue[22], value=-2.3008216172341183e-30, snapshot=(0.485249318938976, 0.4228123062232092, 0.31732402812629323, 0.19378555750762502, 0.09174084435965055, 0.033221432211827065, 0.009330580138774478, 0.002062987226139103)
+
+src/rabbit/collisions/dynamic_collision_driver.py:324: RawStateAdmissionError
+____________ test_valid_nonzero_likelihood_bit_pattern_is_unchanged ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f357797740>
+
+    def test_valid_nonzero_likelihood_bit_pattern_is_unchanged(monkeypatch):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        observation = Observation("Yp", 0.245, 0.004)
+        prediction_value = 0.24623456789
+        expected_bits = np.uint64(0xBFA862F35E325D5A)
+        prediction = BBNPrediction(Yp=prediction_value, DH=2.5e-5)
+        model = _model_returning(prediction)
+    
+        scalar_scores = (
+            model.log_likelihood(observation),
+            BBNLikelihood(model, observations=[observation]).log_likelihood(),
+            sampler.BBNLikelihood(
+                solver_fn=lambda _params: {
+                    "Yp": prediction_value,
+                    "DH": 2.5e-5,
+                },
+                observations=[observation],
+            ).log_likelihood({}),
+        )
+        for score in scalar_scores:
+            assert np.float64(score).view(np.uint64) == expected_bits
+    
+>       monkeypatch.setattr(
+            forward_likelihood,
+            "canonical_batch_forward_solver",
+            lambda *_args, **_kwargs: {
+                "Yp": np.array([prediction_value, prediction_value]),
+                "success": np.array([True, True]),
+                "metadata": {},
+            },
+        )
+E       AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:215: AttributeError
+____________ test_batch_likelihood_masks_failed_and_nonfinite_rows _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f37486e030>
+
+    def test_batch_likelihood_masks_failed_and_nonfinite_rows(monkeypatch):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, np.nan, 0.245, 0.245]),
+            "DH": np.array([2.5e-5, 2.5e-5, np.inf, 2.5e-5]),
+            "success": np.array([True, True, True, False]),
+            "metadata": {},
+        }
+        expected = np.array([True, False, False, False])
+    
+        np.testing.assert_array_equal(
+            observable_helpers.prediction_valid_mask_for_inference(prediction),
+            expected,
+        )
+>       monkeypatch.setattr(
+            forward_likelihood,
+            "canonical_batch_forward_solver",
+            lambda *_args, **_kwargs: prediction,
+        )
+E       AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:391: AttributeError
+___ test_batch_likelihood_sanitizes_failed_extreme_payload_before_arithmetic ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356756f00>
+
+    def test_batch_likelihood_sanitizes_failed_extreme_payload_before_arithmetic(
+        monkeypatch,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, np.finfo(np.float64).max]),
+            "DH": np.array([2.5e-5, np.finfo(np.float64).max]),
+            "success": np.array([True, False]),
+            "metadata": {},
+        }
+>       monkeypatch.setattr(
+            forward_likelihood,
+            "canonical_batch_forward_solver",
+            lambda *_args, **_kwargs: prediction,
+        )
+E       AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:415: AttributeError
+_ test_batch_likelihood_returns_negative_infinity_for_missing_observable[Yp-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356756f30>
+three_dimensional = False, missing_key = 'Yp'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize("missing_key", ["Yp", "DH"])
+    def test_batch_likelihood_returns_negative_infinity_for_missing_observable(
+        monkeypatch,
+        three_dimensional,
+        missing_key,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, 0.246]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        prediction.pop(missing_key)
+    
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:558: AttributeError
+_ test_batch_likelihood_returns_negative_infinity_for_missing_observable[Yp-True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f3746515e0>
+three_dimensional = True, missing_key = 'Yp'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize("missing_key", ["Yp", "DH"])
+    def test_batch_likelihood_returns_negative_infinity_for_missing_observable(
+        monkeypatch,
+        three_dimensional,
+        missing_key,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, 0.246]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        prediction.pop(missing_key)
+    
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:549: AttributeError
+_ test_batch_likelihood_returns_negative_infinity_for_missing_observable[DH-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f374677200>
+three_dimensional = False, missing_key = 'DH'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize("missing_key", ["Yp", "DH"])
+    def test_batch_likelihood_returns_negative_infinity_for_missing_observable(
+        monkeypatch,
+        three_dimensional,
+        missing_key,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, 0.246]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        prediction.pop(missing_key)
+    
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:558: AttributeError
+_ test_batch_likelihood_returns_negative_infinity_for_missing_observable[DH-True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356757920>
+three_dimensional = True, missing_key = 'DH'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize("missing_key", ["Yp", "DH"])
+    def test_batch_likelihood_returns_negative_infinity_for_missing_observable(
+        monkeypatch,
+        three_dimensional,
+        missing_key,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": np.array([0.245, 0.246]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        prediction.pop(missing_key)
+    
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:549: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[None-False] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f357796cf0>
+three_dimensional = False, invalid_value = None
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:598: AttributeError
+__ test_batch_likelihood_safely_rejects_uncoercible_required_value[None-True] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356757aa0>
+three_dimensional = True, invalid_value = None
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:589: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[not-a-number-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be55b0>
+three_dimensional = False, invalid_value = 'not-a-number'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:598: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[not-a-number-True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be6030>
+three_dimensional = True, invalid_value = 'not-a-number'
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:589: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[invalid_value2-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be6bd0>
+three_dimensional = False, invalid_value = <object object at 0x72f8283428d0>
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:598: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[invalid_value2-True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be7dd0>
+three_dimensional = True, invalid_value = <object object at 0x72f8283428d0>
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:589: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[(0.245+0.1j)-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be4470>
+three_dimensional = False, invalid_value = (0.245+0.1j)
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:598: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[(0.245+0.1j)-True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be59d0>
+three_dimensional = True, invalid_value = (0.245+0.1j)
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:589: AttributeError
+_ test_batch_likelihood_safely_rejects_uncoercible_required_value[True-False] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be76e0>
+three_dimensional = False, invalid_value = True
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:598: AttributeError
+__ test_batch_likelihood_safely_rejects_uncoercible_required_value[True-True] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be59d0>
+three_dimensional = True, invalid_value = True
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "invalid_value",
+        [None, "not-a-number", object(), 0.245 + 0.1j, True],
+    )
+    def test_batch_likelihood_safely_rejects_uncoercible_required_value(
+        monkeypatch,
+        three_dimensional,
+        invalid_value,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": invalid_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": np.array([True, True]),
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:589: AttributeError
+_ test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift[False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be4350>
+three_dimensional = False
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    def test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift(
+        monkeypatch,
+        three_dimensional,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        observation = Observation("Yp", 0.245, 0.004)
+        prediction = {
+            "Yp": np.array([0.24623456789, 0.247654321]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]]),
+                observations=[observation],
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:635: AttributeError
+_ test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift[True] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be6960>
+three_dimensional = True
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    def test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift(
+        monkeypatch,
+        three_dimensional,
+    ):
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        observation = Observation("Yp", 0.245, 0.004)
+        prediction = {
+            "Yp": np.array([0.24623456789, 0.247654321]),
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:625: AttributeError
+____ test_batch_likelihood_rejects_observable_shape_broadcast[scalar-False] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355be46e0>
+three_dimensional = False, malformed_value = 0.245
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:685: AttributeError
+____ test_batch_likelihood_rejects_observable_shape_broadcast[scalar-True] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f3748ff680>
+three_dimensional = True, malformed_value = 0.245
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:676: AttributeError
+__ test_batch_likelihood_rejects_observable_shape_broadcast[singleton-False] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356755df0>
+three_dimensional = False, malformed_value = array([0.245])
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:685: AttributeError
+___ test_batch_likelihood_rejects_observable_shape_broadcast[singleton-True] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f800142450>
+three_dimensional = True, malformed_value = array([0.245])
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:676: AttributeError
+_ test_batch_likelihood_rejects_observable_shape_broadcast[wrong-length-False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f356756ae0>
+three_dimensional = False, malformed_value = array([0.245, 0.246, 0.247])
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+            monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+            result = forward_likelihood.canonical_batch_log_likelihood_3d(
+                np.array([[0.0, 6.1e-10, 878.4], [1e-4, 6.1e-10, 878.4]])
+            )
+        else:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver'
+
+tests/test_inference_prediction_validation.py:685: AttributeError
+_ test_batch_likelihood_rejects_observable_shape_broadcast[wrong-length-True] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f355bdb200>
+three_dimensional = True, malformed_value = array([0.245, 0.246, 0.247])
+
+    @pytest.mark.parametrize("three_dimensional", [False, True])
+    @pytest.mark.parametrize(
+        "malformed_value",
+        [0.245, np.array([0.245]), np.array([0.245, 0.246, 0.247])],
+        ids=["scalar", "singleton", "wrong-length"],
+    )
+    def test_batch_likelihood_rejects_observable_shape_broadcast(
+        monkeypatch,
+        three_dimensional,
+        malformed_value,
+    ):
+        """One solver value must never masquerade as multiple batch rows."""
+        import rabbit.inference.forward_likelihood as forward_likelihood
+    
+        prediction = {
+            "Yp": malformed_value,
+            "DH": np.array([2.5e-5, 2.4e-5]),
+            "success": True,
+            "metadata": {},
+        }
+        if three_dimensional:
+>           monkeypatch.setattr(
+                forward_likelihood,
+                "canonical_batch_forward_solver_3d",
+                lambda *_args, **_kwargs: prediction,
+            )
+E           AttributeError: <module 'rabbit.inference.forward_likelihood' from '/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/inference/forward_likelihood.py'> has no attribute 'canonical_batch_forward_solver_3d'
+
+tests/test_inference_prediction_validation.py:676: AttributeError
+____________ TestLogPosterior.test_ac3_log_posterior_differentiable ____________
+
+self = <test_j08_gradient_bridge.TestLogPosterior object at 0x72f7a8300b00>
+
+    def test_ac3_log_posterior_differentiable(self):
+        """jax.grad(log_posterior) returns finite gradient."""
+        def rhs_factory(params):
+            lam = params[0]
+            def rhs(t, y):
+                return jnp.array([-lam * y[0]])
+            return rhs
+    
+        obs = [BBNObservation('Y_p', 0.1, 0.01)]
+        log_post = make_log_posterior(
+            rhs_factory, jnp.array([0.5]), (0.0, 3.0),
+            observable_indices={'Y_p': 0},
+            observations=obs,
+            param_indices=(0,),
+            rtol=1e-8, atol=1e-10,
+        )
+        params = jnp.array([1.0])
+>       val, grad = jax.value_and_grad(log_post)(params)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_j08_gradient_bridge.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/jax/gradient_bridge.py:467: in log_posterior
+    y_final = solve_fn(params)
+              ^^^^^^^^^^^^^^^^
+src/rabbit/jax/gradient_bridge.py:351: in solve_fn
+    return solve_uniform_steps(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:228: in solve_uniform_steps
+    return replay_solve_with_h_tape(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:201: in replay_solve_with_h_tape
+    (_, y_final), _ = lax.scan(step_body, (jnp.asarray(t0), y0), h_tape)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:185: in step_body
+    y_new = lax.cond(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:187: in <lambda>
+    lambda _: _single_step_with_theta(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:110: in _single_step_with_theta
+    jac = jax.jacfwd(f_local)(y)
+          ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+y_local = JVPTracer(primal=JitTracer(float64[1]), tangent=VmapTracer(aval=float64[1], batched=float64[1,1]))
+
+    def f_local(y_local):
+>       return rhs_fn(t, y_local, theta)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestLogPosterior.test_ac3_log_posterior_differentiable.<locals>.rhs_factory() takes 1 positional argument but 3 were given
+E       --------------------
+E       For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:108: TypeError
+________________ TestLogPosterior.test_log_posterior_with_prior ________________
+
+self = <test_j08_gradient_bridge.TestLogPosterior object at 0x72f7a8300dd0>
+
+    def test_log_posterior_with_prior(self):
+        """Prior contributes to log-posterior."""
+        def rhs_factory(params):
+            def rhs(t, y):
+                return -params[0] * y
+            return rhs
+    
+        # Gaussian prior on λ: mean=1, std=0.5
+        def prior_fn(params):
+            return -0.5 * ((params[0] - 1.0) / 0.5) ** 2
+    
+        obs = [BBNObservation('Y_p', 0.1, 0.01)]
+        log_post = make_log_posterior(
+            rhs_factory, jnp.array([0.5]), (0.0, 3.0),
+            observable_indices={'Y_p': 0},
+            observations=obs,
+            param_indices=(0,),
+            prior_fn=prior_fn,
+        )
+>       val = log_post(jnp.array([1.0]))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_j08_gradient_bridge.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/jax/gradient_bridge.py:467: in log_posterior
+    y_final = solve_fn(params)
+              ^^^^^^^^^^^^^^^^
+src/rabbit/jax/gradient_bridge.py:351: in solve_fn
+    return solve_uniform_steps(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:228: in solve_uniform_steps
+    return replay_solve_with_h_tape(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:201: in replay_solve_with_h_tape
+    (_, y_final), _ = lax.scan(step_body, (jnp.asarray(t0), y0), h_tape)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:185: in step_body
+    y_new = lax.cond(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:187: in <lambda>
+    lambda _: _single_step_with_theta(
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:110: in _single_step_with_theta
+    jac = jax.jacfwd(f_local)(y)
+          ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+y_local = JVPTracer(primal=JitTracer(float64[1]), tangent=VmapTracer(aval=float64[1], batched=float64[1,1]))
+
+    def f_local(y_local):
+>       return rhs_fn(t, y_local, theta)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestLogPosterior.test_log_posterior_with_prior.<locals>.rhs_factory() takes 1 positional argument but 3 were given
+E       --------------------
+E       For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+src/rabbit/jax/solver_jax_rodas5p_adjoint.py:108: TypeError
+______________ test_jax_main_promotion_roadmap_is_historical_only ______________
+
+    def test_jax_main_promotion_roadmap_is_historical_only():
+        assert ROADMAP_DOC.exists(), "JAX main canonical promotion roadmap missing"
+        assert RUST_FIRST_PLAN.exists(), "Rust-first normative plan missing"
+        text = ROADMAP_DOC.read_text()
+        for needle in ["PR-A", "PR-B", "PR-C", "PR-D", "PR-E", "dispatch flip"]:
+            assert needle in text, f"Roadmap missing {needle}"
+        normative = RUST_FIRST_PLAN.read_text()
+        assert "Historical" in normative
+>       assert "backend recommendation notes are provenance only" in normative
+E       AssertionError: assert 'backend recommendation notes are provenance only' in '# RABBIT Rust-First Bottom-Up BBN and Type-I No-QKE Plan\n\nDate: 2026-07-15\n\nStatus: ACTIVE, SPECIFIED. This file ...tion remain absent,\nso the new output is not precision-standard, runtime-promoted, or\npublic-production authority.\n'
+
+tests/test_jax_canonical_contract_docs.py:59: AssertionError
+________ test_generated_docs_close_pub02c_without_jax_runtime_authority ________
+
+    def test_generated_docs_close_pub02c_without_jax_runtime_authority():
+        sources = (RENDERER,) + GENERATED_CAPABILITY_DOCS
+        rendered = {path: path.read_text(encoding="utf-8") for path in sources}
+    
+        for path, text in rendered.items():
+            for stale in STALE_PUB02_OPEN:
+                assert stale not in text, f"{path} retains stale claim {stale!r}"
+    
+        promotion_text = rendered[PROMOTION_DOC]
+>       assert "jax_typeI_liveweak_cl3_tier1" in promotion_text
+E       AssertionError: assert 'jax_typeI_liveweak_cl3_tier1' in '<!-- BEGIN:PG_HEADER -->\n# RABBIT Feature Promotion Gates\n\n**Authority**: Two registries are the single sources of...TER -->\nNo candidate should be promoted without explicit gate criteria and decision record.\n<!-- END:PG_FOOTER -->\n'
+
+tests/test_jax_canonical_contract_docs.py:72: AssertionError
+________ test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke _________
+
+    @pytest.mark.production
+    @pytest.mark.slow
+    @pytest.mark.gold
+    def test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke() -> None:
+        result = _run_preconditioned_remap()
+    
+        assert result.success, result.metadata
+        assert result.metadata["collision_scope_contract"] == (
+            "jax_kernel_temperature_remap_jacobian_preconditioned_v1"
+        )
+        assert result.metadata["kernel_jacobian_preconditioner_enabled"] is True
+        assert result.metadata["weak_monopole_scope_contract"] == "separate_nue_nuebar_live_f0_v1"
+        assert result.metadata["stress_species_weight_contract"] == (
+            "temperature4_degeneracy_weighted_species_stress_v1"
+        )
+        assert result.metadata["phase1_solver_diagnostics"]["target_reached"] is True
+        assert result.n_steps_p1 > 0
+>       assert 3.04 < result.metadata["N_eff_measured"] < 3.10
+E       assert 3.04 < 3.0372829409131374
+
+tests/test_jax_kernel_remap_preconditioned.py:131: AssertionError
+___________ test_jax_kernel_remap_preconditioned_tolerance_envelope ____________
+
+    @pytest.mark.production
+    @pytest.mark.slow
+    @pytest.mark.gold
+    def test_jax_kernel_remap_preconditioned_tolerance_envelope() -> None:
+        loose = _run_preconditioned_remap(rtol=1.0e-4, atol=1.0e-6, max_steps=2000)
+        production = _run_preconditioned_remap()
+        tight = _run_preconditioned_remap(rtol=3.0e-6, atol=3.0e-8, max_steps=6000)
+    
+        assert loose.success, loose.metadata
+        assert production.success, production.metadata
+        assert tight.success, tight.metadata
+        assert tight.n_steps_p1 > production.n_steps_p1
+    
+        assert (
+            abs(production.metadata["N_eff_measured"] - tight.metadata["N_eff_measured"])
+            < 2.0e-3
+        )
+        assert (
+            abs(loose.metadata["N_eff_measured"] - tight.metadata["N_eff_measured"])
+            < 5.0e-3
+        )
+        assert abs(production.Yp - tight.Yp) < 2.0e-4
+>       assert abs(loose.Yp - tight.Yp) < 4.0e-4
+E       AssertionError: assert 0.0004071090641502295 < 0.0004
+E        +  where 0.0004071090641502295 = abs((0.2415244803682022 - 0.24111737130405198))
+E        +    where 0.2415244803682022 = JAXFullBoltzmannResult(Yp=0.2415244803682022, DH=2.4805516566896518e-05, Li7H=5.213984523980029e-10, Li6H=2.1975689381...atform': 'cpu', 'runtime_device_contract': 'cpu_preferred_exact_runtime_v1', 'runtime_device_fallback_applied': False}).Yp
+E        +    and   0.24111737130405198 = JAXFullBoltzmannResult(Yp=0.24111737130405198, DH=2.4746174889068227e-05, Li7H=5.23377859533269e-10, Li6H=2.1963893366...atform': 'cpu', 'runtime_device_contract': 'cpu_preferred_exact_runtime_v1', 'runtime_device_fallback_applied': False}).Yp
+
+tests/test_jax_kernel_remap_preconditioned.py:157: AssertionError
+_____ test_jax_kernel_remap_preconditioned_grid_sensitivity_is_documented ______
+
+    @pytest.mark.production
+    @pytest.mark.slow
+    def test_jax_kernel_remap_preconditioned_grid_sensitivity_is_documented() -> None:
+        n6 = _run_preconditioned_remap()
+        n8 = _run_preconditioned_remap(N_q=8, rtol=1.0e-5, atol=1.0e-7, max_steps=3000)
+        n10 = _run_preconditioned_remap(N_q=10, rtol=1.0e-5, atol=1.0e-7, max_steps=3000)
+    
+        assert n6.success, n6.metadata
+        assert n8.success, n8.metadata
+        assert n10.success, n10.metadata
+    
+        n_eff_values = [
+            n6.metadata["N_eff_measured"],
+            n8.metadata["N_eff_measured"],
+            n10.metadata["N_eff_measured"],
+        ]
+        assert n_eff_values[0] > n_eff_values[1] > n_eff_values[2]
+>       assert 1.5e-2 < (n_eff_values[0] - n_eff_values[2]) < 2.5e-2
+E       assert 0.015 < (3.0372829409131374 - 3.0242361719277975)
+
+tests/test_jax_kernel_remap_preconditioned.py:177: AssertionError
+______________ test_rust_extension_and_bridge_import_without_skip ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f1cb3ff230>
+
+    def test_rust_extension_and_bridge_import_without_skip(monkeypatch):
+>       extension = importlib.import_module("_rabbit_cpu")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', import_ = <function _gcd_import at 0x72f9353a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_rabbit_cpu'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_eos_and_compact_characteristic_interface_exists _____________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cab4bf80>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_eos_and_compact_characteristic_interface_exists():
+>       workspace = _workspace()
+                    ^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_native_tier1_vertical_slice.py:30: in _workspace
+    return bridge.NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cab4bf80>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+_____ test_native_boundary_rejects_nonfinite_omega_and_shape_without_clamp _____
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f9353e0380>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_native_boundary_rejects_nonfinite_omega_and_shape_without_clamp():
+>       workspace = _workspace()
+                    ^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_native_tier1_vertical_slice.py:30: in _workspace
+    return bridge.NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f9353e0380>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+___________ test_native_bdf_jacobian_respects_frozen_sigma_minus_row ___________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cabf7290>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f1caccaa50>
+
+    def test_native_bdf_jacobian_respects_frozen_sigma_minus_row(monkeypatch):
+        observed_rows = []
+        original_solve_ivp = driver.solve_ivp
+    
+        def inspect_jacobian(*args, **kwargs):
+            jacobian = kwargs.get("jac")
+            if callable(jacobian):
+                matrix = np.asarray(jacobian(kwargs["t_span"][0], kwargs["y0"]))
+                observed_rows.append(matrix[1].copy())
+            return original_solve_ivp(*args, **kwargs)
+    
+        monkeypatch.setattr(driver, "solve_ivp", inspect_jacobian)
+>       result = driver.run_full_coupled_typeI(
+            driver.FullCoupledConfig(
+                tier1_lrs_implementation="rust_native",
+                Sigma_H_plus=0.1,
+                N_q=8,
+                N_mu=8,
+            )
+        )
+
+tests/test_native_tier1_vertical_slice.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/drivers/full_coupled_typeI.py:1217: in run_full_coupled_typeI
+    workspace = NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cabf7290>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+____________ test_real_endpoint_consumes_native_pack_in_both_phases ____________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cab03980>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f1cacc11f0>
+
+    def test_real_endpoint_consumes_native_pack_in_both_phases(monkeypatch):
+        config = driver.FullCoupledConfig(
+            tier1_lrs_implementation="rust_native",
+            Sigma_H_plus=0.1,
+            Sigma_H_minus=0.0,
+            N_q=8,
+            N_mu=8,
+            n_reactions=12,
+            tier=1,
+            enable_collisions=False,
+            enable_teff=False,
+        )
+        bridge = importlib.import_module("rabbit.native_tier1")
+        temperatures: list[float] = []
+        original_evaluate = bridge.NativeTier1Workspace.evaluate_into
+    
+        def record_evaluate(self, state, derivative, monopole, aux, ray_work):
+            temperatures.append(float(state[3]))
+            return original_evaluate(self, state, derivative, monopole, aux, ray_work)
+    
+        def forbidden_python_core(*_args, **_kwargs):
+            raise AssertionError("rust_native fell back to the Python Tier-1 core")
+    
+        for name in (
+            "compute_typeI_geometry_rhs",
+            "mu_current",
+            "characteristic_transport_rhs",
+            "char_extract_stress",
+            "char_extract_monopole",
+            "dT_gamma_dN_tier1",
+            "T_nu_from_T_gamma_tier1",
+            "_hubble_invsec",
+        ):
+            monkeypatch.setattr(driver, name, forbidden_python_core)
+    
+        with monkeypatch.context() as patch:
+            patch.setattr(bridge.NativeTier1Workspace, "evaluate_into", record_evaluate)
+>           result = driver.run_full_coupled_typeI(config)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/drivers/full_coupled_typeI.py:1217: in run_full_coupled_typeI
+    workspace = NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cab03980>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+__________ test_native_eos_derivatives_temperature_and_hubble_parity ___________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cabf7ef0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_native_eos_derivatives_temperature_and_hubble_parity():
+        from rabbit.drivers.full_coupled_typeI import _MEV_TO_S, _hubble_invsec
+        from rabbit.thermo.eos_photon_electron import (
+            entropy_density_plasma,
+            pressure_plasma,
+            rho_plasma,
+        )
+        from rabbit.thermo.incomplete_decoupling import (
+            T_nu_from_T_gamma_tier1,
+            dT_gamma_dN_tier1,
+        )
+    
+>       workspace = _workspace()
+                    ^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_native_tier1_vertical_slice.py:30: in _workspace
+    return bridge.NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cabf7ef0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+_______ test_native_characteristic_direct_ode_stress_and_monopole_parity _______
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1caccacf0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_native_characteristic_direct_ode_stress_and_monopole_parity():
+        from scipy.integrate import solve_ivp
+    
+        from rabbit.transport.characteristic_rays import extract_monopole, extract_stress
+    
+        n_mu = 12
+        n_q = 20
+        mu0, w0, _x0, _signs = setup_ray_grid(n_mu)
+        q_nodes, _q_weights = roots_laguerre(n_q)
+>       workspace = _workspace(n_mu=n_mu, n_q=n_q)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_native_tier1_vertical_slice.py:371: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_native_tier1_vertical_slice.py:30: in _workspace
+    return bridge.NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1caccacf0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+________ test_native_six_cell_endpoint_matrix_matches_python_reference _________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cb6bb8f0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f1cb3b9280>
+
+    @pytest.mark.slow
+    def test_native_six_cell_endpoint_matrix_matches_python_reference(monkeypatch):
+        terminal_abundances = []
+        original_mass_residual = driver.mass_conservation_residual
+    
+        def capture_terminal_abundances(values):
+            terminal_abundances.append(np.asarray(values, dtype=np.float64).copy())
+            return original_mass_residual(values)
+    
+        monkeypatch.setattr(
+            driver,
+            "mass_conservation_residual",
+            capture_terminal_abundances,
+        )
+        records = []
+        for sigma in (0.0, 0.1, 0.3):
+            for correction_level in (0, 2):
+                reference = driver.run_full_coupled_typeI(
+                    _endpoint_config("python_reference", sigma=sigma, correction_level=correction_level)
+                )
+                reference_abundances = terminal_abundances[-1]
+>               native = driver.run_full_coupled_typeI(
+                    _endpoint_config("rust_native", sigma=sigma, correction_level=correction_level)
+                )
+
+tests/test_native_tier1_vertical_slice.py:473: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/drivers/full_coupled_typeI.py:1217: in run_full_coupled_typeI
+    workspace = NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cb6bb8f0>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+_________________ test_native_full_endpoint_time_and_rss_gate __________________
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cb0cd070>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+>           extension = _load_extension()
+                        ^^^^^^^^^^^^^^^^^
+
+src/rabbit/native_tier1.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/native_tier1.py:15: in _load_extension
+    return importlib.import_module("_rabbit_cpu")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_rabbit_cpu', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named '_rabbit_cpu'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.slow
+    def test_native_full_endpoint_time_and_rss_gate():
+        modes = ("python_reference", "rust_native")
+        for mode in modes:
+>           driver.run_full_coupled_typeI(_endpoint_config(mode))
+
+tests/test_native_tier1_vertical_slice.py:560: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/rabbit/drivers/full_coupled_typeI.py:1217: in run_full_coupled_typeI
+    workspace = NativeTier1Workspace(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <rabbit.native_tier1.NativeTier1Workspace object at 0x72f1cb0cd070>
+
+    def __init__(self, *, ray_grid, momentum_grid, N_eff, f_nu,
+                 ablate_hubble_anisotropy=False):
+        mu0, w0, X0, signs = (_vector("ray grid", item) for item in ray_grid)
+        q_nodes, q_weights = (_vector("momentum grid", item) for item in momentum_grid)
+        if not (mu0.size == w0.size == X0.size == signs.size) or mu0.size == 0:
+            raise ValueError("native ray-grid arrays must have one common nonzero length")
+        if q_nodes.size != q_weights.size or q_nodes.size == 0:
+            raise ValueError("native momentum-grid arrays must have one common nonzero length")
+        try:
+            extension = _load_extension()
+        except Exception as exc:
+>           raise NativeTier1UnavailableError(
+                "native Tier-1 extension is required but unavailable"
+            ) from exc
+E           rabbit.native_tier1.NativeTier1UnavailableError: native Tier-1 extension is required but unavailable
+
+src/rabbit/native_tier1.py:50: NativeTier1UnavailableError
+_____________________________ test_r01_loc_budget ______________________________
+
+    def test_r01_loc_budget():
+        root = Path(__file__).resolve().parents[1]
+        rust_lines = 0
+        for relative in ("native/rabbit_cpu/src/lib.rs", "native/rabbit_cpu/src/tier1_lrs.rs"):
+            production = (root / relative).read_text().split("#[cfg(test)]", 1)[0]
+            rust_lines += len(production.splitlines())
+    
+        wrapper_lines = len((root / "src/rabbit/native_tier1.py").read_text().splitlines())
+>       diff = subprocess.check_output(
+            [
+                "git", "diff", "--unified=0", "0496e5e", "--",
+                "src/rabbit/drivers/full_coupled_typeI.py",
+            ],
+            cwd=root,
+            text=True,
+        )
+
+tests/test_native_tier1_vertical_slice.py:605: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'diff', '--unified=0', '0496e5e', '--', 'src/rabbit/drivers/full_coupled_typeI.py'],)
+kwargs = {'cwd': PosixPath('/tmp/rabbit-ode-four-loop-wt.peLD3M/worktree'), 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'diff', '--unified=0', '0496e5e', '--'...>
+stdout = '', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'diff', '--unified=0', '0496e5e', '--', 'src/rabbit/drivers/full_coupled_typeI.py']' returned non-zero exit status 128.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: bad revision '0496e5e'
+_ test_full_boltzmann_collision_preflight_factorized_jacobian_matches_dense_ad _
+
+    def test_full_boltzmann_collision_preflight_factorized_jacobian_matches_dense_ad():
+        rhs_fn, jac_fn, layout, *_rest = _get_full_boltzmann_rhs(
+            phase=1,
+            correction_level=0,
+            collision_mode="spectral_relaxation_preflight",
+            collision_preflight_relaxation=1.0,
+            thermo_tier=1,
+            N_mu=4,
+            N_q=6,
+            n_network_species=2,
+            n_reactions=12,
+            tau_n=878.4,
+            eta=6.104e-10,
+            N_eff=3.044,
+            f_nu=0.40520,
+        )
+    
+        y0 = np.zeros(layout["n_total"], dtype=np.float64)
+        y0[layout["i_Sp"]] = 0.05
+        y0[layout["i_S"]] = 0.02
+        i0 = layout["i_transport"]
+        i1 = i0 + layout["n_transport"]
+        y0[i0:i1] = _initial_transport_state(4, 6).reshape(-1)
+        y0[layout["i_tg"]] = 10.0
+        y0[layout["i_net"] : layout["i_net"] + 2] = np.array([0.13, 0.87], dtype=np.float64)
+    
+        y = jnp.asarray(y0)
+        factors = jac_fn(jnp.asarray(0.0), y)
+        J_fact = np.asarray(materialize_low_rank_jacobian(factors))
+        J_dense = np.asarray(jax.jacfwd(rhs_fn, argnums=1)(jnp.asarray(0.0), y))
+    
+        assert factors.left_factor.shape == (layout["n_total"], 24)
+>       assert factors.core_matrix.shape == (24, 25)
+E       assert (24, 31) == (24, 25)
+E         
+E         At index 1 diff: 31 != 25
+E         Use -v to get more diff
+
+tests/test_pr_t3a_collisionless_driver.py:221: AssertionError
+____ test_full_boltzmann_private_tier2_direct_kernel_rhs_and_jacobian_smoke ____
+
+    def test_full_boltzmann_private_tier2_direct_kernel_rhs_and_jacobian_smoke():
+        rhs_fn, jac_fn, layout, *_rest = _get_full_boltzmann_rhs(
+            phase=1,
+            correction_level=0,
+            collision_mode="direct_kernel_preflight",
+            collision_preflight_relaxation=1.0,
+            thermo_tier=2,
+            N_mu=1,
+            N_q=4,
+            n_network_species=2,
+            n_reactions=12,
+            tau_n=878.4,
+            eta=6.104e-10,
+            N_eff=3.044,
+            f_nu=0.40520,
+        )
+    
+        y0 = np.zeros(layout["n_total"], dtype=np.float64)
+        y0[layout["i_Sp"]] = 0.05
+        y0[layout["i_S"]] = 0.02
+        i0 = layout["i_transport"]
+        i1 = i0 + layout["n_transport"]
+        y0[i0:i1] = _initial_transport_state(1, 4).reshape(-1)
+        y0[layout["i_tg"]] = 10.0
+        y0[layout["i_tne"]] = 10.0
+        y0[layout["i_tnx"]] = 10.0
+        y0[layout["i_net"] : layout["i_net"] + 2] = np.array([0.13, 0.87], dtype=np.float64)
+    
+        y = jnp.asarray(y0)
+        dy = np.asarray(rhs_fn(jnp.asarray(0.0), y), dtype=np.float64)
+        factors = jac_fn(jnp.asarray(0.0), y)
+    
+        assert dy.shape == (layout["n_total"],)
+        assert np.isfinite(dy).all()
+        assert factors.left_factor.shape == (layout["n_total"], 23)
+>       assert factors.core_matrix.shape == (23, 17)
+E       assert (23, 21) == (23, 17)
+E         
+E         At index 1 diff: 21 != 17
+E         Use -v to get more diff
+
+tests/test_pr_t3a_collisionless_driver.py:438: AssertionError
+___________________ test_scipy_tier2_yp_resolution_converged ___________________
+[XPASS(strict)] BD621: scipy tier-2 residual collision closure is not resolution-converged (~3.5% Y_p drift N_q=16->32); blocks canonical promotion.
+=============================== warnings summary ===============================
+tests/test_characteristic_tier2_driver_regression.py::test_characteristic_bdf_sparse_smoke_matches_radau
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/weak/live_rates.py:354: RuntimeWarning: overflow encountered in exp
+    result = 1.0 / (1.0 + np.exp(q_eval - delta_eval))
+
+tests/test_j02_jax_rhs.py::TestNetworkParity::test_ac5_rate_interpolation
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/validation/truncation_guards.py:34: RuntimeWarning: SciPy nuclear-rate evaluation: T_gamma=1 MeV lies outside the PRIMAT AC2024 tabulation window [8.61735e-05, 0.861735] MeV. Silent boundary clamping is not allowed for publishable runs.
+    _emit(
+
+tests/test_j02_jax_rhs.py::TestNetworkParity::test_ac5_rate_interpolation
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/src/rabbit/validation/truncation_guards.py:34: RuntimeWarning: SciPy nuclear-rate evaluation: T_gamma=5 MeV lies outside the PRIMAT AC2024 tabulation window [8.61735e-05, 0.861735] MeV. Silent boundary clamping is not allowed for publishable runs.
+    _emit(
+
+tests/test_joint_3d_inference.py::TestLogPosterior3D::test_log_posterior_at_flrw_finite
+tests/test_production_gates.py::TestGateP15_AutoSciPyAlias::test_anisotropy_signal_alias_consistency
+  /tmp/rabbit-ode-four-loop-final-20260823/venv/lib/python3.12/site-packages/scipy/integrate/_ivp/bdf.py:416: RuntimeWarning: invalid value encountered in subtract
+    D[order + 2] = d - D[order + 1]
+
+tests/test_model_comparison_prewarm_contract.py::test_run_full_analysis_explicit_prewarm_runs_once_before_grid_scan
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_model_comparison_prewarm_contract.py:27: RuntimeWarning: model_comparison.run_full_analysis is EXPLORATORY. Bayes factors and evidence values require synthetic null/recovery calibration before citation. Pass _acknowledge_exploratory=True to suppress.
+    out = run_full_analysis(
+
+tests/test_profile_likelihood_upper_limit.py::test_unconstrained_when_allowed_region_reaches_grid_edge
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_profile_likelihood_upper_limit.py:33: RuntimeWarning: model_comparison.profile_likelihood is EXPLORATORY: Bayes factors / evidence / p-values require synthetic null/recovery calibration before citation. Pass _acknowledge_exploratory=True to suppress.
+    r = profile_likelihood(_grid_result([0.0, 0.25, 0.5, 0.75], [0.0, 0.0, 0.0, 0.0]))
+
+tests/test_profile_likelihood_upper_limit.py::test_solver_failure_points_masked_not_fabricating_limit
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_profile_likelihood_upper_limit.py:40: RuntimeWarning: model_comparison.profile_likelihood is EXPLORATORY: Bayes factors / evidence / p-values require synthetic null/recovery calibration before citation. Pass _acknowledge_exploratory=True to suppress.
+    r = profile_likelihood(_grid_result([0.0, 0.25, 0.5, 0.75],
+
+tests/test_profile_likelihood_upper_limit.py::test_genuine_constraint_still_reported
+  /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree/tests/test_profile_likelihood_upper_limit.py:49: RuntimeWarning: model_comparison.profile_likelihood is EXPLORATORY: Bayes factors / evidence / p-values require synthetic null/recovery calibration before citation. Pass _acknowledge_exploratory=True to suppress.
+    r = profile_likelihood(_grid_result([0.0, 0.25, 0.5, 0.75],
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/gold/test_typeIII_tilted_bbn.py::test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields
+FAILED tests/gold/test_typeIV_tilted_bbn.py::test_typeIV_tilted_A_and_N1_couple_into_yields
+FAILED tests/gold/test_typeIX_orthogonal_bbn.py::test_typeIX_orthogonal_same_sign_curvature_changes_yields
+FAILED tests/test_augmented_pstf_capability_registry.py::test_augmented_pstf_feature_registry_labels_staging_scope
+FAILED tests/test_constraint_regression.py::TestGradientBridgeLock::test_gradient_finite_and_correct_sign
+FAILED tests/test_cross_code_live.py::test_flrw_yp_matches_alterbbn - Asserti...
+FAILED tests/test_dynamic_collision_driver.py::test_collision_on_reaches_endpoint_physical_neff_no_collapse
+FAILED tests/test_dynamic_collision_driver.py::test_collision_on_frame_scale_is_tight
+FAILED tests/test_dynamic_collision_driver.py::test_nue_warmer_than_nux - rab...
+FAILED tests/test_inference_prediction_validation.py::test_valid_nonzero_likelihood_bit_pattern_is_unchanged
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_masks_failed_and_nonfinite_rows
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_sanitizes_failed_extreme_payload_before_arithmetic
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_returns_negative_infinity_for_missing_observable[Yp-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_returns_negative_infinity_for_missing_observable[Yp-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_returns_negative_infinity_for_missing_observable[DH-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_returns_negative_infinity_for_missing_observable[DH-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[None-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[None-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[not-a-number-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[not-a-number-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[invalid_value2-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[invalid_value2-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[(0.245+0.1j)-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[(0.245+0.1j)-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[True-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_safely_rejects_uncoercible_required_value[True-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift[False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_broadcasts_scalar_boolean_success_without_drift[True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[scalar-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[scalar-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[singleton-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[singleton-True]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[wrong-length-False]
+FAILED tests/test_inference_prediction_validation.py::test_batch_likelihood_rejects_observable_shape_broadcast[wrong-length-True]
+FAILED tests/test_j08_gradient_bridge.py::TestLogPosterior::test_ac3_log_posterior_differentiable
+FAILED tests/test_j08_gradient_bridge.py::TestLogPosterior::test_log_posterior_with_prior
+FAILED tests/test_jax_canonical_contract_docs.py::test_jax_main_promotion_roadmap_is_historical_only
+FAILED tests/test_jax_canonical_contract_docs.py::test_generated_docs_close_pub02c_without_jax_runtime_authority
+FAILED tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke
+FAILED tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_tolerance_envelope
+FAILED tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_grid_sensitivity_is_documented
+FAILED tests/test_native_tier1_vertical_slice.py::test_rust_extension_and_bridge_import_without_skip
+FAILED tests/test_native_tier1_vertical_slice.py::test_eos_and_compact_characteristic_interface_exists
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_boundary_rejects_nonfinite_omega_and_shape_without_clamp
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_bdf_jacobian_respects_frozen_sigma_minus_row
+FAILED tests/test_native_tier1_vertical_slice.py::test_real_endpoint_consumes_native_pack_in_both_phases
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_eos_derivatives_temperature_and_hubble_parity
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_characteristic_direct_ode_stress_and_monopole_parity
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_six_cell_endpoint_matrix_matches_python_reference
+FAILED tests/test_native_tier1_vertical_slice.py::test_native_full_endpoint_time_and_rss_gate
+FAILED tests/test_native_tier1_vertical_slice.py::test_r01_loc_budget - subpr...
+FAILED tests/test_pr_t3a_collisionless_driver.py::test_full_boltzmann_collision_preflight_factorized_jacobian_matches_dense_ad
+FAILED tests/test_pr_t3a_collisionless_driver.py::test_full_boltzmann_private_tier2_direct_kernel_rhs_and_jacobian_smoke
+FAILED tests/test_scipy_tier2_convergence_lock.py::test_scipy_tier2_yp_resolution_converged
+54 failed, 2587 passed, 80 skipped, 9 warnings in 4614.27s (1:16:54)
+Command exited with non-zero status 1
+	Command being timed: "/tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pytest -q"
+	User time (seconds): 17526.82
+	System time (seconds): 217.79
+	Percent of CPU this job got: 380%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:17:42
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 38324268
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 336
+	Minor (reclaiming a frame) page faults: 19441322
+	Voluntary context switches: 25188018
+	Involuntary context switches: 4174385
+	Swaps: 0
+	File system inputs: 61080
+	File system outputs: 711008
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 20:11:36+09:00 [COMMAND_EXIT_CODE="1"]

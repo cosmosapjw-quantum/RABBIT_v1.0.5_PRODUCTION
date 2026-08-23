@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-CLAIM-AUDIT",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "PSL-CLAIM-AUDIT"
+  ],
+  "task": "Phase 3 only: independently audit every claim-source pair in the Phase-2 R1-R6 evidence map. Inspect the cited current source and original/official sources, assign SUPPORTED, PARTIALLY_SUPPORTED, CONTESTED, UNSUPPORTED, MISATTRIBUTED, or INFERENCE_ONLY, identify corrections/deletions and evidence gaps, and ensure no unsupported premise proceeds to hypothesis construction. Do not generate, improve, rank, or promote hypotheses. Write only the registered result envelope.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-CLAIM-AUDIT.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    "/tmp/rabbit-ode-physmath-loop-20260823/RESEARCH_RECORD.md",
+    "/tmp/rabbit-ode-physmath-loop-20260823/state/EVIDENCE_LEDGER.md",
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+    "native/rabbit_cpu/src/flrw.rs",
+    "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+    "native/rabbit_cpu/src/thermal_bbn.rs",
+    "native/rabbit_cpu/src/minimal_network.rs"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "web.run"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+  "status": "registered"
+}

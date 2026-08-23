@@ -1,0 +1,19 @@
+# DECISION_LOG.md
+
+## D-001
+
+DATE:
+
+DECISION: `promote / hold / rework / revert`
+
+OBJECT:
+
+EVIDENCE:
+
+RATIONALE:
+
+ALTERNATIVES:
+
+RISKS:
+
+NEXT_ACTION:

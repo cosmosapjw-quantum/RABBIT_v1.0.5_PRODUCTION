@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-SCI",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02a3e-b88a-7b53-8291-af133fdec236",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260806-bd623-audit-triage",
+    "assignment_id": "A-ODE-SCI",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3d6fa9a09708c3d62bea59ca40d7c7a6a5bf379ad81a480078541be9c8793457",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-SCI.json",
+  "started_at": "2026-08-22T16:13:45Z",
+  "completed_at": "2026-08-22T16:13:45Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-SCI.json",
+    "wc -l scripts/audit/_trajectory_core.py scripts/audit/d056_independent_trajectory.py scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py scripts/audit/d069_independent_trajectory_r4.py src/rabbit/decoupling/_independent_b3_noqke.py src/rabbit/jax/solver_jax_rodas5p.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/solver_diffrax_canonical.py .agent-harness/context/GATE_REGISTRY.json .agent-harness/context/CLAIM_REGISTRY.jsonl .agent-harness/context/FROZEN_DECISIONS.md docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "stat src/rabbit/decoupling/_independent_b3_noqke.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-SCI.json",
+      "sha256": "3d6fa9a09708c3d62bea59ca40d7c7a6a5bf379ad81a480078541be9c8793457",
+      "role": "verified assignment declaring the missing required input"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-ODE-SCI-CONTRACT-01",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The registered scientific audit cannot be executed as sealed because required input src/rabbit/decoupling/_independent_b3_noqke.py is absent at the current checkout. Selecting a similarly named file would exceed the targeted assignment and could silently substitute different comparator bytes.",
+      "assumptions_used": [
+        "The assignment required_inputs list is exhaustive and authoritative.",
+        "A missing required input is a contract error under the mandatory subagent bootstrap."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-SCI.json:required_inputs",
+        "stat stderr: cannot statx 'src/rabbit/decoupling/_independent_b3_noqke.py': No such file or directory",
+        "git HEAD 78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+      ],
+      "evidence_fingerprint": "sha256:3d6fa9a09708c3d62bea59ca40d7c7a6a5bf379ad81a480078541be9c8793457",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "stat src/rabbit/decoupling/_independent_b3_noqke.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Restore the exact required bytes or register a corrected assignment naming the intended current comparator path, then mint a new single-use admission receipt and rerun the audit."
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "error_id": "E-ODE-SCI-MISSING-REQUIRED-INPUT",
+      "message": "Required input src/rabbit/decoupling/_independent_b3_noqke.py is missing; substantive analysis stopped before any trajectory, endpoint, B3, W7, JAX, or physical-prefix execution."
+    }
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-SCI.json"
+  ]
+}

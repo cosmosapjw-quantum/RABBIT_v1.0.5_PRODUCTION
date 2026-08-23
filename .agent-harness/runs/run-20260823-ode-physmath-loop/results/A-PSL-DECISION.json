@@ -1,0 +1,390 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-DECISION",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02d8e-1218-7f73-bb73-5c3798f07009",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physmath-loop",
+    "assignment_id": "A-PSL-DECISION",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8cbd454f8ed51dd6a0495c29fc449d8459b9495472c3ba928192beeab6960638",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-DECISION.json",
+  "started_at": "2026-08-23T07:38:02Z",
+  "completed_at": "2026-08-23T07:45:28Z",
+  "tool_versions": {
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python": "3.12.3",
+    "jq": "1.7",
+    "review_mode": "read-only Phase-8 external decision",
+    "tests_executed": "none",
+    "trajectory_or_endpoint_executed": "none"
+  },
+  "phase_boundary": {
+    "performed": "Phase 8 external decision only",
+    "not_performed": [
+      "broad discovery",
+      "hypothesis generation or repair",
+      "verification execution",
+      "implementation",
+      "trajectory or endpoint execution",
+      "D-071 or gate reopening",
+      "scientific or public promotion"
+    ],
+    "promote_semantics": "admission only to the named V-test; never implementation, trajectory, endpoint, D-071, gate, science, or public authority"
+  },
+  "deduplication": {
+    "method": "Read the cited evidence and candidate-specific content directly; did not count copied or shared evidence_fingerprint strings as corroboration.",
+    "result": "No substantive conflict required a rerun. Phase-5 and Phase-6 labels agree after separating factual support, mathematical testability, and Phase-8 experiment admission."
+  },
+  "decision_counts": {
+    "PROMOTE": 3,
+    "HOLD": 1,
+    "REJECT": 0,
+    "REOPEN_EVIDENCE": 1,
+    "REOPEN_HYPOTHESIS": 2,
+    "REOPEN_VALIDATION": 0
+  },
+  "candidate_decisions": [
+    {
+      "hypothesis_id": "H0",
+      "decision": "PROMOTE",
+      "named_test": "V0",
+      "promotion_scope": "mandatory null/control and evidence-identity test only; not a remedy candidate",
+      "assessment": {
+        "evidence": "STRONG for instrument noncompletion, absent scientific predicate, and unmeasured creep mechanism; none for a positive remedy.",
+        "physical_validity": "VALID as an epistemic control because it makes no physical falsification claim.",
+        "mathematical_validity": "VALID as a falsifiable null; it must not be strengthened to a universal impossibility theorem.",
+        "novelty": "LOW, deliberately; value is attribution discipline.",
+        "testability": "HIGH through exact identity, raw-state, terminal-cause, and complete work accounting.",
+        "robustness": "HIGH if all work buckets and raw failure states are mandatory.",
+        "tractability": "HIGH; V0 is a bounded evidence contract.",
+        "assumption_burden": "LOW.",
+        "residual_uncertainty": "HIGH about the actual creep mechanism; V0 cannot reconstruct missing historical solver state."
+      },
+      "rationale": "Every later candidate needs V0 to distinguish mechanism movement from stale bytes, changed cases, or omitted counters.",
+      "dissent": "H0 is not a remedy and could be held outside the survivor set; promotion is retained only because V0 is the common control required to interpret any survivor.",
+      "unresolved_risk": "A future case can still be under-instrumented and remain ambiguous.",
+      "next_phase": "Phase 9 may formalize only the V0 identity/work-evidence contract; no production code or new gate."
+    },
+    {
+      "hypothesis_id": "H1",
+      "decision": "PROMOTE",
+      "named_test": "V1",
+      "promotion_scope": "bounded correctness discriminator only",
+      "assessment": {
+        "evidence": "MODERATE-STRONG for strict-open Rust decoding and known false-success classes; incomplete for all callers.",
+        "physical_validity": "CONDITIONAL: interior logit/log maps are physical, but boundary saturation and channel-valid invariant scope must remain explicit.",
+        "mathematical_validity": "SOUND on open domains; derivatives become singular as f approaches 0 or 1 or X approaches 0.",
+        "novelty": "MODEST; the useful contribution is the explicit separation of physical admission from software terminal precedence.",
+        "testability": "HIGH with the frozen mutant/good-control table and a software-only comparator.",
+        "robustness": "MODERATE-HIGH if raw failing and last-accepted states remain distinct and no projection is allowed.",
+        "tractability": "HIGH; existing outcome/admission surfaces suffice before any refactor.",
+        "assumption_burden": "MODERATE, chiefly physical error scales and representability margins.",
+        "residual_uncertainty": "Cross-stack caller coverage and extreme-tail representability."
+      },
+      "rationale": "V1 is cheap, directly falsifiable, and can show whether the physics layer adds discrimination beyond typed software outcomes without making a performance claim.",
+      "dissent": "A software-only typed outcome may kill the complete table, in which case H1 adds no value and is killed by its own criterion.",
+      "unresolved_risk": "Bad scale allocation could reject a valid but poorly represented tail state.",
+      "next_phase": "Phase 9 may formalize the existing-function V1 table and error scales only."
+    },
+    {
+      "hypothesis_id": "H2",
+      "decision": "REOPEN_EVIDENCE",
+      "named_test": null,
+      "promotion_scope": "none",
+      "assessment": {
+        "evidence": "MODERATE for flat-FLRW EOS and signs; ABSENT for the required full-branch state envelope, EOS inverse certificate, and positive alpha margin.",
+        "physical_validity": "CONDITIONAL and limited to flat FLRW; only rho_em may replace T_gamma while rho_nu remains derived from f.",
+        "mathematical_validity": "LOCAL inversion follows from positive heat capacity, but global one-to-one inversion and dN/dx regularity are unproved.",
+        "novelty": "MODERATE-LOW; a standard coordinate idea whose nonredundant formulation is useful.",
+        "testability": "MEDIUM only after the completing, transfer-extremum, stalled, cold, and boundary states are prospectively bound.",
+        "robustness": "LOW-MODERATE until numerical error is smaller than the alpha margin.",
+        "tractability": "MEDIUM as read-only EOS work, but current retained D-071 evidence lacks the stalled state dump.",
+        "assumption_burden": "HIGH for a full-branch transversality claim.",
+        "residual_uncertainty": "Whether the necessary state envelope exists without a forbidden new trajectory, and whether the coordinate beats analytic T-in-N by 10x."
+      },
+      "rationale": "Admitting V2 now would allow the load-bearing state envelope to be chosen or regenerated after the decision. The missing input is evidence, not a tolerable caveat.",
+      "dissent": "V2 is read-only and kill-first, so conditional admission could be efficient; this is outweighed by D-071's missing stalled-state dump and the risk of a nonrepresentative envelope.",
+      "unresolved_risk": "A static envelope may miss the transfer extremum and produce a false transversality certificate.",
+      "next_phase": "Return narrowly to Phase 2 to identify prospectively bindable existing states and independent EOS/alpha error bounds; if unavailable without new trajectory authority, HOLD."
+    },
+    {
+      "hypothesis_id": "H3",
+      "decision": "REOPEN_HYPOTHESIS",
+      "named_test": null,
+      "promotion_scope": "none",
+      "assessment": {
+        "evidence": "MODERATE for structured derivatives as a mechanism and current analytic blocks; ABSENT for the proposed affinity, reaction invariants, support algebra, and full scaled Jv.",
+        "physical_validity": "UNDECIDED until one actual endpoint-consumed channel, bath exchange, multiplicity, and reaction vector are fixed.",
+        "mathematical_validity": "NOT YET TESTABLE; log(G/L) requires piecewise zero-support branches and moving thresholds require one-sided derivatives.",
+        "novelty": "MODERATE locally, but explicitly not a materially new D-071 endpoint method.",
+        "testability": "HIGH after exact channel selection; presently the candidate can be cherry-picked after review.",
+        "robustness": "POTENTIALLY HIGH with a high-precision oracle and hidden-work accounting.",
+        "tractability": "MEDIUM for one channel; low if allowed to expand into a full backend.",
+        "assumption_burden": "MODERATE-HIGH.",
+        "residual_uncertainty": "Channel dominance, folded-operator invariants, and any 10 percent active-path benefit."
+      },
+      "rationale": "The exact channel is part of the hypothesis identity, not an implementation detail. It must be sealed before V3 admission.",
+      "dissent": "V3 itself says to seal a channel before output, so conditional promotion is conceivable; reopening avoids post-decision channel selection and keeps the claim falsifiable.",
+      "unresolved_risk": "A correct non-dominant channel could pass algebra while supplying no useful performance information.",
+      "next_phase": "Return narrowly to Phase 4 to name one endpoint-consumed channel and separate the algebraic correctness claim from the later 10 percent cost claim; then repeat Phase 6 before V3."
+    },
+    {
+      "hypothesis_id": "H4",
+      "decision": "REOPEN_HYPOTHESIS",
+      "named_test": null,
+      "promotion_scope": "none",
+      "assessment": {
+        "evidence": "STRONG for the need to control more than energy moments; ABSENT for a current decay theorem, kernel majorant, or propagated observable enclosure.",
+        "physical_validity": "PLAUSIBLE only when the actual finite-mass kernel, blocking, routing, weak weights, and non-equilibrium state family are included.",
+        "mathematical_validity": "NOT YET TESTABLE because 0<=f<=1 gives no integrable polynomial-kernel tail majorant.",
+        "novelty": "HIGHER than moment tests if made rigorous, but not yet a concrete construction.",
+        "testability": "LOW-MEDIUM until one channel, state family, decay envelope, cutoff ladder, and error allocation are frozen.",
+        "robustness": "POTENTIALLY HIGH through containment, but signed cancellation and shared-oracle routing are serious failure modes.",
+        "tractability": "UNCERTAIN; the bound may cost more than direct extended-domain evaluation.",
+        "assumption_burden": "VERY HIGH.",
+        "residual_uncertainty": "Existence, tightness, cost, and later abundance propagation."
+      },
+      "rationale": "H4 is presently a requirement, not a uniquely testable candidate. V4 cannot be admitted before its channel/state/majorant identity is fixed.",
+      "dissent": "A tiny feasibility attempt could quickly fail and be informative; reopening is still required so that its constants cannot be selected after oracle output.",
+      "unresolved_risk": "Even a valid local bound may not compose across reactions or final observables.",
+      "next_phase": "Return narrowly to Phase 4 to specify one actual channel, independent oracle, state family, decay envelope, cutoffs, epsilon_C, and cost cap; then repeat Phase 6 before V4."
+    },
+    {
+      "hypothesis_id": "H5",
+      "decision": "HOLD",
+      "named_test": null,
+      "promotion_scope": "none",
+      "assessment": {
+        "evidence": "WEAK: generic AP theory supplies only a checklist; current positive applicability evidence is absent and fixed-cut slaving is a retained negative.",
+        "physical_validity": "UNDECIDED because coupled bath invariants, equilibrium manifold, positivity, and observable safety are unsealed.",
+        "mathematical_validity": "NOT YET TESTABLE without a unit-consistent projector/metric and non-normal contraction including M-prime when applicable.",
+        "novelty": "POTENTIALLY HIGH and the only seed family with asymptotic endpoint leverage, provided it is genuinely invariant-aware rather than a fixed-cut relabeling.",
+        "testability": "LOW at present; V5 has many unavailable load-bearing inputs.",
+        "robustness": "LOW until coercivity or pseudospectral bounds hold across grids and completing/stalled regimes.",
+        "tractability": "LOW and anti-drift-sensitive.",
+        "assumption_burden": "EXTREME.",
+        "residual_uncertainty": "All applicability premises, H4 safety, handoff, transient growth, and budget projection."
+      },
+      "rationale": "The endpoint leverage prevents rejection, but zero positive operator-specific evidence and unmet dependencies prevent V5 admission or another AP framework.",
+      "dissent": "D-071 specifically requires a materially new asymptotic method, so H5 deserves preservation; preservation does not justify code-first work.",
+      "unresolved_risk": "The only true gap may remain three dimensions or disappear during decoupling, as in V2.",
+      "next_phase": "Remain on hold until exact coupled invariants/equilibrium and an H4 survivor exist; only then reopen Phase 6 for the zero-production-code V5 discriminator."
+    },
+    {
+      "hypothesis_id": "H6",
+      "decision": "PROMOTE",
+      "named_test": "V6",
+      "promotion_scope": "bounded one-sided falsification only",
+      "assessment": {
+        "evidence": "MODERATE-STRONG for exact scoped ingredients; no evidence yet for mutant-killing efficacy.",
+        "physical_validity": "VALID only with explicit operator/channel scope and the full Q_e+2Q_x first law.",
+        "mathematical_validity": "SOUND for exact or allocated-error limits; weak charge conservation must not be imposed on the nuclear-plus-weak operator.",
+        "novelty": "MODERATE; independence and semantic mutants add value beyond shared-backend parity.",
+        "testability": "HIGH with a fixed mutant/good-control table.",
+        "robustness": "MODERATE-HIGH if oracles are subject-independent and each mutant has a specificity control.",
+        "tractability": "HIGH; no generic mutation framework or production change is needed.",
+        "assumption_burden": "MODERATE.",
+        "residual_uncertainty": "Mutant representativeness, sensitivity, and oracle independence."
+      },
+      "rationale": "V6 is cheap, adversarial, and directly attacks known false greens while making no trajectory claim.",
+      "dissent": "Passing a finite mutant table is only one-sided evidence and can miss unknown defect classes.",
+      "unresolved_risk": "An apparently independent oracle may reuse the same constants or routing logic.",
+      "next_phase": "Phase 9 may formalize only the exact scoped V6 mutant/good-control table and oracle provenance."
+    }
+  ],
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-DECISION.json",
+    "read the complete registered Tier-0 context, assignment, adjudicator role, result template, scratch state, V0-V6 design, four sibling results, D-071, V2, and both anti-drift policies",
+    "jq candidate-specific inspection of A-PSL-EVIDENCE, A-PSL-CLAIM-AUDIT, A-PSL-ADV, and A-PSL-PHYSVAL",
+    "sha256sum all sealed evidence inputs; git rev-parse HEAD; python3 --version; jq --version",
+    "python3 .agent-harness/scripts/validate_harness.py"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md",
+      "role": "V0-V6 prospective test designs",
+      "sha256": "1a3d0d61fac0376c56b03e87edaf5ca420d75d95507a4c3b11408423d005f4b6"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+      "role": "claim-source sanitation",
+      "sha256": "78a97db76bf816a67da2761a135377ecd85b1477f5198290d7e5743aeae97865"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json",
+      "role": "independent adversarial classifications",
+      "sha256": "b52ef8769968004c4e5c03a57d6bc49fa487f1d8b265f71e0646a92e2b739264"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json",
+      "role": "physics and mathematics validation",
+      "sha256": "c75d9b60cc72bc3990c44592db8af8869a9a34d08ddfaa784dec1a5252b035f6"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "role": "current measurement and reopen ceiling",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "role": "fixed-cut and Jacobian-only negative results",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PSL-DECISION-000",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Phase 8 completed independently. Exact dispositions are H0 PROMOTE to V0 as control only, H1 PROMOTE to V1, H2 REOPEN_EVIDENCE, H3 REOPEN_HYPOTHESIS, H4 REOPEN_HYPOTHESIS, H5 HOLD, and H6 PROMOTE to V6. PROMOTE grants only admission to the named V-test. No code, test, trajectory, endpoint, D-071, gate, scientific, or public authority is granted.",
+      "assumptions_used": [
+        "The sealed Phase-3 premises and D-071/V2 negative results remain binding.",
+        "A candidate whose identity depends on an unselected channel or state family is not conditionally promoted.",
+        "Phase-6 PASS is not required to admit a candidate to a test designed to resolve a bounded concern, but the test's load-bearing inputs must already be specifiable prospectively."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/HYPOTHESIS_GRAPH.md",
+        "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md"
+      ],
+      "evidence_fingerprint": "sha256:36db6bb815eb1570b8660df64e61ff2b042f2744ab1eb4571b32c7c49ba49168",
+      "counterevidence_refs": [
+        "No verification experiment ran, so no candidate mechanism is validated.",
+        "H2-H5 retain load-bearing evidence, specification, or dependency gaps."
+      ],
+      "reproduction": [
+        "Read every candidate-specific assessment and verify exactly one allowed decision for each H0-H6.",
+        "Require every PROMOTE row to name exactly one V-test and every non-PROMOTE row to name a reopening or hold condition."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Only H0, H1, and H6 may enter Phase 9 formalization in this loop.",
+        "H2-H5 require their stated next phase before reconsideration."
+      ]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H0",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H0 decision: PROMOTE to V0 strictly as the mandatory null/control.",
+      "assumptions_used": ["Null admission does not turn noncompletion into physical falsification."],
+      "evidence_refs": ["docs/audit/BD622_D071_trajectory_closure_2026-08-04.md", "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md", "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md:V0"],
+      "evidence_fingerprint": "sha256:b5428bb68f5caeb7c9838e2e244c493f37ed4380aef694e0ad0daf1fb250be08",
+      "counterevidence_refs": ["H0 supplies no positive mechanism."],
+      "reproduction": ["Check that V0 changes no physical case and requires complete raw/work evidence."],
+      "confidence": 0.99,
+      "unresolved": ["The creep mechanism remains unknown."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H1",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H1 decision: PROMOTE to V1 correctness-only comparison against typed software admission.",
+      "assumptions_used": ["No clipping or projection is permitted; physical and software layers remain separate."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R1", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H1]", "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md:V1"],
+      "evidence_fingerprint": "sha256:bbfe542b96175c40514bf125b2122e663e4156436c8630b2e408e3f6f1f42b00",
+      "counterevidence_refs": ["Software-only admission may kill the entire table."],
+      "reproduction": ["Require H1 to kill at least one physical mutant not killed by the comparator and reject zero valid controls."],
+      "confidence": 0.97,
+      "unresolved": ["Cross-stack coverage and saturation scales."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H2",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H2 decision: REOPEN_EVIDENCE because the full-branch state envelope and alpha/inversion error bounds needed to freeze V2 are absent.",
+      "assumptions_used": ["No new trajectory may be run to manufacture the missing envelope in this loop."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R2", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H2]", "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:2.5"],
+      "evidence_fingerprint": "sha256:1a6df8f61fc2f61657b840e5d6910966aea6fb19bab87d0d5630d7716deee39f",
+      "counterevidence_refs": ["Local EOS positivity makes a bounded read-only study plausible."],
+      "reproduction": ["Inventory prospectively bindable existing states; do not infer a full-branch alpha margin from a selected static subset."],
+      "confidence": 0.94,
+      "unresolved": ["Whether a decisive envelope exists without new execution."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H3",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H3 decision: REOPEN_HYPOTHESIS because the exact endpoint-consumed channel is a load-bearing part of the candidate identity and remains unselected.",
+      "assumptions_used": ["Channel selection after decision could cherry-pick correctness or cost."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R3", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H3]", "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md:V3"],
+      "evidence_fingerprint": "sha256:5e67567abcedf2f35da7fc4589bdc3357fc472c0815f75204fcf7d210ee51f69",
+      "counterevidence_refs": ["V3 already contains a prospective seal requirement."],
+      "reproduction": ["Name the exact channel, support, reaction vector, multiplicity, bath coupling, and derivative path before validation."],
+      "confidence": 0.95,
+      "unresolved": ["Channel dominance and endpoint-consumed benefit."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H4",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H4 decision: REOPEN_HYPOTHESIS because no actual channel/state/decay-envelope/majorant candidate is yet uniquely specified.",
+      "assumptions_used": ["Pauli bounds alone do not supply an integrable collision-tail envelope."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R4", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H4]", "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md:V4"],
+      "evidence_fingerprint": "sha256:582c479ebb9dd5513097328d88563d2b92be4fd85fdef4516889f98a1b2d7ff3",
+      "counterevidence_refs": ["A prospectively frozen tiny feasibility test could be cheap."],
+      "reproduction": ["Freeze constants and oracle independence before any extended-domain output."],
+      "confidence": 0.96,
+      "unresolved": ["Bound existence, tightness, composition, and cost."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H5",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "H5 decision: HOLD. It is the only seed with asymptotic endpoint leverage, but every current operator-specific applicability premise and H4 safety dependency is absent.",
+      "assumptions_used": ["Generic AP terminology and eigenvalue gaps alone are insufficient; non-normality is load-bearing."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R5", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H5]", "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:Part A"],
+      "evidence_fingerprint": "sha256:abef24eea80e0b616aab54158eddcd94fe1e255bb08456afcf1f27a2221f3e8b",
+      "counterevidence_refs": ["D-071 requires a materially new asymptotic method and V2 does not rule out every invariant-aware split."],
+      "reproduction": ["Do not request AP code; reopen only after exact coupled invariants/equilibrium and an H4 survivor exist."],
+      "confidence": 0.98,
+      "unresolved": ["All mechanism, safety, handoff, non-normality, and budget predicates."]
+    },
+    {
+      "finding_id": "F-PSL-DECISION-H6",
+      "claim_id": "PSL-DECISION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "H6 decision: PROMOTE to V6 as one-sided falsification only.",
+      "assumptions_used": ["Every limit is scoped to its exact operator and every oracle is independent of the mutant path."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json:PSL-CLAIM-AUDIT-R6", ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json:candidate_validations[H6]", "/tmp/rabbit-ode-physmath-loop-20260823/VERIFICATION_DESIGN.md:V6"],
+      "evidence_fingerprint": "sha256:c93728ab6fe51124120e1682b03ddb3809c1647facf0963ccdf4ad10759ade22",
+      "counterevidence_refs": ["A finite mutant set cannot validate a trajectory or cover unknown defects."],
+      "reproduction": ["Require 100 percent critical-mutant kill, zero good-control false positives, and distinct oracle provenance."],
+      "confidence": 0.97,
+      "unresolved": ["Mutation representativeness and oracle common-mode risk."]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-DECISION.json"
+  ]
+}

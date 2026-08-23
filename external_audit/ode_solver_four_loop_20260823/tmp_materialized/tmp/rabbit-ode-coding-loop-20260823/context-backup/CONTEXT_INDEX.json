@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "max_injected_chars": 24000,
+  "shared_files": [
+    ".agent-harness/context/SHARED_CONTEXT.md",
+    ".agent-harness/context/SYMBOLS.md",
+    ".agent-harness/context/FROZEN_DECISIONS.md",
+    ".agent-harness/context/GATE_REGISTRY.json"
+  ],
+  "reference_only_files": [
+    ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+    "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "docs/audit/BD622_W5_d028_discriminator_result.md",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "scripts/audit/w7_b3v2_contract_source.py",
+    "docs/audit/BD622_W7_exact_test_vectors.json"
+  ],
+  "role_files": {
+    "default": [
+      ".agent-harness/context/roles/independent_auditor.md"
+    ],
+    "context_mapper": [
+      ".agent-harness/context/roles/context_mapper.md"
+    ],
+    "cas_wolfram_xact": [
+      ".agent-harness/context/roles/cas_common.md",
+      ".agent-harness/context/roles/cas_wolfram_xact.md"
+    ],
+    "cas_sage_singular": [
+      ".agent-harness/context/roles/cas_common.md",
+      ".agent-harness/context/roles/cas_sage_singular.md"
+    ],
+    "cas_lean": [
+      ".agent-harness/context/roles/cas_common.md",
+      ".agent-harness/context/roles/cas_lean.md"
+    ],
+    "cas_sympy": [
+      ".agent-harness/context/roles/cas_common.md",
+      ".agent-harness/context/roles/cas_sympy.md"
+    ],
+    "adjudicator": [
+      ".agent-harness/context/roles/adjudicator.md"
+    ]
+  },
+  "never_inject_globs": [
+    ".agent-harness/runs/*/results/*",
+    ".agent-harness/runs/*/raw_logs/*"
+  ],
+  "built_at": "2026-08-06T11:14:50+00:00",
+  "file_hashes": {
+    ".agent-harness/context/SHARED_CONTEXT.md": "781bd7efdb815f67e1444af08ed54f49219447671b33ef9cf6f2a3cc38828fb0",
+    ".agent-harness/context/SYMBOLS.md": "6d5fbe058c2750ed680ce835e6e03438200b36b16743bf6c1be99649030e096b",
+    ".agent-harness/context/FROZEN_DECISIONS.md": "126b8cc9a85d635c38565bb5da7c9fb8a6eadbe50487b29c6a3bf3c15e3770e5",
+    ".agent-harness/context/GATE_REGISTRY.json": "bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f"
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-coding-harness-loop",
+  "assignment_id": "A-CH-DECIDE",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02dc2-a752-7b53-9e49-b743f5ac05f9",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-coding-harness-loop",
+    "assignment_id": "A-CH-DECIDE",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:1499a32704b9e0d4a6e1a80f1ce081b44c731c6b2c2198390722d4c5caa8f2db",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+  "started_at": "2026-08-23T08:39:36Z",
+  "completed_at": "2026-08-23T08:42:17Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "registered read-only final adjudication; no implementation, test, trajectory, endpoint, or diff execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-coding-harness-loop/assignments/A-CH-DECIDE.json # VERIFY: PASS",
+    "sed bounded reads of every assignment-required input and the three explicitly allowed sibling results",
+    "rg targeted verification of Phase 5 cancellation, NOT_RUN labels, and the F-ODE-ADJ3-012 root amendment",
+    "python3 read-only mechanical transformation/check of the repaired 34-ID ledger",
+    "sha256sum of the repaired packet, sibling results, governing sources, policies, registry, and D-071 record",
+    "python3 --version; jq --version; sha256sum --version"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-coding-loop-20260823/RESEARCH_RECORD.md",
+      "sha256": "11c9a091a908c218407be185d50a5a09a1d56d02fe9c0d14ace123d90385c221",
+      "role": "repaired research-loop record"
+    },
+    {
+      "path": "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md",
+      "sha256": "f4a547e30bc7f3bcc920ff14a84fe28493057ed48b22132a2fc4e580db512c4e",
+      "role": "repaired candidate plan"
+    },
+    {
+      "path": "/tmp/rabbit-ode-coding-loop-20260823/harness/VALIDATION_MATRIX.md",
+      "sha256": "515182366db9037b38455a601ff9121beead8ce6db123f060a084c7a2912babc",
+      "role": "NOT_RUN and design-review boundary"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-LOC.json",
+      "sha256": "8c74fb96c6c0a50136743210eb82ab2d4d6ae94ed5a7e7c7473adf110aad2625",
+      "role": "source localization"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+      "sha256": "c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630",
+      "role": "blind design and original 34-ID ledger"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json",
+      "sha256": "1090179e537c0b760f404e2b322517c5cea7703fbf5ec6b35934505e18bfa7c1",
+      "role": "independent adversarial review"
+    }
+  ],
+  "adjudication": {
+    "top_level_verdict": "PASS_RESEARCH_LOOP_COMPLETE",
+    "authority_boundary": "The attached harness was used only as retrieved research workflow material. User and repository authority control. This result grants no implementation, test, trajectory, endpoint, gate, public, QKE, or production authority.",
+    "execution_truth": {
+      "phase_5_implementation": "CANCELLED_NOT_RUN",
+      "focused_or_regression_tests": "NOT_RUN",
+      "trajectory": "NOT_RUN",
+      "endpoint": "NOT_RUN",
+      "implementation_diff_validation": "NOT_RUN_NO_DIFF_EXISTS"
+    },
+    "repaired_ledger": {
+      "rows": 34,
+      "unique_ids": 34,
+      "numeric_order_exact_001_through_034": true,
+      "missing_ids": [],
+      "duplicate_ids": [],
+      "only_changed_id": "F-ODE-ADJ3-012",
+      "change": "selected_candidate/C-CH-02 -> required_companion_or_future_task",
+      "category_counts": {
+        "selected_candidate": 6,
+        "required_companion_or_future_task": 17,
+        "retained_blocker_or_decisive_experiment": 7,
+        "closed_no_action": 3,
+        "extrinsic_harness_issue": 1
+      }
+    },
+    "candidate_dispositions": {
+      "C1": {
+        "decision": "PROMOTE_FOR_LATER_IMPLEMENTATION",
+        "basis": "The repaired two-boundary contract is implementation-ready: solver/event admission precedes postprocessing; every stored sample is checked raw; per-column Hubble is recomputed and admitted raw; RHS probe clamps remain evaluator protection; RawStateAdmissionError subclasses RuntimeError; nonfinal/final/probe mutants, valid-path identity, <=40 net lines, and two-file rollback are explicit.",
+        "claim_ceiling": "SPECIFIED correctness repair only; not IMPLEMENTED or VALIDATED, and no endpoint or gate claim."
+      },
+      "C2": {
+        "decision": "REWORK",
+        "basis": "The semantic table and honest counter schema are useful, but event-time and event-value tolerances, their units/scale source, refinement iteration/RHS budgets, gate-consumer monotonicity or step-cap evidence, and a defensible <=200-net split remain unresolved. The former +120 cap is withdrawn and F-ODE-ADJ3-012 is companion/future work.",
+        "claim_ceiling": "PROPOSED reference/opt-in correctness repair; no implementation assignment or solver promotion."
+      },
+      "C3": {
+        "decision": "REWORK",
+        "basis": "The 182-state independent system and 122-state folded Rust system are non-substitutable; no restart state exists; derivative removal alone misses the frozen caps; identity/transfer, branch, rank, coercivity/remainder, invariant/positivity, full-grid radial/angular/tail residual, adjoint QoI, and certificate-cost contracts are not frozen.",
+        "claim_ceiling": "PROPOSED static discriminator only; no trajectory, D-071 reopen, endpoint, or gate authority."
+      }
+    },
+    "residual_blockers": [
+      "C1 still requires separate implementation authority and executed focused/regression evidence; any strict-boundary contact on a current valid stored trajectory stops for scientific adjudication rather than tolerance widening.",
+      "C2 requires authoritative event tolerances/scales, refinement budgets, consumer root assumptions, exact accounting semantics, and a rebounded <=200-net slice before implementation.",
+      "C3 requires the 182/122 identity decision and the complete mathematical/numerical certificate before any code; N approximately 0.1653 is never a restart.",
+      "G-F10-INDEPENDENT-FLRW remains FAIL/CLOSED_ON_CURRENT_MEASUREMENT and G-HARNESS-INTEGRITY remains FAIL."
+    ],
+    "gate_changes": [],
+    "current_gate_summary": "6 PASS / 2 FAIL, unchanged",
+    "anti_drift_cost": {
+      "production_added_lines": 0,
+      "production_deleted_lines": 0,
+      "production_net_lines": 0,
+      "token_use_exact": "UNAVAILABLE",
+      "token_use_basis": "The harness exposes no exact token counter.",
+      "runtime_behavior_changed": "no",
+      "physics_behavior_changed": "no",
+      "known_blocker_reduced": "no; design selection and fail-closed scoping only",
+      "blocker_movement_ratio": 0.0,
+      "cost_effectiveness_verdict": "ACCEPT_WITH_LIMITS"
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "F-CH-DECIDE-001",
+      "claim_id": "CH-H1",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The repaired loop respects the authority boundary, truthfully leaves Phase 5, runtime tests, trajectory, endpoint, and diff validation unexecuted, and preserves all 34 seed IDs after exactly one reroute: F-ODE-ADJ3-012 from selected C2 to companion/future.",
+      "assumptions_used": [
+        "The assignment-listed packet and three admitted sibling results are the complete evidence universe for this adjudication."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/RESEARCH_RECORD.md:38-42,108-118",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:18-27,142-154",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/VALIDATION_MATRIX.md:8-26",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json#/phase3_design/seed_coverage_ledger"
+      ],
+      "evidence_fingerprint": "sha256:11c9a091a908c218407be185d50a5a09a1d56d02fe9c0d14ace123d90385c221",
+      "counterevidence_refs": [
+        "A-CH-ADV is a pre-repair MAJOR_REVISIONS result; it does not by itself establish the repaired disposition."
+      ],
+      "reproduction": [
+        "Apply only the declared F-ODE-ADJ3-012 category/assignment transformation to A-CH-DESIGN.seed_coverage_ledger and compare IDs to F-ODE-ADJ3-001..034; observed 34 rows, 34 unique, ordered exact, no missing or duplicates."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-CH-DECIDE-002",
+      "claim_id": "CH-H1",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "C1 is ready to be offered for a later implementation decision, bounded to a two-file, net-<=40, correctness-only raw stored-sample admission repair with structured RuntimeError compatibility and explicit rollback.",
+      "assumptions_used": [
+        "A later implementation must preserve probe-side evaluator clamps and stop rather than widen the strict physical domain if a valid stored path touches its boundary."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:37-82",
+        "src/rabbit/collisions/dynamic_collision_driver.py:151-233,278-360",
+        "tests/test_dynamic_collision_driver.py:1-270",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json#F-CH-ADV-001"
+      ],
+      "evidence_fingerprint": "sha256:f4a547e30bc7f3bcc920ff14a84fe28493057ed48b22132a2fc4e580db512c4e",
+      "counterevidence_refs": [
+        "No implementation or test execution exists; promotion is to a later implementation decision, not to IMPLEMENTED or VALIDATED."
+      ],
+      "reproduction": [
+        "Compare repaired C1 items 1-8 and its three discriminator classes against A-CH-ADV required_repair for F-CH-ADV-001."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Future implementation and focused/regression commands require separate authority."
+      ]
+    },
+    {
+      "finding_id": "F-CH-DECIDE-003",
+      "claim_id": "CH-H2",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "C2 correctly fails closed as REWORK. A semantic truth table does not substitute for authoritative event-unit tolerances/scales, refinement budgets, consumer root assumptions, or a defensible implementation cost; the unsupported +120 cap is withdrawn.",
+      "assumptions_used": [
+        "Generic event values may carry different units, so no universal residual tolerance may be guessed."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:83-155",
+        "src/rabbit/solver/rodas5p.py:249-348",
+        "src/rabbit/solver/rodas5p_adapter.py:55-152",
+        "src/rabbit/solver/ivp_outcome.py:1-36",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json#F-CH-ADV-002,F-CH-ADV-003"
+      ],
+      "evidence_fingerprint": "sha256:7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "counterevidence_refs": [
+        "The repaired truth table and counter schema materially clarify the future design, but do not resolve the numeric authority or cost boundary."
+      ],
+      "reproduction": [
+        "Inspect required tolerance metadata, budget/counter schema, withdrawn line cap, and the explicit no-command rule in repaired PLANS.md."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze event_time_atol/rtol, event_value_atol/rtol and scale source, refinement iteration/RHS budgets, gate-consumer monotonicity or step cap, and a <=200-net split before implementation."
+      ]
+    },
+    {
+      "finding_id": "F-CH-DECIDE-004",
+      "claim_id": "CH-H3",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "C3 correctly remains no-code REWORK under D-071: 182 and 122 states are not interchangeable, the retained creep coordinate is not a restart, derivative-only acceleration cannot meet the caps, and the full reduction plus certificate obligations remain mandatory.",
+      "assumptions_used": [
+        "D-071 and the current gate registry remain governing authority."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/SCIENTIFIC_CONTRACT.md:11-58",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:156-177",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:87-145",
+        ".agent-harness/context/GATE_REGISTRY.json:G-F10-INDEPENDENT-FLRW",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json#F-CH-ADV-004"
+      ],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": [
+        "The Rust operator is executable, but it is the distinct folded 122-state system and carries no transfer of independent trajectory authority."
+      ],
+      "reproduction": [
+        "Verify the repaired C3 plan explicitly states 182/122 non-substitution, no N approximately 0.1653 restart, the derivative-only no-go, and identity/rank/coercivity/remainder/invariant/full-grid-tail/adjoint obligations."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No identity transfer theorem, branch/rank bound, coercivity/remainder proof, full-grid radial/angular/tail enclosure, adjoint QoI allocation, or certificate cost exists."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json"
+  ]
+}

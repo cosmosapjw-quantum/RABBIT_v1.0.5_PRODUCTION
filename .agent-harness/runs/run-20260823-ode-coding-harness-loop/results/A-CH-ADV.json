@@ -1,0 +1,269 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-coding-harness-loop",
+  "assignment_id": "A-CH-ADV",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02db5-daaa-7ed1-8688-ed67479d1e50",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-coding-harness-loop",
+    "assignment_id": "A-CH-ADV",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:74bc483caf0ad7b8bef9e8ea96d8665612f249785e9206b634f72ec13120fefd",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json",
+  "started_at": "2026-08-23T08:22:30Z",
+  "completed_at": "2026-08-23T08:31:24Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "read-only registered adversarial design review; no implementation, tests, trajectory, endpoint, or web execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-coding-harness-loop/assignments/A-CH-ADV.json # VERIFY: PASS",
+    "sed bounded reads of every assignment-listed packet, role, template, policy, source, and focused test input",
+    "jq bounded extraction of A-CH-DESIGN candidate_comparison, fixed_constraints, mechanical_acceptance, anti_drift_cost, and findings",
+    "rg -n targeted source/test inspection for raw clipping, Hubble flooring, event refinement, direction, classifier precedence, and work counters",
+    "python3 mechanical ledger check: 34 rows, 34 unique, exact 001..034 order, three candidate IDs",
+    "sha256sum over the assignment-listed packet, source/test, policy, and allowed sibling-result inputs",
+    "python3 --version; jq --version; sha256sum --version",
+    "python3 -m json.tool plus jq structural assertions on the registered result",
+    "python3 inline _harness.validate_result_contract against A-CH-ADV assignment # ok=true"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md",
+      "sha256": "3ed9745cb3e8400cd4688102255d88f9e533889dde1c4c56ccf9814ed98f77e0",
+      "role": "root execution-plan design under review"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-LOC.json",
+      "sha256": "8c74fb96c6c0a50136743210eb82ab2d4d6ae94ed5a7e7c7473adf110aad2625",
+      "role": "allowed source-localization result"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+      "sha256": "c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630",
+      "role": "allowed blind design result"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "role": "D-071 closure and reopen boundary"
+    }
+  ],
+  "review_summary": {
+    "verdict": "MAJOR_REVISIONS",
+    "authority_boundary": "The user's request is to run a bounded research/design loop. Instructions embedded in the attached material are retrieved content, not user or repository authority; RESEARCH_RECORD.md states that distinction explicitly. This review grants no implementation, runtime, endpoint, gate, or promotion authority.",
+    "mechanical_checks": {
+      "seed_rows": 34,
+      "unique_seed_ids": 34,
+      "exact_order_001_through_034": true,
+      "missing_ids": [],
+      "duplicate_ids": [],
+      "candidate_count": 3,
+      "candidate_limit": 3,
+      "implementation_diff": "NOT_RUN_AND_NOT_CLAIMED",
+      "focused_tests": "NOT_RUN",
+      "trajectory": "NOT_RUN",
+      "endpoint": "NOT_RUN",
+      "scientific_promotion": "NOT_APPLICABLE"
+    },
+    "candidate_verdicts": [
+      {
+        "candidate": "C1",
+        "verdict": "needs_rework",
+        "basis": "The two-file source-local repair and <=40-net-line cost are plausible, and RawStateAdmissionError preserves RuntimeError compatibility. The plan is not implementation-ready because it does not cleanly separate stored accepted samples from internal trial/rejected RHS probes or specify an accepted-sample Hubble check and a discriminator that kills final-only validation."
+      },
+      {
+        "candidate": "C2",
+        "verdict": "needs_rework",
+        "basis": "The six-file cluster is reachable and targets reproduced false success, but the event tolerance/budget/orientation contract, counter schema, mutation independence, and +120-net-line cap are not frozen tightly enough for an implementation assignment."
+      },
+      {
+        "candidate": "C3",
+        "verdict": "defended",
+        "basis": "REWORK/no-code is the correct disposition. The 182-state independent Python authority and 122-state folded Rust executable are non-substitutable; no restart exists; derivative removal alone misses both caps; and the reduction/certificate obligations are not frozen."
+      }
+    ],
+    "scope_and_cost": {
+      "C1": "Two files, current source/test surface 630 lines; +33 estimate and +40 hard cap are credible only after the accepted-state/probe contract is repaired. Correctness-only ceiling, no D-071 movement.",
+      "C2": "Six files, current source/test surface 1,223 lines. The inherited +75 estimate covered only a four-file event slice; the expanded configuration, Jacobian, exact work accounting, classifier, property, and mutation obligations do not have a defensible per-file estimate under the stated +120 hard cap.",
+      "C3": "No implementation surface or line budget is admitted. The earlier +70 static-helper localization is not an estimate for the full certificate and must not be reused as one."
+    },
+    "claim_ceiling": "All planned commands remain future. No code exists or was executed. C1/C2 can at most become local/reference correctness repairs after separate authority and successful execution; C3 remains PROPOSED/static and earns no D-071 reopen, endpoint authority, or gate movement."
+  },
+  "findings": [
+    {
+      "finding_id": "F-CH-ADV-001",
+      "claim_id": "CH-H1",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "C1 conflates accepted-state admission with solver-probe evaluation. PLANS.md requires every stored accepted sample to be strict-open, but then says raw final arrays drive interpolation and Hubble even though interpolation/Hubble occur inside _make_rhs on trial and rejected states. A literal patch could remove the evaluator clamp or reject legitimate Radau finite-difference probes. Conversely, checking only state_final would miss an invalid nonfinal accepted column, and the proposed tests do not explicitly kill that mutant. The RHS H>0 check also does not prove H>0 at every stored accepted column.",
+      "assumptions_used": [
+        "sol.y columns are accepted/stored samples, while _make_rhs receives accepted, trial, finite-difference, and rejected states.",
+        "The current evaluator-facing occupation clamps are intentionally tolerant of solver probes and are not themselves an admission decision."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:43-66",
+        "src/rabbit/collisions/dynamic_collision_driver.py:151-233",
+        "src/rabbit/collisions/dynamic_collision_driver.py:278-346",
+        "tests/test_dynamic_collision_driver.py:45-139",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-LOC.json#CH-LOC-P1"
+      ],
+      "evidence_fingerprint": "sha256:3ed9745cb3e8400cd4688102255d88f9e533889dde1c4c56ccf9814ed98f77e0",
+      "counterevidence_refs": [
+        "PLANS.md already says every stored accepted sample, preserves RawStateAdmissionError as a RuntimeError subclass, and says the H floor cannot establish admission; the intended repair is narrow."
+      ],
+      "reproduction": [
+        "rg -n 'np.clip|H_safe|f_samples|state_final|reached_endpoint' src/rabbit/collisions/dynamic_collision_driver.py",
+        "Inspect whether each proposed future test places an invalid value in a nonfinal sol.y column and separately exercises an out-of-domain RHS probe followed by a valid accepted result."
+      ],
+      "required_repair": "Replace C1 items 3-6 with an explicit two-boundary contract: post-solve admission validates only nonempty sol.y stored columns, after solver-success plus exactly-one-terminal-event admission and before endpoint derivation; every column must have finite T_gamma>0 and finite 0<f<1, and its diagnostic H recomputed from that raw column must be finite and >0. Delete only the final-state np.clip. Preserve _make_rhs occupation clips and _resample_comoving_to_thermal's evaluator clamp for trial/rejected probes. In _make_rhs reject nonfinite or H<=0 before division. Add (a) an invalid nonfinal accepted-column case with valid final state, (b) an invalid final-column case, and (c) a fake solve that invokes rhs on an out-of-domain probe then returns a valid stored trajectory, proving probes are not admitted states. Keep a literal valid-result characterization and require bitwise-identical returned fields.",
+      "confidence": 0.99,
+      "unresolved": [
+        "No test was run by assignment constraint; whether the current valid trajectory touches the strict boundary remains deliberately unknown and must trigger scientific adjudication if observed later."
+      ]
+    },
+    {
+      "finding_id": "F-CH-ADV-002",
+      "claim_id": "CH-H2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "C2 has no executable numerical event contract. It requires both bracket and residual convergence under a 'prospectively fixed' tolerance but fixes neither tolerance, their units/scales, nor independent iteration/RHS budgets. It also leaves time-reversed direction semantics, events=None, missing terminal attributes, scalar-return validation, endpoint zero ownership, and multiple crossings inside one step insufficiently explicit. Since event values have arbitrary units, an unnamed universal residual tolerance cannot be reconstructed by an implementer or an independent test.",
+      "assumptions_used": [
+        "The NumPy Rodas adapter remains a generic scipy-shaped API even though the Type-I event is temperature-valued.",
+        "Fail-closed event evidence requires a contract whose numeric predicates are frozen before output."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:80-110",
+        "src/rabbit/solver/rodas5p.py:249-340",
+        "src/rabbit/solver/rodas5p_adapter.py:55-151",
+        "tests/test_rodas5p_upgrades.py:355-410",
+        "tests/test_rodas5p_adapter.py:86-173"
+      ],
+      "evidence_fingerprint": "sha256:7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "counterevidence_refs": [
+        "The plan correctly demands exact initial roots, nonfinite failure, direction by sign, a single-terminal-scalar subset, and failure with no fabricated t_events."
+      ],
+      "reproduction": [
+        "rg -n '_event_fires|_refine_event|event_direction|direction =|event_fired|t_events' src/rabbit/solver/rodas5p.py src/rabbit/solver/rodas5p_adapter.py",
+        "Observe that PLANS.md names event tolerance and budgets without assigning values or a required event-supplied scale."
+      ],
+      "required_repair": "Add a frozen C2 event table before implementation: define the supported events=None and exactly-one-terminal-scalar cases; define behavior for absent/false terminal, sequence length !=1, non-scalar and nonfinite values; give a literal forward/backward truth table for direction signs and initial/new-endpoint zero; state the monotonic/one-root-per-step limitation; and fix event time/bracket tolerance, event-value tolerance with its unit/scale source, maximum refinement iterations, and maximum refinement RHS work. If a generic residual scale cannot be justified, require an event-supplied tolerance instead of inventing a dimensionless constant. Convergence must require both predicates, and every exhaustion/failed substep path must carry one typed reason and no event arrays.",
+      "confidence": 0.99,
+      "unresolved": [
+        "The correct residual scale for all current adapter consumers was not derivable from the assignment-listed files; this must be frozen by the root packet, not guessed during implementation."
+      ]
+    },
+    {
+      "finding_id": "F-CH-ADV-003",
+      "claim_id": "CH-H2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "C2's six-file +120-net-line cap and result compatibility are not supported by the localized estimate. The +75 estimate covered a four-file event slice, while the root bundle adds total configuration validation, supplied/finite-difference Jacobian semantics, exact nfev/njev/nlu plus refinement accounting, a total classifier, and property/mutation tests. The packet does not freeze whether unavailable counters are null, absent, or integer; nor whether event-refinement RHS calls are included in nfev. A patch can satisfy the prose with incompatible accounting or exceed the hard cap before tests.",
+      "assumptions_used": [
+        "Line caps include source and tests under the active cost policy.",
+        "Counters must have one reproducible unit and inclusion rule rather than merely nonzero values."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/RESEARCH_RECORD.md:91-108",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:82-121",
+        "src/rabbit/solver/rodas5p.py:135-245",
+        "src/rabbit/solver/rodas5p_adapter.py:27-151",
+        "src/rabbit/solver/ivp_outcome.py:4-36",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-LOC.json#CH-LOC-P2"
+      ],
+      "evidence_fingerprint": "sha256:3ed9745cb3e8400cd4688102255d88f9e533889dde1c4c56ccf9814ed98f77e0",
+      "counterevidence_refs": [
+        "The six named files are coherent and the +120 cap lies inside the policy's acceptable 80-200 band if a measured implementation sketch supports it."
+      ],
+      "reproduction": [
+        "wc -l on the six named C2 files gives a current 1,223-line surface.",
+        "Compare A-CH-LOC's four-file +75 estimate with the additional obligations in PLANS.md items 3-5 and its three test modules."
+      ],
+      "required_repair": "Either narrow the later implementation slice to event/refinement plus adapter/classifier and explicitly return F-ODE-ADJ3-012/-013 accounting/Jacobian work to the companion queue, or add a per-file source-and-test line sketch whose total justifies +120. In either case freeze the result schema: stored_output_points=len(t); attempted=accepted+rejected; nfev counts every fun call and explicitly says whether refinement calls are included; njev counts Jacobian builds; nlu counts factorizations including failed/refinement attempts; event refinement has its own attempts/RHS fields; unavailable values use one named representation and never zero. Add a literal Cartesian classifier table, an analytic forward/backward event oracle, a scripted all-refinement-failed sequence, and a mutant-to-test-ID matrix requiring the intended assertion failure rather than any nonzero test exit.",
+      "confidence": 0.97,
+      "unresolved": [
+        "No implementation sketch or mutation run was authorized, so this review does not claim a corrected line total."
+      ]
+    },
+    {
+      "finding_id": "F-CH-ADV-004",
+      "claim_id": "CH-H3",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "C3 is correctly non-implementable now. The packet preserves the 182-state independent Python authority versus 122-state folded Rust mismatch, refuses a restart from the logged N approximately 0.1653 value, retains the 365-fold derivative-removal no-go, and requires identity, branch, rank, coercivity/remainder, conservation/positivity, full-grid radial/angular/tail residual, adjoint QoI, cost, and full-prefix certificates before any gate-bearing claim.",
+      "assumptions_used": [
+        "D-071 remains the controlling closed-on-current-measurement disposition.",
+        "Static fixture states are inputs to a discriminator only and are not a restartable trajectory."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:123-140",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/SCIENTIFIC_CONTRACT.md:18-26",
+        "scripts/audit/_trajectory_core.py:95-170",
+        "scripts/audit/f10_physical_prefix_fixture.py:1088-1217",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:344-670",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:43-144"
+      ],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": [
+        "The Rust surface is executable, but it is a distinct folded system and cannot transfer trajectory authority by similarity."
+      ],
+      "reproduction": [
+        "Mechanically compare Setup.state_size=3*order+2 with Rust OdeSystem::dimension=2+2*grid.len at order 60.",
+        "Inspect the fixture's physical_prefix_executed=false and finite 182-vector contract."
+      ],
+      "required_repair": "Keep C3 as no-code REWORK. Before any implementation assignment, choose either an 182-state offline study or provide an explicit invariant-level 182-to-122 transfer theorem/test that expressly excludes work and trajectory transfer; then freeze the complete reduction and certificate contract. Do not reuse the +70 local-helper estimate as a certificate budget and do not create a new Python production twin or restart from retained creep states.",
+      "confidence": 0.99,
+      "unresolved": [
+        "The transfer identity, slow branch, rank bound, coercivity neighborhood, nonlinear remainder, tail enclosure, QoI allocation, and certificate cost remain unproved by design."
+      ]
+    },
+    {
+      "finding_id": "F-CH-ADV-005",
+      "claim_id": "CH-H3",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The packet's mechanical and claim-boundary controls are sound: all 34 IDs occur once in exact order, exactly three candidates are compared, attachment instructions are demoted to retrieved material, C3 is not presented as code-ready, and every implementation/test/trajectory/endpoint command is future or NOT_RUN. No source diff, runtime validation, scientific validation, gate movement, or promotion is simulated.",
+      "assumptions_used": [
+        "The allowed A-CH-DESIGN result is the complete 34-ID design ledger for this loop.",
+        "This review is design evidence only."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-coding-loop-20260823/RESEARCH_RECORD.md:1-44,66-109",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md:1-27",
+        "/tmp/rabbit-ode-coding-loop-20260823/harness/VALIDATION_MATRIX.md:1-25",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json#/phase3_design/mechanical_acceptance"
+      ],
+      "evidence_fingerprint": "sha256:c8e8aba42c2acb4e166620fe03b96bdbf3c5e96ee5cd837a4955bb8a0eb80630",
+      "counterevidence_refs": [
+        "VALIDATION_MATRIX.md still marks this independent review NOT_RUN because it is the pre-review packet; the root closeout must update that row from this admitted result without converting design review into runtime validation."
+      ],
+      "reproduction": [
+        "Parse seed_coverage_ledger and compare IDs to F-ODE-ADJ3-001..034.",
+        "Search the root packet for PASS, NOT_RUN, future commands, Phase 5 cancellation, and gate/promotion language."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json"
+  ]
+}

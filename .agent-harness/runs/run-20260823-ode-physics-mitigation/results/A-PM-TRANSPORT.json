@@ -1,0 +1,308 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-TRANSPORT",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c09-4755-7422-836f-ccfe393622ee",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physics-mitigation",
+    "assignment_id": "A-PM-TRANSPORT",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:0d1a3c3fca51a1eded1790f3c3e48371f0bb113989d57deee25ded46c429a0d3",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json",
+  "started_at": "2026-08-23T00:41:53Z",
+  "completed_at": "2026-08-23T00:43:09Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "jq": "1.7",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "web": "web__run primary-source pages accessed 2026-08-23"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-TRANSPORT.json",
+    "read the sealed CONTEXT_PACK, assignment, result template, independent-auditor role, prior A-ODE-ADJ3 adjudication, STATUS_BOARD, D-071 closure, physical-prefix readiness and receipts, anti-drift policies, and the three named Rust/Python source files",
+    "jq targeted inspection of 00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json and receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+    "rg -n targeted source/evidence inspection for D-071 budgets, JVP scaling, Rust Jacobian structure, finite-mass thermodynamics, and non-LRS omissions",
+    "sha256sum over every local evidence artifact listed below",
+    "python3 natural-unit scale estimate GF**2*Mpl*T**3/(1.66*sqrt(gstar)) at T=8.497 MeV, yielding 187.21635631025788 before reaction-specific coefficients",
+    "web__run search_query/open restricted to primary papers and authoritative numerical-library/reference documentation listed in evidence_refs"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "10347fed42bf3d1650d529004cbfdd8da48bc3962c0a20d142d69678b5fddd42",
+      "role": "sealed shared context"
+    },
+    {
+      "path": ".agent-harness/generated/STATUS_BOARD.md",
+      "sha256": "5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "role": "current gate and claim status"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+      "sha256": "18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "role": "allowed prior-run ODE adjudication and retained blocker inventory"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "role": "D-071 trajectory wall measurement and reopen criteria"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json",
+      "sha256": "beff908b8468acc1a999f2d0a8e745d15b3c60378926807ebbaad916422dd471",
+      "role": "static-prefix, tail-authority, and JVP-admissibility verdicts"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "sha256": "7db72888d007d0ff736d6aaf0257b039a02508eab7b4905fd81af0ec5f024864",
+      "role": "retained state, collision, tail-proxy, and failed-JVP measurements"
+    },
+    {
+      "path": "scripts/audit/f10_physical_prefix_fixture.py",
+      "sha256": "a9e0cf1bb5bcd0dbd286be3e6ad28a5d696aaff8bfe99a7797be449ee82b08b6",
+      "role": "frozen JVP formula and specified full-prefix contract"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "role": "current Rust-first physical state, collision Jacobian, and finite-mass thermodynamics"
+    },
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "sha256": "78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "role": "current dense OdeSystem/Jacobian and Rodas dense-LU interfaces"
+    },
+    {
+      "path": "src/rabbit/transport/augmented_typeI_nonlrs_collisionless.py",
+      "sha256": "42f40a78d79bb1e91f2ce2d66d0de32682a7b1097733b483b4a390f962c2db05",
+      "role": "current source-only non-LRS collisionless staging boundary"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f",
+      "role": "Rust-first, endpoint, no-QKE, and anti-wrapper authority"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149",
+      "role": "quantitative blocker-movement and cost-effectiveness authority"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PM-TRANSPORT-001",
+      "claim_id": "PM-H2",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "[PROPOSED; NOT IMPLEMENTED OR VALIDATED] The highest-leverage physics remedy is a Rust-first, collision-invariant micro-macro/asymptotic-preserving prefix over the measured N approximately 0.14 to 0.22 stall, not another denser grid or faster copy of the same formulation. For each implemented weak reaction channel, first derive and test the discrete detailed-balance identity for the Fermi gain-loss factors and the channel-specific left nullspace from its stoichiometry; do not import the classical five-invariant nullspace unchanged, because electron-pair creation/annihilation exchanges neutrino number and energy with the finite-mass electromagnetic bath. Then write f=f_eq(M)+g, constrain g to the complement of the exact discrete invariants, evolve the conservative macro moments including electromagnetic energy, and treat only the measured fast collision subspace implicitly via an invariant-sharing quantum BGK/penalty or exponential Rosenbrock-Krylov action while evaluating the residual explicitly. Filbet-Jin and Filbet-Hu-Jin establish the AP/quantum-penalization design precedent, and Gamba-Jin-Liu establishes exact moment evolution, but none proves that the present weak Fermi operator already satisfies the required discrete identities. At T approximately 8.497 MeV, the coefficient-free natural-unit estimate GF^2 Mpl T^3/(1.66 sqrt(10.75)) is approximately 187, so an early fast/slow split is plausible, not established; the actual projected collision-Jacobian spectrum divided by H is the authority.",
+      "assumptions_used": [
+        "No-QKE, isotropic weak collision physics only; no flavor-coherence claim is made.",
+        "The coefficient-free Gamma/H estimate uses GF=1.1663787e-5 GeV^-2, Mpl=1.2209e19 GeV, gstar=10.75 and T=8.497 MeV; reaction-specific matrix elements and phase-space factors can materially change it.",
+        "The existing finite-mass electromagnetic equation of state and Fermi blocking conventions remain fixed.",
+        "A collision invariant is accepted only if it is a left-null vector of the discrete channel operator/Jacobian, not merely a continuum identity."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:43-69,85-98,131-145",
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json:179-272,282-397",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:418-538,582-657",
+        "Filbet and Jin, A class of asymptotic preserving schemes for kinetic equations and related problems with stiff sources, submitted 2009-05-09, https://arxiv.org/abs/0905.1378",
+        "Filbet, Hu, and Jin, A Numerical Scheme for the Quantum Boltzmann Equation Efficient in the Fluid Regime, submitted 2010-09-17, https://arxiv.org/abs/1009.3352",
+        "Gamba, Jin, and Liu, Micro-macro decomposition based asymptotic-preserving numerical schemes and numerical moments conservation for collisional nonlinear kinetic equations, submitted 2018-08-31, https://arxiv.org/abs/1809.00028",
+        "Grohs et al., Neutrino energy transport in weak decoupling and big bang nucleosynthesis, submitted 2015-12-07, https://arxiv.org/abs/1512.02205"
+      ],
+      "evidence_fingerprint": "sha256:5ed99aaf49a5ee46cfd2bc1e66e83b3560bcbe3bc3d0ff01fa991db4ee6caa91",
+      "counterevidence_refs": [
+        "The AP papers concern classical or generic quantum Boltzmann structure; they are precedent rather than validation of this reaction catalogue, quadrature, or cosmological coupling.",
+        "The retained receipts are four static states, not a trajectory, and therefore do not measure an actual fast-subspace spectral gap.",
+        "The current Rust code already has analytic occupation derivatives; an AP rewrite must beat that endpoint-consumed path rather than a Python diagnostic."
+      ],
+      "reproduction": [
+        "At every reaction and grid point, evaluate the gain-minus-loss integrand at a common-temperature Fermi-Dirac state with chemical potentials satisfying that reaction's stoichiometry; freeze a high-precision cancellation tolerance before viewing results.",
+        "Construct the discrete invariant matrix L from channel stoichiometry and quadrature weights; require L*C(f)=0 for conserving channels and L*J_collision=0 at the frozen tolerance, with electron-channel energy exchange cancelling the electromagnetic macro equation.",
+        "At frozen checkpoints spanning N=0.14 and 0.22, project out the invariant nullspace and measure min(-Re(lambda_fast))/H. Falsify the intended AP region if there is no separated fast cluster with ratio at least 10, or if the inferred switching point moves outside its predeclared band under the frozen grid/tolerance ladder.",
+        "Run an overlap interval with both full kinetic and AP states. Falsify if energy drift exceeds 1e-4, spectral L1 disagreement exceeds 2.5e-4, delta-Neff exceeds 1e-4, strict-open occupations fail, or any existing channel invariant/first-law cap fails.",
+        "Run the already specified prefix without changing outputs or thresholds: it must include N=0.14 and 0.22, reach N>=0.25, use <=5500 full-RHS-equivalent calls and <=64800 s. Failure of any bound falsifies this candidate as current prefix progress; D-071 reopens only if a prospectively sealed endpoint projection also lies below 64800 s with nonzero uncertainty margin."
+      ],
+      "confidence": 0.86,
+      "unresolved": [
+        "The exact channel-by-channel discrete nullspace, equilibrium parameterization, penalty coefficient, and macro closure have not been derived for the current Rust reaction implementation.",
+        "No projected collision spectrum, AP overlap trajectory, full-prefix execution, or endpoint execution was run in this research-only assignment."
+      ]
+    },
+    {
+      "finding_id": "F-PM-TRANSPORT-002",
+      "claim_id": "PM-H2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[VALIDATED FAILURE OF THE FROZEN DIAGNOSTIC; PROPOSED REMEDY] The retained direct JVP rule is scale-inadmissible and cannot justify Krylov readiness. Its global Euclidean norm includes the passive elapsed-time coordinate of order 4.318e18, producing epsilon approximately 4.318e15; at creep_1200 a later Arnoldi direction moves N to about -6.898e7 and leaves the strict occupation domain, while successful directions have subtractive-condition ratios near 7190. In the Rust physical system elapsed time does not feed the physical RHS; it is a readout quadrature whose Jacobian column is zero. Preserve elapsed time in output but remove it from the implicit/JVP vector and error geometry. Scale the remaining Tgamma, occupation/logit, geometry, and independent-N directions with the solver's component tolerances; cap perturbations by the admissible physical domain; freeze a centered-difference epsilon ladder; and compare Jv to the existing dense Rust Jacobian plus an independent high-precision tiny-grid reference. Only after that should the dense 2N+2 OdeSystem/DMatrix-LU path be replaced by a block Schur or preconditioned Krylov interface: exact or high-fidelity collision species/momentum blocks, the scalar thermodynamic block, analytic low-rank Friedmann/energy coupling, and later sparse/banded PSTF transport blocks. Rosenbrock-Krylov and matrix-free finite-difference literature supports the mechanism, not current correctness.",
+      "assumptions_used": [
+        "Elapsed seconds remains an accepted-step quadrature/readout and is not deleted from artifacts.",
+        "The current Rust state dependency observed in physical_state_impl remains unchanged: elapsed seconds does not enter collision, Hubble, or thermodynamic evaluation.",
+        "Collision blocks may be dense in momentum; sparse claims apply only to proven transport/geometry coupling, not to the entire operator."
+      ],
+      "evidence_refs": [
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json:3-7,23-31,77-82",
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json:208-272,348-397,472-521",
+        "scripts/audit/f10_physical_prefix_fixture.py:421-488,2382-2411,2448-2470",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:418-538,566-707",
+        "native/rabbit_cpu/src/ode.rs:128-138,621-717,923-924",
+        "Brown, Walker, Wasyk, and Woodward, On Using Approximate Finite Differences in Matrix-Free Newton-Krylov Methods, published 2008-04-18, https://epubs.siam.org/doi/10.1137/060652749",
+        "Tranquilli and Sandu, Rosenbrock--Krylov Methods for Large Systems of Differential Equations, published online 2014-06-26, https://epubs.siam.org/doi/10.1137/130923336",
+        "SUNDIALS CVODE mathematical documentation, component WRMS weights, accessed 2026-08-23, https://sundials.readthedocs.io/en/develop/cvode/Mathematics_link.html"
+      ],
+      "evidence_fingerprint": "sha256:08bcef8caea67885312b22aa0f4a692450eabe5dca92c3768276acfc6efcca02",
+      "counterevidence_refs": [
+        "One initial-state direction returns a numerically zero physical JVP and several Arnoldi probes stop at dimension one, but passive-coordinate dominance and domain failure prevent interpreting this as a benign low-rank operator.",
+        "The Rust occupation Jacobian has analytic structure and focused tests; those local checks do not establish a matrix-free or block endpoint path.",
+        "The anti-drift plan already calls for a structured/block Jacobian, but a plan is not runtime evidence."
+      ],
+      "reproduction": [
+        "Recompute Jv with elapsed seconds excluded and weights Wi=1/(atol_i+rtol*abs(y_i)); treat N as a separately scaled independent variable or use analytic dF/dN. Reject every perturbation that violates Tgamma>0 or finite strict-open decoding.",
+        "For each frozen direction, predeclare and evaluate epsilon/10, epsilon, and 10*epsilon. Falsify the JVP if no convergence plateau exists, centered and one-sided estimates disagree outside the predeclared tolerance, or invariant-null/first-law residuals exceed existing caps.",
+        "On the tiny reference grid, compare block/matrix-free Jv and each Schur block against both the current dense Rust Jacobian and an independent high-precision finite difference; no post-output tolerance selection is allowed.",
+        "At production order and the frozen N=0.14/0.22 checkpoints, require Krylov dimension <=10, no hidden dense fallback, no strict-domain shift, and iteration counts that do not grow unboundedly across the frozen Nq/angular ladder.",
+        "Falsify blocker movement if same-case full-RHS-equivalent calls or wall improve by <10%; label any >=10% kernel/prefix gain segment-only unless the endpoint-consumed run improves. Even a 30% local gain cannot by itself repair the retained approximately 8305x endpoint projection miss."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The appropriate production epsilon tolerance and preconditioner refresh policy must be frozen prospectively from independent reference error, not chosen from the retained failed vectors.",
+        "The OdeSystem trait currently exposes dense Jacobians only; no Rust matrix-free JVP, sparse solve, or preconditioner interface was implemented here."
+      ]
+    },
+    {
+      "finding_id": "F-PM-TRANSPORT-003",
+      "claim_id": "PM-H2",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[PROPOSED; NOT IMPLEMENTED OR VALIDATED] The AP macro variable should retain finite-electron-mass thermodynamics and remove exchange cancellation by evolving a total-energy coordinate, then recovering Tgamma from a monotone electromagnetic-energy solve. It must not assume a^4 rho is constant: for finite-mass electrons d(a^4 rho)/dN=a^4(rho-3P), so the expansion trace/work term remains. Neutrino-electron collision energy exchange must cancel internally between kinetic and electromagnetic equations, while the massive equation of state supplies rho, P, and positive drho/dT. Separately, reaction-timescale reduction should be controlled by measured projected collision eigenvalues versus H, not temperature alone: use full kinetic evolution outside the frozen fast-gap region and an overlap interval to detect switching error. Current Rust already evaluates finite-mass rho, P, drho/dT, H, and electron-bath exchange, so this belongs in the Rust physical vertical slice rather than a new Python/JAX twin.",
+      "assumptions_used": [
+        "The independent variable is N=ln(a), so total continuity is d rho/dN=-3(rho+P).",
+        "The electromagnetic equation of state is monotone over the tested temperature interval; this must be checked rather than assumed in code.",
+        "No massless-electron, instantaneous-decoupling, or fitted-temperature shortcut is permitted."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:183-200,418-487,582-657",
+        "Grohs et al., Neutrino energy transport in weak decoupling and big bang nucleosynthesis, submitted 2015-12-07, https://arxiv.org/abs/1512.02205",
+        "Grohs and Fuller, Insights into neutrino decoupling gleaned from considerations of the role of electron mass, submitted 2017-06-11 and revised 2017-09-12, https://arxiv.org/abs/1706.03391",
+        "Hannestad and Madsen, Neutrino decoupling in the early Universe, submitted 1995-06-02, https://arxiv.org/abs/astro-ph/9506015",
+        "LLNL SUNDIALS ARKODE authoritative overview of IMEX, sparse/direct, and preconditioned Krylov integration, accessed 2026-08-23, https://computing.llnl.gov/projects/sundials/arkode"
+      ],
+      "evidence_fingerprint": "sha256:d57e32ed321b88e6a29c80134489eb00a099e1f6de3b2a82611477d64f3d12e1",
+      "counterevidence_refs": [
+        "The current Rust RHS already enforces a finite-mass first-law relation at evaluated states, so merely renaming Tgamma as energy would add surface without moving the blocker.",
+        "A temperature-only timescale switch can hide nonthermal spectral modes whose relaxation rate is slower than the bulk collision rate."
+      ],
+      "reproduction": [
+        "Differentiate the proposed total-energy coordinate analytically and verify the finite-mass trace identity d(a^4 rho)/dN=a^4(rho-3P) at high precision over the frozen temperature grid.",
+        "For every accepted macro state, bracket and solve Tgamma from electromagnetic energy; falsify if drho_em/dT<=0, the bracket is nonunique, or the recovered Tgamma/first-law residual exceeds the existing cap.",
+        "Compute the non-null collision spectrum/H at prospectively sealed checkpoints and freeze entry/exit thresholds before trajectories. Falsify reduction if the >=10 fast-gap region is absent, changes materially under the grid/tolerance ladder, or overlap solutions show hysteresis.",
+        "Compare full and reduced overlap solutions with the existing energy 1e-4, spectral-L1 2.5e-4, and delta-Neff 1e-4 ceilings; any breach, positivity failure, or failed collision invariant rejects the reduction."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "No algebraic Tgamma inversion, total-energy state, spectral-gap measurement, or full/reduced overlap run exists in the inspected Rust path.",
+        "The macro moment set must be derived from the implemented reaction catalogue so it neither suppresses physical electron-neutrino energy flow nor invents a conserved neutrino number."
+      ]
+    },
+    {
+      "finding_id": "F-PM-TRANSPORT-004",
+      "claim_id": "PM-H2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[VALIDATED MISSING AUTHORITY; PROPOSED REMEDY] The present order-60/ymax-30 equilibrium-tail fractions and last-node distortions are not reaction-tail authority, and brute extension is especially poorly matched to the four-year D-071 projection. Replace the domain holdout with a prospectively sealed combination of (i) a half-line or mapped quadrature chosen for Fermi/exponential decay while preserving detailed balance and discrete invariants, (ii) analytic Fermi-tail moment enclosures, and (iii) an independent high-precision extended-domain lost-action oracle that bounds direct source, collision-source, and propagated feedback separately. For zero chemical potential, f(y)=1/(exp(y)+1)<=exp(-y), so polynomial equilibrium moments beyond Y are bounded by the upper incomplete gamma integral; this does not by itself bound collision tails because reaction kernels, blocking factors, and off-grid incoming/outgoing momenta must also be enclosed. Momentum-discretization uncertainty at roughly 1e-4 in precision decoupling calculations is independent literature evidence that a tiny equilibrium population fraction alone is inadequate.",
+      "assumptions_used": [
+        "The simple f<=exp(-y) bound is stated only for nonnegative y and zero chemical potential; other chemical potentials require a modified bound.",
+        "NIST quadrature and incomplete-gamma identities are mathematical tools, not validation of a particular mapped grid.",
+        "The high-precision oracle must be implementation-independent enough to avoid same-code parity as tail authority."
+      ],
+      "evidence_refs": [
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json:6-7,23-31,77-82",
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json:67-72,194-199,334-339,458-463",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:55-69,85-123",
+        "Bennett et al., Towards a precision calculation of Neff in the Standard Model II, submitted 2020-12-04 and published JCAP 04 (2021) 073, https://arxiv.org/abs/2012.02726",
+        "NIST Digital Library of Mathematical Functions, Gaussian quadrature including generalized Gauss-Laguerre, accessed 2026-08-23, https://dlmf.nist.gov/3.5",
+        "NIST Digital Library of Mathematical Functions, incomplete-gamma asymptotics and error bounds, accessed 2026-08-23, https://dlmf.nist.gov/8.11",
+        "Pareschi and Rey, Moment Preserving Fourier-Galerkin Spectral Methods and Application to the Boltzmann Equation, published 2022-12-19, https://epubs.siam.org/doi/10.1137/21M1423452"
+      ],
+      "evidence_fingerprint": "sha256:9d57090d2d4ab522f35e3b57f87202ebf946509a86dddfb55a3ef1b2f62f7359",
+      "counterevidence_refs": [
+        "The retained equilibrium number and energy tails are very small, approximately 4.99e-11 and 4.92e-10, respectively; they support a bounded-tail strategy but do not include reaction lost action or propagated feedback.",
+        "The base order-48/ymax-24 phase completed, so not every quadrature case is computationally blocked."
+      ],
+      "reproduction": [
+        "Derive per-reaction absolute tail bounds that include kernel growth, Fermi blocking, finite electron mass, quadrature weights, and every off-grid momentum routing; verify each bound encloses an extended-domain high-precision oracle.",
+        "Propagate the direct and collision-source tail intervals through a bounded sensitivity/adjoint or paired trajectory to the frozen observables. Falsify if any direct, collision, or propagated correction exceeds one half of its relevant hard cap, or if the enclosure misses the oracle.",
+        "Freeze a grid/domain ladder before execution and require monotone enclosure contraction plus invariant/detailed-balance preservation. Nonmonotonic observables without a valid containing interval reject the quadrature candidate.",
+        "Require the bounded stalled-phase discriminator and its endpoint projection to fit the existing 64800 s budget with margin. A smaller equilibrium tail fraction, a same-code grid match, or a segment-only quadrature speedup does not reopen D-071."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No reaction-kernel tail enclosure, extended-domain lost-action oracle, or propagated-feedback bound is present in the named evidence.",
+        "The best half-line mapping/order cannot be chosen until the channel-specific kernel asymptotics and invariant constraints are derived."
+      ]
+    },
+    {
+      "finding_id": "F-PM-TRANSPORT-005",
+      "claim_id": "PM-H4",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED BLOCKER / CLAIM FIREWALL] No inspected evidence reopens D-071 or demonstrates endpoint progress. The order-60/ymax-30 holdout stopped near N=0.1653 after 64800 s, with a post-drop projection of approximately 4.58 years and about an 8305x miss. The four physical RHS/JVP states are static receipts, not a prefix; reaction-tail authority and all-state JVP admissibility are false. Current Rust has useful finite-mass physics and analytic occupation-Jacobian structure but only dense solver interfaces and no executed AP prefix. The Python non-LRS file explicitly implements only a three-mode source shell: nonlinear angular advection, the full q-cascade, and collisions are absent, and solve_ivp/Radau receives no production Jacobian or hard budget. Therefore it cannot support a full Type-I transport claim. The admissible execution order is: derive detailed balance/nullspaces in the current Rust collision catalogue; implement one endpoint-consumed Rust AP/energy/JVP/block vertical slice without new gate plumbing; pass the sealed N=0.14/0.22 to N>=0.25 discriminator; obtain an uncertainty-bounded endpoint projection below the existing budget; then run the full endpoint against SciPy/BDF as temporary number-of-record. QKE, public production, publication authority, and static-prefix completion remain FORBIDDEN claims.",
+      "assumptions_used": [
+        "D-071 and the current status board remain authoritative.",
+        "No new trajectory or endpoint benchmark was authorized or executed by this assignment.",
+        "Rust AOT is the only active implementation/repeated-run target; SciPy/BDF remains temporary number-of-record and JAX remains a frozen parity/Jacobian oracle."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json:F-ODE-ADJ3-001,F-ODE-ADJ3-010,F-ODE-ADJ3-011,F-ODE-ADJ3-015,F-ODE-ADJ3-032",
+        ".agent-harness/generated/STATUS_BOARD.md:G-F10-INDEPENDENT-FLRW,G-HARNESS-INTEGRITY",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:43-69,85-145",
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json:3-7,23-31,77-82",
+        "scripts/audit/f10_physical_prefix_fixture.py:2396-2411,2421-2470",
+        "src/rabbit/transport/augmented_typeI_nonlrs_collisionless.py:1-6,218-279,336-421",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:20-32,45-59,333-355,509-519",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22,74-81,119-132"
+      ],
+      "evidence_fingerprint": "sha256:dea4ab44d0a4f9e9376f542f7cd8be7004f3b8418e1d4d260fb61ae2d515e68a",
+      "counterevidence_refs": [
+        "The D-071 base order-48/ymax-24 phase completed and the Rust BDF/Rodas mechanics have focused green tests; these are implementation/local-verification evidence, not independent endpoint authority.",
+        "The exact solver-local BDF Jacobian cache previously delivered a material local speedup, but the remaining projection is orders of magnitude beyond the wall budget.",
+        "The non-LRS source shell is useful staging code for its stated limited scope."
+      ],
+      "reproduction": [
+        "Preserve the existing measured-blocker case and report endpoint-consumed before/after full-RHS-equivalent calls, accepted/rejected attempts, wall, maximum N, event status, strict-domain status, and first-law/invariant residuals.",
+        "A change is not endpoint progress if it improves only a kernel or cheap segment. Under the cost policy, <10% same-case call/wall improvement is no partial blocker movement; >=10% remains local unless consumed by the stalled prefix/endpoint; approximately 30% is still insufficient to counter an approximately 8305x projection miss.",
+        "Falsify D-071 reopening if the prospectively sealed discriminator fails to cover the stalled N interval, does not reach N>=0.25 within 5500 full-RHS-equivalent calls and 64800 s, or projects the endpoint at >=64800 s after uncertainty margin.",
+        "Falsify scientific promotion on any failed detailed-balance/invariant/positivity/first-law/tail condition, any missing terminal event or residual, any post-output tuning, or any reliance on static receipts/same-code parity as a trajectory.",
+        "Do not extend collision/AP conclusions to non-LRS transport until the omitted nonlinear angular advection and q-cascade exist and pass collisionless LRS/no-stress limits; collisions then require their own Rust endpoint-consumed evidence."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "All four remedy families remain PROPOSED until a single Rust vertical slice passes its prospective discriminator.",
+        "Independent endpoint authority, full Type-I transport completion, reaction-tail authority, and public-production support remain absent."
+      ]
+    }
+  ],
+  "errors": [
+    "An initial sha256sum used obsolete audit_outputs/BBN-Type-I-Augmented-2026-02-07 paths and returned ENOENT; the assignment-required 00_F10_PHYSICAL_PREFIX_DIAGNOSIS paths were then resolved and hashed. No evidence claim relies on the missing paths."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "created_at": "2026-08-23T09:06:53+00:00",
+  "spec_ref": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+  "base_ref": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "head_ref": "codex/ode-c1-raw-state-20260823",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "closed_stop_invalid",
+  "closed_at": "2026-08-23T11:30:01Z",
+  "final_decision": "REJECT_STOP_INVALID",
+  "retained_tree_change": false,
+  "candidate_retention": "isolated_evidence_only"
+}

@@ -1,0 +1,39 @@
+{
+  "configuration": {
+    "T_gamma_stop_MeV": 0.01,
+    "atol": 1e-10,
+    "collisions": false,
+    "max_step": 0.5,
+    "n_q": 24,
+    "rtol": 1e-08
+  },
+  "integration_exception": null,
+  "raw_occupations": {
+    "at_or_above_one_count": 0,
+    "entries": [],
+    "invalid_count": 0,
+    "max_clip_excursion_hex": "0x0.0p+0",
+    "maximum_hex": "0x1.f0e53285ad5e3p-2",
+    "minimum_hex": "0x1.572efef6863bap-118",
+    "negative_count": 0,
+    "nonfinite_count": 0,
+    "samples_with_invalid": [],
+    "zero_count": 0
+  },
+  "returned_result": {
+    "N_eff_hex": "0x1.7f28410f9c22ap+1",
+    "N_final_hex": "0x1.3c58cc220fa41p+2",
+    "T_gamma_final_hex": "0x1.47ae147ae147bp-7",
+    "max_clip_excursion_hex": "0x0.0p+0"
+  },
+  "solver": {
+    "message": "A termination event occurred.",
+    "nfev": 1038,
+    "njev": 3,
+    "nlu": 26,
+    "status": 1,
+    "stored_points": 146,
+    "success": true,
+    "terminal_event_count": 1
+  }
+}

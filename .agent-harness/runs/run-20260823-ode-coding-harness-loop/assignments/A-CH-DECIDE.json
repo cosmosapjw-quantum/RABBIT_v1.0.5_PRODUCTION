@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-coding-harness-loop",
+  "assignment_id": "A-CH-DECIDE",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "CH-H1",
+    "CH-H2",
+    "CH-H3"
+  ],
+  "task": "Perform the final Phase 10 adjudication of the repaired attached coding-harness research loop. Read only the canonical pack, assignment, repaired scratch packet, governing policy/gates, and the three explicitly allowed sibling results. Do not redo broad discovery. First verify the user-versus-attachment instruction boundary and that Phase 5, runtime tests, trajectory, endpoint, and diff validation are genuinely NOT_RUN. Mechanically verify the 34-ID ledger remains complete after the root amendment that reroutes only F-ODE-ADJ3-012 from selected C2 to companion/future. Decide PROMOTE_FOR_LATER_IMPLEMENTATION, HOLD, REWORK, or REVERT_DESIGN separately for C1, C2, C3. For C1 determine whether the repaired two-boundary stored-sample/probe contract, structured RuntimeError-compatible failure, per-column raw Hubble check, tests, <=40 net cap, rollback, and correctness-only ceiling are implementation-ready. For C2 determine whether REWORK correctly fails closed on unresolved event-unit tolerances/budgets and unsupported former +120 cap; do not promote it merely because a semantic table exists. For C3 enforce 182/122 non-substitution, no restart, derivative-only no-go, and certificate obligations. Resolve review findings by governing source and policy, not majority. Return a non-inconclusive top-level pass or fail for completion of this research loop, final candidate dispositions, residual blockers, exact claim ceilings, anti-drift cost verdict, and whether any current gate changes. Do not implement, run tests/trajectory/endpoint, edit scratch/shared files, browse prior physics-specific results, or grant execution authority. Write only the registered result JSON and end with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/assignments/A-CH-DECIDE.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/RESEARCH_RECORD.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/harness/SCIENTIFIC_CONTRACT.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/harness/PLANS.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/harness/VALIDATION_MATRIX.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/harness/DECISION_LOG.md",
+    "/tmp/rabbit-ode-coding-loop-20260823/harness/FAILURE_LOG.md",
+    "src/rabbit/collisions/dynamic_collision_driver.py",
+    "tests/test_dynamic_collision_driver.py",
+    "src/rabbit/solver/rodas5p.py",
+    "src/rabbit/solver/rodas5p_adapter.py",
+    "src/rabbit/solver/ivp_outcome.py",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-LOC.json",
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-ADV.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "jq",
+    "rg",
+    "sed",
+    "python3",
+    "sha256sum"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+  "status": "registered"
+}

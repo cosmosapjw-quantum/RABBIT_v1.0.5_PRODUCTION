@@ -1,0 +1,196 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-PHYSVAL",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02d7e-f8f7-7f11-961d-25d6a862c72f",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physmath-loop",
+    "assignment_id": "A-PSL-PHYSVAL",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:fa7306d21283b5df2180dc986220db49d184611dd4b810dd0c62049b4e7f6651",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json",
+  "started_at": "2026-08-23T07:27:17Z",
+  "completed_at": "2026-08-23T07:32:38Z",
+  "tool_versions": {
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python": "3.12.3",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "tests_executed": "none",
+    "trajectory_or_endpoint_executed": "none"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-PHYSVAL.json",
+    "read only the registered role/evidence inputs; targeted nl/rg and jq inspection of H0-H6, D-071/V2, and named Rust source ranges",
+    "sha256sum the sealed evidence; python3 --version; rustc --version; git rev-parse HEAD",
+    "python3 .agent-harness/scripts/validate_result.py ... (exit 2: script absent)",
+    "python3 .agent-harness/scripts/validate_harness.py (ok=true before final compaction; rerun required on final bytes)"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/state/HYPOTHESIS_GRAPH.md",
+      "sha256": "d08e620b98609e2f81697e868903f2fbb32deb8f2ef5e4f5f765b5cc56b1d48d",
+      "role": "H0-H6 and Phase-5 narrowing"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+      "sha256": "78a97db76bf816a67da2761a135377ecd85b1477f5198290d7e5743aeae97865",
+      "role": "sanitized premises"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json",
+      "sha256": "b52ef8769968004c4e5c03a57d6bc49fa487f1d8b265f71e0646a92e2b739264",
+      "role": "Phase-5 scopes and adversaries"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "role": "null and authority ceiling"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+      "role": "fixed-cut/Jacobian negative control"
+    }
+  ],
+  "evidence_bundle_sha256": "sha256:8c5686b5eda0ec61dda4fdfb9840fba876f3d97ff67c961fa2fd12650754160c",
+  "phase_boundary": {
+    "performed": "Phase 6 read-only physics/math validation only",
+    "not_performed": [
+      "theory improvement",
+      "complete Phase-7 design",
+      "implementation",
+      "trajectory/endpoint",
+      "PROMOTE/HOLD/REJECT",
+      "gate or claim movement"
+    ]
+  },
+  "conventions": {
+    "model": "flat homogeneous isotropic FLRW; no shear extension",
+    "coordinates": "N=ln(a), q=ap, y=q/T_ref",
+    "units": "natural units; T,H in MeV; rho in MeV^4; Q in MeV^5",
+    "sign_and_folding": "Q>0 into neutrinos; Q_total=Q_e+2Q_x",
+    "domains": "T,H>0; 0<f<1; logarithmic X requires X>0"
+  },
+  "phase6_status_counts": {
+    "PASS": 1,
+    "CONCERN": 3,
+    "FAIL": 0,
+    "NOT_APPLICABLE": 0,
+    "NOT_YET_TESTABLE": 3
+  },
+  "candidate_validations": [
+    {
+      "hypothesis_id": "H0",
+      "phase6_status": "PASS",
+      "scope": "null/control only",
+      "verdict": "D-071 evaluated no scientific predicate and retained no solver-state evidence that identifies the creep mechanism; V2 rejects the tested fixed-y split and Jacobian-cost story. Remedy selection is therefore underdetermined without refuting the physics.",
+      "smallest_repair_or_extra_assumption": "None; keep it only as a falsifiable control, not a universal no-go."
+    },
+    {
+      "hypothesis_id": "H1",
+      "phase6_status": "CONCERN",
+      "scope": "physical coordinates/invariant admission only",
+      "verdict": "u=logit(f) and z=ln(X) are exact smooth interior maps and current decoders fail raw rather than clip. But du/dN=C/[Hf(1-f)] and dz/dN=(dX/dN)/X become singular near physical boundaries; the maps do not enforce conservation, normalization, or terminal precedence.",
+      "smallest_repair_or_extra_assumption": "Freeze a visited-state representability/conditioning margin in physical errors delta_f=f(1-f)delta_u and delta_X=Xdelta_z; preserve accepted and failing raw states separately; apply channel-valid invariants; keep typed terminal precedence separate."
+    },
+    {
+      "hypothesis_id": "H2",
+      "phase6_status": "CONCERN",
+      "scope": "flat-FLRW energy/clock feasibility",
+      "verdict": "The equations, units, sign, first law, and heavy multiplicity are coherent. The tree EM EOS has d rho/dT>0, so rho_em can replace T_gamma locally. For x=-ln(T_gamma/T_ref), dN/dx=1/alpha is exact, but no full-branch alpha=-dln(T_gamma)/dN>=alpha_min>0 certificate exists; negative Q can destroy transversality. Evolving rho_nu in addition to spectral f would be redundant.",
+      "smallest_repair_or_extra_assumption": "On the spectral path replace only T_gamma by rho_em, derive rho_nu from f, restrict to the declared flat-FLRW EOS, and prospectively freeze EOS round-trip error plus alpha_min>0 on the whole admitted state envelope."
+    },
+    {
+      "hypothesis_id": "H3",
+      "phase6_status": "NOT_YET_TESTABLE",
+      "scope": "one exact current channel and scaled Jv",
+      "verdict": "The sealed aggregator fixes units and Q_e+2Q_x but not one channel's gain/loss legs, support, multiplicity, or reaction vector. A=ln(G/L) is defined only for G,L>0. Required branches are: (0,0)->C=0; (0,L)->-L; (G,0)->G; otherwise C=-G*expm1(-A) for A>=0 and C=L*expm1(A) for A<0. A moving threshold also needs a boundary/one-sided derivative. Invariants are reaction-specific and passive elapsed time must not enter Jv geometry.",
+      "smallest_repair_or_extra_assumption": "Seal one endpoint-consumed channel's exact bytes, support, units, multiplicity, reaction vector, and derivative path; derive those branches and left invariants; freeze coordinate scales and charge hidden dense work."
+    },
+    {
+      "hypothesis_id": "H4",
+      "phase6_status": "NOT_YET_TESTABLE",
+      "scope": "tiny actual-kernel tail-majorant feasibility",
+      "verdict": "Positive quadrature and FD moments do not enclose a signed nonlinear collision integral. The existing MeV^3 EM-derivative tail bound is not a collision/weak/yield bound. Pauli realizability 0<=f<=1 alone permits nondecaying tails, so it gives no finite uniform polynomial-kernel majorant; signed cancellation cannot replace absolute lost action.",
+      "smallest_repair_or_extra_assumption": "Freeze a tiny state family with a provable weighted decay envelope such as f_s(y)<=A_s exp(-beta_s y), seal one actual kernel/support majorant, bound absolute lost action, and require containment against an independent extended domain before any weak/observable propagation."
+    },
+    {
+      "hypothesis_id": "H5",
+      "phase6_status": "NOT_YET_TESTABLE",
+      "scope": "coupled invariants plus entropy-metric non-normal discriminator",
+      "verdict": "No exact coupled reaction matrix, equilibrium tangent, projector, or metric is sealed. Electron channels require the EM thermal degree in the energy invariant; neutrino number is not universal. Eigenvalues alone cannot exclude transient growth. With fixed SPD M require the micro symmetric part P^T(MJ+J^TM)P/2 <= -lambda P^TMP. If M follows the state, M' is load-bearing: J^TM+MJ+M' <= -2lambda M. Fermi metrics also degenerate at f=0,1.",
+      "smallest_repair_or_extra_assumption": "Seal exact coupled invariants/equilibrium; freeze a unit-consistent SPD entropy metric and projector; test coercivity/log norm or pseudospectrum across completing/stalled grids and regimes, including M' when applicable. Kill on absent/nonuniform lambda or transient amplification; no AP code first."
+    },
+    {
+      "hypothesis_id": "H6",
+      "phase6_status": "CONCERN",
+      "scope": "exact-domain, independent one-sided falsifiers",
+      "verdict": "df(q)/dN=0 is exact only for massless homogeneous isotropic collisionless transport; a common-FD null needs common T and reaction-compatible chemical potentials; the first law needs full Q_e+2Q_x. Nuclear reactions conserve baryon and nuclear charge, but the added weak n<->p block changes nuclear charge while preserving baryon. Event status/direction is software semantics, and same-table/helper expectations are not independent.",
+      "smallest_repair_or_extra_assumption": "Freeze an operator/channel scope table; derive each oracle from independent equations/data; pair each mutant with a good-path specificity control; restrict charge conservation to the nuclear suboperator and make no efficacy or trajectory claim before execution."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-PSL-PHYSVAL-000",
+      "claim_id": "PSL-PHYSVAL",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Phase 6 completed within its read-only boundary. Exact statuses: H0 PASS; H1/H2/H6 CONCERN; H3/H4/H5 NOT_YET_TESTABLE. H3 zero-support algebra and H5 fixed-metric non-normality are load-bearing. These are not final candidate dispositions and grant no implementation, Phase-7, trajectory, endpoint, D-071 reopen, public, or scientific authority.",
+      "assumptions_used": [
+        "Phase-3 sanitation and Phase-5 narrowed scopes are binding.",
+        "D-071/V2 remain current authority.",
+        "No numerical discriminator ran."
+      ],
+      "evidence_refs": [
+        "/tmp/rabbit-ode-physmath-loop-20260823/state/HYPOTHESIS_GRAPH.md",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-CLAIM-AUDIT.json",
+        ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-ADV.json",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+        "native/rabbit_cpu/src/flrw.rs",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "native/rabbit_cpu/src/thermal_bbn.rs",
+        "native/rabbit_cpu/src/minimal_network.rs"
+      ],
+      "evidence_fingerprint": "sha256:8c5686b5eda0ec61dda4fdfb9840fba876f3d97ff67c961fa2fd12650754160c",
+      "counterevidence_refs": [
+        "No full-path alpha bound, exact one-channel affinity/nullspace, collision-tail theorem, projected entropy-metric operator, mutant execution, trajectory, or endpoint exists in this phase."
+      ],
+      "reproduction": [
+        "Verify assignment/hashes and read only sealed inputs.",
+        "Apply definition, unit, sign, normalization, conservation, boundary, limit, positivity, regularity, approximation, regime, and counterexample checks candidate by candidate."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Phase 7 and Phase 8 remain parent-owned.",
+        "All repairs/assumptions are unimplemented and unexecuted."
+      ]
+    }
+  ],
+  "resolved_errors": [
+    {
+      "outcome": "The guessed validate_result.py path was absent (exit 2).",
+      "resolution": "The repository's validate_harness.py returned ok=true."
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-PHYSVAL.json"
+  ]
+}

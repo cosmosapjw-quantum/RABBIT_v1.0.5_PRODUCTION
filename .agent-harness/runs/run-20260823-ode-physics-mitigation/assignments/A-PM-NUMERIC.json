@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-NUMERIC",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "PM-H6",
+    "PM-H7",
+    "PM-H8"
+  ],
+  "task": "Independently research numerical-physics remedies for all remaining ODE contract, event, BDF/Rodas, adjoint/tape, telemetry and validation gaps. Focus on physics-defined error weights, event surfaces, invariant-aware acceptance, BDF/Rosenbrock stiff integration, sparse/block linear algebra, failure recovery, and independent reduced-limit tests. Match SciPy 1.17.1, diffsol 0.16.0, JAX 0.10.0 and Diffrax 0.7.2 where external API facts matter; use official docs and primary numerical-analysis sources with URLs/date. Map findings to current files and mark software-only items that physics cannot solve. Do not inspect sibling results or edit production/shared files. Write only the result JSON and end with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-NUMERIC.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json",
+    ".agent-harness/generated/STATUS_BOARD.md",
+    "requirements.measured.txt",
+    "native/rabbit_cpu/Cargo.lock",
+    "native/rabbit_cpu/src/ode.rs",
+    "src/rabbit/solver/rodas5p.py",
+    "src/rabbit/solver/rodas5p_adapter.py",
+    "src/rabbit/solver/ivp_outcome.py",
+    "src/rabbit/jax/gradient_bridge.py",
+    "src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "web__run"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json",
+  "status": "registered"
+}

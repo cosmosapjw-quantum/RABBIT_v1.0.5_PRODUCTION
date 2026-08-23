@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-math-algo-code-independent",
+  "assignment_id": "A-MAC-ADJ",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "adjudicator",
+  "runtime_agent_type": "adjudicator",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "ODE-A1",
+    "ODE-A2",
+    "ODE-A3",
+    "ODE-A4",
+    "ODE-A5",
+    "ODE-A6",
+    "ODE-A7"
+  ],
+  "task": "Fresh final adjudication of the independent mathematical, numerical-algorithmic, and code-contract remedy research. Read the original A-ODE-ADJ3 register and exactly the three allowed sibling envelopes; do not read any prior physics-mitigation run, result, scratch note, or unrelated sibling. Normalize F-ODE-ADJ3-001 through F-ODE-ADJ3-034 exactly once, in numeric order. For every original ID record current disposition, remedy or rigorous no-go, mathematical prerequisite, algorithm and complexity, concrete code insertion/test, hard falsifier or decisive experiment, and residual claim ceiling. Reconcile conflicts by gates and current source. Keep the independent Python trajectory state dimension 182 distinct from the folded Rust N60 state dimension 122. Independently verify the generous dense-FD-removal D-071 bound and do not convert projections, static states, segment timing, or same-code parity into endpoint evidence. Rank at most three first implementation or bounded-discriminator candidates by hard-blocker movement per line and wall-time. Preserve G-F10-INDEPENDENT-FLRW and G-HARNESS-INTEGRITY fail-closed unless current executed evidence discharges them; preserve items 032-034 as bounded pass/closed and item 031 as an external harness limitation. Return a top-level pass or fail, never inconclusive. Do not implement, execute an endpoint, edit shared files, or create gate/manifest/readiness plumbing. Write only the required result JSON and end with the exact HARNESS_RESULT envelope.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-ADJ.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "scripts/audit/_trajectory_core.py",
+    "scripts/audit/f10_physical_prefix_fixture.py",
+    "native/rabbit_cpu/src/ode.rs",
+    "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+    "native/rabbit_cpu/src/neutrino_self_spectral.rs",
+    "native/rabbit_cpu/src/electron_spectral.rs",
+    "native/rabbit_cpu/Cargo.lock"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-MATH.json",
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ALGO.json",
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-CODE.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "jq",
+    "rg",
+    "sed",
+    "python3",
+    "sha256sum"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ.json",
+  "status": "registered"
+}

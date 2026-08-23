@@ -1,0 +1,394 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-coding-harness-loop",
+  "assignment_id": "A-CH-DESIGN",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02da8-60b5-7d00-9b0d-d5384c156dc1",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-coding-harness-loop",
+    "assignment_id": "A-CH-DESIGN",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:ba27d548203f374133d0ae9fcc2ee380b90f580889ad87de21182157a45608b7",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+  "started_at": "2026-08-23T08:12:21Z",
+  "completed_at": "2026-08-23T08:16:47Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "analysis_mode": "read-only blind-results Phase 3 design from assignment-listed evidence; no repository source discovery, implementation, test, trajectory, or endpoint execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-coding-harness-loop/assignments/A-CH-DESIGN.json",
+    "sed -n in bounded chunks over every assignment-listed required input",
+    "sha256sum over A-MAC-ADJ2, A-ODE-ADJ3, guardrails, cost policy, gate registry, and D-071 report",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+    "python3 inline mechanical check: F-ODE-ADJ3-001..034 unique, numeric-order exact, category valid, candidate count <=3",
+    "python3 inline import of _harness.validate_result_contract against the registered assignment"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json"
+  ],
+  "phase3_design": {
+    "disposition": "PASS_DESIGN_ONLY",
+    "authority_boundary": "The 34-entry defect register remains open. This result selects two later implementation candidates and one rework-only scientific discriminator; it implements nothing, validates no solver or physics result, reopens no gate, and grants no execution authority.",
+    "fixed_constraints": {
+      "solver_roles": "Rust AOT remains the active repeated-run target; SciPy/BDF remains the temporary number-of-record; JAX is a frozen local parity/AD/Jacobian oracle only.",
+      "scope": "No QKE, public dispatch, public production, publication-ready support, new Python/JAX production twin, or new standalone gate/readiness/manifest/hash/figure/telemetry surface.",
+      "state_dimensions": {
+        "independent_python_order60": "3*60 + T_gamma + elapsed_time = 182 states",
+        "folded_rust_order60": "2*60 + T_gamma + elapsed_time = 122 states",
+        "non_substitution_rule": "The 122-state folded Rust model cannot replace the 182-state independent D-071/physical-prefix system in any work or complexity bound."
+      },
+      "derivative_only_no_go": {
+        "n": 182,
+        "nominal_dense_fd_removal_ceiling": "183x still leaves 178713.863 full-RHS-equivalent calls, 45.382 times the frozen 3938 projection, 790026.749 seconds, and 12.192 wall-cap multiples.",
+        "ultra_generous_ceiling": "365x still leaves 89601.745 full-RHS-equivalent calls, 22.753 times the frozen 3938 projection, 396095.603 seconds, and 6.113 wall-cap multiples.",
+        "rule": "No Jacobian, sparse-LU, Krylov, IMEX, or solver-swap task may claim D-071 movement from derivative removal alone."
+      },
+      "restart_rule": "The retained D-071 log contains no state dump, checks, or step trace. N approximately 0.1653 is not a restart checkpoint and must never seed an experiment.",
+      "full_prefix_caps": "Any later gate-bearing attempt must start from the physical initial state, include N=0.14 and N=0.22, reach N>=0.25, use <=5500 full-RHS-equivalent calls, and use <=64800 seconds. Failure of any clause is terminal."
+    },
+    "candidate_comparison": [
+      {
+        "candidate_id": "C-CH-01",
+        "rank": 1,
+        "name": "Raw accepted-state physical admission in dynamic_collision_driver",
+        "linked_seed_ids": [
+          "F-ODE-ADJ3-009"
+        ],
+        "decision": "PROMOTE_FOR_LATER_IMPLEMENTATION",
+        "decision_basis": "Smallest line cost and highest direct physics false-success movement: it prevents clipped or floored derivatives from laundering an invalid accepted state.",
+        "behavior_contract": [
+          "Preserve the existing solver-success and expected-terminal-event preconditions.",
+          "Before clipping, flooring, Hubble evaluation, or N_eff construction, admit the raw accepted state only if every value is finite, T>0, every occupation satisfies strict 0<f<1, raw densities are nonnegative, H^2 is finite and positive, and existing normalization/conservation predicates pass.",
+          "On any failed predicate, return one existing typed failure result with the raw offending state and predicate; do not emit N_eff or success and do not call postprocessing.",
+          "Clipped values may exist only as explicitly non-authoritative visualization derivatives after raw admission; they cannot affect terminal classification."
+        ],
+        "mathematical_numerical_preconditions": [
+          "Spectral density weights used by admission are nonnegative under the frozen convention.",
+          "Strict-open occupation and positive-temperature domains are checked on raw binary64 values without repair.",
+          "H^2 and conserved/normalized quantities use the unchanged physical formulae, signs, units, and tolerances."
+        ],
+        "candidate_surfaces": [
+          "dynamic_collision_driver.py at the raw-state-to-postprocessing boundary identified by the sealed audit (basename only; no broader source discovery was authorized)",
+          "adjacent focused tests; no new wrapper, registry, or public entrypoint"
+        ],
+        "line_estimate": {
+          "added": "30-45",
+          "deleted": "8-15",
+          "net": "+15 to +37",
+          "basis": "A-MAC-ADJ2 ranked estimate"
+        },
+        "prospective_blocker_movement_ratio": {
+          "value": 0.25,
+          "ceiling": "A real false-success path can be closed, but no endpoint, wall, or scientific gate moves."
+        },
+        "minimal_tests": [
+          "Inject negative density, f<=0, f>=1, NaN/Inf, and H^2<=0 into an otherwise solver-success/terminal-event result; each returns failure before Hubble/N_eff/postprocessing calls.",
+          "Use spies to prove zero clipping-derived admission and zero N_eff construction on invalid raw input.",
+          "A valid frozen fixture remains bitwise unchanged in terminal observables and classification."
+        ],
+        "scientific_numerical_validation": "Domain, positivity, finiteness, sign, limiting-boundary, normalization, and conservation checks only. These tests validate the admission contract, not a trajectory or endpoint.",
+        "compatibility": "Valid accepted states remain behavior-compatible. Previously silently repaired invalid states become explicit failures; this intentional incompatibility is the fix.",
+        "dependency_public_api_effect": "No new dependency and no public API or capability claim. Reuse the existing result/failure surface.",
+        "rollback_cost": "LOW: one existing driver boundary plus adjacent tests; revert restores the former behavior without data migration.",
+        "hard_falsifier": "Any invalid raw state reaches N_eff/success, any failure is decided from clipped values, or the valid-path fixture changes.",
+        "residual_claim_ceiling": "IMPLEMENTED only after code and focused tests execute; even then, physics false-success repair only, with G-F10-INDEPENDENT-FLRW unchanged."
+      },
+      {
+        "candidate_id": "C-CH-02",
+        "rank": 2,
+        "name": "Typed NumPy Rodas event, configuration, outcome, and test-contract repair",
+        "linked_seed_ids": [
+          "F-ODE-ADJ3-007",
+          "F-ODE-ADJ3-012",
+          "F-ODE-ADJ3-013",
+          "F-ODE-ADJ3-020"
+        ],
+        "decision": "PROMOTE_FOR_LATER_IMPLEMENTATION",
+        "decision_basis": "One existing state machine can remove a reproduced fabricated terminal event and three adjacent false-success/common-mode classes without creating a new solver or wrapper surface.",
+        "behavior_contract": [
+          "Validate finite state shape/dtype, rtol>0, every atol>0, 0<h_min<=h_init<=h_max, positive integer work/reuse bounds, and supported Jacobian controls before the first RHS call; never coerce invalid values.",
+          "Support exactly one scalar terminal event in this bounded lane. A nonterminal event or an event sequence of length other than one returns an explicit UnsupportedEventContract before stepping; silent ignore is forbidden.",
+          "Interpret direction by sign: zero accepts either orientation, positive only negative-to-nonnegative, negative only positive-to-nonpositive; fractional directions such as 0.5 are not truncated, and time reversal applies the same oriented-surface rule consistently.",
+          "A finite exact initial root terminates at t0. A nonfinite event value is typed failure. A reported later event requires a finite oriented bracket and |g(t_event,y_event)|<=event_tol.",
+          "Use a safeguarded, separately budgeted refinement. Exhaustion or any failed refinement substep returns EventRefinementFailed with no t_events; the full substep fallback and message-text success inference are deleted.",
+          "A supplied Jacobian is used when present; otherwise use representable scale-aware finite differences tied to atol, rtol, and component magnitude. Unsupported Jacobian options fail explicitly.",
+          "Terminal precedence is invalid-input/invalid-physics/nonfinite/internal-error/budget/missed-event before success. stored_output_points, attempted_steps, accepted_steps, rejected_steps, nfev, njev, nlu, and event-refinement work remain distinct, exact units; len(t) is never a step count.",
+          "Properties and mutants target the declared invariants independently; NumPy/JAX parity alone is not acceptance evidence."
+        ],
+        "mathematical_numerical_preconditions": [
+          "Event functions are finite scalar maps on admitted states and the declared residual tolerance is fixed before tests.",
+          "Finite-difference perturbations are representable, remain inside the state domain, and pass a directional residual/step-ladder check.",
+          "Refinement work has a finite budget independent of ordinary attempt counts and is reported without hiding linear/RHS work."
+        ],
+        "candidate_surfaces": [
+          "rodas5p.py::_refine_event and its existing adapter/config/counter path, as named by the sealed evidence",
+          "ivp_outcome.py::classify_solve_ivp_result and existing dictionary consumers",
+          "tests/test_rodas5p_upgrades.py and adjacent bounded property/mutation tests"
+        ],
+        "line_estimate": {
+          "added": "95-145",
+          "deleted": "25-45",
+          "net": "+50 to +120",
+          "basis": "A-MAC-ADJ2 ranked estimate"
+        },
+        "prospective_blocker_movement_ratio": {
+          "value": 0.25,
+          "ceiling": "Four real correctness/test defects can close, but this opt-in/reference lane does not move the measured endpoint blocker."
+        },
+        "minimal_tests": [
+          "The retained all-refinement-failed counterexample with residual=123 returns typed failure and no event.",
+          "Initial zero, endpoint zero, NaN event, fractional direction, wrong direction, time reversal, nonterminal event, and multiple-event inputs follow the exact supported/rejected contract.",
+          "Invalid tolerances/steps/state/Jacobian options fail before RHS; a scale-separated Jacobian ladder remains representable.",
+          "Pairwise outcome-precedence truth table and a solve with stored outputs unequal to attempts verify accounting.",
+          "Seeded mutants reintroducing unsafe fallback, direction truncation, zero counters, Boolean-precedence error, and ignored failure are all killed."
+        ],
+        "scientific_numerical_validation": "Deterministic event residual/bracket, scaled Jacobian, work-accounting, property, and mutation validation in minutes. No physical endpoint or backend promotion run belongs to this task.",
+        "compatibility": "Ordinary supported single-terminal-event solves should retain numerical results. Previously silently coerced or unsupported inputs now fail explicitly; callers relying on undocumented behavior must adapt.",
+        "dependency_public_api_effect": "No new dependency. The opt-in/reference API becomes stricter; no production default, JAX role, public capability, or solver-promotion change.",
+        "rollback_cost": "LOW_TO_MEDIUM: one solver/adapter/classifier cluster and focused tests; no data/schema migration and misleading aliases are deleted rather than shadowed.",
+        "hard_falsifier": "Residual=123 emits success/event; any unsupported case is silently accepted; a nontrivial solve reports zero work; or any seeded false-success mutant survives.",
+        "residual_claim_ceiling": "Reference/opt-in NumPy Rodas correctness only. Dense-FD removal remains bounded by the 365x no-go and earns no D-071, endpoint, or promotion claim."
+      },
+      {
+        "candidate_id": "C-CH-03",
+        "rank": 3,
+        "name": "Moment-constrained slow-manifold discriminator with full-grid residual and adjoint QoI certificate",
+        "linked_seed_ids": [
+          "F-ODE-ADJ3-001",
+          "F-ODE-ADJ3-002"
+        ],
+        "decision": "REWORK",
+        "decision_basis": "It is the only candidate with a plausible mechanism for the dominant call-count gap, but the sealed evidence does not yet freeze the moment basis, rank/grid ladder, entropy metric, coercivity neighborhood, tail enclosure, or adjoint QoIs tightly enough for implementation.",
+        "behavior_contract": [
+          "Stage S0 is a prospectively sealed static discriminator only. It consumes only retained physical-prefix fixture states, models the 182-state three-bank order-60/ymax-30 independent system, and emits physical_prefix_executed=false and d071_reopen_earned=false.",
+          "Before any code, freeze moments, entropy-compatible weighted inner product, invariant-null projection P, Q=I-P, rank r, state/block scales, strict positivity neighborhood, quadrature/tail rule, operation order, QoIs, tolerances, and hard rejection criteria. The 122-state folded Rust model is never substituted.",
+          "At every admitted static state certify projector identities and invariant preservation, transverse coercivity mu_W(Q J_C Q)<=-lambda, a nonlinear remainder bound L*rho with lambda-L*rho>0, forcing enclosure, strict-domain margin, conservation, and a full-grid plus tail residual bound.",
+          "Propagate residual/manifold/quadrature/tail error through a predeclared adjoint QoI certificate. A moment match without full-grid residual and tail control is automatic failure.",
+          "Centered componentwise JVP ladders and at least two independent Krylov seeds may be diagnostics only. One global epsilon, one-vector Arnoldi termination, or derivative/Jacobian removal cannot satisfy S0.",
+          "Only a separate owner decision after S0 may authorize Stage S1. S1 starts from the physical initial state, never from log-derived N approximately 0.1653, includes N=0.14 and N=0.22, reaches N>=0.25, and stays within <=5500 full-RHS-equivalent calls and <=64800 seconds in one pass.",
+          "S0 or S1 failure is preserved and terminal; there is no tuning sweep, grid/tolerance/cap relaxation, second pass, endpoint claim, or gate flip."
+        ],
+        "mathematical_numerical_preconditions": [
+          "The chosen slow branch exists uniquely in the declared neighborhood and the invariant-null subspace is separated before coercivity measurement.",
+          "Rank remains bounded under the prospectively frozen grid-order check; growth with grid order falsifies reduction.",
+          "Exact collision certification remains Theta(M^2); reduced algebra O(b*M*r^2+b*r^3) must not hide full-grid certificate work.",
+          "The certificate includes dimensions, signs, strict occupation/temperature domains, conservation, positivity, limiting cases, branch choice, quadrature, spatial/angular/radial/tail uncertainty, and reproducible full-RHS-equivalent accounting."
+        ],
+        "candidate_surfaces": [
+          "One existing private Rust audit executable plus adjacent tests, selected by the main writer only after targeted source confirmation; the sealed evidence does not support inventing an exact path here",
+          "Retained fixture-state bytes from scripts/audit/f10_physical_prefix_fixture.py as inputs only; no new Python/JAX production twin and no modification of the frozen D-071 instrument"
+        ],
+        "line_estimate": {
+          "added": "220-340",
+          "deleted": "40-60 contingent on consolidating superseded local diagnostic code in the same existing executable",
+          "net": "+180 to +300",
+          "basis": "A-MAC-ADJ2's approximately 180-300 net Rust/test estimate; warning-band cost, so the exact-byte design must be reworked and frozen before implementation"
+        },
+        "prospective_blocker_movement_ratio": {
+          "value": "0.25 only after a passing S0 discriminator; 0.75 may be considered only after an authorized S1 meets every full-prefix cap",
+          "current": 0.0
+        },
+        "minimal_tests": [
+          "Weighted P/Q idempotence, orthogonality, invariant-null removal, dimensional/sign checks, and strict-domain guards on every retained fixture state.",
+          "Centered step ladders and two seeds remain stable; out-of-domain shifts fail raw.",
+          "High-precision or interval checks enclose coercivity, nonlinear remainder, full-grid residual, tail, and adjoint QoI bounds.",
+          "Semantic mutants deleting an invariant, weakening the tail, using 122 instead of 182 states, using a global epsilon, or omitting full-grid residual are killed.",
+          "If separately authorized, S1 mechanically checks the physical start, both checkpoints, N>=0.25, full-RHS-equivalent calls, wall cap, and typed terminal envelope."
+        ],
+        "scientific_numerical_validation": "S0 would be DERIVED plus bounded static numerical evidence only. S1 would be a physical-prefix discriminator only. Neither is an endpoint or independent-FLRW validation, and neither was executed here.",
+        "compatibility": "Private audit-only surface; no change to production Rust, SciPy number-of-record, frozen JAX oracle, grid/collision formulae, tolerances, or existing endpoint outputs.",
+        "dependency_public_api_effect": "No new dependency or public API. Reuse Rust AOT and existing private collision/audit components; any need for a new wrapper, manifest, gate, policy knob, or Python/JAX twin rejects the candidate.",
+        "rollback_cost": "MEDIUM: warning-band audit/test code, but confined to one existing private executable and adjacent tests; no production migration. Failure should be removable as one unit while preserving its raw evidence.",
+        "hard_falsifier": "Reject on rank growth, nonunique branch, failed coercivity/remainder inequality, positivity/conservation failure, missing spatial/angular/radial/tail enclosure, failed full-grid/adjoint bound, derivative-only rationale, any reconstructed N approximately 0.1653 restart, or any S1 cap/checkpoint miss.",
+        "residual_claim_ceiling": "REWORKED PROPOSED discriminator at most. G-F10-INDEPENDENT-FLRW remains FAIL and CLOSED_ON_CURRENT_MEASUREMENT until a separate prospectively sealed, adjudicated, materially new full obligation succeeds."
+      }
+    ],
+    "seed_coverage_ledger": [
+      {"finding_id": "F-ODE-ADJ3-001", "category": "selected_candidate", "assignment": "C-CH-03", "note": "D-071 instrument remains closed; only materially new certified reduction is considered."},
+      {"finding_id": "F-ODE-ADJ3-002", "category": "selected_candidate", "assignment": "C-CH-03", "note": "Static JVP receipts bound S0 and forbid prefix/trajectory inflation."},
+      {"finding_id": "F-ODE-ADJ3-003", "category": "retained_blocker_or_decisive_experiment", "assignment": "three-level strict convergence run after separate authority", "note": "No candidate weakens or launders the xfail."},
+      {"finding_id": "F-ODE-ADJ3-004", "category": "required_companion_or_future_task", "assignment": "shared typed phase admission", "note": "Class-A consumer repair is real but lower first-dollar value."},
+      {"finding_id": "F-ODE-ADJ3-005", "category": "required_companion_or_future_task", "assignment": "tilted/FLRW terminal-surface admission", "note": "Bind T_end and fail both trajectories closed."},
+      {"finding_id": "F-ODE-ADJ3-006", "category": "required_companion_or_future_task", "assignment": "convergence-consumer consolidation", "note": "Admit all levels and remove zero-denominator false pass."},
+      {"finding_id": "F-ODE-ADJ3-007", "category": "selected_candidate", "assignment": "C-CH-02", "note": "Typed event refinement removes reproduced fabricated success."},
+      {"finding_id": "F-ODE-ADJ3-008", "category": "required_companion_or_future_task", "assignment": "independent frozen-JAX oracle repair after C-CH-02", "note": "Parity oracle only; no forward/runtime work."},
+      {"finding_id": "F-ODE-ADJ3-009", "category": "selected_candidate", "assignment": "C-CH-01", "note": "Raw physical admission is the smallest direct physics false-success repair."},
+      {"finding_id": "F-ODE-ADJ3-010", "category": "required_companion_or_future_task", "assignment": "shared admitted-result consumption", "note": "Stop endpoint/postprocessing work after failure."},
+      {"finding_id": "F-ODE-ADJ3-011", "category": "required_companion_or_future_task", "assignment": "canonical dispatcher phase/result matrix", "note": "Unify SciPy/Rodas phase admission after core solver contract."},
+      {"finding_id": "F-ODE-ADJ3-012", "category": "selected_candidate", "assignment": "C-CH-02", "note": "Strict configuration, scaled Jacobian, controls, and honest work."},
+      {"finding_id": "F-ODE-ADJ3-013", "category": "selected_candidate", "assignment": "C-CH-02", "note": "Typed precedence and dimensionally honest counters."},
+      {"finding_id": "F-ODE-ADJ3-014", "category": "retained_blocker_or_decisive_experiment", "assignment": "stalled-window end-to-end projection", "note": "Generic Jacobian/local optimization remains a no-go; 365x is insufficient."},
+      {"finding_id": "F-ODE-ADJ3-015", "category": "required_companion_or_future_task", "assignment": "Rust typed failure taxonomy in existing OdeResult", "note": "Correctness debt, not endpoint movement."},
+      {"finding_id": "F-ODE-ADJ3-016", "category": "retained_blocker_or_decisive_experiment", "assignment": "diffsol 0.16.0 internal-retry discriminator", "note": "Rename wrapper-step cap unless dependency hook proves strict total work."},
+      {"finding_id": "F-ODE-ADJ3-017", "category": "required_companion_or_future_task", "assignment": "Rust disjoint work-accounting repair", "note": "Keep inside existing result; no telemetry subsystem."},
+      {"finding_id": "F-ODE-ADJ3-018", "category": "required_companion_or_future_task", "assignment": "last-accepted plus explicit failure snapshot", "note": "Dependency-limited unavailability must be explicit."},
+      {"finding_id": "F-ODE-ADJ3-019", "category": "retained_blocker_or_decisive_experiment", "assignment": "bounded EXP48 N48 directional derivative ladder", "note": "Representative production validation remains inconclusive."},
+      {"finding_id": "F-ODE-ADJ3-020", "category": "selected_candidate", "assignment": "C-CH-02", "note": "Independent properties/mutants close the Boolean/common-mode test gap."},
+      {"finding_id": "F-ODE-ADJ3-021", "category": "retained_blocker_or_decisive_experiment", "assignment": "one exact-head existing dual-endpoint gate after repairs and authority", "note": "No execution belongs to this design phase."},
+      {"finding_id": "F-ODE-ADJ3-022", "category": "required_companion_or_future_task", "assignment": "Rust explicit sign-comparison repair", "note": "Small generic event predicate fix; production cold event not shown affected."},
+      {"finding_id": "F-ODE-ADJ3-023", "category": "required_companion_or_future_task", "assignment": "Rust typed refinement certificate", "note": "Residual/bracket/exhaustion and separate work accounting."},
+      {"finding_id": "F-ODE-ADJ3-024", "category": "retained_blocker_or_decisive_experiment", "assignment": "pinned diffsol h_max/tstop discriminator", "note": "No equivalence or optimization claim before dependency-semantic evidence."},
+      {"finding_id": "F-ODE-ADJ3-025", "category": "retained_blocker_or_decisive_experiment", "assignment": "typed recoverability-by-stage discriminator", "note": "Blind retry policy is rejected."},
+      {"finding_id": "F-ODE-ADJ3-026", "category": "required_companion_or_future_task", "assignment": "representable positive-temperature finite difference", "note": "Use mixed scale or explicit log-coordinate chain rule."},
+      {"finding_id": "F-ODE-ADJ3-027", "category": "required_companion_or_future_task", "assignment": "consolidated Python input/result validator", "note": "Must delete duplicate validation surface in the same patch."},
+      {"finding_id": "F-ODE-ADJ3-028", "category": "required_companion_or_future_task", "assignment": "Rust terminal-variant fixtures after taxonomy", "note": "Delete unreachable variants rather than manufacture tests."},
+      {"finding_id": "F-ODE-ADJ3-029", "category": "required_companion_or_future_task", "assignment": "low-priority frozen-oracle API cleanup", "note": "No JAX runtime expansion or benchmark."},
+      {"finding_id": "F-ODE-ADJ3-030", "category": "required_companion_or_future_task", "assignment": "effective-config snapshot in existing result plus prose correction", "note": "No manifest/hash/readiness layer."},
+      {"finding_id": "F-ODE-ADJ3-031", "category": "extrinsic_harness_issue", "assignment": "harness owner", "note": "Runtime/admission/environment identity is not an ODE code task."},
+      {"finding_id": "F-ODE-ADJ3-032", "category": "closed_no_action", "assignment": "preserve", "note": "Gate and solver-role boundary remains closed and authoritative."},
+      {"finding_id": "F-ODE-ADJ3-033", "category": "closed_no_action", "assignment": "preserve", "note": "Bounded logit-tail/cache/good-path closures are not reopened."},
+      {"finding_id": "F-ODE-ADJ3-034", "category": "closed_no_action", "assignment": "preserve", "note": "Frozen audit inventory is complete; no broad rescan."}
+    ],
+    "mechanical_acceptance": {
+      "expected_id_range": "F-ODE-ADJ3-001 through F-ODE-ADJ3-034",
+      "ledger_rows": 34,
+      "unique_ids": true,
+      "numeric_order_exact": true,
+      "missing_ids": [],
+      "duplicate_ids": [],
+      "candidate_count": 3,
+      "candidate_limit": 3,
+      "category_counts": {
+        "selected_candidate": 7,
+        "required_companion_or_future_task": 16,
+        "retained_blocker_or_decisive_experiment": 7,
+        "closed_no_action": 3,
+        "extrinsic_harness_issue": 1
+      }
+    },
+    "anti_drift_cost": {
+      "production_added_lines": 0,
+      "production_deleted_lines": 0,
+      "production_net_lines": 0,
+      "token_use_exact": "UNAVAILABLE",
+      "token_use_basis": "The subagent harness exposes no exact token counter.",
+      "runtime_behavior_changed": "no",
+      "physics_behavior_changed": "no",
+      "known_blocker_reduced": "no; this is design selection only",
+      "blocker_movement_ratio": 0.0,
+      "validation_strengthened": "no execution; design acceptance was mechanically checked",
+      "cost_effectiveness_verdict": "ACCEPT_WITH_LIMITS",
+      "basis": "Three candidates maximum, no new gate/plumbing, and every nonselected item is explicitly routed without claiming progress."
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "F-CH-DESIGN-001",
+      "claim_id": "ODE-A1",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The Phase 3 seed ledger covers F-ODE-ADJ3-001 through -034 exactly once, in numeric order, using only the five permitted disposition categories.",
+      "assumptions_used": ["The assignment fixes the 34-ID universe and forbids scope expansion."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json", ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json"],
+      "evidence_fingerprint": "sha256:1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "counterevidence_refs": [],
+      "reproduction": ["Parse phase3_design.seed_coverage_ledger, compare finding_id to formatted integer range 1..34, and count categories."],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-CH-DESIGN-002",
+      "claim_id": "ODE-A2",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "C-CH-01 and C-CH-02 are bounded later-implementation candidates with explicit fail-closed behavior, line cost, tests, falsifiers, compatibility, and claim ceilings; neither is represented as implemented or endpoint progress.",
+      "assumptions_used": ["Candidate filenames and symbols are named only where the sealed adjudication supports them."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#/adjudication_summary/ranked_candidates", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#/findings/6", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#/findings/8"],
+      "evidence_fingerprint": "sha256:1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "counterevidence_refs": ["Many unselected ODE-A2 defects remain routed as companions or decisive experiments."],
+      "reproduction": ["Inspect C-CH-01/C-CH-02 linked_seed_ids and contracts against the corresponding A-MAC-ADJ2 findings."],
+      "confidence": 0.98,
+      "unresolved": ["Implementation authority, source confirmation, edits, and tests remain future work."]
+    },
+    {
+      "finding_id": "F-CH-DESIGN-003",
+      "claim_id": "ODE-A3",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "C-CH-03 correctly remains REWORK: it preserves the 182-versus-122 distinction, derivative-only 365x no-go, no N approximately 0.1653 restart, and every full-prefix checkpoint/work/wall cap, so it cannot silently reopen D-071.",
+      "assumptions_used": ["D-071 and the current gate fail disposition remain controlling."],
+      "evidence_refs": ["docs/audit/BD622_D071_trajectory_closure_2026-08-04.md", ".agent-harness/context/GATE_REGISTRY.json:G-F10-INDEPENDENT-FLRW", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#/adjudication_summary/dense_fd_removal_bound"],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": ["The completed order-48 base run does not satisfy the order-60/ymax-30 holdout."],
+      "reproduction": ["Check the C-CH-03 contract for physical start, N=0.14/0.22, N>=0.25, <=5500 calls, <=64800 s, and absence of a log-derived restart."],
+      "confidence": 0.99,
+      "unresolved": ["The exact mathematical certificate is not frozen; that is why the candidate is REWORK, not promoted."]
+    },
+    {
+      "finding_id": "F-CH-DESIGN-004",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Previously closed Rust logit-tail/cache and bounded mechanics evidence is assigned closed/no-action and is not reopened or inflated into endpoint authority.",
+      "assumptions_used": ["No assignment-listed evidence reopens F-ODE-ADJ3-033."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-033"],
+      "evidence_fingerprint": "sha256:1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "counterevidence_refs": [],
+      "reproduction": ["Inspect ledger rows 032-034 and the C-CH candidate links."],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-CH-DESIGN-005",
+      "claim_id": "ODE-A5",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The analogous JAX event defect is routed only as a later independent frozen-oracle repair after C-CH-02; no JAX forward, timing, driver, endpoint, or promotion task is selected.",
+      "assumptions_used": ["The controlling JAX freeze remains authoritative."],
+      "evidence_refs": ["docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-008"],
+      "evidence_fingerprint": "sha256:d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f",
+      "counterevidence_refs": [],
+      "reproduction": ["Verify F-ODE-ADJ3-008 is not linked to a selected candidate and C-CH-02 claims no JAX promotion."],
+      "confidence": 1.0,
+      "unresolved": ["The frozen oracle defect remains open as a future companion."]
+    },
+    {
+      "finding_id": "F-CH-DESIGN-006",
+      "claim_id": "ODE-A6",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Gate roles, environment limitations, endpoint evidence gaps, and provenance debt are separated: the harness issue is extrinsic, exact-head endpoint execution is deferred, and no new manifest/readiness layer or policy promotion is proposed.",
+      "assumptions_used": ["The gate registry is current authority and this fallback assignment passed its own verified admission contract only."],
+      "evidence_refs": [".agent-harness/context/GATE_REGISTRY.json", "bbn_codex_anti_drift_cost_effective_policy.md", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-031"],
+      "evidence_fingerprint": "sha256:bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f",
+      "counterevidence_refs": ["G-HARNESS-INTEGRITY and G-F10-INDEPENDENT-FLRW remain FAIL."],
+      "reproduction": ["Compare ledger rows 021, 030-032 with the gate and cost-policy boundaries."],
+      "confidence": 0.99,
+      "unresolved": ["External harness and exact-environment limitations remain outside ODE remediation."]
+    },
+    {
+      "finding_id": "F-CH-DESIGN-007",
+      "claim_id": "ODE-A7",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Test and scientific-validation seeds are routed without false closure: C-CH-02 includes independent properties/mutants, the strict convergence xfail remains a retained blocker, and Rust/JAX branch/API gaps remain bounded future work.",
+      "assumptions_used": ["Green focused tests alone cannot close scientific or common-mode defects."],
+      "evidence_refs": [".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-003", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-020", ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json#F-ODE-ADJ3-028"],
+      "evidence_fingerprint": "sha256:1990816777280bbbf4fe3f3f4c59fba250e6a0a4d2c630308dcd0935dc6f5842",
+      "counterevidence_refs": [],
+      "reproduction": ["Inspect C-CH-02 tests and ledger rows 003, 020, 028, and 029."],
+      "confidence": 0.98,
+      "unresolved": ["No test, mutation, convergence, or endpoint command was executed in this read-only assignment."]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json"
+  ]
+}

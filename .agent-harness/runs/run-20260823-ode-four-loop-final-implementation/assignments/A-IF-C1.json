@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "assignment_id": "A-IF-C1",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "IF-C1-CONTRACT"
+  ],
+  "task": "Targeted pre-implementation contract check for C1 only. Inspect dynamic_collision_driver.py and its focused test plus the final coding-harness disposition. Identify the exact pre-fix control/data flow, smallest red tests that discriminate stored accepted samples from RHS probes, compatibility and physics invariants, expected two-file diff, and likely existing-test interactions. Do not edit any file, run expensive trajectories, or inspect sibling results.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-C1.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    "src/rabbit/collisions/dynamic_collision_driver.py",
+    "tests/test_dynamic_collision_driver.py",
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json",
+  "status": "registered"
+}

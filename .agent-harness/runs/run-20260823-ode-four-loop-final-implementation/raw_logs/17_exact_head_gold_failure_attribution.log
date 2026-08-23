@@ -1,0 +1,61 @@
+Script started on 2026-08-23 18:50:22+09:00 [COMMAND="env PYTHONPATH=src:. JAX_PLATFORMS=cpu /usr/bin/time -v /tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pytest -q --tb=line tests/gold/test_typeIII_tilted_bbn.py::test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields tests/gold/test_typeIV_tilted_bbn.py::test_typeIV_tilted_A_and_N1_couple_into_yields tests/gold/test_typeIX_orthogonal_bbn.py::test_typeIX_orthogonal_same_sign_curvature_changes_yields tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_tolerance_envelope" <not executed on terminal>]
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+E   assert 8.668809902483382e-09 == 8.67504437776...e-09 ± 1.0e-12
+      
+      comparison failed
+      Obtained: 8.668809902483382e-09
+      Expected: 8.675044377764112e-09 ± 1.0e-12
+/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/tests/gold/test_typeIII_tilted_bbn.py:79: assert 8.668809902483382e-09 == 8.67504437776...e-09 ± 1.0e-12
+E   assert 4.791365009776394e-05 == 4.79136339164...e-05 ± 1.0e-12
+      
+      comparison failed
+      Obtained: 4.791365009776394e-05
+      Expected: 4.791363391642989e-05 ± 1.0e-12
+/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/tests/gold/test_typeIV_tilted_bbn.py:86: assert 4.791365009776394e-05 == 4.79136339164...e-05 ± 1.0e-12
+E   assert -0.019949532896712818 == -0.01994953295926255 ± 2.0e-12
+      
+      comparison failed
+      Obtained: -0.019949532896712818
+      Expected: -0.01994953295926255 ± 2.0e-12
+/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/tests/gold/test_typeIX_orthogonal_bbn.py:95: assert -0.019949532896712818 == -0.01994953295926255 ± 2.0e-12
+E   assert 3.04 < 3.0372829409131374
+/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/tests/test_jax_kernel_remap_preconditioned.py:131: assert 3.04 < 3.0372829409131374
+E   AssertionError: assert 0.0004071090641502295 < 0.0004
+     +  where 0.0004071090641502295 = abs((0.2415244803682022 - 0.24111737130405198))
+     +    where 0.2415244803682022 = JAXFullBoltzmannResult(Yp=0.2415244803682022, DH=2.4805516566896518e-05, Li7H=5.213984523980029e-10, Li6H=2.1975689381...atform': 'cpu', 'runtime_device_contract': 'cpu_preferred_exact_runtime_v1', 'runtime_device_fallback_applied': False}).Yp
+     +    and   0.24111737130405198 = JAXFullBoltzmannResult(Yp=0.24111737130405198, DH=2.4746174889068227e-05, Li7H=5.23377859533269e-10, Li6H=2.1963893366...atform': 'cpu', 'runtime_device_contract': 'cpu_preferred_exact_runtime_v1', 'runtime_device_fallback_applied': False}).Yp
+/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/tests/test_jax_kernel_remap_preconditioned.py:157: AssertionError: assert 0.0004071090641502295 < 0.0004
+=========================== short test summary info ============================
+FAILED tests/gold/test_typeIII_tilted_bbn.py::test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields
+FAILED tests/gold/test_typeIV_tilted_bbn.py::test_typeIV_tilted_A_and_N1_couple_into_yields
+FAILED tests/gold/test_typeIX_orthogonal_bbn.py::test_typeIX_orthogonal_same_sign_curvature_changes_yields
+FAILED tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke
+FAILED tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_tolerance_envelope
+5 failed in 196.99s (0:03:16)
+Command exited with non-zero status 1
+	Command being timed: "/tmp/rabbit-ode-four-loop-final-20260823/venv/bin/python -m pytest -q --tb=line tests/gold/test_typeIII_tilted_bbn.py::test_typeIII_tilted_canonical_curvature_frame_and_tilt_change_yields tests/gold/test_typeIV_tilted_bbn.py::test_typeIV_tilted_A_and_N1_couple_into_yields tests/gold/test_typeIX_orthogonal_bbn.py::test_typeIX_orthogonal_same_sign_curvature_changes_yields tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_preflight_full_ode_smoke tests/test_jax_kernel_remap_preconditioned.py::test_jax_kernel_remap_preconditioned_tolerance_envelope"
+	User time (seconds): 2224.08
+	System time (seconds): 15.16
+	Percent of CPU this job got: 1114%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:20.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3360264
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 1353313
+	Voluntary context switches: 1773131
+	Involuntary context switches: 734126
+	Swaps: 0
+	File system inputs: 3568
+	File system outputs: 192
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 18:53:43+09:00 [COMMAND_EXIT_CODE="1"]

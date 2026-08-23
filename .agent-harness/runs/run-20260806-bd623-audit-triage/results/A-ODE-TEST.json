@@ -1,0 +1,401 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-TEST",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02a3e-d5a0-74e2-80b7-d7df84638c1b",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260806-bd623-audit-triage",
+    "assignment_id": "A-ODE-TEST",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:883112e3bfbefa688eb6c4eaa0c8d448c8064f2509b2ef1c888e43289b4ebe0c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json",
+  "started_at": "2026-08-22T16:11:56Z",
+  "completed_at": "2026-08-22T16:27:46Z",
+  "tool_versions": {
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3",
+    "jax": "0.10.0",
+    "diffrax": "0.7.2",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-TEST.json",
+    "venv/bin/python AST scan over all 615 *.py files under src/rabbit, tests, scripts resolving Import, ImportFrom, Attribute, one-hop callable assignment aliases, importlib/__import__ literals, Diffrax class references, and data-driven solver-class subscript calls",
+    "PYTHONPATH=src venv/bin/python bounded NumPy/SciPy counterexample probe: initial-zero event, nonfinite event, _event_fires exact-zero boundaries, and invalid Rodas5PConfig values",
+    "PYTHONPATH=src venv/bin/python bounded adapter counterexample probe with event.direction=0.5 comparing scipy.integrate.solve_ivp against solve_ivp_rodas5p",
+    "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/python bounded JAX counterexample probe: initial-zero event, nonfinite event, zero rtol, negative atol, and zero-span nonfinite y0",
+    "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/pytest -q -m 'not slow' tests/test_rodas5p_upgrades.py tests/test_rodas5p_adapter.py tests/test_scipy_ivp_outcome_classifier.py tests/test_j04_jax_rodas5p.py",
+    "cargo test --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture",
+    "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/pytest -q tests/test_native_ad_parity.py tests/test_rodas5p_native_ad.py",
+    "rg -n '^\\s*def test_' tests/test_rodas5p_upgrades.py tests/test_rodas5p_adapter.py tests/test_j04_jax_rodas5p.py tests/test_scipy_ivp_outcome_classifier.py tests/test_native_ad_parity.py tests/test_rodas5p_native_ad.py",
+    "rg -n -i 'pytest\\.(skip|xfail|importorskip)|@pytest\\.mark\\.(skip|skipif|xfail)|xfail|skipif|importorskip' tests | rg -i 'solver|rodas|scipy|diffrax|jax|ode|backend|native|convergence|decoupling|transport|full_coupled'",
+    "rg -n 'solve_ode_jax|make_diffrax_solver|extract_h_tape_from_adaptive_solve|_solve_core\\(' src/rabbit tests scripts",
+    "rg -n 'bdf_build|bdf_initialise|bdf_stop_time|bdf_solve|unexpected_root|nonfinite_stage_rhs|nonfinite_stage|nonfinite_candidate|nonfinite_error_norm' native/rabbit_cpu/src/ode.rs tests native/rabbit_cpu/src",
+    "sha256sum src/rabbit/solver/rodas5p.py src/rabbit/solver/rodas5p_adapter.py src/rabbit/solver/ivp_outcome.py src/rabbit/jax/solver_jax_rodas5p.py src/rabbit/jax/solver_diffrax_canonical.py tests/test_rodas5p_upgrades.py tests/test_j04_jax_rodas5p.py tests/test_rodas5p_adapter.py tests/test_scipy_ivp_outcome_classifier.py tests/test_native_ad_parity.py tests/test_rodas5p_native_ad.py tests/test_scipy_tier2_convergence_lock.py native/rabbit_cpu/src/ode.rs native/rabbit_cpu/Cargo.toml pyproject.toml .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json",
+      "sha256": "732650207918d8b582afa0006f471da494e6cf0996b1757f0b508a0b9284ed53",
+      "role": "allowed mapper baseline and retained blocker map"
+    },
+    {
+      "path": "src/rabbit/solver/rodas5p.py",
+      "sha256": "7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "role": "NumPy Rodas5P implementation under counterexample"
+    },
+    {
+      "path": "src/rabbit/solver/rodas5p_adapter.py",
+      "sha256": "d6e3beb068e12bb0229b8b30057528af4292aa9105811dc2b676d219d8df2d43",
+      "role": "SciPy-shaped Rodas5P adapter and telemetry surface"
+    },
+    {
+      "path": "src/rabbit/jax/solver_jax_rodas5p.py",
+      "sha256": "622d7a7363e1c2186eaaabf93ea7a61ef1956206f73d6e2896394997cef654c1",
+      "role": "frozen JAX Rodas5P oracle surface under counterexample"
+    },
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "sha256": "78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "role": "Rust diffsol BDF and native Rodas5P implementation and tests"
+    },
+    {
+      "path": "tests/test_rodas5p_upgrades.py",
+      "sha256": "a5d93c804b9c5ae7bdcf1b78488f8c6f4e541b8841753b355c3572cc2ef9afca",
+      "role": "NumPy Rodas5P focused tests including false-green predicate"
+    },
+    {
+      "path": "tests/test_scipy_tier2_convergence_lock.py",
+      "sha256": "e2cb5d2d26c4fc2743541c6fa945759e1200e2dd8b204d990adaf12a93f56867",
+      "role": "strict-xfail scientific convergence blocker"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-ODE-TEST-01",
+      "claim_id": "ODE-A5",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "AST completeness manifest reconciles the mapper's 33 direct scipy.integrate.solve_ivp import-bearing files (src=11, tests=5, scripts=17) with 42 actual calls (src=14, tests=6, scripts=22). Across an explicit entrypoint target set it resolves 136 calls in 47 files: solve_ivp=42; JAX Rodas5P solve=33 and batch=3; NumPy Rodas5P solve=20; adapter=9; adjoint replay APIs=15; Diffrax wrappers=8; Diffrax ODETerm/PIDController/diffeqsolve=2 each; diagnostic Diffrax wrapper=1. It also records eight Diffrax solver-class references and two data-driven solvers[solver]() instantiations, with zero relevant dynamic imports and zero propagated callable aliases. Three external _solve_core calls were separately found. solve_ode_jax, make_diffrax_solver, and extract_h_tape_from_adaptive_solve have definitions but no direct callers under the three roots.",
+      "assumptions_used": [
+        "All 615 Python files under src/rabbit, tests, and scripts parse as the static audit universe.",
+        "The target set is executable ODE entrypoints and solver-construction calls, not every internal stage/helper invocation.",
+        "Rust diffsol calls are mapped separately from Python AST."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:31-40,50-58",
+        "src/rabbit/jax/solver_jax_rodas5p.py:1201,1422,1898,1979,2044,2215-2221",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:143,205,238,290,380",
+        "src/rabbit/jax/solver_diffrax_canonical.py:88,148-165,182,206-219,251-279",
+        "native/rabbit_cpu/Cargo.toml:13-15"
+      ],
+      "evidence_fingerprint": "sha256:561f3c3a88e9e342eade1da0d7e99867d10219ae873743ae827d89df70d0bd34",
+      "counterevidence_refs": [
+        "Higher-order callables supplied through runtime data, generated Python, or non-Python extensions cannot be proven absent by this AST scan alone."
+      ],
+      "reproduction": [
+        "Run the recorded 615-file AST scan; expected manifest: solve_ivp imports=33, calls=42; resolved target calls=136 in 47 files; Diffrax class refs=8; solver subscript calls=2; relevant dynamic imports=0; callable alias assignments=0.",
+        "rg -n 'solve_ode_jax|make_diffrax_solver|extract_h_tape_from_adaptive_solve|_solve_core\\(' src/rabbit tests scripts"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No claim is made that the three zero-direct-caller convenience APIs are unreachable through external consumers."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-02",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The NumPy Rodas5P/SciPy-shaped adapter event contract has three independently falsified holes. First, direction==0 uses a strict sign product, so an exact endpoint zero is not a hit and an event zero at the initial state is never short-circuited; SciPy stopped at t=0 with status=1 while the adapter returned status=0, no event, and completed the interval. Second, NaN event values are never rejected and both raw and adapter solves returned success at t=0.2. Third, the adapter casts event.direction to int: direction=0.5 becomes 0, so a downward crossing that SciPy correctly ignored terminated the adapter at t=0.6931471805642009. These are false-success or wrong-termination behaviors at the API boundary.",
+      "assumptions_used": [
+        "The adapter's documented claim to match SciPy event direction convention includes any positive or negative direction value, not only integer +/-1.",
+        "A nonfinite event value must fail closed."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p.py:249-260,274-295,298-348",
+        "src/rabbit/solver/rodas5p_adapter.py:70-76,111-150",
+        "tests/test_rodas5p_upgrades.py:355-411",
+        "tests/test_rodas5p_adapter.py:86-128,151-161"
+      ],
+      "evidence_fingerprint": "sha256:dcd2c11c1a8cbaea0ecc3659466932e042e91becbe41117777069eebba5147a3",
+      "counterevidence_refs": [
+        "Existing tests cover ordinary +/-1 crossings and refined roots, and all passed.",
+        "native/rabbit_cpu/src/ode.rs has explicit initial-event and nonfinite fail-loud tests; this finding is the Python NumPy/adapter lane."
+      ],
+      "reproduction": [
+        "Compare scipy.solve_ivp and solve_ivp_rodas5p on y'=-y, y0=[1], event=y[0]-1: SciPy => status=1,t_event=0; adapter => status=0,t_events=[],t_final=1.",
+        "Run raw solve and solve_ivp_rodas5p with event returning NaN over (0,0.2): both => success=True and interval completion.",
+        "Set event.direction=0.5 for event y[0]-0.5 under y'=-y over (0,2): SciPy => status=0,no event,t_final=2; adapter => status=1,event=0.6931471805642009."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The full driver may subsequently reject a missed target; that does not repair the adapter's false success or wrong event termination contract."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-03",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "NumPy Rodas5P lacks fail-closed configuration and input validation. Rodas5PConfig has no validator, solve takes abs(h_init), coerces jac_reuse_max_steps through max(1,...), and does not reject nonpositive/nonfinite tolerances or step limits before integration. Bounded probes returned success for rtol=0, atol=-1e-10, h_init=-0.1, h_min=0, and jac_reuse_max_steps=0. Nonfinite/empty initial states are not rejected at entry and generally degrade into warnings or max_steps rather than a typed invalid-input outcome. The focused Python tests contain no invalid-tolerance/config contract case.",
+      "assumptions_used": [
+        "Relative tolerance must be positive, absolute tolerance nonnegative with a positive scale, step bounds coherent and positive, and initial state finite.",
+        "Silent coercion is not equivalent to a validated public contract."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p.py:101-117,131-140,298-320",
+        "src/rabbit/solver/rodas5p_adapter.py:94-121",
+        "tests/test_rodas5p_upgrades.py:143-452",
+        "tests/test_rodas5p_adapter.py:76-203",
+        "native/rabbit_cpu/src/ode.rs:82-100,240-277"
+      ],
+      "evidence_fingerprint": "sha256:7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "counterevidence_refs": [
+        "Rust ODE tests reject invalid tolerances, dimensions, nonfinite states, event directions, and budgets and passed in this run."
+      ],
+      "reproduction": [
+        "Solve y'=-y on (0,0.2) while varying one Rodas5PConfig field: rtol=0 => success; atol=-1e-10 => success; h_init=-0.1 => success; h_min=0 => success; jac_reuse_max_steps=0 => success after silent coercion."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A complete validation policy for vector atol and degenerate zero-length spans is not specified in the Python API."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-04",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The frozen JAX Rodas5P oracle repeats the event and validation false-success class. It computes ev_init but never handles initial zero/nonfinite values, detects only positive-to-nonpositive crossings, performs no tolerance/state validation beyond mutually exclusive hook checks, and defines success solely from a nonnegative status. Executed probes returned status=0/success=True/no event for an initial-zero event and a NaN event, success for rtol=0 and atol<0, and status=0/success=True with a nonfinite final state for zero-span NaN and Inf y0. Because this lane is an oracle rather than production, the immediate risk is false parity/AD validation rather than production promotion.",
+      "assumptions_used": [
+        "An oracle must reject nonfinite inputs/event outputs and must not silently miss an event already true at the initial state.",
+        "The frozen-oracle policy does not exempt correctness defects."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/solver_jax_rodas5p.py:1201-1267,1295-1320,1360-1415,1795-1799",
+        "tests/test_j04_jax_rodas5p.py:378-518,686-699"
+      ],
+      "evidence_fingerprint": "sha256:57e3f5ae9d2be021cf8b79bc385c855b7921bb0c8e10b56a406a77893f298359",
+      "counterevidence_refs": [
+        "The ordinary downward root-refinement test and max-step failure test passed.",
+        "Analytical, NumPy-twin, and low-rank/dense action tests also passed."
+      ],
+      "reproduction": [
+        "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/python probe of jax_rodas5p_solve on y'=-y over (0,0.2): initial_zero and nan_event both => status=0,success=True,event_triggered=False,N_final=0.2; zero_rtol and negative_atol => status=0,success=True.",
+        "Repeat on span (0,0) with y0=[NaN] and [Inf]: status=0,success=True and finite_y=False."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The public JAX API has no event-direction parameter; whether positive-to-negative only is intentional is undocumented at this call boundary."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-05",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "test_step_returns_finite_or_flags_failure is a false-green assertion. Python precedence makes it ((not ok) and not finite(err)) or allfinite(yn), so any finite yn passes regardless of ok and err. A mutant returning (input_y, 0.0, True) therefore passes even though the stated contract requires the singular/nonfinite Jacobian to flag failure. The test passed in the 55-test focused bundle and does not guard the failure behavior it claims.",
+      "assumptions_used": [
+        "The comment is the intended contract: a nonfinite/singular stage must return ok=False and nonfinite error rather than merely a finite candidate."
+      ],
+      "evidence_refs": [
+        "tests/test_rodas5p_upgrades.py:424-431",
+        "src/rabbit/solver/rodas5p.py:223-232"
+      ],
+      "evidence_fingerprint": "sha256:4d8b71b539a34d53aa6f9cf2dc74b3249756874ed03ec31ece76bf8ce35387ad",
+      "counterevidence_refs": [
+        "The current implementation happens to return the intended failure for the tested Jbad, but the assertion would not detect regression to a finite successful result."
+      ],
+      "reproduction": [
+        "Evaluate the assertion with yn=[1,1], err=0.0, ok=True; it evaluates True solely because allfinite(yn) is True."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-TEST-06",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The bounded evidence is broad but not acceptance-complete: 55 focused Python/JAX tests passed with one slow endpoint test deselected; 27 Rust ode::tests passed; and 18 JAX/Diffrax adjoint/parity tests passed, for 100 passes total. Those greens coexist with the executable counterexamples above. Several tests labeled 'SciPy parity' actually compare JAX Rodas5P against the in-tree NumPy Rodas5P using the same method/tableau, so common-mode defects can survive; analytical solutions, Richardson FD, and Diffrax Kvaerno5 provide partial independent axes and did pass. The two AD modules are module-level importorskip(jax,diffrax): they disappeared in the system Python but ran in the repository venv. The slow real BDF/Rodas endpoint parity test was deliberately not run, and no forbidden independent trajectory/endpoint science was launched.",
+      "assumptions_used": [
+        "Toy analytical/FD/Diffrax checks validate numerical kernels but do not establish the current physical endpoint authority.",
+        "A module-level optional dependency skip must not be interpreted as a passed gate."
+      ],
+      "evidence_refs": [
+        "tests/test_j04_jax_rodas5p.py:406-445",
+        "tests/test_rodas5p_native_ad.py:20-27,93-252",
+        "tests/test_native_ad_parity.py:31-44,129-276",
+        "tests/test_rodas5p_adapter.py:176-203",
+        "tests/test_native_tier1_vertical_slice.py:164-263",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:51-58"
+      ],
+      "evidence_fingerprint": "sha256:18467c1ed05503da14e9ea33ad8f93ee752ba0c10964bc50e793844d806e99fa",
+      "counterevidence_refs": [
+        "test_native_tier1_vertical_slice contains a real full-driver endpoint wiring/fail-closed test for the native physics pack under the Python driver; it is not a Rust ODE endpoint-authority test.",
+        "The venv includes the dev optional dependencies and all 18 AD/Diffrax tests passed."
+      ],
+      "reproduction": [
+        "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/pytest -q -m 'not slow' tests/test_rodas5p_upgrades.py tests/test_rodas5p_adapter.py tests/test_scipy_ivp_outcome_classifier.py tests/test_j04_jax_rodas5p.py  # 55 passed, 1 deselected in 15.17s",
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture  # 27 passed, 213 filtered out in 0.02s",
+        "JAX_PLATFORMS=cpu PYTHONPATH=src venv/bin/pytest -q tests/test_native_ad_parity.py tests/test_rodas5p_native_ad.py  # 18 passed in 35.96s"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The slow BDF/Rodas physical endpoint parity and D-071 independent trajectory blocker remain unexecuted by assignment prohibition.",
+        "No coverage instrumentation or mutation runner was authorized; branch gaps are source/test-map findings, not measured line coverage."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-07",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "A separate scientific promotion blocker is explicitly retained as a strict slow xfail: the SciPy Type-I tier-2 residual collision closure is documented as drifting about 3.5% in Y_p from N_q=16 to 32, above the <1e-3 convergence assertion. It was not executed here because it is slow/endpoint science. An xfailed test normally leaves pytest exit status green, so this known blocker must be reported as unresolved rather than folded into a green suite. Separately, the allowed mapper records D-071's independent SciPy-BDF trajectory lane as FAIL/closed after an approximately 4.58-year projection versus an 18-hour budget.",
+      "assumptions_used": [
+        "The source docstring and strict-xfail reason reflect the current retained blocker; its numerical magnitude was not remeasured in this assignment.",
+        "Scientific promotion requires explicit interpretation of xfail and frozen gate status, not merely pytest exit code."
+      ],
+      "evidence_refs": [
+        "tests/test_scipy_tier2_convergence_lock.py:1-39",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:52-55"
+      ],
+      "evidence_fingerprint": "sha256:e2cb5d2d26c4fc2743541c6fa945759e1200e2dd8b204d990adaf12a93f56867",
+      "counterevidence_refs": [
+        "The strict xfail is transparent and designed to flip XPASS/fail when repaired; the defect is the unresolved physics/convergence condition, not concealment in the test source."
+      ],
+      "reproduction": [
+        "Source inspection only; do not run tests/test_scipy_tier2_convergence_lock.py under this assignment's endpoint prohibition.",
+        "Use the allowed mapper result for D-071; no retained trajectory was rerun."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Current-head Y_p drift was not remeasured.",
+        "D-071 remains a retained blocker, not a new result from this test audit."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-08",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Rust ODE negative-path coverage is materially stronger than the Python/JAX lanes and all 27 focused tests passed, including invalid tolerance/dimension/state, initial and directional events, event-refinement failure, nonfinite RHS/Jacobian/dfdt, singular linear system, step floor, attempt budget, repeatability, counters, exact solutions, stiffness, and Robertson mass. However, a direct reason-string search found bdf_build, bdf_initialise, bdf_stop_time, bdf_solve, unexpected_root, nonfinite_stage_rhs, nonfinite_stage, nonfinite_candidate, and nonfinite_error_norm only at implementation branches, with no direct assertion of those exact outcomes. This is a residual branch-adequacy gap, not proof that every listed branch is reachable or untested indirectly.",
+      "assumptions_used": [
+        "Direct reason assertions are the strongest fail-closed regression lock for distinct failure classes.",
+        "Passing neighboring failure tests does not mechanically cover every branch label."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:82-112,233-576,658-675",
+        "native/rabbit_cpu/src/ode.rs:361-482",
+        "native/rabbit_cpu/Cargo.toml:13-15"
+      ],
+      "evidence_fingerprint": "sha256:78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "counterevidence_refs": [
+        "cargo ode::tests: 27 passed and 213 filtered out; the enumerated robust negative tests are current executable evidence."
+      ],
+      "reproduction": [
+        "cargo test --manifest-path native/rabbit_cpu/Cargo.toml ode::tests -- --nocapture",
+        "rg -n 'bdf_build|bdf_initialise|bdf_stop_time|bdf_solve|unexpected_root|nonfinite_stage_rhs|nonfinite_stage|nonfinite_candidate|nonfinite_error_norm' native/rabbit_cpu/src/ode.rs tests native/rabbit_cpu/src"
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Coverage instrumentation was not run, so indirect execution of these branches is not excluded.",
+        "Some diffsol construction/internal error branches may be impractical to force deterministically."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-09",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "ODE telemetry has false or ambiguous fields without regression locks. The Rodas5P adapter always returns nfev=0 despite evaluating the RHS, and no adapter test asserts nfev. classify_solve_ivp_result records solver_n_steps=len(sol.t), which counts stored points including the initial point rather than accepted steps, while its terminated_other branch is not exercised by the four classifier tests. Missing/inconsistent status attributes and target_reached=True combined with solver failure are also untested. These do not directly alter the numerical state but can corrupt diagnostics, cost comparisons, and failure triage.",
+      "assumptions_used": [
+        "SciPy-shaped nfev should represent function evaluations or be explicitly unavailable, not a fabricated zero.",
+        "Telemetry field names should have stable semantics across solver backends."
+      ],
+      "evidence_refs": [
+        "src/rabbit/solver/rodas5p_adapter.py:138-151",
+        "src/rabbit/solver/ivp_outcome.py:4-35",
+        "tests/test_scipy_ivp_outcome_classifier.py:1-32",
+        "tests/test_rodas5p_adapter.py:76-203"
+      ],
+      "evidence_fingerprint": "sha256:d6e3beb068e12bb0229b8b30057528af4292aa9105811dc2b676d219d8df2d43",
+      "counterevidence_refs": [
+        "Adapter njev, accepted/rejected/attempt counts, status, and exact h_min failure surface are tested or populated."
+      ],
+      "reproduction": [
+        "Run any solve_ivp_rodas5p decay solve and inspect result.nfev; it is 0 although the RHS was called.",
+        "Run the four classifier tests; they cover target_reached, interval_exhausted_without_event, startup_failure, and integration_failure, but not terminated_other."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No current downstream consumer of adapter nfev was identified in the bounded slice; impact is diagnostic unless a consumer exists externally."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-TEST-10",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "Diffrax and convenience wrapper edge contracts are thin. diffrax_adjoint_solve validates an unknown solver with ValueError, but diffrax_adjoint_solve_with_diagnostics indexes the dictionary directly and raises KeyError for the same input. No bad-solver/input test was found. The zero-direct-caller convenience APIs solve_ode_jax, make_diffrax_solver, and extract_h_tape_from_adaptive_solve also have no direct test/caller evidence under src/rabbit, tests, or scripts. This is a bounded API-consistency and orphan-surface issue, not a demonstrated numerical error in Diffrax itself.",
+      "assumptions_used": [
+        "Plain and diagnostic forms of the same wrapper should reject the same invalid solver consistently.",
+        "No direct in-repository caller means coverage must be established explicitly if the convenience API is retained."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/solver_diffrax_canonical.py:143-179,182-225,251-279",
+        "src/rabbit/jax/solver_jax_rodas5p.py:2211-2221",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:290-379"
+      ],
+      "evidence_fingerprint": "sha256:f08c84bab2c5a2594babe8d2bcfbdfff1cda0c3bc29b67a341a7fae7b2508046",
+      "counterevidence_refs": [
+        "All 18 executed Diffrax/adjoint happy-path and parity tests passed."
+      ],
+      "reproduction": [
+        "Inspect solver selection: plain wrapper checks membership at lines 154-157; diagnostic wrapper performs solvers[solver]() at line 212 without the check.",
+        "rg -n 'solve_ode_jax|make_diffrax_solver|extract_h_tape_from_adaptive_solve' src/rabbit tests scripts"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "External package users may call the zero-direct-caller convenience APIs."
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "stage": "jax_probe_system_python",
+      "error_type": "ModuleNotFoundError",
+      "message": "No module named 'jax'",
+      "resolution": "Did not mutate the environment; located the repository venv and reran with JAX 0.10.0 and Diffrax 0.7.2."
+    },
+    {
+      "stage": "jax_probe_initial_signature",
+      "error_type": "ImportError",
+      "message": "JAXRodas5PConfig is not exported by solver_jax_rodas5p",
+      "resolution": "Read the current function signature and reran with direct jax_rodas5p_solve keyword arguments."
+    }
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json"
+  ]
+}

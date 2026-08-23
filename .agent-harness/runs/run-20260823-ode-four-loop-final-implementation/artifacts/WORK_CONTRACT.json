@@ -1,0 +1,147 @@
+{
+  "acceptance": {
+    "criteria": [
+      {
+        "cell": "evidence_map",
+        "evidence": "mechanical 34-ID inventory plus SHA-256 manifest for all four governing loop results",
+        "id": "AC-01"
+      },
+      {
+        "cell": "implementation",
+        "evidence": "recorded failing focused test demonstrates that an invalid stored accepted sample reaches the pre-fix postprocessing path",
+        "id": "AC-02"
+      },
+      {
+        "cell": "implementation",
+        "evidence": "git diff proves exactly dynamic_collision_driver.py and its focused test implement the C1 two-boundary contract with production net lines <=40 and no new flag, dependency, gate, schema, or wrapper",
+        "id": "AC-03"
+      },
+      {
+        "cell": "validation",
+        "evidence": "focused raw-state admission tests pass after the same tests were observed red",
+        "id": "AC-04"
+      },
+      {
+        "cell": "validation",
+        "evidence": "the complete tests/test_dynamic_collision_driver.py module passes",
+        "id": "AC-05"
+      },
+      {
+        "cell": "validation",
+        "evidence": "portable production-not-slow and gold gates run with raw logs and classified outcomes",
+        "id": "AC-06"
+      },
+      {
+        "cell": "validation",
+        "evidence": "the full default pytest suite runs with raw logs and no regression attributable to the C1 diff",
+        "id": "AC-07"
+      },
+      {
+        "cell": "review",
+        "evidence": "one registered independent review audits code, physics invariants, test discrimination, scope, claims, and raw run evidence",
+        "id": "AC-08"
+      },
+      {
+        "cell": "report",
+        "evidence": "external-audit report maps every conclusion to source/result hashes, commands, exit statuses, timings, environment, diffs, gates, failures, skipped work, and residual risks",
+        "id": "AC-09"
+      },
+      {
+        "cell": "report",
+        "evidence": "claim and validation ledgers distinguish IMPLEMENTED, VALIDATED, SPECIFIED, PROPOSED, NOT_RUN, and retained FAIL gates without endpoint or production promotion",
+        "id": "AC-10"
+      }
+    ],
+    "out_of_scope": [
+      "C2 NumPy Rodas event/refinement/classifier implementation before tolerance, unit, budget, monotonicity, and line-split authority exists",
+      "C3 182-state/122-state reduction implementation or identity substitution",
+      "D-071, physical-prefix, independent FLRW, endpoint, unblinding, or gate-reopen execution",
+      "new JAX runtime or forward-development work, Rust promotion work, QKE, public production, or publication claims",
+      "new gates, manifests, readiness wrappers, capability changes, dependencies, flags, telemetry surfaces, figures, or unrelated cleanup",
+      "commit, push, merge, release packaging, resealing, or modification of the user's original checkout"
+    ]
+  },
+  "acceptance_sha256": "842c695c6efccb05fd3a19d87876ca6a9faa499364a9cec3772b500ac994ceed",
+  "budgets": {
+    "active_agents": {
+      "limit": 4,
+      "used": 3
+    },
+    "metacognitive_passes": {
+      "limit": 1,
+      "used": 1
+    },
+    "repair_closeout_rounds": {
+      "limit": 1,
+      "used": 0
+    },
+    "review_rounds": {
+      "limit": 1,
+      "used": 1
+    },
+    "same_failure_retries": {
+      "limit": 1,
+      "used": 1
+    }
+  },
+  "cell_dependents": {
+    "evidence_map": [
+      "implementation",
+      "validation",
+      "review",
+      "report"
+    ],
+    "implementation": [
+      "validation",
+      "review",
+      "report"
+    ],
+    "report": [],
+    "review": [
+      "report"
+    ],
+    "validation": [
+      "review",
+      "report"
+    ]
+  },
+  "cells": {
+    "evidence_map": [
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/FOUR_LOOP_EVIDENCE_MAP.json"
+    ],
+    "implementation": [
+      "src/rabbit/collisions/dynamic_collision_driver.py",
+      "tests/test_dynamic_collision_driver.py"
+    ],
+    "report": [
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/FINAL_EXTERNAL_AUDIT_REPORT.md",
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/RUN_MANIFEST.json",
+      "docs/harness/CLAIM_LEDGER.md",
+      "docs/harness/VALIDATION_LEDGER.md"
+    ],
+    "review": [
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-REVIEW2.json",
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/A-IF-REVIEW_HOST_BOUNDARY.json"
+    ],
+    "validation": [
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs",
+      ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts"
+    ]
+  },
+  "changed_cells": [
+    "evidence_map",
+    "implementation",
+    "validation",
+    "review",
+    "report"
+  ],
+  "decision": "STOP_INVALID",
+  "deliverable": "one external-audit-ready integrated four-loop conclusion packet plus the smallest test-driven C1 raw accepted-state admission repair",
+  "finding": "The real collision-on discriminator contains 2,096 negative stored occupations and the C1 candidate rejects three trajectories that exact HEAD admits; the patch also exceeds the governing total-net line cap and changes Hubble/event semantics outside scope. Independent adjudication therefore rejected admission with zero blocker or gate movement.",
+  "metacognitive_output": {
+    "observable_action": "freeze this finite contract, then create the isolated worktree and registered evidence-map assignment",
+    "self_ask": "Is the next action inside the frozen acceptance set, and does it change an observable output?"
+  },
+  "schema_version": 1,
+  "work_unit": "ODE-FOUR-LOOP-FINAL-IMPLEMENTATION-20260823"
+}

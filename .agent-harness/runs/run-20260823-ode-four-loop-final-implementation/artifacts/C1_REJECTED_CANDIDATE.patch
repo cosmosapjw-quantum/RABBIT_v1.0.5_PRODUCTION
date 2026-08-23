@@ -1,0 +1,353 @@
+diff --git a/src/rabbit/collisions/dynamic_collision_driver.py b/src/rabbit/collisions/dynamic_collision_driver.py
+index 0164b92..86ba88b 100644
+--- a/src/rabbit/collisions/dynamic_collision_driver.py
++++ b/src/rabbit/collisions/dynamic_collision_driver.py
+@@ -80,6 +80,20 @@ _TNU_TGAMMA_STD = (4.0 / 11.0) ** (1.0 / 3.0)
+ _NEFF_PREFAC = (11.0 / 4.0) ** (4.0 / 3.0)
+ 
+ 
++class RawStateAdmissionError(RuntimeError):
++    """A stored solver sample failed the raw physical-state contract."""
++
++    def __init__(self, reason, *, sample_index, N, component, value, state):
++        self.reason, self.sample_index = str(reason), sample_index
++        self.N, self.component, self.value = float(N), str(component), float(value)
++        self.snapshot = tuple(float(x) for x in np.asarray(state).ravel()[:8])
++        super().__init__(
++            f"raw stored state rejected: reason={self.reason}, sample={sample_index}, "
++            f"N={self.N:.16g}, component={self.component}, value={self.value!r}, "
++            f"snapshot={self.snapshot}"
++        )
++
++
+ def plasma_prefactor(T_gamma_MeV: float) -> float:
+     """Physical energy-density prefactor PHYS = T_γ⁴/(2π²).
+ 
+@@ -106,11 +120,9 @@ class DecouplingResult:
+     reached_endpoint — whether the terminal T_γ event fired AND the solver succeeded.
+     solver_success — raw ``solve_ivp`` success flag (fail-closed guard; see FINDING 2).
+     solver_message — raw ``solve_ivp`` status message.
+-    max_clip_excursion — largest raw Pauli/positivity excursion max(max(f−1,0), max(−f,0))
+-        clamped away over the whole integration (FINDING 3: must stay tiny; a large value
+-        means the clip silently repaired a collapsing/Pauli-violating state).
+-    min_hubble_MeV — smallest raw Hubble rate seen before the 1e-100 floor (FINDING 3: must
+-        stay > 0; the floor masking a true H→0 would be an unphysical singularity).
++    max_clip_excursion — largest raw stored-sample Pauli/positivity excursion (admission
++        requires zero excursion).
++    min_hubble_MeV — smallest raw Hubble rate seen; every evaluated H must be finite/positive.
+     f_nue_final / f_nux_final — final comoving distributions on the fixed Y grid (diagnostics).
+     """
+ 
+@@ -151,21 +163,15 @@ def _diagnostic_T_nu(f_th, q_nodes, q_weights, T_gamma):
+ def _make_rhs(quad, collisions):
+     """Build the comoving-frame RHS d/dN of the flattened state [f_nue, f_nux, T_gamma].
+ 
+-    Returns ``(rhs, Y, q_nodes, q_weights, monitor)``. ``monitor`` is a mutable dict the rhs
+-    accumulates the smallest raw Hubble rate seen before the 1e-100 floor into (FINDING 3):
+-    read it after ``solve_ivp`` returns. Clip-excursion tracking is done on the ACCEPTED
+-    solution samples (``sol.y``) after the solve, NOT here — Radau probes wildly out-of-range
+-    trial states during Jacobian finite-differencing / rejected steps, and those probes never
+-    enter the accepted trajectory, so tracking them in the rhs conflates solver noise with a
+-    genuine state corruption."""
++    ``monitor`` records positive Hubble values. Raw physical admission is applied only to
++    stored ``sol.y`` columns after solver success; trial/Jacobian/rejected RHS probes retain
++    evaluator clamps and are never misclassified as accepted trajectory samples."""
+     q_nodes = np.asarray(quad.q_nodes, dtype=float)
+     q_weights = np.asarray(quad.q_weights, dtype=float)
+     Y = q_nodes.copy()  # comoving grid == numeric Laguerre nodes
+     n = Y.size
+ 
+-    # Mutable closure cell for FINDING 3 Hubble tracking (min over accepted + probe evals; a
+-    # true H→0 would show up in any eval near the singularity, so probe evals only make this
+-    # more conservative). The frozen dataclass gets the value at construction.
++    # Probe values make this minimum conservative; invalid H fails before collision work.
+     monitor = {"min_hubble_MeV": np.inf}
+ 
+     def rhs(N, state):
+@@ -184,11 +190,15 @@ def _make_rhs(quad, collisions):
+         T_nue = _diagnostic_T_nu(f_th_nue, q_nodes, q_weights, T_gamma)
+         T_nux = _diagnostic_T_nu(f_th_nux, q_nodes, q_weights, T_gamma)
+ 
+-        # 3. Hubble; record the raw minimum before flooring so a true H→0 is observable.
++        # 3. Hubble: never turn a singular/nonfinite state into finite collision work.
+         H = float(hubble_3T(T_gamma, T_nue, T_nux))
+-        if np.isfinite(H) and H < monitor["min_hubble_MeV"]:
+-            monitor["min_hubble_MeV"] = H
+-        H_safe = max(H, 1.0e-100)
++        if not np.isfinite(H) or H <= 0.0:
++            raise RawStateAdmissionError(
++                "nonfinite_or_nonpositive_hubble", sample_index=None, N=N,
++                component="H", value=H, state=state,
++            )
++        monitor["min_hubble_MeV"] = min(monitor["min_hubble_MeV"], H)
++        H_safe = H
+ 
+         if collisions:
+             # 4. collision fields on the thermal nodes (rate df/dt, MeV).
+@@ -287,20 +297,61 @@ def integrate_flrw_decoupling(
+         max_step=max_step,
+     )
+ 
+-    N_final = float(sol.t[-1])
+-    state_final = sol.y[:, -1]
+-    f_nue_final = np.clip(state_final[:n], 0.0, 1.0)
+-    f_nux_final = np.clip(state_final[n : 2 * n], 0.0, 1.0)
+-    T_gamma_final = float(state_final[2 * n])
+-    z_final = np.exp(N_final) * T_gamma_final
+-
+     solver_success = bool(sol.success)
+     solver_message = str(sol.message)
+-    # FINDING 3 — largest raw Pauli/positivity excursion max(max(f−1,0), max(−f,0)) over the
+-    # ACCEPTED solution samples (the trajectory that actually flows through the integration),
+-    # not the solver's internal probe/rejected-step evals. A tiny value confirms the [0,1]
+-    # clamp never had to silently repair a collapsing or Pauli-violating accepted state.
+-    f_samples = sol.y[: 2 * n, :]
++    event_count = np.asarray(sol.t_events[0]).size if len(sol.t_events) == 1 else 0
++    reached_endpoint = solver_success and event_count == 1
++    if not reached_endpoint:
++        raise RuntimeError(
++            "FLRW decoupling integration did not reach exactly one endpoint event "
++            f"(N_eff would be unphysical): solver_success={solver_success}, "
++            f"message={solver_message!r}, terminal_event_count={event_count}."
++        )
++
++    times = np.asarray(sol.t)
++    states = np.asarray(sol.y)
++    if times.size == 0 or states.shape != (2 * n + 1, times.size):
++        raise RawStateAdmissionError(
++            "malformed_stored_trajectory", sample_index=None, N=np.nan,
++            component="sol.y", value=states.size, state=states,
++        )
++    for sample_index, (N_sample, state) in enumerate(zip(times, states.T, strict=True)):
++        f_sample = state[: 2 * n]
++        bad = np.flatnonzero(~np.isfinite(f_sample) | (f_sample <= 0.0) | (f_sample >= 1.0))
++        if bad.size:
++            j = int(bad[0])
++            bank = "f_nue" if j < n else "f_nux"
++            raise RawStateAdmissionError(
++                "occupation_outside_strict_open_interval", sample_index=sample_index,
++                N=N_sample, component=f"{bank}[{j % n}]", value=f_sample[j], state=state,
++            )
++        T_sample = float(state[2 * n])
++        if not np.isfinite(N_sample) or not np.isfinite(T_sample) or T_sample <= 0.0:
++            raise RawStateAdmissionError(
++                "nonfinite_time_or_nonpositive_temperature", sample_index=sample_index,
++                N=N_sample, component="T_gamma", value=T_sample, state=state,
++            )
++        z_sample = np.exp(N_sample) * T_sample
++        f_nue_th = _resample_comoving_to_thermal(Y, state[:n], q_nodes, z_sample)
++        f_nux_th = _resample_comoving_to_thermal(Y, state[n : 2 * n], q_nodes, z_sample)
++        H_sample = float(hubble_3T(
++            T_sample, _diagnostic_T_nu(f_nue_th, q_nodes, q_weights, T_sample),
++            _diagnostic_T_nu(f_nux_th, q_nodes, q_weights, T_sample),
++        ))
++        if not np.isfinite(H_sample) or H_sample <= 0.0:
++            raise RawStateAdmissionError(
++                "nonfinite_or_nonpositive_hubble", sample_index=sample_index, N=N_sample,
++                component="H", value=H_sample, state=state,
++            )
++
++    N_final = float(times[-1])
++    state_final = states[:, -1]
++    f_nue_final = state_final[:n]
++    f_nux_final = state_final[n : 2 * n]
++    T_gamma_final = float(state_final[2 * n])
++    z_final = np.exp(N_final) * T_gamma_final
++    # Stored accepted samples have already passed strict-open raw admission above.
++    f_samples = states[: 2 * n, :]
+     max_clip_excursion = float(
+         max(np.max(f_samples - 1.0), np.max(-f_samples), 0.0)
+     )
+@@ -308,18 +359,6 @@ def integrate_flrw_decoupling(
+         float(monitor["min_hubble_MeV"]) if np.isfinite(monitor["min_hubble_MeV"]) else 0.0
+     )
+ 
+-    # FINDING 2 — fail closed. A finite N_eff is only physical if the terminal T_γ event fired
+-    # AND the solver reported success; otherwise the run stalled/failed and any N_eff is garbage.
+-    reached_endpoint = solver_success and bool(sol.t_events[0].size > 0)
+-    if not reached_endpoint:
+-        raise RuntimeError(
+-            "FLRW decoupling integration did not reach the endpoint (N_eff would be "
+-            f"unphysical): solver_success={solver_success}, message={solver_message!r}, "
+-            f"terminal_event_fired={bool(sol.t_events[0].size > 0)}, N_reached={N_final:.4f}, "
+-            f"T_gamma_final={T_gamma_final:.4e} MeV (T_stop={float(T_gamma_stop_MeV):.4e}). "
+-            "Increase N_span_max or check the solver tolerances."
+-        )
+-
+     # FINDING 6 — the endpoint bank spectral energy moments must be non-negative; a negative
+     # spectral energy is unphysical. Raise (fail loud) rather than silently flooring, and use
+     # the SAME (unclamped) moments consistently for N_eff and both T_ν readouts.
+diff --git a/tests/test_dynamic_collision_driver.py b/tests/test_dynamic_collision_driver.py
+index 7ace80e..b0e3b74 100644
+--- a/tests/test_dynamic_collision_driver.py
++++ b/tests/test_dynamic_collision_driver.py
+@@ -18,9 +18,13 @@ exists for Bianchi-I BBN with a collision term; these are INTERNAL consistency n
+ 
+ from __future__ import annotations
+ 
++from types import SimpleNamespace
++
+ import numpy as np
+ import pytest
+ 
++import rabbit.collisions.dynamic_collision_driver as driver
++
+ from rabbit.collisions.deterministic_reference import build_fixed_collision_quadrature
+ from rabbit.collisions.dynamic_collision_core import (
+     _collision_field,
+@@ -50,6 +54,21 @@ def _quad(n=24):
+     )
+ 
+ 
++def _fake_success(t_span, y0, *, mutate=None):
++    states = np.column_stack([y0, y0.copy()])
++    states[-1, -1] = 1.0e-2
++    if mutate is not None:
++        mutate(states)
++    times = np.array([t_span[0], 5.0])
++    return SimpleNamespace(
++        success=True,
++        message="fake terminal success",
++        t=times,
++        y=states,
++        t_events=[times[-1:]],
++    )
++
++
+ # ---------------------------------------------------------------------------
+ # Gate A — collisionless frame validation
+ # ---------------------------------------------------------------------------
+@@ -128,6 +147,133 @@ def test_failed_integration_fails_closed():
+         integrate_flrw_decoupling(collisions=False, N_span_max=0.5)
+ 
+ 
++def test_invalid_nonfinal_stored_state_fails_before_postprocessing(monkeypatch):
++    """Catches validation of only the final accepted state after solver success."""
++
++    def fake_solve(_fun, t_span, y0, **_kwargs):
++        return _fake_success(t_span, y0, mutate=lambda states: states.__setitem__((0, 0), -1e-9))
++
++    monkeypatch.setattr(driver, "solve_ivp", fake_solve)
++    with pytest.raises(RuntimeError) as caught:
++        integrate_flrw_decoupling(n_q=8, collisions=False)
++
++    assert type(caught.value).__name__ == "RawStateAdmissionError"
++    assert caught.value.reason == "occupation_outside_strict_open_interval"
++    assert caught.value.sample_index == 0
++
++
++@pytest.mark.parametrize(
++    ("row", "value", "reason"),
++    [
++        (0, 0.0, "occupation_outside_strict_open_interval"),
++        (0, 1.0, "occupation_outside_strict_open_interval"),
++        (0, -1e-9, "occupation_outside_strict_open_interval"),
++        (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
++        (0, np.nan, "occupation_outside_strict_open_interval"),
++        (0, np.inf, "occupation_outside_strict_open_interval"),
++        (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
++        (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
++        (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
++        (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
++    ],
++)
++def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
++    """Catches final-state clipping/flooring before moment and observable calculation."""
++
++    original_moment = driver.spectral_energy_moment
++    moment_calls = []
++
++    def moment_spy(*args):
++        moment_calls.append(1)
++        return original_moment(*args)
++
++    def fake_solve(_fun, t_span, y0, **_kwargs):
++        result = _fake_success(
++            t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
++        )
++        result.t, result.y = result.t[-1:], result.y[:, -1:]
++        return result
++
++    monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
++    monkeypatch.setattr(driver, "solve_ivp", fake_solve)
++    with pytest.raises(RuntimeError) as caught:
++        integrate_flrw_decoupling(n_q=8, collisions=False)
++
++    assert type(caught.value).__name__ == "RawStateAdmissionError"
++    assert caught.value.reason == reason
++    assert caught.value.sample_index == 0
++    assert moment_calls == []
++
++
++def test_exactly_one_terminal_event_is_required(monkeypatch):
++    """Catches accepting an ambiguous result containing duplicate terminal events."""
++
++    def fake_solve(_fun, t_span, y0, **_kwargs):
++        result = _fake_success(t_span, y0)
++        result.t_events = [np.array([result.t[-1], result.t[-1]])]
++        return result
++
++    monkeypatch.setattr(driver, "solve_ivp", fake_solve)
++    with pytest.raises(RuntimeError, match="exactly one endpoint event"):
++        integrate_flrw_decoupling(n_q=8, collisions=False)
++
++
++@pytest.mark.parametrize("H", [0.0, -1.0, np.nan, np.inf])
++def test_stored_state_requires_finite_positive_hubble(monkeypatch, H):
++    """Catches trusting an unevaluated or floored Hubble rate after solve success."""
++
++    monkeypatch.setattr(driver, "solve_ivp", lambda _f, span, y0, **_kw: _fake_success(span, y0))
++    monkeypatch.setattr(driver, "hubble_3T", lambda *_args: H)
++    with pytest.raises(RuntimeError) as caught:
++        integrate_flrw_decoupling(n_q=8, collisions=False)
++
++    assert type(caught.value).__name__ == "RawStateAdmissionError"
++    assert caught.value.reason == "nonfinite_or_nonpositive_hubble"
++
++
++def test_rhs_rejects_nonpositive_hubble_before_collision_work(monkeypatch):
++    """Catches flooring H=0 and dividing collision work by an artificial 1e-100."""
++
++    monkeypatch.setattr(driver, "hubble_3T", lambda *_args: 0.0)
++    collision_calls = []
++
++    def fake_collision(field, *_args):
++        collision_calls.append(1)
++        return np.zeros_like(field)
++
++    monkeypatch.setattr(driver, "_collision_field", fake_collision)
++    rhs, Y, *_ = _make_rhs(_quad(8), collisions=True)
++    state = np.concatenate([1.0 / (np.exp(Y) + 1.0)] * 2 + [[2.0]])
++
++    with pytest.raises(RuntimeError) as caught:
++        rhs(0.0, state)
++
++    assert type(caught.value).__name__ == "RawStateAdmissionError"
++    assert caught.value.reason == "nonfinite_or_nonpositive_hubble"
++    assert collision_calls == []
++
++
++def test_rhs_probe_clamp_does_not_reject_valid_stored_trajectory(monkeypatch):
++    """Catches conflating an out-of-domain Radau probe with an accepted sample."""
++
++    captured = {}
++
++    def fake_solve(fun, t_span, y0, **_kwargs):
++        probe = y0.copy()
++        probe[0], probe[1] = -0.25, 1.25
++        assert np.all(np.isfinite(fun(t_span[0], probe)))
++        captured["final"] = y0.copy()
++        return _fake_success(t_span, y0)
++
++    monkeypatch.setattr(driver, "solve_ivp", fake_solve)
++    result = integrate_flrw_decoupling(n_q=8, collisions=False)
++    n = captured["final"].size // 2
++
++    np.testing.assert_array_equal(result.f_nue_final, captured["final"][:n])
++    np.testing.assert_array_equal(result.f_nux_final, captured["final"][n : 2 * n])
++    assert result.max_clip_excursion == 0.0
++
++
+ # ---------------------------------------------------------------------------
+ # FINDING 5 — collisionless N_eff is n_q-convergent
+ # ---------------------------------------------------------------------------

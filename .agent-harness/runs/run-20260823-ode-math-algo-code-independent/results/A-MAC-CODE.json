@@ -1,0 +1,822 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-math-algo-code-independent",
+  "assignment_id": "A-MAC-CODE",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c7b-b866-7670-9e49-315af338d783",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-math-algo-code-independent",
+    "assignment_id": "A-MAC-CODE",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:2f542a2ea829b1d6118d1cfa62033c3cf03a9aef0a78403f0d6e8be16e99572d",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-CODE.json",
+  "started_at": "2026-08-23T02:40:30Z",
+  "completed_at": "2026-08-23T02:58:00Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "analysis_mode": "static source, contract, and testability review only",
+    "input_set_sha256": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-CODE.json",
+    "git rev-parse HEAD",
+    "git status --short",
+    "sha256sum <all assignment-listed source, test, gate, policy, and original-register inputs> | sha256sum",
+    "python3 -m json.tool .agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-CODE.json",
+    "python3 .agent-harness/scripts/validate_harness.py (global check reported a concurrently unreadable A-MAC-MATH.json; no sibling content was inspected)",
+    "PYTHONPATH=.agent-harness/scripts python3 -c '<validate_result_contract for A-MAC-CODE with exact agent, assignment hash, run, and context>'"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-CODE.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-MAC-CODE-001",
+      "claim_id": "ODE-A1",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The original 34-finding register is a sufficient mechanical floor for this bounded remedy review; every original finding ID is mapped exactly once below. This is completeness of the declared surface, not proof of semantic absence outside it.",
+      "assumptions_used": [
+        "The original A-ODE-ADJ3 register is the authoritative inventory for this assignment.",
+        "No repo-wide rediscovery was authorized under targeted discovery."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-034",
+        ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-CODE.json"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[].finding_id' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The register is explicitly a bounded completeness floor."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-002",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Current Python and Rust solver consumers still lack one fail-closed outcome contract: contradictory solver states, uncertified events, repaired physical states, incomplete work accounting, and post-failure endpoint computations can be accepted or can erase the originating failure. The matrix provides bounded remedies without claiming implementation.",
+      "assumptions_used": [
+        "A result advertised as endpoint-like must be admitted only after solver, event, residual, finiteness, and physical-invariant checks.",
+        "Diagnostic fields must distinguish actual counters from unavailable values and samples from accepted steps."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-004 through -018, -022 through -025, and -027",
+        "src/rabbit/solver/ivp_outcome.py:11-32",
+        "src/rabbit/solver/rodas5p.py:243-348",
+        "src/rabbit/solver/rodas5p_adapter.py:94-150",
+        "native/rabbit_cpu/src/ode.rs:104-181,283-599,626-917"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [
+        "Canonical full_coupled_typeI rejects ordinary missed events; dynamic collision requires solver success plus an event; existing Rust mechanics suites are green on their covered good paths."
+      ],
+      "reproduction": [
+        "Static inspection of assignment-listed source against each original counterexample and its exact consumer."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No production patch or numerical execution was authorized.",
+        "F-ODE-ADJ3-024 and -025 require discriminating execution before numerical-policy changes."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-003",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The independent FLRW endpoint, physical-prefix proposition, tier-2 convergence, production-dimension derivative authority, and generic subnormal-temperature domain remain blocked at their recorded claim tiers. Local wrapper cleanup or segment speedups cannot promote them.",
+      "assumptions_used": [
+        "A timed-out holdout with no predicate evaluation is not endpoint evidence.",
+        "Static states are not a trajectory or physical prefix.",
+        "Same-code endpoint agreement is not independent derivative validation."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-001, -002, -003, -014, -019, -026",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+        "bbn_codex_anti_drift_cost_effective_policy.md",
+        ".agent-harness/generated/STATUS_BOARD.md"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [
+        "Existing base-phase, static JVP, same-code endpoint, and mechanics receipts retain their narrower diagnostic value."
+      ],
+      "reproduction": [
+        "No scientific workload rerun; this assignment preserves the original measured evidence and current gate state."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "G-F10-INDEPENDENT-FLRW remains FAIL and closed on the current instrument.",
+        "The tier-2 residual magnitude was not freshly remeasured."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-004",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Closed historical Rust far-tail and exact-cache blockers and bounded good paths should remain closed; proposed repairs must not delete their regressions or relabel them as current blockers.",
+      "assumptions_used": [
+        "The original register's closed-item evidence remains authoritative for this analysis-only assignment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-033"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "No rerun; retained as prior executed evidence with no scope expansion."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Closed mechanics do not imply scientific endpoint authority."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-005",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The frozen JAX Rodas oracle still has input, initial-event, event-direction, and final-finiteness admission gaps. Only a minimal fail-closed oracle repair is supportable; new JAX runtime, timing, or promotion work remains forbidden.",
+      "assumptions_used": [
+        "JAX is a local parity/AD/Jacobian oracle, not the repeated-run production target."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-008",
+        "src/rabbit/jax/solver_jax_rodas5p.py:852-939,1165-1415",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [
+        "Ordinary covered JAX parity paths remain useful within the frozen-oracle ceiling."
+      ],
+      "reproduction": [
+        "Static verification that ev_init is not an initial terminal branch, crossings are downward-only, and success is derived from status without a final-state finiteness gate."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No JAX execution or forward-development change was authorized."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-006",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Fresh expensive N48 endpoint evidence is missing, the prior harness/environment identity limitations remain external to ODE code, and result provenance is incomplete without embedding the effective Rust configuration. These must stay distinct: execution gap, harness limitation, and bounded provenance repair.",
+      "assumptions_used": [
+        "Python native/AD tests that do not execute native/rabbit_cpu/src/ode.rs are not Rust ODE execution evidence.",
+        "A result-local immutable configuration snapshot is preferable to a new manifest or gate."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-021, -030, -031, -032",
+        "native/rabbit_cpu/src/ode.rs:72-116",
+        ".agent-harness/context/GATE_REGISTRY.json",
+        ".agent-harness/generated/STATUS_BOARD.md"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [
+        "The original register records green bounded Rust mechanics and retained endpoint anchors, but they are not a fresh selected N48 rerun."
+      ],
+      "reproduction": [
+        "Static mapping only; no expensive endpoint or environment-identity rerun."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Selected N48 execution remains absent in this run.",
+        "G-HARNESS-INTEGRITY remains FAIL."
+      ]
+    },
+    {
+      "finding_id": "F-MAC-CODE-007",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Test coverage does not yet kill the known false-success classes, and one Rodas property assertion has Boolean-precedence leakage. Diffrax wrapper error types also drift. Tests must assert typed outcome invariants and raw failure evidence, not only finiteness, booleans, message text, or same-tableau parity.",
+      "assumptions_used": [
+        "A normal xfail remains a visible blocker rather than a passing promotion gate.",
+        "NumPy/JAX twin-solver parity is common-mode evidence."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json: F-ODE-ADJ3-003, -020, -028, -029",
+        "tests/test_rodas5p_upgrades.py:431",
+        "tests/test_scipy_ivp_outcome_classifier.py",
+        "src/rabbit/jax/solver_diffrax_canonical.py:148-157,206-212",
+        "https://docs.kidger.site/diffrax/api/diffeqsolve/",
+        "https://docs.kidger.site/diffrax/api/solution/"
+      ],
+      "evidence_fingerprint": "sha256:1e72f8b786cd72ecd3058d05294125520d977e1925791fcab6bb48f202903f9d",
+      "counterevidence_refs": [
+        "The original register records 27/27 Rust ODE tests on covered branches."
+      ],
+      "reproduction": [
+        "Inspect tests/test_rodas5p_upgrades.py assertion precedence and compare the two Diffrax solver-name lookup paths."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Coverage instrumentation was not run, so indirect Rust branch execution remains unknown."
+      ]
+    }
+  ],
+  "remedy_principles": [
+    "Admit endpoint observables only after a typed terminal outcome passes solver-status, event, residual/bracket, final-state finiteness, and physical-invariant checks; contradictory evidence is CONTRACT_VIOLATION, never success.",
+    "Preserve both last accepted state and the actual failing evaluation snapshot, including stage, time, raw state/value, and typed reason. Do not clip, floor, recompute, or replace the failure before capture.",
+    "Counters state their unit: stored samples, accepted steps, attempted steps, rejected attempts, RHS evaluations including nested RHS work, Jacobian evaluations, actual factorisations, refinement evaluations, and wall time. Unknown is null, never fabricated zero.",
+    "Reuse existing result/config modules and delete duplicate maps, message parsing, and misleading fields. No new manifest, readiness document, telemetry system, hash layer, figure, registry, or gate is proposed.",
+    "Rust AOT remains the implementation/repeated-run target; SciPy/BDF remains temporary number-of-record; JAX changes are limited to frozen-oracle fail-closed correctness. No proposal changes QKE, public support, or promotion authority."
+  ],
+  "remedy_matrix": [
+    {
+      "original_finding_id": "F-ODE-ADJ3-001",
+      "classification": "retained_blocker",
+      "current_verdict": "fail",
+      "consumer": "G-F10-INDEPENDENT-FLRW order-60/ymax-30 holdout and its closed current measurement instrument",
+      "missing_contract": "No terminal holdout result/checks exist; last progress, rejection/error history, and scientific predicate evaluation are absent, so projection cannot become endpoint evidence.",
+      "minimal_fail_closed_change": "No production-code change and no reopen. If an owner authorizes a replacement runner, its existing result type must require a terminal outcome enum, last accepted N/state, elapsed wall, actual work counters, and an explicit predicate_not_evaluated state on timeout/error.",
+      "diagnostic_work_budget_semantics": "Keep 64,800 s as an exhausted wall budget and the projected 3.27e7 RHS/4.58 years/8305x as projection only; never reinterpret timeout as a failed physics predicate.",
+      "raw_failure_retention": "Retain the raw stalled state near N=0.1653, all available logs, missing checks block, and error terminal reason without inferred values.",
+      "compatibility_deletion": "Do not alter the closed instrument or add a readiness/gate artifact; any future runner supersedes it under new authority and reuses an existing result envelope.",
+      "test": "Contract fixture: timeout before predicate evaluation serializes terminal=budget_exhausted, last accepted state/work, checks=null, and cannot be promoted by projection fields.",
+      "likely_code_size_risk": "0 current production lines; future authorized runner approximately 20-40 net lines in an existing result path; high scientific/runtime risk.",
+      "authority_ceiling": "Retains G-F10-INDEPENDENT-FLRW=FAIL and CLOSED_ON_CURRENT_MEASUREMENT."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-002",
+      "classification": "retained_blocker",
+      "current_verdict": "fail",
+      "consumer": "Physical-prefix/JVP evidence consumer for the independent order-60/ymax-30 system",
+      "missing_contract": "Four static states and finite-difference-like shifts are accepted as diagnostic input without an integrated physical prefix, domain-preserving perturbation, direct JVP, or reaction-tail authority.",
+      "minimal_fail_closed_change": "No current implementation change or D-071 reopen. Any future authorized evidence API must require prefix_provenance, domain_valid_all_states, direct_jvp_used, perturbation_norm/epsilon, and reaction_tail_authority before a physical-prefix verdict can exist.",
+      "diagnostic_work_budget_semantics": "Report nine full-RHS-equivalent calls and 1,477,632 whole-reaction rejections as diagnostics only; epsilon and shifted N are first-class values, not hidden normalization details.",
+      "raw_failure_retention": "Retain epsilon=4.318e15, shifted N=-6.898e7, Arnoldi dimension-one breakdowns, and all false authority flags.",
+      "compatibility_deletion": "Do not add another receipt/manifest/gate. A future implementation must consolidate the existing evidence envelope and reject legacy static-only payloads for physical-prefix claims.",
+      "test": "Metamorphic admission test: rescaling an irrelevant elapsed-time coordinate must not change a domain-safe JVP direction; static-only, huge-epsilon, negative-N, and dimension-one-breakdown payloads remain non-authoritative.",
+      "likely_code_size_risk": "0 current lines; future evidence-contract change approximately 30-60 net lines, high scientific risk.",
+      "authority_ceiling": "Diagnostic static/JVP evidence only; no trajectory, prefix, reaction-tail, or endpoint authority."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-003",
+      "classification": "retained_blocker",
+      "current_verdict": "fail",
+      "consumer": "Strict slow Type-I tier-2 residual-collision convergence xfail and any promotion summary consuming ordinary pytest green",
+      "missing_contract": "Normal xfail status does not encode that the approximately 3.5 percent Y_p Nq16-to-32 drift violates the less-than-1e-3 requirement.",
+      "minimal_fail_closed_change": "Do not flip or remove the xfail. Keep the blocker in the existing gate/status machinery; only a freshly executed convergence result satisfying the frozen threshold may change status.",
+      "diagnostic_work_budget_semantics": "Store Nq values, absolute/relative Y_p drift, tolerance, solver configuration, and executed/skipped/xfail state; a non-execution is not a pass.",
+      "raw_failure_retention": "Preserve the failing numerical pair and xfail reason when rerun; no tolerance widening or output clipping.",
+      "compatibility_deletion": "No new gate. Retain the current test name and threshold so historical evidence remains comparable.",
+      "test": "Meta-test: the promotion aggregator must fail when the named test is XPASS/FAIL/XFAIL without a qualifying frozen result, and pass only on an executed threshold-satisfying artifact.",
+      "likely_code_size_risk": "0-15 net lines in existing aggregation/test metadata if authorized; low code risk, high scientific cost to rerun.",
+      "authority_ceiling": "Retained source evidence; magnitude not freshly validated here."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-004",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/drivers/classA_driver.py phase-1 and phase-2 solve_ivp results",
+      "missing_contract": "Progress is mistaken for success; neither handoff nor endpoint event is required, partial phase 1 seeds phase 2, and endpoint-like observables omit solver outcome.",
+      "minimal_fail_closed_change": "Classify each solve before any handoff or postprocessing with an existing shared typed outcome. Require success, status/event consistency, finite final state, the expected event, and event residual tolerance; return/raise a structured partial failure before phase 2 or observables.",
+      "diagnostic_work_budget_semantics": "Expose status/message, terminal kind, last time, event residual, nfev/njev/nlu, stored_samples=len(t), and accepted_steps only when a backend supplies it; never call len(t) steps.",
+      "raw_failure_retention": "Capture the SciPy result and last accepted t/y unchanged. Do not call phase-2 RHS or observable code after a phase-1 failure.",
+      "compatibility_deletion": "Reuse src/rabbit/solver/ivp_outcome.py; delete both len<2 acceptance branches and misleading step labels. Preserve the successful result shape or add an explicitly optional outcome field with a deprecation period.",
+      "test": "Inject success=False after two points, success=True without t_events, contradictory status/event, and nonfinite last state; assert phase 2 is not called, no observables exist, and raw partial evidence is returned.",
+      "likely_code_size_risk": "Approximately 25-45 net lines if shared classifier exists; medium compatibility risk.",
+      "authority_ceiling": "Defect repair only; no Type-I equivalence or endpoint promotion claim."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-005",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/drivers/tilted_flrw.py primary tilted solve and FLRW baseline solve",
+      "missing_contract": "Post-progress failure and missed handoff are accepted, the baseline is unchecked, T_end is unused, and the result looks endpoint-complete without solver status.",
+      "minimal_fail_closed_change": "Apply the same typed admission to both solves before delta_Yp. Require the declared terminal target or rename the routine/result as handoff-only; reject |v|>=1 and nonfinite inputs before RHS evaluation.",
+      "diagnostic_work_budget_semantics": "Return separate primary/baseline status, terminal event, last t/T, residual, and real counters; label handoff rather than endpoint when T_end is not integrated.",
+      "raw_failure_retention": "Retain each solver's partial t/y and original message; do not compute delta_Yp unless both outcomes are admitted.",
+      "compatibility_deletion": "Delete unused T_end or implement its declared semantics, not both. Reuse the common classifier and remove duplicated weak checks.",
+      "test": "Failure-inject primary and baseline independently; add no-event success, equal-start, |v| boundary, and metamorphic primary/baseline swap tests proving delta is absent unless both runs qualify.",
+      "likely_code_size_risk": "Approximately 25-50 net lines; medium API/semantic risk.",
+      "authority_ceiling": "Exploratory driver correctness only; no production support."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-006",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/validation/transport_convergence.py convergence_scan and type_I_exactness_test",
+      "missing_contract": "Failed or partial solve states are consumed; no-convergence defaults to the first ell; a near-zero denominator is mapped to zero relative change and passes; candidate/threshold inputs are weakly validated.",
+      "minimal_fail_closed_change": "Return a convergence result with converged=false and selected_ell=null until two admitted solves satisfy both absolute and relative criteria. Fail on any solver outcome violation and validate monotone unique candidate lists plus finite nonnegative tolerances.",
+      "diagnostic_work_budget_semantics": "Per candidate retain outcome, actual counters, numerator, denominator, absolute delta, relative delta or null with explicit zero-scale reason, and total work budget.",
+      "raw_failure_retention": "Store the first failing candidate's raw partial result; do not substitute a previous/first state or synthesize rel=0.",
+      "compatibility_deletion": "Make selected ell optional and remove the first-candidate fallback. If external callers require int, introduce a temporary deprecated accessor that raises on nonconvergence.",
+      "test": "Property tests over failed solves, empty/single/duplicate candidates, exact-zero and near-zero baselines, no qualifying pair, and scale metamorphisms; assert exactness cannot certify a partial trajectory.",
+      "likely_code_size_risk": "Approximately 35-65 net lines; medium compatibility risk.",
+      "authority_ceiling": "Validation-helper repair, not convergence validation."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-007",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/solver/rodas5p.py event state machine, src/rabbit/solver/rodas5p_adapter.py, and canonical full_coupled_typeI adapter path",
+      "missing_contract": "Event success can be fabricated after all refinement attempts fail; initial/exact-zero/nonfinite/direction/terminal/multiple-event semantics drift, and adapter success is inferred from message text.",
+      "minimal_fail_closed_change": "Introduce an internal typed EventRefinement result with converged, bracket, residual, iterations, and failure reason. Initial zero is an event; nonfinite event values fail; compare directions without integer truncation; reject unsupported multiple/nonterminal events explicitly. Exhausted refinement is solver failure with no t_events.",
+      "diagnostic_work_budget_semantics": "Count attempted/accepted/rejected steps, RHS/Jacobian/factorisation/refinement work separately; bind refinement to an explicit existing budget and publish typed terminal status rather than message parsing.",
+      "raw_failure_retention": "On refinement failure retain the original bracket, last accepted step, last attempted event time/state/value, and substep failure reason; never rerun and discard ok.",
+      "compatibility_deletion": "Delete message-based event inference and the unsafe fallback. Match the supported SciPy event subset; fail closed for unsupported semantics rather than silently approximating them.",
+      "test": "Regression for all-refinement-failed residual=123 counterexample plus initial zero, NaN event, exact-zero endpoint, direction=0.5, nonterminal and multiple events. Metamorphic time reversal flips direction but preserves detection.",
+      "likely_code_size_risk": "Approximately 70-110 net lines after deleting fallback/message logic; medium-high solver risk.",
+      "authority_ceiling": "Reference/opt-in solver correctness only until endpoint gates run.",
+      "official_contract_refs": [
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ]
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-008",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/jax/solver_jax_rodas5p.py frozen local parity/AD/Jacobian oracle",
+      "missing_contract": "ev_init is not terminally handled; only downward crossings exist; invalid tolerance/state inputs pass; status>=0 can label a nonfinite final state successful.",
+      "minimal_fail_closed_change": "At the host boundary validate finite ordered span/state and positive tolerances/step controls; handle initial zero and nonfinite event values before the loop; expose or explicitly constrain event direction; require finite final state and typed terminal reason for success.",
+      "diagnostic_work_budget_semantics": "Retain static-loop attempts, accepted/rejected counts, status, final event residual, and final finiteness. Do not reinterpret padded array length as work.",
+      "raw_failure_retention": "Return the last valid state plus the offending raw event/state value and iteration index without clipping.",
+      "compatibility_deletion": "Minimal oracle-only change in the existing result type; no timing, driver, endpoint, runtime-policy, or promotion surface.",
+      "test": "CPU-JAX regressions for zero-span NaN/Inf state, rtol=0, atol<0, initial-zero/nonfinite events, both direction signs, and nonfinite candidate; compare semantic outcomes to SciPy, not only trajectories.",
+      "likely_code_size_risk": "Approximately 35-70 net lines; medium JIT/control-flow risk.",
+      "authority_ceiling": "Frozen oracle only; no forward-development or runtime promotion."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-009",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/collisions/dynamic_collision_driver.py accepted-state physics admission and N_eff result",
+      "missing_contract": "Clipped/floored values are used for physics checks, so accepted raw Pauli, energy, and Hubble violations can be silently repaired before success.",
+      "minimal_fail_closed_change": "Separate raw trial/accepted state from numerically projected RHS inputs. Before endpoint observables, require finite raw f within tolerance, positive finite raw H, bounded clip excursion, and energy/normalization invariants; violation returns typed physical_state_invalid.",
+      "diagnostic_work_budget_semantics": "Report max raw bound excursion, first violating t/index/value, raw min H including nonfinite, solver counters, and whether projection was used for an RHS evaluation; these are result fields, not a telemetry subsystem.",
+      "raw_failure_retention": "Capture raw occupations/H before clipping/flooring and preserve the solver result; do not run the endpoint N_eff computation on failure.",
+      "compatibility_deletion": "Keep clipping only as an explicitly diagnostic numerical transform if required; delete the claim that the post-clipped negative-energy check validates unclamped state.",
+      "test": "Inject accepted y with f<0, f>1, H<0, H=NaN, and a projection-hidden energy violation; assert no N_eff and exact raw offending sample. Metamorphic clipping strength must not change admission.",
+      "likely_code_size_risk": "Approximately 25-45 net lines; medium physics/API risk and high movement per line.",
+      "authority_ceiling": "Physics-correctness repair only; no endpoint validation."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-010",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/decoupling/solver.py and both augmented transport run wrappers",
+      "missing_contract": "Endpoint/history recomputation occurs before sol.success admission and can mask the original error while exposing fields named final from partial trajectories.",
+      "minimal_fail_closed_change": "Classify immediately after solve_ivp. On failure construct a failure-only result containing outcome and raw partial data; compute histories, final RHS, abundances, or observables only in the admitted-success branch.",
+      "diagnostic_work_budget_semantics": "Standardize status/message/last time/stored samples/nfev/njev/nlu and target residual; omit derived endpoint diagnostics on failure rather than filling misleading defaults.",
+      "raw_failure_retention": "Preserve sol.t/sol.y and original exception/message before any user RHS or observable callback can execute.",
+      "compatibility_deletion": "Make final fields optional or split success/failure variants; delete duplicate post-solve status logic and reuse ivp_outcome. Preserve canonical caller's explicit success check.",
+      "test": "Mock failed solve with postprocessor/RHS that raises if called; assert original failure survives and final fields are absent. Property test every non-success status bypasses postprocessing.",
+      "likely_code_size_risk": "Approximately 45-85 net lines across three consumers after consolidation; medium compatibility risk.",
+      "authority_ceiling": "Wrapper contract repair only."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-011",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/drivers/full_coupled_typeI.py canonical two-phase SciPy/Rodas dispatcher",
+      "missing_contract": "Ordinary missed events fail, but ordered finite temperature/control admission, equal-start semantics, event certificate, final-state/abundance/mass checks, full counters, partial failure retention, and portable dense-output configuration are incomplete.",
+      "minimal_fail_closed_change": "Validate T_start>T_handoff>T_end>0 and finite positive controls before dispatch. Normalize initial-event semantics, require a backend-neutral certified terminal outcome and physical postconditions, and attach partial phase results to a typed failure instead of discarding them.",
+      "diagnostic_work_budget_semantics": "Per phase report terminal kind, event residual/bracket, last time/T, real nfev/njev/nlu/attempts and stored samples; backend-unsupported options are rejected before execution.",
+      "raw_failure_retention": "Return/attach the failed phase's raw solver result and preserve phase 1 when phase 2 fails; do not floor abundance/mass values before raw checks.",
+      "compatibility_deletion": "Remove unused SciPy dense_output allocation or split backend configs; replace len(t)-as-steps and RuntimeError-only loss with a stable internal outcome while preserving successful scientific result fields.",
+      "test": "Matrix over unordered/nonfinite/equal temperatures, unsupported backend options, missed/contradictory events, large event residual, nonfinite final state, invalid abundance/mass residual, and phase-2 failure retaining phase 1.",
+      "likely_code_size_risk": "Approximately 60-110 net lines; high canonical-interface risk.",
+      "authority_ceiling": "Canonical fail-closed hardening; gate execution still required."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-012",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "NumPy Rodas5P configuration, finite-difference/Jacobian path, and SciPy-compatible adapter",
+      "missing_contract": "Invalid controls are silently coerced; state shape/dtype/finiteness and coherent bounds are not validated; backward dfdt probes can cross the initial boundary; adapter omits Jacobian/max_steps and fabricates nfev=0.",
+      "minimal_fail_closed_change": "Add one config.validate plus input/callback validation before allocation; reject rather than abs/coerce invalid values. Use boundary-aware one-sided dfdt, expose supported jac/max_steps, reject unsupported sparsity explicitly, and return nullable actual counters.",
+      "diagnostic_work_budget_semantics": "Define max_steps/attempts exactly, count every RHS/Jacobian/factorisation/refinement evaluation, and use null for unavailable counters. Validate h_min<=h_init<=h_max when explicitly supplied.",
+      "raw_failure_retention": "On callback shape/nonfinite/complex or finite-difference failure retain evaluation stage, t, raw y/value, and typed reason.",
+      "compatibility_deletion": "Delete silent abs/max coercions and nfev=0 fabrication. Added validation is intentionally fail-closed; document the supported adapter subset in existing docstrings, not a new readiness artifact.",
+      "test": "Parameterized invalid config/state/callback tests, t0 boundary dfdt probe guard, supplied-Jacobian call count, and property test that every reported counter equals instrumented calls.",
+      "likely_code_size_risk": "Approximately 60-100 net lines, overlapping the event patch; medium-high numerical/API risk.",
+      "authority_ceiling": "Solver contract repair; no performance or promotion claim.",
+      "official_contract_refs": [
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ]
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-013",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/solver/ivp_outcome.py and every SciPy-result wrapper that consumes its dictionary",
+      "missing_contract": "target_reached is prioritized over contradictory failure/status; samples are mislabeled steps; endpoint time/residual/counters/finiteness and partial failure detail are absent.",
+      "minimal_fail_closed_change": "Replace Boolean-priority classification with a typed mutually exclusive state machine: CONTRACT_VIOLATION, STARTUP_FAILURE, INTEGRATION_FAILURE, TARGET_REACHED, INTERVAL_EXHAUSTED, or TERMINATED_OTHER. Validate contradictions/finiteness first and require an event certificate for TARGET_REACHED.",
+      "diagnostic_work_budget_semantics": "Expose stored_samples, intervals=max(samples-1,0), backend accepted_steps if known, nfev/njev/nlu, last_t, target residual/bracket, and nullable unavailable values.",
+      "raw_failure_retention": "Carry the unmodified source result or normalized raw partial t/y/status/message reference; classifier itself performs no RHS/postprocessing.",
+      "compatibility_deletion": "Implement in the existing module, delete ambiguous dictionary keys after a deprecation adapter, and migrate consumers atomically. Do not add a second classifier.",
+      "test": "Exhaustive truth table over success/status/event/finiteness contradictions plus metamorphic insertion of extra stored samples proving terminal kind is unchanged and sample count is not a step count.",
+      "likely_code_size_risk": "Approximately 45-75 net lines plus consumer migrations; medium compatibility risk.",
+      "authority_ceiling": "Diagnostic/contract repair only.",
+      "official_contract_refs": [
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ]
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-014",
+      "classification": "retained_blocker",
+      "current_verdict": "fail",
+      "consumer": "Python stiff ODE callers and approximately 972-DOF LINEARIZED_PSTF path, under Rust-AOT-first policy",
+      "missing_contract": "Jacobian/sparsity/config/budget support drifts across callers, but no evidence identifies a bounded local change that moves the measured activation/cold endpoint wall.",
+      "minimal_fail_closed_change": "Do not issue a blanket optimization PR. First bind each existing solver config to backend-supported fields and reject incompatible options; pursue one production-shaped Rust endpoint bottleneck only after measurement identifies it.",
+      "diagnostic_work_budget_semantics": "Use endpoint wall, activation/cold wall, actual work counters, and exact problem size. Segment-only measurements remain labeled segment-only and cannot satisfy movement.",
+      "raw_failure_retention": "Any benchmark retains timeout/error, solver reason, last state, and complete config; no best-case-only summary.",
+      "compatibility_deletion": "Prefer deleting unused knobs/dense-output and duplicate configs over adding policy switches. ClassA/Rodas routing is not added without current scope authority.",
+      "test": "Backend-config contract matrix rejects unsupported jac_sparsity/dense_output/method combinations; any optimization needs an exact same-input endpoint A/B with failure equivalence.",
+      "likely_code_size_risk": "0 lines until discriminator; subsequent bounded adapter cleanup 20-50 net lines, performance patch unknown/high risk.",
+      "authority_ceiling": "Technical debt retained; local/segment improvement is not G-F10 endpoint progress."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-015",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "native/rabbit_cpu/src/ode.rs BDF builder, initialize, stop-time, and step error exits",
+      "missing_contract": "Distinct dependency failures collapse into bdf_initialise or bdf_solve strings, preventing actionable fail-loud diagnosis.",
+      "minimal_fail_closed_change": "Replace free-form collapse with a crate-local OdeFailureKind enum carrying phase and dependency error text/source: build, initialize, stop_time, linear_solve, step_size_floor, nonlinear, error_test, nonfinite, unexpected_root, and other_dependency.",
+      "diagnostic_work_budget_semantics": "Every failure includes attempts/work counts accumulated before the error and the precise phase; no parsing of display strings for state transitions.",
+      "raw_failure_retention": "Attach last accepted state and, when callback instrumentation observed it, failing evaluation snapshot.",
+      "compatibility_deletion": "Keep a derived legacy message for external display while internal tests/callers migrate to enum; delete string-equality branching.",
+      "test": "Inject each BDF construction/init/stop/step failure and assert exact enum, phase, counters, and preserved state; formatting changes must not alter classification.",
+      "likely_code_size_risk": "Approximately 45-80 net lines; medium Rust API risk.",
+      "authority_ceiling": "Failure observability only; no numerical success claim."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-016",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "Rust BDF wrapper max_attempts contract around diffsol internal error-test and nonlinear retries",
+      "missing_contract": "The public max_attempts name implies a strict total while diffsol enforces separate internal consecutive-failure allowances inside one step, allowing wrapper-observed overshoot.",
+      "minimal_fail_closed_change": "Immediately rename/split the existing fields to outer_step_calls, max_error_test_failures, and max_nonlinear_solver_failures and stop claiming a strict total. A true strict total requires an upstream/fork callback at each internal attempt; until then expose hard_total_attempts=null and fail closed for callers requiring it.",
+      "diagnostic_work_budget_semantics": "Report outer step calls and both dependency limits/counters separately; post-return detection of overshoot is diagnostic, not enforcement.",
+      "raw_failure_retention": "Retain the dependency error, last accepted state, and all observed counters when a limit is reached or an unobservable hard-total requirement is rejected.",
+      "compatibility_deletion": "Deprecate ambiguous max_attempts; map it explicitly to documented dependency limits only for legacy callers and mark hard-total unavailable. No new policy knob beyond actual dependency semantics.",
+      "test": "A fake/instrumented dependency performs mixed nonlinear and error-test retries inside one step; assert the wrapper never claims strict-total compliance and serializes each limit separately.",
+      "likely_code_size_risk": "Approximately 25-55 net lines for honest API; true upstream enforcement is unbounded/high risk and not proposed as first patch.",
+      "authority_ceiling": "Correct budget semantics, not strict-total enforcement.",
+      "official_contract_refs": [
+        "https://docs.rs/diffsol/latest/src/diffsol/ode_solver/problem.rs.html"
+      ]
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-017",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "native/rabbit_cpu/src/ode.rs CountingSystem and Rodas linear_setups; N48 system nested RHS work",
+      "missing_contract": "Trait-call counters are presented as workload despite excluding RHS calls nested in Jacobian/dfdt; fused calls are undercounted and a linear setup is counted before a factorisation occurs.",
+      "minimal_fail_closed_change": "Name current counters trait_calls and add/derive physical_rhs_evals at the N48 consumer boundary, including nested calls. Increment factorisations only after factorisation is attempted/succeeds, with separate failed_factorisations if useful in the existing work struct.",
+      "diagnostic_work_budget_semantics": "Document exact unit and inclusion rules for rhs_trait_calls, physical_rhs_evals, jacobian_evals, dfdt_evals, factorisation_attempts/successes, accepted/rejected/attempted steps.",
+      "raw_failure_retention": "Counters freeze at failure alongside stage/t/state; no post-hoc zero or inferred work.",
+      "compatibility_deletion": "Rename misleading fields with a compatibility accessor; avoid a parallel telemetry framework. Delete pre-factorisation increment.",
+      "test": "Instrument a system whose jacobian and dfdt each call RHS twice; assert exact 1+2+2 accounting and zero successful factorisations for pre-LU nonfinite failure.",
+      "likely_code_size_risk": "Approximately 35-65 net lines; medium performance/accounting risk.",
+      "authority_ceiling": "Work accounting only; not an endpoint speedup."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-018",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "Rust OdeResult failures from BDF callbacks and Rodas intermediate stages/candidates/error norms",
+      "missing_contract": "raw failure currently means last safe accepted state, while the actual offending evaluation time/state/value/stage is discarded or never captured.",
+      "minimal_fail_closed_change": "Define both last_accepted and failure_snapshot {phase, stage, t, raw_state, raw_value}; callback wrappers store the first/last offending evaluation deterministically and RodasAttemptError carries it to OdeResult.",
+      "diagnostic_work_budget_semantics": "Snapshot includes counters immediately before/including the failing call and a flag when dependency boundaries make the actual offending state unavailable.",
+      "raw_failure_retention": "Never replace the offending NaN/Inf or invalid candidate with the step-start state; preserve both, without clipping or normalization.",
+      "compatibility_deletion": "Keep the existing final state as last_accepted for one compatibility cycle, add a clearly named snapshot to the same result, then remove ambiguous raw-failure wording.",
+      "test": "Inject nonfinite stage RHS at a state distinct from step start and BDF callback nonfinite at a later t; assert both last_accepted and exact failure snapshot survive serialization/debug output.",
+      "likely_code_size_risk": "Approximately 60-100 net lines; medium-high memory/API risk.",
+      "authority_ceiling": "Failure-contract repair; no claim that a failed trajectory is scientifically usable."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-019",
+      "classification": "missing_execution_evidence",
+      "current_verdict": "inconclusive",
+      "consumer": "Production EXP48 N48 spectral Jacobian temperature column and explicit-N derivative used by Rust BDF/Rodas",
+      "missing_contract": "Two-point finite differences at production dimension lack independent truncation/cancellation validation; the named selected-rule test actually exercises GL6 and same-code endpoint parity shares derivatives.",
+      "minimal_fail_closed_change": "No derivative implementation change until evidence. Rename the GL6 test truthfully and add one existing-test-module production-shape derivative discriminator using an independent high-precision/Richardson ladder at preregistered representative evolved states, with failure on non-asymptotic behavior.",
+      "diagnostic_work_budget_semantics": "Record stencil, precision, step ladder, componentwise absolute/relative errors, convergence order, RHS-equivalent work, and exact EXP48 fixture identity.",
+      "raw_failure_retention": "Preserve every ladder value and nonfinite/cancellation result; do not retain only the best step.",
+      "compatibility_deletion": "Correct the misleading test name and reuse existing fixtures/tests; no new validation registry or figure.",
+      "test": "Independent high-precision directional derivative versus production implementation over multiple step sizes; metamorphic linearity and step-halving order checks, including temperature and explicit-N columns.",
+      "likely_code_size_risk": "Approximately 35-70 test lines and 0 production lines initially; medium scientific/test-cost risk.",
+      "authority_ceiling": "Missing derivative evidence; even a pass is derivative authority, not independent endpoint validation."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-020",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "tests/test_rodas5p_upgrades.py property assertion and focused Python/JAX solver-contract suites",
+      "missing_contract": "Boolean precedence lets finite yn pass regardless of the stated ok/error relation, and known failure/event/config/postprocessing counterexamples are absent; twin Rodas parity is common-mode.",
+      "minimal_fail_closed_change": "Parenthesize the intended disjunction and assert the complete typed step-result invariant. Add adversarial tests beside existing modules for every reproduced false-success class; tests consume public/internal outcomes, not message text.",
+      "diagnostic_work_budget_semantics": "Instrument callbacks to assert exact counters and zero post-failure derived calls; property failures print generated input and seed.",
+      "raw_failure_retention": "Tests assert raw failure snapshot identity, including NaN/Inf and stage, rather than merely checking a flag.",
+      "compatibility_deletion": "Replace redundant happy-path parity assertions where they add no independent information; no new test gate/manifest.",
+      "test": "Mutation test kills ok=True with finite err/yn; targeted cases cover classA/tilted/convergence, classifier contradictions, initial/nonfinite/fractional events, all-refinement-failed, invalid config/state, false nfev, and post-failure work.",
+      "likely_code_size_risk": "Approximately 80-140 test lines across existing modules; low production risk, medium maintenance cost.",
+      "authority_ceiling": "Contract-test coverage only; same-tableau parity remains non-independent."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-021",
+      "classification": "missing_execution_evidence",
+      "current_verdict": "inconclusive",
+      "consumer": "Selected-decoupling N48 dual-solver endpoint claim and Rust ODE execution ledger",
+      "missing_contract": "No fresh expensive selected N48 endpoint run exists in this assignment; Python tests that do not invoke the Rust file and differing dependency patch versions cannot fill that gap.",
+      "minimal_fail_closed_change": "No code change. Keep execution status missing until an authorized exact-input Rust BDF/Rodas endpoint command records binary/source/config identity, environment, terminal outcome, and machine-readable comparison.",
+      "diagnostic_work_budget_semantics": "Declare wall/attempt budgets prospectively; record actual counters for both solvers and classify timeout/error separately from endpoint mismatch.",
+      "raw_failure_retention": "Retain complete stdout/stderr/result and last accepted/failing snapshots for both solvers; do not collapse to pass counts.",
+      "compatibility_deletion": "Do not create a new gate or replay manifest. Attach evidence to the existing validation ledger/gate only when execution is authorized.",
+      "test": "Provenance test rejects evidence if Rust code was not executed, exact config/binary is absent, patch versions differ without disclosure, or either terminal certificate is missing.",
+      "likely_code_size_risk": "0 production lines; high compute cost and medium environment-reproducibility risk.",
+      "authority_ceiling": "Missing fresh execution; prior bounded mechanics and endpoint anchors retain only their original tier."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-022",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "native/rabbit_cpu/src/ode.rs event_fires for directionless events",
+      "missing_contract": "previous*current<0 can underflow to signed zero and miss opposite-sign subnormal crossings.",
+      "minimal_fail_closed_change": "Replace multiplication with explicit sign comparisons `(previous < 0 && current > 0) || (previous > 0 && current < 0)` while retaining exact-zero handling.",
+      "diagnostic_work_budget_semantics": "No new diagnostics; existing event counter/reason suffices. This does not affect the production direction=-1 path.",
+      "raw_failure_retention": "On any nonfinite event value preserve time/state/value and return typed failure.",
+      "compatibility_deletion": "Pure internal predicate replacement; delete product-based branch.",
+      "test": "Use smallest positive/negative finite values and scaled pairs; property test sign-crossing invariance under positive rescaling, including underflow products.",
+      "likely_code_size_risk": "Approximately 4-10 net lines; low risk and narrow generic movement.",
+      "authority_ceiling": "Generic event correctness only; no evidence that the production downward endpoint failed."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-023",
+      "classification": "defect_repair",
+      "current_verdict": "inconclusive",
+      "consumer": "Rust BDF and Rodas event refinement loops",
+      "missing_contract": "Fixed 60-iteration refinement returns event_reached without a convergence/residual/bracket certificate; Rodas refinement work sits outside max_attempts.",
+      "minimal_fail_closed_change": "Return EventCertificate only when bracket width or event residual meets configured tolerance and endpoint signs remain valid; otherwise EventRefinementExhausted. Count refinement work under an explicitly named refinement budget.",
+      "diagnostic_work_budget_semantics": "Expose iterations, RHS/Jacobian/factorisations, initial/final bracket, endpoint event values, residual, tolerance, and exhaustion reason separately from integration attempts.",
+      "raw_failure_retention": "On exhaustion retain best bracket and last attempted state/value, plus last accepted integration state.",
+      "compatibility_deletion": "Extend the existing OdeResult/event result rather than add a gate; remove unconditional event success after loop exhaustion.",
+      "test": "Adversarial flat/discontinuous/nonfinite event functions force exhaustion; ordinary monotone event certifies. Metamorphic affine time scaling preserves normalized residual/bracket decision.",
+      "likely_code_size_risk": "Approximately 45-80 net lines; medium solver risk.",
+      "authority_ceiling": "Generic uncertified edge repair; frozen h_max ordinary path is not shown failing."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-024",
+      "classification": "retained_blocker",
+      "current_verdict": "inconclusive",
+      "consumer": "Rust BDF h_max implementation via repeated stop-time segmentation and diffsol StepSizeTooSmall snapping semantics",
+      "missing_contract": "h_max acts as an effective ceiling but may perturb multistep history/order; the interaction with h_min and tstop is neither specified nor tested.",
+      "minimal_fail_closed_change": "Do not change integration policy yet. Specify observable invariants first: accepted interval <=h_max except final snap, no ignored h_min violation, and explicit stop-time reason. If dependency cannot expose them, mark fairness semantics unavailable.",
+      "diagnostic_work_budget_semantics": "Record accepted step sizes/order if available, stop-time segments, StepSizeTooSmall occurrences, and result delta against an unsegmented reference; labels must say diagnostic/fairness.",
+      "raw_failure_retention": "Retain dependency error and step history around tstop/h_min interactions.",
+      "compatibility_deletion": "No new knob or wrapper loop. Prefer dependency-native h_max if version-matched evidence proves semantics; then delete segmentation code rather than retaining both.",
+      "test": "Analytic stiff/nonstiff systems with varied h_max/h_min and exact/nonexact tstop; compare convergence order and event location, with a discriminator for history reset.",
+      "likely_code_size_risk": "0 lines before discriminator; possible 20-60 net or deletion-dominant change; high numerical risk.",
+      "authority_ceiling": "Numerical semantics remain inconclusive; h_max is not simply ignored."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-025",
+      "classification": "retained_blocker",
+      "current_verdict": "inconclusive",
+      "consumer": "Rust Rodas response to LU and nonfinite intermediate failures",
+      "missing_contract": "Immediate fail-loud policy may reject a step-size-recoverable transient, but no production-shaped evidence separates recoverable from irrecoverable failures.",
+      "minimal_fail_closed_change": "Keep immediate failure until a preregistered discriminator shows recovery is valid. If supported, retry only typed recoverable failures with smaller h under the existing total budget; singular/nonfinite at h_min remains terminal.",
+      "diagnostic_work_budget_semantics": "Discriminator records failure kind/stage, h, retry sequence, factorisations, work, recovery state, and endpoint equivalence; retries count against the hard budget.",
+      "raw_failure_retention": "Every retry preserves the first offending snapshot and final terminal snapshot; successful recovery does not erase the incident.",
+      "compatibility_deletion": "No policy knob. Encode recoverability in the failure enum and one state transition; delete ad hoc special cases if introduced.",
+      "test": "Construct one demonstrably h-recoverable stage failure and one irrecoverable singular system; assert bounded retry only for the former and identical fail-loud behavior at h_min.",
+      "likely_code_size_risk": "0 lines before discriminator; approximately 25-50 net if justified; high numerical risk.",
+      "authority_ceiling": "Conservative fail-loud policy retained; not a demonstrated production endpoint defect."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-026",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "ThreeTemperatureFlrwSystem and full isotropic relative finite-difference temperature derivative",
+      "missing_contract": "Any positive finite subnormal T is admitted even when 1e-5*T rounds to zero, causing division by zero.",
+      "minimal_fail_closed_change": "Validate that the chosen perturbation is finite, nonzero, and produces distinct representable T+h and T-h inside the physical domain; otherwise return typed derivative_domain failure. Do not invent an unvalidated absolute floor.",
+      "diagnostic_work_budget_semantics": "Report T, requested/effective h, representability/domain check, and derivative call count.",
+      "raw_failure_retention": "Preserve the original T and zero/equal perturbed values; no clamping to the frozen endpoint range.",
+      "compatibility_deletion": "Internal validation only; later analytic/complex-step replacement requires independent evidence and should delete the finite-difference branch.",
+      "test": "Boundary property over normal/subnormal positive floats checks distinct perturbations or fail-closed outcome; frozen 10-to-0.005 MeV values remain unchanged.",
+      "likely_code_size_risk": "Approximately 10-25 net lines; low code risk, medium scientific semantics risk.",
+      "authority_ceiling": "Generic domain repair; frozen endpoint is far from trigger."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-027",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "Augmented nonlinear/source-only wrappers, tilted input boundary, SolverConfig, and retained thermo failure result described by the original register",
+      "missing_contract": "NaN tolerances, nonfinite supplied q/modes, |v|>=1, and unvalidated solver controls enter numerical code; thermo provenance/failure fields drift and BDF/Radau parity is unexecuted.",
+      "minimal_fail_closed_change": "Centralize finite/domain validation in existing config/run entrypoints; reject NaN tolerance, nonfinite/raw-shape inputs, and |v|>=1 before RHS. Classify solver outcome before thermo final proxy and retain structured partial failure. Keep unrun parity separate.",
+      "diagnostic_work_budget_semantics": "All wrappers use the same nullable status/counter/last-time/event-residual vocabulary; config validation identifies field/value, not a generic ValueError.",
+      "raw_failure_retention": "Preserve raw q/modes/v/config and solver partial state; do not recompute proxy/final RHS on failure.",
+      "compatibility_deletion": "Reuse SolverConfig validation and ivp_outcome; delete duplicate <=0 checks and duplicated failure strings. Thermo code is outside this assignment's readable source, so its change remains specified only.",
+      "test": "Parameterized NaN/Inf/boundary inputs for listed wrappers, spy proving zero RHS calls on rejection, and failed-thermo spy proving no final proxy. Numerical BDF/Radau parity remains a separate execution task.",
+      "likely_code_size_risk": "Approximately 35-70 net lines across readable wrappers; medium scope/compatibility risk.",
+      "authority_ceiling": "Input/failure contract repair only; parity not validated."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-028",
+      "classification": "missing_execution_evidence",
+      "current_verdict": "inconclusive",
+      "consumer": "Rust negative-path reason branches and their test suite",
+      "missing_contract": "Exact assertions/coverage evidence are absent for nine named reason branches; source search cannot establish runtime execution.",
+      "minimal_fail_closed_change": "No production change. Add focused fault-injection tests in the existing Rust test module for each typed reason after F-015's enum exists; use coverage only as supporting evidence.",
+      "diagnostic_work_budget_semantics": "Each test records intended injected stage and exact work counts up to failure; branch coverage is not conflated with semantic correctness.",
+      "raw_failure_retention": "Assertions require expected last accepted and failure snapshot for each branch.",
+      "compatibility_deletion": "Replace string-reason assertions with enum assertions; no new negative-test gate or manifest.",
+      "test": "One deterministic injection each for bdf_build, bdf_initialise, bdf_stop_time, bdf_solve, unexpected_root, nonfinite_stage_rhs, nonfinite_stage, nonfinite_candidate, and nonfinite_error_norm.",
+      "likely_code_size_risk": "Approximately 70-120 test lines, 0 production lines after enum; low runtime risk.",
+      "authority_ceiling": "Branch adequacy remains unknown until executed."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-029",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "src/rabbit/jax/solver_diffrax_canonical.py plain and diagnostics solver lookup plus three convenience wrappers",
+      "missing_contract": "Unknown solver raises ValueError in one path and KeyError in another; wrapper ownership/caller support is undocumented in repository evidence.",
+      "minimal_fail_closed_change": "Factor one private _solver_from_name validator used by both paths and raise the same ValueError with allowed names before solve. Do not delete wrappers until an external compatibility decision; mark them internal/deprecated if policy permits.",
+      "diagnostic_work_budget_semantics": "Diagnostics retain Diffrax result and stats when throw=false; invalid input performs zero solve work.",
+      "raw_failure_retention": "For executed Diffrax failures retain result cause/stats/state; lookup failures retain the supplied name and allowed set.",
+      "compatibility_deletion": "Delete the duplicate solver maps. Defer deletion of solve_ode_jax, make_diffrax_solver, and tape extractor because absence of in-repo callers is not proof of no external consumers.",
+      "test": "Both public paths reject unknown solver with identical exception type/message and zero solver construction; every allowed name maps to the same class in both paths.",
+      "likely_code_size_risk": "Deletion-dominant or approximately 5-15 net lines; low risk.",
+      "authority_ceiling": "API consistency/debt only; not a Diffrax numerical defect.",
+      "official_contract_refs": [
+        "https://docs.kidger.site/diffrax/api/diffeqsolve/",
+        "https://docs.kidger.site/diffrax/api/solution/"
+      ]
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-030",
+      "classification": "defect_repair",
+      "current_verdict": "fail",
+      "consumer": "Rust OdeConfig/OdeResult provenance and isotropic_boltzmann module header",
+      "missing_contract": "A result cannot identify its effective mutable configuration; the module header disagrees with the authoritative nine-row catalogue.",
+      "minimal_fail_closed_change": "Clone an immutable effective_config snapshot into the existing OdeResult at solve entry and ensure returned results use it. Correct the stale header from the authoritative catalogue; no hashes or standalone manifest.",
+      "diagnostic_work_budget_semantics": "The snapshot contains the exact tolerances, step bounds, solver choice, and budgets used; counters remain result-local.",
+      "raw_failure_retention": "Failure results carry the same effective config plus raw snapshots, so later mutation of the caller config cannot rewrite provenance.",
+      "compatibility_deletion": "Add the field to the existing internal result; remove stale text. If serialization is public, version the existing result schema rather than add a parallel receipt.",
+      "test": "Mutate caller config after solve and assert result snapshot unchanged; success and every failure constructor include it. Documentation test checks header against catalogue source if an existing mechanism exists.",
+      "likely_code_size_risk": "Approximately 15-30 net lines plus doc deletion/rewrite; low-medium API risk.",
+      "authority_ceiling": "Provenance/documentation repair, not numerical validation."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-031",
+      "classification": "harness_limitation",
+      "current_verdict": "inconclusive",
+      "consumer": "Shared-context admission/harness and cross-agent environment identity, not an ODE runtime consumer",
+      "missing_contract": "Some prior assignments had nonexistent sealed paths, one dedicated runtime failed before work, same context version had differing pack bytes, and Python patch versions differed.",
+      "minimal_fail_closed_change": "No ODE API change. The harness owner must bind context_version to canonical pack bytes or record a nonsemantic regeneration identity and must reject missing required paths before admission; environment identity remains explicit evidence metadata.",
+      "diagnostic_work_budget_semantics": "Record preflight failure as harness error with zero scientific work; tool versions are evidence dimensions, not ODE counters.",
+      "raw_failure_retention": "Preserve failed admission/runtime events and both context digests; do not rewrite prior artifacts.",
+      "compatibility_deletion": "Outside this assignment and not counted in blocker-movement numerator. Reuse existing harness integrity gate; no new ODE gate.",
+      "test": "Harness fixture rejects nonexistent required path and same-version/different-byte pack unless an authorized canonicalization rule proves equivalence; version mismatch remains visible.",
+      "likely_code_size_risk": "0 ODE lines; harness-owner scope only, medium identity risk.",
+      "authority_ceiling": "External harness limitation; G-HARNESS-INTEGRITY remains FAIL."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-032",
+      "classification": "closed_item",
+      "current_verdict": "pass",
+      "consumer": "Gate/status and solver-role policy boundary",
+      "missing_contract": "None in current policy; risk is accidental role or claim-tier drift.",
+      "minimal_fail_closed_change": "No code change. Preserve current gate states and roles exactly; any result consumer rejects attempts to infer production/scientific authority from green tests, same-code parity, static JVP, or segment timing.",
+      "diagnostic_work_budget_semantics": "Segment and endpoint measurements remain separate; exact-head execution and gate identity accompany any future claim.",
+      "raw_failure_retention": "Keep FAIL gates and forbidden claims visible; do not summarize them away in a green aggregate.",
+      "compatibility_deletion": "No new policy/gate. Delete any future duplicate readiness layer rather than stack it.",
+      "test": "Existing gate-consistency test should reject Rust/JAX/SciPy role swaps, QKE/public claims, or promotion from diagnostic-only evidence.",
+      "likely_code_size_risk": "0 lines; governance preservation.",
+      "authority_ceiling": "Policy boundary PASS; G-F10-INDEPENDENT-FLRW and G-HARNESS-INTEGRITY remain FAIL."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-033",
+      "classification": "closed_item",
+      "current_verdict": "pass",
+      "consumer": "Closed Rust logit-tail/cache regressions and bounded good Python/Rust paths",
+      "missing_contract": "None for the closed historical items; risk is regression or overpromotion.",
+      "minimal_fail_closed_change": "No implementation change. Retain existing regression tests and exact cache/logit behavior; new result-contract work must preserve their good-path outputs and fail-loud semantics.",
+      "diagnostic_work_budget_semantics": "Retain the recorded 55.815 percent endpoint improvement at its original evidence tier and current mechanics counts; do not recast them as fresh runs.",
+      "raw_failure_retention": "Keep the closed far-tail raw failure regression and successful replacement evidence linked.",
+      "compatibility_deletion": "Do not delete the regressions while consolidating result types; no duplicate historical blocker entries.",
+      "test": "Before any solver-result patch, rerun the existing focused mechanics/logit/cache tests and assert good-path endpoint/counter semantics remain unchanged except intentional field renames.",
+      "likely_code_size_risk": "0 planned lines; regression surface only.",
+      "authority_ceiling": "Closed bounded mechanics; no scientific or public promotion."
+    },
+    {
+      "original_finding_id": "F-ODE-ADJ3-034",
+      "classification": "closed_item",
+      "current_verdict": "pass",
+      "consumer": "Declared ODE surface inventory for bounded audits",
+      "missing_contract": "None within declared roots; it is a floor rather than universal absence proof.",
+      "minimal_fail_closed_change": "No code change. Reuse the existing inventory if implementation changes touch mapped call sites; update it only through the existing audit process, not a new scanner/gate.",
+      "diagnostic_work_budget_semantics": "Keep direct-import, AST-call, selected-entrypoint, and solver-surface counts separately defined.",
+      "raw_failure_retention": "Preserve unresolved/dynamic-alias caveats and roots used by the scan.",
+      "compatibility_deletion": "No new manifest. Do not widen scope opportunistically during a bounded patch.",
+      "test": "A targeted post-patch static check confirms only intended mapped consumers changed and no duplicate outcome classifier was introduced.",
+      "likely_code_size_risk": "0 lines; audit bookkeeping only.",
+      "authority_ceiling": "Mechanical completeness floor only."
+    }
+  ],
+  "common_mode_test_risks": [
+    "NumPy Rodas and JAX Rodas share algorithm/tableau/event assumptions; trajectory parity between them cannot exclude a shared defect.",
+    "Rust BDF/Rodas endpoint agreement shares RHS, Jacobian, event, abundance, and calibration code, so it is not independent physics or derivative validation.",
+    "Mock/fault-injection tests prove state-machine behavior but not incidence or recoverability on production-shaped trajectories.",
+    "Clipping/flooring before assertions can make positivity, Pauli, energy, and Hubble tests pass by construction.",
+    "Boolean/message-string tests can pass contradictory states; typed terminal outcome plus residual/bracket/finiteness assertions are required.",
+    "len(t), padded JAX arrays, and fabricated zero counters can make work budgets look bounded while measuring samples or unavailable data.",
+    "Toy GL6/two-node derivative tests do not validate EXP48/N48 truncation and cancellation behavior.",
+    "A normal xfail leaves aggregate pytest green; promotion logic must retain the named blocker independently of suite exit code.",
+    "Different NumPy/SciPy patch versions and regenerated context bytes limit exact cross-agent identity even when overlapping examples agree.",
+    "Post-failure RHS/observable calls can overwrite or mask the originating solver error; spies must assert zero derived work after failure.",
+    "Happy-path event tests do not cover initial zero, nonfinite value, fractional/directionless semantics, subnormal signs, or refinement exhaustion.",
+    "Source search or branch names do not prove negative-path execution; deterministic injection and exact reason assertions are required."
+  ],
+  "ranked_first_patches": [
+    {
+      "rank": 1,
+      "patch": "P1-RAW-PHYSICAL-ADMISSION",
+      "scope": "dynamic_collision_driver only: raw accepted-state/Hubble invariants before clipping-derived endpoint observables",
+      "moves": [
+        "F-ODE-ADJ3-009"
+      ],
+      "estimated_added_deleted_net_lines": "+30 to +45 / -8 to -15 / net +15 to +37",
+      "hard_blocker_movement_per_line": "Highest projected ratio: one confirmed physics false-success path removed with a small local state transition; estimate only until a diff and regression run exist.",
+      "risk": "medium",
+      "acceptance": "Adversarial raw-state tests fail closed, existing good path unchanged, no N_eff/postprocessing on invalid raw state, and no new gate/telemetry surface."
+    },
+    {
+      "rank": 2,
+      "patch": "P2-NUMPY-RODAS-EVENT-ADMISSION",
+      "scope": "rodas5p plus adapter: typed event refinement/certificate, initial/nonfinite/direction semantics, real status and counters",
+      "moves": [
+        "F-ODE-ADJ3-007",
+        "F-ODE-ADJ3-012",
+        "F-ODE-ADJ3-013",
+        "F-ODE-ADJ3-020"
+      ],
+      "estimated_added_deleted_net_lines": "+95 to +145 / -25 to -45 / net +50 to +120",
+      "hard_blocker_movement_per_line": "High projected ratio: removes a reproduced fabricated terminal event and several adapter false-success classes in one existing state machine; estimate only.",
+      "risk": "medium-high",
+      "acceptance": "All-refinement-failed cannot emit t_events/success; initial/nonfinite/fractional-direction fixtures match the declared supported SciPy subset; actual counters replace zero fabrication; no new backend promotion."
+    },
+    {
+      "rank": 3,
+      "patch": "P3-RUST-FAILURE-ENVELOPE",
+      "scope": "native Rust ODE result only: typed failure kind, last-accepted plus failing-evaluation snapshot, honest counter names, immutable effective config",
+      "moves": [
+        "F-ODE-ADJ3-015",
+        "F-ODE-ADJ3-017",
+        "F-ODE-ADJ3-018",
+        "F-ODE-ADJ3-030"
+      ],
+      "estimated_added_deleted_net_lines": "+130 to +190 / -25 to -50 / net +80 to +165",
+      "hard_blocker_movement_per_line": "Moderate projected ratio but highest target relevance because Rust AOT is the repeated-run implementation target; split if net exceeds 200 and do not include retry-policy optimization.",
+      "risk": "high",
+      "acceptance": "Every failure constructor carries typed reason, exact effective config, last accepted state, and available offending snapshot; nested-work counters state their unit; existing 27-test mechanics baseline plus new deterministic injections pass."
+    }
+  ],
+  "anti_drift_and_cost_effectiveness": {
+    "new_gate_manifest_readiness_hash_telemetry_figure_surface": "FORBIDDEN and not proposed",
+    "implementation_status": "PROPOSED only; no production or test code changed and no numerical/physics workload ran",
+    "exact_token_use": "UNAVAILABLE: this agent interface exposes no exact per-assignment token counter",
+    "line_counts": "Projected ranges only; every implementation PR must report actual added/deleted/net lines from its diff",
+    "blocker_movement_ratio": "PROPOSED_ESTIMATE_ONLY: rank uses confirmed hard failure classes moved per projected net line; an implementation must compute the policy ratio from actual changed lines and executed acceptance evidence",
+    "cost_effectiveness_verdict": "The three ranked patches are the only candidates supportable from this static review. Broad Python solver optimization, JAX forward development, retry-policy tuning, and new evidence plumbing are not cost-effective while endpoint/physics correctness blockers remain."
+  },
+  "validation_scope": {
+    "source_review": "completed against all assignment-listed source/test/policy/gate inputs",
+    "scientific_execution": "not run and not authorized",
+    "implementation": "none",
+    "independent_endpoint_or_derivative_validation": "not performed",
+    "sibling_results": "not read",
+    "physics_mitigation_material": "not read",
+    "own_result_contract": "PASS with exact agent ID, assignment SHA-256, run ID, context version, role hash, and template hash",
+    "global_harness_check": "INCONCLUSIVE for this concurrent instant because an unrelated A-MAC-MATH.json was temporarily unreadable; this agent did not inspect that sibling artifact"
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-CODE.json"
+  ]
+}

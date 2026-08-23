@@ -1,0 +1,310 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physmath-loop",
+  "assignment_id": "A-PSL-EVIDENCE",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02d62-a599-7193-a0dc-24ce4b7e1023",
+  "agent_type": "context_mapper",
+  "runtime_agent_type": "context_mapper",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-physmath-loop",
+    "assignment_id": "A-PSL-EVIDENCE",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:01290258dcae2a6cd47f277c8ec7be5609ae6892d334f17399b2f344d0545ca8",
+    "runtime_agent_type": "context_mapper",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json",
+  "started_at": "2026-08-23T06:49:54Z",
+  "completed_at": "2026-08-23T06:51:31Z",
+  "tool_versions": {
+    "repository_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "scipy_documentation": "1.17.0",
+    "primary_source_access_date": "2026-08-23"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-physmath-loop/assignments/A-PSL-EVIDENCE.json",
+    "rg -n -C 2 'logit|elapsed|ThreeTemperature|rho_nu|d_rho|dT|finite_difference|jacob|collisionless|df.*dN|stoich|baryon|charge|event|terminal|admission|raw' native/rabbit_cpu/src/flrw.rs native/rabbit_cpu/src/isotropic_boltzmann.rs native/rabbit_cpu/src/thermal_bbn.rs native/rabbit_cpu/src/minimal_network.rs src/rabbit/collisions/dynamic_collision_core.py docs/audit/BD205_qlaguerre_collision_root_cause_2026-07-01.md",
+    "rg -n -C 2 '32704637|4.58|8305|64800|5500|N=0.14|N=0.22|RHS' docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "web open/find: arXiv 1801.08023v3, 2008.01074v2, 1009.2757, 1512.02205; SciPy solve_ivp 1.17.0"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/rabbit-ode-physmath-loop-20260823/RESEARCH_RECORD.md",
+      "role": "frozen contract and R1-R6 definitions",
+      "sha256": "not recomputed; read as assignment input"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+      "role": "prior seed adjudication and negative-result lineage",
+      "sha256": "not recomputed; read as assignment input"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "role": "current wall-budget authority",
+      "sha256": "not recomputed; read as assignment input"
+    },
+    {
+      "path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "role": "fixed-tail and generic-Jacobian negative result",
+      "sha256": "not recomputed; read as assignment input"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "PSL-EVIDENCE-00",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Phase-2 source map complete for all six frozen seeds. It is an evidence map only: it neither constructs a hypothesis nor promotes any seed. Lineage fixes the governing negative constraint: D-071 projects 32,704,637 further RHS evaluations and 144,574,895 s (4.58 years), an 8,305x miss; D-071 and V2 therefore bar interpreting a generic solver/Jacobian citation, a static invariant, or a segment result as trajectory/gate movement.",
+      "assumptions_used": [
+        "The frozen contract's flat-FLRW, N=ln(a), q=ap, natural-unit, finite-electron-mass electromagnetic-bath conventions apply.",
+        "Current local audit documents are authority for local status; papers only support mechanisms within their stated models."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:96-100",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:97-113,149-164,232-238",
+        "/tmp/rabbit-ode-physmath-loop-20260823/RESEARCH_RECORD.md:20-69",
+        ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json:F-PM-ADJ-001,F-PM-ADJ-004"
+      ],
+      "evidence_fingerprint": "sha256:7f98d0f8c7797307e166dd8a7f81ff2f42d1266ce5aa5ee2345045d5fc849f04",
+      "counterevidence_refs": [
+        "No new trajectory, endpoint, benchmark, implementation, or gate execution was authorized or run in Phase 2."
+      ],
+      "reproduction": [
+        "Read the two local audit documents cited above and require a claimed route to satisfy D-071's existing conjunctive budget/trajectory evidence rather than a paper-level mechanism claim."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Exact channel-wise nullspaces, projected collision spectrum, reaction-tail enclosure, and full-prefix evidence are absent."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R1",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R1 (physical-domain coordinates plus raw-state admission) has direct local support for its representational component: the spectral Rust state maps logits to strict open occupations and returns an error when a strict occupation cannot be represented; thermal FLRW requires positive finite temperatures and returns raw errors. It has no physics-paper warrant for terminal-cause precedence, post-failure observable suppression, or typed solver outcomes: those are software-contract requirements, not transport physics.",
+      "assumptions_used": [
+        "Fermi occupation is represented as f=sigmoid(u), with f in (0,1).",
+        "No clipping/floor is permitted to convert a raw invalid state into a success."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:352-386,1013-1034",
+        "native/rabbit_cpu/src/flrw.rs:267-279,733-746",
+        "https://arxiv.org/html/1801.08023v3 lines 217-222 (baryon normalization definition and conservation)",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:68,89-93"
+      ],
+      "evidence_fingerprint": "sha256:cde12c807c0bfdc64a10923e35a20e6c2c3f0cdc59c16a3a3cc678528f3c23bd",
+      "counterevidence_refs": [
+        "Open-coordinate maps can still underflow/saturate in tails; local test is not an endpoint admission proof.",
+        "The physical literature does not specify the repository's failure taxonomy or event/status precedence."
+      ],
+      "reproduction": [
+        "Inspect occupation_from_logit and occupation_values; feed an unrepresentable strict-open occupation and verify the raw error path, not a clipped value."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No exact mapping from every Python/NumPy false-success surface to Rust terminal-certificate semantics is present in this Phase-2 evidence."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R2",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R2 (energy-coordinate thermodynamics and a monotone temperature clock) is directly supported as a conditional thermodynamic reformulation: local three-temperature FLRW computes finite-mass electromagnetic EOS derivatives and energy-transfer temperature derivatives, and its ideal collisionless state requires dT_gamma/dln(a)<0. PRIMAT supplies the relevant FLRW thermodynamics/plasma-temperature/entropy framework. A globally positive lower bound on alpha=-d ln(T_gamma)/dN for the collision-coupled Type-I path is missing, so a fixed x clock is only conditional; it cannot substitute for general event semantics.",
+      "assumptions_used": [
+        "Q>0 denotes transfer into neutrinos.",
+        "EOS inversion remains positive, finite, and single-valued on the proposed path.",
+        "The clock is used only on a strictly monotone, transverse branch."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/flrw.rs:289-329,489-549,721-727",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:192-209,428-504",
+        "https://arxiv.org/html/1801.08023v3 lines 25-37,128-139 (FL thermodynamics, energy/entropy/plasma-temperature sections)",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 84-96 (events use per-step sign changes; multiple crossings may be missed)",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:45,69,84-87"
+      ],
+      "evidence_fingerprint": "sha256:58276cd3bce5f2854c865fe2a4d70fd4ed7b57ff0a910e739b6fc9e1b2d5420d",
+      "counterevidence_refs": [
+        "SciPy documents root localization after sign changes, not a certified cosmological monotonicity bound.",
+        "Nonzero-shear Type-I energy continuity is not supplied by the flat-FLRW evidence."
+      ],
+      "reproduction": [
+        "Differentiate x=-ln(T_gamma/T_ref): dN/dx=1/alpha only after demonstrating alpha>0; reject if the observed lower bound is nonpositive or lacks a sealed margin."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "No current full-path alpha lower bound or EOS-inversion certificate.",
+        "No evidence that the coordinate change lowers the collision cost."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R3",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "R3 (detailed-balance affinity, channel-valid nullspaces, and physically scaled analytic/block JVP) has direct mechanism support for analytic collision derivatives: neutrino-decoupling literature derives O(N^4) finite-difference versus O(N^3) structured collision Jacobian cost and reports roughly N/5 Jacobian speed-up. Current Rust already contains logit responses, analytic self-collision derivative use, an analytic network block, and a finite-difference thermal block. This is direct support for investigating active-path derivatives, not support for an 8,305x endpoint remedy, a universal nullspace, or any unmeasured wall claim.",
+      "assumptions_used": [
+        "Only channel-valid conservation rows may be imposed; electron-pair channels exchange energy with the electromagnetic bath.",
+        "State/N perturbations require physical block scaling and passive elapsed time is excluded from nonlinear/JVP geometry."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-658",
+        "native/rabbit_cpu/src/thermal_bbn.rs:247-298,326-371",
+        "https://arxiv.org/html/2008.01074v2 lines 285-304 (collision Jacobian complexity and measured N/5 comparison)",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 125-141 (BDF/Radau Jacobian and sparsity interface)",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:48,70,82-83,94,99"
+      ],
+      "evidence_fingerprint": "sha256:97d13a44832584c7e660b37a9e7f376521941b5902460f3e1118a3dd3d00a504",
+      "counterevidence_refs": [
+        "D-071's 8,305x miss and V2's result that removing Jacobian construction still misses budget by 77x-694x preclude endpoint claims from derivative work alone.",
+        "The cited 2008.01074 work includes flavour oscillations/QKE context; only its classical collision-Jacobian algebra/cost argument is used by analogy to the no-QKE programme."
+      ],
+      "reproduction": [
+        "At fixed physical state, compare analytic/block Jv to independently scaled centered differences and a high-precision small-grid reference; separately measure full-RHS-equivalent calls and wall on the active Rust case."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact current discrete channel nullspaces and scale-admissible full Jv evidence remain missing.",
+        "No active endpoint-consumed performance result exists."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R4",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R4 (observable-aware momentum quadrature and propagated collision-tail enclosure) is directly motivated by coupled BBN physics: multi-energy neutrino transport feeds back on plasma thermodynamics, scale-factor/temperature phasing, n/p, yields, and N_eff. Local spectral code carries positive quadrature nodes/weights and moment tests. The source supports requiring a joint observable test; it does not provide a rigorous tail enclosure for this reaction operator, nor does energy/N_eff agreement alone bound weak-rate or abundance error.",
+      "assumptions_used": [
+        "Relevant outputs include energy transfer, weak rates, Yp, D/H, and N_eff, not a single moment.",
+        "Tail/error certificate must bind the actual finite-mass collision kernels and trajectory regime."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:740-761,826-834",
+        "https://arxiv.org/abs/1512.02205 lines 19-20 (nonlinear feedback across spectra, plasma, n/p, yields, N_eff)",
+        "https://arxiv.org/html/1801.08023v3 lines 109-116,217-222 (weak rates, network outputs, baryon normalization)",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:49,71,83"
+      ],
+      "evidence_fingerprint": "sha256:2bbce70c13b980e79395b26c3d181268bd81ad0d2055130347765beca5f36613",
+      "counterevidence_refs": [
+        "No cited paper proves the requested simultaneous enclosure for RABBIT's finite-mass electron/neutrino collision kernels.",
+        "The former fixed momentum-tail closure is a closed negative result and cannot be relabeled as R4 success."
+      ],
+      "reproduction": [
+        "A future certificate must compare extended-domain/reference and reduced-domain results for energy transfer, lambda_np/H, lambda_pn/H, lost collision action, Yp, D/H, and N_eff together."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No reaction-tail bound, weak-kernel error map, or propagated abundance enclosure."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R5",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "R5 (conditional collision-invariant micro-macro/AP reduction) has a precise primary-method analogue: AP relaxation requires QR(U)=0, a uniquely parameterized equilibrium manifold R(E(u))=0, and consistency with the equilibrium limit; non-well-prepared layers and nonconserved components are explicit hazards. This supports only a conditional discriminator based on exact discrete invariants and a measured projected gap. The current local negative result rejects fixed momentum-tail slaving: no usable fast/slow split at any cut, only three gapped dimensions, loss of separation during decoupling, and at best 1.25x in its cost model. Hence R5 has no direct evidence yet for this operator and is not a restatement-free escape from V2.",
+      "assumptions_used": [
+        "The collision operator admits exact discrete left invariants Q and a well-defined equilibrium/micro decomposition for the actual channels.",
+        "A grid-stable non-null spectral gap, handoff overlap, and observable-tail bounds are measured before any reduction claim."
+      ],
+      "evidence_refs": [
+        "https://arxiv.org/html/1009.2757 lines 126-156,210-216 (AP definition, QR=0, equilibrium manifold, well-prepared/stiff-accuracy limits)",
+        "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md:97-113,149-164,232-238",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:96-100",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:46,50,72,81"
+      ],
+      "evidence_fingerprint": "sha256:a518dbd2119500598708a8ec8bd6093ed7757def036f390b40a91d2e3c6c3ab1",
+      "counterevidence_refs": [
+        "The AP primary source is a generic relaxation-system result, not a proof for RABBIT's Fermi collision operator.",
+        "V2 directly conflicts with any assertion that a momentum cut alone supplies the needed separation."
+      ],
+      "reproduction": [
+        "Derive current channel discrete Q, compute projected non-null spectra across the stalled band and grids, then test overlap and all observable source bounds before considering code."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No exact Q, spectrum, well-prepared handoff certificate, or response/tail enclosure exists for the current RABBIT operator."
+      ]
+    },
+    {
+      "finding_id": "PSL-EVIDENCE-R6",
+      "claim_id": "PSL-EVIDENCE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "R6 (independent physical limiting cases and metamorphic falsifiers) has direct local basis: collisionless states enforce negative photon-temperature evolution and finite elapsed time, strict open occupations are tested, and the three-temperature first-law residual is tested. BBN literature independently anchors baryon normalization, while SciPy documents event limits and termination statuses. These support falsifiers for physical invariants and event counterexamples; they do not certify a full solver trajectory or make shared-tableau parity independent.",
+      "assumptions_used": [
+        "Each invariant is asserted only for its valid channel/model: no neutrino-only energy conservation in electron-exchange channels and no flat-FLRW residual silently extended to shear."
+      ],
+      "evidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:192-209,1013-1034",
+        "native/rabbit_cpu/src/flrw.rs:721-727,733-746,892-927",
+        "https://arxiv.org/html/1801.08023v3 lines 217-222 (baryon conservation)",
+        "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.integrate.solve_ivp.html lines 84-96,175-208 (events/counters/status)",
+        "/tmp/rabbit-ode-physics-mitigation-research-20260823.md:73,100"
+      ],
+      "evidence_fingerprint": "sha256:e1f0e8229095c0b3a84df2cb617218f39e3b3d49e2c6d42e6d80fe78c3094b10",
+      "counterevidence_refs": [
+        "Static physical-prefix/JVP receipts are not trajectories and cannot reopen D-071.",
+        "Solver status semantics are an API/software requirement, not a consequence of FLRW physics."
+      ],
+      "reproduction": [
+        "Run separately: common-FD collision null, collisionless df(q)/dN=0, finite-mass first-law, stoichiometry/baryon conservation, transverse and nontransverse event cases; each must kill a known mutant."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No independent full-prefix or endpoint run demonstrates that the proposed falsifier suite detects the retained stall mechanism."
+      ]
+    }
+  ],
+  "source_map": {
+    "R1": {"direct": ["local logit/open-domain raw-error paths"], "analogy": ["BBN baryon conservation"], "software_only": ["terminal classification, status precedence, post-failure admission"]},
+    "R2": {"direct": ["local finite-mass EOS derivatives", "PRIMAT FLRW thermodynamics"], "conditional": ["certified alpha>0 clock"], "missing": ["full-path monotonicity certificate"]},
+    "R3": {"direct": ["local analytic derivative blocks", "O(N^3) structured collision-Jacobian literature"], "conflict": ["D-071/V2 exclude endpoint conclusion from Jacobian work"]},
+    "R4": {"direct": ["coupled spectra-thermodynamics-yield feedback"], "missing": ["reaction-tail and abundance enclosure"]},
+    "R5": {"direct": ["generic AP invariant/equilibrium conditions"], "conflict": ["V2 rejects fixed-cut tail slaving"], "missing": ["current discrete Q/gap/handoff"]},
+    "R6": {"direct": ["local invariant/limit tests", "official event boundaries"], "missing": ["trajectory-level discriminating evidence"]}
+  },
+  "lineage": [
+    "A-ODE-ADJ3 established the 34-finding audit and retained authority.",
+    "Physics-mitigation run provided the six seeds and recorded V2/D-071 negative constraints.",
+    "This Phase-2 artifact re-audits source support only; it does not inherit a promotion verdict."
+  ],
+  "conflict_matrix": [
+    {"seed": "R1", "conflict": "physics cannot repair solver outcome taxonomy", "resolution": "label software-contract-only"},
+    {"seed": "R2", "conflict": "event clock needs monotonic/transverse proof", "resolution": "conditional only"},
+    {"seed": "R3", "conflict": "derivative speedup is orders short of D-071", "resolution": "no endpoint inference"},
+    {"seed": "R4", "conflict": "energy-only accuracy misses weak/yield sensitivity", "resolution": "require joint observables"},
+    {"seed": "R5", "conflict": "V2 fixed-tail no-gap result", "resolution": "exact-invariant/gap discriminator before reduction"},
+    {"seed": "R6", "conflict": "static limits are not trajectory evidence", "resolution": "falsifier-only role"}
+  ],
+  "negative_results": [
+    "Fixed momentum-tail algebraic slaving is closed by V2 and must not be revived by R5 relabeling.",
+    "Generic Jacobian removal/solver replacement is not a D-071 route; V2 reports remaining wall misses even with construction removed.",
+    "No source supports an energy-only tail criterion for coupled BBN observables.",
+    "No source supports treating event API success as raw physical admission."
+  ],
+  "missing_evidence": [
+    "Exact per-channel discrete detailed-balance/nullspace derivation for current bytes.",
+    "Grid-stable projected collision spectrum through the stalled band.",
+    "Finite-mass reaction-tail/weak-rate/abundance propagated enclosure.",
+    "Sealed positive alpha and EOS-inversion certificate on the relevant path.",
+    "Any full-prefix/endpoint evidence or measured active-path blocker movement."
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-physmath-loop/results/A-PSL-EVIDENCE.json"
+  ]
+}

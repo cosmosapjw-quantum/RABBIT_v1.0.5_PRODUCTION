@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-coding-harness-loop",
+  "assignment_id": "A-CH-DESIGN",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "ODE-A1",
+    "ODE-A2",
+    "ODE-A3",
+    "ODE-A4",
+    "ODE-A5",
+    "ODE-A6",
+    "ODE-A7"
+  ],
+  "task": "Independently perform Phase 3 bounded solution design for the coding-harness research loop, using only the prior A-MAC-ADJ2 adjudication and governing gate/policy inputs. Do not inspect A-CH-LOC, any sibling result, the earlier physics-specific loop, or broad repository source. Mechanically cover F-ODE-ADJ3-001 through -034 exactly once in a compact seed-coverage ledger, assigning each to one of: selected candidate, required companion/future task, retained blocker/decisive experiment, closed/no action, or extrinsic harness issue. Compare no more than three materially distinct candidate code tasks. For each give exact behavior contract, mathematical and numerical preconditions, candidate files/symbols only where source evidence supports them, added/deleted/net line estimate, hard-blocker movement ratio, minimal tests, scientific/numerical validation, compatibility, dependency/public API effect, rollback cost, hard falsifier, residual claim ceiling, and whether PROMOTE_FOR_LATER_IMPLEMENTATION/HOLD/REWORK/REJECT is justified. Preserve the derivative-only 365x no-go, 182-vs-122 distinction, no N approximately 0.1653 restart, full-prefix caps, Rust-first/JAX-frozen/no-QKE/no-public rules. Do not implement, execute tests/trajectory/endpoint, create gates/wrappers, or claim current progress. Return top-level pass only if the 34 IDs are unique, ordered, complete and the design count is at most three; otherwise fail. Write only the registered result JSON and end with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/assignments/A-CH-DESIGN.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-ADJ2.json",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "jq",
+    "python3",
+    "sed",
+    "sha256sum"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DESIGN.json",
+  "status": "registered"
+}

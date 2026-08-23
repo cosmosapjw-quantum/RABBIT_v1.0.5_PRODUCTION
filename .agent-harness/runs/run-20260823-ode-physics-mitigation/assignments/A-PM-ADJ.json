@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-physics-mitigation",
+  "assignment_id": "A-PM-ADJ",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "PM-ADJ-32"
+  ],
+  "task": "Adjudicate the frozen ODE physics-mitigation synthesis against the three blind-review results and current authority. Deduplicate by claim/evidence; verify all 32 normalized roots and affected callers are covered; check physics equations, units, signs, domains, conservation/detailed-balance assumptions, already-implemented versus proposed status, dead ends, D-071 claim ceiling, and the ranking of at most three candidate PRs. Explicitly reject inapplicable or generic remedies and identify any missing root. Return a non-inconclusive overall verdict with exact evidence and falsifiers. Do not perform repo-wide rediscovery, run trajectories/endpoints, edit production/shared files, or inspect unlisted sibling results. Write only the declared result JSON and end with HARNESS_RESULT.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/assignments/A-PM-ADJ.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    ".agent-harness/generated/STATUS_BOARD.md",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "/tmp/rabbit-ode-physics-mitigation-research-20260823.md",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-TRANSPORT.json",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-NUMERIC.json",
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-PHYS2.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-physics-mitigation/results/A-PM-ADJ.json",
+  "status": "registered"
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "packet": "ode_solver_four_loop_external_audit_20260823",
+  "purpose": "complete evidence handoff including ignored and task-attributable temporary artifacts",
+  "base": {
+    "branch": "diagnosis_report",
+    "commit": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "delivery_branch": "external-audit/ode-four-loop-complete-20260823",
+  "authorized_actions": [
+    "create external-audit branch",
+    "force-add ignored research artifacts",
+    "commit complete audit packet",
+    "push branch to origin"
+  ],
+  "forbidden_or_not_requested": [
+    "tests or scientific reruns",
+    "production admission of C1",
+    "merge",
+    "pull request",
+    "tag or release",
+    "force-push",
+    "claim or gate promotion"
+  ],
+  "research_runs": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage",
+      "files": 17,
+      "bytes": 216133,
+      "role": "mechanical 34-finding ODE audit"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physics-mitigation",
+      "files": 12,
+      "bytes": 167129,
+      "role": "physics-specific mitigation research"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent",
+      "files": 11,
+      "bytes": 356115,
+      "role": "independent mathematical, algorithmic, and coding research"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-physmath-loop",
+      "files": 12,
+      "bytes": 173929,
+      "role": "physics-seeded physmath research harness"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop",
+      "files": 18,
+      "bytes": 204580,
+      "role": "math-algorithm-code-seeded coding harness"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation",
+      "files": 52,
+      "bytes": 1677224,
+      "role": "integrated implementation experiment, raw runs, final report, and rejection adjudication"
+    }
+  ],
+  "research_run_total_files": 122,
+  "research_run_sha256_manifest": {
+    "path": "RESEARCH_RUN_SHA256SUMS",
+    "sha256": "138e8a1bd6b15d9b68efa3ff448924c5c79187b6238a2ea4ecabaa14e7a48f39"
+  },
+  "source_inputs": [
+    {
+      "path": "source_inputs/physmath-research-harness-gpt56.zip",
+      "bytes": 32648,
+      "sha256": "9adde688f8020e7feb2c1c0304b3204dbe70dd01e2d87e64a5c4eb357c019934"
+    },
+    {
+      "path": "source_inputs/physmath-coding-harness-gpt56.zip",
+      "bytes": 25533,
+      "sha256": "6e67e999a0c19f6ed9de7c339067cc11691d5cf5cb662a11756d8fc393c849b4"
+    }
+  ],
+  "temporary_snapshot": {
+    "path_list": "TEMP_ARCHIVE_PATHS.txt",
+    "regular_files": 24408,
+    "symlinks": 236,
+    "tar_entries": 32231,
+    "tar_bytes": 1139507200,
+    "tar_sha256": "537a40d62177840648b202ff9daa2063aac82d454f46f79d4567f74d82a18eb6",
+    "zstd_bytes": 462309647,
+    "zstd_sha256": "f124b4e897ef06909012a0f5a0b90002ae7fdb985787dc003f869d30f89244f5",
+    "chunks": [
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-00", "bytes": 89128960, "sha256": "66a727f60ec7cb0f959ea328df6aa5729ae83e647dd28f1728c7f24ba4d6c0df"},
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-01", "bytes": 89128960, "sha256": "541d447e7877681317964fc04e032d4333c2f9cb98d96266e01d2939d6a67879"},
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-02", "bytes": 89128960, "sha256": "dd0d23f3d0e52f08e501a08ab7f54fb7c7f75a404cd6dedf04f4195e9adce771"},
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-03", "bytes": 89128960, "sha256": "d964841adf5cf5ed4acdddee35b9b9239f93c27e7cd65f531603f48b08e44701"},
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-04", "bytes": 89128960, "sha256": "306892157e3db6cdb37d19185255c70c437d92fee1bc3ce1d4dcd46f5248b939"},
+      {"path": "tmp_archives/task_owned_tmp.tar.zst.part-05", "bytes": 16664847, "sha256": "e8f75ed9b6db4370c440d1784a1eda89b1133a4d42db8be66ddb255e61f2b528"}
+    ],
+    "regular_file_manifest": {
+      "path": "TEMP_SOURCE_SHA256SUMS",
+      "sha256": "37b92f2e8881dfec47a2f1b007731a363bd86ec845ec80d780c172d10fb3bac1"
+    },
+    "symlink_manifest": {
+      "path": "TEMP_SOURCE_SYMLINKS.txt",
+      "sha256": "92b99c5d0311d1cb5a9d2d758a5ce2761d2da19feca2b61691d3d2a8268fbf91"
+    },
+    "archive_listing": {
+      "path": "TEMP_ARCHIVE_CONTENTS.txt",
+      "sha256": "24382aac7390c8590d9230af02e1dcb72c9be1443f4f9bd9a4870fc7aee2f98c"
+    },
+    "chunk_manifest": {
+      "path": "TMP_ARCHIVE_CHUNK_SHA256SUMS",
+      "sha256": "4b9d5f487b493f7ea65a46ce7ea42d6340b570f1d0a6fc28f6bab59b9a300b58"
+    },
+    "post_snapshot_source_retention_note": "pytest-414 and pytest-462 through pytest-464 disappeared from /tmp after snapshot under normal concurrent pytest retention; the archive and pre-disappearance hashes retain their bytes"
+  },
+  "referenced_but_no_longer_present_before_snapshot": [
+    "/tmp/rabbit-pm-phys.XrsM2o/CONTRACT.json",
+    "/tmp/rabbit_pm_adj_contract.json"
+  ],
+  "secret_review": {
+    "dedicated_scanner": "UNAVAILABLE",
+    "private_key_headers": "NONE",
+    "provider_token_pattern": "ONE_FALSE_POSITIVE_IN_PIL_EMBEDDED_FONT_DATA",
+    "credential_url_pattern": "ONE_FALSE_POSITIVE_IN_URLLIB3_DOCSTRING",
+    "suspicious_filename_review": "packaging tokenizers plus a previously tracked harness incident record; no credential material identified",
+    "pytest_git_remote_review": "no url values present in generated test repositories"
+  },
+  "archive_integrity": {
+    "whole_zstd_test": "PASS",
+    "reassembled_chunk_stream_zstd_test": "PASS",
+    "roundtrip_regular_file_sha256": "PASS_24408_OF_24408",
+    "roundtrip_symlink_target_comparison": "PASS_236_OF_236",
+    "run_tree_byte_comparison": "PASS",
+    "materialized_temp_byte_comparison": "PASS"
+  },
+  "git_custody": {
+    "force_added_ignored_run_files": 122,
+    "staged_files_total": 415,
+    "line_normalization": "DISABLED_WITH_SCOPE_LOCAL_GITATTRIBUTES",
+    "staged_blob_vs_working_sha256": "PASS_415_OF_415",
+    "largest_staged_blob_bytes": 89128960,
+    "github_100mb_blob_limit": "PASS",
+    "diff_check": "EXPECTED_FAIL_ONLY_ON_PRESERVED_RAW_CRLF_LOGS_AND_SOURCE_HARNESS_TEMPLATE_WHITESPACE",
+    "diff_check_policy": "do not rewrite evidence bytes to satisfy whitespace lint"
+  },
+  "scientific_disposition": "REJECT_STOP_INVALID_UNCHANGED",
+  "gate_board": "6_PASS_2_FAIL_UNCHANGED",
+  "tests_run_for_publication": 0,
+  "completeness_ceiling": "all surviving and attributable files identified by the six research runs, explicit result references, task-named temporary roots, final execution caches, and harness extraction roots are included; already-deleted ephemeral contracts and unrelated concurrent-task temporary files are not recoverable or in scope"
+}

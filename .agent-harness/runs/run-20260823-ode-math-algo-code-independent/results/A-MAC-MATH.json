@@ -1,0 +1,1093 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-math-algo-code-independent",
+  "assignment_id": "A-MAC-MATH",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02c7b-771b-7752-998c-a3df79cb5478",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-math-algo-code-independent",
+    "assignment_id": "A-MAC-MATH",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:85851beeab98df6c4d3e5dbce7e367197e0f4eabf4565445e53734df0afc6e1e",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-MATH.json",
+  "started_at": "2026-08-23T02:37:39Z",
+  "completed_at": "2026-08-23T03:00:04Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy_measured": "2.4.4",
+    "scipy_measured": "1.17.1",
+    "jax_measured": "0.10.0",
+    "jaxlib_measured": "0.10.0",
+    "diffrax_measured": "0.7.2",
+    "rustc": "1.94.1 (e408947bf 2026-03-25)",
+    "cargo": "1.94.1 (29ea6fb6a 2026-03-24)",
+    "diffsol_locked": "0.16.0",
+    "git": "2.43.0",
+    "source_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "literature_retrieved_utc": "2026-08-23"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-MATH.json",
+    "jq -r '.findings[] | [.finding_id,.claim_id,.verdict,.severity,.statement] | @tsv' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    "git status --short && git rev-parse HEAD",
+    "sha256sum <all assignment-required local evidence files>",
+    "rg -n <targeted numerical-contract patterns> <assignment-required current source and policy files>",
+    "sed -n <targeted line ranges> <assignment-required current source and policy files>",
+    "fresh web retrieval of primary papers and official SciPy/SUNDIALS documentation on 2026-08-23",
+    "diff -u <(jq -r '.findings[].finding_id' A-ODE-ADJ3.json | sort) <(jq -r '.findings[].finding_id' A-MAC-MATH.json | sort)",
+    "jq -e '<RESULT_ENVELOPE field, enum, hash-shape, 34-unique-finding, and evidence-array invariants>' A-MAC-MATH.json"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-ODE-ADJ3-001",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_SCIENTIFIC_BLOCKER; PROPOSED REMEDY] Governing condition: for entropy-scaled state u=u_eq(z)+v, project P onto the exact collision invariants/slow thermal coordinates and Q=I-P. A legitimate early-prefix reduction requires a computable norm M and uniform coercivity mu_M(Q J_C Q)<=-lambda, a nonlinear remainder bound L||v||_M on radius rho with lambda_eff=lambda-L rho>0, and forcing r=Q(F(u_eq,z)-D u_eq z'); then ||v(N)||_M is bounded by exp(-integral lambda_eff)B0 plus the corresponding convolution of ||r||. Propagate that state defect through an adjoint/dual-weighted residual to every endpoint quantity and add radial/tail enclosures. Only if the total bound is below a prospectively frozen fraction (suggested one half) of each hard scientific tolerance may an index-1 equilibrium-manifold DAE replace the stalled prefix. This is an analytically constrained domain reduction/rigorous surrogate, unlike generic optimization or BGK penalization without an exact residual certificate. Scaling uses entropy variables and per-component equilibrium scales, preserving collision invariants, 0<f<1, positive temperatures, energy closure, and the full cold endpoint. Online complexity should be O(r^3+cost(Jv)) per reduced step versus dense full-system work; offline projected spectral/interval work can be O(n^3) and must fit the existing budget with margin. No such coercivity, remainder, tail, or QoI certificate exists in the supplied evidence, so D-071 remains open and the physical proposition remains undecided.",
+      "assumptions_used": [
+        "The early high-temperature dynamics admit a normally attracting equilibrium manifold after exact invariant projection.",
+        "The discrete collision operator has a physically meaningful entropy-weighted norm and its nullspace exactly matches conserved slow variables.",
+        "A posteriori state and event/QoI estimates remain reliable through the switch and full endpoint evolution.",
+        "The gate's fixed wall budget and blinded scientific tolerances are unchanged."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-001",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:42-55",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:63-113",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:119-143",
+        ".agent-harness/context/GATE_REGISTRY.json:75-115",
+        "https://doi.org/10.1016/j.jcp.2010.06.017",
+        "https://doi.org/10.1016/j.jcp.2013.11.020",
+        "https://doi.org/10.1137/15M1017934",
+        "https://doi.org/10.1137/0732001"
+      ],
+      "evidence_fingerprint": "sha256:d9a8de41f2ac94491249c127c7661f4a7fa8c73925a33353754fd287d1581be4",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:52-55"
+      ],
+      "reproduction": [
+        "rg -n 'wall_seconds|domain-holdout|post-drop|materially new method|bounded discriminator' docs/audit/BD622_D071_trajectory_closure_2026-08-04.md .agent-harness/context/GATE_REGISTRY.json",
+        "PROPOSED: construct the projected generalized eigenproblem on frozen EXP60/ymax30 high-temperature states and interval-enclose the least dissipative Q mode before any endpoint output is inspected."
+      ],
+      "confidence": 0.91,
+      "unresolved": [
+        "Falsifier: any unprojected conservation null mode, lambda_eff<=0 anywhere in the certified prefix, an uncontrolled reaction/radial tail, a QoI enclosure above its preregistered allocation, or projected end-to-end wall above the existing budget with margin rejects the reduction.",
+        "Minimal decisive experiment: on the stalled order-60/ymax-30 phase only, use exact equilibrium plus preregistered perturbations, assemble/project the linearized collision operator in M, interval-bound its least dissipative generalized eigenvalue and nonlinear remainder over the intended switch interval, measure one reduced-prefix wall and one full-RHS defect, and do not run/unblind the endpoint."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-002",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_EVIDENCE_DEFECT] Governing condition: a JVP probe must be local in a dimensionless variable z=D^{-1}u, with D_i fixed from physical component scales, and must remain inside the strict domain. For a centered real probe, choose eta proportional to machine-epsilon^(1/3) and require ||D^{-1}(F(u+eta Dv)-F(u-eta Dv))/(2 eta)-D^{-1}J(u)Dv|| to show the expected O(eta^2)+O(eps/eta) ladder; complex-step is admissible only if the entire branch is analytic. A global norm dominated by elapsed seconds violates this condition and can move N nonlocally. Arnoldi dimension-one termination certifies an invariant direction only when the Hessenberg residual is zero within a scaled bound and repeated under independent admissible seeds; otherwise it is inconclusive. Static JVPs cannot establish trajectory existence, reaction-tail authority, or endpoint QoI error. Remedy: rescale N, temperatures, logits, abundances, and elapsed time separately; project exact invariants; use admissible symmetric directions; record residual norms and compare AD/complex-step/high-precision stencils. Complexity is two RHS calls per centered JVP plus O(kn) Arnoldi storage. This repairs probe meaning but, by itself, cannot reopen D-071.",
+      "assumptions_used": [
+        "The RHS is twice differentiable along each real admissible probe; complex-step additionally requires analyticity and no nonanalytic branches.",
+        "D is fixed prospectively and does not use hidden endpoint outputs.",
+        "Strict occupation and temperature domains are enforced on both perturbations."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-002",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:119-143",
+        "https://doi.org/10.1137/S003614459631241X"
+      ],
+      "evidence_fingerprint": "sha256:d9a8de41f2ac94491249c127c7661f4a7fa8c73925a33353754fd287d1581be4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-002\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: eta-ladder 2^k eps^(1/3), k=-3..3, in scaled coordinates at each frozen prefix state; reject any direction leaving the physical domain."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "Falsifier: failure of the centered second-order ladder, disagreement with independent AD/complex-step beyond the roundoff model, nonzero Arnoldi breakdown residual, or any perturbed state outside the strict domain.",
+        "Minimal decisive experiment: repeat the four original states with per-block scaling, three independent invariant-projected directions, an eta ladder, and high-precision directional derivatives; separately certify reaction-tail truncation before drawing a physical conclusion."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-003",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_SCIENTIFIC_BLOCKER] Governing convergence condition: for the same physics and endpoint event, at least three nested N_q levels are needed to distinguish an asymptotic discretization regime. With differences d_k=Y_{2N}-Y_N, require finite successful trajectories, event residual and QoI error allocations, a stable observed order p=log2(|d_k/d_{k+1}|) consistent with the quadrature construction, and a Richardson remainder |d_{k+1}|/(2^p-1) below 1e-3; a near-zero denominator is handled by an absolute scale, never declared zero relative error automatically. Scaling must be on dimensionless Y_p and collision moments, with identical radial tail and endpoint contracts. Remedy: adaptive or analytically constrained quadrature is acceptable only if it preserves collision number/energy invariants and provides a tail estimator; otherwise retain the locked N_q refinement. Complexity is at least three full solves and scales with collision evaluation cost, so a bounded pre-endpoint discriminator should first check moment/tail error at production-shaped states. The recorded about 3.5 percent drift violates the hard threshold and a normal xfail is not closure.",
+      "assumptions_used": [
+        "The retained source statement accurately describes the strict xfail at the inspected head.",
+        "Nested quadrature changes no other physics, solver, or endpoint settings.",
+        "The observed differences have reached a single leading-order error regime before Richardson extrapolation is used."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-003",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:357-381",
+        "bbn_codex_anti_drift_cost_effective_policy.md:119-129"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-003\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: execute the prospectively frozen three-level Nq sequence with success, root-residual, collision-moment, and tail checks before evaluating the Richardson bound."
+      ],
+      "confidence": 0.86,
+      "unresolved": [
+        "Falsifier: unstable/nonpositive observed order, failed or mismatched events, nonmonotone tail behavior, or a Richardson bound at or above 1e-3.",
+        "Minimal decisive experiment: one three-level nested convergence triplet around N_q=16,32,64 on the exact retained case, with raw Y_p and collision moment/tail artifacts; no xfail-to-pass conversion without the numerical bound."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-004",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing acceptance predicate for each phase is success=true, status in the documented successful set, exactly the intended terminal event, finite event state, |g(t*,y*)|<=tau_g, ordered time inside the certified bracket, and all physical invariants; interval exhaustion is not an event. Phase 2 may consume phase 1 only after that predicate holds, and observables may be computed only from an accepted terminal state. Under transversality m=inf|d g(t,y(t))/dt|>0, event-time error satisfies |delta t|<=(|g_h|+L_g||e_y||)/m, so event residual plus a state error estimate are needed. Remedy: one shared fail-closed phase-result validator, raw partial trajectory retained as diagnostics, and an endpoint adjoint/error budget for reported observables. This does not change the integrator order; it prevents a consistency violation in composition. Cost is O(n) validation plus at most one event-function evaluation. The current assignment does not include classA source, so current-state closure is not claimed.",
+      "assumptions_used": [
+        "The event is a simple transversal root; grazing/even-multiplicity roots require a reformulated event or separate certification.",
+        "The original adjudicated reproduction remains applicable unless current source proves otherwise.",
+        "Partial failed states remain diagnostic only and are never promoted to endpoint results."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-004",
+        "https://doi.org/10.1016/S0898-1221(00)00045-6",
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-004\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: inject (success=false with one accepted step), (success=true/status=0 with no event), and (event with residual>tau_g) into each phase and assert no next-phase call or observable construction."
+      ],
+      "confidence": 0.88,
+      "unresolved": [
+        "Falsifier: any injected failure or missed/uncertified event reaches phase 2 or emits endpoint observables.",
+        "Minimal decisive experiment: the three synthetic phase-result injections above plus one genuine transversal scalar event with a known root and prescribed tau_g/tau_t."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-005",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing condition is the same phase-acceptance predicate as F-ODE-ADJ3-004 for both the primary solve and FLRW baseline. A reported endpoint at T_end additionally requires a terminal event g=T_gamma-T_end with a certified bracket/residual; stopping at T_handoff cannot be relabeled as endpoint. Remedy: either remove/rename T_end and all endpoint-like outputs so the routine is explicitly a handoff diagnostic, or integrate a second certified leg to T_end; delta_Yp is defined only when both compared solves terminate at the same physical event and satisfy the same error budget. Scale event residual by max(T_end,T_scale); require |v|<1, positive finite temperatures, finite raw abundances, and conservation residuals. Composition preserves the underlying method's order only when both event maps are consistent; otherwise no order claim survives. Cost is the second full solve if endpoint semantics are retained, which must be budgeted. Source is not among current assignment inputs, so this is retained rather than re-confirmed.",
+      "assumptions_used": [
+        "T_handoff and T_end denote distinct positive physical temperatures.",
+        "The comparison observable is meaningful only at a common physical endpoint.",
+        "Original adjudicated source evidence remains the current lower bound."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-005",
+        "https://doi.org/10.1016/S0898-1221(00)00045-6"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-005\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: inject primary and baseline post-progress failures and missed handoff/end events; verify raw partial evidence is retained but delta_Yp and endpoint fields are absent."
+      ],
+      "confidence": 0.87,
+      "unresolved": [
+        "Falsifier: unequal physical endpoints, missing root certificate, or any failed baseline contributing to delta_Yp.",
+        "Minimal decisive experiment: two exact scalar cooling models with known handoff and end roots, then the four failure/missed-event injections across primary and baseline paths."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-006",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing convergence condition: every member of a candidate sequence must first pass the complete solve/event/finite/invariant predicate. For quantity Q_k, use a dimensionless error e_k=|Q_k-Q_{k-1}|/max(|Q_k|,|Q_{k-1}|,Q_scale), but if both are below a preregistered absolute scale the pass must be based on |Q_k-Q_{k-1}|<=tau_abs, not forced to zero. Require at least two consecutive differences and, where an order claim is made, three levels with stable observed order and a Richardson remainder. Candidate lists must be finite, strictly increasing, unique, and large enough; no default-to-first winner exists. Remedy: fail the entire scan on any failed trajectory relevant to selection, expose all raw members, and select only the first level whose absolute/relative and event/QoI budgets pass prospectively. Stability/order inherits from each valid solve; selection alone cannot repair non-asymptotic data. Complexity is O(K) full solves and therefore must remain bounded. Current source was not supplied, so classification is retained-open.",
+      "assumptions_used": [
+        "All candidates evaluate identical physics and endpoint conditions.",
+        "Q_scale and tolerances are frozen before candidate outputs.",
+        "The sequence is nested or otherwise admits a justified error model."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-006",
+        "https://doi.org/10.1137/0732001"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-006\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: test empty, singleton, duplicate, unsorted, all-near-zero, no-passing-pair, failed-middle-solve, and known-order synthetic sequences."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Falsifier: a failed solve or a no-passing sequence still returns a selected level, or near-zero values pass without the absolute criterion.",
+        "Minimal decisive experiment: the seven synthetic sequences plus one three-level physical scan with raw event and Richardson diagnostics."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-007",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[OPEN_CONFIRMED_CURRENT_CODE_DEFECT] Governing root contract: finite g values must form an orientation-compatible bracket, including an initial exact zero; refinement must maintain g_lo*g_hi<=0 without multiplication-based underflow, return y matching the selected t, and terminate only with bracket width<=tau_t and residual<=tau_g (or a justified disjunct under a transversality bound). A failed substep is refinement failure, never evidence for moving a bracket; exhausting iterations is a typed failure. Multiple events, each float-valued direction, and terminal semantics must match the public API. Remedy: prevalidate finite configuration/state/event values, detect initial roots, compare signs explicitly, use dense output plus safeguarded Brent/bisection or successful reintegration, retain the last accepted state on failure, and carry typed status rather than infer it from message text. Root-time error follows the F-ODE-ADJ3-004 transversality inequality; fifth-order Rodas5P retains its order only if dense output/event localization is of compatible accuracy. Complexity is O(log(h/tau_t)) event evaluations (or solves if dense output is unavailable). Current lines 283-294 discard failure and fabricate an endpoint; adapter lines 111 and 124-150 truncate direction, infer success from text, and report nfev=0.",
+      "assumptions_used": [
+        "The requested root is isolated and transversal; even-multiplicity roots need a different event function.",
+        "A matching-order dense interpolant is available or each refinement reintegration is itself certified.",
+        "NaN or infinite event values are solver failures."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-007",
+        "src/rabbit/solver/rodas5p.py:249-295",
+        "src/rabbit/solver/rodas5p.py:298-340",
+        "src/rabbit/solver/rodas5p_adapter.py:94-150",
+        "https://doi.org/10.1016/S0898-1221(00)00045-6",
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html",
+        "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html"
+      ],
+      "evidence_fingerprint": "sha256:e39130d33c3e640ae72989fef96d7b88fd6e3b6919ddca0bc85a7ae87976dc9e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '249,345p' src/rabbit/solver/rodas5p.py; sed -n '90,153p' src/rabbit/solver/rodas5p_adapter.py",
+        "PROPOSED: scalar y'=1 tests for initial, upward, downward, fractional-direction, simultaneous, nonterminal, NaN, and all-refinement-step-failed events with exact roots."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: any failed refinement returns status=1/success, any nonfinite event is accepted, or returned |g|/bracket width exceeds the frozen certificate.",
+        "Minimal decisive experiment: monkeypatch every refinement probe to fail and require a typed failure with the last accepted state, then execute the exact scalar event matrix against SciPy semantics."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-008",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[OPEN_CONFIRMED_CURRENT_ORACLE_DEFECT] The same root and acceptance conditions as F-ODE-ADJ3-007 govern the frozen JAX oracle. Host-side validation must require finite y0/N bounds, positive finite rtol/atol/h bounds, coherent step limits, finite initial RHS/Jacobian/event, and an explicit initial-root policy before entering JIT. Inside the fixed-shape loop, finite masks and typed status must propagate; success requires a documented successful terminal state and finite outputs, not merely status>=0. Direction must support both, upward, and downward crossings without converting arbitrary floats to integer categories. Remedy is bounded oracle hardening only—no new JAX runtime or promotion work—using fixed-shape bracket/refinement state with a convergence/residual bit. Scaling uses WRMS tolerances and a dimensionless event scale. The Rodas5P method is nominally order five with an embedded order-four estimator and is designed to reduce stiff order reduction, but that accuracy is irrelevant when initialization or event semantics fail. Complexity adds O(n) host validation and fixed event iterations. Current code computes ev_init at line 1297 but success remains status_int>=0 at line 1370 without the required finite/initial-root acceptance.",
+      "assumptions_used": [
+        "JAX remains a frozen local parity/AD/Jacobian oracle, not a production runtime target.",
+        "Host validation occurs outside JIT and does not alter scientific physics.",
+        "The event is isolated and transversal."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-008",
+        "src/rabbit/jax/solver_jax_rodas5p.py:1295-1319",
+        "src/rabbit/jax/solver_jax_rodas5p.py:1359-1371",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22",
+        "https://doi.org/10.1007/s10543-023-00967-x"
+      ],
+      "evidence_fingerprint": "sha256:eebb18084d7e41992a1d208eb8274abd0ca3905b8ec4af3d5e43bf8ef0570984",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '1290,1380p' src/rabbit/jax/solver_jax_rodas5p.py",
+        "PROPOSED: CPU-only frozen-oracle probes for zero-span NaN/Inf state, zero/negative tolerances, initial-zero/NaN/upward/downward events, and bracket-exhaustion status."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Falsifier: any invalid input/nonfinite output yields success, any initial root is missed, or any supported direction disagrees with the declared event contract.",
+        "Minimal decisive experiment: the bounded CPU matrix above, with no timing, driver, endpoint, or promotion claim."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-009",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing physical-domain condition is evaluated on the raw accepted state: 0<f_i<1 (or the documented closed bounds where physically justified), rho_total>0, H=sqrt(C rho_total)>0 and finite, positive finite temperatures, and finite conservation residuals. Projection by clipping or flooring changes the differential equation and can convert an invalid candidate into apparent success; diagnostics after projection cannot certify invariants. Remedy: integrate occupations in strict logits and positive scalars in log variables where conditioning permits, or reject the raw state before any derived observable; compute H from validated rho without a floor and retain the violating raw state. In logits, f=sigma(l) analytically preserves 0<f<1, but the transformed RHS divides by f(1-f), so extreme-tail conditioning and underflow remain explicit fail-loud limits. Variable transformation preserves consistency/order for smooth invertible regions; clipping does not. Complexity is O(n) validation/transformation. Source is not in the current assignment, so the defect is retained, while the Rust logit implementation is counterevidence that a bounded-coordinate remedy is feasible.",
+      "assumptions_used": [
+        "Pauli bounds, energy positivity, and the Friedmann relation are governing physical invariants.",
+        "No physical boundary solution requires exactly f=0 or f=1 at finite state coordinates.",
+        "Raw invalid candidates must remain available as failure evidence."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-009",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:360-401",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:668-704",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22"
+      ],
+      "evidence_fingerprint": "sha256:40bb43a86cb08c230ba3d3f58b9c77fbe1f74b15c94f48bf00466b2583bd9d2c",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:360-401"
+      ],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-009\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: inject raw f=-eps, f=1+eps, rho<0, H=NaN, and H<0 accepted candidates and require typed failure plus byte-preserved raw state before observable evaluation."
+      ],
+      "confidence": 0.91,
+      "unresolved": [
+        "Falsifier: any projected value is used by an acceptance gate or observable while the corresponding raw invariant fails.",
+        "Minimal decisive experiment: the five raw-state injections above and a smooth-logit convergence comparison away from f=0,1 to verify unchanged order."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-010",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing dataflow condition: if solver acceptance is false, no endpoint-only RHS, network, thermodynamic, or abundance map may execute. A failed partial state belongs to a diagnostic sum type carrying last accepted t,y,status,message/counters and optional raw failing evaluation; fields named final are undefined. Remedy: branch on the full solve predicate before indexing the last state or recomputing any physics; make failure serialization pure and non-throwing, and separately expose an explicitly named partial diagnostic whose evaluation is opt-in and cannot replace the original error. This is not a discretization-order issue: post-failure computation has no consistency claim because the terminal functional's domain condition was not met. Scaling/invariants are therefore fail-closed finite-state and physical-domain checks only. Complexity decreases by avoiding O(m cost(RHS/network)) post-failure work. Current wrapper files were not supplied, so this remains retained rather than freshly confirmed.",
+      "assumptions_used": [
+        "Endpoint observables are defined only on a successful certified terminal state.",
+        "Failure diagnostics must preserve the original solver failure even if later optional diagnostics fail.",
+        "Partial trajectories may be retained but have no endpoint authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-010",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:357-381"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-010\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: return a failed solve whose partial-state RHS throws a sentinel exception; assert the wrapper reports the original solve failure without calling that RHS or producing final fields."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Falsifier: a sentinel post-failure physics function is called, masks the original error, or yields a field represented as final.",
+        "Minimal decisive experiment: the sentinel failure-injection test in each of the three affected wrapper families."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-011",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_ADMISSION_GAP] Governing input condition is finite T_start>T_handoff>T_end>0, finite positive tolerances/step and work bounds, dimensionally matching states, and backend-portable options. Governing output condition is the full success/event predicate plus |T_gamma-T_target|<=tau_T, finite raw state and observables, nonnegative/normalized abundance conditions where physically required, and bounded mass/energy residual. Remedy: nondimensionalize temperatures by T_start and solver errors by atol_i+rtol|y_i|; validate at the canonical boundary; remove unused dense output or supply a backend-independent matching-order interpolant; preserve partial failure evidence instead of raising a detail-free RuntimeError. Endpoint QoIs should receive an adjoint residual estimate, while root error uses transversality. This preserves solver order by changing only admission and acceptance, not the method. Validation is O(n), and adjoint cost is about one backward linearized solve. Current driver source is outside the assigned inputs, so ordinary fail-closed behavior is retained counterevidence but the gaps remain open.",
+      "assumptions_used": [
+        "Photon temperature decreases monotonically across the two configured phases.",
+        "The target event is transversal and terminal.",
+        "Each backend can expose status, event state, counters, and raw failure evidence under one canonical contract."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-011",
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html",
+        "https://doi.org/10.1137/0732001",
+        "https://arxiv.org/abs/2001.11139"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-033"
+      ],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-011\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: boundary table covering NaN, Inf, nonpositive, unordered/equal temperatures, invalid tolerances/bounds, missed events, nonfinite final states, and excessive endpoint residuals on both backends."
+      ],
+      "confidence": 0.87,
+      "unresolved": [
+        "Falsifier: any invalid input reaches a solver, any backend accepts unequal semantics, or any accepted endpoint lacks residual/invariant/work evidence.",
+        "Minimal decisive experiment: execute the boundary table plus one exact cooling ODE on both backends and compare status, root residual, terminal state, and work counters."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-012",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[OPEN_CONFIRMED_CURRENT_CODE_DEFECT] Governing solver condition is positive finite rtol and componentwise atol, 0<h_min<=h_init<=h_max, positive integer max_steps/reuse, finite real one-dimensional y0 with RHS/Jacobian shape agreement, and no derivative probe outside the integration/domain boundary. For finite differences, scale z=D^{-1}y and use delta_j=eta max(|y_j|,s_j), eta about sqrt(eps) for forward or eps^(1/3) for centered differences, with one-sided boundary stencils; the current absolute 1e-8 floor makes relative perturbations uncontrolled. Remedy: validate once, expose jac_fn and max_steps through the adapter, use directional/sparse Jacobians where justified, and count every RHS/Jacobian/linear solve honestly. A dense forward Jacobian costs n+1 RHS evaluations and O(n^2) storage; sparsity/coloring may reduce calls only after a correct pattern is established. Stability of Rodas5P requires a defensible Jacobian and positive WRMS scale; silent coercion invalidates consistency. Current code lines 94-120 construct unchecked values and suppress jac_fn, while lines 135-140 use the fixed floor and adapter line 150 fabricates nfev=0.",
+      "assumptions_used": [
+        "The RHS is differentiable in each probed direction and physical-domain one-sided stencils are available near boundaries.",
+        "State scales D and floors s_j are chosen from units/physics prospectively, not tuned to outputs.",
+        "A supplied Jacobian obeys the same state ordering and conventions as the RHS."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-012",
+        "src/rabbit/solver/rodas5p.py:103-140",
+        "src/rabbit/solver/rodas5p.py:298-324",
+        "src/rabbit/solver/rodas5p_adapter.py:94-120",
+        "src/rabbit/solver/rodas5p_adapter.py:138-151",
+        "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html",
+        "https://doi.org/10.1137/S003614459631241X"
+      ],
+      "evidence_fingerprint": "sha256:e39130d33c3e640ae72989fef96d7b88fd6e3b6919ddca0bc85a7ae87976dc9e",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:82-101"
+      ],
+      "reproduction": [
+        "sed -n '103,140p' src/rabbit/solver/rodas5p.py; sed -n '298,345p' src/rabbit/solver/rodas5p.py; sed -n '94,151p' src/rabbit/solver/rodas5p_adapter.py",
+        "PROPOSED: invalid-configuration/state matrix plus a scaled multicomponent exact Jacobian and boundary-domain derivative ladder."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: any invalid configuration/state succeeds, any derivative probe crosses a forbidden domain, or nfev disagrees with an instrumented RHS counter.",
+        "Minimal decisive experiment: instrument a two-scale stiff linear system with analytic J, exercise the invalid matrix, compare FD/Jv error across an eta ladder, and assert exact work-accounting identities."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-013",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_CODE_DEFECT] Governing classification is a precedence-ordered state machine: any success=false, status<0, nonfinite terminal state, or contract violation is failure regardless of target time; then a certified terminal event is event_triggered; then successful interval completion is target_reached; all other termination is terminated_other. Define n_steps=max(len(t)-1,0), not len(t), and carry t_final, event residual, nfev/njev/nlu, and partial-failure detail. Remedy is a total classifier over the Cartesian product of booleans/status/event/endpoint/finite state with contradictory states explicitly rejected. No numerical scaling or order applies, except endpoint comparison should use a dimensionless time tolerance and never override failure. Complexity is O(n_events+n_state). Current classifier source is not assigned, so the finding remains retained-open.",
+      "assumptions_used": [
+        "Negative solver status and success=false are authoritative failure signals.",
+        "A target time reached by a failed step is not a valid terminal solution.",
+        "The initial sample is not a numerical step."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-013",
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-013\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: exhaustively enumerate success in {false,true}, status in {-1,0,1}, target in {false,true}, event in {false,true}, finite in {false,true}, and assert the precedence table."
+      ],
+      "confidence": 0.92,
+      "unresolved": [
+        "Falsifier: any contradictory failed state classifies as target/event success or len(t) is reported as steps.",
+        "Minimal decisive experiment: the 48-case truth table plus explicit empty/singleton/multisample histories."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-014",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_WITH_POLICY_NO_GO] Governing stiff-solver condition is that the scaled Jacobian J_z=D^{-1}JD, its sparsity/block structure, and work bounds correspond to the actual expensive endpoint path; an optimization is relevant only if a same-physics measured dominant wall/counter or endpoint temperature improves under the frozen budget. Providing jacobian/sparsity/max-step budgets can prevent pathological O(n) finite-difference RHS calls and unbounded work, but generic local optimization cannot reopen D-071 and segment-only timings cannot establish endpoint progress. Remedy order: first use the certified slow-manifold discriminator in F-ODE-ADJ3-001; only if it identifies a full-system region, supply an analytic/AD/Jv block operator or sparse colored Jacobian there with residual tests. Rodas5P requires fresh Jacobians for its design accuracy; BDF stability depends on nonlinear/linear solve quality. Dense factorization is O(n^3), sparse/block or Krylov roughly O(k cost(Jv)+preconditioner) but only measured end-to-end counts matter. No-go: do not add knobs, telemetry, or optimize already-cheap segments while the activation/cold blocker is untouched.",
+      "assumptions_used": [
+        "The cited caller drift remains present in source not included in this assignment.",
+        "The dominant stalled phase and fixed wall budget remain the governing performance target.",
+        "A Jacobian optimization must preserve identical physics and raw failure semantics."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-014",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:90-113",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:131-145",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md:88-102",
+        "bbn_codex_anti_drift_cost_effective_policy.md:68-82",
+        "bbn_codex_anti_drift_cost_effective_policy.md:119-129",
+        "https://doi.org/10.1007/s10543-023-00967-x"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "rg -n 'dominant|activation|cold|segment-only|blocker movement' docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md bbn_codex_anti_drift_cost_effective_policy.md docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+        "PROPOSED: same-state Jacobian/Jv residual and same-physics stalled-phase counter/wall discriminator; reject any candidate lacking endpoint-budget projection with margin."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "Falsifier: a candidate changes physics, lacks scaled Jacobian residual agreement, moves only a cheap segment, or misses the frozen end-to-end budget projection.",
+        "Minimal decisive experiment: measure one production-shaped stalled-phase window with the baseline and at most one Jacobian/Jv candidate, recording full physical RHS equivalents, nonlinear iterations, factorizations, accepted N advance, and wall."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-015",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[OPEN_CONFIRMED_CURRENT_CODE_DEFECT] Governing failure taxonomy must distinguish invalid input/build, initial RHS/Jacobian nonfinite, initialization/nonlinear convergence, linear solve/factorization, local error-test exhaustion, h_min/step-size floor, stop-time failure, unexpected dependency root, invalid accepted state, and total-budget exhaustion. These correspond to mathematically different remedies; collapsing them prevents safe retry/adjudication. Current BDF maps all residual initialization errors to bdf_initialise and all dependency step errors to bdf_solve. Remedy: downcast or map stable diffsol 0.16 error variants and callback flags into the existing result reason; if dependency APIs erase the distinction, rigorous no-go—the wrapper cannot claim typed categories without a dependency patch or a separately observed invariant, and string parsing is not acceptable. This changes no numerical order/scaling; all returned states remain raw last-accepted diagnostics. Complexity O(1).",
+      "assumptions_used": [
+        "diffsol 0.16 exposes or can be patched to expose stable typed errors without parsing display text.",
+        "No automatic retry is selected solely from an ambiguous failure category.",
+        "Failure categories are observational and do not alter the underlying method."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-015",
+        "native/rabbit_cpu/src/ode.rs:360-376",
+        "native/rabbit_cpu/src/ode.rs:459-482",
+        "native/rabbit_cpu/Cargo.lock",
+        "requirements.measured.txt"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:422-445"
+      ],
+      "reproduction": [
+        "sed -n '350,482p' native/rabbit_cpu/src/ode.rs; awk '/name = \"diffsol\"/{flag=1;next} flag && /version =/{print;exit}' native/rabbit_cpu/Cargo.lock",
+        "PROPOSED: construct one deterministic fixture per taxonomy leaf and assert exact reason plus retained state/counters."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Falsifier: two mathematically distinct dependency failures remain observationally identical or mapping relies on unstable strings.",
+        "Minimal decisive experiment: singular linear system, nonlinear nonconvergence, forced error-test exhaustion, and h_min fixtures under BDF with exact reason assertions."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-016",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[OPEN_CONFIRMED_CURRENT_CODE_DEFECT_WITH_INTERFACE_NO_GO] A strict total attempt cap A requires the invariant accepted+error_test_failures+nonlinear_failures<=A at every return, including work hidden inside one dependency step. Current code gives each internal failure class config.max_attempts and checks the aggregate only before and after solver.step, so a single atomic call may overshoot. Remedy is possible only if the dependency accepts a shared remaining budget or exposes a one-attempt iterator/callback that can abort when the aggregate reaches A; set each internal allowance to the remaining total and assert monotone counters. If diffsol step is atomic and noninterruptible, there is a rigorous no-go for calling this field a strict total-attempt cap: rename it to a documented outer/dependency allowance and add an independent wall/cancellation budget, or patch the dependency. Scaling, stability, order, and positivity are unchanged; premature termination returns the last accepted state. Complexity O(1) accounting, but interruption support is an interface requirement.",
+      "assumptions_used": [
+        "The public term max_attempts denotes total accepted plus rejected/nonlinear attempts, not merely wrapper calls.",
+        "diffsol statistics are monotone and count every relevant internal failure.",
+        "An interrupted step does not publish an unaccepted candidate."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-016",
+        "native/rabbit_cpu/src/ode.rs:363-365",
+        "native/rabbit_cpu/src/ode.rs:395-470",
+        "native/rabbit_cpu/Cargo.lock"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '363,470p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: a dependency fixture that incurs both error-test and nonlinear retries inside one step with A=1,2,3; instrument the maximum observed aggregate before control returns."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: any return observes accepted+rejected>A, or no supported callback/remaining-budget API exists while the field remains named as a strict total cap.",
+        "Minimal decisive experiment: the mixed-retry fixture above; if the first atomic call overshoots and cannot be interrupted, record the interface no-go rather than weakening the test."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-017",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[OPEN_CONFIRMED_CURRENT_CODE_DEFECT] Governing accounting identities must distinguish trait calls from physical expensive work. Define rhs_trait, rhs_nested_in_jac, rhs_nested_in_dfdt, fused_payload, jacobian_calls, factorizations, linear_solves, and event-refinement work; a reported physical-RHS-equivalent count must equal the instrumented sum under a documented weight model. Current CountingSystem deliberately excludes RHS calls inside jacobian and counts rhs_and_jacobian as one, while Rodas increments linear_setups before finite checks/factorization. Remedy: count inside the expensive consumer or return a small work delta from existing RHS/Jacobian/dfdt calls; increment factorization only after successful construction and record solves separately. Do not add a new telemetry/gate layer: consolidate existing counters. Numerical scaling/order/invariants are unaffected, but these counters cannot support performance decisions until identities hold. Complexity O(1) increments and no additional physics calls.",
+      "assumptions_used": [
+        "The physical workload metric is intended to count expensive full collision payloads, not only trait entry calls.",
+        "Counter instrumentation has negligible cost and no side effects on deterministic cache behavior.",
+        "Linear setup means a successfully constructed factorization/preconditioner, not an attempted evaluation."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-017",
+        "native/rabbit_cpu/src/ode.rs:123-180",
+        "native/rabbit_cpu/src/ode.rs:695-739",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-578",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:696-715",
+        "bbn_codex_anti_drift_cost_effective_policy.md:68-82"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '123,180p' native/rabbit_cpu/src/ode.rs; sed -n '695,739p' native/rabbit_cpu/src/ode.rs; sed -n '563,578p' native/rabbit_cpu/src/isotropic_boltzmann.rs; sed -n '696,715p' native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "PROPOSED: instrument a counting RHS whose jacobian and dfdt each call RHS twice, then assert every category and a failed-pre-factorization case."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: counters change under an observationally identical fused/separate evaluation, omit nested full physics calls, or report a factorization that never existed.",
+        "Minimal decisive experiment: one fused and one separate N48-shaped linearization point with independent atomic counters, plus nonfinite f/J/dfdt failures before LU."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-018",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[INCONCLUSIVE_CURRENT_CONTRACT] Two mathematically distinct objects exist: y_acc,t_acc, the last accepted solver state, and (t_eval,y_eval,F_eval), the last raw evaluation/candidate that triggered failure and may be nonfinite. Safety favors returning y_acc as resumable state; forensic F-01 language may require y_eval. Remedy: specify both fields and their semantics, retaining raw IEEE values without clipping; attach the typed evaluation stage. Current BDF callbacks set sticky nonfinite flags but later return solver.state, and Rodas returns the step-start state for intermediate-stage failures, so exact y_eval cannot be reconstructed. If the dependency does not expose callback time/state or candidate/stage data, rigorous no-go: actual failing-state retention requires a callback/dependency patch and cannot be inferred. No stability/order claim changes; positivity checks apply to y_acc, while invalid/nonfinite y_eval is evidence, not a restart state. Memory is O(n) for each retained vector.",
+      "assumptions_used": [
+        "F-01 has not yet authoritatively selected last-accepted versus last-evaluated semantics.",
+        "Raw nonfinite bit patterns may be serialized safely as a diagnostic artifact or tagged representation.",
+        "Dependency state after a failed step is not assumed to equal the failing stage/candidate."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-018",
+        "native/rabbit_cpu/src/ode.rs:418-445",
+        "native/rabbit_cpu/src/ode.rs:749-760",
+        "native/rabbit_cpu/src/ode.rs:768-782",
+        "bbn_codex_anti_drift_cost_effective_policy.md:12-22"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '418,470p' native/rabbit_cpu/src/ode.rs; sed -n '742,782p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: force distinct finite step-start, nonfinite intermediate stage, and invalid candidate states; inspect whether both y_acc and exact y_eval can be captured."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Falsifier for closure: any contract claims actual failing evaluation while returning only solver.state/step-start, or raw data are clipped/sanitized.",
+        "Minimal decisive experiment: the three-state separation fixture plus an authority decision defining F-01; if dependency callbacks cannot expose y_eval, record the interface no-go."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-019",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[INCONCLUSIVE_CURRENT_MISSING_EVIDENCE; PROPOSED REMEDY] Governing derivative condition is production-dimensional scaled agreement, not endpoint same-code parity. With z=D_y^{-1}y and f_hat=D_f^{-1}f, validate ||J_hat-J_ref|| and ||J_hat v-J_ref v|| over invariant-projected directions, plus partial_N f, at actual EXP48 evolved states spanning equilibrium, activation, peak stiffness, and cold tail. Centered finite differences have truncation O(delta^2) and roundoff O(eps/delta), motivating delta approximately eps^(1/3) in dimensionless coordinates; current T step 1e-5*T and fixed N step 1e-5 need a ladder. Complex-step removes subtraction only on analytic branches; AD or high-precision five-point/Ridders references are otherwise preferred. Then propagate derivative error through one linear solve/residual and endpoint adjoint sensitivity. Preserve logit bounds, positive T, collision invariants, and raw failure. Dense validation is O(n) RHS calls per full J plus O(n^3) comparison/factorization, so use a few preregistered states/directions. Current code confirms the two centered stencils and the misleading six-node test; no independent EXP48 validation is supplied.",
+      "assumptions_used": [
+        "Reference AD/complex-step/high-precision code shares physical conventions but not the same finite-difference implementation.",
+        "Component scales D_y,D_f are physical and fixed prospectively.",
+        "Selected states cover the regions that dominate endpoint sensitivity and stiffness."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-019",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-578",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:707-715",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1166-1199",
+        "requirements.measured.txt:24-53",
+        "https://doi.org/10.1137/S003614459631241X",
+        "https://doi.org/10.1007/s10543-023-00967-x",
+        "https://doi.org/10.1137/0732001"
+      ],
+      "evidence_fingerprint": "sha256:40bb43a86cb08c230ba3d3f58b9c77fbe1f74b15c94f48bf00466b2583bd9d2c",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:589-659"
+      ],
+      "reproduction": [
+        "sed -n '554,715p' native/rabbit_cpu/src/isotropic_boltzmann.rs; sed -n '1166,1218p' native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "PROPOSED: at four preregistered EXP48 trajectory states, compare analytic/FD Jv and partial_N f to 80-bit-or-higher centered five-point or branch-safe AD across a seven-point step ladder, then check W^{-1}(J-J_ref)D and one Rosenbrock linear residual."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Falsifier: no roundoff/truncation plateau, disagreement above the frozen scaled tolerance, domain-invalid probes, or a derivative perturbation that changes endpoint QoIs beyond their allocation.",
+        "Minimal decisive experiment: the four-state EXP48 Jv/partial_N ladder and one-step linear residual/defect comparison; do not treat same-code BDF/Rodas endpoint agreement as independence."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-020",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[RETAINED_OPEN_TEST_DEFECT] Governing test condition is logical equivalence to the stated contract: a successful step must have finite y_new and finite error norm, while a failed step may retain a finite last-accepted y but must carry a failure reason. Parenthesize the implication explicitly; never rely on and/or precedence. More broadly, tests must span invalid input, contradictory status, initial/nonfinite/fractional events, all-refinement-failed, false counters, and post-failure endpoint dataflow, and must include independent exact solutions or methods to avoid common-mode tableau defects. Remedy: truth-table/property tests and targeted mutants that individually violate finiteness, status, event, and counter invariants. For an order-p method, include a linear stiff exact solution and verify global slope p in its non-roundoff regime plus root convergence. Complexity is bounded O(cases*small_solve), not a production endpoint. Current test files are not assignment inputs, so the precedence defect is retained rather than re-read.",
+      "assumptions_used": [
+        "The original adjudicated test expression and coverage inventory remain the evidence floor.",
+        "Small exact systems are contract tests, not scientific validation.",
+        "A common-tableau comparison cannot independently validate that tableau."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-020",
+        "https://doi.org/10.1007/s10543-023-00967-x",
+        "https://doi.org/10.1016/S0898-1221(00)00045-6"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-033"
+      ],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-020\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: mutate ok, yn finiteness, error finiteness, event residual, status precedence, and nfev one at a time; every mutant must be killed."
+      ],
+      "confidence": 0.89,
+      "unresolved": [
+        "Falsifier: any single-contract mutant survives or a shared-method comparison is the only accuracy oracle.",
+        "Minimal decisive experiment: bounded mutation matrix plus stiff scalar y'=-lambda y and known-root event convergence across decreasing tolerances."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-021",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[RETAINED_MISSING_EXECUTION_EVIDENCE] Governing evidence condition is a fresh exact-head, exact-environment, production EXP48 selected-decoupling endpoint execution for both Rust BDF and Rodas under identical physics/configuration, with machine-readable success/event/residual/invariant/work results and raw failures. Mathematical analysis cannot substitute for that run. Same-code agreement is a consistency check, not independent accuracy; attach a posteriori residual or independent derivative/benchmark evidence before claiming VALIDATED. Remedy is therefore evidentiary, not a new solver or gate: after prerequisite correctness fixes, run the existing endpoint once under the measured environment and compare dimensionless QoIs with preregistered absolute/relative tolerances. Complexity is the measured full endpoint cost; if it exceeds the bounded allocation, report skipped/fail, not a local proxy. The supplied status board retains the regression gate as PASS but the original finding explicitly lacked a fresh expensive rerun; no command in this assignment re-executed it.",
+      "assumptions_used": [
+        "The existing endpoint harness remains available and source-bound to the exact current head.",
+        "BDF and Rodas use identical initial state, physics, event, and tolerance vectors.",
+        "Local green unit tests and historical receipts are not exact-head endpoint execution."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-021",
+        ".agent-harness/generated/STATUS_BOARD.md:13-20",
+        "requirements.measured.txt:24-53",
+        "bbn_codex_anti_drift_cost_effective_policy.md:122-132"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [
+        ".agent-harness/generated/STATUS_BOARD.md:19-19"
+      ],
+      "reproduction": [
+        "git rev-parse HEAD; rg -n 'G-F10C1-REGRESSION' .agent-harness/generated/STATUS_BOARD.md",
+        "NOT RUN IN THIS ASSIGNMENT: the existing exact-head selected-decoupling N48 dual-solver endpoint command must be executed by the owning implementation/verification task."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Falsifier for closure: missing exact-head identity, environment drift, unequal configurations, failed/missed events, nonfinite/raw-invalid output, or absent machine-readable work/residual evidence.",
+        "Minimal decisive experiment: one existing exact-head N48 BDF/Rodas endpoint run after fixes, with SHA/config/environment bound in the existing result surface; no new manifest."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-022",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[OPEN_CONFIRMED_CURRENT_GENERIC_DEFECT] Governing directionless sign-change condition must avoid multiplication: for finite a,b, fire when b==0 or (a<0 and b>0) or (a>0 and b<0), with an explicit initial-zero policy. The current a*b<0 can underflow to signed zero for opposite-sign subnormals and miss a real crossing. Remedy is direct sign comparison; direction-specific predicates already use comparisons but should share zero/nonfinite semantics. Scaling is immaterial because the predicate is sign-invariant under positive scaling; this is precisely why multiplication is unnecessary. Method stability/order is unchanged, though event location still needs the F-ODE-ADJ3-023 certificate. Complexity O(1), preserving all state invariants. The production decreasing temperature event uses direction=-1, so this generic defect is not evidence that the cold endpoint failed.",
+      "assumptions_used": [
+        "IEEE-754 finite subnormals are accepted event values.",
+        "Exact zero is an event according to the declared contract.",
+        "NaN/Inf event values fail before sign comparison."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-022",
+        "native/rabbit_cpu/src/ode.rs:593-598",
+        "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:596-597"
+      ],
+      "reproduction": [
+        "sed -n '593,603p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: use a=smallest_positive_subnormal and b=-a for direction 0, alongside exact-zero and each directional crossing."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Falsifier: any finite opposite-sign pair, including subnormals, fails the directionless predicate or any same-sign pair fires.",
+        "Minimal decisive experiment: exhaustive sign-class table {-normal,-subnormal,-0,+0,+subnormal,+normal} squared for directions -1,0,+1."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-023",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[INCONCLUSIVE_CURRENT_UNCERTIFIED_EDGE] Governing event certificate maintains finite bracket endpoints with an orientation-compatible sign change, matching states, width |b-a|<=tau_t, and either |g(t*,y*)|<=tau_g or a transversality-derived residual/time bound. A hard 60-iteration cap is only an implementation maximum; if the certificate is unmet it must return event_refinement_exhausted, never event_reached. For bisection, width after k iterations is h/2^k, so 60 is sufficient only when floating-point separation and the frozen tau_t make that inequality true; residual additionally depends on dense/reintegrated state error. Remedy: store lo/hi/g values, check convergence after the loop, and include refinement solves in the declared work budget. BDF interpolation must be of adequate order; Rodas repeated substeps inherit local solve error. Complexity O(log2(h/tau_t)) evaluations/solves. Current Rust BDF and Rodas loops break by width but return success after 60 without a final residual/bracket/convergence flag.",
+      "assumptions_used": [
+        "The event is continuous and transversal in the refinement interval.",
+        "Finite precision can make midpoint equal an endpoint; this must count as stagnation unless certificate already holds.",
+        "The returned state corresponds exactly to the reported root-side time."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-023",
+        "native/rabbit_cpu/src/ode.rs:499-567",
+        "native/rabbit_cpu/src/ode.rs:800-868",
+        "https://doi.org/10.1016/S0898-1221(00)00045-6",
+        "https://sundials.readthedocs.io/en/v7.5.0/cvode/Mathematics_link.html"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:601-603"
+      ],
+      "reproduction": [
+        "sed -n '499,567p' native/rabbit_cpu/src/ode.rs; sed -n '800,868p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: exact scalar roots near an endpoint, flat-but-transversal roots with small derivative, midpoint stagnation, and deliberately impossible tau_t/tau_g under a low iteration cap."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier for certification: loop exhaustion/stagnation returns event_reached, final bracket loses sign orientation, returned y mismatches t, or residual/time bound is absent.",
+        "Minimal decisive experiment: parameterize the iteration cap to 0,1,2,60 on exact roots and require either the frozen certificate or typed exhaustion with last accepted state."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-024",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[INCONCLUSIVE_CURRENT_NUMERICAL_SEMANTICS] Governing max-step condition is every accepted internal step h_n<=h_max while preserving the native variable-order BDF history except at genuine user stop/output/event boundaries. Repeated set_stop_time chunks enforce an effective ceiling but may force exact boundaries, restart/error-test behavior, and an h_min exception; it is not automatically equivalent to a solver-native max-step parameter. Remedy: prefer a dependency-native max-step option. If unavailable, document segmentation as a different algorithm and demonstrate that chunk phase does not materially change scaled endpoint/QoI error, observed order, rejection pattern, or event result. A strict h_min rule must state whether a final snap shorter than h_min is allowed and cannot silently ignore a genuine StepSizeTooSmall. For zero-stable BDF, convergence requires consistency and controlled variable-step/order ratios; artificial discontinuities can increase constants/order reduction. Complexity adds O(span/h_max) stop operations. Current code sets a new stop at each chunk.",
+      "assumptions_used": [
+        "diffsol BDF preserves history across set_stop_time, but may adapt specifically to the stop.",
+        "h_max is intended as an internal accepted-step ceiling rather than output sampling interval.",
+        "The exact solution is smooth across artificial chunk boundaries."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-024",
+        "native/rabbit_cpu/src/ode.rs:379-413",
+        "native/rabbit_cpu/src/ode.rs:571-589",
+        "native/rabbit_cpu/Cargo.lock"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:381-382"
+      ],
+      "reproduction": [
+        "sed -n '379,413p' native/rabbit_cpu/src/ode.rs; sed -n '571,589p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: stiff scalar and two-mode exact systems with h_max chunk grids shifted by irrational-like phases; compare endpoint error slopes, accepted-step maxima, order/history traces, and h_min final-snap behavior."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Falsifier: accepted h exceeds h_max, endpoint error/order depends materially on chunk alignment, history resets, or a below-h_min snap is silently treated inconsistently.",
+        "Minimal decisive experiment: the two exact systems over at least four h_max values and three chunk phases, with native step/order/rejection trace if the dependency exposes it."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-025",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[INCONCLUSIVE_CURRENT_CONSERVATIVE_POLICY] Governing recoverability condition for a Rodas attempt failure is: the step-start state, f, J, and df/dt are finite/valid; a smaller positive h remains above h_min; and the failure mechanism is plausibly step-dependent. A singular W=I/(gamma h)-J may become nonsingular as h shrinks, and a nonfinite interior stage caused by leaving the physical domain may disappear; by contrast, nonfinite step-start data or structural singularity should fail immediately. Remedy: introduce a bounded retry only for explicitly recoverable variants, shrink h by a fixed factor, refresh the linearization, count the rejection, and stop on repetition/h_min/budget; preserve the raw failed stage if available. This does not guarantee stability—each accepted step still requires the embedded error test and state invariants. Worst-case work is R additional O(n^3) factorizations under a fixed retry cap. Current code returns immediately from any rodas_attempt error at lines 749-760, while invalid accepted candidates do shrink h at lines 768-782, so whether production-shaped failures are recoverable remains unmeasured.",
+      "assumptions_used": [
+        "At least some LU/nonfinite-intermediate failures are caused by an overly large step rather than invalid physics at the start state.",
+        "Retries refresh J/dfdt and remain within the total attempt budget.",
+        "No invalid raw stage is published as accepted."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-025",
+        "native/rabbit_cpu/src/ode.rs:749-782",
+        "native/rabbit_cpu/src/ode.rs:889-915",
+        "https://doi.org/10.1007/s10543-023-00967-x"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:768-782"
+      ],
+      "reproduction": [
+        "sed -n '742,782p' native/rabbit_cpu/src/ode.rs; sed -n '889,915p' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: one analytically h-dependent singular-W system, one stage-domain overshoot recoverable by halving, and one structural/nonfinite-at-start failure."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Falsifier for a retry policy: the same typed failure repeats after bounded shrink, start data are invalid, h reaches h_min, total budget is exceeded, or accepted results lose order/invariants.",
+        "Minimal decisive experiment: the three fixtures above plus one production-shaped failure snapshot; compare immediate failure versus at most three halving retries with raw evidence and counters."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-026",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[OPEN_CONFIRMED_CURRENT_GENERIC_DOMAIN_DEFECT] Governing derivative condition requires a representable nonzero perturbation and two valid stencil states. Current delta=1e-5|T| rounds to zero for sufficiently small subnormal positive T, despite state_is_valid accepting every positive finite value, causing division by zero. Preferred remedy is q=log(T/T_ref), for which partial f/partial q=T partial f/partial T and positivity is automatic; validate the transformed RHS near physical limits. Otherwise impose a physical T_min>0 and choose delta=max(eps^(1/3) max(|T|,T_scale), ulp(T)) with one-sided stencils when T-delta<=0, rejecting states below the declared model domain. An arbitrary machine floor alone is not physics. Centered order is O(delta^2) only when both points are valid; log transformation preserves order on T>0. Complexity remains two RHS calls per column. The frozen endpoint 0.005 MeV is far from subnormal, so this is a generic defect, not an endpoint-failure explanation.",
+      "assumptions_used": [
+        "Temperature is strictly positive in the physical model and has a meaningful reference scale.",
+        "The transformed RHS is differentiable over the admitted interval.",
+        "Any lower physical domain bound is specified from the model, not chosen to silence a numerical failure."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-026",
+        "native/rabbit_cpu/src/flrw.rs:356-385",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:563-578",
+        "https://doi.org/10.1137/S003614459631241X"
+      ],
+      "evidence_fingerprint": "sha256:40bb43a86cb08c230ba3d3f58b9c77fbe1f74b15c94f48bf00466b2583bd9d2c",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-026"
+      ],
+      "reproduction": [
+        "sed -n '354,385p' native/rabbit_cpu/src/flrw.rs; sed -n '563,578p' native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "PROPOSED: test smallest subnormal, neighboring powers of two, declared T_min, and production endpoint; verify nonzero valid probes and a derivative step ladder."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Falsifier: delta==0, T-delta<=0 in a centered stencil, nonfinite derivative, or transformed/untransformed derivatives disagree away from the boundary.",
+        "Minimal decisive experiment: exact power-law f(T)=T^4 and the real thermo RHS across subnormal-to-0.005 MeV scales, comparing log-coordinate AD/high-precision reference."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-027",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[RETAINED_OPEN_INPUT_AND_FAILURE_DRIFT] Governing wrapper contract is one canonical validation/acceptance predicate: finite positive tolerances and work bounds; finite correctly shaped mode/q arrays; finite physical parameters with |v|<1 before Lorentz factors; backend-compatible options; and no final observable before solver success/event/finite/invariant checks. Remedy: a small pure validator/result adapter reused by existing wrappers, not a new registry/gate. Dimensionless scales must follow units per component; raw q/modes are checked before transformations. Failure output retains status, counters, last accepted t,y and optional raw evaluation. Method defaults may differ only under an explicit comparison contract; BDF/Radau parity requires same physics and error weights. Validation is O(n); no change to order/stability. The affected current sources were not included, so this finding is retained, and no current BDF/Radau parity is inferred.",
+      "assumptions_used": [
+        "All wrappers represent variants of the same solver-result and physical-domain contract.",
+        "|v|<1 is required before evaluating 1/sqrt(1-v^2).",
+        "Thermodynamic observables are undefined on a failed/nonfinite terminal state."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-027",
+        "bbn_codex_anti_drift_cost_effective_policy.md:111-120",
+        "https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [
+        "native/rabbit_cpu/src/ode.rs:82-101"
+      ],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-027\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: shared invalid-input/failure matrix across all affected wrappers, including NaN tolerance/mode/q, |v| in {1,nextafter(1,+inf)}, and failed partial thermo state."
+      ],
+      "confidence": 0.86,
+      "unresolved": [
+        "Falsifier: any wrapper accepts an invalid matrix member, computes an endpoint proxy before failure gating, or loses raw status/counters/state.",
+        "Minimal decisive experiment: parameterize the same matrix over all wrapper entrypoints and one identical BDF/Radau exact model; require consistent failures and scaled endpoint agreement."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-028",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[INCONCLUSIVE_RETAINED_BRANCH_GAP] Governing negative-path adequacy condition is not raw coverage percentage but one deterministic witness per externally distinct failure reason, asserting exact reason, accepted/rejected/work counters, retained state semantics, and absence of endpoint/event success. Remedy: table-driven fixtures for bdf_build, bdf_initialise, bdf_stop_time, bdf_solve, unexpected_root, nonfinite_stage_rhs, nonfinite_stage, nonfinite_candidate, and nonfinite_error_norm, with a mutation that maps each reason to a neighbor. Scaling/order are irrelevant on rejected paths, except fixtures must distinguish numerical causes and preserve raw states/invariants. Complexity O(number of reasons) small solves. Current source exposes these branches, but tests were not assigned and indirect execution cannot be excluded, so the finding remains inconclusive rather than a claim that none are covered.",
+      "assumptions_used": [
+        "Each reason is intended as a stable externally observable contract.",
+        "Fixtures can force a branch without changing production physics code.",
+        "Coverage alone does not prove reason/state/counter correctness."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-028",
+        "native/rabbit_cpu/src/ode.rs:360-376",
+        "native/rabbit_cpu/src/ode.rs:459-482",
+        "native/rabbit_cpu/src/ode.rs:605-683",
+        "native/rabbit_cpu/src/ode.rs:742-782"
+      ],
+      "evidence_fingerprint": "sha256:14f739aa8bb09d1fa23567f17e945c18a4ea8d51178fa60c6be50cabff79a422",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-033"
+      ],
+      "reproduction": [
+        "rg -n 'bdf_build|bdf_initialise|bdf_stop_time|bdf_solve|unexpected_root|nonfinite_stage_rhs|nonfinite_stage|nonfinite_candidate|nonfinite_error_norm' native/rabbit_cpu/src/ode.rs",
+        "PROPOSED: one exact-reason fixture and one reason-mapping mutant for every listed branch."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Falsifier for closure: a reason cannot be deterministically reached/asserted, a mutant survives, or a negative path yields event/endpoint success.",
+        "Minimal decisive experiment: execute the nine-row reason table with exact raw-state/counter expectations and mutation checks."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-029",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[RETAINED_OPEN_API_DEBT] Governing API condition is total, consistent input validation: an unknown solver identifier must produce the same documented exception class/message across result and diagnostics forms, before dictionary indexing or numerical work. Orphan surfaces require either a supported caller/test contract or deprecation/removal; absence of in-repository callers is not proof of no external use. Remedy: one validation function and one bad-solver test; deprecate then delete unowned entrypoints only with compatibility authority. There is no ODE stability/order/scaling remedy because no integration should begin. Complexity O(1). Current Diffrax files were not assigned, so the original finding is retained and no claim is made about present callers.",
+      "assumptions_used": [
+        "ValueError is the intended public invalid-selection exception.",
+        "External consumers may exist unless an API authority declares the functions private/deprecated.",
+        "No new JAX development is authorized beyond bounded oracle maintenance."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-029",
+        "bbn_codex_anti_drift_cost_effective_policy.md:16-22"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-029\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "PROPOSED: call both forms with the same unknown identifier and assert identical ValueError contract before any RHS invocation."
+      ],
+      "confidence": 0.84,
+      "unresolved": [
+        "Falsifier: diagnostics raises KeyError/different behavior, invokes numerical code, or orphan removal breaks an authorized external API.",
+        "Minimal decisive experiment: the paired bad-identifier calls plus a bounded symbol/caller authority review before deprecation."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-030",
+      "claim_id": "ODE-A6",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[OPEN_CONFIRMED_CURRENT_PROVENANCE_AND_DOCUMENTATION_DEBT] Governing reproducibility condition is that an OdeResult can be bound to the exact rtol/atol, h bounds, attempt semantics, solver kind, source/binary identity, and physics configuration used. Current mutable OdeConfig is not embedded in OdeResult, and the isotropic module header contradicts the current collision surface. Remedy: reuse the existing result/evidence surface to store a canonical immutable config snapshot or digest at solve entry and correct/delete the stale header; do not add a standalone manifest/hash/readiness gate. Digest canonicalization must define float bit encoding, vector order, and solver/version identity. This is provenance, not numerical validation: it cannot prove stability/order or scientific truth. Runtime cost is O(n_atol) serialization/hash once per solve, negligible; code must remain net-small or consolidate older plumbing under policy. Exact token use is UNAVAILABLE in this harness and must not be invented if a PR is later proposed.",
+      "assumptions_used": [
+        "Existing result/evidence structures can carry a snapshot/digest without a new gate subsystem.",
+        "Configuration is frozen at solve entry and not mutated concurrently.",
+        "Documentation must describe the authoritative current catalogue, not historical capability."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-030",
+        "native/rabbit_cpu/src/ode.rs:73-116",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1-12",
+        "bbn_codex_anti_drift_cost_effective_policy.md:20-48",
+        "bbn_codex_anti_drift_cost_effective_policy.md:50-66"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '1,12p' native/rabbit_cpu/src/isotropic_boltzmann.rs; sed -n '73,116p' native/rabbit_cpu/src/ode.rs; sed -n '20,66p' bbn_codex_anti_drift_cost_effective_policy.md",
+        "PROPOSED: mutate each config field after constructing two otherwise identical solves and assert the existing result binding distinguishes every used configuration without a new manifest."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: two materially different used configurations share the same binding, the snapshot reflects post-solve mutation, or remediation adds standalone gate plumbing without blocker movement/consolidation.",
+        "Minimal decisive experiment: canonical-bit digest golden vectors including -0, subnormal, atol order, and solver kind, plus a header/catalogue consistency review."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-031",
+      "claim_id": "ODE-A6",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[CLOSED_AS_EXTRINSIC_NON_ODE_FINDING] Governing numerical condition: none. Missing sealed paths, runtime HTTP failure, context-pack byte drift, and environment patch-version drift constrain evidence identity but do not imply an ODE defect. The rigorous remedy is procedural: fail closed, bind assignment/source/environment identities, and rerun the exact intended evidence; never convert harness failure into a physics or solver verdict. No scaling, stability, consistency, order, positivity, or complexity statement about the ODE follows. A current context-pack SHA was recorded only for this assignment; no sibling byte comparison was performed. This item is therefore closed for ODE-remedy classification while the independent harness gate remains separately FAIL.",
+      "assumptions_used": [
+        "The original adjudication correctly separated harness/environment limitations from code findings.",
+        "No missing artifact is silently substituted by a similarly named path.",
+        "Harness-integrity status is governed by its own gate."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-031",
+        ".agent-harness/generated/CONTEXT_PACK.md",
+        ".agent-harness/context/GATE_REGISTRY.json:158-178",
+        ".agent-harness/generated/STATUS_BOARD.md:20-20"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-MATH.json",
+        "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-MATH.json"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier of this classification: direct evidence that an ODE implementation caused the missing-path/runtime/context identity failure.",
+        "Minimal decisive experiment: none for ODE mathematics; the harness owner must run its registered live integrity canary."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-032",
+      "claim_id": "ODE-A6",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[CLOSED_POLICY_AND_GATE_BOUNDARY] Current governing conditions remain explicit: G-F10-INDEPENDENT-FLRW and G-HARNESS-INTEGRITY are FAIL; the six other listed gates are PASS only within their recorded scope. Rust AOT is the active/repeated-run target, SciPy/BDF the temporary number-of-record, JAX a frozen local parity/AD/Jacobian oracle, and QKE/public-production/full scientific authority are forbidden. Remedy: none; preserve this boundary. No green unit suite, same-code solver agreement, static JVP, projection/tree match, or segment timing satisfies the endpoint/scientific conditions. Numerical scaling/order/invariants are claim-specific and cannot be promoted by policy metadata. Complexity of a claim must include its exact gate evidence, not proxy work.",
+      "assumptions_used": [
+        "The supplied gate registry and generated status board are the current authority for this assignment.",
+        "PASS gates retain their stated narrow evidence scope.",
+        "No new gate decision was authorized or produced here."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-032",
+        ".agent-harness/generated/STATUS_BOARD.md:13-20",
+        ".agent-harness/context/GATE_REGISTRY.json:75-115",
+        ".agent-harness/context/GATE_REGISTRY.json:158-178",
+        "bbn_codex_anti_drift_cost_effective_policy.md:10-22"
+      ],
+      "evidence_fingerprint": "sha256:b0fbc0ea0d8af71c1502016eb9139c72e5a8a1b604a578c80be2d07017f22722",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "rg -n 'G-F10-INDEPENDENT-FLRW|G-HARNESS-INTEGRITY|PASS|FAIL' .agent-harness/generated/STATUS_BOARD.md .agent-harness/context/GATE_REGISTRY.json",
+        "sed -n '10,22p' bbn_codex_anti_drift_cost_effective_policy.md"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Falsifier: a newer authoritative gate decision with exact evidence supersedes the supplied registry/status board.",
+        "Minimal decisive experiment: none; gate changes require their registered evidence and adjudication, not this mathematical analysis."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-033",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[CLOSED_BOUNDED_GOOD_PATHS] The two mathematical closures remain sound in current assigned source: strict logit coordinates map every finite logit to 0<f<1 and fail raw when the representation/physical evaluation breaks; solver-local bitwise-identical fused/cache semantics avoid repeated full-Jacobian payload at identical points without changing F or J. These preserve Pauli invariants and consistency where the transform is smooth; exact bitwise cache reuse cannot change order. Current source also has positive finite OdeConfig validation and fail-loud Rust event/nonfinite branches. Remedy: none; retain regression witnesses and do not relist these historical defects as open. Limiting caveat: f approaches 0 or 1 at extreme logits, where transformed derivatives can be ill-conditioned/underflow and must fail raw. Cache complexity removes duplicate expensive payloads but does not establish endpoint or scientific authority. Historical test counts were not rerun in this assignment.",
+      "assumptions_used": [
+        "Cache keys require exact bitwise-identical finite (t,y) and return bitwise-identical outputs.",
+        "Finite logits are the admitted state coordinates; raw transform failures remain visible.",
+        "Closed mechanics do not close G-F10-INDEPENDENT-FLRW."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-033",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:360-401",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:668-704",
+        "native/rabbit_cpu/src/ode.rs:82-101",
+        "native/rabbit_cpu/src/ode.rs:129-140"
+      ],
+      "evidence_fingerprint": "sha256:40bb43a86cb08c230ba3d3f58b9c77fbe1f74b15c94f48bf00466b2583bd9d2c",
+      "counterevidence_refs": [
+        ".agent-harness/generated/STATUS_BOARD.md:15-15"
+      ],
+      "reproduction": [
+        "sed -n '82,140p' native/rabbit_cpu/src/ode.rs; sed -n '360,401p' native/rabbit_cpu/src/isotropic_boltzmann.rs; sed -n '668,704p' native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "NOT RUN: retained historical unit/endpoint test counts were not re-executed in this read-only mathematical assignment."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Falsifier: cache reuse at nonidentical state/time, non-bitwise output drift, silent logit clipping, or promotion of these local closures to endpoint authority.",
+        "Minimal decisive experiment: retain existing bitwise cache/logit boundary regressions; separately use F-ODE-ADJ3-021 for exact-head endpoint evidence."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-034",
+      "claim_id": "ODE-A1",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[RETAINED_CLOSED_MECHANICAL_REGISTER_WITH_COMPLETENESS_CEILING] Governing condition for this item is inventory identity, not numerical correctness: the original adjudication's exact executable roots, import/call definitions, and alias exclusions form a completeness floor for that head. No mathematical remedy follows from counts alone, and an inventory cannot prove absence of semantic defects. This blind assignment was explicitly restricted to named inputs and did not rescan the repository, so the register is retained closed for the original audit but is not asserted as a fresh exact-head inventory. Scaling, stability, consistency, order, positivity, and computational complexity must be evaluated per mapped solver surface; mere enumeration supplies none. Remedy for future drift is a fresh mechanical AST inventory under the same declared roots and definitions, deduplicated by stable finding IDs, without treating count changes as defects by themselves.",
+      "assumptions_used": [
+        "The original inventory definitions and declared roots were internally consistent for its audited head.",
+        "No broad rediscovery was authorized for this blind remedy axis.",
+        "Inventory completeness and semantic correctness remain separate claims."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json#F-ODE-ADJ3-034",
+        ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-MATH.json",
+        ".agent-harness/context/roles/independent_auditor.md"
+      ],
+      "evidence_fingerprint": "sha256:18195e473776b0fd0bcc23b1be41c45338d529bffaf75262cb2f99e9b6a174c9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.findings[] | select(.finding_id==\"F-ODE-ADJ3-034\") | .statement' .agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+        "NOT RUN: a fresh repo-wide AST inventory would violate this assignment's bounded required-input/discovery contract."
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Falsifier of current completeness: any source/call-surface change since the original audited head; this would not falsify the retained original-head register.",
+        "Minimal decisive experiment: in a separately authorized mapping assignment, rerun the same AST inventory definitions at exact head and compare roots/calls/aliases mechanically."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-MATH.json"
+  ]
+}

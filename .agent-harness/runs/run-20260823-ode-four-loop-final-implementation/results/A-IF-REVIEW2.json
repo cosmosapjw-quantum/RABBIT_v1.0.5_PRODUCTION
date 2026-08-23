@@ -1,0 +1,343 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-four-loop-final-implementation",
+  "assignment_id": "A-IF-REVIEW2",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02e55-c26e-7c20-8a4e-a6b326391a9a",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260823-ode-four-loop-final-implementation",
+    "assignment_id": "A-IF-REVIEW2",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e4d465ed4c1383ff95c2cf18d318781739b8cc232488e4ef23af0babbeab004e",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-REVIEW2.json",
+  "started_at": "2026-08-23T11:15:56Z",
+  "completed_at": "2026-08-23T11:25:14Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "git": "2.43.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "targeted read-only adjudication; no production edit and no new test, trajectory, endpoint, or scientific execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260823-ode-four-loop-final-implementation/assignments/A-IF-REVIEW2.json # VERIFY: PASS",
+    "complete bounded reads of CONTEXT_PACK.md, the assignment, adjudicator role, RESULT_ENVELOPE, every required artifact/result, and every required raw log",
+    "jq read-only full-object summaries, invalid-entry grouping, JSON-pointer inspection, and canonical configuration/solver/raw-occupation comparison across exact HEAD and C1",
+    "git apply --numstat/--stat on C1_REJECTED_CANDIDATE.patch",
+    "rg/awk/sed read-only extraction of complete pytest outcome lists and first-error attribution from the measured-environment logs",
+    "sha256sum of the sealed patch, trajectories, dummy outputs, result inputs, and raw logs",
+    "python3 read-only float.fromhex conversion of the first and maximum retained negative occupation magnitudes",
+    "python3 --version; jq --version; git --version; sha256sum --version; date -u"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/FOUR_LOOP_EVIDENCE_MAP.json",
+      "sha256": "92f4739c1722f012ae8f57499136ee6cc038dc595943a43d1c235007ddbbb56c",
+      "role": "sealed four-loop evidence universe and claim ceiling"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/C1_REJECTED_CANDIDATE.patch",
+      "sha256": "a12a2c772c288fecb6a74b27d2a7133f2d839273a110276b7a24f850ef96a849",
+      "role": "exact rejected two-file candidate"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_exact_head_collision_on.json",
+      "sha256": "2da11255f25761e4b7e7ea330eda2c4948013e4d1df00c5e127720a90f9a678e",
+      "role": "exact-HEAD collision-on trajectory inspection"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collision_on.json",
+      "sha256": "1495d0aa53560773a223dfabcf5eb149c23b567a340b7f9bab08630067c8d8e3",
+      "role": "C1 collision-on strict-admission failure"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collisionless.json",
+      "sha256": "4e2d29a06d41660aa76f99da2c83229d3a660d049e7bac67030b07f71424b4b5",
+      "role": "bounded collisionless admitted-path control"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/valid_dummy_exact_head.json",
+      "sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0",
+      "role": "exact-HEAD synthetic valid-path output"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/valid_dummy_c1.json",
+      "sha256": "9f25dd6251d3d577675b57e7cf51350397e0252cc39bd4d51cdcc8b0d4fef0b0",
+      "role": "byte-identical C1 synthetic valid-path output"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/08_c1_adversarial_green.log",
+      "sha256": "4dd46935ac54bfa9f4dc0705d111232d2c00a7152c85914d591011cf47bd1f5e",
+      "role": "18/18 synthetic adversarial green tests"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/15_production_not_slow_measured_env_retry.log",
+      "sha256": "39fafbf50e5114f74a5decfeea2b1a143aeb6c6971df1434f5e6eb63445c598b",
+      "role": "396 passed, 8 skipped measured production-not-slow run"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/16_gold_measured_env.log",
+      "sha256": "6b8fedcecf0ac89ec9e5afcba9b25a85583bc1968b4896b7e01adc7d359c6150",
+      "role": "candidate measured gold run with five failures"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/17_exact_head_gold_failure_attribution.log",
+      "sha256": "dab2b06ea77858c0f22f514a11a2a77c1997147668785b54413e34433be42b71",
+      "role": "exact-HEAD reproduction of the same five gold failures"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/18_full_default_measured_env.log",
+      "sha256": "51da9b55cc531cda99549c4c9d9ea4552c6222f1428132be8c868a45c54702e1",
+      "role": "full measured run: 54 failed, 2587 passed, 80 skipped"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/19_dynamic_collision_module_measured_env.log",
+      "sha256": "5cf6994649164b2de42d7f95c32ca19440d874e55dd7434f8282b8786f3d07e2",
+      "role": "candidate focused module: 3 failed, 28 passed"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/20_exact_head_dynamic_collision_measured_env.log",
+      "sha256": "cd86a43f0cbad5298d0a4f004bc94fe0a7533a051079919dd386e9efcb512060",
+      "role": "exact-HEAD focused module: 13 passed"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json",
+      "sha256": "4e908ac7c057b0126648692b1fedc59d5b6f54120484348f517239274dbb0de4",
+      "role": "preimplementation C1 contract audit"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json",
+      "sha256": "c0bcf5ddee457de8f7c5dcdaa3cb1ea15d6884229458015f8d91bc1f2693ec21",
+      "role": "governing implementation-offer disposition and stop rule"
+    }
+  ],
+  "adjudication": {
+    "decision": "REJECT/STOP_INVALID",
+    "decision_basis": "The candidate correctly exposes a real raw-state violation, but it does not repair it. The measured collision-on solve succeeds and fires one event while 2,096 stored occupations are negative across samples 3 through 233; strict-open admission therefore rejects the run at sample 3. Exact HEAD and C1 have the same canonical configuration/solver/raw-occupation bytes, so this is the pre-existing direct-f numerical trajectory being newly rejected, not a repaired trajectory. The candidate also exceeds its frozen cost boundary and changes RHS Hubble and terminal-event semantics outside C1.",
+    "retention": "Do not admit the candidate to the retained tree. Preserving the patch, raw trajectories, and logs in the isolated evidence worktree is correct.",
+    "strict_occupation_assessment": {
+      "contract": "Every stored occupation must satisfy strict 0 < f < 1; no epsilon, clipping, projection, or tolerance widening is authorized.",
+      "collision_on_result": "FAIL",
+      "solver_success": true,
+      "terminal_event_count": 1,
+      "stored_points": 234,
+      "invalid_count": 2096,
+      "invalid_kind": "negative only; zero/nonfinite/at-or-above-one counts are all zero",
+      "samples_with_invalid": "every sample 3 through 233 inclusive",
+      "first_violation": "sample 3, N=-2.302557321652884, f_nue[22]=-2.3008216172341183e-30 while initial FD at that node is 4.128432717702736e-31",
+      "maximum_excursion": "5.491289338418672e-15",
+      "localization": "high-q tails: nue nodes 18-23 and nux nodes 19-23",
+      "exact_head_c1_canonical_payload_sha256": "sha256:dbb889a696287da2bc02a60a6a42156cece3256f59d618710412d6e5b2c85dc6"
+    },
+    "rhs_hubble_assessment": "FAIL_SCOPE. Stored-column recomputation of finite positive H is within C1, but the patch additionally removes the frozen RHS H_safe=max(H,1e-100) behavior and raises from trial/Jacobian/rejected RHS evaluations. The governing C1 audit explicitly required probe-side H_safe to remain unchanged. The synthetic monkeypatch test proves the new behavior exists; no retained real-trajectory evidence shows it is needed or safe. This requires a separate physics/numerical contract, not silent inclusion in C1.",
+    "event_semantics_assessment": "FAIL_SCOPE. C1 required solver success plus a nonempty terminal event before postprocessing. The patch changes this to exactly one event and adds only a synthetic duplicate-event mutant. The realized solve has one terminal event, so this change neither explains nor repairs the failure; event refinement/outcome semantics remain C2 REWORK.",
+    "additional_contract_gap": "The patch computes z_sample=exp(N_sample)*T_sample but does not explicitly require z_sample to be finite and positive before resampling, despite the frozen C1 audit specifying that invariant.",
+    "physics_invariants": {
+      "strict_positivity": "FAIL on the real collision-on trajectory",
+      "solver_success_and_event": "PASS for the measured trajectory, but insufficient for physical admission",
+      "collisionless_strict_open_control": "PASS on the retained n_q=24 collisionless run",
+      "hubble": "No measured nonfinite/nonpositive H failure is retained; the candidate stops first on occupation sample 3",
+      "endpoint_observables": "INADMISSIBLE under C1 because they would be formed only after sanitizing a trajectory that violates the raw state manifold",
+      "collision_formulas_conservation_first_law": "Not newly validated by this implementation experiment"
+    },
+    "failure_attribution": {
+      "candidate_specific": "The three slow dynamic-collision tests fail only on C1, all with the same RawStateAdmissionError. Exact HEAD passes all 13 pre-existing module tests; C1 passes the 18 added synthetic tests and ten pre-existing tests, then fails the three real collision-on tests.",
+      "exact_head_baseline_confirmed": "All five measured gold failures reproduce on exact HEAD with the same values and are not attributable to C1.",
+      "full_suite": "The C1 full run is red at 54 failed, 2587 passed, 80 skipped. Three failures are C1-specific and five are exact-HEAD-confirmed. The remaining 46 have no paired exact-HEAD full run in the sealed evidence; their exact attribution is inconclusive, although their reported failure surfaces are outside the two-file C1 diff.",
+      "production_not_slow": "396 passed and 8 skipped, but this selection excludes the slow collision-on discriminator and cannot rescue the candidate."
+    },
+    "anti_drift_cost": {
+      "all_files_added_lines": 228,
+      "all_files_deleted_lines": 43,
+      "all_files_net_lines": 185,
+      "production_added_lines": 82,
+      "production_deleted_lines": 43,
+      "production_net_lines": 39,
+      "test_added_lines": 146,
+      "test_deleted_lines": 0,
+      "frozen_total_net_cap": 40,
+      "token_use_exact": "UNAVAILABLE",
+      "token_use_basis": "The harness exposes no exact token counter.",
+      "blocker_movement_ratio": 0.0,
+      "cost_effectiveness_verdict": "REJECT; the candidate is +185 net overall, exceeds the frozen total cap by 145 lines, and leaves the real collision-on path inadmissible."
+    },
+    "claim_ceiling": {
+      "candidate_code": "IMPLEMENTED and executed only as an isolated rejected experiment; not implemented in the retained tree",
+      "synthetic_discriminators": "VALIDATED only for their fake-solver/mutant scope (18/18)",
+      "raw_violation_diagnosis": "VALIDATED only for the frozen n_q=24, collision-on, rtol=1e-8, atol=1e-10, T_stop=0.01 MeV trajectory",
+      "c1_repair": "REJECTED; not VALIDATED and not admitted",
+      "endpoint_or_scientific_authority": "NONE",
+      "four_loop_blocker_movement": "NONE; the experiment localizes a positivity-preservation blocker",
+      "gate_movement": "NONE"
+    },
+    "gate_verdicts": {
+      "G-F10C1-RADIAL": "PASS unchanged by authority; not revalidated by this rejected candidate",
+      "G-F10C1-REGRESSION": "PASS unchanged on the retained tree; the candidate itself is not regression-green",
+      "G-F10-PERFORMANCE": "PASS unchanged; no candidate endpoint/performance evidence",
+      "G-F10-CATALOGUE": "PASS unchanged; no catalogue change",
+      "G-F10-INDEPENDENT-FLRW": "FAIL/CLOSED_ON_CURRENT_MEASUREMENT unchanged; no D-071 reopen",
+      "G-F10-COVARIANCE-METROLOGY": "PASS unchanged at its matched-family/module-byte scope",
+      "G-F10-SCOPE": "PASS unchanged; rejecting the candidate preserves the scope fence",
+      "G-HARNESS-INTEGRITY": "FAIL unchanged"
+    },
+    "minimum_future_physics_numerical_work": [
+      "Under a new prospectively sealed authority slice, identify a positivity-preserving state representation or integrator for the collision-on direct-f failure. A logit/entropy coordinate is a candidate, but its transformed RHS, tail conditioning, initial values, Jacobian behavior, conservation, and endpoint readouts must be derived and tested rather than assumed.",
+      "Use the retained sample-3/high-q trajectory as a real red discriminator and require strict-open occupations at every stored sample with no clipping, epsilon admission, atol widening, tail slaving, or post-hoc projection. Preserve collisionless identity, number/energy/first-law behavior, finite positive T_gamma/H, and the terminal event.",
+      "Keep RHS probe-H policy and event semantics in separate contracts. Do not remove the H floor or strengthen nonempty-event admission to exactly-one inside a raw stored-state patch without independent solver-probe and consumer evidence.",
+      "After a real collision-on green, rerun the focused module, measured production/gold/full suites, and paired exact-HEAD controls. The other 46 full-suite failures need an exact-HEAD full comparison before attribution. No endpoint, D-071, or gate claim precedes those results."
+    ],
+    "unresolved_claims": [
+      "Whether a positivity-preserving reparameterization can close the real collision-on strict-open contract without worsening tail conditioning or physical invariants.",
+      "Whether the candidate's RHS H change would alter any real solver probe; the retained run fails first on occupation admission and provides no such evidence.",
+      "Exact attribution of the 46 full-suite failures not covered by the paired gold and focused exact-HEAD runs."
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IF-REVIEW2-001",
+      "claim_id": "IF-C1-FINAL-ADJ",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "REJECT/STOP_INVALID: strict stored-sample admission is correctly fail-closed in principle but is incompatible with the measured collision-on trajectory. The successful one-event solve contains 2,096 negative occupations across every stored sample 3-233, beginning at f_nue[22]=-2.3008216172341183e-30; exact HEAD and C1 have identical canonical configuration, solver, and raw-occupation payloads. The patch discovers rather than repairs a positivity-preservation blocker.",
+      "assumptions_used": [
+        "The frozen strict-open contract is literal: any f<=0 or f>=1 fails, regardless of absolute size or solver atol.",
+        "The retained JSON contains the complete invalid-entry ledger for the declared measured trajectory."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_exact_head_collision_on.json#/configuration",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_exact_head_collision_on.json#/raw_occupations",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collision_on.json#/integration_exception",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/19_dynamic_collision_module_measured_env.log:80-98",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/19_dynamic_collision_module_measured_env.log:294-298",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/20_exact_head_dynamic_collision_measured_env.log:1-3"
+      ],
+      "evidence_fingerprint": "sha256:dbb889a696287da2bc02a60a6a42156cece3256f59d618710412d6e5b2c85dc6",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collisionless.json#/raw_occupations shows zero invalid entries for the collisionless control.",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/08_c1_adversarial_green.log shows 18/18 synthetic mutants pass, but none substitutes for the real collision-on trajectory."
+      ],
+      "reproduction": [
+        "Canonicalize {configuration,solver,raw_occupations} with jq -cS for exact HEAD and C1; both hash to dbb889a696287da2bc02a60a6a42156cece3256f59d618710412d6e5b2c85dc6.",
+        "Group .raw_occupations.entries by bank/node and inspect .samples_with_invalid; observed 2,096 negatives localized to nue 18-23 and nux 19-23, with samples 3-233 all represented.",
+        "Compare the candidate focused outcome 3 failed/28 passed to exact HEAD 13 passed under the same measured environment."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The root numerical mechanism producing the high-q negative tail and a positivity-preserving replacement remain unresolved."
+      ]
+    },
+    {
+      "finding_id": "F-IF-REVIEW2-002",
+      "claim_id": "IF-C1-FINAL-ADJ",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The candidate is not a conforming C1 patch even apart from the trajectory failure. It changes probe/rejected-evaluation H behavior by deleting H_safe=max(H,1e-100), changes nonempty terminal-event admission to exactly one event, omits an explicit finite-positive z_sample check, and totals +228/-43/net +185 against the frozen two-file net<=40 boundary.",
+      "assumptions_used": [
+        "A-IF-C1 and A-CH-DECIDE are governing for the bounded implementation offer.",
+        "The net-line cap applies to the two-file patch, not only production lines."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/C1_REJECTED_CANDIDATE.patch:41-83",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/C1_REJECTED_CANDIDATE.patch:98-155",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json#/findings/2",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-C1.json#/findings/3",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json#/adjudication/candidate_dispositions/C1"
+      ],
+      "evidence_fingerprint": "sha256:a12a2c772c288fecb6a74b27d2a7133f2d839273a110276b7a24f850ef96a849",
+      "counterevidence_refs": [
+        "Production-only net movement is +39, and the realized H/event values do not trigger the extra branches; neither fact changes the governing total cap or scope boundary."
+      ],
+      "reproduction": [
+        "Run git apply --numstat on the sealed patch: production +82/-43 and tests +146/-0, totaling +228/-43/net +185.",
+        "Read the H hunk at patch lines 71-83 and event hunk at 105-112; compare to A-IF-C1's explicit probe-side H_safe and nonempty-event contract."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A separately authorized contract would be required to decide RHS probe-H failure semantics and any strengthened event-cardinality rule."
+      ]
+    },
+    {
+      "finding_id": "F-IF-REVIEW2-003",
+      "claim_id": "IF-C1-FINAL-ADJ",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Failure attribution is bounded and reproducible: three focused failures are C1-specific; five gold failures reproduce exactly on exact HEAD; the remaining 46 full-suite failures are not paired against an exact-HEAD full run and remain inconclusive. The 396-pass production-not-slow selection is genuine but excludes the decisive slow collision-on path.",
+      "assumptions_used": [
+        "The measured-environment commands shown in the log headers are the comparison environments of record.",
+        "No unlisted exact-HEAD full run may be inferred."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/15_production_not_slow_measured_env_retry.log:1-8",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/16_gold_measured_env.log:1-37",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/17_exact_head_gold_failure_attribution.log:1-36",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/18_full_default_measured_env.log:2897-2952",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/19_dynamic_collision_module_measured_env.log:294-299",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/raw_logs/20_exact_head_dynamic_collision_measured_env.log:1-3"
+      ],
+      "evidence_fingerprint": "sha256:5cf6994649164b2de42d7f95c32ca19440d874e55dd7434f8282b8786f3d07e2",
+      "counterevidence_refs": [
+        "The two-file diff makes most other failures structurally unlikely to be caused by C1, but structural disjointness is not an exact-HEAD execution comparison."
+      ],
+      "reproduction": [
+        "Compare the five candidate gold failure values/names to the exact-HEAD targeted rerun; all five match.",
+        "Compare candidate and exact-HEAD dynamic-collision module summaries and subtract the five confirmed gold plus three confirmed C1 failures from the 54 full failures, leaving 46 unpaired failures."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Exact attribution of the 46 unpaired full-suite failures."
+      ]
+    },
+    {
+      "finding_id": "F-IF-REVIEW2-004",
+      "claim_id": "IF-FOUR-LOOP-CLAIM-CEILING",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "No blocker or gate moved. The only newly supportable scientific statement is a bounded diagnosis: the frozen n_q=24 collision-on direct-f trajectory is not strictly positive in its high-q stored tails. The C1 remedy is rejected, D-071 is not reopened, endpoint/public/QKE authority remains absent, and leaving the candidate unadmitted in the isolated worktree is the correct terminal action.",
+      "assumptions_used": [
+        "The generated status board in the shared context remains sole gate authority.",
+        "A rejected isolated experiment cannot move a retained-tree claim or gate."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/FOUR_LOOP_EVIDENCE_MAP.json#/claim_ceiling",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/FOUR_LOOP_EVIDENCE_MAP.json#/preimplementation_status",
+        ".agent-harness/runs/run-20260823-ode-coding-harness-loop/results/A-CH-DECIDE.json#/adjudication/residual_blockers",
+        ".agent-harness/generated/CONTEXT_PACK.md:346-390",
+        ".agent-harness/generated/CONTEXT_PACK.md:391-457",
+        ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/artifacts/raw_trajectory_c1_collision_on.json#/integration_exception"
+      ],
+      "evidence_fingerprint": "sha256:92f4739c1722f012ae8f57499136ee6cc038dc595943a43d1c235007ddbbb56c",
+      "counterevidence_refs": [
+        "The synthetic C1 battery, collisionless control, and production-not-slow selection pass, but none establishes a usable collision-on trajectory or retained blocker movement."
+      ],
+      "reproduction": [
+        "Read every current gate status from the generated context registry: six pass and two fail before and after this experiment.",
+        "Verify the candidate returns no collision-on result and the patch remains only a rejected evidence artifact."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The minimum new work is a prospectively sealed positivity-preserving numerical formulation plus real collision-on, invariant, and exact-HEAD paired validation; no patch-local tolerance adjustment is admissible."
+      ]
+    }
+  ],
+  "errors": [
+    "One initial jq display command omitted the '.' filter for three small JSON files and exited with a compile error; it was corrected immediately, all three files were then read successfully, and no evidence or verdict was affected."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260823-ode-four-loop-final-implementation/results/A-IF-REVIEW2.json"
+  ]
+}

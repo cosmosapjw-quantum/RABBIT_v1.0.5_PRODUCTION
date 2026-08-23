@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-TEST",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "ODE-A5",
+    "ODE-A7"
+  ],
+  "task": "Independently falsify the ODE audit completeness and test adequacy at current HEAD. Starting from the mapper result, build an AST-level inventory of scipy.integrate/diffsol/JAX/Diffrax/ODE aliases and calls to catch missed dynamic or indirect surfaces; reconcile exact counts. Map focused tests to risks and inspect oracle independence, mocks/tautologies, skips/xfails/optional-dependency branches, negative/boundary/event/nonfinite/budget/fallback cases, backend parity and real endpoint coverage. Execute one bounded focused pytest/cargo collection or test bundle that does not launch forbidden trajectory/endpoint science. Report uncovered meaningful branches and any false-green behavior; include a completeness manifest and explicit residual gaps. Do not inspect other reviewer results or edit tests/source.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-TEST.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json",
+    "tests",
+    "pyproject.toml",
+    "native/rabbit_cpu/Cargo.toml",
+    "src/rabbit",
+    "scripts"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json",
+  "status": "registered"
+}

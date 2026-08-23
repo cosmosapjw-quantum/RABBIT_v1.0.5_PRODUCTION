@@ -1,0 +1,619 @@
+Script started on 2026-08-23 18:13:42+09:00 [COMMAND="/usr/bin/time -v env PYTHONPATH=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src pytest -q tests/test_dynamic_collision_driver.py -k 'invalid_final_stored_state_never_reaches_observables or exactly_one_terminal_event_is_required' -vv" <not executed on terminal>]
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/rabbit-ode-four-loop-wt.peLD3M/worktree
+configfile: pyproject.toml
+collecting ... collected 31 items / 20 deselected / 11 selected                               
+
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval] FAILED [  9%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval] FAILED [ 18%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval] FAILED [ 27%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval] FAILED [ 36%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval] FAILED [ 45%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval] FAILED [ 54%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature] FAILED [ 63%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature] FAILED [ 72%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature] FAILED [ 81%]
+tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature] FAILED [ 90%]
+tests/test_dynamic_collision_driver.py::test_exactly_one_terminal_event_is_required PASSED [100%]
+
+=================================== FAILURES ===================================
+_ test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77366774ae40>
+row = 0, value = 0.0, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7736a8568d40>
+row = 0, value = 1.0, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77362776e9c0>
+row = 0, value = -1e-09, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77362776e000>
+row = 0, value = 1.000000001, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7736277bc440>
+row = 0, value = nan, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7736277bc5f0>
+row = 0, value = inf, reason = 'occupation_outside_strict_open_interval'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7736277bc680>
+row = -1, value = 0.0, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7736277bd4f0>
+row = -1, value = -1.0, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77362762bfe0>
+row = -1, value = nan, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+_ test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x773627628080>
+row = -1, value = inf, reason = 'nonfinite_time_or_nonpositive_temperature'
+
+    @pytest.mark.parametrize(
+        ("row", "value", "reason"),
+        [
+            (0, 0.0, "occupation_outside_strict_open_interval"),
+            (0, 1.0, "occupation_outside_strict_open_interval"),
+            (0, -1e-9, "occupation_outside_strict_open_interval"),
+            (0, 1.0 + 1e-9, "occupation_outside_strict_open_interval"),
+            (0, np.nan, "occupation_outside_strict_open_interval"),
+            (0, np.inf, "occupation_outside_strict_open_interval"),
+            (-1, 0.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, -1.0, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.nan, "nonfinite_time_or_nonpositive_temperature"),
+            (-1, np.inf, "nonfinite_time_or_nonpositive_temperature"),
+        ],
+    )
+    def test_invalid_final_stored_state_never_reaches_observables(monkeypatch, row, value, reason):
+        """Catches final-state clipping/flooring before moment and observable calculation."""
+    
+        original_moment = driver.spectral_energy_moment
+        moment_calls = []
+    
+        def moment_spy(*args):
+            moment_calls.append(1)
+            return original_moment(*args)
+    
+        def fake_solve(_fun, t_span, y0, **_kwargs):
+            return _fake_success(
+                t_span, y0, mutate=lambda states: states.__setitem__((row, -1), value)
+            )
+    
+        monkeypatch.setattr(driver, "spectral_energy_moment", moment_spy)
+        monkeypatch.setattr(driver, "solve_ivp", fake_solve)
+        with pytest.raises(RuntimeError) as caught:
+            integrate_flrw_decoupling(n_q=8, collisions=False)
+    
+        assert type(caught.value).__name__ == "RawStateAdmissionError"
+        assert caught.value.reason == reason
+        assert caught.value.sample_index == 1
+>       assert moment_calls == []
+E       assert [1, 1] == []
+E         
+E         Left contains 2 more items, first extra item: 1
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     1,
+E         +     1,
+E         + ]
+
+tests/test_dynamic_collision_driver.py:203: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-0.0-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-1.0-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0--1e-09-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-1.000000001-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-nan-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[0-inf-occupation_outside_strict_open_interval]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-0.0-nonfinite_time_or_nonpositive_temperature]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1--1.0-nonfinite_time_or_nonpositive_temperature]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-nan-nonfinite_time_or_nonpositive_temperature]
+FAILED tests/test_dynamic_collision_driver.py::test_invalid_final_stored_state_never_reaches_observables[-1-inf-nonfinite_time_or_nonpositive_temperature]
+================= 10 failed, 1 passed, 20 deselected in 0.56s ==================
+Command exited with non-zero status 1
+	Command being timed: "env PYTHONPATH=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/src pytest -q tests/test_dynamic_collision_driver.py -k invalid_final_stored_state_never_reaches_observables or exactly_one_terminal_event_is_required -vv"
+	User time (seconds): 3.60
+	System time (seconds): 0.09
+	Percent of CPU this job got: 456%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.81
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 89968
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 17333
+	Voluntary context switches: 54
+	Involuntary context switches: 930
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 144
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+
+Script done on 2026-08-23 18:13:43+09:00 [COMMAND_EXIT_CODE="1"]

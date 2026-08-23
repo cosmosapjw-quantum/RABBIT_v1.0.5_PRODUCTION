@@ -1,0 +1,103 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-ADJ2",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02a51-932a-7bc0-9602-727fe983e192",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260806-bd623-audit-triage",
+    "assignment_id": "A-ODE-ADJ2",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:f56f9cf7b45023048af9f91169a6de1bf8ec9b05280480213562bca30f90516f",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ2.json",
+  "started_at": "2026-08-22T16:32:37Z",
+  "completed_at": "2026-08-22T16:34:50Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ2.json",
+    "wc -l <sealed required inputs and allowed sibling results>",
+    "test ! -e scripts/audit/run_physical_rhs_jvp_receipts.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ2.json",
+      "sha256": "f56f9cf7b45023048af9f91169a6de1bf8ec9b05280480213562bca30f90516f",
+      "role": "verified assignment declaring the missing required input"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-ODE-ADJ2-CONTRACT-01",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The sealed complete-ODE adjudication cannot be performed under A-ODE-ADJ2 because required input scripts/audit/run_physical_rhs_jvp_receipts.py is absent at current HEAD. Substituting the similarly purposed current file would exceed the exact assignment and silently change the evidence bytes.",
+      "assumptions_used": [
+        "The assignment required_inputs list is exhaustive and authoritative.",
+        "A missing required input requires fail-closed termination under the mandatory subagent bootstrap."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ2.json:required_inputs",
+        "test ! -e scripts/audit/run_physical_rhs_jvp_receipts.py exited 0",
+        "git HEAD 78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+      ],
+      "evidence_fingerprint": "sha256:f56f9cf7b45023048af9f91169a6de1bf8ec9b05280480213562bca30f90516f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "test ! -e scripts/audit/run_physical_rhs_jvp_receipts.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Register a corrected adjudication assignment naming the intended current source path, mint a new single-use admission receipt, and rerun adjudication.",
+        "The complete severity-ordered deduplication, gate-by-gate verdict, and science-slice synthesis were not produced under this failed contract."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ2-RUNTIME-01",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "The assignment records that a prior dedicated adjudicator runtime failed before substantive work and that its token-only receipt may remain unconsumed; this fallback default runtime did not inspect receipt state because the missing required input forced an earlier hard stop.",
+      "assumptions_used": [
+        "The assignment task text is authoritative for the requested process limitation but not proof of current receipt state."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ2.json:task"
+      ],
+      "evidence_fingerprint": "sha256:f56f9cf7b45023048af9f91169a6de1bf8ec9b05280480213562bca30f90516f",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.8,
+      "unresolved": [
+        "Main must separately verify and, if policy permits, close or preserve the prior dedicated-runtime receipt state."
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "error_id": "E-ODE-ADJ2-MISSING-REQUIRED-INPUT",
+      "message": "Required input scripts/audit/run_physical_rhs_jvp_receipts.py is missing; substantive adjudication stopped before reading sibling results or retained science evidence."
+    }
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ2.json"
+  ]
+}

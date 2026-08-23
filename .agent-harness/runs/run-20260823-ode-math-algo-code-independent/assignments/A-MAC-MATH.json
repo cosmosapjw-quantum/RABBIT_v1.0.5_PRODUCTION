@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260823-ode-math-algo-code-independent",
+  "assignment_id": "A-MAC-MATH",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "ODE-A1",
+    "ODE-A2",
+    "ODE-A3",
+    "ODE-A4",
+    "ODE-A5",
+    "ODE-A6",
+    "ODE-A7"
+  ],
+  "task": "Fresh blind mathematical remedy analysis of all 34 original ODE findings. Use only the original A-ODE-ADJ3 register, current source named by this assignment, governing gates/policy, and fresh primary literature or official documentation. Do not read any prior physics-mitigation run, result, note, or sibling result. For every original finding ID, derive the governing numerical condition and classify open/retained/inconclusive/closed; propose a remedy or rigorous no-go, with assumptions, scaling/nondimensionalization, stability/consistency/order arguments, limiting cases, positivity/invariants where relevant, complexity bound, falsifier, and minimal decisive experiment. Focus on stiff ODE/DAE structure, event/root certification, a-posteriori or goal-oriented error control, dimensional reduction, and derivative conditioning. Do not implement or edit shared files. Write only the required result JSON and end with the exact HARNESS_RESULT envelope.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/assignments/A-MAC-MATH.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+    "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+    "bbn_codex_anti_drift_cost_effective_policy.md",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    ".agent-harness/generated/STATUS_BOARD.md",
+    "native/rabbit_cpu/src/ode.rs",
+    "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+    "native/rabbit_cpu/src/flrw.rs",
+    "src/rabbit/solver/rodas5p.py",
+    "src/rabbit/solver/rodas5p_adapter.py",
+    "src/rabbit/jax/solver_jax_rodas5p.py",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "requirements.measured.txt",
+    "native/rabbit_cpu/Cargo.lock"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch",
+    "web__run"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-MATH.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260823-ode-math-algo-code-independent/results/A-MAC-MATH.json",
+  "status": "registered"
+}

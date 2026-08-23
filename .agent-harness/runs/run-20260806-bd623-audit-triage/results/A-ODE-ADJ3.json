@@ -1,0 +1,928 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-ADJ3",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "agent_id": "01a02a54-94df-7e22-9cb6-68c2a78d40eb",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "spawn_contract": {
+    "run_id": "run-20260806-bd623-audit-triage",
+    "assignment_id": "A-ODE-ADJ3",
+    "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:60ab6a125c4b5f0cfdde67182572827a100d44d2f188c713645721d671fff3bb",
+    "runtime_agent_type": "default",
+    "review_role": "adjudicator",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:1dc457a2b117d64b083cb065e245df062e768ba7a6ea77f0728289a345df59ff",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json",
+  "started_at": "2026-08-22T16:35:52Z",
+  "completed_at": "2026-08-22T16:46:11Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "git_head": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "human_summary": "FAIL at current HEAD. The bounded audit confirms multiple false-success/failure-masking defects in legacy Python callers and the NumPy/JAX Rodas event layers, several Rust BDF/Rodas contract and evidence gaps, and two independent scientific-promotion blockers. The controlling G-F10-INDEPENDENT-FLRW gate remains FAIL/CLOSED_ON_CURRENT_MEASUREMENT: r4 completed its 48x24 base solve but the 60x30 domain holdout exhausted 64,800 seconds before any scientific predicate was evaluated. The later physical-prefix package is four static states only; one direct JVP is inadmissible, three Arnoldi runs break down at dimension one, reaction-tail authority is absent, and no physical prefix ran. Green focused tests and same-code Rust endpoint anchors remain implementation/regression evidence only. Rust AOT stays the repeated-run target, SciPy/BDF the temporary number-of-record, JAX a frozen oracle, and QKE/public-production promotion forbidden.",
+  "completeness_ceiling": {
+    "frozen_target": "exact HEAD 78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b; mapped Python ODE entrypoints under src/rabbit, tests, scripts; native/rabbit_cpu Rust ODE and named consumers; current gate registry; retained D-071/r4 and physical-prefix evidence",
+    "mechanical_inventory": "33 direct scipy.solve_ivp import-bearing files (11 src, 5 tests, 17 scripts), 42 solve_ivp calls, and 136 resolved Python ODE entrypoint calls in 47 files; no relevant dynamic imports or propagated callable aliases found",
+    "not_claimed": "No proof against generated code, external package consumers, runtime higher-order callables, or unlisted non-Python extensions. No new physical endpoint, D-071 trajectory, B3/W7, Radau science, or public-promotion run was authorized or executed. Static source findings are separated from live counterexamples and retained historical evidence.",
+    "token_use": "UNAVAILABLE: the harness exposes no exact token counter"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ3.json",
+    "read sealed CONTEXT_PACK, assignment, adjudicator role, result template, STATUS_BOARD and GATE_REGISTRY",
+    "read six allowed sibling result envelopes and deduplicate their findings",
+    "read docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+    "jq targeted inspection of r4_trajectory_report.json, READINESS.json and PHYSICAL_RHS_JVP_RECEIPTS.json",
+    "targeted inspection of run_state_arnoldi_receipt and sealed physical-prefix contract in scripts/audit/f10_physical_prefix_fixture.py",
+    "sha256sum all required evidence and allowed sibling result files",
+    "python3 .agent-harness/scripts/validate_harness.py  # ok=true; this result pending until SubagentStop"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/STATUS_BOARD.md",
+      "sha256": "5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "role": "current gate and claim authority"
+    },
+    {
+      "path": ".agent-harness/context/GATE_REGISTRY.json",
+      "sha256": "bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f",
+      "role": "machine-readable gate definitions and D-071 disposition"
+    },
+    {
+      "path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "role": "retained trajectory instrument adjudication"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+      "sha256": "fbadb3e3dbf44509694d8b482915a98d78857d1090420181191ee191350044f2",
+      "role": "r4 base output and wall-budget error"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json",
+      "sha256": "beff908b8468acc1a999f2d0a8e745d15b3c60378926807ebbaad916422dd471",
+      "role": "physical-prefix claim ceiling"
+    },
+    {
+      "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "sha256": "7db72888d007d0ff736d6aaf0257b039a02508eab7b4905fd81af0ec5f024864",
+      "role": "four-state direct-JVP and Arnoldi retained evidence"
+    },
+    {
+      "path": "scripts/audit/f10_physical_prefix_fixture.py",
+      "sha256": "a9e0cf1bb5bcd0dbd286be3e6ad28a5d696aaff8bfe99a7797be449ee82b08b6",
+      "role": "sealed JVP scaling and prefix contract"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json",
+      "sha256": "83ae377c5967ea4d26279b98ded8497898a67baa8ec523654b3fc098110a69c1",
+      "role": "Python caller and NumPy Rodas audit"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json",
+      "sha256": "e1d2ea763c9562aca4e489ec3d1674370d0107e1d9267aa43efa1b84ed665c79",
+      "role": "Rust ODE audit and focused executions"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json",
+      "sha256": "df8913e2ea9023abbb841b99b91f9bb3f929b435b5fa4601cf209f706dcf094d",
+      "role": "completeness scan, counterexamples and test-gap audit"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-ODE-ADJ3-001",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_SCIENTIFIC_BLOCKER] G-F10-INDEPENDENT-FLRW remains FAIL and CLOSED_ON_CURRENT_MEASUREMENT. r4 completed the base SciPy-BDF order-48/ymax-24 phase and killed both mutants, but its order-60/ymax-30 domain holdout stalled at N approximately 0.1653, exhausted 64,800 seconds with verdict ERROR, produced no domain_holdout result and no top-level checks block, and therefore evaluated no scientific predicate. The defensible post-drop projection is about 3.27e7 additional RHS evaluations, 4.58 years and an approximately 8305x miss; the unexplained N drop and absent step/rejection/error trace make model uncertainty unquantified. This closes the instrument, not the underlying physical proposition.",
+      "assumptions_used": [
+        "The current gate registry and D-071 are authoritative.",
+        "No new trajectory execution was authorized."
+      ],
+      "evidence_refs": [
+        ".agent-harness/context/GATE_REGISTRY.json:G-F10-INDEPENDENT-FLRW",
+        "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md:2-5,33-144",
+        ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json:verdict,error,wall_seconds,base,mutants"
+      ],
+      "evidence_fingerprint": "sha256:b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "counterevidence_refs": [
+        "The base order-48 phase completed and retained checkpoints; same-host agreement remains supporting reproducibility only."
+      ],
+      "reproduction": [
+        "jq 'keys, .verdict, .error, .wall_seconds, has(\"checks\"), .base.solution_t_end, .mutants' r4_trajectory_report.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Reopen only with a materially new method, prospectively sealed contract, and bounded stalled-phase discriminator inside the existing wall budget with margin."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-002",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_SCIENTIFIC_BLOCKER] The physical-prefix/JVP package does not earn a D-071 reopen. It executed four static order-60/ymax-30 states and nine full-RHS-equivalent calls, not a trajectory or prefix. creep_1200's second JVP shift used epsilon 4.318e15 and moved N to -6.898e7, leaving the strict occupation domain; the fixed global-norm rule is dominated by the approximately 4.3e18 elapsed-time coordinate. The other three Arnoldi runs break down at dimension one. All states record 1,477,632 whole-reaction rejections, but that count alone is not a validated physical defect. Reaction-tail authority is explicitly false, physical_prefix_executed is false, and direct_jvp_admissible_all_states is false.",
+      "assumptions_used": [
+        "The sealed receipt claim ceiling is binding.",
+        "A static-state failure is not promoted to a trajectory or physics verdict."
+      ],
+      "evidence_refs": [
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/READINESS.json",
+        "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json:results",
+        "scripts/audit/f10_physical_prefix_fixture.py:413-615,2368-2472"
+      ],
+      "evidence_fingerprint": "sha256:7db72888d007d0ff736d6aaf0257b039a02508eab7b4905fd81af0ec5f024864",
+      "counterevidence_refs": [
+        "All requested static receipt artifacts and direct-JVP provenance are present; the retained failure is evidence, not artifact absence."
+      ],
+      "reproduction": [
+        "jq '.results | {overall_status,failure_count,full_rhs_equivalent_calls,physical_prefix_executed,reaction_tail_authority_validated,d071_reopen_earned,states}' PHYSICAL_RHS_JVP_RECEIPTS.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "A materially new, scale-admissible method and reaction-tail authority remain absent."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-003",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[RETAINED_SCIENTIFIC_BLOCKER] The current test tree retains a strict slow xfail for SciPy Type-I tier-2 residual-collision convergence: source records about 3.5% Y_p drift from N_q=16 to 32 against a <1e-3 requirement. Normal xfail leaves pytest green, so this must remain an explicit promotion blocker. The magnitude was not remeasured in this bounded audit and is therefore retained-source evidence, not fresh validation.",
+      "assumptions_used": [
+        "The current strict-xfail source accurately records the retained condition.",
+        "Endpoint science was prohibited in this assignment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-07",
+        "tests/test_scipy_tier2_convergence_lock.py:1-39 as cited by the test auditor"
+      ],
+      "evidence_fingerprint": "sha256:e2cb5d2d26c4fc2743541c6fa945759e1200e2dd8b204d990adaf12a93f56867",
+      "counterevidence_refs": [
+        "The strict xfail is transparent and will fail on unexpected pass; concealment is not alleged."
+      ],
+      "reproduction": [
+        "Source inspection only; no endpoint execution."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Current-head numerical drift remains unremeasured."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-004",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CONFIRMED_CODE_DEFECT] classA_driver accepts success=False after one accepted step and success=True interval exhaustion without either temperature event, because it raises only for not-success with fewer than two stored points and never checks t_events. It then feeds partial phase 1 into phase 2 and emits observables from a partial/missed phase 2 while omitting solver status/message. The claimed Type-I equivalence to the canonical driver is false for failure semantics.",
+      "assumptions_used": [
+        "SciPy partial failures and eventless interval completion are valid OdeResult outcomes."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-001"
+      ],
+      "evidence_fingerprint": "sha256:4b24e5e2fad87121a81f1cd683ac648a36814f008033dc617067457360e99b62",
+      "counterevidence_refs": [
+        "Curved-type output is labeled experimental; Type I is nevertheless described as canonical-equivalent."
+      ],
+      "reproduction": [
+        "Evaluate the recorded boolean truth table at classA_driver.py:410-531."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-005",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CONFIRMED_CODE_DEFECT] tilted_flrw accepts a post-progress primary Radau failure, never verifies the handoff event, and consumes the FLRW baseline with no success/event check before delta_Yp. T_end is declared but unused, so the routine stops at T_handoff while exposing an endpoint-like result without solver status/message. Its exploratory label limits authority but does not repair false-success semantics.",
+      "assumptions_used": [
+        "The assigned file search for T_end and solve outcomes was complete."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-002"
+      ],
+      "evidence_fingerprint": "sha256:37748ec4d55faf3abe13a31edc9e112a9e7a4437d73a88613b81c96b24eb6421",
+      "counterevidence_refs": [
+        "The module self-labels exploratory and not end-to-end validated."
+      ],
+      "reproduction": [
+        "Inspect tilted_flrw.py:244-271 and all T_end references."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-006",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CONFIRMED_CODE_DEFECT] transport_convergence is false-green: both solve loops consume sol.y without sol.success checks; convergence_scan defaults to the first ell candidate if no pair passes and maps a near-zero denominator to relative_change=0, which itself passes; type_I_exactness_test can certify partial failed trajectories. Candidate lists and thresholds are also insufficiently validated.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-003"
+      ],
+      "evidence_fingerprint": "sha256:f973cccf2d3e0ee5f6b6078f9874018a5989fed3f98dcdfaf7ceb9d3ec01d8b1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Inspect transport_convergence.py:112-227; no success branch exists and the default is preserved on all failures."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-007",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "[CONFIRMED_CODE_DEFECT] NumPy Rodas5P can fabricate a successful terminal event after refinement failure: if every refinement substep fails, _refine_event reruns the full substep, discards its ok flag, and returns that state; the adapter publishes t_events/success and canonical full_coupled trusts the event. A bounded monkeypatch reproduction produced an event residual of 123. The same layer also misses initial/exact-zero directionless events, accepts NaN event functions as interval success, truncates fractional direction (0.5 to 0), ignores event.terminal, accepts only one event callable, and infers status from message text. Live comparison showed SciPy stopping at t=0 while the adapter completed, and a downward crossing incorrectly triggered for direction=0.5.",
+      "assumptions_used": [
+        "Synthetic probes establish API behavior, not frequency on a physical trajectory."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-004",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-02"
+      ],
+      "evidence_fingerprint": "sha256:7c23d3ad7c26346144ca87e40b7dd7b4ba2a4a310c7c224f00ef84c8be1c8026",
+      "counterevidence_refs": [
+        "Current full-coupled events use terminal=True and direction=-1; the adapter is opt-in and default BDF is unaffected."
+      ],
+      "reproduction": [
+        "Use the recorded initial-zero, NaN-event, fractional-direction and forced-refinement-failure probes."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Physical-endpoint incidence is unmeasured."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-008",
+      "claim_id": "ODE-A5",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_ORACLE_DEFECT] Frozen JAX Rodas5P repeats false-success classes: ev_init is computed but initial zero/nonfinite events are not handled; only positive-to-nonpositive crossings exist; invalid tolerances and nonfinite states are not rejected; success is derived only from nonnegative status. Executed CPU probes returned success/no-event for initial-zero and NaN events, success for rtol=0 and atol<0, and success with nonfinite final state for zero-span NaN/Inf input. This threatens parity/AD oracle validity, not production promotion.",
+      "assumptions_used": [
+        "An oracle must fail closed on nonfinite inputs and event outputs."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-04"
+      ],
+      "evidence_fingerprint": "sha256:57e3f5ae9d2be021cf8b79bc385c855b7921bb0c8e10b56a406a77893f298359",
+      "counterevidence_refs": [
+        "Ordinary downward event, max-step, analytic, NumPy-twin and linear-action tests passed."
+      ],
+      "reproduction": [
+        "Run the recorded JAX CPU initial-zero, NaN-event, invalid-tolerance and zero-span nonfinite probes."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The absence of a public event-direction parameter is undocumented as intentional or accidental."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-009",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] dynamic_collision_driver defeats its own physical-state gates: RHS and endpoint occupations are clipped to [0,1]; the advertised unclamped negative-energy check therefore sees clipped nonnegative values; max_clip_excursion and min_hubble are diagnostic-only; negative H is floored to 1e-100; nonfinite H is omitted from the monitor. Solver success plus event can thus yield N_eff after silently repairing accepted-state Pauli/positivity/Hubble violations.",
+      "assumptions_used": [
+        "The spectral energy weights are nonnegative as intended."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-007"
+      ],
+      "evidence_fingerprint": "sha256:3a9bad7f5721590298effad078f1e9d0d8df65ba327f2346d73dfd526c99bc8f",
+      "counterevidence_refs": [
+        "The driver correctly requires solver success and a terminal event."
+      ],
+      "reproduction": [
+        "Inspect dynamic_collision_driver.py:171-202,288-357."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Actual physical excursion magnitudes were not measured."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-010",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] Isotropic decoupling and both augmented transport result wrappers perform endpoint work on a failed partial trajectory before honoring sol.success: decoupling recomputes RHS/observables over the partial history; augmented wrappers unpack the last partial state and recompute a final RHS. Those evaluations can mask the original solver exception/message and expose fields named final from a failed solve. Diagnostics are inconsistent across the three wrappers.",
+      "assumptions_used": [
+        "Partial trajectories are acceptable only when failure provenance remains observable."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-008"
+      ],
+      "evidence_fingerprint": "sha256:4dc1ec5acf248ac2c5d9b45ff30e28c103f15146a805d14b8c7b9268ffea3fd5",
+      "counterevidence_refs": [
+        "Decoupling returns an explicit success flag and the canonical full-coupled consumer checks it; one augmented wrapper is smoke-scale/non-promoted."
+      ],
+      "reproduction": [
+        "Inspect the three cited post-solve branches in the Python audit."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No failure-injection test covers these branches."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-011",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] Canonical full_coupled_typeI is fail-closed for ordinary missed events, but admission is incomplete: it does not validate finite ordered T_start>T_handoff>T_end>0 or finite positive controls; equal-temperature starts differ between SciPy initial-event handling and Rodas; accepted events have no residual/final-state/abundance/mass-residual gate; diagnostics omit endpoint residual and work counters; RuntimeError drops partial evidence; dense_output allocates an unused SciPy interpolant but is rejected by Rodas, so one shared config is not portable.",
+      "assumptions_used": [
+        "No external validation was observed in the assigned canonical surface."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-009"
+      ],
+      "evidence_fingerprint": "sha256:35897bd1f88d09d749e058d4cce80b6e0b262e4c885a255e66008508e585d795",
+      "counterevidence_refs": [
+        "Requested/effective method identity is preserved, compact stiff Jacobian information is supplied, and ordinary missed events are rejected in both phases."
+      ],
+      "reproduction": [
+        "Inspect full_coupled_typeI.py:1075-1184,1331-1399,1528-1554,1679-1742."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No new full physical trajectory was run."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-012",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] NumPy Rodas5P configuration and telemetry are not fail-closed. Live probes succeeded with rtol=0, negative atol, negative h_init, h_min=0 and jac_reuse_max_steps=0 after silent coercions. State finiteness/shape/complex dtype and coherent step bounds are not validated; fallback df/dt probes before the initial boundary; the dense absolute-FD Jacobian has a fixed 1e-8 floor and no sparsity; supplied Jacobians are unavailable through the adapter; max_steps is not exposed; and adapter nfev is fabricated as zero after real RHS work.",
+      "assumptions_used": [
+        "Tolerances and step bounds require an explicit validated contract."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-005",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-03,F-ODE-TEST-09"
+      ],
+      "evidence_fingerprint": "sha256:d6e3beb068e12bb0229b8b30057528af4292aa9105811dc2b676d219d8df2d43",
+      "counterevidence_refs": [
+        "Attempt bounds, h_min, LU reuse and ordinary event behavior have focused tests; this is a frozen reference lane."
+      ],
+      "reproduction": [
+        "Run the recorded invalid-config decay probes and inspect adapter.nfev."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No high-dimensional physical Rodas run was authorized."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-013",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] classify_solve_ivp_result prioritizes target_reached over success/status: target_reached=True with success=False/status=-1 is labeled target_reached/event_triggered. It calls len(t) a step count although it includes the initial sample and omits endpoint time, event residual, nfev/njev/nlu, final-state finiteness and partial-failure detail. The contradictory and terminated_other branches lack focused tests.",
+      "assumptions_used": [
+        "Adapters or corrupted/future wrappers can produce contradictory result objects even if ordinary SciPy usually cannot."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-006",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-09"
+      ],
+      "evidence_fingerprint": "sha256:9636ecacc8dfaef579aef23ce9038735c290b28f6344b9fcf2598ec228ce9ec3",
+      "counterevidence_refs": [
+        "The canonical SciPy path constructs target_reached from t_events, so the contradiction is unusual there."
+      ],
+      "reproduction": [
+        "Call the classifier on the recorded contradictory SimpleNamespace."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-014",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_TECHNICAL_DEBT_WITH_POLICY_CEILING] Stiffness controls and resource budgets drift across Python callers: dynamic/classA/tilted and approximately 972-DOF LINEARIZED_PSTF paths lack Jacobian or sparsity support where applicable; augmented Radau wrappers lack Jacobian, max_step and attempt/wall budgets; decoupling passes jac_sparsity to arbitrary methods; classA accepts SolverConfig but cannot route RODAS5P. These are genuine configuration/performance hazards, but segment/local optimization is not evidence of movement on the measured independent endpoint blocker and is restricted by anti-drift policy.",
+      "assumptions_used": [
+        "Absent solve_ivp kwargs imply SciPy defaults."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-010",
+        ".agent-harness/generated/STATUS_BOARD.md:G-F10-PERFORMANCE"
+      ],
+      "evidence_fingerprint": "sha256:1bd8a8476d181b321bce076c4459bc3c1fd42cae0348864a60cffdeaa2255b4c",
+      "counterevidence_refs": [
+        "Canonical compact characteristic paths supply stiffness structure; short RK45 analysis helpers are not established stiff production lanes."
+      ],
+      "reproduction": [
+        "Inspect kwargs at the 11 mapped src/rabbit solve_ivp callers."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No new timing benchmark was authorized."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-015",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] Rust BDF collapses required fail-loud categories: all non-nonfinite initialization errors become bdf_initialise and all dependency step errors become bdf_solve. Linear-solver, step-size-floor and other diffsol failures are therefore indistinguishable; focused tests have Rodas singular-linear/h_min cases but no BDF counterparts.",
+      "assumptions_used": [
+        "F-01's distinct failure taxonomy applies to each solver path that can produce those failures."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-02"
+      ],
+      "evidence_fingerprint": "sha256:bd827e4a2425c3edbf21572f335acbfa31aa5cb9d5e58e62f4c6cd4533428e49",
+      "counterevidence_refs": [
+        "A simple BDF max-attempt exit is tested."
+      ],
+      "reproduction": [
+        "Inspect bdf_initialise/bdf_solve mapping and absence of BDF-specific linear/step-floor assertions."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Concrete diffsol error variants and BDF conformance probes are missing."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-016",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] Rust BDF max_attempts is not a strict total-attempt ceiling. The wrapper checks only before/after solver.step(), while one diffsol BDF step can internally consume separate full retry allowances for error tests and nonlinear failures. Mixed internal retries can exceed the declared total before returning; the wrapper then fails after overshoot. The max_attempts=1 test exercises an accepted path and does not falsify this construction.",
+      "assumptions_used": [
+        "Total attempt budget includes all accepted, rejected and nonlinear attempts."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-03"
+      ],
+      "evidence_fingerprint": "sha256:d19ab41b70bce6b6cebc203dc77a0055df6c8a1c6e9dbc0ed03132c4a2364d21",
+      "counterevidence_refs": [
+        "Overshoot is detected and does not silently return success."
+      ],
+      "reproduction": [
+        "Compare wrapper aggregate checks with diffsol 0.16.0's internal retry loop as cited by the Rust audit."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "A mixed rejection probe is needed to quantify maximum overshoot."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-017",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CODE_DEFECT] Rust workload counters materially undercount expensive work: CountingSystem excludes RHS calls nested inside jacobian and counts rhs_and_jacobian as one RHS call, while the N48 consumer's Jacobian and dfdt each invoke two additional full RHS evaluations. Rodas increments linear_setups before confirming that f/J/dfdt is finite, so it can report a setup without an LU factorization. Current tests lock trait-call semantics, not physical workload semantics.",
+      "assumptions_used": [
+        "Counters printed with endpoint wall time are expected to support resource/stiffness diagnosis."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-06"
+      ],
+      "evidence_fingerprint": "sha256:c662ece1d55c3af94bc8eacc99f63e7307c71605a4d83d7e1fb1bf603796e65e",
+      "counterevidence_refs": [
+        "The narrower trait-call interpretation is deterministic."
+      ],
+      "reproduction": [
+        "Inspect nested RHS calls and counter increment order cited by the Rust audit."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Rename to trait_calls or integrate true work accounting into an existing surface; do not add standalone telemetry plumbing."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-018",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_CONTRACT_GAP] Rust raw-failure retention preserves a safe last accepted state, not necessarily the actual failing evaluation: BDF stores sticky nonfinite flags without callback time/state and returns solver.state(); Rodas returns step-start state after nonfinite intermediate stage/RHS/candidate/error. Existing tests fail at initial/step-start points and do not exercise this distinction. This is a defect if F-01 means actual last raw finite/nonfinite evaluation, otherwise the contract wording is ambiguous.",
+      "assumptions_used": [
+        "The plan's last raw state refers to the failing evaluation rather than last accepted state."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-07"
+      ],
+      "evidence_fingerprint": "sha256:20c7bd260cf4239fd7a944e98805cfc8212daa241016bfe513174625c29890f8",
+      "counterevidence_refs": [
+        "No path clips or fabricates success; all return a raw solver-owned accepted state/time."
+      ],
+      "reproduction": [
+        "Inspect absence of BDF callback x/t and Rodas stage-state retention."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "Clarify the contract or retain failing callback/stage state with an internal-stage probe."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-019",
+      "claim_id": "ODE-A3",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[MISSING_EVIDENCE] Production N48 derivative/stiffness validation is incomplete. The full spectral consumer uses two-point finite differences for the photon-temperature Jacobian column and explicit-N derivative, while analytic formulas cover only occupations. Direct stencil parity is on a 2-node toy, and a test named selected_spectral_rule actually uses 6-node Gauss-Laguerre rather than EXP48. Same-code N48 dual-solver endpoint regression does not independently validate derivative accuracy at production dimension.",
+      "assumptions_used": [
+        "Derivative authority requires selected-grid representative evolved states and an independent axis."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-10"
+      ],
+      "evidence_fingerprint": "sha256:0a954f4ae818bbe98f24289cfab0cc75befcfeeebc19bdc38af742905715d10f",
+      "counterevidence_refs": [
+        "Lightweight derivative tests and current N48 endpoint regression anchors pass."
+      ],
+      "reproduction": [
+        "Run the two cited lightweight derivative tests and inspect their constructed grids."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No representative EXP48 derivative ladder or independent production-dimension oracle exists in the mapped evidence."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-020",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "[CONFIRMED_TEST_DEFECT_AND_COVERAGE_GAP] Focused green suites coexist with executable counterexamples. test_step_returns_finite_or_flags_failure has a precedence bug: any finite yn passes even when ok=True with a finite error, so a mutant can violate its stated contract and remain green. The focused Python/JAX suite omits classA/tilted/convergence failure injection, contradictory classifier states, initial/nonfinite/fractional Rodas events, false nfev, invalid config/state, refinement-all-failed fallback and post-failure endpoint work. Tests comparing JAX and NumPy Rodas share method/tableau and cannot exclude common-mode defects.",
+      "assumptions_used": [
+        "Coverage is bounded to the assigned focused surfaces; no line-coverage tool was run."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-013",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-05,F-ODE-TEST-06"
+      ],
+      "evidence_fingerprint": "sha256:a5d93c804b9c5ae7bdcf1b78488f8c6f4e541b8841753b355c3572cc2ef9afca",
+      "counterevidence_refs": [
+        "55 focused Python/JAX tests, 27 Rust ODE tests and 18 AD/Diffrax tests passed; analytic/FD/Diffrax axes provide partial independence."
+      ],
+      "reproduction": [
+        "Evaluate the assertion with finite yn, err=0, ok=True; run the recorded focused bundles."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "One slow endpoint test and forbidden trajectory science were deliberately not run."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-021",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "[MISSING_EXECUTION_EVIDENCE] The audit did not freshly rerun the expensive selected-decoupling N48 dual-solver endpoint. Rust live evidence is 27/27 ODE tests in debug and release, 22/22 FLRW release tests, 12/12 lightweight isotropic tests and clean release Clippy; the canonical pack retains the prior 238/0/2 release suite and BDF/Rodas endpoint anchors. Three mapped Python native/AD tests do not execute native/rabbit_cpu/src/ode.rs, so they cannot be counted as Rust ODE evidence. Python agents also used different NumPy/SciPy patch environments (2.4.2/1.17.0 versus 2.4.4/1.17.1), limiting exact cross-agent environment identity even though overlapping counterexamples agree.",
+      "assumptions_used": [
+        "Stored canonical evidence remains valid only at its declared claim tier."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-01,ODE-RUST-12,ODE-RUST-13",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:tool_versions",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:tool_versions"
+      ],
+      "evidence_fingerprint": "sha256:e3868ebc281a731e3dd1109f44516230d772eb93b5cf800a841b9396e19fe324",
+      "counterevidence_refs": [
+        "Current focused Rust executions are broad and green."
+      ],
+      "reproduction": [
+        "Review recorded commands and skipped endpoint test."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No fresh exact-HEAD full-endpoint receipt belongs to this audit."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-022",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[CONFIRMED_CODE_DEFECT] Rust directionless event detection multiplies previous*current<0. Opposite-sign tiny finite values can underflow to signed zero and miss a genuine crossing. Direction-specific comparison is unaffected, so the production cold endpoint at direction=-1 is not demonstrated to fail; this is a generic F-01 event defect.",
+      "assumptions_used": [
+        "Finite subnormal event values are admissible."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-04"
+      ],
+      "evidence_fingerprint": "sha256:386f7b5d28c10f6f2058eadf9639b438d0befe20f0e65d5c1e52a146c1c349de",
+      "counterevidence_refs": [
+        "Exact-zero and ordinary-scale direction tests pass."
+      ],
+      "reproduction": [
+        "Evaluate event_fires(MIN_POSITIVE,-MIN_POSITIVE,0); product is -0 and predicate false."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-023",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[UNCERTIFIED_EDGE_CONTRACT] Rust BDF and Rodas event refiners cap bisection at 60 without recording convergence, checking a final residual/bracket invariant, or emitting refinement exhaustion; they still return event_reached. Rodas may perform up to 60 extra linear solves outside max_attempts. Frozen h_max=0.04 makes interval convergence comfortable and ordinary tests pass, so this is a generic uncertified edge rather than a current endpoint failure.",
+      "assumptions_used": [
+        "A refined event needs a verified predicate or explicit failure."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-05"
+      ],
+      "evidence_fingerprint": "sha256:8b37470faa169def36cfa7bbbdffda896ceb16bcafec1ea15829feeadc500b2c",
+      "counterevidence_refs": [
+        "Ordinary initial, exact-endpoint, upward/downward/wrong-direction event tests pass."
+      ],
+      "reproduction": [
+        "Static inspection of both 60-iteration loops."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Define whether refinement work counts against total attempts and add forced-exhaustion evidence."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-024",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[NUMERICAL_SEMANTICS_GAP] Rust BDF h_max is an effective ceiling via repeated stop-time segmentation, but forcing exact chunk boundaries perturbs BDF history/order and pinned diffsol ignores StepSizeTooSmall when snapping to tstop. The existing diagnostic is therefore half-wrong: h_max is not ignored, but fairness/history and h_min/tstop semantics remain untested.",
+      "assumptions_used": [
+        "Pinned diffsol 0.16.0 source is the executed dependency."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-09"
+      ],
+      "evidence_fingerprint": "sha256:04fff541c5804e81c626cdf8d022a47cb0f8cc80464ab5541c0c77d126923011",
+      "counterevidence_refs": [
+        "The frozen h_max=0.04 endpoint has accepted regression anchors."
+      ],
+      "reproduction": [
+        "Inspect solve_bdf set_stop_time against diffsol handle_tstop/update_step_size."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Whether terminal/chunk snaps below h_min are allowed is unspecified."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-025",
+      "claim_id": "ODE-A2",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[CONSERVATIVE_FAILURE_POLICY_GAP] Rust Rodas retries tolerance rejection and invalid candidates with smaller h, but terminates immediately on LU failure or nonfinite intermediate stage/RHS/candidate/error. This is fail-loud and intentional in current tests, yet a step-size-recoverable transient can become a hard endpoint failure. No production-shaped discriminator separates recoverable from irrecoverable cases.",
+      "assumptions_used": [
+        "Some intermediate failures can depend on h despite a valid start state/Jacobian."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-16"
+      ],
+      "evidence_fingerprint": "sha256:d37ddc634c5665e1bd467e565d5d031de142920152bd832d9700dbe2b1da3e89",
+      "counterevidence_refs": [
+        "Fail-loud linear/nonfinite outcomes are required and current focused tests pass."
+      ],
+      "reproduction": [
+        "Compare immediate Err branches with h-shrinking rejection branches."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "A bounded production-shaped probe is required before policy change."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-026",
+      "claim_id": "ODE-A3",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[CONFIRMED_GENERIC_DOMAIN_DEFECT] ThreeTemperatureFlrwSystem and the full isotropic system accept any positive finite temperature but use a relative-only finite-difference step 1e-5*T. For sufficiently small positive subnormal T the step rounds to zero and the centered quotient divides by zero. IdealFlrwSystem has an absolute floor. The frozen 10 to 0.005 MeV endpoint is far from the trigger.",
+      "assumptions_used": [
+        "state_is_valid defines the callable domain."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-11"
+      ],
+      "evidence_fingerprint": "sha256:a67a64694a211c69e3d6aa903596bbc10eda872a3ffa867575123125efe7564d",
+      "counterevidence_refs": [
+        "Production temperature floor is 0.005 MeV."
+      ],
+      "reproduction": [
+        "For positive subnormal T, evaluate 1e-5*T and the centered quotient denominator."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-027",
+      "claim_id": "ODE-A2",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "[CONFIRMED_INPUT_AND_FAILURE_DRIFT] Remaining Python wrappers have inconsistent validation: augmented_nonlrs accepts NaN tolerances; source-only augmented omits finite checks for supplied modes/raw q; tilted does not enforce |v|<1 before 1/sqrt(1-v^2); thermo places chemical-potential validation outside its unavailable envelope, computes its final N_eff proxy before honoring solver outcome without an explicit finite check, and on failure retains only a reason string rather than status/counters/last time. SolverConfig has no validation hook. Separately, BDF/Radau/classA defaults coexist and current numerical BDF/Radau parity was not rerun.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-011",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:ODE-MAP-02"
+      ],
+      "evidence_fingerprint": "sha256:4cda818cc21470ae5a62b2220bfb2782320425104e6e8bbc7d132f01a9ed6253",
+      "counterevidence_refs": [
+        "Thermo is diagnostic-only and rejects ordinary failure/missed events; augmented nonlinear checks shape and finite A values."
+      ],
+      "reproduction": [
+        "Inspect the cited wrapper validation branches and solver-drift mapping."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Current numerical BDF/Radau parity remains unexecuted in this audit."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-028",
+      "claim_id": "ODE-A7",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[TEST_BRANCH_GAP] Rust negative-path coverage is substantially stronger and 27/27 ODE tests pass, but direct reason assertions are absent for bdf_build, bdf_initialise, bdf_stop_time, bdf_solve, unexpected_root, nonfinite_stage_rhs, nonfinite_stage, nonfinite_candidate and nonfinite_error_norm. Without coverage instrumentation indirect execution cannot be excluded. This is branch-adequacy uncertainty, not proof that all branches are untested.",
+      "assumptions_used": [
+        "Exact reason assertions are the strongest lock for distinct fail-closed classes."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-08"
+      ],
+      "evidence_fingerprint": "sha256:78e141fdf4c1a985f618b02972e3114a7394e82b61800fa0e83f795bd1f0fbc1",
+      "counterevidence_refs": [
+        "The focused Rust suite covers invalid inputs, events, nonfinite callbacks, singular linear systems, step floor, budget, stiffness and Robertson mass."
+      ],
+      "reproduction": [
+        "Run Rust ode::tests and search exact reason strings as recorded."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "No coverage instrumentation was run."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-031",
+      "claim_id": "ODE-A6",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "[EXTERNAL_HARNESS_LIMITATION, NOT AN ODE CODE FINDING] A-ODE-SCI and A-ODE-ADJ2 correctly failed closed because their sealed required paths (_independent_b3_noqke.py and run_physical_rhs_jvp_receipts.py) do not exist at current HEAD; this assignment used corrected existing paths. A prior dedicated adjudicator runtime returned HTTP 400 before substantive work. The same context_version was regenerated to different CONTEXT_PACK byte digests during the run (sibling artifacts record 236f5532..., current file dd936b46...), apparently from nonsemantic pack regeneration, so byte identity across sibling context artifacts is not established. Python tool patch versions also differed. These are harness/environment limits and must not be counted as ODE defects.",
+      "assumptions_used": [
+        "The assignment task is authoritative that the dedicated runtime 400 occurred.",
+        "No receipt-state conclusion follows from A-ODE-ADJ2."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-SCI.json",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ2.json",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-ADJ3.json:task",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:artifacts,tool_versions",
+        ".agent-harness/generated/CONTEXT_PACK.md"
+      ],
+      "evidence_fingerprint": "sha256:42e45bb87da0e2117181fe4646a55f86797c45ce6a92ae610333c78cc06ed9a0",
+      "counterevidence_refs": [
+        "All three substantive reviewer envelopes verified the same semantic context_version and exact current HEAD."
+      ],
+      "reproduction": [
+        "Compare sealed missing paths and recorded context-pack digests; no broad rescan."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Parent must separately manage any unconsumed dedicated-runtime admission receipt."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-032",
+      "claim_id": "ODE-A6",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[POLICY_AND_GATE_BOUNDARY] Current authority is unambiguous: G-F10-INDEPENDENT-FLRW and G-HARNESS-INTEGRITY are FAIL; catalogue, covariance-metrology (only its frozen matched family/bytes), performance, scope, radial and regression gates are PASS. Rust AOT is the repeated-run implementation target; SciPy/BDF remains temporary number-of-record; JAX is a frozen parity/AD/Jacobian oracle; QKE, public dispatch/production and full authority are FORBIDDEN. The JAX discrete-adjoint lane replays a predetermined step tape because reverse-mode through the adaptive loop is blocked, and its offline tape extractor does not reproduce adaptive decisions bitwise; this is an oracle limitation, not endpoint authority. Green tests, same-code BDF/Rodas agreement, static JVP receipts or segment timings cannot promote scientific or public claims.",
+      "assumptions_used": [
+        "Generated status board is sole current status authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/STATUS_BOARD.md",
+        ".agent-harness/context/GATE_REGISTRY.json",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:ODE-MAP-05"
+      ],
+      "evidence_fingerprint": "sha256:5704a12665c432724fd92c4da9b3c2362e2e4a1f4939e36d4607ce5d9da6605d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Read generated status board and gate registry."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-033",
+      "claim_id": "ODE-A4",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[CLOSED_HISTORICAL_BLOCKERS_AND_BOUNDED_GOOD_PATHS] Do not relist as open: Rust direct-occupation far-tail Rodas nonfinite failure was closed by strict-open logit coordinates with raw failure; repeated BDF full-Jacobian work at identical dense-column points was closed by the solver-local exact bitwise cache with retained 55.815% endpoint improvement; all nine catalogue rows and current same-code anchors are retained. Current Rust mechanics baseline is green (27/27 ODE debug/release, 22/22 FLRW release, 12/12 lightweight isotropic, Clippy). Canonical Python full_coupled rejects ordinary missed events, dynamic collision requires success+event, thermo is diagnostic fail-closed for ordinary failures, short RK45 helpers raise on failure, and decoupling's canonical consumer checks its success. These positives bound findings; they do not close the scientific gate or defects above.",
+      "assumptions_used": [
+        "No current finding falsifies logit/cache invariants."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-01,ODE-RUST-08,ODE-RUST-14",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-PY.json:ODE-PY-012",
+        ".agent-harness/generated/STATUS_BOARD.md"
+      ],
+      "evidence_fingerprint": "sha256:79f0bd25b043cf2142a07d6e2436ded284f24a7fafe6bbe3b045eda282c78cc7",
+      "counterevidence_refs": [
+        "F-ODE-ADJ3-001 through F-ODE-ADJ3-031"
+      ],
+      "reproduction": [
+        "Use recorded focused Rust commands and inspect named good-path branches."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-034",
+      "claim_id": "ODE-A1",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "[MECHANICAL_COMPLETENESS_REGISTER] Corrected static map: exactly 28 direct solve_ivp import files in executable src+scripts scope (11 src/rabbit, 17 scripts) and 33 across src+tests+scripts (plus 5 tests); AST resolves 42 solve_ivp calls and 136 selected ODE entrypoint calls in 47 files, eight Diffrax class references and two data-driven solver-class instantiations. No relevant dynamic solve_ivp import, alternate call alias or propagated callable alias was found. Solver surfaces include SciPy BDF/Radau/LSODA, NumPy Rodas adapter, frozen JAX Rodas/adjoint/Diffrax, Rust BDF/Rodas and retained independent BDF trajectory tooling. This is the audit completeness floor, not proof of semantic absence outside the declared roots.",
+      "assumptions_used": [
+        "All 615 Python files under src/rabbit, tests and scripts parsed in the test audit."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json:ODE-MAP-06,ODE-MAP-08",
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-01"
+      ],
+      "evidence_fingerprint": "sha256:561f3c3a88e9e342eade1da0d7e99867d10219ae873743ae827d89df70d0bd34",
+      "counterevidence_refs": [
+        "Generated code, external consumers and runtime higher-order callables remain outside proof."
+      ],
+      "reproduction": [
+        "Run the recorded AST inventory and mapper commands."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Only external/generated/dynamically supplied consumers remain outside the static ceiling."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-029",
+      "claim_id": "ODE-A7",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[CONFIRMED_API_INCONSISTENCY_AND_ORPHAN_SURFACE] diffrax_adjoint_solve rejects an unknown solver with ValueError, while its diagnostics form directly indexes the solver dictionary and raises KeyError. No bad-solver test exists. solve_ode_jax, make_diffrax_solver and extract_h_tape_from_adaptive_solve have no direct in-repository caller/test evidence, although external consumers may exist. This is wrapper consistency/debt, not a Diffrax numerical failure.",
+      "assumptions_used": [
+        "Plain and diagnostic forms should reject the same bad solver consistently."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-TEST.json:F-ODE-TEST-10"
+      ],
+      "evidence_fingerprint": "sha256:f08c84bab2c5a2594babe8d2bcfbdfff1cda0c3bc29b67a341a7fae7b2508046",
+      "counterevidence_refs": [
+        "All 18 executed Diffrax/adjoint happy-path and parity tests passed."
+      ],
+      "reproduction": [
+        "Compare dictionary selection in plain and diagnostic wrappers; search direct callers."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "External consumers are outside the static completeness ceiling."
+      ]
+    },
+    {
+      "finding_id": "F-ODE-ADJ3-030",
+      "claim_id": "ODE-A6",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "[PROVENANCE_AND_DOCUMENTATION_DEBT] Rust OdeConfig is mutable and neither serialized nor embedded/digested in OdeResult, so a result alone cannot prove tolerances, step bounds or budget; sealed source/binary evidence supplies indirect provenance. The isotropic_boltzmann module header is stale, saying only identical same-flavour scattering exists while the authoritative current catalogue has all nine rows. Neither issue is a numerical failure and anti-drift policy forbids solving them with new standalone manifest/gate plumbing.",
+      "assumptions_used": [
+        "Comparison artifacts require configuration identity.",
+        "The generated status/context supersedes stale module prose."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-RUST.json:ODE-RUST-17,ODE-RUST-18",
+        ".agent-harness/generated/STATUS_BOARD.md:G-F10-CATALOGUE"
+      ],
+      "evidence_fingerprint": "sha256:6ce3333a3bc1a19aaf3d434afb1c2eafd0811c1c885c9fc15ff1604f5686fcd8",
+      "counterevidence_refs": [
+        "Frozen test source plus source/binary hashes can bind controls indirectly; runtime catalogue tests are authoritative."
+      ],
+      "reproduction": [
+        "Inspect OdeConfig/OdeResult derives and compare module prose to the generated catalogue status."
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-ADJ3.json"
+  ]
+}

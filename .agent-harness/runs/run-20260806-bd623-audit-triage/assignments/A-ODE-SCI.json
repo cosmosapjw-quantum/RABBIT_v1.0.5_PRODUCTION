@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260806-bd623-audit-triage",
+  "assignment_id": "A-ODE-SCI",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "ODE-A3",
+    "ODE-A4",
+    "ODE-A6"
+  ],
+  "task": "Audit the scientific/numerical and authority blockers around the mapped ODE lanes using current retained bytes only. Target the independent SciPy-BDF trajectory core/r2-r4 scripts and artifacts, B3-v2 comparator interface, physical-prefix RHS/JVP receipts, frozen JAX/Rodas/Diffrax oracle semantics, and governing gates/claims. Check assumptions, dimensions/units, signs, initial/boundary/event definitions, strict occupation domain, positivity/no clipping, conservation/first-law, tail/spatial uncertainty, finite-difference/JVP perturbations, accepted-versus-trial chronology, conditioning/tolerance/step-cost evidence, reproducibility and claim tier. Recompute bounded facts from retained artifacts or run validation-only checks; do not execute B3/W7/trajectory/endpoint science or modify anything. Produce a complete blocker chain and distinguish underlying physics unknowns from failed/inadmissible instruments.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/assignments/A-ODE-SCI.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json",
+    "scripts/audit/_trajectory_core.py",
+    "scripts/audit/d056_independent_trajectory.py",
+    "scripts/audit/d062_independent_trajectory_r2.py",
+    "scripts/audit/d063_independent_trajectory_r3.py",
+    "scripts/audit/d069_independent_trajectory_r4.py",
+    "src/rabbit/decoupling/_independent_b3_noqke.py",
+    "src/rabbit/jax/solver_jax_rodas5p.py",
+    "src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+    "src/rabbit/jax/solver_diffrax_canonical.py",
+    "00_F10_PHYSICAL_PREFIX_DIAGNOSIS",
+    ".agent-harness/context/GATE_REGISTRY.json",
+    ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+    ".agent-harness/context/FROZEN_DECISIONS.md",
+    "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-MAP.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-SCI.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260806-bd623-audit-triage/results/A-ODE-SCI.json",
+  "status": "registered"
+}
