@@ -1,0 +1,1952 @@
+diff --git a/docs/audit/RUST_ODE_COLLISION_RECONSTRUCTION_2026-08-24.md b/docs/audit/RUST_ODE_COLLISION_RECONSTRUCTION_2026-08-24.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..e470fa00a5f558461ce6bd45f49f01ed6cef1d73
+--- /dev/null
++++ b/docs/audit/RUST_ODE_COLLISION_RECONSTRUCTION_2026-08-24.md
+@@ -0,0 +1,260 @@
++# Rust ODE Collision Reconstruction — P1 Evidence Note
++
++Date: 2026-08-24  
++Branch: `codex/ode-p0-rust-reconstruction-20260824`  
++Base commit: `78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b`  
++Claim ceiling: focused direct-comoving electron-collision reconstruction only; no endpoint or solver promotion
++
++## Outcome
++
++The P0 discriminator selected `COLLISION_DISCRETIZATION_OR_ASSEMBLY_REPAIR`,
++not a Radau-first repair. The Python thermal-to-comoving map does not preserve
++node-local Pauli inwardness at the moving high-q boundary. P1 therefore leaves
++the Python production driver unchanged and reconstructs the collision path on
++the existing Rust direct-comoving finite-electron-mass event stream.
++
++The following results are **IMPLEMENTED** and were executed:
++
++- division-free event production/destruction coefficients;
++- conservative folded elastic and pair edges whose action reconstructs the
++  existing Rust conservative collision action;
++- a raw-occupation, Pauli-capacity-bracketed backward-Euler edge extent;
++- transactional forward/reverse edge sweeps;
++- a collision-only `delta_ln_a / H` substep with electromagnetic temperature
++  backreaction fixed by total-energy closure;
++- deterministic scoped-thread event construction with original event order;
++- focused raw-tail, boundary, equilibrium, conservation, rollback, and timing
++  tests.
++
++The following remain **PROPOSED**, not validated or promoted:
++
++- composition with expansion and neutrino self-collision operators;
++- an adaptive step-doubling controller and accepted/rejected prefix history;
++- parity against the retained Python trajectory, whose simplified collision
++  physics is not identical to the Rust finite-mass event action;
++- collision-on endpoint authority and replacement of SciPy/BDF as the
++  number-of-record.
++
++## P0 binding and corrected signed impact
++
++Retained exact-HEAD raw trajectory:
++
++```text
++/tmp/rabbit_raw_trajectory_exact_head_collision_on.json
++sha256 2da11255f25761e4b7e7ea330eda2c4948013e4d1df00c5e127720a90f9a678e
++```
++
++Corrected discriminator:
++
++```text
++/tmp/rabbit_ode_p0_discriminator.py
++sha256 a5c1a41189bf069a84fa5c8953ed7571200f3c657f35f6766db25e394ad4f1f7
++
++/tmp/rabbit_ode_p0_result_signed_impact.json
++sha256 f1c50509264bc986985cad2f13e9b8605b2cb8d79e951582f4743fec3bc6fd41
++```
++
++The exact measured environment was Python 3.12, NumPy 2.4.4, and SciPy
++1.17.1. The short prefix reproduced the retained first invalid entry exactly:
++
++```text
++sample index       3
++N                  -2.302557321652884
++bank/node          nue[22]
++raw f              -2.3008216172341183e-30
++previous N         -2.302570546101056
++delta N            1.3224448172088898e-05
++nfev/njev/nlu      124 / 3 / 32
++stored points      9
++```
++
++At `nue[22]`, the local frozen gain-loss update was physical, but node-local
++reconstruction of the mapped field failed. At `nue[23]` and `nux[23]`, the
++inferred loss coefficient was negative and the upper boundary field pointed
++outward. This is the signature of the two interpolation operators, not proof
++that the continuum collision operator is nonphysical.
++
++The first P0 report subtracted O(1) moments and lost the signed tail below
++floating resolution. The corrected run evaluates the signed delta directly:
++
++```text
++nue number moment delta       -1.1152393290390595e-25
++nue energy moment delta       -7.802464163482016e-24
++N_eff diagnostic delta        -5.290447599947546e-24
++weak lambda_np delta           -1.1755851215602610e-18 s^-1
++weak lambda_pn delta           -1.1521718908759760e-18 s^-1
++```
++
++The corresponding total-minus-total readouts were all `0.0`; they are not
++authoritative for this tail-scale question.
++
++## Physics and numerical construction
++
++For an elastic edge `j -> i`, the paired directed quadratures give
++
++```text
++A_ij = 1/2 (G_forward_coefficient + L_reverse_coefficient) >= 0
++B_ij = 1/2 (L_forward_coefficient + G_reverse_coefficient) >= 0
++J_ij = A_ij (1-f_i) f_j - B_ij f_i (1-f_j).
++```
++
++The weighted update is `m_i df_i/dt = J_ij` and
++`m_j df_j/dt = -J_ij`, so `m_i f_i + m_j f_j` is an algebraic identity.
++For pair creation/annihilation, the two orientations instead give
++
++```text
++J_ij = A_ij (1-f_i)(1-f_j) - B_ij f_i f_j,
++```
++
++and both occupations move with the same weighted extent, preserving the
++neutrino-antineutrino difference before folding.
++
++For one edge, write both occupations as affine functions of an extent `xi`.
++The accepted interval is the exact intersection of donor, receiver, and hole
++capacities. The scalar backward-Euler equation
++
++```text
++xi = delta_t J(f_i(xi), f_j(xi))
++```
++
++has a monotone residual because `dJ/dxi <= 0`. A safeguarded Newton solve is
++therefore bracketed by physical capacities for every finite non-negative
++step. No occupation is clipped, projected, or floored. Near detailed balance,
++the net uses a logarithmic affinity and `expm1` instead of subtracting two
++large positive rates.
++
++The collision-only FLRW candidate freezes `delta_t = delta_ln_a/H` for one
++substep. After the edge sweep it solves
++
++```text
++rho_em(T_gamma,new) = rho_em(T_gamma,old) - (rho_nu,new - rho_nu,old)
++```
++
++with the existing electromagnetic EOS. The state is committed only after all
++occupations are strict, finite logit-representable values and the EOS inversion
++succeeds.
++
++## Executed focused run data
++
++Toolchain and host:
++
++```text
++rustc 1.94.1 (e408947bf 2026-03-25), LLVM 21.1.8
++cargo 1.94.1 (29ea6fb6a 2026-03-24)
++x86_64, AMD Ryzen 9 5900X, 12 cores / 24 threads
++```
++
++Focused kernel/action run:
++
++```text
++cargo test --lib pauli -- --nocapture
++9 passed; 0 failed; 1 ignored; 240 filtered out
++
++P1_TAIL raw_before_e=1.00000000000000001e-35
++        raw_after_e=2.81654998151922333e-4
++        raw_before_x=9.99999999999999929e-41
++        raw_after_x=2.83609365323408123e-4
++        edge_apps=60 nonlinear_iters=526 max_edge_iters=32
++```
++
++Event-coefficient factorization:
++
++```text
++cargo test --lib dynamic_coefficients_reconstruct_positive_event_gain_and_loss -- --nocapture
++1 passed; 0 failed; 248 filtered out
++```
++
++Executed solver substep:
++
++```text
++cargo test --lib reconstructed_electron_substep_is_raw_bounded_transactional_and_energy_closed -- --nocapture
++1 passed; 0 failed; 248 filtered out
++
++delta_N                  1.00000000000000008e-5
++frozen dt [MeV^-1]       1.94100387937646160e16
++electron tail before     4.02716779214063304e-36
++electron tail after      1.98938113478435546e-9
++heavy tail before        1.10893901931213646e-40
++heavy tail after         4.22668848891454724e-10
++T_gamma before [MeV]     1.14999999999999991
++T_gamma after [MeV]      1.14999974123257909
++rho_nu before [MeV^4]    1.58767666882388436
++rho_nu after [MeV^4]     1.58767950410753689
++total energy residual    0.0 MeV^4
++edge applications        60
++nonlinear iterations     372
++maximum edge iterations  27
++```
++
++Release segment benchmark, 24 momentum nodes, radial order 6, angular order
++4, 79,804 retained events, minimum of three samples:
++
++```text
++cargo test --release --lib pauli_event_parallel_benchmark -- --ignored --nocapture
++
++workers  parallel [s]  speedup  action
++2        0.020620398    1.7433   bitwise equal
++4        0.012570839    2.8596   bitwise equal
++6        0.009897871    3.6319   bitwise equal
++8        0.009060894    3.9673   bitwise equal
++12       0.008722009    4.1215   bitwise equal
++24       0.007573928    4.7462   bitwise equal
++serial   0.035947701    1.0000   reference
++```
++
++This is a collision-event segment benchmark, not endpoint progress.
++
++Native AOT SIMD probe:
++
++```text
++RUSTFLAGS='-C target-cpu=native' ... pauli_event_parallel_benchmark
++enabled AVX2, FMA, SSE4, BMI, and related host features
++serial best 0.035692782 s
++24-worker best 0.008619585 s
++```
++
++The native serial difference versus the portable build was below one percent,
++and the native parallel sample was slower than the portable parallel sample.
++Explicit SIMD/`target-cpu=native` settings were therefore not retained. The
++measured deterministic thread decomposition was retained.
++
++## Validation boundary
++
++No Python default/full suite, Rust full suite, gold test, endpoint, package,
++JAX, or Diffrax command was run. The final focused rerun and formatting check
++are recorded in the session handoff; this note must not be read as endpoint or
++scientific promotion authority.
++
++## Cost line
++
++```text
++added_lines: 1710
++deleted_lines: 49
++net_lines: 1661
++files_touched: 8
++token_use_exact: UNAVAILABLE
++token_use_basis: the active harness exposes no exact token counter
++runtime_behavior_changed: yes
++physics_behavior_changed: yes, in the new reconstruction candidate only
++known_blocker_reduced: yes
++blocker_movement_ratio: 0.50
++validation_strengthened: yes
++cost_effectiveness_verdict: ACCEPT_WITH_LIMITS
++```
++
++The line count exceeds the preferred PR budget. It moves a hard physics and
++solver blocker, but the work should be split before promotion into event
++factorization, collision-step reconstruction, and measured parallel assembly.
++No superseded Python/JAX implementation was deleted in this bounded research
++unit, so cumulative migration duplication remains open.
++
++## Remaining blockers
++
++1. Add a positivity-preserving neutrino self-collision step or a compatible
++   split operator without tail freezing.
++2. Compose expansion, electron collision, and self-collision with step
++   doubling and a physics-scaled local error norm.
++3. Record accepted/rejected raw candidates and demonstrate convergence over a
++   short collision-on prefix at two step ladders.
++4. Bind a same-physics reference before claiming parity with SciPy.
++5. Only then run endpoint and cold-wall authority gates.
+diff --git a/native/rabbit_cpu/src/electron_event.rs b/native/rabbit_cpu/src/electron_event.rs
+index 7c52c48051ec436ba6155812190cdaf4e8c12fe0..039e0a8d897367d656e602fadf9af0afb265214a 100644
+--- a/native/rabbit_cpu/src/electron_event.rs
++++ b/native/rabbit_cpu/src/electron_event.rs
+@@ -16,6 +16,12 @@ pub(crate) struct WeightedGainLossMeV {
+     pub(crate) net: RateMeV,
+ }
+ 
++#[derive(Clone, Copy, Debug, PartialEq)]
++pub(crate) struct DynamicGainLossCoefficientsMeV {
++    pub(crate) gain: RateMeV,
++    pub(crate) loss: RateMeV,
++}
++
+ fn checked_occupancies(occupancies: [f64; 4]) -> Result<[f64; 4], &'static str> {
+     occupancies
+         .into_iter()
+@@ -99,6 +105,36 @@ pub(crate) fn weighted_event_gain_loss_mev(
+     })
+ }
+ 
++/// Strip the two dynamic neutrino factors from one physical event.
++///
++/// The result is independent of the dynamic occupations and remains
++/// non-negative for the positive HM quadrature stream.  It is the elementary
++/// production/destruction coefficient used by the Pauli edge reconstruction.
++pub(crate) fn weighted_dynamic_gain_loss_coefficients_mev(
++    process: ExplicitElectronProcess,
++    occupancies: [f64; 4],
++    weight: RateMeV,
++) -> Result<DynamicGainLossCoefficientsMeV, &'static str> {
++    let [_, f2, f3, f4] = checked_occupancies(occupancies)?;
++    if weight.value() < 0.0 {
++        return Err("physical Pauli edge weight must be non-negative");
++    }
++    let (gain, loss) = match process.channel() {
++        ElectronChannel::ElectronMinusElastic | ElectronChannel::ElectronPlusElastic => (
++            weight.value() * (1.0 - f2) * f4,
++            weight.value() * f2 * (1.0 - f4),
++        ),
++        ElectronChannel::Pair => (
++            weight.value() * f3 * f4,
++            weight.value() * (1.0 - f3) * (1.0 - f4),
++        ),
++    };
++    Ok(DynamicGainLossCoefficientsMeV {
++        gain: RateMeV::new(gain)?,
++        loss: RateMeV::new(loss)?,
++    })
++}
++
+ pub(crate) fn weighted_neutrino_event_jvp_mev(
+     process: ExplicitElectronProcess,
+     occupancies: [f64; 4],
+diff --git a/native/rabbit_cpu/src/electron_event_falsifiers.rs b/native/rabbit_cpu/src/electron_event_falsifiers.rs
+index 42fb4667e331bf223fbbaf06da048670ab315e8f..6d66d62de54fd1591cd0e7da9db6f10b6305e580 100644
+--- a/native/rabbit_cpu/src/electron_event_falsifiers.rs
++++ b/native/rabbit_cpu/src/electron_event_falsifiers.rs
+@@ -4,7 +4,8 @@ mod frozen {
+     };
+     use crate::electron_event::{
+         neutrino_leg_direction, pauli_balance, pauli_directional_derivative, pauli_gradient,
+-        weighted_event_gain_loss_mev, weighted_neutrino_event_jvp_mev,
++        weighted_dynamic_gain_loss_coefficients_mev, weighted_event_gain_loss_mev,
++        weighted_neutrino_event_jvp_mev,
+     };
+     const BOUNDARIES: [[f64; 4]; 6] = [
+         [0.0, 0.0, 0.0, 0.0],
+@@ -89,6 +90,43 @@ mod frozen {
+         }
+     }
+ 
++    #[test]
++    fn dynamic_coefficients_reconstruct_positive_event_gain_and_loss() {
++        for process in EXPLICIT_ELECTRON_PROCESSES {
++            for (occupancies, _) in SEEDS {
++                let weight = RateMeV::new(2.7).unwrap();
++                let coefficients =
++                    weighted_dynamic_gain_loss_coefficients_mev(process, occupancies, weight)
++                        .unwrap();
++                let weighted = weighted_event_gain_loss_mev(occupancies, weight).unwrap();
++                let [f1, f2, f3, _] = occupancies;
++                let (gain, loss) = match process.channel() {
++                    ElectronChannel::ElectronMinusElastic
++                    | ElectronChannel::ElectronPlusElastic => (
++                        coefficients.gain.value() * (1.0 - f1) * f3,
++                        coefficients.loss.value() * f1 * (1.0 - f3),
++                    ),
++                    ElectronChannel::Pair => (
++                        coefficients.gain.value() * (1.0 - f1) * (1.0 - f2),
++                        coefficients.loss.value() * f1 * f2,
++                    ),
++                };
++                assert!(coefficients.gain.value() >= 0.0);
++                assert!(coefficients.loss.value() >= 0.0);
++                assert!(relative(gain, weighted.gain.value()) <= 2.0e-15);
++                assert!(relative(loss, weighted.loss.value()) <= 2.0e-15);
++            }
++            assert!(
++                weighted_dynamic_gain_loss_coefficients_mev(
++                    process,
++                    SEEDS[0].0,
++                    RateMeV::new(-1.0).unwrap(),
++                )
++                .is_err()
++            );
++        }
++    }
++
+     #[test]
+     fn pauli_directional_derivative_matches_five_seed_ladder() {
+         for (occupancies, direction) in SEEDS {
+diff --git a/native/rabbit_cpu/src/electron_spectral.rs b/native/rabbit_cpu/src/electron_spectral.rs
+index 90490b00fbfec95f6be42cde2cb706079bd4f5b5..4457d7332f3b2763f19790334094ed0b883d9ca2 100644
+--- a/native/rabbit_cpu/src/electron_spectral.rs
++++ b/native/rabbit_cpu/src/electron_spectral.rs
+@@ -17,6 +17,7 @@ use crate::electron_phase_point::{
+     PhysicalRadialCell, integrated_scalar_density_mev, physical_support_slice,
+ };
+ use crate::electron_supplied::{SuppliedElectronEvent, SuppliedElectronEvents};
++use crate::pauli_edge_step::{PauliEdge, PauliEdgeStep, PauliEdgeTopology};
+ use crate::quadrature::{gauss_laguerre_plain_rule, gauss_legendre_rule};
+ 
+ const EXPLICIT_STATES: usize = 6;
+@@ -32,6 +33,28 @@ pub(crate) struct IsotropicElectronSpectralAction {
+     pub(crate) jacobian_mev: Vec<f64>,
+ }
+ 
++#[derive(Clone, Debug)]
++struct FoldedPauliEdge {
++    bank: usize,
++    edge: PauliEdge,
++}
++
++#[derive(Clone, Debug)]
++pub(crate) struct IsotropicElectronPauliEdges {
++    nq: usize,
++    exact_equilibrium: bool,
++    anchor_electron_pair: Vec<f64>,
++    anchor_heavy_pair: Vec<f64>,
++    edges: Vec<FoldedPauliEdge>,
++}
++
++#[derive(Clone, Copy, Debug, Default, PartialEq)]
++pub(crate) struct PauliSweepReport {
++    pub(crate) edge_applications: usize,
++    pub(crate) nonlinear_iterations: usize,
++    pub(crate) maximum_edge_iterations: usize,
++}
++
+ #[derive(Clone, Copy, Debug)]
+ pub(crate) struct ElectronSpectralRule {
+     pub(crate) electron_radial_order: usize,
+@@ -88,7 +111,72 @@ fn explicit_occupations(electron_pair: &[f64], heavy_pair: &[f64]) -> Vec<f64> {
+     explicit
+ }
+ 
+-fn build_event_stream(
++#[allow(clippy::too_many_arguments)]
++fn build_event_task(
++    process_slot: usize,
++    target_node: usize,
++    t_gamma: TemperatureMeV,
++    t_cm: TemperatureMeV,
++    electron_mass: ElectronMassMeV,
++    y_nodes: &[f64],
++    y_weights: &[f64],
++    electron_rule: &[(f64, f64)],
++    angular_rule: &[(f64, f64)],
++) -> Result<Vec<SuppliedElectronEvent>, &'static str> {
++    let process = EXPLICIT_ELECTRON_PROCESSES[process_slot];
++    let target_y = NeutrinoY::new(y_nodes[target_node])?;
++    let capacity = y_nodes
++        .len()
++        .checked_mul(electron_rule.len())
++        .and_then(|value| value.checked_mul(angular_rule.len()))
++        .ok_or("electron spectral task dimension overflow")?;
++    let mut events = Vec::with_capacity(capacity);
++    for (coupled_node, (&coupled_y, &coupled_weight)) in y_nodes.iter().zip(y_weights).enumerate() {
++        for &(electron_x, electron_weight) in electron_rule {
++            let radial = match process.channel() {
++                ElectronChannel::ElectronMinusElastic | ElectronChannel::ElectronPlusElastic => {
++                    PhysicalRadialCell::elastic(
++                        ElectronX::new(electron_x)?,
++                        electron_weight,
++                        NeutrinoY::new(coupled_y)?,
++                        coupled_weight,
++                    )?
++                }
++                ElectronChannel::Pair => PhysicalRadialCell::pair(
++                    NeutrinoY::new(coupled_y)?,
++                    coupled_weight,
++                    ElectronX::new(electron_x)?,
++                    electron_weight,
++                )?,
++            };
++            for &(mu13, mu13_weight) in angular_rule {
++                let Some(support) = physical_support_slice(
++                    process_slot,
++                    t_gamma,
++                    t_cm,
++                    electron_mass,
++                    target_y,
++                    radial,
++                    mu13,
++                )?
++                else {
++                    continue;
++                };
++                let density = integrated_scalar_density_mev(&support)?;
++                events.push(SuppliedElectronEvent::new(
++                    process_slot,
++                    target_node,
++                    coupled_node,
++                    support.fixed_fermions,
++                    RateMeV::new(mu13_weight * density.value())?,
++                )?);
++            }
++        }
++    }
++    Ok(events)
++}
++
++fn build_event_stream_with_workers(
+     t_gamma_mev: f64,
+     t_cm_mev: f64,
+     y_nodes: &[f64],
+@@ -96,6 +184,7 @@ fn build_event_stream(
+     electron_mass_mev: f64,
+     rule: ElectronSpectralRule,
+     channel_filter: Option<ElectronChannel>,
++    requested_workers: usize,
+ ) -> Result<SuppliedElectronEvents, &'static str> {
+     let t_gamma = TemperatureMeV::new(t_gamma_mev)
+         .map_err(|_| "electron spectral photon temperature is invalid")?;
+@@ -113,66 +202,96 @@ fn build_event_stream(
+         .and_then(|value| value.checked_mul(nq))
+         .and_then(|value| value.checked_mul(angular_rule.len()))
+         .ok_or("electron spectral event dimension overflow")?;
+-    let mut events = Vec::with_capacity(capacity);
+-
+-    for (process_slot, &process) in EXPLICIT_ELECTRON_PROCESSES
++    let tasks = EXPLICIT_ELECTRON_PROCESSES
+         .iter()
+         .enumerate()
+         .take(ACTIVE_EXPLICIT_STATES * PROCESSES_PER_STATE)
+-    {
+-        if channel_filter.is_some_and(|channel| process.channel() != channel) {
+-            continue;
++        .filter(|(_, process)| channel_filter.is_none_or(|channel| process.channel() == channel))
++        .flat_map(|(process_slot, _)| (0..nq).map(move |target_node| (process_slot, target_node)))
++        .collect::<Vec<_>>();
++    if tasks.is_empty() {
++        return Err("electron spectral event task set is empty");
++    }
++    let workers = requested_workers.max(1).min(tasks.len());
++    let mut events = Vec::with_capacity(capacity);
++    if workers == 1 {
++        for &(process_slot, target_node) in &tasks {
++            events.extend(build_event_task(
++                process_slot,
++                target_node,
++                t_gamma,
++                t_cm,
++                electron_mass,
++                y_nodes,
++                y_weights,
++                &electron_rule,
++                &angular_rule,
++            )?);
+         }
+-        for (target_node, &target_y_value) in y_nodes.iter().enumerate() {
+-            let target_y = NeutrinoY::new(target_y_value)?;
+-            for (coupled_node, (&coupled_y, &coupled_weight)) in
+-                y_nodes.iter().zip(y_weights).enumerate()
+-            {
+-                for &(electron_x, electron_weight) in &electron_rule {
+-                    let radial = match process.channel() {
+-                        ElectronChannel::ElectronMinusElastic
+-                        | ElectronChannel::ElectronPlusElastic => PhysicalRadialCell::elastic(
+-                            ElectronX::new(electron_x)?,
+-                            electron_weight,
+-                            NeutrinoY::new(coupled_y)?,
+-                            coupled_weight,
+-                        )?,
+-                        ElectronChannel::Pair => PhysicalRadialCell::pair(
+-                            NeutrinoY::new(coupled_y)?,
+-                            coupled_weight,
+-                            ElectronX::new(electron_x)?,
+-                            electron_weight,
+-                        )?,
+-                    };
+-                    for &(mu13, mu13_weight) in &angular_rule {
+-                        let Some(support) = physical_support_slice(
++    } else {
++        let chunk_size = tasks.len().div_ceil(workers);
++        let joined = std::thread::scope(|scope| {
++            let mut handles = Vec::with_capacity(workers);
++            let electron_rule = electron_rule.as_slice();
++            let angular_rule = angular_rule.as_slice();
++            for chunk in tasks.chunks(chunk_size) {
++                handles.push(scope.spawn(move || {
++                    let mut local = Vec::new();
++                    for &(process_slot, target_node) in chunk {
++                        local.extend(build_event_task(
+                             process_slot,
++                            target_node,
+                             t_gamma,
+                             t_cm,
+                             electron_mass,
+-                            target_y,
+-                            radial,
+-                            mu13,
+-                        )?
+-                        else {
+-                            continue;
+-                        };
+-                        let density = integrated_scalar_density_mev(&support)?;
+-                        events.push(SuppliedElectronEvent::new(
+-                            process_slot,
+-                            target_node,
+-                            coupled_node,
+-                            support.fixed_fermions,
+-                            RateMeV::new(mu13_weight * density.value())?,
++                            y_nodes,
++                            y_weights,
++                            electron_rule,
++                            angular_rule,
+                         )?);
+                     }
+-                }
++                    Ok::<_, &'static str>(local)
++                }));
+             }
++            handles
++                .into_iter()
++                .map(|handle| handle.join())
++                .collect::<Vec<_>>()
++        });
++        for result in joined {
++            let local = result
++                .map_err(|_| "electron spectral worker panicked")?
++                .map_err(|error| error)?;
++            events.extend(local);
+         }
+     }
+     SuppliedElectronEvents::new(nq, events.into_boxed_slice())
+ }
+ 
++fn build_event_stream(
++    t_gamma_mev: f64,
++    t_cm_mev: f64,
++    y_nodes: &[f64],
++    y_weights: &[f64],
++    electron_mass_mev: f64,
++    rule: ElectronSpectralRule,
++    channel_filter: Option<ElectronChannel>,
++) -> Result<SuppliedElectronEvents, &'static str> {
++    let workers = std::thread::available_parallelism()
++        .map(usize::from)
++        .unwrap_or(1);
++    build_event_stream_with_workers(
++        t_gamma_mev,
++        t_cm_mev,
++        y_nodes,
++        y_weights,
++        electron_mass_mev,
++        rule,
++        channel_filter,
++        workers,
++    )
++}
++
+ fn folded_row(explicit: &[RateMeV], nq: usize, first_state: usize, node: usize) -> f64 {
+     0.5 * (explicit[first_state * nq + node].value()
+         + explicit[(first_state + 1) * nq + node].value())
+@@ -318,6 +437,263 @@ fn conservative_explicit_action(
+     Ok((action, jacobian))
+ }
+ 
++fn build_folded_pauli_edges(
++    stream: &SuppliedElectronEvents,
++    explicit_f: &[f64],
++    y_nodes: &[f64],
++    y_weights: &[f64],
++    electron_pair: &[f64],
++    heavy_pair: &[f64],
++    exact_equilibrium: bool,
++) -> Result<IsotropicElectronPauliEdges, &'static str> {
++    let nq = stream.nq();
++    let input = EXPLICIT_STATES
++        .checked_mul(nq)
++        .ok_or("electron Pauli edge dimension overflow")?;
++    let edge_count = input
++        .checked_mul(input)
++        .ok_or("electron Pauli edge dimension overflow")?;
++    let number_weights = y_nodes
++        .iter()
++        .zip(y_weights)
++        .map(|(node, weight)| weight * node.powi(2))
++        .collect::<Vec<_>>();
++    let mut directed_gain_coefficient = vec![0.0; edge_count];
++    let mut directed_loss_coefficient = vec![0.0; edge_count];
++    for item in stream.validated_contractions(explicit_f)? {
++        let item = item?;
++        let target = item.dynamic_legs.target.explicit_node.flat_index;
++        let coupled = item.dynamic_legs.coupled.explicit_node.flat_index;
++        let target_node = item.dynamic_legs.target.explicit_node.node;
++        let edge = target * input + coupled;
++        let measure = number_weights[target_node];
++        let coefficients = item.dynamic_coefficients()?;
++        directed_gain_coefficient[edge] += measure * coefficients.gain.value();
++        directed_loss_coefficient[edge] += measure * coefficients.loss.value();
++    }
++    if directed_gain_coefficient
++        .iter()
++        .chain(&directed_loss_coefficient)
++        .any(|value| !value.is_finite() || *value < 0.0)
++    {
++        return Err("electron Pauli directed coefficient is invalid");
++    }
++
++    let elastic_coefficients = |state: usize, first_node: usize, second_node: usize| {
++        let first = state * nq + first_node;
++        let second = state * nq + second_node;
++        let forward = first * input + second;
++        let reverse = second * input + first;
++        (
++            0.5 * (directed_gain_coefficient[forward] + directed_loss_coefficient[reverse]),
++            0.5 * (directed_loss_coefficient[forward] + directed_gain_coefficient[reverse]),
++        )
++    };
++    let pair_coefficients = |first_state: usize, first_node: usize, second_node: usize| {
++        let second_state = first_state + 1;
++        let first = first_state * nq + first_node;
++        let second = second_state * nq + second_node;
++        let forward = first * input + second;
++        let reverse = second * input + first;
++        (
++            0.5 * (directed_gain_coefficient[forward] + directed_gain_coefficient[reverse]),
++            0.5 * (directed_loss_coefficient[forward] + directed_loss_coefficient[reverse]),
++        )
++    };
++
++    let mut edges = Vec::with_capacity(2 * nq * nq);
++    for (bank, first_state) in [0, 2].into_iter().enumerate() {
++        for first_node in 0..nq {
++            for second_node in first_node + 1..nq {
++                let first = elastic_coefficients(first_state, first_node, second_node);
++                let conjugate = elastic_coefficients(first_state + 1, first_node, second_node);
++                let gain = 0.5 * (first.0 + conjugate.0);
++                let loss = 0.5 * (first.1 + conjugate.1);
++                if gain != 0.0 || loss != 0.0 {
++                    edges.push(FoldedPauliEdge {
++                        bank,
++                        edge: PauliEdge::new(
++                            PauliEdgeTopology::ElasticTransfer,
++                            first_node,
++                            second_node,
++                            number_weights[first_node],
++                            number_weights[second_node],
++                            gain,
++                            loss,
++                        )?,
++                    });
++                }
++            }
++        }
++        for first_node in 0..nq {
++            for second_node in first_node..nq {
++                let forward = pair_coefficients(first_state, first_node, second_node);
++                let (gain, loss) = if first_node == second_node {
++                    forward
++                } else {
++                    let transpose = pair_coefficients(first_state, second_node, first_node);
++                    (
++                        0.5 * (forward.0 + transpose.0),
++                        0.5 * (forward.1 + transpose.1),
++                    )
++                };
++                if gain != 0.0 || loss != 0.0 {
++                    edges.push(FoldedPauliEdge {
++                        bank,
++                        edge: PauliEdge::new(
++                            PauliEdgeTopology::PairSource,
++                            first_node,
++                            second_node,
++                            number_weights[first_node],
++                            number_weights[second_node],
++                            gain,
++                            loss,
++                        )?,
++                    });
++                }
++            }
++        }
++    }
++    (!edges.is_empty())
++        .then_some(IsotropicElectronPauliEdges {
++            nq,
++            exact_equilibrium,
++            anchor_electron_pair: electron_pair.to_vec(),
++            anchor_heavy_pair: heavy_pair.to_vec(),
++            edges,
++        })
++        .ok_or("electron Pauli edge reconstruction is empty")
++}
++
++impl IsotropicElectronPauliEdges {
++    fn is_exact_anchor(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> bool {
++        self.exact_equilibrium
++            && electron_pair.len() == self.nq
++            && heavy_pair.len() == self.nq
++            && electron_pair
++                .iter()
++                .zip(&self.anchor_electron_pair)
++                .all(|(value, anchor)| value.to_bits() == anchor.to_bits())
++            && heavy_pair
++                .iter()
++                .zip(&self.anchor_heavy_pair)
++                .all(|(value, anchor)| value.to_bits() == anchor.to_bits())
++    }
++
++    fn checked_banks(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> Result<(), &'static str> {
++        if electron_pair.len() != self.nq
++            || heavy_pair.len() != self.nq
++            || electron_pair
++                .iter()
++                .chain(heavy_pair)
++                .any(|value| !value.is_finite() || !(0.0..=1.0).contains(value))
++        {
++            return Err("electron Pauli edge occupation bank is invalid");
++        }
++        Ok(())
++    }
++
++    pub(crate) fn action_values(
++        &self,
++        electron_pair: &[f64],
++        heavy_pair: &[f64],
++    ) -> Result<IsotropicElectronSpectralAction, &'static str> {
++        self.checked_banks(electron_pair, heavy_pair)?;
++        let mut action = vec![0.0; 2 * self.nq];
++        if !self.is_exact_anchor(electron_pair, heavy_pair) {
++            for item in &self.edges {
++                let bank_offset = item.bank * self.nq;
++                let first = item.edge.first_node;
++                let second = item.edge.second_node;
++                let occupations = if item.bank == 0 {
++                    electron_pair
++                } else {
++                    heavy_pair
++                };
++                let flux = item
++                    .edge
++                    .flux_mev(occupations[first], occupations[second])?;
++                action[bank_offset + first] += flux / item.edge.first_measure;
++                match item.edge.topology {
++                    PauliEdgeTopology::ElasticTransfer => {
++                        action[bank_offset + second] -= flux / item.edge.second_measure;
++                    }
++                    PauliEdgeTopology::PairSource if first != second => {
++                        action[bank_offset + second] += flux / item.edge.second_measure;
++                    }
++                    PauliEdgeTopology::PairSource => {}
++                }
++            }
++        }
++        action
++            .iter()
++            .all(|value| value.is_finite())
++            .then(|| IsotropicElectronSpectralAction {
++                electron_pair_mev: action[..self.nq].to_vec(),
++                heavy_pair_mev: action[self.nq..].to_vec(),
++                jacobian_mev: Vec::new(),
++            })
++            .ok_or("electron Pauli edge action is non-finite")
++    }
++
++    pub(crate) fn transactional_step(
++        &self,
++        step_mev_inverse: f64,
++        electron_pair: &[f64],
++        heavy_pair: &[f64],
++    ) -> Result<(Vec<f64>, Vec<f64>, PauliSweepReport), &'static str> {
++        self.checked_banks(electron_pair, heavy_pair)?;
++        if !step_mev_inverse.is_finite() || step_mev_inverse < 0.0 {
++            return Err("electron Pauli sweep step is invalid");
++        }
++        if step_mev_inverse == 0.0 || self.is_exact_anchor(electron_pair, heavy_pair) {
++            return Ok((
++                electron_pair.to_vec(),
++                heavy_pair.to_vec(),
++                PauliSweepReport::default(),
++            ));
++        }
++
++        let mut electron_candidate = electron_pair.to_vec();
++        let mut heavy_candidate = heavy_pair.to_vec();
++        let mut report = PauliSweepReport::default();
++        let half_step = 0.5 * step_mev_inverse;
++        for reverse in [false, true] {
++            let apply = |item: &FoldedPauliEdge,
++                         electron: &mut [f64],
++                         heavy: &mut [f64]|
++             -> Result<PauliEdgeStep, &'static str> {
++                if item.bank == 0 {
++                    item.edge.apply_implicit(half_step, electron)
++                } else {
++                    item.edge.apply_implicit(half_step, heavy)
++                }
++            };
++            if reverse {
++                for item in self.edges.iter().rev() {
++                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
++                    report.edge_applications += 1;
++                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
++                    report.maximum_edge_iterations = report
++                        .maximum_edge_iterations
++                        .max(edge_report.nonlinear_iterations);
++                }
++            } else {
++                for item in &self.edges {
++                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
++                    report.edge_applications += 1;
++                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
++                    report.maximum_edge_iterations = report
++                        .maximum_edge_iterations
++                        .max(edge_report.nonlinear_iterations);
++                }
++            }
++        }
++        self.checked_banks(&electron_candidate, &heavy_candidate)?;
++        Ok((electron_candidate, heavy_candidate, report))
++    }
++}
++
+ fn fold_jacobian(explicit: &[RateMeV], nq: usize) -> Vec<f64> {
+     let explicit_width = EXPLICIT_STATES * nq;
+     let folded_width = FOLDED_PAIRS * nq;
+@@ -431,6 +807,43 @@ pub(crate) fn evaluate_isotropic_electron_spectral_action_values(
+     evaluate_isotropic_electron_spectral_action_impl(input, false)
+ }
+ 
++pub(crate) fn reconstruct_isotropic_electron_pauli_edges(
++    input: ElectronSpectralInput<'_>,
++) -> Result<IsotropicElectronPauliEdges, &'static str> {
++    let ElectronSpectralInput {
++        t_gamma_mev,
++        t_cm_mev,
++        y_nodes,
++        y_weights,
++        electron_pair,
++        heavy_pair,
++        electron_mass_mev,
++        rule,
++    } = input;
++    checked_grid(y_nodes, y_weights, electron_pair, heavy_pair)?;
++    let explicit_f = explicit_occupations(electron_pair, heavy_pair);
++    let exact_equilibrium = exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, electron_pair)
++        && exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, heavy_pair);
++    let stream = build_event_stream(
++        t_gamma_mev,
++        t_cm_mev,
++        y_nodes,
++        y_weights,
++        electron_mass_mev,
++        rule,
++        None,
++    )?;
++    build_folded_pauli_edges(
++        &stream,
++        &explicit_f,
++        y_nodes,
++        y_weights,
++        electron_pair,
++        heavy_pair,
++        exact_equilibrium,
++    )
++}
++
+ #[cfg(test)]
+ pub(crate) fn evaluate_filtered_isotropic_action(
+     input: ElectronSpectralInput<'_>,
+@@ -467,6 +880,7 @@ pub(crate) fn evaluate_filtered_isotropic_action(
+ #[cfg(test)]
+ mod tests {
+     use core::f64::consts::PI;
++    use std::time::Instant;
+ 
+     use super::*;
+     use crate::electron_hm::G_F_MEV_MINUS_2;
+@@ -741,6 +1155,234 @@ mod tests {
+         }
+     }
+ 
++    fn assert_action_reconstruction(
++        reference: &IsotropicElectronSpectralAction,
++        reconstructed: &IsotropicElectronSpectralAction,
++    ) {
++        for (label, expected, actual) in [
++            (
++                "electron",
++                &reference.electron_pair_mev,
++                &reconstructed.electron_pair_mev,
++            ),
++            (
++                "heavy",
++                &reference.heavy_pair_mev,
++                &reconstructed.heavy_pair_mev,
++            ),
++        ] {
++            let difference = expected
++                .iter()
++                .zip(actual)
++                .map(|(left, right)| (left - right).abs())
++                .sum::<f64>();
++            let scale = expected
++                .iter()
++                .chain(actual)
++                .map(|value| value.abs())
++                .sum::<f64>()
++                .max(f64::MIN_POSITIVE);
++            assert!(
++                difference <= 2.0e-11 * scale,
++                "bank={label} difference={difference:.17e} scale={scale:.17e} relative={:.17e}",
++                difference / scale,
++            );
++        }
++    }
++
++    #[test]
++    fn folded_pauli_edges_reconstruct_action_and_are_boundary_inward() {
++        let (y, w) = grid(4);
++        let electron = y
++            .iter()
++            .enumerate()
++            .map(|(node, value)| fd(*value) * if node.is_multiple_of(2) { 0.91 } else { 1.07 })
++            .collect::<Vec<_>>();
++        let heavy = y
++            .iter()
++            .enumerate()
++            .map(|(node, value)| fd(*value) * if node.is_multiple_of(2) { 1.03 } else { 0.84 })
++            .collect::<Vec<_>>();
++        let rule = ElectronSpectralRule {
++            electron_radial_order: 4,
++            angular_order: 3,
++        };
++        let input = spectral_input(1.15, 1.0, &y, &w, &electron, &heavy, rule);
++        let reference = evaluate_isotropic_electron_spectral_action_values(input).unwrap();
++        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
++        let reconstructed = edges.action_values(&electron, &heavy).unwrap();
++        assert_action_reconstruction(&reference, &reconstructed);
++
++        for bank in 0..2 {
++            for node in 0..y.len() {
++                let mut lower_electron = electron.clone();
++                let mut lower_heavy = heavy.clone();
++                let mut upper_electron = electron.clone();
++                let mut upper_heavy = heavy.clone();
++                if bank == 0 {
++                    lower_electron[node] = 0.0;
++                    upper_electron[node] = 1.0;
++                } else {
++                    lower_heavy[node] = 0.0;
++                    upper_heavy[node] = 1.0;
++                }
++                let lower = edges.action_values(&lower_electron, &lower_heavy).unwrap();
++                let upper = edges.action_values(&upper_electron, &upper_heavy).unwrap();
++                let lower_value = if bank == 0 {
++                    lower.electron_pair_mev[node]
++                } else {
++                    lower.heavy_pair_mev[node]
++                };
++                let upper_value = if bank == 0 {
++                    upper.electron_pair_mev[node]
++                } else {
++                    upper.heavy_pair_mev[node]
++                };
++                assert!(
++                    lower_value >= 0.0,
++                    "bank={bank} node={node} lower={lower_value:.17e}"
++                );
++                assert!(
++                    upper_value <= 0.0,
++                    "bank={bank} node={node} upper={upper_value:.17e}"
++                );
++            }
++        }
++    }
++
++    #[test]
++    fn pauli_sweep_is_transactional_at_equilibrium_and_in_the_high_q_tail() {
++        let (y, w) = grid(4);
++        let equilibrium = y.iter().copied().map(fd).collect::<Vec<_>>();
++        let rule = ElectronSpectralRule {
++            electron_radial_order: 4,
++            angular_order: 3,
++        };
++        let equilibrium_input = spectral_input(1.0, 1.0, &y, &w, &equilibrium, &equilibrium, rule);
++        let equilibrium_edges =
++            reconstruct_isotropic_electron_pauli_edges(equilibrium_input).unwrap();
++        let (same_electron, same_heavy, equilibrium_report) = equilibrium_edges
++            .transactional_step(1.0e30, &equilibrium, &equilibrium)
++            .unwrap();
++        assert_eq!(same_electron, equilibrium);
++        assert_eq!(same_heavy, equilibrium);
++        assert_eq!(equilibrium_report, PauliSweepReport::default());
++
++        let mut electron = equilibrium
++            .iter()
++            .map(|value| 0.93 * value)
++            .collect::<Vec<_>>();
++        let mut heavy = equilibrium
++            .iter()
++            .map(|value| 0.87 * value)
++            .collect::<Vec<_>>();
++        let last = y.len() - 1;
++        electron[last] = 1.0e-35;
++        heavy[last] = 1.0e-40;
++        let input = spectral_input(1.15, 1.0, &y, &w, &electron, &heavy, rule);
++        let reference = evaluate_isotropic_electron_spectral_action_values(input).unwrap();
++        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
++        let reconstructed = edges.action_values(&electron, &heavy).unwrap();
++        assert_action_reconstruction(&reference, &reconstructed);
++        let before = [electron[last], heavy[last]];
++        let (candidate_electron, candidate_heavy, report) =
++            edges.transactional_step(1.0e24, &electron, &heavy).unwrap();
++        assert!(
++            candidate_electron
++                .iter()
++                .chain(&candidate_heavy)
++                .all(|value| value.is_finite() && (0.0..=1.0).contains(value))
++        );
++        assert!(report.edge_applications > 0 && report.maximum_edge_iterations <= 32);
++        eprintln!(
++            "P1_TAIL raw_before_e={:.17e} raw_after_e={:.17e} raw_before_x={:.17e} raw_after_x={:.17e} edge_apps={} nonlinear_iters={} max_edge_iters={}",
++            before[0],
++            candidate_electron[last],
++            before[1],
++            candidate_heavy[last],
++            report.edge_applications,
++            report.nonlinear_iterations,
++            report.maximum_edge_iterations,
++        );
++        assert!(
++            edges
++                .transactional_step(f64::NAN, &electron, &heavy)
++                .is_err()
++        );
++        assert_eq!(electron[last], before[0]);
++        assert_eq!(heavy[last], before[1]);
++    }
++
++    #[test]
++    #[ignore = "diagnostic: release-mode serial/parallel event-build comparison"]
++    fn pauli_event_parallel_benchmark() {
++        let (y, w) = grid(24);
++        let electron = y.iter().map(|value| 0.93 * fd(*value)).collect::<Vec<_>>();
++        let heavy = y.iter().map(|value| 0.87 * fd(*value)).collect::<Vec<_>>();
++        let explicit = explicit_occupations(&electron, &heavy);
++        let rule = ElectronSpectralRule {
++            electron_radial_order: 6,
++            angular_order: 4,
++        };
++        let available_workers = std::thread::available_parallelism()
++            .map(usize::from)
++            .unwrap_or(1);
++        assert!(
++            available_workers > 1,
++            "parallel benchmark requires more than one worker"
++        );
++        let evaluate = |worker_count: usize| {
++            let start = Instant::now();
++            let stream = build_event_stream_with_workers(
++                1.15,
++                1.0,
++                &y,
++                &w,
++                ELECTRON_MASS_MEV,
++                rule,
++                None,
++                worker_count,
++            )
++            .unwrap();
++            let event_count = stream.events().len();
++            let (action, _) =
++                conservative_explicit_action(&stream, &explicit, &y, &w, false).unwrap();
++            (start.elapsed().as_secs_f64(), event_count, action)
++        };
++
++        let serial_reference = evaluate(1);
++        let mut serial_best = serial_reference.0;
++        for _ in 0..2 {
++            serial_best = serial_best.min(evaluate(1).0);
++        }
++        for workers in [2, 4, 6, 8, 12, 24]
++            .into_iter()
++            .filter(|workers| *workers <= available_workers)
++        {
++            let parallel_reference = evaluate(workers);
++            assert_eq!(serial_reference.1, parallel_reference.1);
++            assert!(
++                serial_reference
++                    .2
++                    .iter()
++                    .zip(&parallel_reference.2)
++                    .all(|(left, right)| left.value().to_bits() == right.value().to_bits())
++            );
++            let mut parallel_best = parallel_reference.0;
++            for _ in 0..2 {
++                parallel_best = parallel_best.min(evaluate(workers).0);
++            }
++            eprintln!(
++                "P1_PERF workers={} events={} serial_best_s={:.9} parallel_best_s={:.9} speedup={:.6} bitwise_equal=true",
++                workers,
++                serial_reference.1,
++                serial_best,
++                parallel_best,
++                serial_best / parallel_best,
++            );
++        }
++    }
++
+     #[test]
+     fn invalid_inputs_fail_without_clipping() {
+         let (y, w) = grid(3);
+diff --git a/native/rabbit_cpu/src/electron_supplied.rs b/native/rabbit_cpu/src/electron_supplied.rs
+index 15f46e6ec5c8f03ef5050ff3da4155ee8e809f03..6cc913d73b7a9bf0ef6f87b7de30728f9deeb65f 100644
+--- a/native/rabbit_cpu/src/electron_supplied.rs
++++ b/native/rabbit_cpu/src/electron_supplied.rs
+@@ -3,7 +3,10 @@
+ use crate::electron_catalog::{
+     EXPLICIT_ELECTRON_PROCESSES, ExplicitElectronProcess, ExplicitNeutrino, RateMeV,
+ };
+-use crate::electron_event::{WeightedGainLossMeV, weighted_event_gain_loss_mev};
++use crate::electron_event::{
++    DynamicGainLossCoefficientsMeV, WeightedGainLossMeV,
++    weighted_dynamic_gain_loss_coefficients_mev, weighted_event_gain_loss_mev,
++};
+ 
+ pub(crate) struct SuppliedElectronEvent {
+     process_slot: usize,
+@@ -152,6 +155,18 @@ pub(crate) struct SuppliedContraction {
+     pub(crate) weighted_balance: WeightedGainLossMeV,
+ }
+ 
++impl SuppliedContraction {
++    pub(crate) fn dynamic_coefficients(
++        &self,
++    ) -> Result<DynamicGainLossCoefficientsMeV, &'static str> {
++        weighted_dynamic_gain_loss_coefficients_mev(
++            self.process,
++            self.occupancies,
++            self.scalar_weight,
++        )
++    }
++}
++
+ pub(crate) struct ExplicitSixAction {
+     pub(crate) channel_contributions: Box<[WeightedGainLossMeV]>,
+     pub(crate) total_action: Box<[RateMeV]>,
+diff --git a/native/rabbit_cpu/src/isotropic_boltzmann.rs b/native/rabbit_cpu/src/isotropic_boltzmann.rs
+index 2a6b7e4d06eccbc85e296a7ac3ad3850635a6964..918207debeeb27d005c593f8d10893c83bbb4434 100644
+--- a/native/rabbit_cpu/src/isotropic_boltzmann.rs
++++ b/native/rabbit_cpu/src/isotropic_boltzmann.rs
+@@ -16,9 +16,9 @@
+ use core::f64::consts::PI;
+ 
+ use crate::electron_spectral::{
+-    ElectronSpectralInput, ElectronSpectralRule, IsotropicElectronSpectralAction,
++    ElectronSpectralInput, ElectronSpectralRule, IsotropicElectronSpectralAction, PauliSweepReport,
+     evaluate_isotropic_electron_spectral_action,
+-    evaluate_isotropic_electron_spectral_action_values,
++    evaluate_isotropic_electron_spectral_action_values, reconstruct_isotropic_electron_pauli_edges,
+ };
+ use crate::flrw::{
+     ELECTRON_MASS_MEV, MEV_TO_INVERSE_SECONDS, NEWTON_G_MEV_MINUS_2, electromagnetic_eos,
+@@ -314,6 +314,96 @@ pub(crate) struct IsotropicBoltzmannFlrwSystem {
+     neutrino_self_rule: NeutrinoSelfSpectralRule,
+ }
+ 
++#[derive(Clone, Debug)]
++pub(crate) struct ElectronCollisionReconstruction {
++    pub(crate) candidate_state: Vec<f64>,
++    pub(crate) delta_ln_a: f64,
++    pub(crate) frozen_step_mev_inverse: f64,
++    pub(crate) t_gamma_before_mev: f64,
++    pub(crate) t_gamma_after_mev: f64,
++    pub(crate) rho_neutrino_before_mev4: f64,
++    pub(crate) rho_neutrino_after_mev4: f64,
++    pub(crate) total_energy_residual_mev4: f64,
++    pub(crate) sweep: PauliSweepReport,
++}
++
++fn electromagnetic_temperature_for_density(
++    target_rho_mev4: f64,
++    anchor_temperature_mev: f64,
++) -> Result<f64, &'static str> {
++    if !target_rho_mev4.is_finite()
++        || target_rho_mev4 <= 0.0
++        || !anchor_temperature_mev.is_finite()
++        || anchor_temperature_mev <= 0.0
++    {
++        return Err("electromagnetic reconstruction target is invalid");
++    }
++    let anchor = electromagnetic_eos(anchor_temperature_mev)
++        .map_err(|_| "electromagnetic reconstruction EOS failed")?;
++    if target_rho_mev4.to_bits() == anchor.rho.to_bits() {
++        return Ok(anchor_temperature_mev);
++    }
++    let (mut lower, mut upper) = if target_rho_mev4 < anchor.rho {
++        let mut lower = 0.5 * anchor_temperature_mev;
++        for _ in 0..64 {
++            let rho = electromagnetic_eos(lower)
++                .map_err(|_| "electromagnetic reconstruction EOS failed")?
++                .rho;
++            if rho <= target_rho_mev4 {
++                break;
++            }
++            lower *= 0.5;
++        }
++        (lower, anchor_temperature_mev)
++    } else {
++        let mut upper = 2.0 * anchor_temperature_mev;
++        for _ in 0..64 {
++            let rho = electromagnetic_eos(upper)
++                .map_err(|_| "electromagnetic reconstruction EOS failed")?
++                .rho;
++            if rho >= target_rho_mev4 {
++                break;
++            }
++            upper *= 2.0;
++            if !upper.is_finite() {
++                return Err("electromagnetic reconstruction bracket overflowed");
++            }
++        }
++        (anchor_temperature_mev, upper)
++    };
++    let lower_rho = electromagnetic_eos(lower)
++        .map_err(|_| "electromagnetic reconstruction EOS failed")?
++        .rho;
++    let upper_rho = electromagnetic_eos(upper)
++        .map_err(|_| "electromagnetic reconstruction EOS failed")?
++        .rho;
++    if lower_rho > target_rho_mev4 || upper_rho < target_rho_mev4 {
++        return Err("electromagnetic reconstruction density is not bracketed");
++    }
++
++    let mut temperature = anchor_temperature_mev;
++    for _ in 0..64 {
++        let eos = electromagnetic_eos(temperature)
++            .map_err(|_| "electromagnetic reconstruction EOS failed")?;
++        let residual = eos.rho - target_rho_mev4;
++        if residual.abs() <= 32.0 * f64::EPSILON * target_rho_mev4 {
++            return Ok(temperature);
++        }
++        if residual < 0.0 {
++            lower = temperature;
++        } else {
++            upper = temperature;
++        }
++        let newton = temperature - residual / eos.drho_dt;
++        temperature = if newton > lower && newton < upper && newton.is_finite() {
++            newton
++        } else {
++            0.5 * (lower + upper)
++        };
++    }
++    Err("electromagnetic reconstruction temperature solve did not converge")
++}
++
+ impl IsotropicBoltzmannFlrwSystem {
+     pub(crate) fn new(
+         grid: ComovingMomentumGrid,
+@@ -524,6 +614,110 @@ impl IsotropicBoltzmannFlrwSystem {
+         .ok_or("spectral FLRW output is non-finite")
+     }
+ 
++    /// One collision-only reconstruction substep at fixed `ln(a)`.
++    ///
++    /// Electron/positron events are advanced as conservative Pauli edges for
++    /// the frozen physical time `delta_ln_a / H`.  The electromagnetic
++    /// temperature is then solved from the opposite neutrino-energy change.
++    /// Expansion and neutrino self-scattering belong to separate split
++    /// operators; this method is a bounded solver candidate, not the promoted
++    /// endpoint integrator.
++    pub(crate) fn reconstruct_electron_collision_substep(
++        &self,
++        ln_a: f64,
++        state: &[f64],
++        delta_ln_a: f64,
++    ) -> Result<ElectronCollisionReconstruction, &'static str> {
++        if !delta_ln_a.is_finite() || delta_ln_a < 0.0 {
++            return Err("electron collision reconstruction step is invalid");
++        }
++        let physical = self.physical_state_impl(ln_a, state, false)?;
++        let y_nodes = self
++            .grid
++            .nodes_mev
++            .iter()
++            .map(|value| value / self.reference_temperature_mev)
++            .collect::<Vec<_>>();
++        let y_weights = self
++            .grid
++            .weights_mev
++            .iter()
++            .map(|value| value / self.reference_temperature_mev)
++            .collect::<Vec<_>>();
++        let edges = reconstruct_isotropic_electron_pauli_edges(ElectronSpectralInput {
++            t_gamma_mev: state[T_GAMMA_INDEX],
++            t_cm_mev: physical.t_cm_mev,
++            y_nodes: &y_nodes,
++            y_weights: &y_weights,
++            electron_pair: &physical.electron_pair_occupation,
++            heavy_pair: &physical.heavy_pair_occupation,
++            electron_mass_mev: ELECTRON_MASS_MEV,
++            rule: self.electron_rule,
++        })?;
++        let frozen_step_mev_inverse = delta_ln_a / physical.h_mev;
++        let (electron_candidate, heavy_candidate, sweep) = edges.transactional_step(
++            frozen_step_mev_inverse,
++            &physical.electron_pair_occupation,
++            &physical.heavy_pair_occupation,
++        )?;
++        if electron_candidate
++            .iter()
++            .chain(&heavy_candidate)
++            .any(|value| !value.is_finite() || *value <= 0.0 || *value >= 1.0)
++        {
++            return Err("electron collision reconstruction cannot return a strict logit state");
++        }
++
++        let electron_moments = self.grid.pair_moments(ln_a, &electron_candidate)?;
++        let heavy_moments = self.grid.pair_moments(ln_a, &heavy_candidate)?;
++        let rho_neutrino_after_mev4 =
++            electron_moments.energy_density_mev4 + 2.0 * heavy_moments.energy_density_mev4;
++        let rho_neutrino_before_mev4 = physical.rho_neutrino_total_mev4;
++        let electromagnetic_before = electromagnetic_eos(state[T_GAMMA_INDEX])
++            .map_err(|_| "electron collision reconstruction EOS failed")?;
++        let target_electromagnetic_rho =
++            electromagnetic_before.rho - (rho_neutrino_after_mev4 - rho_neutrino_before_mev4);
++        let t_gamma_after_mev = electromagnetic_temperature_for_density(
++            target_electromagnetic_rho,
++            state[T_GAMMA_INDEX],
++        )?;
++
++        let mut candidate_state = state.to_vec();
++        if sweep.edge_applications != 0 {
++            candidate_state[T_GAMMA_INDEX] = t_gamma_after_mev;
++            for (node, occupation) in electron_candidate.iter().copied().enumerate() {
++                candidate_state[self.electron_start() + node] =
++                    occupation.ln() - (-occupation).ln_1p();
++            }
++            for (node, occupation) in heavy_candidate.iter().copied().enumerate() {
++                candidate_state[self.heavy_start() + node] =
++                    occupation.ln() - (-occupation).ln_1p();
++            }
++        }
++        if !self.state_is_valid(&candidate_state) {
++            return Err("electron collision reconstruction candidate state is invalid");
++        }
++        let electromagnetic_after = electromagnetic_eos(t_gamma_after_mev)
++            .map_err(|_| "electron collision reconstruction EOS failed")?;
++        let total_energy_residual_mev4 = electromagnetic_after.rho + rho_neutrino_after_mev4
++            - electromagnetic_before.rho
++            - rho_neutrino_before_mev4;
++        if !total_energy_residual_mev4.is_finite() {
++            return Err("electron collision reconstruction energy residual is non-finite");
++        }
++        Ok(ElectronCollisionReconstruction {
++            candidate_state,
++            delta_ln_a,
++            frozen_step_mev_inverse,
++            t_gamma_before_mev: state[T_GAMMA_INDEX],
++            t_gamma_after_mev,
++            rho_neutrino_before_mev4,
++            rho_neutrino_after_mev4,
++            total_energy_residual_mev4,
++            sweep,
++        })
++    }
++
+     pub(crate) fn physical_state(
+         &self,
+         ln_a: f64,
+@@ -821,6 +1015,82 @@ mod tests {
+         }));
+     }
+ 
++    #[test]
++    fn reconstructed_electron_substep_is_raw_bounded_transactional_and_energy_closed() {
++        let grid = ComovingMomentumGrid::gauss_laguerre(4, 1.0).unwrap();
++        let system = IsotropicBoltzmannFlrwSystem::new(
++            grid,
++            1.0,
++            ElectronSpectralRule {
++                electron_radial_order: 4,
++                angular_order: 3,
++            },
++            NeutrinoSelfSpectralRule { angular_order: 3 },
++        )
++        .unwrap();
++        let equilibrium = system.initial_fd_state(1.0).unwrap();
++        let equilibrium_candidate = system
++            .reconstruct_electron_collision_substep(0.0, &equilibrium, 1.0e-5)
++            .unwrap();
++        assert_eq!(equilibrium_candidate.candidate_state, equilibrium);
++        assert_eq!(equilibrium_candidate.sweep, PauliSweepReport::default());
++
++        let mut state = system.initial_fd_state(1.0).unwrap();
++        state[T_GAMMA_INDEX] = 1.15;
++        let last = system.grid.len() - 1;
++        state[system.electron_start() + last] = -81.5;
++        state[system.heavy_start() + last] = -92.0;
++        let before = state.clone();
++        let before_physical = system.physical_state_impl(0.0, &state, false).unwrap();
++        let candidate = system
++            .reconstruct_electron_collision_substep(0.0, &state, 1.0e-5)
++            .unwrap();
++        let after_physical = system
++            .physical_state_impl(0.0, &candidate.candidate_state, false)
++            .unwrap();
++        assert!(
++            after_physical
++                .electron_pair_occupation
++                .iter()
++                .chain(&after_physical.heavy_pair_occupation)
++                .all(|value| value.is_finite() && *value > 0.0 && *value < 1.0)
++        );
++        assert!(candidate.sweep.edge_applications > 0);
++        assert_eq!(
++            candidate.candidate_state[ELAPSED_SECONDS_INDEX].to_bits(),
++            state[ELAPSED_SECONDS_INDEX].to_bits(),
++        );
++        let total_scale = electromagnetic_eos(state[T_GAMMA_INDEX]).unwrap().rho
++            + candidate.rho_neutrino_before_mev4;
++        assert!(candidate.total_energy_residual_mev4.abs() <= 64.0 * f64::EPSILON * total_scale);
++        assert!(candidate.rho_neutrino_after_mev4 > candidate.rho_neutrino_before_mev4);
++        assert!(candidate.t_gamma_after_mev < candidate.t_gamma_before_mev);
++        eprintln!(
++            "P1_SOLVER delta_N={:.17e} dt_MeV_inv={:.17e} tail_e_before={:.17e} tail_e_after={:.17e} tail_x_before={:.17e} tail_x_after={:.17e} T_before={:.17e} T_after={:.17e} rho_nu_before={:.17e} rho_nu_after={:.17e} energy_residual={:.17e} edge_apps={} nonlinear_iters={} max_edge_iters={}",
++            candidate.delta_ln_a,
++            candidate.frozen_step_mev_inverse,
++            before_physical.electron_pair_occupation[last],
++            after_physical.electron_pair_occupation[last],
++            before_physical.heavy_pair_occupation[last],
++            after_physical.heavy_pair_occupation[last],
++            candidate.t_gamma_before_mev,
++            candidate.t_gamma_after_mev,
++            candidate.rho_neutrino_before_mev4,
++            candidate.rho_neutrino_after_mev4,
++            candidate.total_energy_residual_mev4,
++            candidate.sweep.edge_applications,
++            candidate.sweep.nonlinear_iterations,
++            candidate.sweep.maximum_edge_iterations,
++        );
++
++        assert!(
++            system
++                .reconstruct_electron_collision_substep(0.0, &state, f64::NAN)
++                .is_err()
++        );
++        assert_eq!(state, before);
++    }
++
+     #[test]
+     fn arbitrary_distribution_has_exact_comoving_number_and_energy_scaling() {
+         let grid = ComovingMomentumGrid::gauss_laguerre(16, 1.0).unwrap();
+diff --git a/native/rabbit_cpu/src/lib.rs b/native/rabbit_cpu/src/lib.rs
+index 56ac298e132e13512026792a94d9825920e5b889..25dab9b461fd2cce05767300d17456bae2b014e4 100644
+--- a/native/rabbit_cpu/src/lib.rs
++++ b/native/rabbit_cpu/src/lib.rs
+@@ -14,6 +14,7 @@ mod isotropic_boltzmann;
+ mod minimal_bbn;
+ mod minimal_network;
+ mod ode;
++mod pauli_edge_step;
+ mod qed_eos;
+ mod quadrature;
+ mod thermal_bbn;
+diff --git a/native/rabbit_cpu/src/pauli_edge_step.rs b/native/rabbit_cpu/src/pauli_edge_step.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b6be3565cc63f4f8a4baf3a25ce4a1a574fc15b
+--- /dev/null
++++ b/native/rabbit_cpu/src/pauli_edge_step.rs
+@@ -0,0 +1,399 @@
++//! Positivity-preserving local steps for conservative Pauli collision edges.
++//!
++//! The state variable is the raw occupation, not a clipped or projected
++//! surrogate.  Each edge carries non-negative forward and reverse
++//! coefficients.  A backward-Euler extent solve is one dimensional,
++//! bracketed by the exact Pauli capacities, and therefore remains inside the
++//! Fermi box for arbitrarily stiff finite steps.  The caller owns operator
++//! splitting across edges and commits only a completely validated candidate.
++
++#![cfg_attr(not(test), allow(dead_code))]
++
++#[derive(Clone, Copy, Debug, Eq, PartialEq)]
++pub(crate) enum PauliEdgeTopology {
++    /// `j -> i` minus `i -> j`; the weighted number sum is invariant.
++    ElasticTransfer,
++    /// Bath-driven pair creation minus annihilation; both nodes move together.
++    PairSource,
++}
++
++#[derive(Clone, Copy, Debug)]
++pub(crate) struct PauliEdge {
++    pub(crate) topology: PauliEdgeTopology,
++    pub(crate) first_node: usize,
++    pub(crate) second_node: usize,
++    pub(crate) first_measure: f64,
++    pub(crate) second_measure: f64,
++    pub(crate) gain_coefficient_mev: f64,
++    pub(crate) loss_coefficient_mev: f64,
++}
++
++#[derive(Clone, Copy, Debug, Default, PartialEq)]
++pub(crate) struct PauliEdgeStep {
++    pub(crate) extent: f64,
++    pub(crate) nonlinear_iterations: usize,
++}
++
++fn valid_occupation(value: f64) -> bool {
++    value.is_finite() && (0.0..=1.0).contains(&value)
++}
++
++fn stable_nonnegative_product_difference(
++    gain_coefficient: f64,
++    gain_factors: [f64; 2],
++    loss_coefficient: f64,
++    loss_factors: [f64; 2],
++) -> Result<f64, &'static str> {
++    let gain = gain_coefficient * gain_factors[0] * gain_factors[1];
++    let loss = loss_coefficient * loss_factors[0] * loss_factors[1];
++    if !gain.is_finite() || gain < 0.0 || !loss.is_finite() || loss < 0.0 {
++        return Err("Pauli edge gain or loss is invalid");
++    }
++    if gain == 0.0 || loss == 0.0 {
++        return Ok(gain - loss);
++    }
++    let direct = gain - loss;
++    let scale = gain.max(loss);
++    if direct.abs() > 1.0e-6 * scale {
++        return Ok(direct);
++    }
++
++    // Near detailed balance, evaluate the affinity before subtraction.  This
++    // avoids destroying a small physical net by cancelling two positive rates.
++    let log_gain = gain_coefficient.ln() + gain_factors[0].ln() + gain_factors[1].ln();
++    let log_loss = loss_coefficient.ln() + loss_factors[0].ln() + loss_factors[1].ln();
++    let stable = if log_gain >= log_loss {
++        log_gain.exp() * -((log_loss - log_gain).exp_m1())
++    } else {
++        log_loss.exp() * (log_gain - log_loss).exp_m1()
++    };
++    stable
++        .is_finite()
++        .then_some(stable)
++        .ok_or("Pauli edge affinity difference is non-finite")
++}
++
++impl PauliEdge {
++    pub(crate) fn new(
++        topology: PauliEdgeTopology,
++        first_node: usize,
++        second_node: usize,
++        first_measure: f64,
++        second_measure: f64,
++        gain_coefficient_mev: f64,
++        loss_coefficient_mev: f64,
++    ) -> Result<Self, &'static str> {
++        if (topology == PauliEdgeTopology::ElasticTransfer && first_node == second_node)
++            || !first_measure.is_finite()
++            || first_measure <= 0.0
++            || !second_measure.is_finite()
++            || second_measure <= 0.0
++            || !gain_coefficient_mev.is_finite()
++            || gain_coefficient_mev < 0.0
++            || !loss_coefficient_mev.is_finite()
++            || loss_coefficient_mev < 0.0
++        {
++            return Err("Pauli edge is outside the accepted physical domain");
++        }
++        Ok(Self {
++            topology,
++            first_node,
++            second_node,
++            first_measure,
++            second_measure,
++            gain_coefficient_mev,
++            loss_coefficient_mev,
++        })
++    }
++
++    #[inline]
++    pub(crate) fn flux_mev(
++        &self,
++        first_occupation: f64,
++        second_occupation: f64,
++    ) -> Result<f64, &'static str> {
++        if !valid_occupation(first_occupation) || !valid_occupation(second_occupation) {
++            return Err("Pauli edge occupation is outside [0, 1]");
++        }
++        let (gain_factors, loss_factors) = match self.topology {
++            PauliEdgeTopology::ElasticTransfer => (
++                [1.0 - first_occupation, second_occupation],
++                [first_occupation, 1.0 - second_occupation],
++            ),
++            PauliEdgeTopology::PairSource => (
++                [1.0 - first_occupation, 1.0 - second_occupation],
++                [first_occupation, second_occupation],
++            ),
++        };
++        stable_nonnegative_product_difference(
++            self.gain_coefficient_mev,
++            gain_factors,
++            self.loss_coefficient_mev,
++            loss_factors,
++        )
++    }
++
++    fn occupations_at_extent(
++        &self,
++        initial: [f64; 2],
++        extent: f64,
++    ) -> Result<[f64; 2], &'static str> {
++        let first = initial[0] + extent / self.first_measure;
++        let second_sign = match self.topology {
++            PauliEdgeTopology::ElasticTransfer => -1.0,
++            PauliEdgeTopology::PairSource => 1.0,
++        };
++        let second = initial[1] + second_sign * extent / self.second_measure;
++        (valid_occupation(first) && valid_occupation(second))
++            .then_some([first, second])
++            .ok_or("Pauli edge extent leaves the Fermi box")
++    }
++
++    fn extent_bounds(&self, initial: [f64; 2]) -> (f64, f64) {
++        let first_down = self.first_measure * initial[0];
++        let first_up = self.first_measure * (1.0 - initial[0]);
++        match self.topology {
++            PauliEdgeTopology::ElasticTransfer => (
++                -first_down.min(self.second_measure * (1.0 - initial[1])),
++                first_up.min(self.second_measure * initial[1]),
++            ),
++            PauliEdgeTopology::PairSource => (
++                -first_down.min(self.second_measure * initial[1]),
++                first_up.min(self.second_measure * (1.0 - initial[1])),
++            ),
++        }
++    }
++
++    fn flux_derivative_by_extent(&self, occupations: [f64; 2]) -> f64 {
++        let [first, second] = occupations;
++        match self.topology {
++            PauliEdgeTopology::ElasticTransfer => {
++                let derivative_first = -self.gain_coefficient_mev * second
++                    - self.loss_coefficient_mev * (1.0 - second);
++                let derivative_second =
++                    self.gain_coefficient_mev * (1.0 - first) + self.loss_coefficient_mev * first;
++                derivative_first / self.first_measure - derivative_second / self.second_measure
++            }
++            PauliEdgeTopology::PairSource => {
++                let derivative_first = -self.gain_coefficient_mev * (1.0 - second)
++                    - self.loss_coefficient_mev * second;
++                let derivative_second =
++                    -self.gain_coefficient_mev * (1.0 - first) - self.loss_coefficient_mev * first;
++                derivative_first / self.first_measure + derivative_second / self.second_measure
++            }
++        }
++    }
++
++    pub(crate) fn implicit_step(
++        &self,
++        step_mev_inverse: f64,
++        first_occupation: f64,
++        second_occupation: f64,
++    ) -> Result<([f64; 2], PauliEdgeStep), &'static str> {
++        if !step_mev_inverse.is_finite() || step_mev_inverse < 0.0 {
++            return Err("Pauli edge step must be finite and non-negative");
++        }
++        let initial = [first_occupation, second_occupation];
++        if !initial.into_iter().all(valid_occupation) {
++            return Err("Pauli edge initial occupation is outside [0, 1]");
++        }
++        let initial_flux = self.flux_mev(initial[0], initial[1])?;
++        if step_mev_inverse == 0.0 || initial_flux == 0.0 {
++            return Ok((initial, PauliEdgeStep::default()));
++        }
++
++        let (lower_capacity, upper_capacity) = self.extent_bounds(initial);
++        let residual = |extent: f64| -> Result<(f64, f64), &'static str> {
++            let occupations = self.occupations_at_extent(initial, extent)?;
++            let flux = self.flux_mev(occupations[0], occupations[1])?;
++            let value = extent - step_mev_inverse * flux;
++            let derivative = 1.0 - step_mev_inverse * self.flux_derivative_by_extent(occupations);
++            if !value.is_finite() || !derivative.is_finite() || derivative < 1.0 {
++                return Err("Pauli edge implicit residual is invalid");
++            }
++            Ok((value, derivative))
++        };
++
++        // Capacity endpoints can round one ulp outside [0,1] when converted
++        // back from weighted extent. Move only the root bracket one
++        // representable value inward; no candidate occupation is clipped.
++        let mut lower = if lower_capacity < 0.0 {
++            lower_capacity.next_up()
++        } else {
++            lower_capacity
++        };
++        let mut upper = if upper_capacity > 0.0 {
++            upper_capacity.next_down()
++        } else {
++            upper_capacity
++        };
++        let lower_residual = residual(lower)?.0;
++        let upper_residual = residual(upper)?.0;
++        let bracket_scale = lower.abs().max(upper.abs()).max(1.0);
++        let bracket_tolerance = 64.0 * f64::EPSILON * bracket_scale;
++        if lower_residual > bracket_tolerance || upper_residual < -bracket_tolerance {
++            return Err("Pauli edge implicit root is not bracketed by physical capacities");
++        }
++
++        let mut extent = 0.0;
++        let mut iterations = 0;
++        for iteration in 0..32 {
++            iterations = iteration + 1;
++            let (value, derivative) = residual(extent)?;
++            if value <= 0.0 {
++                lower = extent;
++            } else {
++                upper = extent;
++            }
++            let width = upper - lower;
++            if width <= 16.0 * f64::EPSILON * upper.abs().max(lower.abs()).max(1.0) {
++                extent = 0.5 * (lower + upper);
++                break;
++            }
++            let newton = extent - value / derivative;
++            extent = if newton > lower && newton < upper && newton.is_finite() {
++                newton
++            } else {
++                0.5 * (lower + upper)
++            };
++        }
++        if iterations == 32 {
++            extent = 0.5 * (lower + upper);
++        }
++        let candidate = self.occupations_at_extent(initial, extent)?;
++        Ok((
++            candidate,
++            PauliEdgeStep {
++                extent,
++                nonlinear_iterations: iterations,
++            },
++        ))
++    }
++
++    pub(crate) fn apply_implicit(
++        &self,
++        step_mev_inverse: f64,
++        occupations: &mut [f64],
++    ) -> Result<PauliEdgeStep, &'static str> {
++        if self.first_node >= occupations.len() || self.second_node >= occupations.len() {
++            return Err("Pauli edge node is outside the occupation bank");
++        }
++        let initial = [occupations[self.first_node], occupations[self.second_node]];
++        let (candidate, report) = self.implicit_step(step_mev_inverse, initial[0], initial[1])?;
++        if self.first_node == self.second_node {
++            if self.topology != PauliEdgeTopology::PairSource
++                || candidate[0].to_bits() != candidate[1].to_bits()
++            {
++                return Err("same-node Pauli pair step is inconsistent");
++            }
++            occupations[self.first_node] = candidate[0];
++        } else {
++            occupations[self.first_node] = candidate[0];
++            occupations[self.second_node] = candidate[1];
++        }
++        Ok(report)
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    fn relative(left: f64, right: f64) -> f64 {
++        (left - right).abs() / left.abs().max(right.abs()).max(f64::MIN_POSITIVE)
++    }
++
++    #[test]
++    fn flux_is_inward_on_every_topological_boundary() {
++        for topology in [
++            PauliEdgeTopology::ElasticTransfer,
++            PauliEdgeTopology::PairSource,
++        ] {
++            let edge = PauliEdge::new(topology, 0, 1, 2.0, 3.0, 7.0, 11.0).unwrap();
++            for other in [0.0, 0.23, 1.0] {
++                assert!(edge.flux_mev(0.0, other).unwrap() >= 0.0);
++                assert!(edge.flux_mev(1.0, other).unwrap() <= 0.0);
++                match topology {
++                    PauliEdgeTopology::ElasticTransfer => {
++                        assert!(edge.flux_mev(other, 0.0).unwrap() <= 0.0);
++                        assert!(edge.flux_mev(other, 1.0).unwrap() >= 0.0);
++                    }
++                    PauliEdgeTopology::PairSource => {
++                        assert!(edge.flux_mev(other, 0.0).unwrap() >= 0.0);
++                        assert!(edge.flux_mev(other, 1.0).unwrap() <= 0.0);
++                    }
++                }
++            }
++        }
++    }
++
++    #[test]
++    fn affinity_difference_resolves_near_cancellation_and_extreme_tail() {
++        let edge = PauliEdge::new(
++            PauliEdgeTopology::ElasticTransfer,
++            0,
++            1,
++            1.0,
++            1.0,
++            1.0,
++            1.0 + 2.0e-12,
++        )
++        .unwrap();
++        let flux = edge.flux_mev(0.5, 0.5).unwrap();
++        assert!(flux < 0.0);
++        assert!(relative(flux, -5.0e-13) < 5.0e-5);
++
++        let tail = PauliEdge::new(
++            PauliEdgeTopology::PairSource,
++            0,
++            1,
++            1.0,
++            1.0,
++            3.0e-280,
++            2.0e-300,
++        )
++        .unwrap();
++        let tail_flux = tail.flux_mev(1.0e-20, 1.0e-30).unwrap();
++        assert!(tail_flux.is_finite() && tail_flux > 0.0);
++    }
++
++    #[test]
++    fn stiff_elastic_step_preserves_box_and_weighted_number() {
++        let edge =
++            PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 1, 2.0, 5.0, 3.0, 7.0).unwrap();
++        let initial = [1.0e-35, 1.0 - 2.0e-15];
++        let invariant = 2.0 * initial[0] + 5.0 * initial[1];
++        let (candidate, report) = edge.implicit_step(1.0e30, initial[0], initial[1]).unwrap();
++        assert!(candidate.into_iter().all(valid_occupation));
++        assert!(report.extent > 0.0 && report.nonlinear_iterations <= 32);
++        assert!(relative(2.0 * candidate[0] + 5.0 * candidate[1], invariant) < 3.0e-16);
++    }
++
++    #[test]
++    fn stiff_pair_step_preserves_box_and_cp_difference() {
++        let edge =
++            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
++        let initial = [1.0e-35, 2.0e-31];
++        let invariant = 2.0 * initial[0] - 5.0 * initial[1];
++        let (candidate, report) = edge.implicit_step(1.0e30, initial[0], initial[1]).unwrap();
++        assert!(candidate.into_iter().all(valid_occupation));
++        assert!(report.extent > 0.0 && report.nonlinear_iterations <= 32);
++        let residual = (2.0 * candidate[0] - 5.0 * candidate[1] - invariant).abs();
++        assert!(residual <= 8.0 * f64::EPSILON * 5.0);
++    }
++
++    #[test]
++    fn same_node_pair_step_and_invalid_input_are_transactional() {
++        let edge = PauliEdge::new(PauliEdgeTopology::PairSource, 0, 0, 3.0, 3.0, 5.0, 2.0).unwrap();
++        let mut occupation = [0.2];
++        edge.apply_implicit(4.0, &mut occupation).unwrap();
++        assert!(occupation[0] > 0.2 && occupation[0] < 1.0);
++
++        let before = occupation;
++        assert!(edge.apply_implicit(f64::NAN, &mut occupation).is_err());
++        assert_eq!(occupation, before);
++        assert!(
++            PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 0, 1.0, 1.0, 1.0, 1.0,).is_err()
++        );
++    }
++}

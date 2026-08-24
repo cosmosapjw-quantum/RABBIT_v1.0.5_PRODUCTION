@@ -16,9 +16,9 @@
 use core::f64::consts::PI;
 
 use crate::electron_spectral::{
-    ElectronSpectralInput, ElectronSpectralRule, IsotropicElectronSpectralAction,
+    ElectronSpectralInput, ElectronSpectralRule, IsotropicElectronSpectralAction, PauliSweepReport,
     evaluate_isotropic_electron_spectral_action,
-    evaluate_isotropic_electron_spectral_action_values,
+    evaluate_isotropic_electron_spectral_action_values, reconstruct_isotropic_electron_pauli_edges,
 };
 use crate::flrw::{
     ELECTRON_MASS_MEV, MEV_TO_INVERSE_SECONDS, NEWTON_G_MEV_MINUS_2, electromagnetic_eos,
@@ -314,6 +314,96 @@ pub(crate) struct IsotropicBoltzmannFlrwSystem {
     neutrino_self_rule: NeutrinoSelfSpectralRule,
 }
 
+#[derive(Clone, Debug)]
+pub(crate) struct ElectronCollisionReconstruction {
+    pub(crate) candidate_state: Vec<f64>,
+    pub(crate) delta_ln_a: f64,
+    pub(crate) frozen_step_mev_inverse: f64,
+    pub(crate) t_gamma_before_mev: f64,
+    pub(crate) t_gamma_after_mev: f64,
+    pub(crate) rho_neutrino_before_mev4: f64,
+    pub(crate) rho_neutrino_after_mev4: f64,
+    pub(crate) total_energy_residual_mev4: f64,
+    pub(crate) sweep: PauliSweepReport,
+}
+
+fn electromagnetic_temperature_for_density(
+    target_rho_mev4: f64,
+    anchor_temperature_mev: f64,
+) -> Result<f64, &'static str> {
+    if !target_rho_mev4.is_finite()
+        || target_rho_mev4 <= 0.0
+        || !anchor_temperature_mev.is_finite()
+        || anchor_temperature_mev <= 0.0
+    {
+        return Err("electromagnetic reconstruction target is invalid");
+    }
+    let anchor = electromagnetic_eos(anchor_temperature_mev)
+        .map_err(|_| "electromagnetic reconstruction EOS failed")?;
+    if target_rho_mev4.to_bits() == anchor.rho.to_bits() {
+        return Ok(anchor_temperature_mev);
+    }
+    let (mut lower, mut upper) = if target_rho_mev4 < anchor.rho {
+        let mut lower = 0.5 * anchor_temperature_mev;
+        for _ in 0..64 {
+            let rho = electromagnetic_eos(lower)
+                .map_err(|_| "electromagnetic reconstruction EOS failed")?
+                .rho;
+            if rho <= target_rho_mev4 {
+                break;
+            }
+            lower *= 0.5;
+        }
+        (lower, anchor_temperature_mev)
+    } else {
+        let mut upper = 2.0 * anchor_temperature_mev;
+        for _ in 0..64 {
+            let rho = electromagnetic_eos(upper)
+                .map_err(|_| "electromagnetic reconstruction EOS failed")?
+                .rho;
+            if rho >= target_rho_mev4 {
+                break;
+            }
+            upper *= 2.0;
+            if !upper.is_finite() {
+                return Err("electromagnetic reconstruction bracket overflowed");
+            }
+        }
+        (anchor_temperature_mev, upper)
+    };
+    let lower_rho = electromagnetic_eos(lower)
+        .map_err(|_| "electromagnetic reconstruction EOS failed")?
+        .rho;
+    let upper_rho = electromagnetic_eos(upper)
+        .map_err(|_| "electromagnetic reconstruction EOS failed")?
+        .rho;
+    if lower_rho > target_rho_mev4 || upper_rho < target_rho_mev4 {
+        return Err("electromagnetic reconstruction density is not bracketed");
+    }
+
+    let mut temperature = anchor_temperature_mev;
+    for _ in 0..64 {
+        let eos = electromagnetic_eos(temperature)
+            .map_err(|_| "electromagnetic reconstruction EOS failed")?;
+        let residual = eos.rho - target_rho_mev4;
+        if residual.abs() <= 32.0 * f64::EPSILON * target_rho_mev4 {
+            return Ok(temperature);
+        }
+        if residual < 0.0 {
+            lower = temperature;
+        } else {
+            upper = temperature;
+        }
+        let newton = temperature - residual / eos.drho_dt;
+        temperature = if newton > lower && newton < upper && newton.is_finite() {
+            newton
+        } else {
+            0.5 * (lower + upper)
+        };
+    }
+    Err("electromagnetic reconstruction temperature solve did not converge")
+}
+
 impl IsotropicBoltzmannFlrwSystem {
     pub(crate) fn new(
         grid: ComovingMomentumGrid,
@@ -522,6 +612,110 @@ impl IsotropicBoltzmannFlrwSystem {
         .all(f64::is_finite)
         .then_some(result)
         .ok_or("spectral FLRW output is non-finite")
+    }
+
+    /// One collision-only reconstruction substep at fixed `ln(a)`.
+    ///
+    /// Electron/positron events are advanced as conservative Pauli edges for
+    /// the frozen physical time `delta_ln_a / H`.  The electromagnetic
+    /// temperature is then solved from the opposite neutrino-energy change.
+    /// Expansion and neutrino self-scattering belong to separate split
+    /// operators; this method is a bounded solver candidate, not the promoted
+    /// endpoint integrator.
+    pub(crate) fn reconstruct_electron_collision_substep(
+        &self,
+        ln_a: f64,
+        state: &[f64],
+        delta_ln_a: f64,
+    ) -> Result<ElectronCollisionReconstruction, &'static str> {
+        if !delta_ln_a.is_finite() || delta_ln_a < 0.0 {
+            return Err("electron collision reconstruction step is invalid");
+        }
+        let physical = self.physical_state_impl(ln_a, state, false)?;
+        let y_nodes = self
+            .grid
+            .nodes_mev
+            .iter()
+            .map(|value| value / self.reference_temperature_mev)
+            .collect::<Vec<_>>();
+        let y_weights = self
+            .grid
+            .weights_mev
+            .iter()
+            .map(|value| value / self.reference_temperature_mev)
+            .collect::<Vec<_>>();
+        let edges = reconstruct_isotropic_electron_pauli_edges(ElectronSpectralInput {
+            t_gamma_mev: state[T_GAMMA_INDEX],
+            t_cm_mev: physical.t_cm_mev,
+            y_nodes: &y_nodes,
+            y_weights: &y_weights,
+            electron_pair: &physical.electron_pair_occupation,
+            heavy_pair: &physical.heavy_pair_occupation,
+            electron_mass_mev: ELECTRON_MASS_MEV,
+            rule: self.electron_rule,
+        })?;
+        let frozen_step_mev_inverse = delta_ln_a / physical.h_mev;
+        let (electron_candidate, heavy_candidate, sweep) = edges.transactional_step(
+            frozen_step_mev_inverse,
+            &physical.electron_pair_occupation,
+            &physical.heavy_pair_occupation,
+        )?;
+        if electron_candidate
+            .iter()
+            .chain(&heavy_candidate)
+            .any(|value| !value.is_finite() || *value <= 0.0 || *value >= 1.0)
+        {
+            return Err("electron collision reconstruction cannot return a strict logit state");
+        }
+
+        let electron_moments = self.grid.pair_moments(ln_a, &electron_candidate)?;
+        let heavy_moments = self.grid.pair_moments(ln_a, &heavy_candidate)?;
+        let rho_neutrino_after_mev4 =
+            electron_moments.energy_density_mev4 + 2.0 * heavy_moments.energy_density_mev4;
+        let rho_neutrino_before_mev4 = physical.rho_neutrino_total_mev4;
+        let electromagnetic_before = electromagnetic_eos(state[T_GAMMA_INDEX])
+            .map_err(|_| "electron collision reconstruction EOS failed")?;
+        let target_electromagnetic_rho =
+            electromagnetic_before.rho - (rho_neutrino_after_mev4 - rho_neutrino_before_mev4);
+        let t_gamma_after_mev = electromagnetic_temperature_for_density(
+            target_electromagnetic_rho,
+            state[T_GAMMA_INDEX],
+        )?;
+
+        let mut candidate_state = state.to_vec();
+        if sweep.edge_applications != 0 {
+            candidate_state[T_GAMMA_INDEX] = t_gamma_after_mev;
+            for (node, occupation) in electron_candidate.iter().copied().enumerate() {
+                candidate_state[self.electron_start() + node] =
+                    occupation.ln() - (-occupation).ln_1p();
+            }
+            for (node, occupation) in heavy_candidate.iter().copied().enumerate() {
+                candidate_state[self.heavy_start() + node] =
+                    occupation.ln() - (-occupation).ln_1p();
+            }
+        }
+        if !self.state_is_valid(&candidate_state) {
+            return Err("electron collision reconstruction candidate state is invalid");
+        }
+        let electromagnetic_after = electromagnetic_eos(t_gamma_after_mev)
+            .map_err(|_| "electron collision reconstruction EOS failed")?;
+        let total_energy_residual_mev4 = electromagnetic_after.rho + rho_neutrino_after_mev4
+            - electromagnetic_before.rho
+            - rho_neutrino_before_mev4;
+        if !total_energy_residual_mev4.is_finite() {
+            return Err("electron collision reconstruction energy residual is non-finite");
+        }
+        Ok(ElectronCollisionReconstruction {
+            candidate_state,
+            delta_ln_a,
+            frozen_step_mev_inverse,
+            t_gamma_before_mev: state[T_GAMMA_INDEX],
+            t_gamma_after_mev,
+            rho_neutrino_before_mev4,
+            rho_neutrino_after_mev4,
+            total_energy_residual_mev4,
+            sweep,
+        })
     }
 
     pub(crate) fn physical_state(
@@ -819,6 +1013,82 @@ mod tests {
         assert!(actual.into_iter().zip(expected).all(|(value, anchor)| {
             value.is_finite() && value > 0.0 && relative_error(value, anchor) < 0.01
         }));
+    }
+
+    #[test]
+    fn reconstructed_electron_substep_is_raw_bounded_transactional_and_energy_closed() {
+        let grid = ComovingMomentumGrid::gauss_laguerre(4, 1.0).unwrap();
+        let system = IsotropicBoltzmannFlrwSystem::new(
+            grid,
+            1.0,
+            ElectronSpectralRule {
+                electron_radial_order: 4,
+                angular_order: 3,
+            },
+            NeutrinoSelfSpectralRule { angular_order: 3 },
+        )
+        .unwrap();
+        let equilibrium = system.initial_fd_state(1.0).unwrap();
+        let equilibrium_candidate = system
+            .reconstruct_electron_collision_substep(0.0, &equilibrium, 1.0e-5)
+            .unwrap();
+        assert_eq!(equilibrium_candidate.candidate_state, equilibrium);
+        assert_eq!(equilibrium_candidate.sweep, PauliSweepReport::default());
+
+        let mut state = system.initial_fd_state(1.0).unwrap();
+        state[T_GAMMA_INDEX] = 1.15;
+        let last = system.grid.len() - 1;
+        state[system.electron_start() + last] = -81.5;
+        state[system.heavy_start() + last] = -92.0;
+        let before = state.clone();
+        let before_physical = system.physical_state_impl(0.0, &state, false).unwrap();
+        let candidate = system
+            .reconstruct_electron_collision_substep(0.0, &state, 1.0e-5)
+            .unwrap();
+        let after_physical = system
+            .physical_state_impl(0.0, &candidate.candidate_state, false)
+            .unwrap();
+        assert!(
+            after_physical
+                .electron_pair_occupation
+                .iter()
+                .chain(&after_physical.heavy_pair_occupation)
+                .all(|value| value.is_finite() && *value > 0.0 && *value < 1.0)
+        );
+        assert!(candidate.sweep.edge_applications > 0);
+        assert_eq!(
+            candidate.candidate_state[ELAPSED_SECONDS_INDEX].to_bits(),
+            state[ELAPSED_SECONDS_INDEX].to_bits(),
+        );
+        let total_scale = electromagnetic_eos(state[T_GAMMA_INDEX]).unwrap().rho
+            + candidate.rho_neutrino_before_mev4;
+        assert!(candidate.total_energy_residual_mev4.abs() <= 64.0 * f64::EPSILON * total_scale);
+        assert!(candidate.rho_neutrino_after_mev4 > candidate.rho_neutrino_before_mev4);
+        assert!(candidate.t_gamma_after_mev < candidate.t_gamma_before_mev);
+        eprintln!(
+            "P1_SOLVER delta_N={:.17e} dt_MeV_inv={:.17e} tail_e_before={:.17e} tail_e_after={:.17e} tail_x_before={:.17e} tail_x_after={:.17e} T_before={:.17e} T_after={:.17e} rho_nu_before={:.17e} rho_nu_after={:.17e} energy_residual={:.17e} edge_apps={} nonlinear_iters={} max_edge_iters={}",
+            candidate.delta_ln_a,
+            candidate.frozen_step_mev_inverse,
+            before_physical.electron_pair_occupation[last],
+            after_physical.electron_pair_occupation[last],
+            before_physical.heavy_pair_occupation[last],
+            after_physical.heavy_pair_occupation[last],
+            candidate.t_gamma_before_mev,
+            candidate.t_gamma_after_mev,
+            candidate.rho_neutrino_before_mev4,
+            candidate.rho_neutrino_after_mev4,
+            candidate.total_energy_residual_mev4,
+            candidate.sweep.edge_applications,
+            candidate.sweep.nonlinear_iterations,
+            candidate.sweep.maximum_edge_iterations,
+        );
+
+        assert!(
+            system
+                .reconstruct_electron_collision_substep(0.0, &state, f64::NAN)
+                .is_err()
+        );
+        assert_eq!(state, before);
     }
 
     #[test]

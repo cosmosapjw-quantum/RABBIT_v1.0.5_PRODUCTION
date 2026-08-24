@@ -1,0 +1,18 @@
+ A docs/audit/RUST_ODE_COLLISION_RECONSTRUCTION_2026-08-24.md
+ M native/rabbit_cpu/src/electron_event.rs
+ M native/rabbit_cpu/src/electron_event_falsifiers.rs
+ M native/rabbit_cpu/src/electron_spectral.rs
+ M native/rabbit_cpu/src/electron_supplied.rs
+ M native/rabbit_cpu/src/isotropic_boltzmann.rs
+ M native/rabbit_cpu/src/lib.rs
+ A native/rabbit_cpu/src/pauli_edge_step.rs
+?? external_audit/ode_rust_reconstruction_20260824/
+!! native/rabbit_cpu/target/
+!! src/rabbit/__pycache__/
+!! src/rabbit/collisions/__pycache__/
+!! src/rabbit/config/__pycache__/
+!! src/rabbit/jax/__pycache__/
+!! src/rabbit/thermo/__pycache__/
+!! src/rabbit/transport/__pycache__/
+!! src/rabbit/validation/__pycache__/
+!! src/rabbit/weak/__pycache__/

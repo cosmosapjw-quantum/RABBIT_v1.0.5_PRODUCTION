@@ -1,0 +1,1024 @@
+{
+  "boundary_inwardness_verdict": "FAIL",
+  "cancellation_diagnosis": "SEVERE",
+  "claim_ceiling": "short-prefix causal discriminator only; no endpoint or solver validation",
+  "environment": {
+    "numpy": "2.4.4",
+    "platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "scipy": "1.17.1"
+  },
+  "frozen_tolerances": {
+    "atol_scalar": 1e-10,
+    "gain_loss_reconstruction_relative": 1e-10,
+    "max_step": 0.5,
+    "prefix_delta_N": 0.01,
+    "rtol": 1e-08,
+    "severe_cancellation_threshold": 67108864.0
+  },
+  "frozen_update_verdict": "NONPHYSICAL",
+  "gain_loss_reconstruction_verdict": "FAIL",
+  "nodes": [
+    {
+      "C": {
+        "decimal": 2.130956088727755e-41,
+        "hex": "0x1.db381620a7b00p-136"
+      },
+      "G": {
+        "decimal": 3.0264716730878733e-33,
+        "envelope": [
+          3.0264716730878723e-33,
+          3.0264716730878733e-33
+        ],
+        "hex": "0x1.f6dbde38034e8p-109"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 2.3682401910207586e-13,
+        "envelope": [
+          2.368240191020758e-13,
+          2.3682401910207586e-13
+        ],
+        "hex": "0x1.0aa3e04895a17p-42"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 1.1113510050949333e+28,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 9.948246399564062e-19,
+        "hex": "0x1.259ed3177a921p-60"
+      },
+      "f_previous": {
+        "decimal": 9.9482463183618e-19,
+        "hex": "0x1.259ed2ef44f60p-60"
+      },
+      "frozen_update": {
+        "decimal": 1.2779411837375385e-20,
+        "hex": "0x1.e2cae32f1b380p-67"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.4935770530109376,
+        "pass": false,
+        "retained_relative_residual": 0.9746340601298233
+      },
+      "lambda_delta_N": 70.21823328129537,
+      "node": 18,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 4.6705195487067356e-18,
+          "absolute_term_sum": 2.3682401910260623e-13,
+          "factorized_fsum": -2.368240191020758e-13,
+          "factorized_longdouble": -2.3682401910207586e-13,
+          "ordinary": -2.3682401910207586e-13,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 2.2876138454718966e-41,
+          "factorized_fsum": 2.1309560067250368e-41,
+          "factorized_longdouble": 2.1309560067250694e-41,
+          "ordinary": 2.130956088727755e-41,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.46019049493152e-20,
+          "absolute_term_sum": 3.026471673615506e-33,
+          "factorized_fsum": 3.0264716730878723e-33,
+          "factorized_longdouble": 3.026471673087873e-33,
+          "ordinary": 3.0264716730878733e-33,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 41.45172048487077,
+        "hex": "0x1.4b9d1fa12ba03p+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": -2.4325164083676704e-43,
+        "hex": "-0x1.5b2e2af7aaa00p-142"
+      },
+      "G": {
+        "decimal": 1.4792033402439087e-35,
+        "envelope": [
+          1.4792033402439085e-35,
+          1.4792033402439087e-35
+        ],
+        "hex": "0x1.3a977d7e03e22p-116"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 3.926086462732886e-13,
+        "envelope": [
+          3.926086462732886e-13,
+          3.926086462732886e-13
+        ],
+        "hex": "0x1.ba09bce02ee6ep-42"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 1.6140020471095073e+30,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 3.3240388778450804e-21,
+        "hex": "0x1.f650868d5d54ap-69"
+      },
+      "f_previous": {
+        "decimal": 3.3240387044918233e-21,
+        "hex": "0x1.f65084d5dca25p-69"
+      },
+      "frozen_update": {
+        "decimal": 3.76762802929781e-23,
+        "hex": "0x1.6c61f3a9f4100p-75"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.4943327553825346,
+        "pass": false,
+        "retained_relative_residual": 0.9775850833438938
+      },
+      "lambda_delta_N": 116.40831709890405,
+      "node": 19,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 6.0092265462546286e-18,
+          "absolute_term_sum": 3.9260864627423267e-13,
+          "factorized_fsum": -3.926086462732886e-13,
+          "factorized_longdouble": -3.926086462732886e-13,
+          "ordinary": -3.926086462732886e-13,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 2.6557371542036665e-43,
+          "factorized_fsum": -2.432516454903746e-43,
+          "factorized_longdouble": -2.4325164549037204e-43,
+          "ordinary": -2.4325164083676704e-43,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 1.4792033405577044e-35,
+          "factorized_fsum": 1.4792033402439085e-35,
+          "factorized_longdouble": 1.4792033402439085e-35,
+          "ordinary": 1.4792033402439087e-35,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 47.153106445156325,
+        "hex": "0x1.79398fdf3606ap+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 4.459293520063072e-41,
+        "hex": "0x1.f13a53e79100ep-135"
+      },
+      "G": {
+        "decimal": 3.3986388926759993e-38,
+        "envelope": [
+          3.3986388926759983e-38,
+          3.3986388926759993e-38
+        ],
+        "hex": "0x1.72143996ed965p-125"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 6.589615636805878e-13,
+        "envelope": [
+          6.589615636805877e-13,
+          6.589615636805878e-13
+        ],
+        "hex": "0x1.72f65ea3a62f4p-41"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 1.4777263723857036e+28,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 5.1789001350179146e-24,
+        "hex": "0x1.90b2af756e05fp-78"
+      },
+      "f_previous": {
+        "decimal": 5.218210863544069e-24,
+        "hex": "0x1.93bd50887cf08p-78"
+      },
+      "frozen_update": {
+        "decimal": 5.1575677247290784e-26,
+        "hex": "0x1.fec7e05e55500p-85"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.49506459138320635,
+        "pass": false,
+        "retained_relative_residual": 0.9804387365276138
+      },
+      "lambda_delta_N": 195.38185770754495,
+      "node": 20,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 7.780931607770685e-18,
+          "absolute_term_sum": 6.589615636814231e-13,
+          "factorized_fsum": -6.589615636805877e-13,
+          "factorized_longdouble": -6.589615636805878e-13,
+          "ordinary": -6.589615636805878e-13,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 4.460309878565489e-41,
+          "factorized_fsum": 4.4592935200619627e-41,
+          "factorized_longdouble": 4.4592935200619627e-41,
+          "ordinary": 4.459293520063072e-41,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 3.398638893112607e-38,
+          "factorized_fsum": 3.3986388926759983e-38,
+          "factorized_longdouble": 3.398638892675999e-38,
+          "ordinary": 3.3986388926759993e-38,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 53.60857454469507,
+        "hex": "0x1.acde5c54b525bp+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 7.030527187584987e-43,
+        "hex": "0x1.f5b7166316140p-141"
+      },
+      "G": {
+        "decimal": 2.9063275166262375e-41,
+        "envelope": [
+          2.9063275166262365e-41,
+          2.9063275166262375e-41
+        ],
+        "hex": "0x1.4410fc1eefbb5p-135"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 1.1394257502857805e-12,
+        "envelope": [
+          1.1394257502857803e-12,
+          1.1394257502857805e-12
+        ],
+        "hex": "0x1.40b84734de404p-40"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 1.6206832288450017e+30,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 1.9550536640847015e-27,
+        "hex": "0x1.35ca65ff20642p-89"
+      },
+      "f_previous": {
+        "decimal": 2.9646885490687648e-27,
+        "hex": "0x1.d5c60e14690b5p-89"
+      },
+      "frozen_update": {
+        "decimal": 2.5506949583132644e-29,
+        "hex": "0x1.02abd3bc8a6c0p-95"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.4958022697075981,
+        "pass": false,
+        "retained_relative_residual": 0.9831459596986956
+      },
+      "lambda_delta_N": 337.839309727265,
+      "node": 21,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 1.0227741660246642e-17,
+          "absolute_term_sum": 1.1394257502878252e-12,
+          "factorized_fsum": -1.1394257502857805e-12,
+          "factorized_longdouble": -1.1394257502857803e-12,
+          "ordinary": -1.1394257502857805e-12,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 7.031104323186084e-43,
+          "factorized_fsum": 7.030527187584783e-43,
+          "factorized_longdouble": 7.030527187584783e-43,
+          "ordinary": 7.030527187584987e-43,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 2.9063275172470815e-41,
+          "factorized_fsum": 2.9063275166262365e-41,
+          "factorized_longdouble": 2.9063275166262365e-41,
+          "ordinary": 2.9063275166262375e-41,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 61.05853144721876,
+        "hex": "0x1.e877df55dcbcbp+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 4.456443697649705e-45,
+        "hex": "0x1.9711989ec4a00p-148"
+      },
+      "G": {
+        "decimal": 5.915750606826112e-45,
+        "envelope": [
+          5.915750606826112e-45,
+          5.915750606826192e-45
+        ],
+        "hex": "0x1.0e2f0898eaf80p-147"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 2.104270692867107e-12,
+        "envelope": [
+          2.104270692867107e-12,
+          2.104270692867108e-12
+        ],
+        "hex": "0x1.2826577770b4ap-39"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 4.721860828123743e+32,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": -2.3008216172341183e-30,
+        "hex": "-0x1.7554640e33c9dp-99"
+      },
+      "f_previous": {
+        "decimal": 1.0182937323086186e-31,
+        "hex": "0x1.085d3a1291c34p-103"
+      },
+      "frozen_update": {
+        "decimal": 2.811306847013007e-33,
+        "hex": "0x1.d31bc4bcc3e40p-109"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.4965948051669066,
+        "pass": false,
+        "retained_relative_residual": 0.9665062903302005
+      },
+      "lambda_delta_N": 623.9154751235299,
+      "node": 22,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 1.3896227400481252e-17,
+          "absolute_term_sum": 2.1042706928697406e-12,
+          "factorized_fsum": -2.104270692867108e-12,
+          "factorized_longdouble": -2.104270692867108e-12,
+          "ordinary": -2.104270692867107e-12,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 4.4564442649933057e-45,
+          "factorized_fsum": 4.456443697649785e-45,
+          "factorized_longdouble": 4.456443697649785e-45,
+          "ordinary": 4.456443697649705e-45,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 5.915750607886952e-45,
+          "factorized_fsum": 5.915750606826192e-45,
+          "factorized_longdouble": 5.915750606826192e-45,
+          "ordinary": 5.915750606826112e-45,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 69.96224003510503,
+        "hex": "0x1.17d95573a6b64p+6"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 9.070301573463078e-50,
+        "hex": "0x1.0f7cfbcbc8000p-163"
+      },
+      "G": {
+        "decimal": 9.070301573400847e-50,
+        "envelope": [
+          9.070301573338617e-50,
+          9.070301573400847e-50
+        ],
+        "hex": "0x1.0f7cfbcbc0000p-163"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": -9.946421986615543e-30,
+        "envelope": [
+          -9.946421986615543e-30,
+          -9.946421986615543e-30
+        ],
+        "hex": "-0x1.93798d2000000p-97"
+      },
+      "bank": "nue",
+      "cancellation_ratio": 1.0965922032532772e+20,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 6.090249699678497e-35,
+        "hex": "0x1.43d02eedeb168p-114"
+      },
+      "f_previous": {
+        "decimal": 3.374441354700219e-35,
+        "hex": "0x1.66d5080315967p-115"
+      },
+      "frozen_update": {
+        "decimal": "NaN",
+        "hex": "nan"
+      },
+      "frozen_update_physical": false,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 1.4654644487968423e-07,
+        "pass": false,
+        "retained_relative_residual": 6.85710042064015e-12
+      },
+      "lambda_delta_N": "NaN",
+      "node": 23,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 4.462484765587329e-20,
+          "absolute_term_sum": 1.3698654567907824e-29,
+          "factorized_fsum": 9.946421986615543e-30,
+          "factorized_longdouble": 9.946421986615543e-30,
+          "ordinary": 9.946421986615543e-30,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 9.070301574085379e-50,
+          "factorized_fsum": 9.070301573338617e-50,
+          "factorized_longdouble": 9.070301573338617e-50,
+          "ordinary": 9.070301573463078e-50,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 9.070301574085379e-50,
+          "factorized_fsum": 9.070301573338617e-50,
+          "factorized_longdouble": 9.070301573338617e-50,
+          "ordinary": 9.070301573400847e-50,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 81.49827923394889,
+        "hex": "0x1.45fe3ce958588p+6"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 1.8650362916913957e-44,
+        "hex": "0x1.a9e624cd6ce00p-146"
+      },
+      "G": {
+        "decimal": 1.6233617919078274e-36,
+        "envelope": [
+          1.623361791907827e-36,
+          1.6233617919078274e-36
+        ],
+        "hex": "0x1.143360d7dadbfp-119"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 5.293372416764001e-14,
+        "envelope": [
+          5.293372416764001e-14,
+          5.293372416764001e-14
+        ],
+        "hex": "0x1.dcc8db9a53ce1p-45"
+      },
+      "bank": "nux",
+      "cancellation_ratio": 2.8382141625584444e+30,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 3.3240386716182187e-21,
+        "hex": "0x1.f65084828471ep-69"
+      },
+      "f_previous": {
+        "decimal": 3.32403866387829e-21,
+        "hex": "0x1.f650846ee4f1ap-69"
+      },
+      "frozen_update": {
+        "decimal": 3.066832036949496e-23,
+        "hex": "0x1.289b155cb88c0p-75"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.49538696443693275,
+        "pass": false,
+        "retained_relative_residual": 0.981716542126446
+      },
+      "lambda_delta_N": 15.694829460896134,
+      "node": 19,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 8.498212637872599e-18,
+          "absolute_term_sum": 5.293372416775789e-14,
+          "factorized_fsum": -5.293372416764001e-14,
+          "factorized_longdouble": -5.293372416764001e-14,
+          "ordinary": -5.293372416764001e-14,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 1.865969004504348e-44,
+          "factorized_fsum": 1.8650362243516556e-44,
+          "factorized_longdouble": 1.8650362243516556e-44,
+          "ordinary": 1.8650362916913957e-44,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 1.623361792299691e-36,
+          "factorized_fsum": 1.623361791907827e-36,
+          "factorized_longdouble": 1.623361791907827e-36,
+          "ordinary": 1.6233617919078274e-36,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 47.153106445156325,
+        "hex": "0x1.79398fdf3606ap+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 1.2494300988635314e-46,
+        "hex": "0x1.6d3575b06c200p-153"
+      },
+      "G": {
+        "decimal": 3.7273930620819724e-39,
+        "envelope": [
+          3.7273930620819705e-39,
+          3.7273930620819724e-39
+        ],
+        "hex": "0x1.44b3a497356a2p-128"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 8.886892991063719e-14,
+        "envelope": [
+          8.886892991063716e-14,
+          8.886892991063719e-14
+        ],
+        "hex": "0x1.903ae67fa7dfap-44"
+      },
+      "bank": "nux",
+      "cancellation_ratio": 7.112757247602043e+32,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 5.225067267057063e-24,
+        "hex": "0x1.94451ea117e83p-78"
+      },
+      "f_previous": {
+        "decimal": 5.225067235590858e-24,
+        "hex": "0x1.94451e783f778p-78"
+      },
+      "frozen_update": {
+        "decimal": 4.1942589693485486e-26,
+        "hex": "0x1.9f61191689a00p-85"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.49598640683672,
+        "pass": false,
+        "retained_relative_residual": 0.9840734722875747
+      },
+      "lambda_delta_N": 26.349604552714524,
+      "node": 20,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 1.1003808615187954e-17,
+          "absolute_term_sum": 8.886892991074182e-14,
+          "factorized_fsum": -8.886892991063716e-14,
+          "factorized_longdouble": -8.886892991063719e-14,
+          "ordinary": -8.886892991063719e-14,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 1.2496366874929226e-46,
+          "factorized_fsum": 1.249430084712768e-46,
+          "factorized_longdouble": 1.249430084712793e-46,
+          "ordinary": 1.2494300988635314e-46,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 3.727393062628654e-39,
+          "factorized_fsum": 3.7273930620819705e-39,
+          "factorized_longdouble": 3.7273930620819705e-39,
+          "ordinary": 3.7273930620819724e-39,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 53.60857454469507,
+        "hex": "0x1.acde5c54b525bp+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 1.2889582326652134e-48,
+        "hex": "0x1.e241abe71a900p-160"
+      },
+      "G": {
+        "decimal": 3.1856797377874155e-42,
+        "envelope": [
+          3.185679737787414e-42,
+          3.1856797377874155e-42
+        ],
+        "hex": "0x1.1c2c109c7481dp-138"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 1.537075055096724e-13,
+        "envelope": [
+          1.5370750550967238e-13,
+          1.537075055096724e-13
+        ],
+        "hex": "0x1.5a1e5821799b5p-43"
+      },
+      "bank": "nux",
+      "cancellation_ratio": 1.192494074783535e+35,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 3.038201477062816e-27,
+        "hex": "0x1.e16c17f84b40bp-89"
+      },
+      "f_previous": {
+        "decimal": 3.0382013228816888e-27,
+        "hex": "0x1.e16c165e6903dp-89"
+      },
+      "frozen_update": {
+        "decimal": 2.0725596497218295e-29,
+        "hex": "0x1.a45d7317ebf80p-96"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.49658916807860276,
+        "pass": false,
+        "retained_relative_residual": 0.9864491092134144
+      },
+      "lambda_delta_N": 45.574218020141544,
+      "node": 21,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 1.446414220088991e-17,
+          "absolute_term_sum": 1.5370750550992673e-13,
+          "factorized_fsum": -1.5370750550967238e-13,
+          "factorized_longdouble": -1.5370750550967238e-13,
+          "ordinary": -1.537075055096724e-13,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 1.2904897229378812e-48,
+          "factorized_fsum": 1.2889582306523402e-48,
+          "factorized_longdouble": 1.2889582306523402e-48,
+          "ordinary": 1.2889582326652134e-48,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 3.1856797385602257e-42,
+          "factorized_fsum": 3.185679737787414e-42,
+          "factorized_longdouble": 3.185679737787414e-42,
+          "ordinary": 3.1856797377874155e-42,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 61.05853144721876,
+        "hex": "0x1.e877df55dcbcbp+5"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 7.687804950837569e-51,
+        "hex": "0x1.702c36e62bf80p-167"
+      },
+      "G": {
+        "decimal": 6.481826948276878e-46,
+        "envelope": [
+          6.481826948276878e-46,
+          6.481826948276892e-46
+        ],
+        "hex": "0x1.d9a8f80beb3f5p-151"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": 2.839484961270634e-13,
+        "envelope": [
+          2.839484961270634e-13,
+          2.839484961270635e-13
+        ],
+        "hex": "0x1.3fb294f3e3018p-42"
+      },
+      "bank": "nux",
+      "cancellation_ratio": 3.6934924590682785e+37,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 4.1283839307591925e-31,
+        "hex": "0x1.0bf28b31a79cfp-101"
+      },
+      "f_previous": {
+        "decimal": 4.128382892116987e-31,
+        "hex": "0x1.0bf286c6ac6c6p-101"
+      },
+      "frozen_update": {
+        "decimal": 2.2827474125365213e-33,
+        "hex": "0x1.7b495629f2a00p-109"
+      },
+      "frozen_update_physical": true,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 0.4972353335463994,
+        "pass": false,
+        "retained_relative_residual": 0.9890020804834329
+      },
+      "lambda_delta_N": 84.19062313239985,
+      "node": 22,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 1.9652182642186256e-17,
+          "absolute_term_sum": 2.8394849612738954e-13,
+          "factorized_fsum": -2.839484961270635e-13,
+          "factorized_longdouble": -2.839484961270634e-13,
+          "ordinary": -2.839484961270634e-13,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 7.968305670583161e-51,
+          "factorized_fsum": 7.687804952245952e-51,
+          "factorized_longdouble": 7.687804952246103e-51,
+          "ordinary": 7.687804950837569e-51,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 6.481826949623381e-46,
+          "factorized_fsum": 6.481826948276892e-46,
+          "factorized_longdouble": 6.4818269482768916e-46,
+          "ordinary": 6.481826948276878e-46,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 69.96224003510503,
+        "hex": "0x1.17d95573a6b64p+6"
+      },
+      "severe_cancellation": true
+    },
+    {
+      "C": {
+        "decimal": 9.96703936524342e-51,
+        "hex": "0x1.dd538c0c517d1p-167"
+      },
+      "G": {
+        "decimal": 9.967039365243409e-51,
+        "envelope": [
+          9.967039365243409e-51,
+          9.967039365243434e-51
+        ],
+        "hex": "0x1.dd538c0c517c8p-167"
+      },
+      "H_MeV": 4.460190494931543e-20,
+      "L": {
+        "decimal": -1.2396242503450277e-30,
+        "envelope": [
+          -1.2396242503450277e-30,
+          -1.2396242503450277e-30
+        ],
+        "hex": "-0x1.9247f42000000p-100"
+      },
+      "bank": "nux",
+      "cancellation_ratio": 1.2437236424166094e+20,
+      "delta_N": 1.3224448172088898e-05,
+      "f_first": {
+        "decimal": 1.0240085759359365e-35,
+        "hex": "0x1.b390a8ea94126p-117"
+      },
+      "f_previous": {
+        "decimal": 7.284920772816389e-36,
+        "hex": "0x1.35ddc33e4621ep-117"
+      },
+      "frozen_update": {
+        "decimal": "NaN",
+        "hex": "nan"
+      },
+      "frozen_update_physical": false,
+      "gain_loss_reconstruction": {
+        "midpoint_relative_residual": 1.588346407664548e-07,
+        "pass": false,
+        "retained_relative_residual": 1.190871155138642e-16
+      },
+      "lambda_delta_N": "NaN",
+      "node": 23,
+      "ordinary_vs_independent": {
+        "at_one": {
+          "H": 4.4647778573093993e-20,
+          "absolute_term_sum": 1.6507064326683357e-30,
+          "factorized_fsum": 1.2396242503450277e-30,
+          "factorized_longdouble": 1.2396242503450277e-30,
+          "ordinary": 1.2396242503450277e-30,
+          "z": 1.000000001748008
+        },
+        "at_retained": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 9.967039368707371e-51,
+          "factorized_fsum": 9.967039365243442e-51,
+          "factorized_longdouble": 9.967039365243442e-51,
+          "ordinary": 9.96703936524342e-51,
+          "z": 1.000000001748008
+        },
+        "at_zero": {
+          "H": 4.460190494931543e-20,
+          "absolute_term_sum": 9.967039368707364e-51,
+          "factorized_fsum": 9.967039365243434e-51,
+          "factorized_longdouble": 9.967039365243434e-51,
+          "ordinary": 9.967039365243409e-51,
+          "z": 1.000000001748008
+        }
+      },
+      "q": {
+        "decimal": 81.49827923394889,
+        "hex": "0x1.45fe3ce958588p+6"
+      },
+      "severe_cancellation": true
+    }
+  ],
+  "prefix": {
+    "delta_N": {
+      "decimal": 1.3224448172088898e-05,
+      "hex": "0x1.bbbd251280000p-17"
+    },
+    "first_invalid_N": {
+      "decimal": -2.302557321652884,
+      "hex": "-0x1.26ba32c4d50e0p+1"
+    },
+    "first_invalid_entries": [
+      {
+        "bank": "nue",
+        "node": 22,
+        "value": {
+          "decimal": -2.3008216172341183e-30,
+          "hex": "-0x1.7554640e33c9dp-99"
+        }
+      }
+    ],
+    "first_invalid_index": 3,
+    "message": "A termination event occurred.",
+    "nfev": 124,
+    "njev": 3,
+    "nlu": 32,
+    "previous_N": {
+      "decimal": -2.302570546101056,
+      "hex": "-0x1.26baa1b41e52ap+1"
+    },
+    "previous_index": 2,
+    "retained_first_entry_match": {
+      "N_hex": true,
+      "bank": true,
+      "node": true,
+      "sample_index": true,
+      "value_hex": true
+    },
+    "stored_points": 9,
+    "success": true,
+    "wall_seconds": 0.4396875239908695
+  },
+  "provenance": {
+    "retained_path": "/tmp/rabbit_raw_trajectory_exact_head_collision_on.json",
+    "retained_sha256": "2da11255f25761e4b7e7ea330eda2c4948013e4d1df00c5e127720a90f9a678e"
+  },
+  "raw_tail_qoi_impact": {
+    "N_eff": {
+      "clipped": 11.558412082012882,
+      "raw": 11.558412082012882,
+      "signed_raw_minus_clipped_direct": -5.290447599947546e-24,
+      "signed_raw_minus_clipped_total_subtraction": 0.0
+    },
+    "collision_field_raw_factorized": {
+      "nue": {
+        "energy_moment_delta_MeV": 1.0390730920005584e-37,
+        "max_abs_field_delta_MeV": 1.8207346722510127e-37,
+        "number_moment_delta_MeV": 2.1206817541369803e-39
+      },
+      "nux": {
+        "energy_moment_delta_MeV": 0.0,
+        "max_abs_field_delta_MeV": 0.0,
+        "number_moment_delta_MeV": 0.0
+      }
+    },
+    "nue": {
+      "energy": {
+        "clipped": 5.682196975755114,
+        "raw": 5.682196975755114,
+        "signed_raw_minus_clipped_direct": -7.802464163482016e-24,
+        "signed_raw_minus_clipped_total_subtraction": 0.0
+      },
+      "number": {
+        "clipped": 1.8030853524854225,
+        "raw": 1.8030853524854225,
+        "signed_raw_minus_clipped_direct": -1.1152393290390595e-25,
+        "signed_raw_minus_clipped_total_subtraction": 0.0
+      }
+    },
+    "nux": {
+      "energy": {
+        "clipped": 5.682196975587314,
+        "raw": 5.682196975587314,
+        "signed_raw_minus_clipped_direct": 0.0,
+        "signed_raw_minus_clipped_total_subtraction": 0.0
+      },
+      "number": {
+        "clipped": 1.803085352448716,
+        "raw": 1.803085352448716,
+        "signed_raw_minus_clipped_direct": 0.0,
+        "signed_raw_minus_clipped_total_subtraction": 0.0
+      }
+    },
+    "weak_born_raw_linear": {
+      "clipped": {
+        "channels_np": [
+          82083648.62697612,
+          69384104.67096293,
+          0.4386953373238373
+        ],
+        "channels_pn": [
+          60995885.40385479,
+          71725385.80009857,
+          0.38037174678694485
+        ],
+        "lambda_np": 105394.49228770068,
+        "lambda_pn": 92350.2903379017
+      },
+      "note": "diagnostic linear interpolation without the production logit floor; direct delta is the authoritative signed-impact readout",
+      "raw": {
+        "channels_np": [
+          82083648.62697612,
+          69384104.67096293,
+          0.4386953373238373
+        ],
+        "channels_pn": [
+          60995885.40385479,
+          71725385.80009857,
+          0.38037174678694485
+        ],
+        "lambda_np": 105394.49228770068,
+        "lambda_pn": 92350.2903379017
+      },
+      "signed_raw_minus_clipped_direct": {
+        "channels_np": [
+          -1.6894928171661265e-15,
+          9.746380167120396e-45,
+          -0.0
+        ],
+        "channels_pn": [
+          8.668344158486413e-45,
+          -1.6558444795491507e-15,
+          0.0
+        ],
+        "lambda_np": -1.175585121560261e-18,
+        "lambda_pn": -1.152171890875976e-18
+      },
+      "signed_raw_minus_clipped_total_subtraction": {
+        "channels_np": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "channels_pn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "lambda_np": 0.0,
+        "lambda_pn": 0.0
+      }
+    }
+  },
+  "schema": "rabbit_ode_p0_v1",
+  "selected_route": "COLLISION_DISCRETIZATION_OR_ASSEMBLY_REPAIR",
+  "stop_reason": "boundary sign or gain-loss reconstruction failed"
+}

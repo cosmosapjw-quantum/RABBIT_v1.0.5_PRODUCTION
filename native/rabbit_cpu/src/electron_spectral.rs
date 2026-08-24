@@ -17,6 +17,7 @@ use crate::electron_phase_point::{
     PhysicalRadialCell, integrated_scalar_density_mev, physical_support_slice,
 };
 use crate::electron_supplied::{SuppliedElectronEvent, SuppliedElectronEvents};
+use crate::pauli_edge_step::{PauliEdge, PauliEdgeStep, PauliEdgeTopology};
 use crate::quadrature::{gauss_laguerre_plain_rule, gauss_legendre_rule};
 
 const EXPLICIT_STATES: usize = 6;
@@ -30,6 +31,28 @@ pub(crate) struct IsotropicElectronSpectralAction {
     pub(crate) heavy_pair_mev: Vec<f64>,
     /// Row-major derivative of `[C_e, C_x]` with respect to `[f_e, f_x]`.
     pub(crate) jacobian_mev: Vec<f64>,
+}
+
+#[derive(Clone, Debug)]
+struct FoldedPauliEdge {
+    bank: usize,
+    edge: PauliEdge,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct IsotropicElectronPauliEdges {
+    nq: usize,
+    exact_equilibrium: bool,
+    anchor_electron_pair: Vec<f64>,
+    anchor_heavy_pair: Vec<f64>,
+    edges: Vec<FoldedPauliEdge>,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub(crate) struct PauliSweepReport {
+    pub(crate) edge_applications: usize,
+    pub(crate) nonlinear_iterations: usize,
+    pub(crate) maximum_edge_iterations: usize,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -88,7 +111,72 @@ fn explicit_occupations(electron_pair: &[f64], heavy_pair: &[f64]) -> Vec<f64> {
     explicit
 }
 
-fn build_event_stream(
+#[allow(clippy::too_many_arguments)]
+fn build_event_task(
+    process_slot: usize,
+    target_node: usize,
+    t_gamma: TemperatureMeV,
+    t_cm: TemperatureMeV,
+    electron_mass: ElectronMassMeV,
+    y_nodes: &[f64],
+    y_weights: &[f64],
+    electron_rule: &[(f64, f64)],
+    angular_rule: &[(f64, f64)],
+) -> Result<Vec<SuppliedElectronEvent>, &'static str> {
+    let process = EXPLICIT_ELECTRON_PROCESSES[process_slot];
+    let target_y = NeutrinoY::new(y_nodes[target_node])?;
+    let capacity = y_nodes
+        .len()
+        .checked_mul(electron_rule.len())
+        .and_then(|value| value.checked_mul(angular_rule.len()))
+        .ok_or("electron spectral task dimension overflow")?;
+    let mut events = Vec::with_capacity(capacity);
+    for (coupled_node, (&coupled_y, &coupled_weight)) in y_nodes.iter().zip(y_weights).enumerate() {
+        for &(electron_x, electron_weight) in electron_rule {
+            let radial = match process.channel() {
+                ElectronChannel::ElectronMinusElastic | ElectronChannel::ElectronPlusElastic => {
+                    PhysicalRadialCell::elastic(
+                        ElectronX::new(electron_x)?,
+                        electron_weight,
+                        NeutrinoY::new(coupled_y)?,
+                        coupled_weight,
+                    )?
+                }
+                ElectronChannel::Pair => PhysicalRadialCell::pair(
+                    NeutrinoY::new(coupled_y)?,
+                    coupled_weight,
+                    ElectronX::new(electron_x)?,
+                    electron_weight,
+                )?,
+            };
+            for &(mu13, mu13_weight) in angular_rule {
+                let Some(support) = physical_support_slice(
+                    process_slot,
+                    t_gamma,
+                    t_cm,
+                    electron_mass,
+                    target_y,
+                    radial,
+                    mu13,
+                )?
+                else {
+                    continue;
+                };
+                let density = integrated_scalar_density_mev(&support)?;
+                events.push(SuppliedElectronEvent::new(
+                    process_slot,
+                    target_node,
+                    coupled_node,
+                    support.fixed_fermions,
+                    RateMeV::new(mu13_weight * density.value())?,
+                )?);
+            }
+        }
+    }
+    Ok(events)
+}
+
+fn build_event_stream_with_workers(
     t_gamma_mev: f64,
     t_cm_mev: f64,
     y_nodes: &[f64],
@@ -96,6 +184,7 @@ fn build_event_stream(
     electron_mass_mev: f64,
     rule: ElectronSpectralRule,
     channel_filter: Option<ElectronChannel>,
+    requested_workers: usize,
 ) -> Result<SuppliedElectronEvents, &'static str> {
     let t_gamma = TemperatureMeV::new(t_gamma_mev)
         .map_err(|_| "electron spectral photon temperature is invalid")?;
@@ -113,64 +202,94 @@ fn build_event_stream(
         .and_then(|value| value.checked_mul(nq))
         .and_then(|value| value.checked_mul(angular_rule.len()))
         .ok_or("electron spectral event dimension overflow")?;
-    let mut events = Vec::with_capacity(capacity);
-
-    for (process_slot, &process) in EXPLICIT_ELECTRON_PROCESSES
+    let tasks = EXPLICIT_ELECTRON_PROCESSES
         .iter()
         .enumerate()
         .take(ACTIVE_EXPLICIT_STATES * PROCESSES_PER_STATE)
-    {
-        if channel_filter.is_some_and(|channel| process.channel() != channel) {
-            continue;
+        .filter(|(_, process)| channel_filter.is_none_or(|channel| process.channel() == channel))
+        .flat_map(|(process_slot, _)| (0..nq).map(move |target_node| (process_slot, target_node)))
+        .collect::<Vec<_>>();
+    if tasks.is_empty() {
+        return Err("electron spectral event task set is empty");
+    }
+    let workers = requested_workers.max(1).min(tasks.len());
+    let mut events = Vec::with_capacity(capacity);
+    if workers == 1 {
+        for &(process_slot, target_node) in &tasks {
+            events.extend(build_event_task(
+                process_slot,
+                target_node,
+                t_gamma,
+                t_cm,
+                electron_mass,
+                y_nodes,
+                y_weights,
+                &electron_rule,
+                &angular_rule,
+            )?);
         }
-        for (target_node, &target_y_value) in y_nodes.iter().enumerate() {
-            let target_y = NeutrinoY::new(target_y_value)?;
-            for (coupled_node, (&coupled_y, &coupled_weight)) in
-                y_nodes.iter().zip(y_weights).enumerate()
-            {
-                for &(electron_x, electron_weight) in &electron_rule {
-                    let radial = match process.channel() {
-                        ElectronChannel::ElectronMinusElastic
-                        | ElectronChannel::ElectronPlusElastic => PhysicalRadialCell::elastic(
-                            ElectronX::new(electron_x)?,
-                            electron_weight,
-                            NeutrinoY::new(coupled_y)?,
-                            coupled_weight,
-                        )?,
-                        ElectronChannel::Pair => PhysicalRadialCell::pair(
-                            NeutrinoY::new(coupled_y)?,
-                            coupled_weight,
-                            ElectronX::new(electron_x)?,
-                            electron_weight,
-                        )?,
-                    };
-                    for &(mu13, mu13_weight) in &angular_rule {
-                        let Some(support) = physical_support_slice(
+    } else {
+        let chunk_size = tasks.len().div_ceil(workers);
+        let joined = std::thread::scope(|scope| {
+            let mut handles = Vec::with_capacity(workers);
+            let electron_rule = electron_rule.as_slice();
+            let angular_rule = angular_rule.as_slice();
+            for chunk in tasks.chunks(chunk_size) {
+                handles.push(scope.spawn(move || {
+                    let mut local = Vec::new();
+                    for &(process_slot, target_node) in chunk {
+                        local.extend(build_event_task(
                             process_slot,
+                            target_node,
                             t_gamma,
                             t_cm,
                             electron_mass,
-                            target_y,
-                            radial,
-                            mu13,
-                        )?
-                        else {
-                            continue;
-                        };
-                        let density = integrated_scalar_density_mev(&support)?;
-                        events.push(SuppliedElectronEvent::new(
-                            process_slot,
-                            target_node,
-                            coupled_node,
-                            support.fixed_fermions,
-                            RateMeV::new(mu13_weight * density.value())?,
+                            y_nodes,
+                            y_weights,
+                            electron_rule,
+                            angular_rule,
                         )?);
                     }
-                }
+                    Ok::<_, &'static str>(local)
+                }));
             }
+            handles
+                .into_iter()
+                .map(|handle| handle.join())
+                .collect::<Vec<_>>()
+        });
+        for result in joined {
+            let local = result
+                .map_err(|_| "electron spectral worker panicked")?
+                .map_err(|error| error)?;
+            events.extend(local);
         }
     }
     SuppliedElectronEvents::new(nq, events.into_boxed_slice())
+}
+
+fn build_event_stream(
+    t_gamma_mev: f64,
+    t_cm_mev: f64,
+    y_nodes: &[f64],
+    y_weights: &[f64],
+    electron_mass_mev: f64,
+    rule: ElectronSpectralRule,
+    channel_filter: Option<ElectronChannel>,
+) -> Result<SuppliedElectronEvents, &'static str> {
+    let workers = std::thread::available_parallelism()
+        .map(usize::from)
+        .unwrap_or(1);
+    build_event_stream_with_workers(
+        t_gamma_mev,
+        t_cm_mev,
+        y_nodes,
+        y_weights,
+        electron_mass_mev,
+        rule,
+        channel_filter,
+        workers,
+    )
 }
 
 fn folded_row(explicit: &[RateMeV], nq: usize, first_state: usize, node: usize) -> f64 {
@@ -318,6 +437,263 @@ fn conservative_explicit_action(
     Ok((action, jacobian))
 }
 
+fn build_folded_pauli_edges(
+    stream: &SuppliedElectronEvents,
+    explicit_f: &[f64],
+    y_nodes: &[f64],
+    y_weights: &[f64],
+    electron_pair: &[f64],
+    heavy_pair: &[f64],
+    exact_equilibrium: bool,
+) -> Result<IsotropicElectronPauliEdges, &'static str> {
+    let nq = stream.nq();
+    let input = EXPLICIT_STATES
+        .checked_mul(nq)
+        .ok_or("electron Pauli edge dimension overflow")?;
+    let edge_count = input
+        .checked_mul(input)
+        .ok_or("electron Pauli edge dimension overflow")?;
+    let number_weights = y_nodes
+        .iter()
+        .zip(y_weights)
+        .map(|(node, weight)| weight * node.powi(2))
+        .collect::<Vec<_>>();
+    let mut directed_gain_coefficient = vec![0.0; edge_count];
+    let mut directed_loss_coefficient = vec![0.0; edge_count];
+    for item in stream.validated_contractions(explicit_f)? {
+        let item = item?;
+        let target = item.dynamic_legs.target.explicit_node.flat_index;
+        let coupled = item.dynamic_legs.coupled.explicit_node.flat_index;
+        let target_node = item.dynamic_legs.target.explicit_node.node;
+        let edge = target * input + coupled;
+        let measure = number_weights[target_node];
+        let coefficients = item.dynamic_coefficients()?;
+        directed_gain_coefficient[edge] += measure * coefficients.gain.value();
+        directed_loss_coefficient[edge] += measure * coefficients.loss.value();
+    }
+    if directed_gain_coefficient
+        .iter()
+        .chain(&directed_loss_coefficient)
+        .any(|value| !value.is_finite() || *value < 0.0)
+    {
+        return Err("electron Pauli directed coefficient is invalid");
+    }
+
+    let elastic_coefficients = |state: usize, first_node: usize, second_node: usize| {
+        let first = state * nq + first_node;
+        let second = state * nq + second_node;
+        let forward = first * input + second;
+        let reverse = second * input + first;
+        (
+            0.5 * (directed_gain_coefficient[forward] + directed_loss_coefficient[reverse]),
+            0.5 * (directed_loss_coefficient[forward] + directed_gain_coefficient[reverse]),
+        )
+    };
+    let pair_coefficients = |first_state: usize, first_node: usize, second_node: usize| {
+        let second_state = first_state + 1;
+        let first = first_state * nq + first_node;
+        let second = second_state * nq + second_node;
+        let forward = first * input + second;
+        let reverse = second * input + first;
+        (
+            0.5 * (directed_gain_coefficient[forward] + directed_gain_coefficient[reverse]),
+            0.5 * (directed_loss_coefficient[forward] + directed_loss_coefficient[reverse]),
+        )
+    };
+
+    let mut edges = Vec::with_capacity(2 * nq * nq);
+    for (bank, first_state) in [0, 2].into_iter().enumerate() {
+        for first_node in 0..nq {
+            for second_node in first_node + 1..nq {
+                let first = elastic_coefficients(first_state, first_node, second_node);
+                let conjugate = elastic_coefficients(first_state + 1, first_node, second_node);
+                let gain = 0.5 * (first.0 + conjugate.0);
+                let loss = 0.5 * (first.1 + conjugate.1);
+                if gain != 0.0 || loss != 0.0 {
+                    edges.push(FoldedPauliEdge {
+                        bank,
+                        edge: PauliEdge::new(
+                            PauliEdgeTopology::ElasticTransfer,
+                            first_node,
+                            second_node,
+                            number_weights[first_node],
+                            number_weights[second_node],
+                            gain,
+                            loss,
+                        )?,
+                    });
+                }
+            }
+        }
+        for first_node in 0..nq {
+            for second_node in first_node..nq {
+                let forward = pair_coefficients(first_state, first_node, second_node);
+                let (gain, loss) = if first_node == second_node {
+                    forward
+                } else {
+                    let transpose = pair_coefficients(first_state, second_node, first_node);
+                    (
+                        0.5 * (forward.0 + transpose.0),
+                        0.5 * (forward.1 + transpose.1),
+                    )
+                };
+                if gain != 0.0 || loss != 0.0 {
+                    edges.push(FoldedPauliEdge {
+                        bank,
+                        edge: PauliEdge::new(
+                            PauliEdgeTopology::PairSource,
+                            first_node,
+                            second_node,
+                            number_weights[first_node],
+                            number_weights[second_node],
+                            gain,
+                            loss,
+                        )?,
+                    });
+                }
+            }
+        }
+    }
+    (!edges.is_empty())
+        .then_some(IsotropicElectronPauliEdges {
+            nq,
+            exact_equilibrium,
+            anchor_electron_pair: electron_pair.to_vec(),
+            anchor_heavy_pair: heavy_pair.to_vec(),
+            edges,
+        })
+        .ok_or("electron Pauli edge reconstruction is empty")
+}
+
+impl IsotropicElectronPauliEdges {
+    fn is_exact_anchor(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> bool {
+        self.exact_equilibrium
+            && electron_pair.len() == self.nq
+            && heavy_pair.len() == self.nq
+            && electron_pair
+                .iter()
+                .zip(&self.anchor_electron_pair)
+                .all(|(value, anchor)| value.to_bits() == anchor.to_bits())
+            && heavy_pair
+                .iter()
+                .zip(&self.anchor_heavy_pair)
+                .all(|(value, anchor)| value.to_bits() == anchor.to_bits())
+    }
+
+    fn checked_banks(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> Result<(), &'static str> {
+        if electron_pair.len() != self.nq
+            || heavy_pair.len() != self.nq
+            || electron_pair
+                .iter()
+                .chain(heavy_pair)
+                .any(|value| !value.is_finite() || !(0.0..=1.0).contains(value))
+        {
+            return Err("electron Pauli edge occupation bank is invalid");
+        }
+        Ok(())
+    }
+
+    pub(crate) fn action_values(
+        &self,
+        electron_pair: &[f64],
+        heavy_pair: &[f64],
+    ) -> Result<IsotropicElectronSpectralAction, &'static str> {
+        self.checked_banks(electron_pair, heavy_pair)?;
+        let mut action = vec![0.0; 2 * self.nq];
+        if !self.is_exact_anchor(electron_pair, heavy_pair) {
+            for item in &self.edges {
+                let bank_offset = item.bank * self.nq;
+                let first = item.edge.first_node;
+                let second = item.edge.second_node;
+                let occupations = if item.bank == 0 {
+                    electron_pair
+                } else {
+                    heavy_pair
+                };
+                let flux = item
+                    .edge
+                    .flux_mev(occupations[first], occupations[second])?;
+                action[bank_offset + first] += flux / item.edge.first_measure;
+                match item.edge.topology {
+                    PauliEdgeTopology::ElasticTransfer => {
+                        action[bank_offset + second] -= flux / item.edge.second_measure;
+                    }
+                    PauliEdgeTopology::PairSource if first != second => {
+                        action[bank_offset + second] += flux / item.edge.second_measure;
+                    }
+                    PauliEdgeTopology::PairSource => {}
+                }
+            }
+        }
+        action
+            .iter()
+            .all(|value| value.is_finite())
+            .then(|| IsotropicElectronSpectralAction {
+                electron_pair_mev: action[..self.nq].to_vec(),
+                heavy_pair_mev: action[self.nq..].to_vec(),
+                jacobian_mev: Vec::new(),
+            })
+            .ok_or("electron Pauli edge action is non-finite")
+    }
+
+    pub(crate) fn transactional_step(
+        &self,
+        step_mev_inverse: f64,
+        electron_pair: &[f64],
+        heavy_pair: &[f64],
+    ) -> Result<(Vec<f64>, Vec<f64>, PauliSweepReport), &'static str> {
+        self.checked_banks(electron_pair, heavy_pair)?;
+        if !step_mev_inverse.is_finite() || step_mev_inverse < 0.0 {
+            return Err("electron Pauli sweep step is invalid");
+        }
+        if step_mev_inverse == 0.0 || self.is_exact_anchor(electron_pair, heavy_pair) {
+            return Ok((
+                electron_pair.to_vec(),
+                heavy_pair.to_vec(),
+                PauliSweepReport::default(),
+            ));
+        }
+
+        let mut electron_candidate = electron_pair.to_vec();
+        let mut heavy_candidate = heavy_pair.to_vec();
+        let mut report = PauliSweepReport::default();
+        let half_step = 0.5 * step_mev_inverse;
+        for reverse in [false, true] {
+            let apply = |item: &FoldedPauliEdge,
+                         electron: &mut [f64],
+                         heavy: &mut [f64]|
+             -> Result<PauliEdgeStep, &'static str> {
+                if item.bank == 0 {
+                    item.edge.apply_implicit(half_step, electron)
+                } else {
+                    item.edge.apply_implicit(half_step, heavy)
+                }
+            };
+            if reverse {
+                for item in self.edges.iter().rev() {
+                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
+                    report.edge_applications += 1;
+                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
+                    report.maximum_edge_iterations = report
+                        .maximum_edge_iterations
+                        .max(edge_report.nonlinear_iterations);
+                }
+            } else {
+                for item in &self.edges {
+                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
+                    report.edge_applications += 1;
+                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
+                    report.maximum_edge_iterations = report
+                        .maximum_edge_iterations
+                        .max(edge_report.nonlinear_iterations);
+                }
+            }
+        }
+        self.checked_banks(&electron_candidate, &heavy_candidate)?;
+        Ok((electron_candidate, heavy_candidate, report))
+    }
+}
+
 fn fold_jacobian(explicit: &[RateMeV], nq: usize) -> Vec<f64> {
     let explicit_width = EXPLICIT_STATES * nq;
     let folded_width = FOLDED_PAIRS * nq;
@@ -431,6 +807,43 @@ pub(crate) fn evaluate_isotropic_electron_spectral_action_values(
     evaluate_isotropic_electron_spectral_action_impl(input, false)
 }
 
+pub(crate) fn reconstruct_isotropic_electron_pauli_edges(
+    input: ElectronSpectralInput<'_>,
+) -> Result<IsotropicElectronPauliEdges, &'static str> {
+    let ElectronSpectralInput {
+        t_gamma_mev,
+        t_cm_mev,
+        y_nodes,
+        y_weights,
+        electron_pair,
+        heavy_pair,
+        electron_mass_mev,
+        rule,
+    } = input;
+    checked_grid(y_nodes, y_weights, electron_pair, heavy_pair)?;
+    let explicit_f = explicit_occupations(electron_pair, heavy_pair);
+    let exact_equilibrium = exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, electron_pair)
+        && exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, heavy_pair);
+    let stream = build_event_stream(
+        t_gamma_mev,
+        t_cm_mev,
+        y_nodes,
+        y_weights,
+        electron_mass_mev,
+        rule,
+        None,
+    )?;
+    build_folded_pauli_edges(
+        &stream,
+        &explicit_f,
+        y_nodes,
+        y_weights,
+        electron_pair,
+        heavy_pair,
+        exact_equilibrium,
+    )
+}
+
 #[cfg(test)]
 pub(crate) fn evaluate_filtered_isotropic_action(
     input: ElectronSpectralInput<'_>,
@@ -467,6 +880,7 @@ pub(crate) fn evaluate_filtered_isotropic_action(
 #[cfg(test)]
 mod tests {
     use core::f64::consts::PI;
+    use std::time::Instant;
 
     use super::*;
     use crate::electron_hm::G_F_MEV_MINUS_2;
@@ -737,6 +1151,234 @@ mod tests {
                 (neutrino - antineutrino).abs() < 5.0e-12 * scale,
                 "state={first_state} neutrino={neutrino:.17e} antineutrino={antineutrino:.17e} relative={:.17e}",
                 (neutrino - antineutrino).abs() / scale,
+            );
+        }
+    }
+
+    fn assert_action_reconstruction(
+        reference: &IsotropicElectronSpectralAction,
+        reconstructed: &IsotropicElectronSpectralAction,
+    ) {
+        for (label, expected, actual) in [
+            (
+                "electron",
+                &reference.electron_pair_mev,
+                &reconstructed.electron_pair_mev,
+            ),
+            (
+                "heavy",
+                &reference.heavy_pair_mev,
+                &reconstructed.heavy_pair_mev,
+            ),
+        ] {
+            let difference = expected
+                .iter()
+                .zip(actual)
+                .map(|(left, right)| (left - right).abs())
+                .sum::<f64>();
+            let scale = expected
+                .iter()
+                .chain(actual)
+                .map(|value| value.abs())
+                .sum::<f64>()
+                .max(f64::MIN_POSITIVE);
+            assert!(
+                difference <= 2.0e-11 * scale,
+                "bank={label} difference={difference:.17e} scale={scale:.17e} relative={:.17e}",
+                difference / scale,
+            );
+        }
+    }
+
+    #[test]
+    fn folded_pauli_edges_reconstruct_action_and_are_boundary_inward() {
+        let (y, w) = grid(4);
+        let electron = y
+            .iter()
+            .enumerate()
+            .map(|(node, value)| fd(*value) * if node.is_multiple_of(2) { 0.91 } else { 1.07 })
+            .collect::<Vec<_>>();
+        let heavy = y
+            .iter()
+            .enumerate()
+            .map(|(node, value)| fd(*value) * if node.is_multiple_of(2) { 1.03 } else { 0.84 })
+            .collect::<Vec<_>>();
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let input = spectral_input(1.15, 1.0, &y, &w, &electron, &heavy, rule);
+        let reference = evaluate_isotropic_electron_spectral_action_values(input).unwrap();
+        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
+        let reconstructed = edges.action_values(&electron, &heavy).unwrap();
+        assert_action_reconstruction(&reference, &reconstructed);
+
+        for bank in 0..2 {
+            for node in 0..y.len() {
+                let mut lower_electron = electron.clone();
+                let mut lower_heavy = heavy.clone();
+                let mut upper_electron = electron.clone();
+                let mut upper_heavy = heavy.clone();
+                if bank == 0 {
+                    lower_electron[node] = 0.0;
+                    upper_electron[node] = 1.0;
+                } else {
+                    lower_heavy[node] = 0.0;
+                    upper_heavy[node] = 1.0;
+                }
+                let lower = edges.action_values(&lower_electron, &lower_heavy).unwrap();
+                let upper = edges.action_values(&upper_electron, &upper_heavy).unwrap();
+                let lower_value = if bank == 0 {
+                    lower.electron_pair_mev[node]
+                } else {
+                    lower.heavy_pair_mev[node]
+                };
+                let upper_value = if bank == 0 {
+                    upper.electron_pair_mev[node]
+                } else {
+                    upper.heavy_pair_mev[node]
+                };
+                assert!(
+                    lower_value >= 0.0,
+                    "bank={bank} node={node} lower={lower_value:.17e}"
+                );
+                assert!(
+                    upper_value <= 0.0,
+                    "bank={bank} node={node} upper={upper_value:.17e}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn pauli_sweep_is_transactional_at_equilibrium_and_in_the_high_q_tail() {
+        let (y, w) = grid(4);
+        let equilibrium = y.iter().copied().map(fd).collect::<Vec<_>>();
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let equilibrium_input = spectral_input(1.0, 1.0, &y, &w, &equilibrium, &equilibrium, rule);
+        let equilibrium_edges =
+            reconstruct_isotropic_electron_pauli_edges(equilibrium_input).unwrap();
+        let (same_electron, same_heavy, equilibrium_report) = equilibrium_edges
+            .transactional_step(1.0e30, &equilibrium, &equilibrium)
+            .unwrap();
+        assert_eq!(same_electron, equilibrium);
+        assert_eq!(same_heavy, equilibrium);
+        assert_eq!(equilibrium_report, PauliSweepReport::default());
+
+        let mut electron = equilibrium
+            .iter()
+            .map(|value| 0.93 * value)
+            .collect::<Vec<_>>();
+        let mut heavy = equilibrium
+            .iter()
+            .map(|value| 0.87 * value)
+            .collect::<Vec<_>>();
+        let last = y.len() - 1;
+        electron[last] = 1.0e-35;
+        heavy[last] = 1.0e-40;
+        let input = spectral_input(1.15, 1.0, &y, &w, &electron, &heavy, rule);
+        let reference = evaluate_isotropic_electron_spectral_action_values(input).unwrap();
+        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
+        let reconstructed = edges.action_values(&electron, &heavy).unwrap();
+        assert_action_reconstruction(&reference, &reconstructed);
+        let before = [electron[last], heavy[last]];
+        let (candidate_electron, candidate_heavy, report) =
+            edges.transactional_step(1.0e24, &electron, &heavy).unwrap();
+        assert!(
+            candidate_electron
+                .iter()
+                .chain(&candidate_heavy)
+                .all(|value| value.is_finite() && (0.0..=1.0).contains(value))
+        );
+        assert!(report.edge_applications > 0 && report.maximum_edge_iterations <= 32);
+        eprintln!(
+            "P1_TAIL raw_before_e={:.17e} raw_after_e={:.17e} raw_before_x={:.17e} raw_after_x={:.17e} edge_apps={} nonlinear_iters={} max_edge_iters={}",
+            before[0],
+            candidate_electron[last],
+            before[1],
+            candidate_heavy[last],
+            report.edge_applications,
+            report.nonlinear_iterations,
+            report.maximum_edge_iterations,
+        );
+        assert!(
+            edges
+                .transactional_step(f64::NAN, &electron, &heavy)
+                .is_err()
+        );
+        assert_eq!(electron[last], before[0]);
+        assert_eq!(heavy[last], before[1]);
+    }
+
+    #[test]
+    #[ignore = "diagnostic: release-mode serial/parallel event-build comparison"]
+    fn pauli_event_parallel_benchmark() {
+        let (y, w) = grid(24);
+        let electron = y.iter().map(|value| 0.93 * fd(*value)).collect::<Vec<_>>();
+        let heavy = y.iter().map(|value| 0.87 * fd(*value)).collect::<Vec<_>>();
+        let explicit = explicit_occupations(&electron, &heavy);
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 6,
+            angular_order: 4,
+        };
+        let available_workers = std::thread::available_parallelism()
+            .map(usize::from)
+            .unwrap_or(1);
+        assert!(
+            available_workers > 1,
+            "parallel benchmark requires more than one worker"
+        );
+        let evaluate = |worker_count: usize| {
+            let start = Instant::now();
+            let stream = build_event_stream_with_workers(
+                1.15,
+                1.0,
+                &y,
+                &w,
+                ELECTRON_MASS_MEV,
+                rule,
+                None,
+                worker_count,
+            )
+            .unwrap();
+            let event_count = stream.events().len();
+            let (action, _) =
+                conservative_explicit_action(&stream, &explicit, &y, &w, false).unwrap();
+            (start.elapsed().as_secs_f64(), event_count, action)
+        };
+
+        let serial_reference = evaluate(1);
+        let mut serial_best = serial_reference.0;
+        for _ in 0..2 {
+            serial_best = serial_best.min(evaluate(1).0);
+        }
+        for workers in [2, 4, 6, 8, 12, 24]
+            .into_iter()
+            .filter(|workers| *workers <= available_workers)
+        {
+            let parallel_reference = evaluate(workers);
+            assert_eq!(serial_reference.1, parallel_reference.1);
+            assert!(
+                serial_reference
+                    .2
+                    .iter()
+                    .zip(&parallel_reference.2)
+                    .all(|(left, right)| left.value().to_bits() == right.value().to_bits())
+            );
+            let mut parallel_best = parallel_reference.0;
+            for _ in 0..2 {
+                parallel_best = parallel_best.min(evaluate(workers).0);
+            }
+            eprintln!(
+                "P1_PERF workers={} events={} serial_best_s={:.9} parallel_best_s={:.9} speedup={:.6} bitwise_equal=true",
+                workers,
+                serial_reference.1,
+                serial_best,
+                parallel_best,
+                serial_best / parallel_best,
             );
         }
     }

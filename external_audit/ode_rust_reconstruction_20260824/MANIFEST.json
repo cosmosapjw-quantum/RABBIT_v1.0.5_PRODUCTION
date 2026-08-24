@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "packet": "ode_rust_reconstruction_external_audit_20260824",
+  "purpose": "complete external-audit handoff of inherited ODE research plus current Rust reconstruction and all attributable current-research temporary and ignored files",
+  "delivery_branch": "external-audit/ode-rust-reconstruction-complete-20260824",
+  "identity": {
+    "reconstruction_development_base": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "delivery_base": "0879e61c660d446ffc33d9024ad73faacc44327e",
+    "inherited_four_loop_complete": "9c05a65eaa5fbb86bec5d131c0d300689217de16",
+    "inherited_adversarial_review": "0879e61c660d446ffc33d9024ad73faacc44327e"
+  },
+  "authorized_actions": [
+    "create a new external-audit branch",
+    "attach all research files including attributable tmp and ignored artifacts",
+    "force-add the audit packet",
+    "commit and push the new branch to origin"
+  ],
+  "forbidden_or_not_requested": [
+    "additional tests or benchmarks",
+    "additional solver, endpoint, package, JAX, Diffrax, or scientific runs",
+    "production admission or claim promotion",
+    "pull request",
+    "merge",
+    "tag or release",
+    "force-push",
+    "mutation or cleanup of the original diagnosis_report checkout"
+  ],
+  "inherited_research": {
+    "four_loop_packet_path": "external_audit/ode_solver_four_loop_20260823",
+    "research_run_trees": 6,
+    "research_run_files": 122,
+    "prior_temp_regular_files": 24408,
+    "prior_temp_symlinks": 236,
+    "prior_temp_zstd_bytes": 462309647,
+    "prior_temp_zstd_sha256": "f124b4e897ef06909012a0f5a0b90002ae7fdb985787dc003f869d30f89244f5",
+    "ancestry_check": "PASS_BOTH_COMMITS"
+  },
+  "rust_reconstruction": {
+    "claim_status": "IMPLEMENTED_FOCUSED_CANDIDATE_PENDING_EXTERNAL_REVIEW",
+    "promotion_authority": false,
+    "changed_files": 8,
+    "added_lines": 1710,
+    "deleted_lines": 49,
+    "net_lines": 1661,
+    "report": {
+      "path": "docs/audit/RUST_ODE_COLLISION_RECONSTRUCTION_2026-08-24.md",
+      "sha256": "d4cdb4cbf9df7c49a259475b98c1aa512f3214090bdf0e055a3d83840185ab6f"
+    },
+    "source_manifest": {
+      "path": "RECONSTRUCTION_SOURCE_SHA256SUMS",
+      "sha256": "5c12e65b22a6729539048d5390850d8531a34d1daab315db5d251807a96c8482"
+    },
+    "standalone_patch": {
+      "path": "RECONSTRUCTION_WORKTREE_DIFF.patch",
+      "sha256": "8bdbe11c3791bae7b7c7907c8251d8025f547eccbac7b527500977238dc3338b"
+    },
+    "cost_effectiveness_verdict": "ACCEPT_WITH_LIMITS",
+    "token_use_exact": "UNAVAILABLE_ACTIVE_HARNESS_EXPOSES_NO_EXACT_COUNTER"
+  },
+  "materialized_p0_files": [
+    {
+      "path": "tmp_materialized/tmp/rabbit_raw_trajectory_exact_head_collision_on.json",
+      "bytes": 565985,
+      "sha256": "2da11255f25761e4b7e7ea330eda2c4948013e4d1df00c5e127720a90f9a678e"
+    },
+    {
+      "path": "tmp_materialized/tmp/rabbit_ode_p0_discriminator.py",
+      "bytes": 28581,
+      "sha256": "a5c1a41189bf069a84fa5c8953ed7571200f3c657f35f6766db25e394ad4f1f7"
+    },
+    {
+      "path": "tmp_materialized/tmp/rabbit_ode_p0_result.json",
+      "bytes": 30703,
+      "sha256": "93dd5869889ae1b87527d023aed23d44ecabf6fdc20b1bff6bccbaa06a8b5124"
+    },
+    {
+      "path": "tmp_materialized/tmp/rabbit_ode_p0_result_signed_impact.json",
+      "bytes": 31541,
+      "sha256": "f1c50509264bc986985cad2f13e9b8605b2cb8d79e951582f4743fec3bc6fd41"
+    }
+  ],
+  "current_temporary_snapshot": {
+    "path_list": {
+      "path": "TEMP_ARCHIVE_PATHS.txt",
+      "entries": 8,
+      "sha256": "ed5b0ba8b8d0931c769083a55c48ae071fe78775c3baf2eecd64ba30cf19c54c"
+    },
+    "regular_files": 11806,
+    "symlinks": 4,
+    "tar_entries": 13683,
+    "tar_bytes": 2556252160,
+    "tar_sha256": "eb250e4a85e983b00ac93012841777025da8f2fb8956b33c02609be3e6e5d967",
+    "zstd_bytes": 544174962,
+    "zstd_sha256": "d051b9469a0845f0557c95416a6a2c06706f8ae929c396614ce12fbc5479f460",
+    "chunks": [
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-00",
+        "bytes": 89128960,
+        "sha256": "7efddc41ebf5b324e4044eacf4fc14861c5b8e995929accfce7860fe981b1870"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-01",
+        "bytes": 89128960,
+        "sha256": "8cca8a6c2992bcf83c4a4d12fb96d067d5856a792ee17f166175d3430200d708"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-02",
+        "bytes": 89128960,
+        "sha256": "a687410780445478002640020125c64d7d5f05f41db636d3ab167f3ce43c083c"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-03",
+        "bytes": 89128960,
+        "sha256": "c254275e353e509719370c22cff33f2cf9618b4fc0cc1f3ae4cd05e0f29f9b8f"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-04",
+        "bytes": 89128960,
+        "sha256": "09de8187519016d8d75034157ea31b7127fb54c6d4bd4764ca7db33419fdad60"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-05",
+        "bytes": 89128960,
+        "sha256": "19aecac68a5611d2eca5acc1b3bbe1ab6c89f7cb19c04e1155505b950e4519be"
+      },
+      {
+        "path": "tmp_archives/task_owned_tmp.tar.zst.part-06",
+        "bytes": 9401202,
+        "sha256": "9978be5f925cbb31d4e4cb4a84a5f2075e636d1af737efe0a5db26bd3d9b0168"
+      }
+    ],
+    "regular_file_manifest": {
+      "path": "TEMP_SOURCE_SHA256SUMS",
+      "sha256": "590416eff8760f4421d377fad4e4aa41ce02ca39c8ee335154a1c040bf204146"
+    },
+    "symlink_manifest": {
+      "path": "TEMP_SOURCE_SYMLINKS.txt",
+      "sha256": "acbf934b6ac13c296159c5675e0968371a788ed80700505d3bd5f2eb5add4030"
+    },
+    "archive_listing": {
+      "path": "TEMP_ARCHIVE_CONTENTS.txt",
+      "sha256": "0fd6ce5ec400c4b7087eeaf7a5365b9d932811f6fbe12b87ea755ad695445520"
+    },
+    "chunk_manifest": {
+      "path": "TMP_ARCHIVE_CHUNK_SHA256SUMS",
+      "sha256": "f9759d1fc71346617860b9ee67b0e79ddd2c35410c15ffc06cbc0a2bd83e5f0c"
+    },
+    "archive_integrity": {
+      "whole_zstd_stream": "PASS",
+      "reassembled_chunk_stream": "PASS",
+      "roundtrip_regular_files": "PASS_11806_OF_11806",
+      "roundtrip_symlink_targets": "PASS_4_OF_4"
+    }
+  },
+  "publication_validation": {
+    "tests_run": 0,
+    "benchmarks_run": 0,
+    "solver_or_endpoint_runs": 0,
+    "scientific_reruns": 0,
+    "packaging_only_checks": [
+      "SHA-256 manifests",
+      "archive listing",
+      "zstd stream integrity",
+      "roundtrip source-byte and symlink comparison",
+      "Git ancestry and ref inspection",
+      "staged byte identity and blob-size inspection",
+      "local and remote ref equality"
+    ],
+    "independent_review": "PENDING_EXTERNAL_AUDIT",
+    "shipping_disposition": "SHIPPING_WITH_RISK_REVIEW_ENABLEMENT_ONLY"
+  },
+  "original_checkout": {
+    "path": "/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION",
+    "branch": "diagnosis_report",
+    "commit": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+    "pre_existing_modified_files": [
+      "AGENTS.md",
+      "bbn_codex_anti_drift_cost_effective_policy.md",
+      "docs/harness/DECISION_LOG.md",
+      "docs/harness/NEXT_SESSION_PROMPT.md",
+      "docs/harness/PROJECT_STATE.md",
+      "docs/harness/VALIDATION_LEDGER.md"
+    ],
+    "pre_existing_untracked_files": [
+      "RABBIT_diagnosis_report.bundle"
+    ],
+    "mutation_by_publication_task": "NONE"
+  },
+  "completeness_ceiling": "all files in the inherited published four-loop packet plus every surviving file in the eight current task-attributable research paths are included; publication-created split/intermediate duplicates are represented by the exact reconstructable chunk stream, and unrelated concurrent-task tmp paths are excluded"
+}
