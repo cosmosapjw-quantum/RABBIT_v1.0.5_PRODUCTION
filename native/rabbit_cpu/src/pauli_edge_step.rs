@@ -594,6 +594,7 @@ impl PauliEdge {
             ) && midpoint_certificate.flux.resolution == PauliFluxResolution::Resolved
                 && midpoint_certificate.value.abs()
                     <= 128.0 * f64::EPSILON * midpoint_certificate.scale + MIN_SUBNORMAL
+                && midpoint_certificate.occupation_error_abs <= 128.0 * f64::EPSILON
             {
                 let candidate =
                     self.occupations_at_extent(initial, midpoint)
@@ -632,10 +633,17 @@ impl PauliEdge {
                 midpoint
             };
         }
-        Err(PauliEdgeFailure::new(
-            PauliEdgeFailureKind::IterationLimit,
-            "Pauli edge implicit root did not converge",
-        ))
+        if occupation_bracket_is_certified(lower, upper, self.first_measure, self.second_measure) {
+            Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::UncertainPhysicalBracket,
+                "Pauli edge floating bracket lacks an occupation-error certificate",
+            ))
+        } else {
+            Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::IterationLimit,
+                "Pauli edge implicit root did not converge",
+            ))
+        }
     }
 
     pub(crate) fn apply_implicit(
@@ -682,8 +690,10 @@ mod tests {
             report.residual_abs <= 128.0 * f64::EPSILON * report.residual_scale + f64::MIN_POSITIVE
         );
         assert!(
-            report.occupation_error_abs <= 128.0 * f64::EPSILON
-                || report.max_occupation_bracket_width <= 128.0 * f64::EPSILON
+            report.occupation_error_abs <= 128.0 * f64::EPSILON,
+            "occupation_error_abs={:.17e} bracket_width={:.17e}",
+            report.occupation_error_abs,
+            report.max_occupation_bracket_width,
         );
         assert!(report.nonlinear_iterations <= 96);
     }
@@ -705,6 +715,32 @@ mod tests {
                 .unwrap_err()
                 .kind,
             PauliEdgeFailureKind::IterationLimit
+        );
+    }
+
+    #[test]
+    fn affine_state_rounding_cannot_produce_false_solved_bracket() {
+        let edge = PauliEdge::new(
+            PauliEdgeTopology::PairSource,
+            0,
+            1,
+            0.125,
+            2.0_f64.powi(-27),
+            262_144.0,
+            0.03125,
+        )
+        .unwrap();
+
+        let failure = edge
+            .implicit_step(4.0, 1.0 - 2.0_f64.powi(-30), 0.25)
+            .unwrap_err();
+        assert!(
+            matches!(
+                failure.kind,
+                PauliEdgeFailureKind::UncertainPhysicalBracket
+                    | PauliEdgeFailureKind::UnresolvedFlux
+            ),
+            "unexpected failure kind: {failure:?}"
         );
     }
 
@@ -945,23 +981,30 @@ mod tests {
     }
 
     #[test]
-    fn stiff_pair_step_preserves_box_cp_difference_and_backward_euler_residual() {
+    fn pair_step_preserves_box_cp_difference_and_backward_euler_residual() {
         let edge =
             PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
-        let initial = [1.0e-35, 2.0e-31];
+        let initial = [0.23, 0.79];
         let invariant = 2.0 * initial[0] - 5.0 * initial[1];
-        let step_mev_inverse = 8.0;
+        let step_mev_inverse = 2.0_f64.powi(-8);
         let (candidate, report) = edge
             .implicit_step(step_mev_inverse, initial[0], initial[1])
             .unwrap();
         assert!(candidate.into_iter().all(valid_occupation));
-        assert!(report.extent > 0.0);
         let residual = (2.0 * candidate[0] - 5.0 * candidate[1] - invariant).abs();
         assert!(residual <= 8.0 * f64::EPSILON * 5.0);
         let backward_euler =
             report.extent - step_mev_inverse * edge.flux_mev(candidate[0], candidate[1]).unwrap();
         assert!(backward_euler.abs() <= report.root_error_abs);
         assert_root_certificate(report);
+    }
+
+    #[test]
+    fn stiff_pair_step_without_state_map_certificate_fails_closed() {
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
+        let failure = edge.implicit_step(8.0, 1.0e-35, 2.0e-31).unwrap_err();
+        assert_eq!(failure.kind, PauliEdgeFailureKind::UncertainPhysicalBracket);
     }
 
     #[test]

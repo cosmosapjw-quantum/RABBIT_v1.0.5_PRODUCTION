@@ -39,6 +39,9 @@ jobs:
           # not at all, which is worse.
           fetch-depth: 0
 
+      - name: Install harness test dependency
+        run: python3 -m pip install --disable-pip-version-check "pytest>=7.0"
+
       - name: Aggregate validator
         run: python3 .agent-harness/scripts/validate_harness.py
 
@@ -60,3 +63,19 @@ jobs:
                                   ':!.agent-harness/context/CONTEXT_INDEX.json'
           git show HEAD:.agent-harness/generated/CONTEXT_PACK.md \
             | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
+
+  native-r1c:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native/rabbit_cpu
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Pauli edge certificate regressions
+        run: cargo test --locked --lib pauli_edge_step::tests -- --nocapture
+
+      - name: Pauli sweep certificate regressions
+        run: |
+          cargo test --locked --lib root_certificates_hold_across_legacy_small_step_scales -- --nocapture
+          cargo test --locked --lib subnormal_traffic_does_not_dilute_error_fraction -- --nocapture

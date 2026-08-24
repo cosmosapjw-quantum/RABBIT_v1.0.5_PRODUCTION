@@ -517,7 +517,7 @@ impl IsotropicElectronPauliEdges {
                 {
                     report.maximum_flux_error_fraction = report.maximum_flux_error_fraction.max(
                         edge_report.flux_abs_error_mev
-                            / edge_report.traffic_upper_bound_mev.max(f64::MIN_POSITIVE),
+                            / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1)),
                     );
                 }
             }
@@ -1267,7 +1267,40 @@ mod tests {
                 "h=2^-{exponent} iterations={}",
                 report.maximum_edge_iterations
             );
+            assert_eq!(report.unresolved, 0, "h=2^-{exponent}");
+            assert_eq!(report.exact_stationary, 0, "h=2^-{exponent}");
+            assert!(report.solved > 0, "h=2^-{exponent}");
+            assert_eq!(report.solved, report.edge_applications, "h=2^-{exponent}");
+            assert!(
+                report.maximum_root_residual_ratio.is_finite(),
+                "h=2^-{exponent}"
+            );
+            assert!(
+                report.maximum_root_error_bound.is_finite(),
+                "h=2^-{exponent}"
+            );
+            assert!(
+                report.maximum_flux_error_fraction.is_finite(),
+                "h=2^-{exponent}"
+            );
         }
+    }
+
+    #[test]
+    fn subnormal_traffic_does_not_dilute_error_fraction() {
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 1.0, 1.0, 1.0e-310, 0.0).unwrap();
+        let (_, edge_report) = edge.implicit_step(1.0, 0.5, 0.5).unwrap();
+        assert_eq!(edge_report.kind, Some(PauliEdgeApplicationKind::Solved));
+        assert!(edge_report.traffic_upper_bound_mev > 0.0);
+        assert!(edge_report.traffic_upper_bound_mev < f64::MIN_POSITIVE);
+
+        let expected_fraction = edge_report.flux_abs_error_mev
+            / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1));
+        let mut sweep_report = PauliSweepReport::empty();
+        IsotropicElectronPauliEdges::record_edge_certificate(&mut sweep_report, edge_report);
+
+        assert_eq!(sweep_report.maximum_flux_error_fraction, expected_fraction);
     }
 
     #[test]
