@@ -50,6 +50,8 @@ pub(crate) struct PauliSweepReport {
     pub(crate) edge_applications: usize,
     pub(crate) nonlinear_iterations: usize,
     pub(crate) maximum_edge_iterations: usize,
+    pub(crate) maximum_root_residual_ratio: f64,
+    pub(crate) maximum_occupation_bracket_width: f64,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -457,6 +459,20 @@ fn build_folded_pauli_edges(
 }
 
 impl IsotropicElectronPauliEdges {
+    fn record_edge_certificate(report: &mut PauliSweepReport, edge_report: PauliEdgeStep) {
+        report.edge_applications += 1;
+        report.nonlinear_iterations += edge_report.nonlinear_iterations;
+        report.maximum_edge_iterations = report
+            .maximum_edge_iterations
+            .max(edge_report.nonlinear_iterations);
+        report.maximum_root_residual_ratio = report
+            .maximum_root_residual_ratio
+            .max(edge_report.residual_abs / edge_report.residual_scale);
+        report.maximum_occupation_bracket_width = report
+            .maximum_occupation_bracket_width
+            .max(edge_report.max_occupation_bracket_width);
+    }
+
     fn checked_banks(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> Result<(), &'static str> {
         if electron_pair.len() != self.nq
             || heavy_pair.len() != self.nq
@@ -547,20 +563,12 @@ impl IsotropicElectronPauliEdges {
             if reverse {
                 for item in self.edges.iter().rev() {
                     let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
-                    report.edge_applications += 1;
-                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
-                    report.maximum_edge_iterations = report
-                        .maximum_edge_iterations
-                        .max(edge_report.nonlinear_iterations);
+                    Self::record_edge_certificate(&mut report, edge_report);
                 }
             } else {
                 for item in &self.edges {
                     let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
-                    report.edge_applications += 1;
-                    report.nonlinear_iterations += edge_report.nonlinear_iterations;
-                    report.maximum_edge_iterations = report
-                        .maximum_edge_iterations
-                        .max(edge_report.nonlinear_iterations);
+                    Self::record_edge_certificate(&mut report, edge_report);
                 }
             }
         }
@@ -1142,6 +1150,30 @@ mod tests {
                 vec![0.284, 0.519, 0.093, 0.741],
             ),
         ]
+    }
+
+    #[test]
+    fn pauli_sweep_tangent_converges_to_unforced_action() {
+        let (y, w) = grid(4);
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let states = focused_states(&y);
+        let (electron, heavy) = &states[1];
+        let input = spectral_input(1.15, 1.0, &y, &w, electron, heavy, rule);
+        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
+        for exponent in [8_i32, 10, 12, 14] {
+            let step = 2.0_f64.powi(-exponent);
+            let (_, _, report) = edges.transactional_step(step, electron, heavy).unwrap();
+            eprintln!(
+                "R3 tangent probe h={step:.17e} applications={} max_iterations={} max_residual_ratio={:.17e} max_occupation_width={:.17e}",
+                report.edge_applications,
+                report.maximum_edge_iterations,
+                report.maximum_root_residual_ratio,
+                report.maximum_occupation_bracket_width,
+            );
+        }
     }
 
     #[test]
