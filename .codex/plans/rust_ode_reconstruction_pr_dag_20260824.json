@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "plan_id": "rust_ode_reconstruction_pr_dag_20260824",
+  "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+  "source": {
+    "branch": "external-audit/ode-rust-reconstruction-complete-20260824",
+    "head": "5689f2889163c3cf939a2d83c66075910d1948ff",
+    "clean_base": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b"
+  },
+  "documents": {
+    "audit": "docs/audit/RUST_ODE_RECONSTRUCTION_THIRD_PARTY_REAUDIT_2026-08-24.md",
+    "execution": "docs/audit/RUST_ODE_RECONSTRUCTION_CODEX_PR_DAG_2026-08-24.md"
+  },
+  "executor": {
+    "ask_questions": false,
+    "ambiguity": "STOP_WITH_STATUS_CODE",
+    "parallel": false,
+    "merge_evidence_archive": false,
+    "completion_pr": "R10",
+    "optional": ["R11"]
+  },
+  "order": ["PRE-00", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"],
+  "items": [
+    {
+      "id": "PRE-00",
+      "kind": "preflight",
+      "base": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+      "section": "PRE-00 — Clean source firewall",
+      "stop": "BASE_DRIFT"
+    },
+    {
+      "id": "R1",
+      "depends": ["PRE-00"],
+      "branch": "codex/ode-rust-r1-edge-root-certificate",
+      "title": "R1: certify Pauli edge implicit roots",
+      "commit": "fix(ode): certify Pauli edge implicit roots",
+      "section": "PR R1 — Certified Pauli edge root and stable gain/loss primitive",
+      "write": [
+        "native/rabbit_cpu/src/electron_event.rs",
+        "native/rabbit_cpu/src/electron_event_falsifiers.rs",
+        "native/rabbit_cpu/src/electron_supplied.rs",
+        "native/rabbit_cpu/src/pauli_edge_step.rs",
+        "native/rabbit_cpu/src/lib.rs"
+      ],
+      "anchors": [
+        "pauli_edge_step.rs:41-76 stable_nonnegative_product_difference",
+        "pauli_edge_step.rs:187-274 PauliEdge::implicit_step"
+      ],
+      "tests": [
+        "root_cap_is_an_error_not_a_midpoint_success",
+        "tiny_extent_uses_occupation_scaled_certificate",
+        "successful_edge_step_carries_a_residual_certificate",
+        "stiff_elastic_step_preserves_box_number_and_backward_euler_residual",
+        "stiff_pair_step_preserves_box_cp_difference_and_backward_euler_residual",
+        "log_scaled_difference_survives_extreme_tail_and_near_balance"
+      ],
+      "stop": "BLOCKED_ROOT_CERTIFICATE",
+      "claim": "VALIDATED_LOCAL_EDGE_ROOT_PRIMITIVE"
+    },
+    {
+      "id": "R2",
+      "depends": ["R1"],
+      "branch": "codex/ode-rust-r2-electron-edge-balance",
+      "title": "R2: validate unforced electron edge detailed balance",
+      "commit": "feat(collisions): validate unforced electron Pauli edges",
+      "section": "PR R2 — Serial folded edge assembly and unforced detailed balance",
+      "write": ["native/rabbit_cpu/src/electron_spectral.rs"],
+      "anchors": [
+        "electron_spectral.rs:103-277 build_event_stream",
+        "electron_spectral.rs:558-709 is_exact_anchor/action_values/transactional_step",
+        "electron_spectral.rs:732-815 exact_reference_state/evaluate/reconstruct"
+      ],
+      "tests": [
+        "unforced_fd_equilibrium_is_an_event_and_edge_null",
+        "unforced_equilibrium_jacobian_is_continuous",
+        "folded_edges_reconstruct_action_at_five_independent_states",
+        "folded_edges_are_boundary_inward_at_five_independent_states"
+      ],
+      "stop": {
+        "equilibrium": "BLOCKED_RAW_DETAILED_BALANCE",
+        "reconstruction": "BLOCKED_EDGE_RECONSTRUCTION"
+      },
+      "claim": "VALIDATED_SERIAL_ELECTRON_EDGE_ASSEMBLY_AT_FOCUSED_STATES"
+    },
+    {
+      "id": "R3",
+      "depends": ["R2"],
+      "branch": "codex/ode-rust-r3-edge-sweep-consistency",
+      "title": "R3: certify electron Pauli sweep consistency",
+      "commit": "test(collisions): certify Pauli sweep consistency",
+      "section": "PR R3 — Temporal consistency, edge-order sensitivity, and derivative identity",
+      "write": [
+        "native/rabbit_cpu/src/electron_spectral.rs",
+        "native/rabbit_cpu/src/pauli_edge_step.rs"
+      ],
+      "tests": [
+        "pauli_sweep_tangent_converges_to_unforced_action",
+        "pauli_sweep_step_doubling_has_a_measured_order",
+        "pauli_sweep_edge_order_error_converges",
+        "pauli_sweep_preserves_complete_edge_set_invariants"
+      ],
+      "stop": "BLOCKED_TEMPORAL_CONSISTENCY",
+      "claim": "VALIDATED_MEASURED_ORDER_LOCAL_ELECTRON_EDGE_SWEEP"
+    },
+    {
+      "id": "R4",
+      "depends": ["R3"],
+      "branch": "codex/ode-rust-r4-electron-substep",
+      "title": "R4: isolate the energy-closed electron collision substep",
+      "commit": "feat(ode): isolate electron collision reconstruction",
+      "section": "PR R4 — Isolated energy-closed electron collision substep",
+      "write": ["native/rabbit_cpu/src/isotropic_boltzmann.rs"],
+      "anchors": [
+        "isotropic_boltzmann.rs:625-725 reconstruct_electron_collision_substep",
+        "isotropic_boltzmann.rs:726-925 physical_state_impl/write_rhs/write_jacobian"
+      ],
+      "tests": [
+        "thermodynamic_snapshot_builds_no_collision_action",
+        "reconstructed_electron_substep_is_transactional_and_strict",
+        "reconstructed_electron_substep_energy_residual_is_rejected",
+        "reconstructed_electron_substep_converges_to_action_energy_derivative",
+        "zero_step_is_bitwise_identity"
+      ],
+      "stop": "BLOCKED_ENERGY_DERIVATIVE",
+      "claim": "VALIDATED_ISOLATED_ELECTRON_COLLISION_SUBSTEP_ON_SMALL_GRIDS"
+    },
+    {
+      "id": "R5",
+      "depends": ["R4"],
+      "branch": "codex/ode-rust-r5-adaptive-electron-step",
+      "title": "R5: add adaptive Pauli electron collision steps",
+      "commit": "feat(ode): adapt electron collision substeps",
+      "section": "PR R5 — Deterministic adaptive electron collision controller",
+      "write": ["native/rabbit_cpu/src/isotropic_boltzmann.rs"],
+      "defaults": {
+        "logit_rtol": 1e-6,
+        "logit_atol": 1e-8,
+        "moment_rtol": 1e-8,
+        "temperature_rtol": 1e-10,
+        "min_delta_ln_a": 1e-12,
+        "max_rejections": 12
+      },
+      "tests": [
+        "adaptive_electron_step_rejects_then_accepts_without_mutating_input",
+        "adaptive_electron_step_is_deterministic_bitwise",
+        "adaptive_electron_step_error_decreases_with_requested_step",
+        "adaptive_electron_step_preserves_box_energy_and_elapsed_time",
+        "adaptive_electron_step_fails_at_minimum_step"
+      ],
+      "stop": "BLOCKED_ADAPTIVE_CONTROLLER",
+      "claim": "VALIDATED_ADAPTIVE_ISOLATED_ELECTRON_COLLISION_STEP_ON_SMALL_GRIDS"
+    },
+    {
+      "id": "R6",
+      "depends": ["R5"],
+      "branch": "codex/ode-rust-r6-selected-prefix-oracle",
+      "title": "R6: validate the selected-grid electron collision prefix",
+      "commit": "test(ode): validate selected-grid electron collision prefix",
+      "section": "PR R6 — Same-physics selected-grid short-prefix oracle",
+      "write": ["native/rabbit_cpu/src/isotropic_boltzmann.rs"],
+      "fixture": {
+        "grid": "selected48",
+        "T_ref": 1.0,
+        "T_gamma": 1.15,
+        "electron_rule": "6/4",
+        "delta_N": [1e-6, 5e-7, 2.5e-7]
+      },
+      "tests": [
+        "selected48_reference_solvers_agree_for_electron_collision_only",
+        "selected48_adaptive_pauli_step_matches_same_physics_reference",
+        "selected48_high_q_tail_remains_strict_without_clipping",
+        "selected48_prefix_error_decreases_under_step_refinement"
+      ],
+      "stop": "BLOCKED_SAME_PHYSICS_REFERENCE",
+      "claim": "VALIDATED_ELECTRON_ONLY_SELECTED_GRID_SHORT_PREFIX"
+    },
+    {
+      "id": "R7",
+      "depends": ["R6"],
+      "branch": "codex/ode-rust-r7-self-collision-step",
+      "title": "R7: bound the neutrino self-collision substep",
+      "commit": "feat(ode): bound neutrino self-collision steps",
+      "section": "PR R7 — Bounded neutrino self-collision substep",
+      "write": [
+        "native/rabbit_cpu/src/neutrino_self_spectral.rs",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs"
+      ],
+      "tests": [
+        "self_collision_step_is_strict_and_transactional",
+        "self_collision_step_preserves_degeneracy_weighted_number",
+        "self_collision_step_preserves_total_neutrino_energy",
+        "self_collision_step_matches_tight_bdf_reference",
+        "self_collision_step_does_not_change_tgamma_or_elapsed_time",
+        "self_collision_step_fails_before_logit_underflow"
+      ],
+      "stop": "BLOCKED_SELF_COLLISION",
+      "claim": "VALIDATED_ISOLATED_SELF_COLLISION_STEP"
+    },
+    {
+      "id": "R8",
+      "depends": ["R7"],
+      "branch": "codex/ode-rust-r8-composed-prefix",
+      "title": "R8: compose the bounded FLRW collision operators",
+      "commit": "feat(ode): compose bounded FLRW collision steps",
+      "section": "PR R8 — Adaptive composed FLRW short prefix",
+      "write": ["native/rabbit_cpu/src/isotropic_boltzmann.rs"],
+      "fixture": {
+        "grid": "selected48",
+        "T_initial": 10.0,
+        "prefix": [1e-3, 1e-2],
+        "electron_rule": "6/4",
+        "self_order": 4
+      },
+      "tests": [
+        "composed_prefix_1e3_is_strict_energy_closed_and_deterministic",
+        "composed_prefix_1e2_is_strict_energy_closed_and_deterministic",
+        "composed_prefix_converges_under_global_step_halving",
+        "composed_prefix_split_order_bias_decreases",
+        "composed_prefix_failure_is_transactional"
+      ],
+      "stop": "BLOCKED_SPLIT_PREFIX",
+      "claim": "VALIDATED_SELECTED_GRID_COMPOSED_SHORT_PREFIX"
+    },
+    {
+      "id": "R9",
+      "depends": ["R8"],
+      "branch": "codex/ode-rust-r9-full-regression",
+      "title": "R9: validate the certified Rust collision reconstruction",
+      "commit": "test(native): validate certified collision reconstruction",
+      "section": "PR R9 — Full regression and clean code-only promotion",
+      "write": [
+        "R1-R8 code files",
+        ".github/workflows/native-rust.yml only if exact Rust CI is absent"
+      ],
+      "commands": [
+        "cargo fmt --all -- --check",
+        "cargo check",
+        "cargo check --release",
+        "cargo clippy --all-targets --all-features -- -D warnings",
+        "cargo test --lib",
+        "cargo test --release --lib",
+        "pytest focused native/isotropic modules",
+        "pytest -m 'production and not slow' -q --tb=line"
+      ],
+      "stop": "BLOCKED_FULL_REGRESSION",
+      "claim": "VALIDATED_CODE_ONLY_RUST_SHORT_PREFIX_SUBSTRATE"
+    },
+    {
+      "id": "R10",
+      "depends": ["R9"],
+      "branch": "codex/ode-rust-r10-endpoint-gate",
+      "title": "R10: run the certified Rust decoupling endpoint gate",
+      "commit": "test(physics): gate the Rust decoupling endpoint",
+      "section": "PR R10 — Endpoint and convergence authority",
+      "ladder": [
+        {"grid": 32, "electron": "4/3", "self": 3},
+        {"grid": 48, "electron": "6/4", "self": 4},
+        {"grid": 64, "electron": "8/6", "self": 6}
+      ],
+      "terminal_T": 0.01,
+      "tests": [
+        "certified_endpoint_ladder",
+        "cargo test --release --lib",
+        "pytest -m gold -q --tb=short"
+      ],
+      "stop": "BLOCKED_ENDPOINT",
+      "claim": "VALIDATED_INTERNAL_NO_QKE_ISOTROPIC_RUST_ENDPOINT_FOR_FROZEN_LADDER"
+    },
+    {
+      "id": "R11",
+      "depends": ["R10"],
+      "optional": true,
+      "branch": "codex/ode-rust-r11-endpoint-performance",
+      "title": "R11: reduce certified Rust endpoint collision cost",
+      "commit": "perf(native): reduce certified endpoint collision cost",
+      "section": "PR R11 — Endpoint-consumed performance and deterministic worker policy",
+      "write": [
+        "native/rabbit_cpu/src/electron_spectral.rs",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs"
+      ],
+      "gate": {
+        "wall_improvement_min": 0.10,
+        "rss_increase_max": 0.15,
+        "otherwise": "REVERT_TO_SERIAL"
+      },
+      "stop": "BLOCKED_PERFORMANCE",
+      "claim": "VALIDATED_ENDPOINT_CONSUMED_PERFORMANCE_IMPROVEMENT"
+    }
+  ]
+}
