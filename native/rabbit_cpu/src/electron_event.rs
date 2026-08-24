@@ -16,6 +16,12 @@ pub(crate) struct WeightedGainLossMeV {
     pub(crate) net: RateMeV,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct DynamicGainLossCoefficientsMeV {
+    pub(crate) gain: RateMeV,
+    pub(crate) loss: RateMeV,
+}
+
 fn checked_occupancies(occupancies: [f64; 4]) -> Result<[f64; 4], &'static str> {
     occupancies
         .into_iter()
@@ -96,6 +102,36 @@ pub(crate) fn weighted_event_gain_loss_mev(
         gain: RateMeV::new(weight.value() * balance.gain)?,
         loss: RateMeV::new(weight.value() * balance.loss)?,
         net: RateMeV::new(weight.value() * balance.net)?,
+    })
+}
+
+/// Strip the two dynamic neutrino factors from one physical event.
+///
+/// The result is independent of the dynamic occupations and remains
+/// non-negative for the positive HM quadrature stream.  It is the elementary
+/// production/destruction coefficient used by the Pauli edge reconstruction.
+pub(crate) fn weighted_dynamic_gain_loss_coefficients_mev(
+    process: ExplicitElectronProcess,
+    occupancies: [f64; 4],
+    weight: RateMeV,
+) -> Result<DynamicGainLossCoefficientsMeV, &'static str> {
+    let [_, f2, f3, f4] = checked_occupancies(occupancies)?;
+    if weight.value() < 0.0 {
+        return Err("physical Pauli edge weight must be non-negative");
+    }
+    let (gain, loss) = match process.channel() {
+        ElectronChannel::ElectronMinusElastic | ElectronChannel::ElectronPlusElastic => (
+            weight.value() * (1.0 - f2) * f4,
+            weight.value() * f2 * (1.0 - f4),
+        ),
+        ElectronChannel::Pair => (
+            weight.value() * f3 * f4,
+            weight.value() * (1.0 - f3) * (1.0 - f4),
+        ),
+    };
+    Ok(DynamicGainLossCoefficientsMeV {
+        gain: RateMeV::new(gain)?,
+        loss: RateMeV::new(loss)?,
     })
 }
 

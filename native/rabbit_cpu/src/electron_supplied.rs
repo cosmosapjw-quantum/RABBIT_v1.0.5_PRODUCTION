@@ -3,7 +3,10 @@
 use crate::electron_catalog::{
     EXPLICIT_ELECTRON_PROCESSES, ExplicitElectronProcess, ExplicitNeutrino, RateMeV,
 };
-use crate::electron_event::{WeightedGainLossMeV, weighted_event_gain_loss_mev};
+use crate::electron_event::{
+    DynamicGainLossCoefficientsMeV, WeightedGainLossMeV,
+    weighted_dynamic_gain_loss_coefficients_mev, weighted_event_gain_loss_mev,
+};
 
 pub(crate) struct SuppliedElectronEvent {
     process_slot: usize,
@@ -150,6 +153,18 @@ pub(crate) struct SuppliedContraction {
     pub(crate) occupancies: [f64; 4],
     pub(crate) scalar_weight: RateMeV,
     pub(crate) weighted_balance: WeightedGainLossMeV,
+}
+
+impl SuppliedContraction {
+    pub(crate) fn dynamic_coefficients(
+        &self,
+    ) -> Result<DynamicGainLossCoefficientsMeV, &'static str> {
+        weighted_dynamic_gain_loss_coefficients_mev(
+            self.process,
+            self.occupancies,
+            self.scalar_weight,
+        )
+    }
 }
 
 pub(crate) struct ExplicitSixAction {
