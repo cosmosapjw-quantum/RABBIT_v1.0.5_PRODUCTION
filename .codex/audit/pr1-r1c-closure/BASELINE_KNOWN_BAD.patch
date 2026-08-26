@@ -1,7 +1,7 @@
 diff --git a/native/rabbit_cpu/src/pauli_edge_step.rs b/native/rabbit_cpu/src/pauli_edge_step.rs
 --- a/native/rabbit_cpu/src/pauli_edge_step.rs
 +++ b/native/rabbit_cpu/src/pauli_edge_step.rs
-@@ -704,6 +704,29 @@ mod tests {
+@@ -704,6 +704,30 @@ mod tests {
          assert!(report.nonlinear_iterations <= 96);
      }
  

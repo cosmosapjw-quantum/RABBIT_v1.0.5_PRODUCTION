@@ -1,6 +1,6 @@
 {
   "schema": "rabbit-audit-contract-manifest/v1",
-  "package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-v2-20260825",
+  "package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-v3-20260826",
   "identity_algorithm": "git-blob-sha1",
   "audited_implementation_head": "50d3bc5b8093bc33e9311f94505c5ee0711ce51b",
   "components": [
@@ -14,7 +14,7 @@
     },
     {
       "path": "/.codex/audit/pr1-r1c-closure/BASELINE_KNOWN_BAD.patch",
-      "blob_sha": "24858b1173b6948f88b2c9db8f53f018e93d34fe"
+      "blob_sha": "527a907b2736310d46bd4d84020b8af0e752d479"
     },
     {
       "path": "/docs/audit/PR1_R1C_DYNAMIC_ADVERSARIAL_REAUDIT_2026-08-25.md",
