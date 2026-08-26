@@ -1,0 +1,34 @@
+diff --git a/native/rabbit_cpu/src/pauli_edge_step.rs b/native/rabbit_cpu/src/pauli_edge_step.rs
+--- a/native/rabbit_cpu/src/pauli_edge_step.rs
++++ b/native/rabbit_cpu/src/pauli_edge_step.rs
+@@ -704,6 +704,29 @@ mod tests {
+         assert!(report.nonlinear_iterations <= 96);
+     }
+ 
++    #[test]
++    fn audit_baseline_power_fixture_returns_known_bad_bits() {
++        let edge = PauliEdge::new(
++            PauliEdgeTopology::PairSource,
++            0,
++            1,
++            2.0_f64.powi(8),
++            2.0_f64.powi(-36),
++            2.0_f64.powi(26),
++            2.0_f64.powi(-14),
++        )
++        .unwrap();
++
++        let (_, report) = edge
++            .implicit_step(
++                2.0_f64.powi(-36),
++                1.0 - 2.0_f64.powi(-40),
++                1.0 - 2.0_f64.powi(-6),
++            )
++            .expect("the exact audited head must reproduce the known false Solved result");
++        assert_eq!(report.kind, Some(PauliEdgeApplicationKind::Solved));
++        assert_eq!(report.extent.to_bits(), 0xbcce_ff08_07bf_a264);
++    }
++
+     #[test]
+     fn root_cap_is_an_error_not_a_midpoint_success() {
+         let edge = PauliEdge::new(
