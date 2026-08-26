@@ -1,0 +1,29 @@
+{
+  "schema": "rabbit-audit-contract-manifest/v1",
+  "package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-v2-20260825",
+  "identity_algorithm": "git-blob-sha1",
+  "audited_implementation_head": "50d3bc5b8093bc33e9311f94505c5ee0711ce51b",
+  "components": [
+    {
+      "path": "/.codex/audit/pr1-r1c-closure/AUDIT_COMPILED_PACKAGE.json",
+      "blob_sha": "c6cb54e282eeb30993ac02459dfb8ed3436a2796"
+    },
+    {
+      "path": "/.codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py",
+      "blob_sha": "6c2aed9cbe74c30fb8fdc7618e334f3445e73abb"
+    },
+    {
+      "path": "/.codex/audit/pr1-r1c-closure/BASELINE_KNOWN_BAD.patch",
+      "blob_sha": "24858b1173b6948f88b2c9db8f53f018e93d34fe"
+    },
+    {
+      "path": "/docs/audit/PR1_R1C_DYNAMIC_ADVERSARIAL_REAUDIT_2026-08-25.md",
+      "blob_sha": "b6c5f58db154348d867af8354d833756c5a4b79d"
+    }
+  ],
+  "policy": {
+    "implementation_agent_may_edit_components": false,
+    "identity_mismatch_status": "CONTRACT_AMENDMENT_REQUIRED",
+    "release_commit_is_pinned_by_handoff": true
+  }
+}
