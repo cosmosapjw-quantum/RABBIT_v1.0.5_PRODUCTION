@@ -54,6 +54,8 @@ pub(crate) enum PauliEdgeFailureKind {
     InvalidInput,
     UnresolvedFlux,
     UncertainPhysicalBracket,
+    CertificateUnattainableAtStep,
+    StateMapUnresolved,
     InvalidResidual,
     IterationLimit,
 }
@@ -93,6 +95,129 @@ fn valid_occupation(value: f64) -> bool {
 const MIN_SUBNORMAL: f64 = f64::from_bits(1);
 const PRODUCT_ABS_ERROR_FACTOR: f64 = 8.0 * f64::EPSILON;
 const DIFFERENCE_ABS_ERROR_FACTOR: f64 = 2.0 * f64::EPSILON;
+
+#[derive(Clone, Copy, Debug)]
+struct Interval {
+    lo: f64,
+    hi: f64,
+}
+
+impl Interval {
+    fn new(lo: f64, hi: f64) -> Result<Self, PauliEdgeFailure> {
+        if !lo.is_finite() || !hi.is_finite() || lo > hi {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge interval is non-finite or unordered",
+            ));
+        }
+        Ok(Self { lo, hi })
+    }
+
+    fn point(value: f64) -> Result<Self, PauliEdgeFailure> {
+        Self::new(value, value)
+    }
+
+    fn is_zero(self) -> bool {
+        self.lo == 0.0 && self.hi == 0.0
+    }
+
+    fn add(self, rhs: Self) -> Result<Self, PauliEdgeFailure> {
+        if rhs.is_zero() {
+            return Ok(self);
+        }
+        if self.is_zero() {
+            return Ok(rhs);
+        }
+        Self::new((self.lo + rhs.lo).next_down(), (self.hi + rhs.hi).next_up())
+    }
+
+    fn sub(self, rhs: Self) -> Result<Self, PauliEdgeFailure> {
+        if rhs.is_zero() {
+            return Ok(self);
+        }
+        Self::new((self.lo - rhs.hi).next_down(), (self.hi - rhs.lo).next_up())
+    }
+
+    fn mul_nonnegative(self, rhs: Self) -> Result<Self, PauliEdgeFailure> {
+        if self.lo < 0.0 || rhs.lo < 0.0 {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge interval multiplication requires non-negative factors",
+            ));
+        }
+        if self.is_zero() || rhs.is_zero() {
+            return Self::point(0.0);
+        }
+        let lo_product = self.lo * rhs.lo;
+        let hi_product = self.hi * rhs.hi;
+        let lo = if lo_product == 0.0 {
+            0.0
+        } else {
+            lo_product.next_down().max(0.0)
+        };
+        let hi = if hi_product == 0.0 {
+            MIN_SUBNORMAL
+        } else {
+            hi_product.next_up()
+        };
+        Self::new(lo, hi)
+    }
+
+    fn div_positive(self, rhs: f64) -> Result<Self, PauliEdgeFailure> {
+        if !rhs.is_finite() || rhs <= 0.0 {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge interval divisor is not finite and positive",
+            ));
+        }
+        if self.is_zero() {
+            return Ok(self);
+        }
+        Self::new((self.lo / rhs).next_down(), (self.hi / rhs).next_up())
+    }
+
+    fn scale_nonnegative(self, rhs: f64) -> Result<Self, PauliEdgeFailure> {
+        if !rhs.is_finite() || rhs < 0.0 {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge interval scale is not finite and non-negative",
+            ));
+        }
+        if rhs == 0.0 || self.is_zero() {
+            return Self::point(0.0);
+        }
+        Self::new((self.lo * rhs).next_down(), (self.hi * rhs).next_up())
+    }
+
+    fn complement_unit(self) -> Result<Self, PauliEdgeFailure> {
+        if self.lo < 0.0 || self.hi > 1.0 {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::StateMapUnresolved,
+                "Pauli edge interval leaves the Fermi box",
+            ));
+        }
+        if self.lo == 0.0 && self.hi == 0.0 {
+            return Self::point(1.0);
+        }
+        if self.lo == 1.0 && self.hi == 1.0 {
+            return Self::point(0.0);
+        }
+        Self::new((1.0 - self.hi).next_down(), (1.0 - self.lo).next_up())
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+struct PauliFluxInterval {
+    net_mev: Interval,
+    traffic_upper_bound_mev: f64,
+}
+
+#[derive(Clone, Copy, Debug)]
+struct RootResidualInterval {
+    residual: Interval,
+    root_error_abs: f64,
+    occupation_error_abs: f64,
+}
 
 #[derive(Clone, Copy, Debug)]
 enum DirectProduct {
@@ -222,9 +347,8 @@ struct RootResidual {
     value: f64,
     derivative: f64,
     scale: f64,
-    root_error_abs: f64,
-    occupation_error_abs: f64,
     flux: PauliFluxEvaluation,
+    certified: RootResidualInterval,
 }
 
 fn occupation_bracket_is_certified(
@@ -385,22 +509,152 @@ impl PauliEdge {
             .ok_or("Pauli edge extent leaves the Fermi box")
     }
 
-    fn extent_bounds(&self, initial: [f64; 2]) -> (f64, f64) {
-        let first_down = self.first_measure * initial[0];
-        let first_up = self.first_measure * (1.0 - initial[0]);
-        match self.topology {
+    fn affine_occupation_intervals(
+        &self,
+        initial: [f64; 2],
+        extent: f64,
+    ) -> Result<[Interval; 2], PauliEdgeFailure> {
+        let extent_interval = Interval::point(extent)?;
+        let first =
+            Interval::point(initial[0])?.add(extent_interval.div_positive(self.first_measure)?)?;
+        let second_quotient = extent_interval.div_positive(self.second_measure)?;
+        let second = match self.topology {
+            PauliEdgeTopology::ElasticTransfer => {
+                Interval::point(initial[1])?.sub(second_quotient)?
+            }
+            PauliEdgeTopology::PairSource => Interval::point(initial[1])?.add(second_quotient)?,
+        };
+        if [first, second]
+            .into_iter()
+            .any(|occupation| occupation.lo < 0.0 || occupation.hi > 1.0)
+        {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::StateMapUnresolved,
+                "Pauli edge exact affine state cannot be enclosed in the Fermi box",
+            ));
+        }
+        Ok([first, second])
+    }
+
+    fn certified_flux_interval(
+        &self,
+        occupations: [Interval; 2],
+    ) -> Result<PauliFluxInterval, PauliEdgeFailure> {
+        let [first, second] = occupations;
+        if [first, second]
+            .into_iter()
+            .any(|occupation| occupation.lo < 0.0 || occupation.hi > 1.0)
+        {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::StateMapUnresolved,
+                "Pauli edge interval leaves the Fermi box",
+            ));
+        }
+        let first_complement = first.complement_unit()?;
+        let second_complement = second.complement_unit()?;
+        let (gain_factors, loss_factors) = match self.topology {
+            PauliEdgeTopology::ElasticTransfer => {
+                ([first_complement, second], [first, second_complement])
+            }
+            PauliEdgeTopology::PairSource => {
+                ([first_complement, second_complement], [first, second])
+            }
+        };
+        let product =
+            |coefficient: f64, factors: [Interval; 2]| -> Result<Interval, PauliEdgeFailure> {
+                Interval::point(coefficient)?
+                    .mul_nonnegative(factors[0])?
+                    .mul_nonnegative(factors[1])
+            };
+        let gain = product(self.gain_coefficient_mev, gain_factors)?;
+        let loss = product(self.loss_coefficient_mev, loss_factors)?;
+        let traffic_upper_bound_mev = gain.add(loss)?.hi;
+        if !traffic_upper_bound_mev.is_finite() {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge interval traffic is non-finite",
+            ));
+        }
+        Ok(PauliFluxInterval {
+            net_mev: gain.sub(loss)?,
+            traffic_upper_bound_mev,
+        })
+    }
+
+    fn residual_interval(
+        &self,
+        initial: [f64; 2],
+        extent: f64,
+        step_mev_inverse: f64,
+    ) -> Result<RootResidualInterval, PauliEdgeFailure> {
+        let occupations = self.affine_occupation_intervals(initial, extent)?;
+        let flux = self.certified_flux_interval(occupations)?;
+        let residual =
+            Interval::point(extent)?.sub(flux.net_mev.scale_nonnegative(step_mev_inverse)?)?;
+        let root_error_abs = residual.lo.abs().max(residual.hi.abs());
+        let minimum_measure = self.first_measure.min(self.second_measure);
+        let occupation_error_abs = if root_error_abs == 0.0 {
+            0.0
+        } else {
+            (root_error_abs / minimum_measure).next_up()
+        };
+        if !root_error_abs.is_finite()
+            || !occupation_error_abs.is_finite()
+            || !flux.traffic_upper_bound_mev.is_finite()
+        {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::InvalidResidual,
+                "Pauli edge exact-real residual interval is invalid",
+            ));
+        }
+        Ok(RootResidualInterval {
+            residual,
+            root_error_abs,
+            occupation_error_abs,
+        })
+    }
+
+    fn extent_bounds(&self, initial: [f64; 2]) -> Result<(f64, f64), PauliEdgeFailure> {
+        let product_upper = |measure: f64, occupation: Interval| {
+            Interval::point(measure)?
+                .mul_nonnegative(occupation)
+                .map(|value| value.hi)
+        };
+        let first = Interval::point(initial[0])?;
+        let second = Interval::point(initial[1])?;
+        let first_down = product_upper(self.first_measure, first)?;
+        let first_up = product_upper(self.first_measure, first.complement_unit()?)?;
+        let (lower, upper) = match self.topology {
             PauliEdgeTopology::ElasticTransfer => (
-                -first_down.min(self.second_measure * (1.0 - initial[1])),
-                first_up.min(self.second_measure * initial[1]),
+                -first_down.min(product_upper(
+                    self.second_measure,
+                    second.complement_unit()?,
+                )?),
+                first_up.min(product_upper(self.second_measure, second)?),
             ),
             PauliEdgeTopology::PairSource => (
-                -first_down.min(self.second_measure * initial[1]),
-                first_up.min(self.second_measure * (1.0 - initial[1])),
+                -first_down.min(product_upper(self.second_measure, second)?),
+                first_up.min(product_upper(
+                    self.second_measure,
+                    second.complement_unit()?,
+                )?),
             ),
+        };
+        if !lower.is_finite() || !upper.is_finite() || lower > 0.0 || upper < 0.0 {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::StateMapUnresolved,
+                "Pauli edge physical-capacity interval is invalid",
+            ));
         }
+        Ok((lower, upper))
     }
 
     fn flux_derivative_by_extent(&self, occupations: [f64; 2]) -> f64 {
+        // LEMMA-R1C-UNIQUE-PHYSICAL-ROOT.  For PairSource both partial
+        // derivatives of J and both df/dxi are non-positive/positive,
+        // respectively.  For ElasticTransfer, dJ/df1 <= 0, dJ/df2 >= 0,
+        // df1/dxi > 0, and df2/dxi < 0.  Therefore dJ/dxi <= 0 for both
+        // topologies and r'(xi) = 1 - h*dJ/dxi >= 1 for h >= 0.
         let [first, second] = occupations;
         match self.topology {
             PauliEdgeTopology::ElasticTransfer => {
@@ -418,6 +672,57 @@ impl PauliEdge {
                 derivative_first / self.first_measure + derivative_second / self.second_measure
             }
         }
+    }
+
+    fn try_certify_solved(
+        &self,
+        initial: [f64; 2],
+        extent: f64,
+        nonlinear_iterations: usize,
+        lower: f64,
+        upper: f64,
+        current: RootResidual,
+    ) -> Result<Option<([f64; 2], PauliEdgeStep)>, PauliEdgeFailure> {
+        if current.flux.resolution != PauliFluxResolution::Resolved
+            || current.value.abs() > 128.0 * f64::EPSILON * current.scale + MIN_SUBNORMAL
+        {
+            return Ok(None);
+        }
+        if current.certified.occupation_error_abs > 128.0 * f64::EPSILON {
+            return Err(PauliEdgeFailure::new(
+                PauliEdgeFailureKind::StateMapUnresolved,
+                "Pauli edge exact affine-state certificate exceeds the occupation tolerance",
+            ));
+        }
+        let candidate = self
+            .occupations_at_extent(initial, extent)
+            .map_err(|message| {
+                PauliEdgeFailure::new(PauliEdgeFailureKind::InvalidResidual, message)
+            })?;
+        Ok(Some((
+            candidate,
+            PauliEdgeStep {
+                kind: Some(PauliEdgeApplicationKind::Solved),
+                extent,
+                nonlinear_iterations,
+                residual_abs: current.value.abs(),
+                residual_scale: current.scale,
+                traffic_upper_bound_mev: current.flux.traffic_upper_bound_mev,
+                flux_abs_error_mev: current.flux.abs_error_bound_mev,
+                root_error_abs: current.certified.root_error_abs,
+                occupation_error_abs: current.certified.occupation_error_abs,
+                max_occupation_bracket_width: maximum_occupation_bracket_width(
+                    lower,
+                    upper,
+                    self.first_measure,
+                    self.second_measure,
+                ),
+                conditioning_lower_bound: (current.flux.net_mev.abs()
+                    - current.flux.abs_error_bound_mev)
+                    .max(0.0)
+                    / current.flux.traffic_upper_bound_mev.max(MIN_SUBNORMAL),
+            },
+        )))
     }
 
     pub(crate) fn implicit_step(
@@ -469,7 +774,7 @@ impl PauliEdge {
             PauliFluxResolution::Resolved => {}
         }
 
-        let (lower_capacity, upper_capacity) = self.extent_bounds(initial);
+        let (lower_capacity, upper_capacity) = self.extent_bounds(initial)?;
         let residual = |extent: f64| -> Result<RootResidual, PauliEdgeFailure> {
             let occupations = self
                 .occupations_at_extent(initial, extent)
@@ -481,14 +786,11 @@ impl PauliEdge {
             let value = extent - step_flux;
             let derivative = 1.0 - step_mev_inverse * self.flux_derivative_by_extent(occupations);
             let scale = residual_scale(extent, step_mev_inverse * flux.traffic_upper_bound_mev);
-            let root_error_abs = value.abs() + step_mev_inverse * flux.abs_error_bound_mev;
-            let occupation_error_abs = root_error_abs / self.first_measure.min(self.second_measure);
+            let certified = self.residual_interval(initial, extent, step_mev_inverse)?;
             if !value.is_finite()
                 || !derivative.is_finite()
                 || derivative < 1.0
                 || !scale.is_finite()
-                || (flux.resolution != PauliFluxResolution::UnresolvedForCertificate
-                    && (!root_error_abs.is_finite() || !occupation_error_abs.is_finite()))
             {
                 return Err(PauliEdgeFailure::new(
                     PauliEdgeFailureKind::InvalidResidual,
@@ -499,80 +801,28 @@ impl PauliEdge {
                 value,
                 derivative,
                 scale,
-                root_error_abs,
-                occupation_error_abs,
                 flux,
+                certified,
             })
         };
 
-        // Capacity endpoints can round one ulp outside [0,1] when converted
-        // back from weighted extent. Move only the root bracket one
-        // representable value inward; no candidate occupation is clipped.
-        let mut lower = if lower_capacity < 0.0 {
-            lower_capacity.next_up()
-        } else {
-            lower_capacity
-        };
-        let mut upper = if upper_capacity > 0.0 {
-            upper_capacity.next_down()
-        } else {
-            upper_capacity
-        };
-        let lower_certificate = residual(lower)?;
-        let upper_certificate = residual(upper)?;
-        if lower_certificate.value + step_mev_inverse * lower_certificate.flux.abs_error_bound_mev
-            > 0.0
-            || upper_certificate.value
-                - step_mev_inverse * upper_certificate.flux.abs_error_bound_mev
-                < 0.0
-        {
-            return Err(PauliEdgeFailure::new(
-                PauliEdgeFailureKind::UncertainPhysicalBracket,
-                "Pauli edge implicit root is not bracketed by physical capacities",
-            ));
-        }
+        // The outward-rounded capacity bounds enclose the physical interval.
+        // Pauli inward signs give r(lower) <= 0 and r(upper) >= 0 analytically;
+        // never evaluate a rounded outer endpoint as a physical state.
+        let mut lower = lower_capacity;
+        let mut upper = upper_capacity;
 
         let mut extent = 0.0;
         for iteration in 1..=max_iterations {
+            let bracket_before = (lower.to_bits(), upper.to_bits());
             let current = residual(extent)?;
-            if current.flux.resolution == PauliFluxResolution::Resolved
-                && current.value.abs() <= 128.0 * f64::EPSILON * current.scale + MIN_SUBNORMAL
-                && current.occupation_error_abs <= 128.0 * f64::EPSILON
+            if let Some(solved) =
+                self.try_certify_solved(initial, extent, iteration, lower, upper, current)?
             {
-                let candidate = self
-                    .occupations_at_extent(initial, extent)
-                    .map_err(|message| {
-                        PauliEdgeFailure::new(PauliEdgeFailureKind::InvalidResidual, message)
-                    })?;
-                return Ok((
-                    candidate,
-                    PauliEdgeStep {
-                        kind: Some(PauliEdgeApplicationKind::Solved),
-                        extent,
-                        nonlinear_iterations: iteration,
-                        residual_abs: current.value.abs(),
-                        residual_scale: current.scale,
-                        traffic_upper_bound_mev: current.flux.traffic_upper_bound_mev,
-                        flux_abs_error_mev: current.flux.abs_error_bound_mev,
-                        root_error_abs: current.root_error_abs,
-                        occupation_error_abs: current.occupation_error_abs,
-                        max_occupation_bracket_width: maximum_occupation_bracket_width(
-                            lower,
-                            upper,
-                            self.first_measure,
-                            self.second_measure,
-                        ),
-                        conditioning_lower_bound: (current.flux.net_mev.abs()
-                            - current.flux.abs_error_bound_mev)
-                            .max(0.0)
-                            / current.flux.traffic_upper_bound_mev.max(MIN_SUBNORMAL),
-                    },
-                ));
+                return Ok(solved);
             }
-            let current_is_lower =
-                current.value + step_mev_inverse * current.flux.abs_error_bound_mev <= 0.0;
-            let current_is_upper =
-                current.value - step_mev_inverse * current.flux.abs_error_bound_mev >= 0.0;
+            let current_is_lower = current.certified.residual.hi <= 0.0;
+            let current_is_upper = current.certified.residual.lo >= 0.0;
             if current_is_lower {
                 lower = extent;
             } else if current_is_upper {
@@ -580,58 +830,41 @@ impl PauliEdge {
             }
             let midpoint = 0.5 * (lower + upper);
             let midpoint_certificate = residual(midpoint)?;
-            let occupation_width = maximum_occupation_bracket_width(
-                lower,
-                upper,
-                self.first_measure,
-                self.second_measure,
-            );
             if occupation_bracket_is_certified(
                 lower,
                 upper,
                 self.first_measure,
                 self.second_measure,
-            ) && midpoint_certificate.flux.resolution == PauliFluxResolution::Resolved
-                && midpoint_certificate.value.abs()
-                    <= 128.0 * f64::EPSILON * midpoint_certificate.scale + MIN_SUBNORMAL
-                && midpoint_certificate.occupation_error_abs <= 128.0 * f64::EPSILON
-            {
-                let candidate =
-                    self.occupations_at_extent(initial, midpoint)
-                        .map_err(|message| {
-                            PauliEdgeFailure::new(PauliEdgeFailureKind::InvalidResidual, message)
-                        })?;
-                return Ok((
-                    candidate,
-                    PauliEdgeStep {
-                        kind: Some(PauliEdgeApplicationKind::Solved),
-                        extent: midpoint,
-                        nonlinear_iterations: iteration,
-                        residual_abs: midpoint_certificate.value.abs(),
-                        residual_scale: midpoint_certificate.scale,
-                        traffic_upper_bound_mev: midpoint_certificate.flux.traffic_upper_bound_mev,
-                        flux_abs_error_mev: midpoint_certificate.flux.abs_error_bound_mev,
-                        root_error_abs: midpoint_certificate.root_error_abs,
-                        occupation_error_abs: midpoint_certificate.occupation_error_abs,
-                        max_occupation_bracket_width: occupation_width,
-                        conditioning_lower_bound: (midpoint_certificate.flux.net_mev.abs()
-                            - midpoint_certificate.flux.abs_error_bound_mev)
-                            .max(0.0)
-                            / midpoint_certificate
-                                .flux
-                                .traffic_upper_bound_mev
-                                .max(MIN_SUBNORMAL),
-                    },
-                ));
+            ) {
+                if let Some(solved) = self.try_certify_solved(
+                    initial,
+                    midpoint,
+                    iteration,
+                    lower,
+                    upper,
+                    midpoint_certificate,
+                )? {
+                    return Ok(solved);
+                }
             }
             let newton = extent - current.value / current.derivative;
-            extent = if !current_is_lower && !current_is_upper {
+            let next_extent = if !current_is_lower && !current_is_upper {
                 midpoint
             } else if newton > lower && newton < upper && newton.is_finite() {
                 newton
             } else {
                 midpoint
             };
+            if iteration < max_iterations
+                && next_extent.to_bits() == extent.to_bits()
+                && bracket_before == (lower.to_bits(), upper.to_bits())
+            {
+                return Err(PauliEdgeFailure::new(
+                    PauliEdgeFailureKind::UncertainPhysicalBracket,
+                    "Pauli edge exact affine-state interval did not resolve",
+                ));
+            }
+            extent = next_extent;
         }
         if occupation_bracket_is_certified(lower, upper, self.first_measure, self.second_measure) {
             Err(PauliEdgeFailure::new(
@@ -698,6 +931,40 @@ mod tests {
         assert!(report.nonlinear_iterations <= 96);
     }
 
+    fn assert_root_certificate_against_golden(
+        report: PauliEdgeStep,
+        golden: f64,
+        min_measure: f64,
+    ) {
+        let actual = (report.extent - golden).abs() / min_measure;
+        assert!(actual <= 128.0 * f64::EPSILON);
+        assert!(report.occupation_error_abs >= actual);
+        assert!(report.occupation_error_abs <= 128.0 * f64::EPSILON);
+        assert_root_certificate(report);
+    }
+
+    fn assert_local_golden_ladder() {
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
+        for (exponent, golden_bits) in [
+            (8_i32, 0xbf6e_4ad0_bfc2_b909),
+            (14, 0xbf0f_8e82_450e_ec7e),
+            (20, 0xbeaf_93c8_2712_ec39),
+            (30, 0xbe0f_93dd_9299_eefb),
+        ] {
+            let (_, report) = edge
+                .implicit_step(2.0_f64.powi(-exponent), 0.23, 0.79)
+                .unwrap();
+            assert!(report.nonlinear_iterations <= 4, "h=2^-{exponent}");
+            assert_eq!(report.kind, Some(PauliEdgeApplicationKind::Solved));
+            assert_root_certificate_against_golden(
+                report,
+                f64::from_bits(golden_bits),
+                edge.first_measure.min(edge.second_measure),
+            );
+        }
+    }
+
     #[test]
     fn root_cap_is_an_error_not_a_midpoint_success() {
         let edge = PauliEdge::new(
@@ -742,6 +1009,42 @@ mod tests {
             ),
             "unexpected failure kind: {failure:?}"
         );
+    }
+
+    #[test]
+    fn power_of_two_state_map_rounding_never_false_solves() {
+        let edge = PauliEdge::new(
+            PauliEdgeTopology::PairSource,
+            0,
+            1,
+            2.0_f64.powi(8),
+            2.0_f64.powi(-36),
+            2.0_f64.powi(26),
+            2.0_f64.powi(-14),
+        )
+        .unwrap();
+        let result = edge.implicit_step(
+            2.0_f64.powi(-36),
+            1.0 - 2.0_f64.powi(-40),
+            1.0 - 2.0_f64.powi(-6),
+        );
+        let golden = f64::from_bits(0xbcce_ff07_e8a3_8d5c);
+        let known_bad = 0xbcce_ff08_07bf_a264_u64;
+        let min_measure = 2.0_f64.powi(-36);
+        match result {
+            Ok((_, report)) => {
+                assert_ne!(report.extent.to_bits(), known_bad);
+                let actual_occupation_error = (report.extent - golden).abs() / min_measure;
+                assert!(actual_occupation_error <= 128.0 * f64::EPSILON);
+                assert!(report.occupation_error_abs >= actual_occupation_error);
+            }
+            Err(error) => assert!(matches!(
+                error.kind,
+                PauliEdgeFailureKind::UncertainPhysicalBracket
+                    | PauliEdgeFailureKind::CertificateUnattainableAtStep
+                    | PauliEdgeFailureKind::StateMapUnresolved
+            )),
+        }
     }
 
     #[test]
@@ -790,6 +1093,46 @@ mod tests {
                     PauliEdgeTopology::PairSource => {
                         assert!(edge.flux_mev(other, 0.0).unwrap() >= 0.0);
                         assert!(edge.flux_mev(other, 1.0).unwrap() <= 0.0);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn flux_derivative_is_nonpositive_on_physical_box() {
+        for topology in [
+            PauliEdgeTopology::ElasticTransfer,
+            PauliEdgeTopology::PairSource,
+        ] {
+            for measures in [
+                [2.0_f64.powi(-20), 3.0],
+                [2.0, 5.0],
+                [7.0, 2.0_f64.powi(20)],
+            ] {
+                for coefficients in [
+                    [0.0, 0.0],
+                    [2.0_f64.powi(-30), 11.0],
+                    [13.0, 2.0_f64.powi(20)],
+                ] {
+                    let edge = PauliEdge::new(
+                        topology,
+                        0,
+                        1,
+                        measures[0],
+                        measures[1],
+                        coefficients[0],
+                        coefficients[1],
+                    )
+                    .unwrap();
+                    for first in [0.0, 0.125, 0.5, 0.875, 1.0] {
+                        for second in [0.0, 0.25, 0.75, 1.0] {
+                            let derivative = edge.flux_derivative_by_extent([first, second]);
+                            assert!(derivative <= 0.0, "dJ/dxi={derivative:.17e}");
+                            for step in [0.0, 2.0_f64.powi(-20), 1.0, 2.0_f64.powi(20)] {
+                                assert!(1.0 - step * derivative >= 1.0);
+                            }
+                        }
                     }
                 }
             }
@@ -860,14 +1203,74 @@ mod tests {
 
     #[test]
     fn root_certificates_hold_across_extreme_step_scales() {
-        let edge =
-            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
-        for exponent in [8_i32, 14, 20, 30] {
-            let (_, report) = edge
-                .implicit_step(2.0_f64.powi(-exponent), 0.23, 0.79)
+        assert_local_golden_ladder();
+    }
+
+    #[test]
+    fn reported_interval_covers_high_precision_root_on_power_fixtures() {
+        let edge = PauliEdge::new(
+            PauliEdgeTopology::PairSource,
+            0,
+            1,
+            2.0_f64.powi(8),
+            2.0_f64.powi(-36),
+            2.0_f64.powi(26),
+            2.0_f64.powi(-14),
+        )
+        .unwrap();
+        if let Ok((_, report)) = edge.implicit_step(
+            2.0_f64.powi(-36),
+            1.0 - 2.0_f64.powi(-40),
+            1.0 - 2.0_f64.powi(-6),
+        ) {
+            assert_root_certificate_against_golden(
+                report,
+                f64::from_bits(0xbcce_ff07_e8a3_8d5c),
+                2.0_f64.powi(-36),
+            );
+        }
+        assert_local_golden_ladder();
+    }
+
+    #[test]
+    fn positive_interval_underflow_encloses_zero_and_positive_upper() {
+        let product = Interval::point(MIN_SUBNORMAL)
+            .unwrap()
+            .mul_nonnegative(Interval::point(0.5).unwrap())
+            .unwrap();
+        assert_eq!(product.lo, 0.0);
+        assert!(product.hi > 0.0);
+    }
+
+    #[test]
+    fn every_solved_path_carries_true_root_interval() {
+        let fixtures = [
+            (
+                PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 1, 2.0, 5.0, 3.0, 7.0)
+                    .unwrap(),
+                0.25,
+                [0.23, 0.79],
+            ),
+            (
+                PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap(),
+                2.0_f64.powi(-14),
+                [0.23, 0.79],
+            ),
+        ];
+        for (edge, step, initial) in fixtures {
+            let (_, report) = edge.implicit_step(step, initial[0], initial[1]).unwrap();
+            assert_eq!(report.kind, Some(PauliEdgeApplicationKind::Solved));
+            let certified = edge
+                .residual_interval(initial, report.extent, step)
                 .unwrap();
-            assert!(report.nonlinear_iterations <= 4, "h=2^-{exponent}");
-            assert_root_certificate(report);
+            assert_eq!(
+                report.root_error_abs.to_bits(),
+                certified.root_error_abs.to_bits()
+            );
+            assert_eq!(
+                report.occupation_error_abs.to_bits(),
+                certified.occupation_error_abs.to_bits()
+            );
         }
     }
 
@@ -882,7 +1285,7 @@ mod tests {
     }
 
     #[test]
-    fn physical_capacity_bracket_uses_flux_error_intervals() {
+    fn physical_capacity_bracket_uses_analytic_inward_signs() {
         let edge = PauliEdge::new(
             PauliEdgeTopology::PairSource,
             0,
@@ -893,10 +1296,9 @@ mod tests {
             2.0e-308,
         )
         .unwrap();
-        assert_eq!(
-            edge.implicit_step(1.0, 0.5, 0.5).unwrap_err().kind,
-            PauliEdgeFailureKind::UncertainPhysicalBracket
-        );
+        let (_, report) = edge.implicit_step(1.0, 0.5, 0.5).unwrap();
+        assert_eq!(report.kind, Some(PauliEdgeApplicationKind::Solved));
+        assert_root_certificate(report);
     }
 
     #[test]
@@ -1004,7 +1406,7 @@ mod tests {
         let edge =
             PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
         let failure = edge.implicit_step(8.0, 1.0e-35, 2.0e-31).unwrap_err();
-        assert_eq!(failure.kind, PauliEdgeFailureKind::UncertainPhysicalBracket);
+        assert_eq!(failure.kind, PauliEdgeFailureKind::StateMapUnresolved);
     }
 
     #[test]
