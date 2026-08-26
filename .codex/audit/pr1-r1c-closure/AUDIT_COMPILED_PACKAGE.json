@@ -1,119 +1,194 @@
 {
-  "schema": "rabbit-audit-compiled-package/v1",
-  "package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-20260825",
+  "schema": "rabbit-audit-compiled-package/v2",
+  "package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-v2-20260825",
   "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
   "pull_request": 1,
   "audited_base_sha": "a59531ad9c5f041c65ceed5d1508c4ea30c8dbf5",
   "audited_head_sha": "50d3bc5b8093bc33e9311f94505c5ee0711ce51b",
+  "supersedes_package_id": "rabbit-pr1-r1c-dynamic-compiled-contract-20260825",
+  "revision_reason": [
+    "split must-close P0/P1 defects from deliberately deferred typed blockers",
+    "classify the Python control-flow mirror separately from the independent exact-real reference",
+    "add an exact-head Rust known-bad baseline gate",
+    "remove ambiguous stagnation and certificate-attainability instructions",
+    "add the physical-root uniqueness lemma, external-oracle coverage, non-degeneration gates, tolerance provenance, and a bounded review loop"
+  ],
   "merge_verdict": "REQUEST_CHANGES",
   "claim_ceiling": [
     "focused local Pauli primitive only",
+    "no equilibrium evolution semantics until PR-ODE-R1E",
     "no R2C or R3C authority",
     "no active-driver, endpoint, N_eff, abundance, performance, public-production, or QKE authority"
   ],
+  "path_matching_semantics": {
+    "root": "repository root",
+    "rule": "all paths in this package begin with / and are repository-rooted; no suffix or unrooted glob interpretation is permitted"
+  },
+  "tolerance_provenance": {
+    "value": "128*f64::EPSILON",
+    "units": "dimensionless occupation",
+    "status": "frozen audit-local acceptance threshold inherited from R1",
+    "reason_frozen_now": "prevent post-hoc widening to make PR #1 green",
+    "not_claimed": "this value is not derived from an endpoint, N_eff, abundance, or accumulated global error budget",
+    "future_action": "PR-ODE-R1E must justify, replace, or compose it under an explicit accumulated-error contract through CONTRACT_AMENDMENT_REQUIRED"
+  },
   "severity_policy": {
     "P0": "invalid physical/numerical state or wrong-science output reported as certified success; broken unit/sign/boundary/invariant; provenance break reported as validated",
-    "P1": "major boundary/fallback/evidence contract missing; partial implementation represented as complete; required physical state aborts; failure materially misclassified or delayed"
+    "P1": "major boundary/fallback/evidence contract missing; partial implementation represented as complete; required physical state aborts; failure materially misclassified or delayed",
+    "P2": "non-load-bearing test, naming, efficiency, or evidence-quality defect"
+  },
+  "threat_partition": {
+    "must_close_in_pr1": [
+      "FM-R1C-P0-001",
+      "FM-R1C-P0-002",
+      "FM-R1C-P0-003",
+      "FM-R1C-P1-002",
+      "FM-R1C-P1-003",
+      "FM-R1C-P1-004",
+      "FM-R1C-P1-005",
+      "FM-R1C-P1-006",
+      "FM-R1C-P1-007"
+    ],
+    "deferred_typed_blocker": [
+      "FM-R1C-P1-001",
+      "FM-R1C-P1-008",
+      "FM-R1C-P1-009"
+    ],
+    "interpretation": "deferred threats remain P1; they do not count as open PR-#1 defects only when their exact typed blocker and claim ceiling are present",
+    "forbidden_shortcut": "do not downgrade deferred P1 items to P2 and do not implement PR-ODE-R1E inside PR #1"
+  },
+  "evidence_classification": {
+    "repository_source": "exact a59531ad..50d3bc5 diff and source at 50d3bc5",
+    "executed_rust": "GitHub Actions run 32787997031; useful but incomplete for the revised contract",
+    "audit_control_flow_model": {
+      "path": "/.codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py",
+      "independent": false,
+      "role": "audit-authored binary64 mirror of the old Rust control flow; baseline hypothesis generator only",
+      "forbidden_role": "must not be used as final-SHA proof that Rust was fixed"
+    },
+    "independent_exact_real_reference": {
+      "implementation": "Decimal 110-digit exact-real affine-state residual solve inside the reproducer",
+      "role": "independent root oracle for frozen fixtures",
+      "external_crosscheck": "an independent reviewer reproduced the primary root and error ratio with SymPy rational algebra and mpmath 120 digits"
+    },
+    "authoritative_implementation_check": "Rust RED/GREEN regressions executed at the exact base/final SHA"
   },
   "p0_p1_threat_catalogue": [
     {
       "id": "FM-R1C-P0-001",
       "severity": "P0",
-      "title": "State-map and residual arithmetic omitted from true-root certificate",
-      "files": ["native/rabbit_cpu/src/pauli_edge_step.rs"],
+      "closure_class": "must_close_in_pr1",
+      "title": "State-map and residual arithmetic omitted from the true-root certificate",
+      "files": ["/native/rabbit_cpu/src/pauli_edge_step.rs"],
       "symbols": ["occupations_at_extent", "certified_flux_evaluation", "implicit_step_with_limit"],
-      "trigger": "Solved uses a product-only error bound after rounded extent/measure, initial +/- quotient, h*flux, and residual arithmetic",
+      "trigger": "Solved uses a product-only error bound after rounded extent/measure, initial +/- quotient, complement, h*flux, and residual arithmetic",
       "consequence": "exact affine-state occupation error can exceed 128 eps while outcome is Solved",
-      "detectors": [
+      "required_detection": [
         "pauli_edge_step::tests::power_of_two_state_map_rounding_never_false_solves",
-        ".codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py",
-        "mutation: replace interval residual with current direct-product bound; regression must fail"
+        "pauli_edge_step::tests::every_solved_path_carries_true_root_interval",
+        "BASELINE_KNOWN_BAD.patch on the exact base",
+        "outward-rounding mutation RED"
       ],
       "stop": "BLOCKED_TRUE_ROOT_INTERVAL"
     },
     {
       "id": "FM-R1C-P0-002",
       "severity": "P0",
-      "title": "A Solved return bypasses the common exact-real interval gate",
-      "files": ["native/rabbit_cpu/src/pauli_edge_step.rs"],
-      "symbol": "implicit_step_with_limit",
-      "detectors": [
-        "pauli_edge_step::tests::every_solved_path_carries_true_root_interval",
-        "mutate current and midpoint gates separately; each mutation must be RED",
-        "source check: every PauliEdgeApplicationKind::Solved constructor is dominated by one interval-acceptance helper"
+      "closure_class": "must_close_in_pr1",
+      "title": "A Solved return bypasses the common exact-real interval authority",
+      "required_detection": [
+        "source census: one common try_certify_solved helper dominates every Solved constructor",
+        "mutate current-iterate gate; P0 regression must be RED",
+        "mutate midpoint gate; P0 regression must be RED"
       ],
       "stop": "BLOCKED_UNCERTIFIED_SUCCESS_PATH"
     },
     {
       "id": "FM-R1C-P0-003",
       "severity": "P0",
+      "closure_class": "must_close_in_pr1",
       "title": "Patch obtains green by changing the contract",
       "frozen_values": {
         "max_iterations": 96,
         "occupation_tolerance": "128*f64::EPSILON",
         "golden_root_bits": "0xbcceff07e8a38d5c",
-        "known_bad_bits": "0xbcceff0807bfa264"
+        "known_bad_bits": "0xbcceff0807bfa264",
+        "primary_fixture": "PairSource m1=2^8,m2=2^-36,A=2^26,B=2^-14,h=2^-36,f=(1-2^-40,1-2^-6)"
       },
-      "detectors": [
-        "git diff verifies Cargo.toml, fixtures, cap, tolerance, and golden bits are unchanged",
-        "contract package SHA is unchanged"
+      "required_detection": [
+        "unchanged-surface diff check",
+        "contract release commit and blob identities match the manifest"
       ],
       "stop": "CONTRACT_AMENDMENT_REQUIRED"
     },
     {
       "id": "FM-R1C-P1-001",
       "severity": "P1",
+      "closure_class": "deferred_typed_blocker",
       "title": "Exact detailed balance hard-aborts a nonzero sweep",
-      "fixture": "ElasticTransfer, m1=m2=A=B=1, h=0.25, f1=f2=0.5",
-      "current_outcome": "UnresolvedFlux",
+      "fixture": "ElasticTransfer m1=m2=A=B=1,h=0.25,f=(0.5,0.5)",
+      "required_pr1_state": "typed BLOCKED_EQUILIBRIUM_STEP_SEMANTICS remains explicit; no silent success and no CertifiedFrozen implementation",
       "detector": "pauli_edge_step::tests::exact_balance_is_explicitly_blocked_until_r1e",
+      "future_owner": "PR-ODE-R1E",
       "stop": "BLOCKED_EQUILIBRIUM_STEP_SEMANTICS"
     },
     {
       "id": "FM-R1C-P1-002",
       "severity": "P1",
-      "title": "Irreducible certificate error is discovered after futile iteration and misclassified",
-      "trigger": "interval occupation-error floor exceeds 128 eps",
-      "detector": "pauli_edge_step::tests::irreducible_certificate_error_fails_early_with_typed_kind",
-      "required_kind": "CertificateUnattainableAtStep"
+      "closure_class": "must_close_in_pr1",
+      "title": "Representable root interval is exhausted without a precise typed outcome",
+      "authority": "interval geometry only; h*delta_J/min(m) is diagnostic and is not a universal attainability theorem",
+      "required_kind": "CertificateUnattainableAtStep",
+      "required_semantics": [
+        "try interval acceptance at current, midpoint, lower, and upper candidates first",
+        "the unique physical root remains enclosed",
+        "lower and upper are adjacent binary64 extents and no representable extent lies between",
+        "occupation bracket width exceeds 128 eps",
+        "no candidate satisfies the common interval acceptance helper"
+      ],
+      "detector": "pauli_edge_step::tests::adjacent_uncertifiable_root_interval_has_typed_outcome",
+      "stop": "CertificateUnattainableAtStep"
     },
     {
       "id": "FM-R1C-P1-003",
       "severity": "P1",
-      "title": "Fallback repeats an identical midpoint to the cap",
-      "fixture": "ElasticTransfer, m1=m2=2^-30, A=B=2^-20 MeV, h=1 MeV^-1, f=(1/8,1/4)",
-      "detectors": [
-        "pauli_edge_step::tests::repeated_extent_fails_immediately_as_stagnated_interval",
-        ".codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py"
-      ],
-      "required_kind": "StagnatedInterval"
+      "closure_class": "must_close_in_pr1",
+      "title": "Fallback repeats an identical extent/bracket to the cap",
+      "fixture": "ElasticTransfer m1=m2=2^-30,A=B=2^-20 MeV,h=1 MeV^-1,f=(1/8,1/4)",
+      "detector": "pauli_edge_step::tests::repeated_extent_fails_immediately_as_stagnated_interval",
+      "required_kind": "StagnatedInterval",
+      "stop": "StagnatedInterval"
     },
     {
       "id": "FM-R1C-P1-004",
       "severity": "P1",
-      "title": "Resolved hot path performs discarded log/exp/expm1 work",
-      "symbol": "certified_flux_evaluation",
+      "closure_class": "must_close_in_pr1",
+      "title": "Resolved direct-product path performs discarded log/exp/expm1 work",
       "detectors": [
         "pauli_edge_step::tests::resolved_direct_certificate_does_not_call_log_value_path",
-        "source check: flux_mev call exists only in unresolved-direct-product arm"
+        "source check: flux_mev is called only in the unresolved-direct-product arm"
       ],
       "stop": "BLOCKED_HOT_PATH_CONTRACT"
     },
     {
       "id": "FM-R1C-P1-005",
       "severity": "P1",
+      "closure_class": "must_close_in_pr1",
       "title": "Sweep report silently skips malformed Solved evidence",
-      "symbol": "record_edge_certificate",
-      "detector": "electron_spectral::tests::malformed_solved_report_is_rejected_not_skipped",
+      "detectors": [
+        "electron_spectral::tests::malformed_solved_report_is_rejected_not_skipped",
+        "record_edge_certificate returns Result and validates every Solved field"
+      ],
       "stop": "BLOCKED_REPORT_INTEGRITY"
     },
     {
       "id": "FM-R1C-P1-006",
       "severity": "P1",
-      "title": "CI omits threat-carrying sweep regressions and static Rust gates",
-      "file": ".github/workflows/harness.yml",
+      "closure_class": "must_close_in_pr1",
+      "title": "CI omits threat-carrying regressions and static Rust gates",
       "required_commands": [
         "cargo fmt --all -- --check",
+        "cargo check --release",
         "cargo clippy --all-targets --all-features -- -D warnings",
         "cargo test --locked --lib pauli_edge_step::tests -- --nocapture",
         "cargo test --locked --lib electron_spectral::tests::sweep_report_counts_exact_stationary_without_nan_swallow -- --exact --nocapture",
@@ -125,15 +200,18 @@
     {
       "id": "FM-R1C-P1-007",
       "severity": "P1",
-      "title": "PR evidence body is stale relative to the live head",
-      "current_mismatch": "body names 5262df6 and two files; API reports 50d3bc5, two commits, three files",
-      "detector": "evidence final_sha equals git rev-parse HEAD and GitHub PR API head SHA",
+      "closure_class": "must_close_in_pr1",
+      "title": "PR metadata and command evidence are stale relative to the live final SHA",
+      "detector": "evidence final_sha equals git rev-parse HEAD and GitHub PR API head SHA; every command record names that SHA",
       "stop": "STALE_EVIDENCE"
     },
     {
       "id": "FM-R1C-P1-008",
       "severity": "P1",
+      "closure_class": "deferred_typed_blocker",
       "title": "Future CertifiedFrozen errors are not globally accumulated",
+      "required_pr1_state": "CertifiedFrozen is absent; claim ceiling explicitly blocks equilibrium/endpoint promotion",
+      "future_owner": "PR-ODE-R1E",
       "required_future_fields": [
         "frozen_count",
         "maximum_frozen_occupation_error",
@@ -146,117 +224,192 @@
     {
       "id": "FM-R1C-P1-009",
       "severity": "P1",
+      "closure_class": "deferred_typed_blocker",
       "title": "Scientific claim exceeds local certificate authority",
-      "forbidden_claims": ["continuum collision validation", "temporal order", "endpoint", "N_eff", "BBN abundance", "production", "public dispatch", "QKE"],
+      "required_pr1_state": "forbidden claims remain absent and the PR body states the local claim ceiling",
+      "forbidden_claims": [
+        "continuum collision validation",
+        "temporal order",
+        "endpoint",
+        "N_eff",
+        "BBN abundance",
+        "production",
+        "public dispatch",
+        "QKE"
+      ],
       "stop": "BLOCKED_CLAIM_OVERREACH"
     }
   ],
   "dynamic_evidence": {
     "binary64_epsilon": 2.220446049250313e-16,
     "certificate_threshold_128eps": 2.842170943040401e-14,
-    "p0_false_solved": {
-      "fixture": {
-        "topology": "PairSource",
-        "first_measure": 256.0,
-        "second_measure": 1.4551915228366852e-11,
-        "gain_coefficient_mev": 67108864.0,
-        "loss_coefficient_mev": 0.00006103515625,
-        "step_mev_inverse": 1.4551915228366852e-11,
-        "first_occupation": 0.9999999999990905,
-        "second_occupation": 0.984375
-      },
-      "current_model_outcome": "SOLVED_CURRENT",
+    "primary_p0": {
+      "control_flow_model_outcome": "SOLVED_CURRENT",
       "iterations": 3,
-      "returned_extent_hex": "-0x1.eff0807bfa264p-51",
-      "nearest_exact_root_hex": "-0x1.eff07e8a38d5cp-51",
-      "reported_root_error_abs": 4.930380657629558e-30,
-      "reported_occupation_error_abs": 3.388131789015988e-19,
-      "actual_occupation_error": "3.536762950339900120034750970710174e-12",
-      "actual_error_over_128eps": "124.43878363475429867",
-      "verdict": "P0_FALSE_SOLVED"
+      "returned_extent_bits": "0xbcceff0807bfa264",
+      "nearest_exact_root_bits": "0xbcceff07e8a38d5c",
+      "actual_occupation_error": "3.5367629503399001e-12",
+      "actual_error_over_128eps": "124.4387836347543",
+      "independent_crosscheck": "confirmed with SymPy rational expansion and mpmath 120-digit solve"
     },
+    "local_pair_edge_golden_ladder": [
+      {
+        "fixture": "PairSource m1=2,m2=5,A=13,B=17,f=(0.23,0.79)",
+        "h": "2^-8",
+        "nearest_root_bits": "0xbf6e4ad0bfc2b909"
+      },
+      {
+        "fixture": "same",
+        "h": "2^-14",
+        "nearest_root_bits": "0xbf0f8e82450eec7e"
+      },
+      {
+        "fixture": "same",
+        "h": "2^-20",
+        "nearest_root_bits": "0xbeaf93c82712ec39"
+      },
+      {
+        "fixture": "same",
+        "h": "2^-30",
+        "nearest_root_bits": "0xbe0f93dd9299eefb"
+      }
+    ],
     "fallback_stagnation": {
-      "fixture": "Elastic m1=m2=2^-30, A=B=2^-20, h=1, f=(1/8,1/4)",
-      "current_model_outcome": "UNCERTAIN_PHYSICAL_BRACKET",
-      "iterations": 96,
-      "last_extent_hex": "0x1.ffc007ff001ffp-35",
-      "repeated_extent_iterations": 5,
-      "verdict": "P1_STAGNATED_INTERVAL"
+      "fixture": "ElasticTransfer m1=m2=2^-30,A=B=2^-20,h=1,f=(1/8,1/4)",
+      "old_outcome": "UncertainPhysicalBracket after cap",
+      "required_outcome": "StagnatedInterval on first repeated extent/bracket"
     },
     "equilibrium": {
-      "fixture": "Elastic m1=m2=A=B=1, h=0.25, f=(0.5,0.5)",
-      "current_model_outcome": "UNRESOLVED_FLUX",
-      "verdict": "P1_EQUILIBRIUM_ABORT"
+      "fixture": "ElasticTransfer m1=m2=A=B=1,h=0.25,f=(0.5,0.5)",
+      "required_pr1_outcome": "typed BLOCKED_EQUILIBRIUM_STEP_SEMANTICS"
+    }
+  },
+  "mathematical_contract": {
+    "units": {
+      "f": "dimensionless",
+      "measure": "quadrature-weighted dimensionless measure",
+      "gain_loss_flux": "MeV",
+      "step": "MeV^-1",
+      "extent_and_residual": "quadrature-weighted dimensionless occupation"
+    },
+    "physical_root_uniqueness": {
+      "id": "LEMMA-R1C-UNIQUE-PHYSICAL-ROOT",
+      "statement": "For A,B>=0, m1,m2>0, h>=0, and f in the Pauli box, dJ/dxi<=0 for both edge topologies; therefore r'(xi)=1-h dJ/dxi>=1 and the physical-capacity root is unique.",
+      "pair_source": [
+        "dJ/df1=-A(1-f2)-B f2<=0",
+        "dJ/df2=-A(1-f1)-B f1<=0",
+        "df1/dxi=1/m1 and df2/dxi=1/m2"
+      ],
+      "elastic_transfer": [
+        "dJ/df1=-A f2-B(1-f2)<=0",
+        "dJ/df2=A(1-f1)+B f1>=0",
+        "df1/dxi=1/m1 and df2/dxi=-1/m2"
+      ],
+      "scope_note": "the residual is quadratic and may have another root outside the physical-capacity interval; the theorem identifies the unique physical root only"
     }
   },
   "invariant_test_matrix": [
     {
       "id": "INV-R1C-001",
       "severity": "P0",
-      "statement": "Certificate encloses the exact-real affine occupation map from binary64 inputs",
-      "detectors": ["power_of_two_state_map_rounding_never_false_solves", "independent Decimal reproducer"],
-      "oracle_class": "A"
+      "statement": "Every Solved certificate encloses the exact-real affine occupation map from binary64 inputs",
+      "detectors": [
+        "power_of_two_state_map_rounding_never_false_solves",
+        "baseline Rust known-bad patch",
+        "external exact-real golden root"
+      ],
+      "oracle_class": "A for exact-real root; Rust is the implementation under test"
     },
     {
       "id": "INV-R1C-002",
       "severity": "P0",
-      "statement": "root_error_abs includes quotient, state addition, complement, products, flux, h*flux, and residual subtraction rounding",
-      "detectors": ["reported_interval_covers_high_precision_root_on_power_fixtures", "outward-rounding mutation RED"]
+      "statement": "root_error_abs covers quotient, affine state, complement, products, flux, h multiplication, and residual subtraction rounding",
+      "detectors": [
+        "reported_interval_covers_high_precision_root_on_power_fixtures",
+        "mutate one outward operation inward; regression RED"
+      ]
     },
     {
       "id": "INV-R1C-003",
       "severity": "P0",
-      "statement": "Every Solved constructor uses one common interval-acceptance helper",
-      "detectors": ["source constructor census", "current-path mutation RED", "midpoint-path mutation RED"]
+      "statement": "Every Solved constructor is dominated by one common exact-real interval acceptance helper"
     },
     {
       "id": "INV-R1C-004",
       "severity": "P0",
-      "statement": "cap=96, tolerance=128 eps, fixture, golden root, and contract remain unchanged"
+      "statement": "cap, tolerance, fixture, golden bits, and released contract identity are unchanged"
     },
     {
       "id": "INV-R1C-005",
       "severity": "P1",
-      "statement": "Until R1E, exact balance is an explicit typed blocker, never silent success"
+      "closure_class": "deferred_typed_blocker",
+      "statement": "Until R1E, exact balance is an explicit typed blocker and never silent success"
     },
     {
       "id": "INV-R1C-006",
       "severity": "P1",
-      "statement": "Unattainable certificate exits early with CertificateUnattainableAtStep"
+      "statement": "CertificateUnattainableAtStep is emitted only after adjacent-representable interval exhaustion, not from h*delta_J/min(m) heuristics"
     },
     {
       "id": "INV-R1C-007",
       "severity": "P1",
-      "statement": "Repeated extent with no interval progress exits as StagnatedInterval"
+      "statement": "Repeated extent and unchanged bracket exit immediately as StagnatedInterval"
     },
     {
       "id": "INV-R1C-008",
       "severity": "P1",
-      "statement": "Resolved certificate path performs no transcendental value evaluation"
+      "statement": "Resolved direct-product certificate path performs no transcendental value evaluation"
     },
     {
       "id": "INV-R1C-009",
       "severity": "P1",
-      "statement": "Malformed Solved evidence fails; aggregation never skips it"
+      "statement": "Malformed Solved evidence is rejected; no aggregate field is silently skipped"
     },
     {
       "id": "INV-R1C-010",
       "severity": "P1",
-      "statement": "CI runs all required tests, fmt, clippy, and final-SHA evidence"
+      "statement": "CI runs the full PR-#1 contract commands and evidence is bound to the final SHA"
     },
     {
       "id": "INV-R1C-011",
       "severity": "P1",
-      "statement": "PR metadata and all evidence refer to the final SHA"
+      "statement": "PR metadata and evidence identify the live final SHA and exact changed surfaces"
+    },
+    {
+      "id": "INV-R1C-012",
+      "severity": "P0",
+      "statement": "The physical root is unique because dJ/dxi<=0 and r'(xi)>=1 on the Pauli box",
+      "detectors": [
+        "code comment with the two topology sign derivations",
+        "pauli_edge_step::tests::flux_derivative_is_nonpositive_on_physical_box"
+      ]
+    },
+    {
+      "id": "INV-R1C-013",
+      "severity": "P1",
+      "statement": "Fail-closed logic does not degenerate into rejecting established resolved fixtures",
+      "detectors": [
+        "local extreme-step golden ladder returns Solved and covers each external golden root",
+        "sweep legacy ladder has solved=edge_applications, unresolved=0, exact_stationary=0, finite bounds, and maximum occupation error<=128 eps"
+      ],
+      "stop": "BLOCKED_CERTIFICATE_OVERCONSERVATISM"
+    },
+    {
+      "id": "INV-R1C-014",
+      "severity": "P0",
+      "statement": "Whenever a golden root is supplied, reported occupation_error_abs is at least abs(extent-golden)/min_measure",
+      "detector": "assert_root_certificate_against_golden"
     },
     {
       "id": "INV-R1E-001",
       "severity": "P1",
+      "closure_class": "deferred_typed_blocker",
       "statement": "CertifiedFrozen local errors are accumulated and consumed before global claims"
     },
     {
       "id": "INV-CLAIM-001",
       "severity": "P1",
+      "closure_class": "deferred_typed_blocker",
       "statement": "Local R1 evidence cannot promote collision physics, temporal, endpoint, or public claims"
     }
   ],
@@ -279,15 +432,28 @@
       },
       {
         "id": "PRE-002",
-        "command": "python3 .codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py",
-        "expect": "P0_FALSE_SOLVED, P1_STAGNATED_INTERVAL, P1_EQUILIBRIUM_ABORT",
-        "else": "REPRODUCER_DIVERGENCE"
+        "command": "python3 .codex/audit/pr1-r1c-closure/pr1_r1c_numeric_reproducer.py --baseline-audit-model",
+        "expect": "audit model prints P0_FALSE_SOLVED, P1_STAGNATED_INTERVAL, P1_EQUILIBRIUM_ABORT and exact-real golden values",
+        "interpretation": "baseline audit-model consistency only; not a Rust oracle and not a final-SHA verification",
+        "else": "AUDIT_MODEL_DIVERGENCE"
+      },
+      {
+        "id": "PRE-002B",
+        "command": "git apply .codex/audit/pr1-r1c-closure/BASELINE_KNOWN_BAD.patch && cd native/rabbit_cpu && cargo test --locked --lib pauli_edge_step::tests::audit_baseline_power_fixture_returns_known_bad_bits -- --exact --nocapture; status=$?; cd ../..; git apply -R .codex/audit/pr1-r1c-closure/BASELINE_KNOWN_BAD.patch; git diff --exit-code -- native/rabbit_cpu/src/pauli_edge_step.rs; exit $status",
+        "expect": "Rust at the exact audited head returns known-bad bits 0xbcceff0807bfa264",
+        "else": "REPRODUCER_MODEL_DIVERGENCE"
       },
       {
         "id": "PRE-003",
         "command": "cd native/rabbit_cpu && cargo test --locked --lib pauli_edge_step::tests -- --nocapture",
         "expect": "baseline focused suite passes",
         "else": "BASELINE_DIVERGENCE"
+      },
+      {
+        "id": "PRE-004",
+        "command": "after adding power_of_two_state_map_rounding_never_false_solves, run it before production changes",
+        "expect": "RED because current Rust returns the known-bad Solved result",
+        "else": "BASELINE_RED_NOT_OBSERVED"
       }
     ],
     "work_units": [
@@ -295,30 +461,41 @@
         "id": "PR1-CLOSURE-A",
         "delivery": "amend existing PR #1",
         "risk_unit": "P0 exact-real true-root certificate",
-        "allowed_paths": ["native/rabbit_cpu/src/pauli_edge_step.rs"],
-        "forbidden_paths": ["native/rabbit_cpu/Cargo.toml", "data/**", "tests/fixtures/**", "src/**"],
+        "allowed_paths": ["/native/rabbit_cpu/src/pauli_edge_step.rs"],
+        "forbidden_paths": [
+          "/native/rabbit_cpu/Cargo.toml",
+          "/data/**",
+          "/tests/fixtures/**",
+          "/src/**"
+        ],
         "ordered_steps": [
-          "RED: add power_of_two_state_map_rounding_never_false_solves with golden bits 0xbcceff07e8a38d5c and known-bad bits 0xbcceff0807bfa264",
-          "add private certificate-only Interval {lo,hi}; validate finite ordered bounds",
-          "outward-round xi/measure, initial +/- quotient, 1-f, every nonnegative product, gain-loss, h*flux, and residual",
-          "positive underflow must enclose [0,positive upper], never ExactZero",
-          "define root_error=max(abs(r_lo),abs(r_hi)); occupation_error=root_error/min(m1,m2)",
-          "keep point f64 state and derivative only for candidate/Newton proposal",
-          "authorize current and midpoint Solved only via one common interval helper",
-          "use analytic conceptual capacity endpoint signs from Pauli inwardness",
-          "mutation: restore old direct-product-only bound; P0 test must fail"
+          "RED: add power_of_two_state_map_rounding_never_false_solves using the frozen golden and known-bad bits",
+          "add a private certificate-only outward Interval with finite ordered bounds",
+          "outward-round xi/measure, initial +/- quotient, complement, nonnegative products, gain-loss, h*flux, and residual",
+          "positive underflow encloses [0,positive_upper] and is never ExactZero",
+          "define root_error=max(abs(r_lo),abs(r_hi)) and occupation_error=root_error/min(m1,m2)",
+          "keep point binary64 state and analytic derivative as proposal-only quantities",
+          "authorize every Solved result through one try_certify_solved helper",
+          "replace numeric capacity-endpoint flux evaluation with the analytic Pauli inward-sign proof",
+          "document and test LEMMA-R1C-UNIQUE-PHYSICAL-ROOT",
+          "extend assertion helper so occupation_error_abs covers the external golden-root occupation error",
+          "add golden-root coverage for the local extreme-step ladder",
+          "mutation: restore direct-product-only bound or round one interval operation inward; P0 regression must be RED"
         ],
         "required_signatures": [
           "struct Interval { lo: f64, hi: f64 }",
           "fn affine_occupation_intervals(&self, initial: [f64;2], extent: f64) -> Result<[Interval;2], PauliEdgeFailure>",
           "fn certified_flux_interval(&self, occupations: [Interval;2]) -> Result<PauliFluxInterval, PauliEdgeFailure>",
-          "fn residual_interval(&self, initial: [f64;2], extent: f64, h: f64) -> Result<RootResidualInterval, PauliEdgeFailure>"
+          "fn residual_interval(&self, initial: [f64;2], extent: f64, h: f64) -> Result<RootResidualInterval, PauliEdgeFailure>",
+          "fn try_certify_solved(...) -> Result<Option<PauliEdgeStep>, PauliEdgeFailure>"
         ],
         "acceptance": [
-          "power fixture is typed fail-closed OR Solved within 128 eps of independent root and report bound covers it",
-          "known bad bits are never certified",
-          "all Solved paths share interval authority",
-          "cap, tolerance, fixture, and golden root unchanged"
+          "the primary P0 fixture is typed fail-closed or Solved within 128 eps of the external physical root",
+          "if Solved, report.occupation_error_abs covers abs(extent-golden)/min_measure",
+          "known-bad bits are never certified",
+          "all Solved constructors share interval authority",
+          "local golden ladder remains Solved and each report covers its external root",
+          "cap, tolerance, fixtures, and golden bits remain unchanged"
         ],
         "claim_ceiling": "focused exact-real affine-state local certificate"
       },
@@ -327,21 +504,22 @@
         "delivery": "amend existing PR #1 after CLOSURE-A",
         "risk_unit": "P1 fallback, taxonomy, hot path, report, CI, evidence",
         "allowed_paths": [
-          "native/rabbit_cpu/src/pauli_edge_step.rs",
-          "native/rabbit_cpu/src/electron_spectral.rs",
-          ".github/workflows/harness.yml"
+          "/native/rabbit_cpu/src/pauli_edge_step.rs",
+          "/native/rabbit_cpu/src/electron_spectral.rs",
+          "/.github/workflows/harness.yml"
         ],
         "ordered_steps": [
-          "RED: add repeated_extent_fails_immediately_as_stagnated_interval with the exact power fixture",
-          "RED: add irreducible_certificate_error_fails_early_with_typed_kind",
-          "add CertificateUnattainableAtStep and StagnatedInterval",
-          "fail on first bitwise-repeated extent with unchanged interval",
-          "bail when irreducible interval occupation error alone makes 128 eps unattainable",
-          "move flux_mev/log/expm1 into unresolved-direct-product arm",
-          "update module claim: Pauli box algebra works for stiff steps; finite-precision certification can fail closed",
-          "make record_edge_certificate return Result; nonfinite/inconsistent Solved fields are hard failures",
+          "RED: use exactly ElasticTransfer m1=m2=2^-30,A=B=2^-20,h=1,f=(1/8,1/4) for repeated_extent_fails_immediately_as_stagnated_interval",
+          "RED: add adjacent_uncertifiable_root_interval_has_typed_outcome",
+          "add StagnatedInterval on first repeated extent plus unchanged bracket",
+          "add CertificateUnattainableAtStep only for adjacent representable physical-root brackets after all candidate acceptance attempts fail and occupation width remains above 128 eps",
+          "do not use h*delta_J/min(m) or eta_J as a universal attainability gate; record them as diagnostics only",
+          "move flux_mev/log/expm1 into the unresolved-direct-product arm",
+          "update module claim: Pauli-box algebra tolerates stiff finite steps, while finite-precision certification may fail closed",
+          "make record_edge_certificate return Result and reject nonfinite/inconsistent Solved fields",
           "add maximum_occupation_error_bound to PauliSweepReport",
-          "extend native-r1c CI with fmt, clippy, both B1 sweep tests, focused suite, and final-SHA falsifier",
+          "retain the non-degeneration gate: local and sweep legacy ladders remain Solved under their frozen contract",
+          "extend native-r1c CI with fmt, check, clippy, both sweep B1 tests, the focused suite, and exact final-SHA reporting",
           "refresh PR body metadata and final-SHA evidence"
         ],
         "required_commands": [
@@ -355,6 +533,12 @@
           "cargo test --locked --lib electron_event_falsifiers::frozen -- --nocapture",
           "git diff --check"
         ],
+        "acceptance": [
+          "all must_close_in_pr1 P0/P1 threats are closed",
+          "all deferred_typed_blocker threats expose their exact blocker and remain outside PR #1 implementation scope",
+          "legacy resolved fixtures do not become generic fail-closed outcomes",
+          "CI and evidence refer to the final SHA"
+        ],
         "claim_ceiling": "R1 local certificate correction; equilibrium semantics remains BLOCKED"
       },
       {
@@ -362,35 +546,37 @@
         "delivery": "new PR after PR #1 merges",
         "risk_unit": "equilibrium semantics and accumulated frozen error",
         "contract": [
-          "CertifiedFrozen only when exact residual interval at xi=0 proves occupation root distance <=128 eps",
-          "2*h*delta_J/min(m) is a sufficient fallback bound, not a universal equality",
-          "report frozen count, max local error, sum local error, and per-sweep accumulated bound",
-          "temporal fixtures require frozen_count=0",
-          "equilibrium fixtures require finite certified frozen bounds",
-          "outer controller must consume accumulated bound before endpoint/scientific claims"
+          "CertifiedFrozen is not part of PR #1",
+          "a local freeze requires an exact residual interval proving a bounded local occupation error",
+          "h*delta_J/min(m) may be used only as a labelled sufficient diagnostic bound, not a universal equality",
+          "report frozen count, maximum local error, sum local error, and per-sweep accumulated bound",
+          "outer controller consumes the accumulated bound before endpoint/scientific claims"
         ],
         "stop": "BLOCKED_FROZEN_ERROR_BUDGET"
       },
       {
         "id": "PR-ODE-R2C",
         "depends_on": ["PR-ODE-R1E"],
-        "risk_unit": "conditioned detailed-balance sensitivity",
-        "claim_ceiling": "focused operator compatibility and negative-control sensitivity"
+        "risk_unit": "conditioned detailed-balance sensitivity"
       },
       {
         "id": "PR-ODE-R3C",
         "depends_on": ["PR-ODE-R2C"],
-        "risk_unit": "rate-scaled representable temporal consistency/order",
-        "required_scales": ["eta_J ladder", "eta_cap safety", "D/ulp representability", "step-doubling first-order slope near 2"],
-        "claim_ceiling": "focused first-order sweep or typed temporal blocker"
+        "risk_unit": "rate-scaled representable temporal consistency and order"
       }
-    ]
+    ],
+    "review_loop": {
+      "maximum_fresh_review_rounds": 2,
+      "round_definition": "one classification-only fresh-context review followed, if needed, by one implementation fix cycle and complete evidence regeneration",
+      "stop_after_limit": "BLOCKED_REVIEW_NONCONVERGENCE"
+    }
   },
   "evidence_bundle_schema": {
-    "schema": "rabbit-pr1-r1c-evidence-bundle/v1",
+    "schema": "rabbit-pr1-r1c-evidence-bundle/v2",
     "required": [
       "base_sha",
       "final_sha",
+      "github_pr_api_head_sha",
       "git_status_porcelain_empty",
       "git_diff_stat",
       "git_diff_check_exit_0",
@@ -398,11 +584,19 @@
       "invariant_results",
       "mutation_red_restored_green",
       "unchanged_surface_hashes",
+      "deferred_typed_blocker_results",
       "not_executed_with_authority_lost",
       "unresolved_blockers",
       "claim_ceiling"
     ],
-    "command_record_required": ["command", "executed_at_commit", "exit_code", "stdout_sha256", "environment"]
+    "command_record_required": [
+      "command",
+      "executed_at_commit",
+      "exit_code",
+      "stdout_sha256",
+      "environment"
+    ],
+    "forbidden_evidence": "the audit-authored Python control-flow mirror is not final-SHA proof"
   },
   "final_independent_audit_contract": {
     "fresh_context_required": true,
@@ -410,26 +604,29 @@
     "reviewer_edits_forbidden": true,
     "first_pass": "classification-only",
     "reviewer_input": [
-      "base_sha",
-      "final_sha",
+      "base SHA",
+      "final SHA",
       "base..final diff",
-      "this compiled package",
-      "verification and mutation logs",
+      "released compiled package",
+      "Rust verification and mutation logs",
       "evidence bundle",
-      "unresolved blockers"
+      "deferred typed blockers"
     ],
     "mandatory_challenges": [
-      "run power-of-two P0 regression and independent reproducer",
+      "run the Rust primary P0 regression",
+      "compare every golden-root fixture in occupation units",
       "inspect every Solved constructor",
-      "mutate one outward-rounding operation inward",
-      "mutate current and midpoint interval gates separately",
-      "run exact-balance and stagnation regressions",
-      "verify cap/tolerance/golden/contract unchanged",
+      "mutate one outward operation inward",
+      "mutate current and midpoint acceptance separately",
+      "run uniqueness-sign and legacy non-degeneration regressions",
+      "run exact-balance and stagnation blocker regressions",
+      "verify cap, tolerance, golden values, and released contract identity",
       "verify CI and evidence freshness",
       "audit scientific claim ceiling"
     ],
     "finding_fields": [
       "severity",
+      "closure_class",
       "file",
       "line_or_symbol",
       "violated_invariant",
@@ -439,21 +636,25 @@
       "detector_should_have_caught"
     ],
     "pass_condition": {
-      "P0": 0,
-      "P1": 0,
+      "must_close_p0_open": 0,
+      "must_close_p1_open": 0,
+      "deferred_without_required_typed_blocker": 0,
+      "deferred_claim_ceiling_violations": 0,
+      "new_uncatalogued_p0_p1": 0,
       "unmapped_threats": 0,
       "missing_evidence": 0,
       "unresolved_spec_boundaries": 0,
       "contract_changes": 0,
       "new_relevant_suite_failures": 0
     },
-    "failure_action": "REQUEST_CHANGES; return to implementation context; regenerate all evidence; rerun fresh review"
+    "failure_action": "REQUEST_CHANGES; return only must-close findings to the implementation context; regenerate all evidence; run at most two fresh review rounds"
   },
   "compilation_gate": {
     "prose_only_p0_p1_allowed": false,
     "unmapped_p0_p1_threats": 0,
     "missing_detectors": 0,
     "missing_stop_states": 0,
+    "internal_spec_conflicts": 0,
     "failure_status": "AUDIT_COMPILATION_FAILED"
   }
 }
