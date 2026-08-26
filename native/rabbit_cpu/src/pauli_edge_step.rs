@@ -3,11 +3,20 @@
 //! The state variable is the raw occupation, not a clipped or projected
 //! surrogate.  Each edge carries non-negative forward and reverse
 //! coefficients.  A backward-Euler extent solve is one dimensional,
-//! bracketed by the exact Pauli capacities, and therefore remains inside the
-//! Fermi box for arbitrarily stiff finite steps.  The caller owns operator
-//! splitting across edges and commits only a completely validated candidate.
+//! bracketed by the exact Pauli capacities.  The Pauli-box algebra supports
+//! arbitrarily stiff finite steps, while finite-precision certification may
+//! still fail closed.  The caller owns operator splitting across edges and
+//! commits only a completely validated candidate.
 
 #![cfg_attr(not(test), allow(dead_code))]
+
+#[cfg(test)]
+use std::cell::Cell;
+
+#[cfg(test)]
+thread_local! {
+    static FLUX_VALUE_EVALUATIONS: Cell<usize> = const { Cell::new(0) };
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum PauliEdgeTopology {
@@ -56,6 +65,7 @@ pub(crate) enum PauliEdgeFailureKind {
     UncertainPhysicalBracket,
     CertificateUnattainableAtStep,
     StateMapUnresolved,
+    StagnatedInterval,
     InvalidResidual,
     IterationLimit,
 }
@@ -373,6 +383,22 @@ fn maximum_occupation_bracket_width(
     (extent_width / first_measure).max(extent_width / second_measure)
 }
 
+fn exhausted_interval_failure_kind(
+    lower: f64,
+    upper: f64,
+    occupation_width: f64,
+    all_candidates_rejected: bool,
+) -> Option<PauliEdgeFailureKind> {
+    (all_candidates_rejected
+        && lower.is_finite()
+        && upper.is_finite()
+        && lower < upper
+        && lower.next_up().to_bits() == upper.to_bits()
+        && occupation_width.is_finite()
+        && occupation_width > 128.0 * f64::EPSILON)
+        .then_some(PauliEdgeFailureKind::CertificateUnattainableAtStep)
+}
+
 impl PauliEdge {
     pub(crate) fn new(
         topology: PauliEdgeTopology,
@@ -413,6 +439,8 @@ impl PauliEdge {
         first_occupation: f64,
         second_occupation: f64,
     ) -> Result<f64, &'static str> {
+        #[cfg(test)]
+        FLUX_VALUE_EVALUATIONS.with(|count| count.set(count.get() + 1));
         let (gain_factors, loss_factors) =
             edge_factors(self.topology, first_occupation, second_occupation)?;
         stable_nonnegative_product_difference(
@@ -434,11 +462,6 @@ impl PauliEdge {
             )?;
         let gain = direct_three_factor_product(self.gain_coefficient_mev, gain_factors);
         let loss = direct_three_factor_product(self.loss_coefficient_mev, loss_factors);
-        let value_flux = self
-            .flux_mev(first_occupation, second_occupation)
-            .map_err(|message| {
-                PauliEdgeFailure::new(PauliEdgeFailureKind::InvalidResidual, message)
-            })?;
         match (gain, loss) {
             (DirectProduct::ExactZero, DirectProduct::ExactZero) => Ok(PauliFluxEvaluation {
                 net_mev: 0.0,
@@ -447,6 +470,11 @@ impl PauliEdge {
                 resolution: PauliFluxResolution::ExactZero,
             }),
             (DirectProduct::Unresolved, _) | (_, DirectProduct::Unresolved) => {
+                let value_flux =
+                    self.flux_mev(first_occupation, second_occupation)
+                        .map_err(|message| {
+                            PauliEdgeFailure::new(PauliEdgeFailureKind::InvalidResidual, message)
+                        })?;
                 Ok(PauliFluxEvaluation {
                     net_mev: value_flux,
                     traffic_upper_bound_mev: 0.0,
@@ -689,10 +717,7 @@ impl PauliEdge {
             return Ok(None);
         }
         if current.certified.occupation_error_abs > 128.0 * f64::EPSILON {
-            return Err(PauliEdgeFailure::new(
-                PauliEdgeFailureKind::StateMapUnresolved,
-                "Pauli edge exact affine-state certificate exceeds the occupation tolerance",
-            ));
+            return Ok(None);
         }
         let candidate = self
             .occupations_at_extent(initial, extent)
@@ -811,11 +836,16 @@ impl PauliEdge {
         // never evaluate a rounded outer endpoint as a physical state.
         let mut lower = lower_capacity;
         let mut upper = upper_capacity;
+        let mut lower_is_sign_certified = false;
+        let mut upper_is_sign_certified = false;
+        let mut saw_state_map_rejection = false;
 
         let mut extent = 0.0;
         for iteration in 1..=max_iterations {
             let bracket_before = (lower.to_bits(), upper.to_bits());
             let current = residual(extent)?;
+            saw_state_map_rejection |=
+                current.certified.occupation_error_abs > 128.0 * f64::EPSILON;
             if let Some(solved) =
                 self.try_certify_solved(initial, extent, iteration, lower, upper, current)?
             {
@@ -825,27 +855,90 @@ impl PauliEdge {
             let current_is_upper = current.certified.residual.lo >= 0.0;
             if current_is_lower {
                 lower = extent;
+                lower_is_sign_certified = true;
             } else if current_is_upper {
                 upper = extent;
+                upper_is_sign_certified = true;
             }
             let midpoint = 0.5 * (lower + upper);
+            if (midpoint.to_bits() == lower.to_bits() && !lower_is_sign_certified)
+                || (midpoint.to_bits() == upper.to_bits() && !upper_is_sign_certified)
+            {
+                return Err(PauliEdgeFailure::new(
+                    PauliEdgeFailureKind::StateMapUnresolved,
+                    "Pauli edge outer capacity leaves no valid interior candidate",
+                ));
+            }
             let midpoint_certificate = residual(midpoint)?;
-            if occupation_bracket_is_certified(
+            saw_state_map_rejection |=
+                midpoint_certificate.certified.occupation_error_abs > 128.0 * f64::EPSILON;
+            if let Some(solved) = self.try_certify_solved(
+                initial,
+                midpoint,
+                iteration,
+                lower,
+                upper,
+                midpoint_certificate,
+            )? {
+                return Ok(solved);
+            }
+            let occupation_width = maximum_occupation_bracket_width(
                 lower,
                 upper,
                 self.first_measure,
                 self.second_measure,
-            ) {
+            );
+            if lower < upper && lower.next_up().to_bits() == upper.to_bits() {
+                if !lower_is_sign_certified || !upper_is_sign_certified {
+                    return Err(PauliEdgeFailure::new(
+                        PauliEdgeFailureKind::StateMapUnresolved,
+                        "Pauli edge outer capacity leaves no sign-certified adjacent bracket",
+                    ));
+                }
+                let lower_certificate = residual(lower)?;
+                saw_state_map_rejection |=
+                    lower_certificate.certified.occupation_error_abs > 128.0 * f64::EPSILON;
                 if let Some(solved) = self.try_certify_solved(
                     initial,
-                    midpoint,
+                    lower,
                     iteration,
                     lower,
                     upper,
-                    midpoint_certificate,
+                    lower_certificate,
                 )? {
                     return Ok(solved);
                 }
+                let upper_certificate = residual(upper)?;
+                saw_state_map_rejection |=
+                    upper_certificate.certified.occupation_error_abs > 128.0 * f64::EPSILON;
+                if let Some(solved) = self.try_certify_solved(
+                    initial,
+                    upper,
+                    iteration,
+                    lower,
+                    upper,
+                    upper_certificate,
+                )? {
+                    return Ok(solved);
+                }
+                if let Some(kind) =
+                    exhausted_interval_failure_kind(lower, upper, occupation_width, true)
+                {
+                    return Err(PauliEdgeFailure::new(
+                        kind,
+                        "Pauli edge adjacent extents cannot attain the occupation certificate",
+                    ));
+                }
+                if saw_state_map_rejection {
+                    return Err(PauliEdgeFailure::new(
+                        PauliEdgeFailureKind::StateMapUnresolved,
+                        "Pauli edge adjacent candidates lack an occupation-map certificate",
+                    ));
+                }
+                return Err(PauliEdgeFailure::new(
+                    PauliEdgeFailureKind::UncertainPhysicalBracket,
+                    "Pauli edge adjacent bracket lacks a pointwise root certificate",
+                ));
             }
             let newton = extent - current.value / current.derivative;
             let next_extent = if !current_is_lower && !current_is_upper {
@@ -860,16 +953,20 @@ impl PauliEdge {
                 && bracket_before == (lower.to_bits(), upper.to_bits())
             {
                 return Err(PauliEdgeFailure::new(
-                    PauliEdgeFailureKind::UncertainPhysicalBracket,
-                    "Pauli edge exact affine-state interval did not resolve",
+                    PauliEdgeFailureKind::StagnatedInterval,
+                    "Pauli edge extent and root bracket stagnated",
                 ));
             }
             extent = next_extent;
         }
         if occupation_bracket_is_certified(lower, upper, self.first_measure, self.second_measure) {
             Err(PauliEdgeFailure::new(
-                PauliEdgeFailureKind::UncertainPhysicalBracket,
-                "Pauli edge floating bracket lacks an occupation-error certificate",
+                if saw_state_map_rejection {
+                    PauliEdgeFailureKind::StateMapUnresolved
+                } else {
+                    PauliEdgeFailureKind::UncertainPhysicalBracket
+                },
+                "Pauli edge floating bracket lacks a pointwise occupation certificate",
             ))
         } else {
             Err(PauliEdgeFailure::new(
@@ -1006,6 +1103,7 @@ mod tests {
                 failure.kind,
                 PauliEdgeFailureKind::UncertainPhysicalBracket
                     | PauliEdgeFailureKind::UnresolvedFlux
+                    | PauliEdgeFailureKind::StagnatedInterval
             ),
             "unexpected failure kind: {failure:?}"
         );
@@ -1043,8 +1141,55 @@ mod tests {
                 PauliEdgeFailureKind::UncertainPhysicalBracket
                     | PauliEdgeFailureKind::CertificateUnattainableAtStep
                     | PauliEdgeFailureKind::StateMapUnresolved
+                    | PauliEdgeFailureKind::StagnatedInterval
             )),
         }
+    }
+
+    #[test]
+    fn repeated_extent_fails_immediately_as_stagnated_interval() {
+        let edge = PauliEdge::new(
+            PauliEdgeTopology::ElasticTransfer,
+            0,
+            1,
+            2.0_f64.powi(-30),
+            2.0_f64.powi(-30),
+            2.0_f64.powi(-20),
+            2.0_f64.powi(-20),
+        )
+        .unwrap();
+        let failure = edge.implicit_step(1.0, 1.0 / 8.0, 1.0 / 4.0).unwrap_err();
+        assert_eq!(failure.kind, PauliEdgeFailureKind::StagnatedInterval);
+    }
+
+    #[test]
+    fn adjacent_uncertifiable_root_interval_has_typed_outcome() {
+        let lower = -1.0_f64;
+        let upper = lower.next_up();
+        assert_eq!(
+            exhausted_interval_failure_kind(lower, upper, 129.0 * f64::EPSILON, true,),
+            Some(PauliEdgeFailureKind::CertificateUnattainableAtStep)
+        );
+    }
+
+    #[test]
+    fn resolved_direct_certificate_does_not_call_log_value_path() {
+        FLUX_VALUE_EVALUATIONS.with(|count| count.set(0));
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 2.0, 5.0, 13.0, 17.0).unwrap();
+        let evaluation = edge.certified_flux_evaluation(0.23, 0.79).unwrap();
+        assert_eq!(evaluation.resolution, PauliFluxResolution::Resolved);
+        assert_eq!(FLUX_VALUE_EVALUATIONS.with(Cell::get), 0);
+    }
+
+    #[test]
+    fn exact_balance_is_explicitly_blocked_until_r1e() {
+        // BLOCKED_EQUILIBRIUM_STEP_SEMANTICS: PR-ODE-R1E owns any future
+        // CertifiedFrozen evolution semantics. PR1 must remain fail-closed.
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 1, 1.0, 1.0, 1.0, 1.0).unwrap();
+        let failure = edge.implicit_step(0.25, 0.5, 0.5).unwrap_err();
+        assert_eq!(failure.kind, PauliEdgeFailureKind::UnresolvedFlux);
     }
 
     #[test]
