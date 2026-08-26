@@ -17,7 +17,10 @@ use crate::electron_phase_point::{
     PhysicalRadialCell, integrated_scalar_density_mev, physical_support_slice,
 };
 use crate::electron_supplied::{SuppliedElectronEvent, SuppliedElectronEvents};
-use crate::pauli_edge_step::{PauliEdge, PauliEdgeStep, PauliEdgeTopology};
+use crate::pauli_edge_step::{
+    PauliEdge, PauliEdgeApplicationKind, PauliEdgeFailure, PauliEdgeFailureKind, PauliEdgeStep,
+    PauliEdgeTopology,
+};
 use crate::quadrature::{gauss_laguerre_plain_rule, gauss_legendre_rule};
 
 const EXPLICIT_STATES: usize = 6;
@@ -45,13 +48,44 @@ pub(crate) struct IsotropicElectronPauliEdges {
     edges: Vec<FoldedPauliEdge>,
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct PauliSweepReport {
     pub(crate) edge_applications: usize,
+    pub(crate) solved: usize,
+    pub(crate) exact_stationary: usize,
+    pub(crate) unresolved: usize,
     pub(crate) nonlinear_iterations: usize,
     pub(crate) maximum_edge_iterations: usize,
     pub(crate) maximum_root_residual_ratio: f64,
     pub(crate) maximum_occupation_bracket_width: f64,
+    pub(crate) maximum_flux_error_fraction: f64,
+    pub(crate) maximum_root_error_bound: f64,
+    pub(crate) maximum_occupation_error_bound: f64,
+}
+
+impl PauliSweepReport {
+    fn empty() -> Self {
+        Self {
+            edge_applications: 0,
+            solved: 0,
+            exact_stationary: 0,
+            unresolved: 0,
+            nonlinear_iterations: 0,
+            maximum_edge_iterations: 0,
+            maximum_root_residual_ratio: 0.0,
+            maximum_occupation_bracket_width: 0.0,
+            maximum_flux_error_fraction: 0.0,
+            maximum_root_error_bound: 0.0,
+            maximum_occupation_error_bound: 0.0,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct PauliSweepFailure {
+    pub(crate) kind: PauliEdgeFailureKind,
+    pub(crate) edge_index: Option<usize>,
+    pub(crate) partial_report: PauliSweepReport,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -459,18 +493,73 @@ fn build_folded_pauli_edges(
 }
 
 impl IsotropicElectronPauliEdges {
-    fn record_edge_certificate(report: &mut PauliSweepReport, edge_report: PauliEdgeStep) {
-        report.edge_applications += 1;
-        report.nonlinear_iterations += edge_report.nonlinear_iterations;
-        report.maximum_edge_iterations = report
-            .maximum_edge_iterations
-            .max(edge_report.nonlinear_iterations);
-        report.maximum_root_residual_ratio = report
-            .maximum_root_residual_ratio
-            .max(edge_report.residual_abs / edge_report.residual_scale);
-        report.maximum_occupation_bracket_width = report
-            .maximum_occupation_bracket_width
-            .max(edge_report.max_occupation_bracket_width);
+    fn record_edge_certificate(
+        report: &mut PauliSweepReport,
+        edge_report: PauliEdgeStep,
+    ) -> Result<(), PauliEdgeFailureKind> {
+        match edge_report.kind {
+            Some(PauliEdgeApplicationKind::Solved) => {
+                let finite_evidence = [
+                    edge_report.extent,
+                    edge_report.residual_abs,
+                    edge_report.residual_scale,
+                    edge_report.traffic_upper_bound_mev,
+                    edge_report.flux_abs_error_mev,
+                    edge_report.root_error_abs,
+                    edge_report.occupation_error_abs,
+                    edge_report.max_occupation_bracket_width,
+                    edge_report.conditioning_lower_bound,
+                ]
+                .into_iter()
+                .all(f64::is_finite);
+                let consistent_evidence = (1..=96).contains(&edge_report.nonlinear_iterations)
+                    && edge_report.residual_abs >= 0.0
+                    && edge_report.residual_scale > 0.0
+                    && edge_report.traffic_upper_bound_mev > 0.0
+                    && edge_report.flux_abs_error_mev >= 0.0
+                    && edge_report.flux_abs_error_mev <= edge_report.traffic_upper_bound_mev
+                    && edge_report.root_error_abs >= edge_report.residual_abs
+                    && edge_report.occupation_error_abs >= 0.0
+                    && edge_report.occupation_error_abs <= 128.0 * f64::EPSILON
+                    && edge_report.max_occupation_bracket_width >= 0.0
+                    && (0.0..=1.0).contains(&edge_report.conditioning_lower_bound)
+                    && edge_report.residual_abs
+                        <= 128.0 * f64::EPSILON * edge_report.residual_scale + f64::from_bits(1);
+                if !finite_evidence || !consistent_evidence {
+                    return Err(PauliEdgeFailureKind::InvalidResidual);
+                }
+                report.edge_applications += 1;
+                report.solved += 1;
+                report.nonlinear_iterations += edge_report.nonlinear_iterations;
+                report.maximum_edge_iterations = report
+                    .maximum_edge_iterations
+                    .max(edge_report.nonlinear_iterations);
+                if edge_report.residual_scale.is_finite() && edge_report.residual_scale > 0.0 {
+                    report.maximum_root_residual_ratio = report
+                        .maximum_root_residual_ratio
+                        .max(edge_report.residual_abs / edge_report.residual_scale);
+                }
+                report.maximum_occupation_bracket_width = report
+                    .maximum_occupation_bracket_width
+                    .max(edge_report.max_occupation_bracket_width);
+                report.maximum_root_error_bound = report
+                    .maximum_root_error_bound
+                    .max(edge_report.root_error_abs);
+                report.maximum_occupation_error_bound = report
+                    .maximum_occupation_error_bound
+                    .max(edge_report.occupation_error_abs);
+                report.maximum_flux_error_fraction = report.maximum_flux_error_fraction.max(
+                    edge_report.flux_abs_error_mev
+                        / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1)),
+                );
+            }
+            Some(PauliEdgeApplicationKind::ExactStationary) => {
+                report.edge_applications += 1;
+                report.exact_stationary += 1;
+            }
+            None => report.edge_applications += 1,
+        }
+        Ok(())
     }
 
     fn checked_banks(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> Result<(), &'static str> {
@@ -532,28 +621,37 @@ impl IsotropicElectronPauliEdges {
         step_mev_inverse: f64,
         electron_pair: &[f64],
         heavy_pair: &[f64],
-    ) -> Result<(Vec<f64>, Vec<f64>, PauliSweepReport), &'static str> {
-        self.checked_banks(electron_pair, heavy_pair)?;
+    ) -> Result<(Vec<f64>, Vec<f64>, PauliSweepReport), PauliSweepFailure> {
+        self.checked_banks(electron_pair, heavy_pair)
+            .map_err(|_| PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidInput,
+                edge_index: None,
+                partial_report: PauliSweepReport::empty(),
+            })?;
         if !step_mev_inverse.is_finite() || step_mev_inverse < 0.0 {
-            return Err("electron Pauli sweep step is invalid");
+            return Err(PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidInput,
+                edge_index: None,
+                partial_report: PauliSweepReport::empty(),
+            });
         }
         if step_mev_inverse == 0.0 {
             return Ok((
                 electron_pair.to_vec(),
                 heavy_pair.to_vec(),
-                PauliSweepReport::default(),
+                PauliSweepReport::empty(),
             ));
         }
 
         let mut electron_candidate = electron_pair.to_vec();
         let mut heavy_candidate = heavy_pair.to_vec();
-        let mut report = PauliSweepReport::default();
+        let mut report = PauliSweepReport::empty();
         let half_step = 0.5 * step_mev_inverse;
         for reverse in [false, true] {
             let apply = |item: &FoldedPauliEdge,
                          electron: &mut [f64],
                          heavy: &mut [f64]|
-             -> Result<PauliEdgeStep, &'static str> {
+             -> Result<PauliEdgeStep, PauliEdgeFailure> {
                 if item.bank == 0 {
                     item.edge.apply_implicit(half_step, electron)
                 } else {
@@ -561,18 +659,63 @@ impl IsotropicElectronPauliEdges {
                 }
             };
             if reverse {
-                for item in self.edges.iter().rev() {
-                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
-                    Self::record_edge_certificate(&mut report, edge_report);
+                for (edge_index, item) in self.edges.iter().enumerate().rev() {
+                    match apply(item, &mut electron_candidate, &mut heavy_candidate) {
+                        Ok(edge_report) => {
+                            if let Err(kind) =
+                                Self::record_edge_certificate(&mut report, edge_report)
+                            {
+                                return Err(PauliSweepFailure {
+                                    kind,
+                                    edge_index: Some(edge_index),
+                                    partial_report: report,
+                                });
+                            }
+                        }
+                        Err(error) => {
+                            report.unresolved +=
+                                usize::from(error.kind == PauliEdgeFailureKind::UnresolvedFlux);
+                            return Err(PauliSweepFailure {
+                                kind: error.kind,
+                                edge_index: Some(edge_index),
+                                partial_report: report,
+                            });
+                        }
+                    }
                 }
             } else {
-                for item in &self.edges {
-                    let edge_report = apply(item, &mut electron_candidate, &mut heavy_candidate)?;
-                    Self::record_edge_certificate(&mut report, edge_report);
+                for (edge_index, item) in self.edges.iter().enumerate() {
+                    match apply(item, &mut electron_candidate, &mut heavy_candidate) {
+                        Ok(edge_report) => {
+                            if let Err(kind) =
+                                Self::record_edge_certificate(&mut report, edge_report)
+                            {
+                                return Err(PauliSweepFailure {
+                                    kind,
+                                    edge_index: Some(edge_index),
+                                    partial_report: report,
+                                });
+                            }
+                        }
+                        Err(error) => {
+                            report.unresolved +=
+                                usize::from(error.kind == PauliEdgeFailureKind::UnresolvedFlux);
+                            return Err(PauliSweepFailure {
+                                kind: error.kind,
+                                edge_index: Some(edge_index),
+                                partial_report: report,
+                            });
+                        }
+                    }
                 }
             }
         }
-        self.checked_banks(&electron_candidate, &heavy_candidate)?;
+        self.checked_banks(&electron_candidate, &heavy_candidate)
+            .map_err(|_| PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidResidual,
+                edge_index: None,
+                partial_report: report,
+            })?;
         Ok((electron_candidate, heavy_candidate, report))
     }
 }
@@ -812,7 +955,7 @@ mod tests {
             .unwrap();
         assert_eq!(zero_electron, occupation);
         assert_eq!(zero_heavy, occupation);
-        assert_eq!(zero_report, PauliSweepReport::default());
+        assert_eq!(zero_report, PauliSweepReport::empty());
         let reconstructed = edges.action_values(&occupation, &occupation).unwrap();
         let direct_l1 = direct
             .electron_pair_mev
@@ -1153,7 +1296,7 @@ mod tests {
     }
 
     #[test]
-    fn pauli_sweep_tangent_converges_to_unforced_action() {
+    fn root_certificates_hold_across_legacy_small_step_scales() {
         let (y, w) = grid(4);
         let rule = ElectronSpectralRule {
             electron_radial_order: 4,
@@ -1163,9 +1306,11 @@ mod tests {
         let (electron, heavy) = &states[1];
         let input = spectral_input(1.15, 1.0, &y, &w, electron, heavy, rule);
         let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
-        for exponent in [8_i32, 10, 12, 14] {
+        for exponent in [8_i32, 10, 12, 14, 16, 20, 24, 30] {
             let step = 2.0_f64.powi(-exponent);
-            let (_, _, report) = edges.transactional_step(step, electron, heavy).unwrap();
+            let (_, _, report) = edges
+                .transactional_step(step, electron, heavy)
+                .unwrap_or_else(|failure| panic!("h=2^-{exponent} failure={failure:?}"));
             eprintln!(
                 "R3 tangent probe h={step:.17e} applications={} max_iterations={} max_residual_ratio={:.17e} max_occupation_width={:.17e}",
                 report.edge_applications,
@@ -1173,7 +1318,110 @@ mod tests {
                 report.maximum_root_residual_ratio,
                 report.maximum_occupation_bracket_width,
             );
+            assert!(
+                report.maximum_edge_iterations <= 4,
+                "h=2^-{exponent} iterations={}",
+                report.maximum_edge_iterations
+            );
+            assert_eq!(report.unresolved, 0, "h=2^-{exponent}");
+            assert_eq!(report.exact_stationary, 0, "h=2^-{exponent}");
+            assert!(report.solved > 0, "h=2^-{exponent}");
+            assert_eq!(report.solved, report.edge_applications, "h=2^-{exponent}");
+            assert!(
+                report.maximum_occupation_error_bound <= 128.0 * f64::EPSILON,
+                "h=2^-{exponent} occupation_error={:.17e}",
+                report.maximum_occupation_error_bound,
+            );
+            assert!(
+                [
+                    report.maximum_root_residual_ratio,
+                    report.maximum_occupation_bracket_width,
+                    report.maximum_flux_error_fraction,
+                    report.maximum_root_error_bound,
+                    report.maximum_occupation_error_bound,
+                ]
+                .into_iter()
+                .all(f64::is_finite),
+                "h=2^-{exponent}"
+            );
         }
+    }
+
+    #[test]
+    fn subnormal_traffic_does_not_dilute_error_fraction() {
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 1.0, 1.0, 1.0e-310, 0.0).unwrap();
+        let (_, edge_report) = edge.implicit_step(1.0, 0.5, 0.5).unwrap();
+        assert_eq!(edge_report.kind, Some(PauliEdgeApplicationKind::Solved));
+        assert!(edge_report.traffic_upper_bound_mev > 0.0);
+        assert!(edge_report.traffic_upper_bound_mev < f64::MIN_POSITIVE);
+
+        let expected_fraction = edge_report.flux_abs_error_mev
+            / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1));
+        let mut sweep_report = PauliSweepReport::empty();
+        IsotropicElectronPauliEdges::record_edge_certificate(&mut sweep_report, edge_report)
+            .unwrap();
+
+        assert_eq!(sweep_report.maximum_flux_error_fraction, expected_fraction);
+    }
+
+    #[test]
+    fn malformed_solved_report_is_rejected_not_skipped() {
+        let malformed = PauliEdgeStep {
+            kind: Some(PauliEdgeApplicationKind::Solved),
+            extent: 0.0,
+            nonlinear_iterations: 1,
+            residual_abs: f64::NAN,
+            residual_scale: 1.0,
+            traffic_upper_bound_mev: 1.0,
+            flux_abs_error_mev: 0.0,
+            root_error_abs: 0.0,
+            occupation_error_abs: 0.0,
+            max_occupation_bracket_width: 0.0,
+            conditioning_lower_bound: 1.0,
+        };
+        let mut report = PauliSweepReport::empty();
+        let result = IsotropicElectronPauliEdges::record_edge_certificate(&mut report, malformed);
+        assert_eq!(result, Err(PauliEdgeFailureKind::InvalidResidual));
+        assert_eq!(report, PauliSweepReport::empty());
+    }
+
+    #[test]
+    fn sweep_report_counts_exact_stationary_without_nan_swallow() {
+        let edges = IsotropicElectronPauliEdges {
+            nq: 2,
+            edges: vec![FoldedPauliEdge {
+                bank: 0,
+                edge: PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 1.0, 1.0, 0.0, 0.0)
+                    .unwrap(),
+            }],
+        };
+        let (_, _, report) = edges
+            .transactional_step(0.25, &[0.2, 0.7], &[0.3, 0.6])
+            .unwrap();
+        assert_eq!(report.exact_stationary, 2);
+        assert_eq!(report.solved, 0);
+        assert_eq!(report.maximum_root_residual_ratio, 0.0);
+        assert_eq!(report.maximum_occupation_bracket_width, 0.0);
+        assert_eq!(report.maximum_occupation_error_bound, 0.0);
+    }
+
+    #[test]
+    fn unresolved_edge_failure_is_transactional_and_observable() {
+        let edges = IsotropicElectronPauliEdges {
+            nq: 2,
+            edges: vec![FoldedPauliEdge {
+                bank: 0,
+                edge: PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 1, 1.0, 1.0, 1.0, 1.0)
+                    .unwrap(),
+            }],
+        };
+        let failure = edges
+            .transactional_step(0.25, &[0.5, 0.5], &[0.3, 0.6])
+            .unwrap_err();
+        assert_eq!(failure.kind, PauliEdgeFailureKind::UnresolvedFlux);
+        assert_eq!(failure.edge_index, Some(0));
+        assert_eq!(failure.partial_report.unresolved, 1);
     }
 
     #[test]
