@@ -100,11 +100,31 @@ jobs:
               raise SystemExit("merged owner authorization record is absent or does not bind the expected authority base")
           PY
 
-      - name: Build generated authority projections
+      - name: Build and synchronize generated authority projections
         run: |
           set -euo pipefail
           python3 .agent-harness/scripts/build_status_board.py
           python3 .agent-harness/scripts/build_context_pack.py
+          python3 - <<'PY'
+          from pathlib import Path
+
+          begin = "<!-- BEGIN GENERATED STATUS BOARD -->"
+          end = "<!-- END GENERATED STATUS BOARD -->"
+          artifact_path = Path(".agent-harness/generated/STATUS_BOARD.md")
+          host_path = Path("docs/harness/PROJECT_STATE.md")
+          artifact = artifact_path.read_text(encoding="utf-8")
+          host = host_path.read_text(encoding="utf-8")
+          if artifact.count(begin) != 1 or artifact.count(end) != 1:
+              raise SystemExit("generated board artifact has an invalid sentinel count")
+          if host.count(begin) != 1 or host.count(end) != 1:
+              raise SystemExit("PROJECT_STATE board host has an invalid sentinel count")
+          a0 = artifact.index(begin)
+          a1 = artifact.index(end, a0) + len(end)
+          h0 = host.index(begin)
+          h1 = host.index(end, h0) + len(end)
+          block = artifact[a0:a1]
+          host_path.write_text(host[:h0] + block + host[h1:], encoding="utf-8")
+          PY
 
       - name: Preliminary formal verification
         shell: bash
@@ -127,7 +147,7 @@ jobs:
           if any("D-077 records-only SSOT synchronization" in line for line in lines):
               raise SystemExit("D-077 validation row already exists")
           separator = next(i for i, line in enumerate(lines) if line.startswith("|---"))
-          row = """| 2026-09-01 | D-077 records-only SSOT synchronization: generated-board and context builders, aggregate validator, harness regression suite, SSOT consistency, chronology, generated-artifact comparison and diff check | **Every listed command exited zero in GitHub Actions before the synchronization commit was pushed.** | `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`; `.agent-harness/context/FROZEN_DECISIONS.md`; `.agent-harness/context/GATE_REGISTRY.json`; generated board and context pack | No executable scientific path changed. The old-instrument measurement and grade are retained; only method admissibility and its pre-output contract are synchronized. |"""
+          row = """| 2026-09-01 | D-077 records-only SSOT synchronization: projection builders and host synchronization, aggregate validator, harness regression suite, SSOT consistency, chronology and diff check | **All pre-commit commands exited zero. This row is published only if the subsequent committed-tree no-op rebuild and exact-tree rerun also exit zero.** | `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`; `.agent-harness/context/FROZEN_DECISIONS.md`; `.agent-harness/context/GATE_REGISTRY.json`; generated board, board host and context pack | No executable scientific path changed. The old-instrument measurement and grade are retained; only method admissibility and its pre-output contract are synchronized. |"""
           lines.insert(separator + 1, row)
           path.write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
@@ -136,7 +156,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base="$(git rev-parse HEAD^)"
+          base="03556bed931fc31704f4540c7f113a638985bc1e"
           rm .github/workflows/d077_ssot_sync.yml
 
           expected="$(cat <<'EOF'
@@ -146,6 +166,7 @@ jobs:
           .agent-harness/generated/CONTEXT_PACK.md
           .agent-harness/generated/STATUS_BOARD.md
           docs/harness/DECISION_LOG.md
+          docs/harness/PROJECT_STATE.md
           docs/harness/VALIDATION_LEDGER.md
           EOF
           )"
@@ -171,7 +192,7 @@ jobs:
           python3 .agent-harness/scripts/check_chronology.py
           python3 .agent-harness/scripts/build_status_board.py
           python3 .agent-harness/scripts/build_context_pack.py
-          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md
+          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md docs/harness/PROJECT_STATE.md
           git diff --exit-code -- ':!.agent-harness/generated/CONTEXT_PACK.md' ':!.agent-harness/context/CONTEXT_INDEX.json'
           git show HEAD:.agent-harness/generated/CONTEXT_PACK.md | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
           git diff --check
