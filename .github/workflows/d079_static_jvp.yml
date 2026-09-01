@@ -4,18 +4,25 @@ on:
   push:
     branches:
       - research/d079-cloglog-event-jvp-static-suite-20260901
+    paths:
+      - .github/workflows/d079_static_jvp.yml
+      - scripts/audit/_d079_*.py
+      - scripts/audit/d079_static_probe.py
+      - tests/test_d079_cloglog_event_jvp.py
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   static-jvp:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
       OPENBLAS_NUM_THREADS: "1"
       OMP_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
       PYTHONPATH: src:.
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -36,10 +43,46 @@ jobs:
             scripts/audit/_d079_tangent_primitives.py \
             scripts/audit/_d079_collision_jvp.py \
             scripts/audit/_d079_rhs_jvp.py \
+            scripts/audit/d079_static_probe.py \
             tests/test_d079_cloglog_event_jvp.py
 
       - name: Run focused small-grid derivative suite
         run: python3 -m pytest -q tests/test_d079_cloglog_event_jvp.py -m "not slow"
+
+      - name: Generate plot-driven static receipt
+        run: python3 scripts/audit/d079_static_probe.py --out-dir docs/audit/artifacts/d079
+
+      - name: Audit receipt and mutations fail-closed
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("docs/audit/artifacts/d079")
+          receipt = json.loads((root / "research_receipt.json").read_text())
+          assert receipt["classification"] == "STATIC_C_ONLY_PHYSICAL_DERIVATIVE"
+          assert receipt["comparator_blob_sha"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          assert receipt["best_collision_residual"] < 2.0e-6
+          assert receipt["best_rhs_residual"] < 3.0e-6
+          invariants = receipt["invariant_residuals"]
+          assert invariants["first-law"] < 2.0e-11
+          assert invariants["CP"] < 2.0e-12
+          assert invariants["mu-tau"] < 2.0e-12
+          mutations = receipt["mutation_residuals"]
+          assert mutations["correct"] < 2.0e-6
+          assert mutations["sign"] > 1.0
+          assert mutations["scale-1.01"] > 5.0e-3
+          assert mutations["flavour-swap"] > 1.0e-3
+          assert mutations["omit-electron"] > 1.0e-3
+          for name in (
+              "residual_ladder.png",
+              "invariant_tangent_residuals.png",
+              "mutation_kills.png",
+              "probe_summary.md",
+          ):
+              path = root / name
+              assert path.is_file() and path.stat().st_size > 0, name
+          PY
 
       - name: Recover exact retained creep-1200 state
         run: |
@@ -56,3 +99,34 @@ jobs:
         env:
           D079_STATE_1200: /tmp/d079_state_1200.npz
         run: python3 -m pytest -q tests/test_d079_cloglog_event_jvp.py -m slow
+
+      - name: Upload direct plot bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d079-static-jvp-artifacts
+          path: docs/audit/artifacts/d079
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Commit deterministic generated evidence
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d079
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d079/invariant_tangent_residuals.png
+          docs/audit/artifacts/d079/mutation_kills.png
+          docs/audit/artifacts/d079/probe_summary.md
+          docs/audit/artifacts/d079/research_receipt.json
+          docs/audit/artifacts/d079/residual_ladder.png
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "research(d079): record static physical JVP evidence"
+          git push origin HEAD:research/d079-cloglog-event-jvp-static-suite-20260901
