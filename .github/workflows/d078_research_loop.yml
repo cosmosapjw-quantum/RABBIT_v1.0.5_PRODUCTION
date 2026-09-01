@@ -69,7 +69,20 @@ jobs:
               assert artifact.is_file() and artifact.stat().st_size > 0, filename
           PY
 
-      - name: Commit generated research evidence
+      - name: Upload plot bundle for direct hostile reading
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d078-plot-bundle
+          path: |
+            docs/audit/artifacts/d078/logit_chain_amplification.png
+            docs/audit/artifacts/d078/directional_residual_ladder.png
+            docs/audit/artifacts/d078/mutation_residual_ladder.png
+            docs/audit/artifacts/d078/probe_summary.md
+            docs/audit/artifacts/d078/research_receipt.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Preserve deterministic generated research evidence
         run: |
           set -euo pipefail
           expected="$(cat <<'EOF'
@@ -80,14 +93,22 @@ jobs:
           docs/audit/artifacts/d078/research_receipt.json
           EOF
           )"
-          actual="$(git ls-files --others --exclude-standard docs/audit/artifacts/d078 | sort)"
-          if [[ "$actual" != "$expected" ]]; then
-            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+          actual="$(git status --porcelain --untracked-files=all \
+            | sed -E 's/^.. //' \
+            | grep '^docs/audit/artifacts/d078/' \
+            | sort || true)"
+          unexpected="$(comm -13 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual") || true)"
+          if [[ -n "$unexpected" ]]; then
+            printf 'Unexpected generated paths:\n%s\n' "$unexpected" >&2
             exit 1
           fi
           git diff --check
+          git add docs/audit/artifacts/d078
+          if git diff --cached --quiet; then
+            echo 'Generated evidence is byte-identical to the committed artifact set.'
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/audit/artifacts/d078
-          git commit -m "research(d078): record structural derivative probe"
+          git commit -m "research(d078): refresh structural derivative probe"
           git push origin HEAD:research/d078-analytic-jacobian-research-loop-20260901
