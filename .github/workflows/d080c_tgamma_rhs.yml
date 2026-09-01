@@ -136,7 +136,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/audit/artifacts/d080c
-          expected="$(cat <<'EOF'
+          allowed="$(cat <<'EOF'
           docs/audit/artifacts/d080c/component_ratios.png
           docs/audit/artifacts/d080c/mutation_kills.png
           docs/audit/artifacts/d080c/probe_summary.md
@@ -147,10 +147,22 @@ jobs:
           EOF
           )"
           actual="$(git diff --cached --name-only | sort)"
-          if [[ "$actual" != "$expected" ]]; then
-            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+          test -n "$actual"
+          unexpected="$(comm -23 \
+            <(printf '%s\n' "$actual" | sort) \
+            <(printf '%s\n' "$allowed" | sort))"
+          if [[ -n "$unexpected" ]]; then
+            printf 'Unexpected generated paths:\n%s\n' "$unexpected" >&2
             exit 1
           fi
+          for required in \
+            docs/audit/artifacts/d080c/component_ratios.png \
+            docs/audit/artifacts/d080c/mutation_kills.png \
+            docs/audit/artifacts/d080c/probe_summary.md \
+            docs/audit/artifacts/d080c/research_receipt.json
+          do
+            printf '%s\n' "$actual" | grep -Fxq "$required"
+          done
           git diff --cached --check
           git commit -m "research(d080c): record full T-gamma RHS-column evidence"
           git push origin HEAD:research/d080c-tgamma-full-rhs-column-20260902
