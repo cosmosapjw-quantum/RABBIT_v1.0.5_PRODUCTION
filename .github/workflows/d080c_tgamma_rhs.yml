@@ -46,8 +46,110 @@ jobs:
           python3 -m pip install --disable-pip-version-check \
             numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
 
-      - name: Compile D-080C specification
-        run: python3 -m py_compile tests/test_d080c_tgamma_rhs.py
+      - name: Compile D-080C source and tests
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d080c_tgamma_rhs.py \
+            scripts/audit/d080c_tgamma_rhs_probe.py \
+            tests/test_d080c_tgamma_rhs.py
 
-      - name: Run focused static RHS-column specification
+      - name: Run focused static RHS-column suite
         run: python3 -m pytest -q tests/test_d080c_tgamma_rhs.py -m "not slow"
+
+      - name: Generate deterministic plot and mutation receipt
+        run: |
+          rm -rf docs/audit/artifacts/d080c
+          python3 scripts/audit/d080c_tgamma_rhs_probe.py \
+            --out-dir docs/audit/artifacts/d080c
+
+      - name: Audit receipt fail-closed
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("docs/audit/artifacts/d080c")
+          receipt = json.loads((root / "research_receipt.json").read_text())
+          assert receipt["classification"] == "FULL_STATIC_TGAMMA_RHS_COLUMN"
+          assert receipt["comparator_blob_sha"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          thermal = receipt["thermal_case"]
+          weak = receipt["manufactured_weak_tail_case"]
+          assert thermal["best_block_residual"] < 5.0e-5
+          assert weak["best_block_residual"] < 3.0e-4
+          assert thermal["all_samples_same_branch"] is True
+          assert weak["all_samples_same_branch"] is True
+          assert thermal["base_reconstruction_residual"] < 5.0e-14
+          assert thermal["component_sum_residual"] < 5.0e-13
+          assert thermal["hubble_log_tangent_per_mev"] > 0.0
+          equilibrium = receipt["equilibrium"]
+          assert equilibrium["neutrino_energy_tangent"] > 0.0
+          assert equilibrium["electromagnetic_energy_tangent"] < 0.0
+          assert equilibrium["first_law_tangent_residual"] < 2.0e-10
+          assert equilibrium["elapsed_output_tangent"] < 0.0
+          assert receipt["elapsed_time_input_column_norm"] == 0.0
+          best = thermal["best_block_residual"]
+          for value in receipt["mutation_block_residuals"].values():
+              assert value > max(1.0e-6, 20.0 * best)
+          for name in (
+              "component_ratios.png",
+              "mutation_kills.png",
+              "probe_summary.md",
+              "research_receipt.json",
+              "rhs_residual_ladders.png",
+              "rowwise_residual_ladder.png",
+              "weak_tail_residual_ladder.png",
+          ):
+              path = root / name
+              assert path.is_file() and path.stat().st_size > 0, name
+          PY
+
+      - name: Recover exact retained creep-1200 state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080c_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080c_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Run retained-stiff full-RHS discriminator
+        env:
+          D080C_STATE_1200: /tmp/d080c_state_1200.npz
+        run: python3 -m pytest -q tests/test_d080c_tgamma_rhs.py -m slow
+
+      - name: Upload direct evidence bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d080c-tgamma-rhs-artifacts
+          path: docs/audit/artifacts/d080c
+          if-no-files-found: error
+          retention-days: 2
+
+      - name: Commit deterministic evidence
+        run: |
+          set -euo pipefail
+          git fetch origin research/d080c-tgamma-full-rhs-column-20260902
+          git rebase origin/research/d080c-tgamma-full-rhs-column-20260902
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d080c
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d080c/component_ratios.png
+          docs/audit/artifacts/d080c/mutation_kills.png
+          docs/audit/artifacts/d080c/probe_summary.md
+          docs/audit/artifacts/d080c/research_receipt.json
+          docs/audit/artifacts/d080c/rhs_residual_ladders.png
+          docs/audit/artifacts/d080c/rowwise_residual_ladder.png
+          docs/audit/artifacts/d080c/weak_tail_residual_ladder.png
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "research(d080c): record full T-gamma RHS-column evidence"
+          git push origin HEAD:research/d080c-tgamma-full-rhs-column-20260902
