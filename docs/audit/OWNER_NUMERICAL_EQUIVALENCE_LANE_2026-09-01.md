@@ -181,9 +181,9 @@ a completed endpoint, independent scientific corroboration, or any gate pass.
 ## 9. Cost line
 
 ```text
-added_lines: 177
+added_lines: 196
 removed_lines: 0
-net_lines: 177
+net_lines: 196
 files_touched: 1
 token_use_exact: UNAVAILABLE
 token_use_basis: the GitHub connector exposes no exact token counter
