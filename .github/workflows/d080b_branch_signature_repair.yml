@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          fetch-depth: 0
+          fetch-depth: 2
           ref: research/d080b-tgamma-collision-column-20260902
 
       - name: Remove continuous T-gamma bytes from the discrete branch signature
@@ -44,7 +44,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          changed="$(git diff --cached --name-only)"
-          test "$changed" = "scripts/audit/_d080b_tgamma_collision.py"
+          expected="$(cat <<'EOF'
+          .github/workflows/d080b_branch_signature_repair.yml
+          scripts/audit/_d080b_tgamma_collision.py
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          test "$actual" = "$expected"
           git commit -m "fix(d080b): make branch signatures temperature-invariant"
           git push origin HEAD:research/d080b-tgamma-collision-column-20260902
