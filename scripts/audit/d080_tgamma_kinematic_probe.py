@@ -72,7 +72,11 @@ def primal_batch(
 
 
 def comparator_blob_sha() -> str:
-    return hashlib.sha1(Path(ind.__file__).read_bytes()).hexdigest()
+    """Return the Git blob object ID, not the raw-file SHA-1."""
+
+    payload = Path(ind.__file__).read_bytes()
+    framed = b"blob " + str(len(payload)).encode("ascii") + b"\0" + payload
+    return hashlib.sha1(framed).hexdigest()
 
 
 def save_line_plot(
@@ -102,13 +106,11 @@ def save_bar_plot(
     *,
     ylabel: str,
     title: str,
-    log: bool = True,
 ) -> None:
     figure = plt.figure(figsize=(6.4, 4.2), constrained_layout=True)
     axis = figure.add_subplot(1, 1, 1)
     axis.bar(labels, values)
-    if log:
-        axis.set_yscale("log")
+    axis.set_yscale("log")
     axis.set_ylabel(ylabel)
     axis.set_title(title)
     axis.tick_params(axis="x", rotation=20)
@@ -146,6 +148,7 @@ def main() -> None:
     centered_p2: np.ndarray | None = None
     centered_e2: np.ndarray | None = None
     centered_weight: np.ndarray | None = None
+    best_residual = float("inf")
 
     for epsilon in epsilons:
         plus = primal_batch(
@@ -169,10 +172,10 @@ def main() -> None:
             kinematic_residuals.append(float("nan"))
             continue
         centered = (batch_vector(plus) - batch_vector(minus)) / (2.0 * epsilon)
-        kinematic_residuals.append(relative(analytic, centered))
-        if centered_p2 is None or kinematic_residuals[-1] == min(
-            value for value in kinematic_residuals if np.isfinite(value)
-        ):
+        residual = relative(analytic, centered)
+        kinematic_residuals.append(residual)
+        if residual < best_residual:
+            best_residual = residual
             centered_p2 = (plus.p2 - minus.p2) / (2.0 * epsilon)
             centered_e2 = (plus.e2 - minus.e2) / (2.0 * epsilon)
             centered_weight = (
@@ -228,7 +231,7 @@ def main() -> None:
         ),
     }
     if receipt["comparator_blob_sha"] != EXPECTED_COMPARATOR_BLOB_SHA:
-        raise RuntimeError("comparator byte identity changed")
+        raise RuntimeError("comparator Git blob identity changed")
 
     (output / "research_receipt.json").write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n",
@@ -268,7 +271,7 @@ def main() -> None:
     summary = f"""# D-080A T-gamma kinematic tangent probe
 
 - classification: `{receipt['classification']}`
-- comparator blob: `{receipt['comparator_blob_sha']}`
+- comparator Git blob: `{receipt['comparator_blob_sha']}`
 - best kinematic residual: `{receipt['best_kinematic_residual']:.9e}`
 - best EOS residual: `{receipt['best_eos_residual']:.9e}`
 - all centered samples same branch: `{receipt['all_centered_samples_same_branch']}`
@@ -280,7 +283,7 @@ def main() -> None:
 
 This probe certifies only the smooth incoming-electron quadrature, elastic
 kinematics, mapped output coordinates, matrix-element dot products, and QED-off
-EOS temperature tangents.  It does not assemble the collision or full RHS
+EOS temperature tangents. It does not assemble the collision or full RHS
 `T_gamma` column.
 """
     (output / "probe_summary.md").write_text(summary, encoding="utf-8")
