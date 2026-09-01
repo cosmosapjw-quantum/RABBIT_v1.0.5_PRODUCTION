@@ -96,7 +96,7 @@ evidence packages, which carry an `implication` line per accepted package.
 |---|---|---|
 | `G-F10-CATALOGUE` | PASS | nine rows execute with rowwise invariants at module bytes 760a7c04 |
 | `G-F10-COVARIANCE-METROLOGY` | PASS | D-065 upholds it only on the frozen matched family and module bytes |
-| `G-F10-INDEPENDENT-FLRW` | FAIL | D-065 restored FAIL; D-071 closed the lane on current measurement |
+| `G-F10-INDEPENDENT-FLRW` | FAIL | D-071 closes the old instrument on its current measurement; D-077 authorizes only a prospectively sealed numerical-equivalence lane; no grade movement |
 | `G-F10-PERFORMANCE` | PASS | measured whole-endpoint reduction, closed with its profile |
 | `G-F10-SCOPE` | PASS | the F-10 fence holds and downstream authority is closed |
 | `G-F10C1-RADIAL` | PASS | D-004/D-014: frozen direct and five-profile envelope |

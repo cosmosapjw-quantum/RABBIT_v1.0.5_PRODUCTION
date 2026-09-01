@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `a819af389d4f97e3b641ccb65cd6c120a0943289f8c333ec67490bc3267ad6cb`
-Built at: `2026-08-06T11:14:50+00:00`
+Context version: `6cccf8ac5962b757fe4874763d262d228b2925532d35cd206c2cdbfddcb4446c`
+Built at: `2026-09-01T12:32:56+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -177,7 +177,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `126b8cc9a85d635c38565bb5da7c9fb8a6eadbe50487b29c6a3bf3c15e3770e5`
+SHA-256: `f685ba2b80eebc0d0439a26b64c3daa6febe9592f6ae31c2984b30183627b1e9`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -266,12 +266,13 @@ SHA-256: `126b8cc9a85d635c38565bb5da7c9fb8a6eadbe50487b29c6a3bf3c15e3770e5`
 | D-070-B9/B10 | **All six round-9 defects in `check_ssot_consistency.py` fixed, and canary staleness made mechanical. No gate movement; board stays 6 PASS / 2 FAIL.** The critical binder defect was REPLACED, not patched: ids and status tokens are bound by WORD ORDER -- the clause is walked in sequence, each run of consecutive ids forms one subject group, and the group takes the first token that follows it, which is then consumed and never offered to a later id. Distance-ranking is gone, because the attack's gaps were 3 and 5 while ordinary `and`-joined prose has 6 and 5: no threshold separates them, only structure does. Coverage is now asymmetric on purpose -- contradictions are caught at the full loose window however phrased, but coverage requires an AFFIRMATIVE connector from a closed list, inverting a denylist that could never be finished. | 7 of 7 SSOT guards and 5 of 5 canary guards die when reverted. 82 SSOT regression cases, 10 canary regression cases, whole harness suite 204, hook suite 108 unchanged, production suites 36 unchanged. The canary detector rediscovered F-R9-004 on its first run and found a second stale canary nobody had reported; a fresh C7 was dispatched as the last act before the sealing commit and supersedes both. | Harness tooling, tests and record only; zero production, physics, solver or Rust lines; module sha256 stays `760a7c04` | **Two fixtures did not discriminate on the first attempt and that is recorded, because the failure mode is the lesson.** A comma-adjacency fixture whose two statuses are EQUAL errors under both the fixed and the broken binder and proves nothing -- the neighbour's status must equal the lied-about id's TRUE status. The coordinator made that exact mistake twice, once in the manual reproduction and once in the fixture, and caught the second only by running the revert; the affirmative-coverage guard likewise had no fixture at first and survived its own removal in silence. **Retained attestations are never rewritten to satisfy a checker** -- C5 predates the `canary` field, so its id is read from the run directory name and it is retired by replacement instead. **Standing cost, accepted deliberately:** editing an attested hook now fails the harness until a fresh canary is run or the stale one is superseded. `json_array_length` may still return 0 while `count_lines_matching` may not, because resolving a `json_path` already proves the array exists; `role: historical` may still sit in a live region while `role: frozen` may not, because citing a superseded number alongside its commit is ordinary and is already constrained by the same-line commit test. |
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
+| D-077 | **Authorize a prospectively sealed numerical-equivalence lane for the D-071 independent-FLRW closure while retaining the old instrument/current-measurement disposition and every historical byte.** Admissible candidates are an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton-Krylov path using the identical RHS, or a hybrid analytic/AD block Jacobian whose omissions are declared and bounded before output. A finite-difference-factor reset or cap is diagnostic only. | Owner authorization `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`, merged by PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`; the authorization freezes identical physical RHS, state, grid, domain, tolerances, event, endpoint, observables, failure semantics and wall budget, and requires pre-output identity, equation-to-derivative mapping, local derivative and Newton checks, a stalled-phase discriminator, frozen endpoint predicates, mutation kills and post-report adjudication. | Records and method-admissibility only. No runtime, physics, solver, derivative implementation, numerical output, gate grade, F-11 or Type-I, QKE, inference, public-production or publication authority changes. | Reopen consideration requires every amended registry condition. Any physical-contract change leaves this equivalence lane. Authorization alone is design status only and cannot move the gate. |
 
 ---
 
 ## Source: `.agent-harness/context/GATE_REGISTRY.json`
 
-SHA-256: `bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f`
+SHA-256: `4ec125dc1f02349822d2bc5050fb9d0782cea21c6cac2d9c67faf5c5605a3106`
 
 {
   "schema_version": 1,
@@ -365,19 +366,29 @@ SHA-256: `bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f`
       "owner": "main",
       "status": "fail",
       "fail_disposition": {
-        "decision": "D-071",
+        "decision": "D-071/D-077",
         "state": "CLOSED_ON_CURRENT_MEASUREMENT",
         "why": "The D-069 r4 instrument exhausted its 64,800 s frozen wall budget with verdict ERROR and no top-level checks block, so no scientific predicate was evaluated. Re-derived from the retained stdout 28c541b3: the domain holdout set its last new maximum at evaluation 751 and then spent 10,300 evaluations and 45,545 s -- 70% of the whole budget -- without setting another. In the post-drop creep regime it advances at 2.376238e-07 N/eval at 4.42062 s/eval, leaving 7.771399 in N: about 3.27e7 further evaluations and 4.58 years of wall on this host, an ~8,305x miss against the frozen 3,938-evaluation projection. Log rounding alone spans 4.40-4.78 years; model uncertainty is unquantified because no step-size trace, rejection counter or error norm survives; and an unexplained -0.0184 drop in N at evaluation 951 is not modelled at all. The defensible claim is order-of-magnitude impracticality, not a completion date.",
         "what_is_not_concluded": "Nothing about the underlying physical proposition. r4 evaluated no predicate: evaluate() sits after the wall-budget error handler and is unreachable on the retained path. This closes an INSTRUMENT, not a question. Byte agreement across r4/r3/r2/D-056 is deterministic same-host reproducibility, not independent corroboration.",
         "reopen_requires_all_of": [
-          "a materially new method -- asymptotic reformulation, rigorous surrogate bound, or analytically constrained domain reduction -- not a faster implementation of this one",
-          "a prospectively sealed contract, frozen before any output byte, as D-069 required",
-          "a bounded discriminator covering the phase that stalled, projecting end-to-end completion inside the existing wall budget with margin, reviewed before implementation"
+          "the private-comparator physical RHS, collision catalogue, constants, units, state layout, grids, domain, tolerances, event, endpoint, observables, accepted-state and failure semantics, and wall budget remain identical",
+          "one admissible numerical-equivalence method is selected: an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton-Krylov path using the identical RHS, or a prospectively bounded analytic/AD block hybrid",
+          "a source, tree, environment, dependency, command and equation-to-derivative contract is prospectively sealed before any qualifying output byte",
+          "preregistered directional-derivative, Jacobian or JVP, local-Newton, linear-residual, conservation, exchange and symmetry tests pass at equilibrium, asymmetric, stalled collision-epoch, transition and late-time states",
+          "a bounded discriminator covers the stalled collision-dominated phase and projects end-to-end completion inside the existing wall budget with a prospectively declared margin",
+          "the frozen trajectory-prefix, checkpoint, spectral-moment, tail, conservation, exchange, event, endpoint and holdout predicates pass with no output-led refitting",
+          "designated collision-sign, normalization, multiplicity, state-index, omitted-block, stale-Jacobian, derivative-scaling and event mutations are killed",
+          "a complete evidence package and adjudication are authored only after the complete report exists; authorization alone does not move the gate"
         ],
         "explicitly_not_reopen_conditions": [
-          "generic optimization",
-          "faster hardware or more cores -- a 10x-100x gain does not close an ~8,300x evaluation-count miss, and the retained failure is step-count dominated",
-          "a larger wall budget"
+          "a finite-difference factor reset or cap by itself; it is a diagnostic causal control only",
+          "generic optimization or output-led threshold selection",
+          "tolerance widening, clipping, projection, state repair, hidden floors or failed-state suppression",
+          "changes to grids, domain, collision catalogue, physical coefficients, state meaning, event, endpoint, observables or failure semantics",
+          "reuse of production Rust or frozen JAX derivative code inside the independent comparator",
+          "faster hardware or more cores",
+          "a larger wall budget",
+          "F-11 or Type-I, QKE, inference, public-runtime, production or publication claims"
         ],
         "withdrawn_by_this_decision": "The D-071 nine-axis robustness envelope (R1-R9), which earlier surfaces forward-reference. Its premise was that an order-60 integration is tractable inside the frozen budget; R5 was order 60 and R6/R7 were 72 and 96. The measurement above disproves the premise, so the plan is retired inside the decision its forward reference pointed at rather than left dangling.",
         "evidence": [
@@ -387,7 +398,7 @@ SHA-256: `bae6314757c554ddf84056e4715d3cfbac52b5839d7cc7ee36204cd63046df7f`
         ]
       },
       "status_package": null,
-      "status_basis_legacy": "D-065 restored FAIL; D-071 closed the lane on current measurement"
+      "status_basis_legacy": "D-071 closes the old instrument on its current measurement; D-077 authorizes only a prospectively sealed numerical-equivalence lane; no grade movement"
     },
     {
       "gate_id": "G-F10-COVARIANCE-METROLOGY",
