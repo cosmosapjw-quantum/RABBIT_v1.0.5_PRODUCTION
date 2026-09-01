@@ -1,0 +1,62 @@
+{
+  "best_collision_residual": 1.1255297778462666e-10,
+  "best_rhs_residual": 3.073282849486843e-11,
+  "case": {
+    "direction_norm": 1.0,
+    "order": 8,
+    "temperature_cm_mev": 2.0,
+    "temperature_gamma_mev": 2.05,
+    "y_max": 8.0
+  },
+  "classification": "STATIC_C_ONLY_PHYSICAL_DERIVATIVE",
+  "collision_residuals": [
+    1.0690292987786029e-06,
+    9.621336487149008e-08,
+    1.0694162510465962e-08,
+    1.0032412569740064e-09,
+    1.1255297778462666e-10,
+    4.099405073479755e-10,
+    7.290917493271307e-10
+  ],
+  "comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "epsilon_ladder": [
+    0.01,
+    0.003,
+    0.001,
+    0.0003,
+    0.0001,
+    3e-05,
+    1e-05
+  ],
+  "explicit_non_authority": [
+    "no temperature or expansion-direction columns",
+    "no integrator call",
+    "no trajectory or endpoint",
+    "no wall-time projection",
+    "no F10 gate movement"
+  ],
+  "invariant_residuals": {
+    "CP": 3.252500847037205e-14,
+    "first-law": 0.0,
+    "mu-tau": 1.5043182973550342e-14,
+    "self-energy": 5.619621284928538e-16,
+    "self-number": 1.227202594608874e-16
+  },
+  "mutation_residuals": {
+    "correct": 1.1255297778462666e-10,
+    "flavour-swap": 1.0309216161977177,
+    "omit-electron": 0.8242830692183193,
+    "scale-1.01": 0.009900990001606035,
+    "sign": 1.9999999999016218
+  },
+  "rhs_residuals": [
+    2.4460890505026146e-06,
+    2.201535750762616e-07,
+    2.4461217944927512e-08,
+    2.1802309988557192e-09,
+    3.073282849486843e-11,
+    3.0091173975274997e-10,
+    3.009116102040905e-10
+  ],
+  "schema": "rabbit.d079.static_c_only_jvp.v1"
+}
