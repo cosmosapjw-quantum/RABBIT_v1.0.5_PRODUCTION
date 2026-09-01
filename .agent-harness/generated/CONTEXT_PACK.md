@@ -1,7 +1,7 @@
 # Canonical Shared Context Pack
 
-Context version: `6cccf8ac5962b757fe4874763d262d228b2925532d35cd206c2cdbfddcb4446c`
-Built at: `2026-09-01T12:32:56+00:00`
+Context version: `82e36c5f6da74ebd1f436be9d5934a062be631056f0eebd94a491454311efcf4`
+Built at: `2026-09-01T13:54:28+00:00`
 
 This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.
 
@@ -177,7 +177,7 @@ Any CAS axis may introduce internal names, but its result must map them back to 
 
 ## Source: `.agent-harness/context/FROZEN_DECISIONS.md`
 
-SHA-256: `f685ba2b80eebc0d0439a26b64c3daa6febe9592f6ae31c2984b30183627b1e9`
+SHA-256: `3938b6bfd9d55c64f1333b0dfa02401be6c1778964722bd8b14f6ce0b3dd3a0f`
 
 # Frozen Decisions and Rejected Alternatives
 
@@ -267,6 +267,7 @@ SHA-256: `f685ba2b80eebc0d0439a26b64c3daa6febe9592f6ae31c2984b30183627b1e9`
 
 Agents must not silently reopen a frozen decision. A proposed reversal is a meta-finding with new evidence and an explicit reopen condition.
 | D-077 | **Authorize a prospectively sealed numerical-equivalence lane for the D-071 independent-FLRW closure while retaining the old instrument/current-measurement disposition and every historical byte.** Admissible candidates are an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton-Krylov path using the identical RHS, or a hybrid analytic/AD block Jacobian whose omissions are declared and bounded before output. A finite-difference-factor reset or cap is diagnostic only. | Owner authorization `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`, merged by PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`; the authorization freezes identical physical RHS, state, grid, domain, tolerances, event, endpoint, observables, failure semantics and wall budget, and requires pre-output identity, equation-to-derivative mapping, local derivative and Newton checks, a stalled-phase discriminator, frozen endpoint predicates, mutation kills and post-report adjudication. | Records and method-admissibility only. No runtime, physics, solver, derivative implementation, numerical output, gate grade, F-11 or Type-I, QKE, inference, public-production or publication authority changes. | Reopen consideration requires every amended registry condition. Any physical-contract change leaves this equivalence lane. Authorization alone is design status only and cannot move the gate. |
+| D-078 | **Close the mathematics/physics research loop and two bounded coding research loops for the D-077 numerical-equivalence lane without executing or modifying the private comparator.** Retain the exact piecewise logit Jacobian/JVP push-forward, typed floor-kink refusal, manufactured true directional-residual certificate, sign/scale mutation controls, and plot/high-precision claim narrowing. Select an independently derived occupation-space analytic Jacobian or JVP as the first future implementation candidate; defer AD and JFNK until the static physical derivative package exists. | `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_CONTRACT_2026-09-01.md`; `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_RESULT_2026-09-01.md`; 12 focused tests; generated receipt and plots under `docs/audit/artifacts/d078/`; Wolfram high-precision witnesses; VigilODE reference commit `8d0c79184e09efb5bdadc24a6315c60a71a44264` used only for true-residual/failure-preservation discipline. | Research-only derivative algebra, verifier, manufactured probes, and method selection. No existing source path is modified; no private RHS, solver, trajectory, tolerance, grid, event, endpoint, observable, wall budget, registry grade, F-11/Type-I, QKE, inference, public-runtime, performance, or publication authority changes. | The next admissible action is a separately frozen pre-output contract deriving the actual occupation-space event Jacobian/JVP and testing it on prospectively fixed static physical states. No call to the integrator is admissible until that package passes linearized null, conservation, exchange, first-law, branch, and mutation checks. |
 
 ---
 
