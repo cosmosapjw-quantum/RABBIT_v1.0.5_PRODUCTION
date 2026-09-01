@@ -263,6 +263,7 @@ def test_directional_certificate_types_strict_domain_exit() -> None:
         epsilons=[0.3, 0.2],
         state_validator=lambda state: bool(np.all(state > 0.0)),
         min_valid_samples=1,
+        required_consecutive_passes=1,
     )
     assert certificate.status is TangentStatus.OUT_OF_DOMAIN
     assert certificate.valid_samples == 0
