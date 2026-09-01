@@ -28,17 +28,23 @@ jobs:
           from __future__ import annotations
 
           import json
+          import subprocess
           from pathlib import Path
 
           decision_id = "D-077"
           merge_commit = "03556bed931fc31704f4540c7f113a638985bc1e"
+          authority_base = "f6e42c29f3186926b65544d9147e9b6eab248b4e"
+
+          subprocess.run(
+              ["git", "merge-base", "--is-ancestor", merge_commit, "HEAD"],
+              check=True,
+          )
 
           frozen_path = Path(".agent-harness/context/FROZEN_DECISIONS.md")
           frozen = frozen_path.read_text(encoding="utf-8")
           if f"| {decision_id} |" in frozen:
               raise SystemExit(f"{decision_id} already exists in {frozen_path}")
-          frozen_row = (
-              "| D-077 | **Authorize a prospectively sealed numerical-equivalence lane for the D-071 independent-FLRW closure while retaining the old instrument/current-measurement disposition and every historical byte.** Admissible candidates are an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton–Krylov path using the identical RHS, or a hybrid analytic/AD block Jacobian whose omissions are declared and bounded before output. A finite-difference-factor reset or cap is diagnostic only. | Owner authorization `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`, merged by PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`; the authorization freezes identical physical RHS, state, grid, domain, tolerances, event, endpoint, observables, failure semantics and wall budget, and requires pre-output identity, equation-to-derivative mapping, local derivative and Newton checks, a stalled-phase discriminator, frozen endpoint predicates, mutation kills and post-report adjudication. | Records and method-admissibility only. No runtime, physics, solver, derivative implementation, numerical output, gate grade, F-11 or Type-I, QKE, inference, public-production or publication authority changes. | Reopen consideration requires every amended registry condition. Any physical-contract change leaves this equivalence lane. Authorization alone is design status only and cannot move the gate. |"
+          frozen_row = """| D-077 | **Authorize a prospectively sealed numerical-equivalence lane for the D-071 independent-FLRW closure while retaining the old instrument/current-measurement disposition and every historical byte.** Admissible candidates are an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton-Krylov path using the identical RHS, or a hybrid analytic/AD block Jacobian whose omissions are declared and bounded before output. A finite-difference-factor reset or cap is diagnostic only. | Owner authorization `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`, merged by PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`; the authorization freezes identical physical RHS, state, grid, domain, tolerances, event, endpoint, observables, failure semantics and wall budget, and requires pre-output identity, equation-to-derivative mapping, local derivative and Newton checks, a stalled-phase discriminator, frozen endpoint predicates, mutation kills and post-report adjudication. | Records and method-admissibility only. No runtime, physics, solver, derivative implementation, numerical output, gate grade, F-11 or Type-I, QKE, inference, public-production or publication authority changes. | Reopen consideration requires every amended registry condition. Any physical-contract change leaves this equivalence lane. Authorization alone is design status only and cannot move the gate. |"""
           frozen_path.write_text(frozen.rstrip("\n") + "\n" + frozen_row + "\n", encoding="utf-8")
 
           decision_path = Path("docs/harness/DECISION_LOG.md")
@@ -46,8 +52,7 @@ jobs:
           if any("Record D-077" in line for line in decision_lines):
               raise SystemExit("D-077 already exists in DECISION_LOG.md")
           separator = next(i for i, line in enumerate(decision_lines) if line.startswith("|---"))
-          decision_row = (
-              "| 2026-09-01 | Record D-077: authorize a sealed numerical-equivalence lane for the D-071 independent trajectory programme while retaining the old instrument and current-measurement closure and all historical evidence. | The owner merged PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`. A numerical representation may now change only through an independently derived analytic Jacobian, private-RHS AD Jacobian with provenance, matrix-free JVP or Newton–Krylov path, or a prospectively bounded analytic and AD hybrid, while the physical problem and acceptance contract remain identical. | Rejected: treating a finite-difference factor reset or cap as a qualifying result; hardware-only or larger-budget rescue; tolerance or band widening; clipping, projection or repair; physical, grid, event or endpoint changes; production derivative reuse; combining this records decision with implementation or output. | The registry grade is unchanged. The next admissible action is a separate pre-output contract change followed by the stalled-phase discriminator; only a later evidence package and adjudication may request reconsideration. |"
+          decision_row = """| 2026-09-01 | Record D-077: authorize a sealed numerical-equivalence lane for the D-071 independent trajectory programme while retaining the old instrument and current-measurement closure and all historical evidence. | The owner merged PR #4 at `03556bed931fc31704f4540c7f113a638985bc1e`. A numerical representation may now change only through an independently derived analytic Jacobian, private-RHS AD Jacobian with provenance, matrix-free JVP or Newton-Krylov path, or a prospectively bounded analytic and AD hybrid, while the physical problem and acceptance contract remain identical. | Rejected: treating a finite-difference factor reset or cap as a qualifying result; hardware-only or larger-budget rescue; tolerance or band widening; clipping, projection or repair; physical, grid, event or endpoint changes; production derivative reuse; combining this records decision with implementation or output. | The registry grade is unchanged. The next admissible action is a separate pre-output contract change followed by the stalled-phase discriminator; only a later evidence package and adjudication may request reconsideration. |"""
           decision_lines.insert(separator + 1, decision_row)
           decision_path.write_text("\n".join(decision_lines) + "\n", encoding="utf-8")
 
@@ -71,7 +76,7 @@ jobs:
               "a bounded discriminator covers the stalled collision-dominated phase and projects end-to-end completion inside the existing wall budget with a prospectively declared margin",
               "the frozen trajectory-prefix, checkpoint, spectral-moment, tail, conservation, exchange, event, endpoint and holdout predicates pass with no output-led refitting",
               "designated collision-sign, normalization, multiplicity, state-index, omitted-block, stale-Jacobian, derivative-scaling and event mutations are killed",
-              "a complete evidence package and adjudication are authored only after the complete report exists; authorization alone does not move the gate"
+              "a complete evidence package and adjudication are authored only after the complete report exists; authorization alone does not move the gate",
           ]
           disposition["explicitly_not_reopen_conditions"] = [
               "a finite-difference factor reset or cap by itself; it is a diagnostic causal control only",
@@ -81,7 +86,7 @@ jobs:
               "reuse of production Rust or frozen JAX derivative code inside the independent comparator",
               "faster hardware or more cores",
               "a larger wall budget",
-              "F-11 or Type-I, QKE, inference, public-runtime, production or publication claims"
+              "F-11 or Type-I, QKE, inference, public-runtime, production or publication claims",
           ]
           gate["status_basis_legacy"] = (
               "D-071 closes the old instrument on its current measurement; "
@@ -90,8 +95,9 @@ jobs:
           gate_path.write_text(json.dumps(registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
           owner_record = Path("docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md")
-          if not owner_record.is_file() or merge_commit not in owner_record.read_text(encoding="utf-8"):
-              raise SystemExit("merged owner authorization record is absent or does not bind the expected base")
+          owner_text = owner_record.read_text(encoding="utf-8") if owner_record.is_file() else ""
+          if authority_base not in owner_text or "Tracking issue: #3" not in owner_text:
+              raise SystemExit("merged owner authorization record is absent or does not bind the expected authority base")
           PY
 
       - name: Build generated authority projections
@@ -108,12 +114,9 @@ jobs:
           python3 -m pytest -q .agent-harness/tests
           python3 .agent-harness/scripts/check_ssot_consistency.py
           python3 .agent-harness/scripts/check_chronology.py
-          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md
-          git diff --exit-code -- ':!.agent-harness/generated/CONTEXT_PACK.md' ':!.agent-harness/context/CONTEXT_INDEX.json'
-          git show HEAD:.agent-harness/generated/CONTEXT_PACK.md | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
           git diff --check
 
-      - name: Record successful formal validation
+      - name: Record successful preliminary validation
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -124,28 +127,12 @@ jobs:
           if any("D-077 records-only SSOT synchronization" in line for line in lines):
               raise SystemExit("D-077 validation row already exists")
           separator = next(i for i, line in enumerate(lines) if line.startswith("|---"))
-          row = (
-              "| 2026-09-01 | D-077 records-only SSOT synchronization: generated-board and context builders, aggregate validator, harness regression suite, SSOT consistency, chronology, generated-artifact comparison and diff check | **Every listed command exited zero in GitHub Actions before the synchronization commit was pushed.** | `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`; `.agent-harness/context/FROZEN_DECISIONS.md`; `.agent-harness/context/GATE_REGISTRY.json`; generated board and context pack | No executable scientific path changed. The old-instrument measurement and grade are retained; only method admissibility and its pre-output contract are synchronized. |"
+          row = """| 2026-09-01 | D-077 records-only SSOT synchronization: generated-board and context builders, aggregate validator, harness regression suite, SSOT consistency, chronology, generated-artifact comparison and diff check | **Every listed command exited zero in GitHub Actions before the synchronization commit was pushed.** | `docs/audit/OWNER_NUMERICAL_EQUIVALENCE_LANE_2026-09-01.md`; `.agent-harness/context/FROZEN_DECISIONS.md`; `.agent-harness/context/GATE_REGISTRY.json`; generated board and context pack | No executable scientific path changed. The old-instrument measurement and grade are retained; only method admissibility and its pre-output contract are synchronized. |"""
           lines.insert(separator + 1, row)
           path.write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
 
-      - name: Final formal verification
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 .agent-harness/scripts/validate_harness.py
-          python3 -m pytest -q .agent-harness/tests
-          python3 .agent-harness/scripts/check_ssot_consistency.py
-          python3 .agent-harness/scripts/check_chronology.py
-          python3 .agent-harness/scripts/build_status_board.py
-          python3 .agent-harness/scripts/build_context_pack.py
-          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md
-          git diff --exit-code -- ':!.agent-harness/generated/CONTEXT_PACK.md' ':!.agent-harness/context/CONTEXT_INDEX.json'
-          git show HEAD:.agent-harness/generated/CONTEXT_PACK.md | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
-          git diff --check
-
-      - name: Commit synchronized records and remove temporary workflow
+      - name: Commit synchronized records locally and remove temporary workflow
         shell: bash
         run: |
           set -euo pipefail
@@ -153,9 +140,9 @@ jobs:
           rm .github/workflows/d077_ssot_sync.yml
 
           expected="$(cat <<'EOF'
+          .agent-harness/context/CONTEXT_INDEX.json
           .agent-harness/context/FROZEN_DECISIONS.md
           .agent-harness/context/GATE_REGISTRY.json
-          .agent-harness/context/CONTEXT_INDEX.json
           .agent-harness/generated/CONTEXT_PACK.md
           .agent-harness/generated/STATUS_BOARD.md
           docs/harness/DECISION_LOG.md
@@ -173,4 +160,21 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "records(d077): integrate numerical-equivalence authority"
+
+      - name: Final exact-tree verification and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .agent-harness/scripts/validate_harness.py
+          python3 -m pytest -q .agent-harness/tests
+          python3 .agent-harness/scripts/check_ssot_consistency.py
+          python3 .agent-harness/scripts/check_chronology.py
+          python3 .agent-harness/scripts/build_status_board.py
+          python3 .agent-harness/scripts/build_context_pack.py
+          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md
+          git diff --exit-code -- ':!.agent-harness/generated/CONTEXT_PACK.md' ':!.agent-harness/context/CONTEXT_INDEX.json'
+          git show HEAD:.agent-harness/generated/CONTEXT_PACK.md | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
+          git diff --check
+          git checkout -- .agent-harness/context/CONTEXT_INDEX.json .agent-harness/generated/CONTEXT_PACK.md
+          test -z "$(git status --porcelain)"
           git push origin HEAD:records/d077-numerical-equivalence-ssot-20260901
