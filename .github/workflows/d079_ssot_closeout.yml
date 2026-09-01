@@ -1,0 +1,121 @@
+name: d079-ssot-closeout
+
+on:
+  push:
+    branches:
+      - research/d079-cloglog-event-jvp-static-suite-20260901
+    paths:
+      - .github/workflows/d079_ssot_closeout.yml
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d079-cloglog-event-jvp-static-suite-20260901
+
+      - name: Install harness dependency
+        run: python3 -m pip install --disable-pip-version-check "pytest>=7.0"
+
+      - name: Insert the two required D-079 authority rows
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          frozen = Path('.agent-harness/context/FROZEN_DECISIONS.md')
+          text = frozen.read_text(encoding='utf-8')
+          row = (
+              '| D-079 | **Validate the frozen private comparator spectral complementary-log-log '
+              'event-JVP and complete static-RHS JVP as a pre-output derivative block, while retaining '
+              '`G-F10-INDEPENDENT-FLRW` at FAIL.** The derivative must reuse the identical reaction '
+              'catalogue, kinematics, matrix elements, support masks, quadrature, modal maps, '
+              'thermodynamics, units, state layout, and failure semantics; no integrator may run in '
+              'this node. | `docs/audit/BD622_D079_CLOGLOG_EVENT_JVP_CONTRACT_2026-09-01.md`; '
+              '`docs/audit/BD623_D079_CLOGLOG_EVENT_JVP_RESULT_2026-09-01.md`; workflow run '
+              '`33523417075`; comparator blob `de44feee0aa484abe26976c7dc34c579643005b5`; '
+              'small-grid collision/RHS residuals `1.1255297778462666e-10` and '
+              '`3.073282849486843e-11`; exact retained `creep_1200` SHA-checked slow discriminator; '
+              'first-law, conservation, CP, mu/tau, and four mutation controls pass. | Static '
+              'spectral-input derivative research and validation only. No `T_gamma` input column, '
+              'dense full Jacobian, BDF `jac=` path, trajectory, endpoint, wall-time claim, gate '
+              'movement, public runtime, QKE, Bianchi, inference, or publication authority. | The '
+              'next admissible node is D-080: derive and certify the `T_gamma` input tangent, exact '
+              'zero elapsed-time column, support-boundary semantics, and a prospectively sealed '
+              'multi-regime full-state static Jacobian/JVP. Integration remains forbidden until it '
+              'passes. |'
+          )
+          if '| D-079 |' not in text:
+              frozen.write_text(text.rstrip() + '\n' + row + '\n', encoding='utf-8')
+
+          log = Path('docs/harness/DECISION_LOG.md')
+          text = log.read_text(encoding='utf-8')
+          row = (
+              '| 2026-09-01 | Record D-079: validate the exact spectral cloglog event-JVP and '
+              'complete static-RHS JVP of the frozen private comparator, while retaining the '
+              'independent-FLRW gate at FAIL. | The comparator blob is pinned; the analytic event '
+              'tangent agrees with the unchanged collision and RHS paths, closes differentiated '
+              'number, energy and first-law identities, recovers CP and mu/tau symmetry, kills '
+              'sign/scale/flavour/omitted-electron mutations, and passes the exact retained '
+              '`creep_1200` local discriminator. | Rejected: the old nonlocal forward-FD Arnoldi '
+              'step; clipping or projection; changed support, quadrature, physics, tolerance, '
+              'event, endpoint or budget; treating one missing thermal column as trivial; running '
+              'BDF before a full-state static certificate. | D-079 is pre-output and static only. '
+              'D-080 must add the `T_gamma` input tangent, support-boundary typing, zero time column, '
+              'and multi-regime full-state certificate before any separately sealed BDF Jacobian '
+              'instrument. No gate or claim status moves. |'
+          )
+          if 'Record D-079:' not in text:
+              separator = '|---|---|---|---|---|\n'
+              if separator not in text:
+                  raise SystemExit('decision-log table separator not found')
+              text = text.replace(separator, separator + row + '\n', 1)
+              log.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Rebuild generated projections
+        run: |
+          python3 .agent-harness/scripts/build_status_board.py
+          python3 .agent-harness/scripts/build_context_pack.py
+
+      - name: Verify complete harness closure
+        run: |
+          python3 .agent-harness/scripts/validate_harness.py
+          python3 -m pytest -q .agent-harness/tests
+          python3 .agent-harness/scripts/check_ssot_consistency.py
+          git diff --check
+
+      - name: Commit exact closeout files
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .agent-harness/context/FROZEN_DECISIONS.md \
+            docs/harness/DECISION_LOG.md \
+            .agent-harness/generated/STATUS_BOARD.md \
+            .agent-harness/generated/CONTEXT_PACK.md
+          changed="$(git diff --cached --name-only | sort)"
+          if [[ -z "$changed" ]]; then
+            echo 'D-079 SSOT closeout already present'
+            exit 0
+          fi
+          allowed="$(cat <<'EOF'
+          .agent-harness/context/FROZEN_DECISIONS.md
+          .agent-harness/generated/CONTEXT_PACK.md
+          .agent-harness/generated/STATUS_BOARD.md
+          docs/harness/DECISION_LOG.md
+          EOF
+          )"
+          if [[ "$changed" != "$allowed" ]]; then
+            printf 'Unexpected closeout paths.\nAllowed:\n%s\nActual:\n%s\n' "$allowed" "$changed" >&2
+            exit 1
+          fi
+          git commit -m "records(d079): register static cloglog JVP decision"
+          git push origin HEAD:research/d079-cloglog-event-jvp-static-suite-20260901
