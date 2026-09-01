@@ -1,0 +1,125 @@
+{
+  "claim_ceiling": "full static fixed-support original-RHS T_gamma input column only; no square Jacobian, integrator, trajectory, endpoint, performance, N_eff, gate, release, or publication claim",
+  "classification": "FULL_STATIC_TGAMMA_RHS_COLUMN",
+  "comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "component_ratios_within_native_output_block": {
+    "T Hubble": 0.011781935307339649,
+    "T collision": 0.4952643600174429,
+    "T expansion/EOS": 2.1875259650234833,
+    "T heat capacity": 1.6710083897335863,
+    "spectral Hubble": 0.022204981741623615,
+    "spectral collision": 1.022003356371427,
+    "time Hubble": 1.0
+  },
+  "elapsed_time_input_column_norm": 0.0,
+  "equilibrium": {
+    "elapsed_output_tangent": -2.9682069952782854e+20,
+    "electromagnetic_energy_tangent": -8.606919856943374e-20,
+    "first_law_tangent_residual": 0.0,
+    "hubble_log_tangent_per_mev": 0.5231017159993603,
+    "neutrino_energy_tangent": 8.606919856943374e-20
+  },
+  "expected_comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "manufactured_weak_tail_case": {
+    "all_samples_same_branch": true,
+    "best_block_residual": 2.454956136786496e-08,
+    "best_index": 4,
+    "block_residuals": [
+      0.00024550462639058053,
+      2.2097257720561362e-05,
+      2.455268762058012e-06,
+      2.209758020287675e-07,
+      2.454956136786496e-08
+    ],
+    "branch_signature": "32b0d9875e6ee42c9d6607d96014bc32670d42e470f388733ce2e0d73b8107fa",
+    "elapsed_residuals": [
+      3.230028207181236e-06,
+      2.907019532295013e-07,
+      3.230015819165285e-08,
+      2.907428864809769e-09,
+      3.2560946042860756e-10
+    ],
+    "epsilon_ladder_mev": [
+      0.001,
+      0.0003,
+      0.0001,
+      3e-05,
+      1e-05
+    ],
+    "order": 8,
+    "spectral_residuals": [
+      0.00024550462639058053,
+      2.2097257720561362e-05,
+      2.455268762058012e-06,
+      2.209758020287675e-07,
+      2.454956136786496e-08
+    ],
+    "status": "controlled static probe; not retained trajectory evidence",
+    "temperature_cm_mev": 0.45,
+    "temperature_gamma_mev": 0.5,
+    "temperature_residuals": [
+      4.507348411469593e-08,
+      4.0569094100926155e-09,
+      4.517096130487756e-10,
+      3.984895537150094e-11,
+      2.720621668743508e-12
+    ],
+    "y_max": 10.0
+  },
+  "metric_contract": "maximum of separately dimensionless spectral, photon-temperature, and elapsed-output residuals; heterogeneous units are never mixed",
+  "mutation_block_residuals": {
+    "flip Q_em,T": 0.9905287200456124,
+    "omit Hubble": 1.0,
+    "omit collision": 1.0220033536382722,
+    "omit heat capacity": 0.625609561925678
+  },
+  "schema": "rabbit.d080c.static_tgamma_rhs.v1",
+  "thermal_case": {
+    "all_samples_same_branch": true,
+    "base_reconstruction_residual": 0.0,
+    "best_block_residual": 1.730599336173931e-07,
+    "best_index": 4,
+    "block_residuals": [
+      0.0017290336493146108,
+      0.00015573993590963954,
+      1.730567673939841e-05,
+      1.5575237583202025e-06,
+      1.730599336173931e-07
+    ],
+    "branch_signature": "93a58141e44223a6ff88b8a14b8b2cd013b5f384e5ba7b5c32dc9b05a65b59b9",
+    "component_sum_residual": 0.0,
+    "elapsed_residuals": [
+      2.2183906560325697e-05,
+      1.9965671285875675e-06,
+      2.2184106328029074e-07,
+      1.9964809157018996e-08,
+      2.2164519637163854e-09
+    ],
+    "epsilon_ladder_mev": [
+      0.01,
+      0.003,
+      0.001,
+      0.0003,
+      0.0001
+    ],
+    "hubble_log_tangent_per_mev": 0.5346295229727147,
+    "order": 8,
+    "spectral_residuals": [
+      0.0017290336493146108,
+      0.00015573993590963954,
+      1.730567673939841e-05,
+      1.5575237583202025e-06,
+      1.730599336173931e-07
+    ],
+    "temperature_cm_mev": 2.0,
+    "temperature_gamma_mev": 2.05,
+    "temperature_residuals": [
+      1.1318965811147264e-05,
+      1.0186391385908768e-06,
+      1.1318130290077611e-07,
+      1.0187282543536376e-08,
+      1.1325469223724583e-09
+    ],
+    "y_max": 8.0
+  }
+}
