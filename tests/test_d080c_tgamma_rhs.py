@@ -157,15 +157,30 @@ def test_full_tgamma_rhs_column_matches_original_packed_rhs_ladder() -> None:
 
     assert min(residuals) < 5.0e-5
     assert best_centered is not None
+    swapped_output_rows = result.tgamma_column.copy()
+    swapped_output_rows[-2], swapped_output_rows[-1] = (
+        result.tgamma_column[-1],
+        result.tgamma_column[-2],
+    )
     mutations = {
         "omit-collision": result.tgamma_column - result.collision_component,
-        "omit-hubble-feedback": result.tgamma_column - result.hubble_component,
+        "omit-all-hubble-feedback": result.tgamma_column - result.hubble_component,
+        "omit-spectral-hubble-feedback": (
+            result.tgamma_column - result.spectral_hubble_component
+        ),
+        "omit-temperature-hubble-feedback": (
+            result.tgamma_column - result.temperature_hubble_component
+        ),
+        "omit-time-hubble-feedback": (
+            result.tgamma_column - result.time_hubble_component
+        ),
         "omit-heat-capacity-derivative": (
             result.tgamma_column - result.heat_capacity_component
         ),
         "flip-electromagnetic-transfer": (
             result.tgamma_column - 2.0 * result.temperature_collision_component
         ),
+        "swap-temperature-time-output-rows": swapped_output_rows,
     }
     for name, mutant in mutations.items():
         assert _block_relative(mutant, best_centered, grid.order) > max(
