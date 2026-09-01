@@ -1,0 +1,26 @@
+{
+  "schema": "rabbit.d080b.wolfram_symbolic_receipt.v1",
+  "date": "2026-09-02",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "scope": "full static fixed-support T_gamma collision-action tangent identities",
+  "natural_units": {
+    "hbar": 1,
+    "c": 1,
+    "k_B": 1
+  },
+  "results": {
+    "event_product_rule_residual": "0",
+    "electron_logit_temperature_derivative_residual": "0",
+    "elastic_equilibrium_affinity_derivative": "(-E2 + E4)/T^2",
+    "elastic_equilibrium_positive_energy_transfer_residual": "0",
+    "pair_equilibrium_positive_energy_transfer_residual": "0",
+    "differentiated_event_first_law_residual": "0"
+  },
+  "derived_sign_gates": {
+    "elastic": "At detailed balance, (dC/dT_gamma)*(E1-E3) = G*(E4-E2)^2/T^2 >= 0.",
+    "pair": "At detailed balance, (dC/dT_gamma)*(E1+E2) = G*(E3+E4)^2/T^2 > 0 on nonzero-energy support.",
+    "electromagnetic": "The corresponding electromagnetic energy-transfer tangent has the opposite sign.",
+    "first_law": "dQ_nu/dT_gamma + dQ_em/dT_gamma = 0 event by event on the fixed-support differentiable branch."
+  },
+  "claim_ceiling": "Formula-level symbolic closure only; no numerical collision-column, RHS, solver, trajectory, endpoint, performance, or gate claim."
+}

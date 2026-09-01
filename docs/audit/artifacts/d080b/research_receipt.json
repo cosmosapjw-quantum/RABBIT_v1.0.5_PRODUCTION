@@ -1,0 +1,82 @@
+{
+  "all_ladder_samples_same_branch": true,
+  "base_reconstruction_residual": 0.0,
+  "best_thermal_action_residual": 7.008319499657305e-07,
+  "best_thermal_energy_residual": 1.3451422014128028e-08,
+  "case": {
+    "order": 8,
+    "temperature_cm_mev": 2.0,
+    "temperature_gamma_mev": 2.05,
+    "y_max": 8.0
+  },
+  "claim_ceiling": "static fixed-support T_gamma collision-action column only; no full RHS, square Jacobian, integrator, trajectory, endpoint, performance, or gate claim",
+  "classification": "FULL_STATIC_TGAMMA_COLLISION_COLUMN",
+  "comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "component_norms_over_total": {
+    "Pauli": 0.6803454327114572,
+    "elastic": 1.0275292915344316,
+    "matrix": 0.04225523274173477,
+    "measure": 0.03944366072232272,
+    "pair": 0.263211827501944,
+    "projection": 0.24670548930421946
+  },
+  "component_sum_residual": 3.6697417739742726e-15,
+  "energy_tangent_by_component": {
+    "kinematic-weight": [
+      7.662318417713502e-23,
+      -7.662318417713504e-23
+    ],
+    "matrix": [
+      6.1168925109049155e-22,
+      -6.116892510904915e-22
+    ],
+    "measure": [
+      6.045911114696083e-22,
+      -6.045911114696082e-22
+    ],
+    "pauli": [
+      1.0064455517950273e-19,
+      -1.0064455517950273e-19
+    ]
+  },
+  "epsilon_ladder_mev": [
+    0.01,
+    0.003,
+    0.001,
+    0.0003,
+    0.0001
+  ],
+  "equilibrium_base_norm": 5.870417396613988e-35,
+  "equilibrium_electromagnetic_energy_tangent": -8.606919856943374e-20,
+  "equilibrium_neutrino_energy_tangent": 8.606919856943374e-20,
+  "expected_comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "maximum_first_law_tangent_residual": 5.904140785354764e-17,
+  "minimum_lambda_margin": 0.2598020334735334,
+  "minimum_support_margin": 0.0026697082136230193,
+  "mutation_residuals": {
+    "flip-pauli": 1.360690605566371,
+    "omit-elastic": 1.0275292689663658,
+    "omit-matrix": 0.04225588633730735,
+    "omit-measure": 0.03944431314830849,
+    "omit-pair": 0.25615986865669194,
+    "omit-projection": 0.24670601795989683
+  },
+  "schema": "rabbit.d080b.static_tgamma_collision.v1",
+  "thermal_action_residuals": [
+    0.006964702522886377,
+    0.0006303902084346112,
+    7.007840899653884e-05,
+    6.307414676887248e-06,
+    7.008319499657305e-07
+  ],
+  "thermal_branch_signature": "93a58141e44223a6ff88b8a14b8b2cd013b5f384e5ba7b5c32dc9b05a65b59b9",
+  "thermal_cp_residual": 8.511669472522492e-15,
+  "thermal_energy_residuals": [
+    0.00013447577211927854,
+    1.2104304815588841e-05,
+    1.3449371441294354e-06,
+    1.2104518509616555e-07,
+    1.3451422014128028e-08
+  ],
+  "thermal_mu_tau_residual": 7.176505633695463e-15
+}
