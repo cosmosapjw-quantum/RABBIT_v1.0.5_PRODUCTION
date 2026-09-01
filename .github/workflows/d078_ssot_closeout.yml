@@ -1,0 +1,121 @@
+name: d078-ssot-closeout
+
+on:
+  push:
+    branches:
+      - research/d078-analytic-jacobian-research-loop-20260901
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d078-analytic-jacobian-research-loop-20260901
+
+      - name: Install bounded verification dependencies
+        run: python3 -m pip install --disable-pip-version-check "numpy>=1.24" "pytest>=7.0"
+
+      - name: Record D-078 in controlling ledgers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          decision_id = "D-078"
+
+          frozen_path = Path(".agent-harness/context/FROZEN_DECISIONS.md")
+          frozen = frozen_path.read_text(encoding="utf-8")
+          if f"| {decision_id} |" in frozen:
+              raise SystemExit(f"{decision_id} already exists in {frozen_path}")
+          frozen_row = """| D-078 | **Close the mathematics/physics research loop and two bounded coding research loops for the D-077 numerical-equivalence lane without executing or modifying the private comparator.** Retain the exact piecewise logit Jacobian/JVP push-forward, typed floor-kink refusal, manufactured true directional-residual certificate, sign/scale mutation controls, and plot/high-precision claim narrowing. Select an independently derived occupation-space analytic Jacobian or JVP as the first future implementation candidate; defer AD and JFNK until the static physical derivative package exists. | `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_CONTRACT_2026-09-01.md`; `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_RESULT_2026-09-01.md`; 12 focused tests; generated receipt and plots under `docs/audit/artifacts/d078/`; Wolfram high-precision witnesses; VigilODE reference commit `8d0c79184e09efb5bdadc24a6315c60a71a44264` used only for true-residual/failure-preservation discipline. | Research-only derivative algebra, verifier, manufactured probes, and method selection. No existing source path is modified; no private RHS, solver, trajectory, tolerance, grid, event, endpoint, observable, wall budget, registry grade, F-11/Type-I, QKE, inference, public-runtime, performance, or publication authority changes. | The next admissible action is a separately frozen pre-output contract deriving the actual occupation-space event Jacobian/JVP and testing it on prospectively fixed static physical states. No call to the integrator is admissible until that package passes linearized null, conservation, exchange, first-law, branch, and mutation checks. |"""
+          frozen_path.write_text(frozen.rstrip("\n") + "\n" + frozen_row + "\n", encoding="utf-8")
+
+          log_path = Path("docs/harness/DECISION_LOG.md")
+          lines = log_path.read_text(encoding="utf-8").splitlines()
+          if any("Record D-078:" in line for line in lines):
+              raise SystemExit("D-078 already exists in DECISION_LOG.md")
+          separator = next(i for i, line in enumerate(lines) if line.startswith("|---"))
+          row = """| 2026-09-01 | Record D-078: close the exact logit-linearization and true-tangent research loops, and select an independently derived occupation-space analytic Jacobian/JVP as the first future implementation candidate. | The exact push-forward, equilibrium similarity limit, floor-active branch, typed kink, manufactured residual ladders, sign/scale mutants, and high-precision witnesses were checked before any physical comparator output. VigilODE supplied only the true-residual and explicit-failure verification pattern. | Rejected: treating the logit chart alone as the retained-stall diagnosis; universal binary64 finite-difference authority in the deep tail; changing the floor, tolerance, grid, event, endpoint, hardware, or budget; copying production derivatives; implementing AD or JFNK before a certified static occupation derivative exists; running a trajectory in this research slice. | No registry grade or scientific claim moves. The next admissible change is a separate pre-output actual-event derivative contract and static physical-state package; integration remains blocked until it passes. |"""
+          lines.insert(separator + 1, row)
+          log_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Build generated context projection
+        run: |
+          set -euo pipefail
+          python3 .agent-harness/scripts/build_status_board.py
+          python3 .agent-harness/scripts/build_context_pack.py
+
+      - name: Preliminary exact-scope verification
+        run: |
+          set -euo pipefail
+          python3 .agent-harness/scripts/validate_harness.py
+          python3 -m pytest -q .agent-harness/tests
+          python3 -m pytest -q tests/test_d078_jacobian_research.py
+          python3 .agent-harness/scripts/check_ssot_consistency.py
+          python3 .agent-harness/scripts/check_chronology.py --help >/dev/null
+          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md docs/harness/PROJECT_STATE.md
+          git diff --check
+
+      - name: Record successful D-078 validation
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("docs/harness/VALIDATION_LEDGER.md")
+          lines = path.read_text(encoding="utf-8").splitlines()
+          if any("D-078 analytic-Jacobian research closeout" in line for line in lines):
+              raise SystemExit("D-078 validation row already exists")
+          separator = next(i for i, line in enumerate(lines) if line.startswith("|---"))
+          row = """| 2026-09-01 | D-078 analytic-Jacobian research closeout: context/status builders, aggregate validator, full harness regression suite, 12-test focused derivative suite, SSOT consistency, chronology CLI contract, generated-board no-op and diff check | **Every preliminary command exited zero; this row is published only if the committed-tree rerun below also exits zero.** | `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_CONTRACT_2026-09-01.md`; `docs/audit/BD622_D078_ANALYTIC_JACOBIAN_RESEARCH_RESULT_2026-09-01.md`; `docs/audit/artifacts/d078/`; Actions runs `33514057720` and `33514573717` | Research-only mechanism evidence. No existing runtime, physics, comparator, solver, trajectory, or registry-grade path changed. |"""
+          lines.insert(separator + 1, row)
+          path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Commit ledgers locally and remove temporary workflow
+        run: |
+          set -euo pipefail
+          base="f82792ddbc98efbb91e590aa0e826fa925643f26"
+          rm .github/workflows/d078_ssot_closeout.yml
+          expected="$(cat <<'EOF'
+          .agent-harness/context/CONTEXT_INDEX.json
+          .agent-harness/context/FROZEN_DECISIONS.md
+          .agent-harness/generated/CONTEXT_PACK.md
+          docs/harness/DECISION_LOG.md
+          docs/harness/VALIDATION_LEDGER.md
+          EOF
+          )"
+          actual="$(git diff --name-only "$base" | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected final changed paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --check "$base"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "records(d078): close analytic-Jacobian research SSOT"
+
+      - name: Final committed-tree verification and push
+        run: |
+          set -euo pipefail
+          python3 .agent-harness/scripts/validate_harness.py
+          python3 -m pytest -q .agent-harness/tests
+          python3 -m pytest -q tests/test_d078_jacobian_research.py
+          python3 .agent-harness/scripts/check_ssot_consistency.py
+          python3 .agent-harness/scripts/check_chronology.py --help >/dev/null
+          python3 .agent-harness/scripts/build_status_board.py
+          python3 .agent-harness/scripts/build_context_pack.py
+          git diff --exit-code -- .agent-harness/generated/STATUS_BOARD.md docs/harness/PROJECT_STATE.md
+          git diff --exit-code -- ':!.agent-harness/generated/CONTEXT_PACK.md' ':!.agent-harness/context/CONTEXT_INDEX.json'
+          git show HEAD:.agent-harness/generated/CONTEXT_PACK.md | diff <(sed '4d' -) <(sed '4d' .agent-harness/generated/CONTEXT_PACK.md)
+          git diff --check
+          git checkout -- .agent-harness/context/CONTEXT_INDEX.json .agent-harness/generated/CONTEXT_PACK.md
+          test -z "$(git status --porcelain)"
+          git push origin HEAD:research/d078-analytic-jacobian-research-loop-20260901
