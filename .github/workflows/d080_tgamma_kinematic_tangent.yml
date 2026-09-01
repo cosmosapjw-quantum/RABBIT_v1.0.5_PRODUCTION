@@ -59,6 +59,7 @@ jobs:
 
           root = Path("docs/audit/artifacts/d080a")
           receipt = json.loads((root / "research_receipt.json").read_text())
+          print(json.dumps(receipt, indent=2, sort_keys=True))
           assert receipt["classification"] == "TGAMMA_KINEMATIC_TANGENT_ONLY"
           assert receipt["comparator_blob_sha"] == "de44feee0aa484abe26976c7dc34c579643005b5"
           assert receipt["best_kinematic_residual"] < 2.0e-6
