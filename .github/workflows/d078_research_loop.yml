@@ -80,7 +80,7 @@ jobs:
           docs/audit/artifacts/d078/research_receipt.json
           EOF
           )"
-          actual="$(git status --porcelain | sed 's/^?? //' | sed 's/^ M //' | sort)"
+          actual="$(git ls-files --others --exclude-standard docs/audit/artifacts/d078 | sort)"
           if [[ "$actual" != "$expected" ]]; then
             printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
             exit 1
