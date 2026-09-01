@@ -1,0 +1,10 @@
+RABBIT GitHub connector smoke receipt
+
+run_id: RABBIT-GITHUB-SMOKE-20260901-GPT56-R1
+repository: cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION
+anchor_main_sha: 70b050af5923d15afd6bc8443ce13869f042306f
+base_branch: mock/connectivity-base-20260901-gpt56-r1
+head_branch: mock/connectivity-head-20260901-gpt56-r1
+scope: disposable connectivity branches only
+status: PROBE_ONLY_NOT_A_RESULT
+assertion: no production, package, implementation, release, or default branch is a merge target
