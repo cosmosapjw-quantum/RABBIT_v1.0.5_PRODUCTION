@@ -27,6 +27,26 @@ def _relative(left: np.ndarray, right: np.ndarray) -> float:
     return float(np.linalg.norm(a - b) / scale)
 
 
+def _scalar_relative(left: float, right: float) -> float:
+    scale = max(abs(float(left)), abs(float(right)), np.finfo(float).tiny)
+    return abs(float(left) - float(right)) / scale
+
+
+def _block_relative(left: np.ndarray, right: np.ndarray, order: int) -> float:
+    """Compare spectral, temperature, and time rows without mixing units."""
+
+    a = np.asarray(left, dtype=np.float64)
+    b = np.asarray(right, dtype=np.float64)
+    size = 3 * order + 2
+    if a.shape != (size,) or b.shape != (size,):
+        raise ValueError("packed RHS vectors have an invalid shape")
+    return max(
+        _relative(a[: 3 * order], b[: 3 * order]),
+        _scalar_relative(a[-2], b[-2]),
+        _scalar_relative(a[-1], b[-1]),
+    )
+
+
 def _config(*, electron_radial_order: int = 8) -> ind.IndependentCollisionConfig:
     return ind.IndependentCollisionConfig(
         incoming_polar_order=2,
@@ -98,7 +118,7 @@ def test_full_tgamma_rhs_column_matches_original_packed_rhs_ladder() -> None:
         temperature_cm_mev=tcm,
         config=config,
     )
-    assert _relative(result.base_rhs, original) < 5.0e-14
+    assert _block_relative(result.base_rhs, original, grid.order) < 5.0e-14
     assert result.base_reconstruction_residual < 5.0e-14
     assert result.component_sum_residual < 5.0e-13
     assert np.array_equal(result.elapsed_time_input_column, np.zeros_like(result.base_rhs))
@@ -129,7 +149,7 @@ def test_full_tgamma_rhs_column_matches_original_packed_rhs_ladder() -> None:
             epsilon=epsilon,
             config=config,
         )
-        residual = _relative(result.tgamma_column, centered)
+        residual = _block_relative(result.tgamma_column, centered, grid.order)
         residuals.append(residual)
         if residual < best:
             best = residual
@@ -148,7 +168,9 @@ def test_full_tgamma_rhs_column_matches_original_packed_rhs_ladder() -> None:
         ),
     }
     for name, mutant in mutations.items():
-        assert _relative(mutant, best_centered) > max(1.0e-6, 20.0 * best), name
+        assert _block_relative(mutant, best_centered, grid.order) > max(
+            1.0e-6, 20.0 * best
+        ), name
 
 
 def test_elapsed_time_input_column_is_exactly_structural_zero() -> None:
@@ -240,7 +262,7 @@ def test_manufactured_weak_collision_tail_matches_original_rhs() -> None:
         epsilon=epsilon,
         config=config,
     )
-    assert _relative(result.tgamma_column, centered) < 3.0e-4
+    assert _block_relative(result.tgamma_column, centered, grid.order) < 3.0e-4
 
 
 @pytest.mark.slow
@@ -293,7 +315,7 @@ def test_retained_stiff_state_has_admissible_full_tgamma_rhs_column() -> None:
         config=config,
         elapsed=float(state[-1]),
     )
-    assert _relative(result.tgamma_column, centered) < 3.0e-3
+    assert _block_relative(result.tgamma_column, centered, grid.order) < 3.0e-3
     assert result.collision.first_law_tangent_residual < 2.0e-8
     assert np.array_equal(
         result.elapsed_time_input_column, np.zeros_like(result.tgamma_column)
