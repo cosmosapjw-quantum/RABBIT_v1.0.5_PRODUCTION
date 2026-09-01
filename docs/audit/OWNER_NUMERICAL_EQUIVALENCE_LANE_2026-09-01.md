@@ -182,7 +182,7 @@ a completed endpoint, independent scientific corroboration, or any gate pass.
 
 ```text
 added_lines: 196
-removed_lines: 0
+deleted_lines: 0
 net_lines: 196
 files_touched: 1
 token_use_exact: UNAVAILABLE
