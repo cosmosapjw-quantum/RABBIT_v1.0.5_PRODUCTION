@@ -28,26 +28,12 @@ jobs:
 
           path = Path("scripts/audit/_d080b_tgamma_collision.py")
           text = path.read_text(encoding="utf-8")
-          old = '''    digest.update(
-              f"{grid.order}:{grid.y_max}:{tcm:.17e}:{tg:.17e}:{mass:.17e}".encode()
-          )
-          '''
-          new = '''    # A branch signature describes only discrete path choices.  Including
-              # the differentiated continuous value T_gamma would make every nonzero
-              # finite-difference perturbation appear to cross a branch by construction.
-              digest.update(
-                  (
-                      f"{grid.order}:{grid.y_max}:{tcm:.17e}:{mass:.17e}:"
-                      f"{config.incoming_polar_order}:"
-                      f"{config.final_polar_order}:"
-                      f"{config.final_azimuth_order}:"
-                      f"{config.electron_radial_order}"
-                  ).encode()
+          needle = ":{tg:.17e}"
+          if text.count(needle) != 1:
+              raise SystemExit(
+                  f"expected exactly one continuous T-gamma signature token, found {text.count(needle)}"
               )
-              '''
-          if text.count(old) != 1:
-              raise SystemExit("expected exactly one continuous-temperature signature block")
-          path.write_text(text.replace(old, new), encoding="utf-8")
+          path.write_text(text.replace(needle, ""), encoding="utf-8")
           PY
           rm .github/workflows/d080b_branch_signature_repair.yml
           git diff --check
