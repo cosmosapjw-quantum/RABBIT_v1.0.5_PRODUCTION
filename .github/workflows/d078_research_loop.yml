@@ -1,0 +1,93 @@
+name: d078-analytic-jacobian-research-loop
+
+on:
+  push:
+    branches:
+      - research/d078-analytic-jacobian-research-loop-20260901
+
+permissions:
+  contents: write
+
+jobs:
+  research-loop:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d078-analytic-jacobian-research-loop-20260901
+
+      - name: Install bounded research dependencies
+        run: python3 -m pip install --disable-pip-version-check "numpy>=1.24" "matplotlib>=3.7" "pytest>=7.0"
+
+      - name: Compile research modules
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d078_logit_linearization.py \
+            scripts/audit/_d078_tangent_certificate.py \
+            scripts/audit/d078_research_probe.py
+
+      - name: Execute focused TDD contract
+        run: python3 -m pytest -q tests/test_d078_jacobian_research.py
+
+      - name: Generate structural plots and receipt
+        run: python3 scripts/audit/d078_research_probe.py --out-dir docs/audit/artifacts/d078
+
+      - name: Fail-closed receipt and mutation checks
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("docs/audit/artifacts/d078/research_receipt.json")
+          receipt = json.loads(path.read_text(encoding="utf-8"))
+          assert receipt["classification"] == "STRUCTURAL_MANUFACTURED_RESEARCH_ONLY"
+          cases = {entry["label"]: entry for entry in receipt["cases"]}
+          mutations = {entry["label"]: entry for entry in receipt["mutations"]}
+          assert cases["interior"]["certificate_status"] == "CERTIFIED"
+          assert cases["near-floor"]["branch_crossing_samples"] >= 1
+          assert mutations["correct"]["certificate_status"] == "CERTIFIED"
+          assert mutations["sign-mutant"]["certificate_status"] != "CERTIFIED"
+          assert mutations["scale-1.01-mutant"]["certificate_status"] != "CERTIFIED"
+          assert receipt["explicit_non_authority"] == [
+              "no private comparator import",
+              "no physical trajectory",
+              "no checkpoint or endpoint",
+              "no wall-time projection",
+              "no gate movement",
+          ]
+          for filename in (
+              "logit_chain_amplification.png",
+              "directional_residual_ladder.png",
+              "mutation_residual_ladder.png",
+              "probe_summary.md",
+          ):
+              artifact = path.parent / filename
+              assert artifact.is_file() and artifact.stat().st_size > 0, filename
+          PY
+
+      - name: Commit generated research evidence
+        run: |
+          set -euo pipefail
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d078/directional_residual_ladder.png
+          docs/audit/artifacts/d078/logit_chain_amplification.png
+          docs/audit/artifacts/d078/mutation_residual_ladder.png
+          docs/audit/artifacts/d078/probe_summary.md
+          docs/audit/artifacts/d078/research_receipt.json
+          EOF
+          )"
+          actual="$(git status --porcelain | sed 's/^?? //' | sed 's/^ M //' | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d078
+          git commit -m "research(d078): record structural derivative probe"
+          git push origin HEAD:research/d078-analytic-jacobian-research-loop-20260901
