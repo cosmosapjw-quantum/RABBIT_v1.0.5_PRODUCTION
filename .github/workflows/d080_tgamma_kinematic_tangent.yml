@@ -11,10 +11,11 @@ on:
       - tests/test_d080_tgamma_kinematic_tangent.py
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   tgamma-kinematics:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -25,6 +26,8 @@ jobs:
       PYTHONPATH: src:.
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
 
       - name: Verify frozen predecessor identities
         run: |
@@ -35,8 +38,10 @@ jobs:
           test "$(git rev-parse HEAD:scripts/audit/_d079_rhs_jvp.py)" = \
             6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
 
-      - name: Install bounded dependencies
-        run: python3 -m pip install --disable-pip-version-check numpy scipy matplotlib pytest
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
 
       - name: Compile D-080 source and tests
         run: |
@@ -87,3 +92,30 @@ jobs:
           path: docs/audit/artifacts/d080a
           if-no-files-found: error
           retention-days: 2
+
+      - name: Commit deterministic evidence
+        run: |
+          set -euo pipefail
+          branch=research/d080-tgamma-kinematic-tangent-20260902
+          git fetch origin "$branch"
+          git rebase "origin/$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d080a
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d080a/eos_residual_ladder.png
+          docs/audit/artifacts/d080a/kinematic_residual_ladder.png
+          docs/audit/artifacts/d080a/mutation_kills.png
+          docs/audit/artifacts/d080a/probe_summary.md
+          docs/audit/artifacts/d080a/research_receipt.json
+          docs/audit/artifacts/d080a/support_margin.png
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected evidence paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "research(d080): record T-gamma kinematic tangent evidence"
+          git push origin HEAD:"$branch"
