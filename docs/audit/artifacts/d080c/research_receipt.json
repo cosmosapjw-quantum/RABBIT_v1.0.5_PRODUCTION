@@ -69,11 +69,15 @@
   "metric_contract": "maximum of separately dimensionless spectral, photon-temperature, and elapsed-output residuals; heterogeneous units are never mixed",
   "mutation_block_residuals": {
     "flip Q_em,T": 0.9905287200456124,
-    "omit Hubble": 1.0,
+    "omit T-row Hubble": 0.0116447366410172,
+    "omit all Hubble": 1.0,
     "omit collision": 1.0220033536382722,
-    "omit heat capacity": 0.625609561925678
+    "omit heat capacity": 0.625609561925678,
+    "omit spectral Hubble": 0.021726827900600425,
+    "omit time-row Hubble": 1.0,
+    "swap T/time rows": 1.0
   },
-  "schema": "rabbit.d080c.static_tgamma_rhs.v1",
+  "schema": "rabbit.d080c.static_tgamma_rhs.v2",
   "thermal_case": {
     "all_samples_same_branch": true,
     "base_reconstruction_residual": 0.0,
