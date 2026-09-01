@@ -1,0 +1,53 @@
+name: d080c-static-tgamma-rhs
+
+on:
+  push:
+    branches:
+      - research/d080c-tgamma-full-rhs-column-20260902
+    paths:
+      - .github/workflows/d080c_tgamma_rhs.yml
+      - scripts/audit/_d080c_tgamma_rhs.py
+      - scripts/audit/d080c_tgamma_rhs_probe.py
+      - scripts/audit/d080c_symbolic_checks.wl
+      - tests/test_d080c_tgamma_rhs.py
+
+permissions:
+  contents: write
+
+jobs:
+  static-tgamma-rhs-column:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen predecessor identities
+        run: |
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git rev-parse HEAD:scripts/audit/_d079_rhs_jvp.py)" = \
+            6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
+          test "$(git rev-parse HEAD:scripts/audit/_d080_tgamma_primitives.py)" = \
+            c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git rev-parse HEAD:scripts/audit/_d080b_tgamma_collision.py)" = \
+            78489c43f3046db09d8ba2d96070124ed7b0aa91
+
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Compile D-080C specification
+        run: python3 -m py_compile tests/test_d080c_tgamma_rhs.py
+
+      - name: Run focused static RHS-column specification
+        run: python3 -m pytest -q tests/test_d080c_tgamma_rhs.py -m "not slow"
