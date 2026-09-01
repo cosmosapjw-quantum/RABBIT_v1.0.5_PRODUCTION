@@ -106,15 +106,14 @@ jobs:
             echo 'D-079 SSOT closeout already present'
             exit 0
           fi
-          allowed="$(cat <<'EOF'
+          expected="$(cat <<'EOF'
           .agent-harness/context/FROZEN_DECISIONS.md
           .agent-harness/generated/CONTEXT_PACK.md
-          .agent-harness/generated/STATUS_BOARD.md
           docs/harness/DECISION_LOG.md
           EOF
           )"
-          if [[ "$changed" != "$allowed" ]]; then
-            printf 'Unexpected closeout paths.\nAllowed:\n%s\nActual:\n%s\n' "$allowed" "$changed" >&2
+          if [[ "$changed" != "$expected" ]]; then
+            printf 'Unexpected closeout paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$changed" >&2
             exit 1
           fi
           git commit -m "records(d079): register static cloglog JVP decision"
