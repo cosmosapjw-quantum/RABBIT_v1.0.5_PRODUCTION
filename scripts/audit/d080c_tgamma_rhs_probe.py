@@ -217,20 +217,23 @@ def line_plot(
     plt.close(figure)
 
 
-def bar_plot(
+def horizontal_bar_plot(
     path: Path,
     values: dict[str, float],
     *,
-    ylabel: str,
+    xlabel: str,
     title: str,
 ) -> None:
-    figure = plt.figure(figsize=(7.2, 4.6), constrained_layout=True)
+    figure = plt.figure(figsize=(7.4, 5.0), constrained_layout=True)
     axis = figure.add_subplot(1, 1, 1)
-    axis.bar(list(values), list(values.values()))
-    axis.set_yscale("log")
-    axis.set_ylabel(ylabel)
+    labels = list(values)
+    data = list(values.values())
+    axis.barh(labels, data)
+    axis.set_xscale("log")
+    axis.set_xlabel(xlabel)
     axis.set_title(title)
-    axis.tick_params(axis="x", rotation=25)
+    axis.invert_yaxis()
+    axis.grid(True, axis="x", which="both", alpha=0.3)
     figure.savefig(path, dpi=180)
     plt.close(figure)
 
@@ -317,13 +320,30 @@ def main() -> None:
         analytic=weak,
     )
 
+    swapped_output_rows = thermal.tgamma_column.copy()
+    swapped_output_rows[-2], swapped_output_rows[-1] = (
+        thermal.tgamma_column[-1],
+        thermal.tgamma_column[-2],
+    )
     mutations = {
         "omit collision": thermal.tgamma_column - thermal.collision_component,
-        "omit Hubble": thermal.tgamma_column - thermal.hubble_component,
-        "omit heat capacity": thermal.tgamma_column - thermal.heat_capacity_component,
+        "omit all Hubble": thermal.tgamma_column - thermal.hubble_component,
+        "omit spectral Hubble": (
+            thermal.tgamma_column - thermal.spectral_hubble_component
+        ),
+        "omit T-row Hubble": (
+            thermal.tgamma_column - thermal.temperature_hubble_component
+        ),
+        "omit time-row Hubble": (
+            thermal.tgamma_column - thermal.time_hubble_component
+        ),
+        "omit heat capacity": (
+            thermal.tgamma_column - thermal.heat_capacity_component
+        ),
         "flip Q_em,T": (
             thermal.tgamma_column - 2.0 * thermal.temperature_collision_component
         ),
+        "swap T/time rows": swapped_output_rows,
     }
     mutation_residuals = {
         name: block_residuals(
@@ -339,7 +359,7 @@ def main() -> None:
         raise RuntimeError("comparator Git-blob identity changed")
 
     receipt = {
-        "schema": "rabbit.d080c.static_tgamma_rhs.v1",
+        "schema": "rabbit.d080c.static_tgamma_rhs.v2",
         "classification": "FULL_STATIC_TGAMMA_RHS_COLUMN",
         "comparator_blob_sha": comparator_sha,
         "expected_comparator_blob_sha": EXPECTED_COMPARATOR_BLOB_SHA,
@@ -447,21 +467,22 @@ def main() -> None:
         ylabel="block-scaled tangent residual",
         title="Manufactured low-temperature weak-collision probe",
     )
-    bar_plot(
+    horizontal_bar_plot(
         output / "component_ratios.png",
         ratios,
-        ylabel="absolute component / native-block total",
+        xlabel="absolute component / native-block total",
         title="Load-bearing D-080C RHS-column components",
     )
-    bar_plot(
+    horizontal_bar_plot(
         output / "mutation_kills.png",
         mutation_residuals,
-        ylabel="block-scaled residual against original RHS",
-        title="Adversarial omission/sign mutations",
+        xlabel="block-scaled residual against original RHS",
+        title="Adversarial omission, sign, and row-order mutations",
     )
 
     summary = f"""# D-080C deterministic static probe
 
+- schema: `rabbit.d080c.static_tgamma_rhs.v2`
 - classification: `FULL_STATIC_TGAMMA_RHS_COLUMN`
 - comparator blob: `{comparator_sha}`
 - thermal best block residual: `{min(thermal_ladder.block_residuals):.16e}`
@@ -471,10 +492,15 @@ def main() -> None:
 - equilibrium dQ_nu/dT_gamma: `{equilibrium.collision.neutrino_energy_transfer:.16e}`
 - equilibrium dQ_em/dT_gamma: `{equilibrium.collision.electron_bath_energy_transfer:.16e}`
 - elapsed-time input column norm: `{np.linalg.norm(thermal.elapsed_time_input_column):.16e}`
+- granular mutations: `{len(mutation_residuals)}`
 
 The residual metric is blockwise and dimension-aware.  It does not combine the
 MeV^-1 spectral rows, dimensionless photon-temperature row, and MeV^-2 elapsed
 output row in one dimensional Euclidean norm.
+
+The Hubble mutation audit independently removes the spectral, photon-temperature,
+and elapsed-output contributions.  The output-row swap mutation certifies the
+packed ordering rather than relying only on vector length.
 
 The manufactured weak-tail state is a controlled static probe, not retained
 trajectory evidence.  The claim remains limited to the fixed-support static
