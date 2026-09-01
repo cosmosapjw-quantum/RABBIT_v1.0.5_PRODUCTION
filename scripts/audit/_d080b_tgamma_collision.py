@@ -343,7 +343,7 @@ def electron_tgamma_branch_signature(
     neutrino_weights = tcm * grid.weights
     digest = hashlib.sha256()
     digest.update(
-        f"{grid.order}:{grid.y_max}:{tcm:.17e}:{tg:.17e}:{mass:.17e}".encode()
+        f"{grid.order}:{grid.y_max}:{tcm:.17e}:{mass:.17e}".encode()
     )
 
     for node_index, y1 in enumerate(grid.nodes):
