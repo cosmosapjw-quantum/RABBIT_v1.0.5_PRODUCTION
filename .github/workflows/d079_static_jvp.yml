@@ -1,0 +1,58 @@
+name: d079-static-physical-jvp
+
+on:
+  push:
+    branches:
+      - research/d079-cloglog-event-jvp-static-suite-20260901
+
+permissions:
+  contents: read
+
+jobs:
+  static-jvp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen comparator identity
+        run: |
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+
+      - name: Install bounded dependencies
+        run: python3 -m pip install --disable-pip-version-check numpy scipy matplotlib pytest
+
+      - name: Compile D-079 source and tests
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d079_tangent_primitives.py \
+            scripts/audit/_d079_collision_jvp.py \
+            scripts/audit/_d079_rhs_jvp.py \
+            tests/test_d079_cloglog_event_jvp.py
+
+      - name: Run focused small-grid derivative suite
+        run: python3 -m pytest -q tests/test_d079_cloglog_event_jvp.py -m "not slow"
+
+      - name: Recover exact retained creep-1200 state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d079_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d079_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Run retained-state local derivative discriminator
+        env:
+          D079_STATE_1200: /tmp/d079_state_1200.npz
+        run: python3 -m pytest -q tests/test_d079_cloglog_event_jvp.py -m slow
