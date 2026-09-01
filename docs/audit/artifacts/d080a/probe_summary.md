@@ -10,6 +10,7 @@
 - freeze-p2 mutation: `1.000000000e+00`
 - flip-e2-sign mutation: `2.000000000e+00`
 - omit-weight-scale mutation: `1.000000000e+00`
+- D-080 records/projection synchronization parent: `4e2604cae418b8834fb29e2d4227deb6f8cf5c0b`
 
 This probe certifies only the smooth incoming-electron quadrature, elastic
 kinematics, mapped output coordinates, matrix-element dot products, and QED-off
