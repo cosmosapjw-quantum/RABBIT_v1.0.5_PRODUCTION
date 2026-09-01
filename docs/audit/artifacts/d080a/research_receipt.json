@@ -1,0 +1,41 @@
+{
+  "all_centered_samples_same_branch": true,
+  "best_eos_residual": 1.5358912625172127e-09,
+  "best_kinematic_residual": 3.682855771233863e-11,
+  "claim_ceiling": "smooth T_gamma quadrature/kinematic/EOS tangent only; no collision-column, RHS-column, solver, trajectory, endpoint, or gate claim",
+  "classification": "TGAMMA_KINEMATIC_TANGENT_ONLY",
+  "comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "electron_mass_mev": 0.51099895,
+  "eos_residuals": [
+    1.5338130382167297e-05,
+    1.3804485372929639e-06,
+    1.5338326485072365e-07,
+    1.3805076418029579e-08,
+    1.5358912625172127e-09
+  ],
+  "epsilons_mev": [
+    0.01,
+    0.003,
+    0.001,
+    0.0003,
+    0.0001
+  ],
+  "expected_comparator_blob_sha": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "kinematic_residuals": [
+    1.8575648640755438e-07,
+    1.6718010754618127e-08,
+    1.8576485402628228e-09,
+    1.6715382949554038e-10,
+    3.682855771233863e-11
+  ],
+  "lambda_margin": 0.8332592638827941,
+  "mutation_residuals": {
+    "flip-e2-sign": 1.9999999999980516,
+    "freeze-p2": 1.0,
+    "omit-weight-scale": 1.0
+  },
+  "schema": "rabbit-d080a-tgamma-kinematic/v1",
+  "support_margin": 0.0026758977636325144,
+  "target_neutrino_momentum_mev": 3.2,
+  "temperature_gamma_mev": 2.05
+}
