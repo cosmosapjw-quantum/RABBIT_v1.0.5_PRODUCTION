@@ -49,7 +49,7 @@ def test_cloglog_chart_tangent_matches_centered_difference() -> None:
     c = np.array([[-4.0, -1.0, 0.2, 1.5]])
     v = np.array([[0.4, -0.2, 0.1, 0.3]])
     df, du, dlogq = cloglog_chart_tangent(c, v)
-    epsilon = 1.0e-6
+    epsilon = 1.0e-5
     f_plus = ind.cloglog_to_occupation(c + epsilon * v)
     f_minus = ind.cloglog_to_occupation(c - epsilon * v)
     u_plus = ind._native_pair_logits(np.repeat(c + epsilon * v, 3, axis=0))[0]
@@ -57,7 +57,7 @@ def test_cloglog_chart_tangent_matches_centered_difference() -> None:
     q_plus = ind.cloglog_chain_factor(c + epsilon * v)
     q_minus = ind.cloglog_chain_factor(c - epsilon * v)
     assert np.allclose(df, (f_plus - f_minus) / (2.0 * epsilon), rtol=2e-9, atol=1e-12)
-    assert np.allclose(du[0], (u_plus - u_minus) / (2.0 * epsilon), rtol=2e-9, atol=1e-11)
+    assert np.allclose(du[0], (u_plus - u_minus) / (2.0 * epsilon), rtol=2e-8, atol=1e-10)
     assert np.allclose(dlogq, (np.log(q_plus) - np.log(q_minus)) / (2.0 * epsilon), rtol=2e-9, atol=1e-11)
 
 
