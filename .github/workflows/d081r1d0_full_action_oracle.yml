@@ -76,11 +76,22 @@ jobs:
               assert len(case["self_rows"]) == 9
               assert len(case["electron_families"]) == 15
               assert decode(case["diagnostics"]["first_law_residual"]) <= 5.0e-13
-              assert decode(case["diagnostics"]["charge_conjugation_residual"]) <= 5.0e-12
-          assert decode(cases["equilibrium"]["diagnostics"]["mu_tau_residual"]) <= 5.0e-12
-          assert decode(cases["thermal_split"]["diagnostics"]["event_neutrino_energy_transfer"]) > 0.0
-          assert decode(cases["thermal_split"]["electron_bath_energy_transfer_bits"]) < 0.0
-          assert decode(cases["mu_tau_split"]["diagnostics"]["mu_tau_residual"]) > 1.0e-8
+
+          equilibrium = cases["equilibrium"]
+          thermal = cases["thermal_split"]
+          split = cases["mu_tau_split"]
+          assert decode(thermal["diagnostics"]["charge_conjugation_residual"]) <= 5.0e-12
+          assert decode(split["diagnostics"]["charge_conjugation_residual"]) <= 5.0e-12
+          assert decode(thermal["diagnostics"]["mu_tau_residual"]) <= 5.0e-12
+          assert decode(thermal["diagnostics"]["event_neutrino_energy_transfer"]) > 0.0
+          assert decode(thermal["electron_bath_energy_transfer_bits"]) < 0.0
+          assert decode(split["diagnostics"]["mu_tau_residual"]) > 1.0e-8
+
+          null = {key: decode(value) for key, value in data["null_state_metrology"].items()}
+          assert null["equilibrium_total_over_thermal"] <= 1.0e-10
+          assert null["equilibrium_cp_over_thermal"] <= 1.0e-12
+          assert null["equilibrium_mu_tau_over_thermal"] <= 1.0e-12
+          assert decode(equilibrium["metrology"]["total_max_abs"]) <= 1.0e-18
           PY
 
       - name: Generate bounded R1D0 records
@@ -108,6 +119,7 @@ jobs:
               return struct.unpack(">d", bytes.fromhex(bits))[0]
 
           cases = {case["name"]: case for case in data["cases"]}
+          null = {key: decode(value) for key, value in data["null_state_metrology"].items()}
           receipt = {
               "schema": "rabbit.d081r1d0.full_action_oracle_freeze.v1",
               "classification": "FULL_PYTHON_ACTION_ORACLE_FROZEN",
@@ -121,19 +133,32 @@ jobs:
               "y_max": 8.0,
               "cases": ["equilibrium", "thermal_split", "mu_tau_split"],
               "catalogue": {"self_events": 27, "electron_events": 15},
+              "null_state_metrology": null,
               "equilibrium": {
+                  "total_max_abs": decode(cases["equilibrium"]["metrology"]["total_max_abs"]),
+                  "cp_absolute": decode(cases["equilibrium"]["metrology"]["cp_absolute"]),
+                  "mu_tau_absolute": decode(cases["equilibrium"]["metrology"]["mu_tau_absolute"]),
+                  "legacy_cp_relative": decode(cases["equilibrium"]["metrology"]["legacy_cp_relative"]),
+                  "legacy_mu_tau_relative": decode(cases["equilibrium"]["metrology"]["legacy_mu_tau_relative"]),
                   "first_law_residual": decode(cases["equilibrium"]["diagnostics"]["first_law_residual"]),
-                  "charge_conjugation_residual": decode(cases["equilibrium"]["diagnostics"]["charge_conjugation_residual"]),
-                  "mu_tau_residual": decode(cases["equilibrium"]["diagnostics"]["mu_tau_residual"]),
               },
               "thermal_split": {
+                  "total_max_abs": decode(cases["thermal_split"]["metrology"]["total_max_abs"]),
+                  "cp_relative": decode(cases["thermal_split"]["diagnostics"]["charge_conjugation_residual"]),
+                  "mu_tau_relative": decode(cases["thermal_split"]["diagnostics"]["mu_tau_residual"]),
                   "q_nu": decode(cases["thermal_split"]["diagnostics"]["event_neutrino_energy_transfer"]),
                   "q_em": decode(cases["thermal_split"]["electron_bath_energy_transfer_bits"]),
                   "first_law_residual": decode(cases["thermal_split"]["diagnostics"]["first_law_residual"]),
               },
               "mu_tau_split": {
-                  "mu_tau_residual": decode(cases["mu_tau_split"]["diagnostics"]["mu_tau_residual"]),
+                  "cp_relative": decode(cases["mu_tau_split"]["diagnostics"]["charge_conjugation_residual"]),
+                  "mu_tau_relative": decode(cases["mu_tau_split"]["diagnostics"]["mu_tau_residual"]),
                   "first_law_residual": decode(cases["mu_tau_split"]["diagnostics"]["first_law_residual"]),
+              },
+              "preserved_failed_measurement": {
+                  "workflow_run": 33669293606,
+                  "failure": "equilibrium legacy relative CP residual was 1.53002459381913996e-3 because both compared actions were numerical nulls",
+                  "diagnostic_workflow_run": 33669459552,
               },
               "claim_ceiling": (
                   "frozen Python order-8 full-action oracle only; no Rust full-action parity, "
@@ -167,11 +192,25 @@ jobs:
           full-action positive authority is the frozen Python comparator Git blob recorded in
           the machine receipt.
 
+          ## Preserved failed measurement and metrology repair
+
+          The first freeze attempt failed because it applied a forward relative CP residual to
+          an equilibrium action whose maximum magnitude was about `1.47e-35`. The absolute CP
+          discrepancy was only about `1.67e-38`, but normalising by the null action produced the
+          misleading relative value `1.53e-3`. A separate diagnostic run measured all three
+          states before any repair.
+
+          The corrected gate does not widen the non-null CP threshold. Thermal and flavour-split
+          cases retain the `5e-12` relative gate. The equilibrium CP and mu/tau absolute
+          differences are divided by the independently declared non-null thermal action scale;
+          the legacy null-state relative values remain in the receipt.
+
           ## Physical gates
 
-          The generator requires first-law and CP closure in every case, a numerically null
-          equilibrium action, positive neutrino and negative electromagnetic energy transfer
-          for the thermal-split case, and a nonzero mu/tau response for the antisymmetric case.
+          The generator requires first-law closure in every case, a numerically null equilibrium
+          action against the non-null thermal scale, CP and mu/tau closure with null-aware
+          normalisation, positive neutrino and negative electromagnetic energy transfer for the
+          thermal-split case, and a nonzero mu/tau response for the antisymmetric case.
 
           ## Claim ceiling
 
@@ -189,11 +228,12 @@ jobs:
           python3 -m json.tool docs/audit/artifacts/d081r1d0/full_action_oracle_receipt.json >/dev/null
           git diff --check
 
-      - name: Commit frozen fixture and records, removing temporary workflow
+      - name: Commit frozen fixture and records, removing temporary workflows
         shell: bash
         run: |
           set -euo pipefail
           rm .github/workflows/d081r1d0_full_action_oracle.yml
+          rm .github/workflows/d081r1d0_cp_diagnostic.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
