@@ -1,0 +1,39 @@
+{
+  "arxiv_sources_read_directly": [
+    "2008.01074",
+    "1605.09383",
+    "1506.05266",
+    "2012.02726"
+  ],
+  "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "catalogue": {
+    "electron_events": 15,
+    "self_events": 27
+  },
+  "claim_ceiling": "selected scalar kernel primitives only; no full six-species collision action, retained-state RHS/J/Jv parity, solver call, trajectory, performance, endpoint, N_eff or F10 gate movement",
+  "classification": "SELECTED_EXACT_KERNEL_PRIMITIVES_ADMITTED",
+  "covered_primitives": [
+    "stable scalar Pauli gain-minus-loss",
+    "Pauli detailed-balance restoring gradient",
+    "self K_s and K_t weak matrices",
+    "six selected electron elastic/pair matrix cases",
+    "one event-measure point",
+    "roundoff-only nonnegative projection and material-negative refusal",
+    "six-species catalogue stoichiometry"
+  ],
+  "fixture_sha256": "8b8e943a435c4c6ed3b68360181e465b650330fa73aa50ed84aed878ccd9e62b",
+  "generator_sha256": "353b8f9842799abb683619dcdd33035710868c9947898bfbeed85cc2350f4f4d",
+  "offline_vendor_artifact_id": 9838506413,
+  "offline_vendor_outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+  "predecessor_head": "1f42af299273011475a5b147344dcf68b2b39c65",
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "rust_source_sha256": "eb0326c3e24b2c841ca11852c6e58bf0e6882c578a2d273d7b66fd21da3e755c",
+  "rust_toolchain": "1.94.1",
+  "schema": "rabbit.d081r1c.kernel_primitive_admission.v1",
+  "tested_head": "e20e0bd5f949ef5258efb252d7911ff5eb4f0cee",
+  "tested_tree": "4124208594744c34e2bddc6e34e41b269c196a80",
+  "tests": {
+    "failed": 0,
+    "passed": 10
+  }
+}
