@@ -1,4 +1,4 @@
-# Retriggered on the exact semantic-helper test repair head; no physics or threshold change.
+# Retriggered on the exact rustfmt + semantic-helper head; no physics or threshold change.
 name: d081r1c-kernel-primitive-admission
 
 on:
