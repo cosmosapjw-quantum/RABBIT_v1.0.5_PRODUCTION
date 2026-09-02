@@ -9,6 +9,9 @@ on:
       - scripts/audit/_d080f_frozen_full_build.py
       - scripts/audit/d080f_retained_full_build.py
       - tests/test_d080f_frozen_full_build.py
+      - docs/audit/BD631_D080F_RETAINED_FULL_JACOBIAN_BUILD_CONTRACT_2026-09-02.md
+      - docs/audit/D080F_WOLFRAM_CONSTRUCTION_CHECKS_2026-09-02.wl
+      - docs/audit/D080F_WOLFRAM_CONSTRUCTION_RECEIPT_2026-09-02.json
 
 permissions:
   contents: write
@@ -43,14 +46,157 @@ jobs:
             0913b3be5ad66af27ae7115deb603c88556cd6b4
           test "$(git rev-parse HEAD:scripts/audit/_d080e_prepared_jvp_core.py)" = \
             915196691eb166f5624d413a46d314b32faacfe6
+          test "$(git rev-parse HEAD:docs/audit/D080F_WOLFRAM_CONSTRUCTION_CHECKS_2026-09-02.wl)" = \
+            bbcfa593e955bf00388a810c5be3dd92319bd3db
 
       - name: Install frozen research dependencies
         run: |
           python3 -m pip install --disable-pip-version-check \
             numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
 
-      - name: Compile D-080F specification
-        run: python3 -m py_compile tests/test_d080f_frozen_full_build.py
+      - name: Compile and run focused D-080F specification
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d080f_frozen_full_build.py \
+            scripts/audit/d080f_retained_full_build.py \
+            tests/test_d080f_frozen_full_build.py
+          python3 -m pytest -q tests/test_d080f_frozen_full_build.py
 
-      - name: Run focused sealed-build specification
-        run: python3 -m pytest -q tests/test_d080f_frozen_full_build.py
+      - name: Recover exact retained creep-1200 state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080f_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080f_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Execute retained production-order full build
+        run: |
+          rm -rf docs/audit/artifacts/d080f
+          python3 scripts/audit/d080f_retained_full_build.py \
+            --retained-state /tmp/d080f_state_1200.npz \
+            --out-dir docs/audit/artifacts/d080f
+
+      - name: Audit D-080F package fail-closed
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import numpy as np
+
+          root = Path("docs/audit/artifacts/d080f")
+          receipt = json.loads((root / "research_receipt.json").read_text())
+          assert receipt["schema"] == "rabbit.d080f.retained_full_build.v1"
+          assert receipt["classification"] == "EXECUTED_RETAINED_PRODUCTION_ORDER_JACOBIAN"
+          assert receipt["route_decision"] in {
+              "EXPLICIT_CALLBACK_CANDIDATE",
+              "MATRIX_FREE_OR_SPLIT_CANDIDATE",
+          }
+          assert receipt["fixture_sha256"] == \
+              "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380"
+          assert receipt["matrix_shape"] == [182, 182]
+          assert receipt["matrix_raw_bytes"] == 264992
+          assert receipt["elapsed_column_norm"] == 0.0
+
+          seal = receipt["prepared_state_seal"]
+          assert seal["fingerprint_unchanged"] is True
+          assert seal["all_arrays_readonly"] is True
+          assert seal["cache_miss_delta"] == 0
+          assert seal["cache_entry_delta"] == 0
+          assert seal["cache_unique_bytes"] <= 2 * 1024**3
+
+          correctness = receipt["correctness"]
+          assert correctness["maximum_equivalence_residual"] <= 5.0e-10
+          assert correctness["serial_oracle_columns"] == [0, 59, 60, 119, 120, 179]
+          for direction in correctness["original_rhs_directional_ladders"]:
+              assert direction["all_samples_same_branch"] is True
+              assert direction["best_block_residual"] < 6.0e-3
+              assert 1.0 < direction["convergence_slope_first_three"] < 3.0
+
+          matrix_path = root / "retained_order60_static_jacobian.npy"
+          matrix = np.load(matrix_path, allow_pickle=False)
+          assert matrix.shape == (182, 182)
+          assert np.array_equal(matrix[:, -1], np.zeros(182))
+          assert matrix.nbytes == 264992
+          assert hashlib.sha256(matrix_path.read_bytes()).hexdigest() == \
+              receipt["matrix_file_sha256"]
+
+          symbolic = json.loads(
+              Path("docs/audit/D080F_WOLFRAM_CONSTRUCTION_RECEIPT_2026-09-02.json").read_text()
+          )
+          assert symbolic["source_git_blob_sha"] == \
+              "bbcfa593e955bf00388a810c5be3dd92319bd3db"
+          results = symbolic["results"]
+          assert results["state_size_order_60"] == 182
+          assert results["spectral_columns_order_60"] == 180
+          assert results["dense_matrix_raw_bytes"] == 264992
+          assert results["passive_elapsed_column_newton_determinant_residual"] == 0
+
+          expected = {
+              "SHA256SUMS",
+              "construction_timing.png",
+              "integrity_and_residuals.png",
+              "memory_accounting.png",
+              "original_rhs_directional_ladders.png",
+              "prepared_array_manifest.json",
+              "probe_summary.md",
+              "research_receipt.json",
+              "retained_order60_base_rhs.npy",
+              "retained_order60_probe_directions.npy",
+              "retained_order60_static_jacobian.npy",
+          }
+          actual = {path.name for path in root.iterdir() if path.is_file()}
+          assert actual == expected, (expected - actual, actual - expected)
+          for path in root.iterdir():
+              assert path.is_file() and path.stat().st_size > 0, path
+          PY
+          (cd docs/audit/artifacts/d080f && sha256sum -c SHA256SUMS)
+
+      - name: Upload direct evidence bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d080f-retained-full-jacobian-artifacts
+          path: docs/audit/artifacts/d080f
+          if-no-files-found: error
+          retention-days: 2
+
+      - name: Commit measured evidence
+        run: |
+          set -euo pipefail
+          git fetch origin research/d080f-retained-full-jacobian-build-20260902
+          test "$(git rev-parse origin/research/d080f-retained-full-jacobian-build-20260902)" = \
+            "$(git rev-parse HEAD)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d080f
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d080f/SHA256SUMS
+          docs/audit/artifacts/d080f/construction_timing.png
+          docs/audit/artifacts/d080f/integrity_and_residuals.png
+          docs/audit/artifacts/d080f/memory_accounting.png
+          docs/audit/artifacts/d080f/original_rhs_directional_ladders.png
+          docs/audit/artifacts/d080f/prepared_array_manifest.json
+          docs/audit/artifacts/d080f/probe_summary.md
+          docs/audit/artifacts/d080f/research_receipt.json
+          docs/audit/artifacts/d080f/retained_order60_base_rhs.npy
+          docs/audit/artifacts/d080f/retained_order60_probe_directions.npy
+          docs/audit/artifacts/d080f/retained_order60_static_jacobian.npy
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          if [[ -z "$actual" ]]; then
+            echo "Measured package is byte-identical; no commit required."
+            exit 0
+          fi
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected measured paths.\nExpected:\n%s\nActual:\n%s\n' \
+              "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "research(d080f): record retained full-Jacobian build"
+          git push origin HEAD:research/d080f-retained-full-jacobian-build-20260902
