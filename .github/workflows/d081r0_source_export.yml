@@ -28,25 +28,74 @@ jobs:
           test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.toml)" = "30bc4826c7a7676b5fb5c8610273eb7586551ad8"
           test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.lock)" = "a1b5035da5c20712d1a2a4ab077da255ff94a014"
           test "$(git rev-parse HEAD:native/rabbit_cpu/rust-toolchain.toml)" = "b1dd491cdce6f8b98cfe02f6807980c0dfe48784"
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = "de44feee0aa484abe26976c7dc34c579643005b5"
 
-      - name: Produce exact source and oracle bundle
+      - name: Produce exact source-input-output oracle bundle
         shell: bash
         run: |
           set -euo pipefail
           root=/tmp/d081r0-source
+          oracle="$root/repo/python-oracle"
           rm -rf "$root"
           mkdir -p "$root/repo"
           cp -a native/rabbit_cpu "$root/repo/native-rabbit_cpu"
-          mkdir -p "$root/repo/python-oracle"
-          cp scripts/audit/_d079_rhs_jvp.py "$root/repo/python-oracle/"
-          cp scripts/audit/_d080c_tgamma_rhs.py "$root/repo/python-oracle/"
-          cp scripts/audit/_d080e_prepared_jvp.py "$root/repo/python-oracle/"
-          cp scripts/audit/_d080e_prepared_jvp_core.py "$root/repo/python-oracle/"
-          cp scripts/audit/_d080f_action_metric.py "$root/repo/python-oracle/"
-          cp docs/audit/artifacts/d080f/research_receipt.json "$root/repo/python-oracle/"
-          cp docs/audit/artifacts/d080f/retained_order60_base_rhs.npy "$root/repo/python-oracle/"
-          cp docs/audit/artifacts/d080f/retained_order60_probe_directions.npy "$root/repo/python-oracle/"
-          cp docs/audit/artifacts/d080f/retained_order60_static_jacobian.npy "$root/repo/python-oracle/"
+          mkdir -p "$oracle"
+          cp src/rabbit/decoupling/_independent_noqke.py "$oracle/"
+          cp scripts/audit/_trajectory_core.py "$oracle/"
+          cp scripts/audit/_d079_tangent_primitives.py "$oracle/"
+          cp scripts/audit/_d079_collision_jvp.py "$oracle/"
+          cp scripts/audit/_d079_rhs_jvp.py "$oracle/"
+          cp scripts/audit/_d080a_tgamma_kinematics.py "$oracle/"
+          cp scripts/audit/_d080b_tgamma_collision.py "$oracle/"
+          cp scripts/audit/_d080c_tgamma_rhs.py "$oracle/"
+          cp scripts/audit/_d080e_prepared_jvp.py "$oracle/"
+          cp scripts/audit/_d080e_prepared_jvp_core.py "$oracle/"
+          cp scripts/audit/_d080f_action_metric.py "$oracle/"
+          cp scripts/audit/_d080f_frozen_full_build.py "$oracle/"
+          cp docs/audit/artifacts/d080f/research_receipt.json "$oracle/"
+          cp docs/audit/artifacts/d080f/retained_order60_base_rhs.npy "$oracle/"
+          cp docs/audit/artifacts/d080f/retained_order60_probe_directions.npy "$oracle/"
+          cp docs/audit/artifacts/d080f/retained_order60_static_jacobian.npy "$oracle/"
+          git show \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > "$oracle/state_1200.npz"
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  $oracle/state_1200.npz" \
+            | sha256sum -c -
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import pathlib
+          import subprocess
+
+          root = pathlib.Path('/tmp/d081r0-source')
+          oracle = root / 'repo/python-oracle'
+          def sha(path: pathlib.Path) -> str:
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          receipt = json.loads((oracle / 'research_receipt.json').read_text(encoding='utf-8'))
+          manifest = {
+              'schema': 'rabbit.d081r0.source_input_output_oracle.v1',
+              'classification': 'EXACT_SOURCE_INPUT_OUTPUT_ORACLE_BUNDLE',
+              'export_head': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
+              'export_tree': subprocess.check_output(['git','rev-parse','HEAD^{tree}'], text=True).strip(),
+              'd080f_source_head': '901a62350b19cf43c17dffe45e96e8b94e4c7ca1',
+              'private_comparator_git_blob': subprocess.check_output(['git','rev-parse','HEAD:src/rabbit/decoupling/_independent_noqke.py'], text=True).strip(),
+              'retained_state_source_commit': '78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b',
+              'retained_state_sha256': sha(oracle / 'state_1200.npz'),
+              'matrix_content_sha256': receipt['matrix_content_sha256'],
+              'matrix_file_sha256': sha(oracle / 'retained_order60_static_jacobian.npy'),
+              'base_rhs_sha256': sha(oracle / 'retained_order60_base_rhs.npy'),
+              'directions_sha256': sha(oracle / 'retained_order60_probe_directions.npy'),
+              'state_contract': {
+                  'order': 60,
+                  'y_max': 30.0,
+                  'size': 182,
+                  'ordering': ['c_e[0:60]','c_mu[0:60]','c_tau[0:60]','T_gamma','elapsed_time'],
+                  'chart': 'strict-open complementary-log-log occupation coordinate',
+              },
+              'claim_ceiling': 'cross-language oracle input/output bytes only; no Rust semantic parity or solver result',
+          }
+          (oracle / 'ORACLE_MANIFEST.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
           git rev-parse HEAD > "$root/EXPORT_HEAD"
           git rev-parse HEAD^{tree} > "$root/EXPORT_TREE"
           (
