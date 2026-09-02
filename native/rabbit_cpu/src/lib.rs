@@ -9,6 +9,7 @@ mod electron_event;
 mod electron_hm;
 mod electron_thermal;
 mod electron_thermal_fd;
+mod f10_kernel_primitives;
 mod flrw;
 mod isotropic_boltzmann;
 mod minimal_bbn;
