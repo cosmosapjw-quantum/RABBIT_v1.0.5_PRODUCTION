@@ -13,7 +13,7 @@ permissions:
 jobs:
   exact-vendor:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -59,7 +59,7 @@ jobs:
           grep -F 'replace-with = "vendored-sources"' .cargo/config.toml
           grep -F 'directory = "vendor"' .cargo/config.toml
 
-      - name: Prove exact offline closure
+      - name: Prove exact bounded offline closure
         shell: bash
         run: |
           set -euo pipefail
@@ -69,8 +69,32 @@ jobs:
           cargo +1.94.1 metadata --locked --offline --format-version 1 \
             > /tmp/d081r0-cargo-metadata.json
           cargo +1.94.1 check --release --locked --offline
-          cargo +1.94.1 test --locked --lib --offline -- --nocapture \
-            | tee /tmp/d081r0-cargo-test.txt
+          cargo +1.94.1 test --locked --lib --offline --no-run
+          {
+            cargo +1.94.1 test --locked --lib --offline ode::tests -- --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              isotropic_boltzmann::tests::analytic_jacobian_and_explicit_time_derivative_match_five_point_stencils \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              isotropic_boltzmann::tests::classical_spectral_flrw_jacobian_and_time_derivative_match_stencils \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              isotropic_boltzmann::tests::fused_rhs_and_jacobian_matches_separate_calls_bitwise \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline pauli_edge_step::tests -- --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              electron_spectral::tests::unforced_equilibrium_jacobian_is_continuous \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              electron_spectral::tests::folded_edges_reconstruct_action_at_five_independent_states \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              neutrino_self_spectral::tests::nonthermal_full_catalogue_conserves_weighted_number_and_energy \
+              -- --exact --nocapture
+            cargo +1.94.1 test --locked --lib --offline \
+              neutrino_self_spectral::tests::logit_jacobian_matches_five_point_stencils \
+              -- --exact --nocapture
+          } 2>&1 | tee /tmp/d081r0-cargo-test.txt
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
 
@@ -104,8 +128,8 @@ jobs:
           if failed != 0:
               raise SystemExit(f'offline tests reported {failed} failures')
           receipt = {
-              'schema': 'rabbit.d081r0.exact_offline_vendor.v2',
-              'classification': 'EXACT_RABBIT_CARGO_LOCK_OFFLINE_CLOSURE',
+              'schema': 'rabbit.d081r0.exact_offline_vendor.v3',
+              'classification': 'EXACT_RABBIT_CARGO_LOCK_BOUNDED_OFFLINE_CLOSURE',
               'source_head': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
               'source_tree': subprocess.check_output(['git','rev-parse','HEAD^{tree}'], text=True).strip(),
               'cargo_toml_git_blob': subprocess.check_output(['git','rev-parse','HEAD:native/rabbit_cpu/Cargo.toml'], text=True).strip(),
@@ -124,18 +148,21 @@ jobs:
               'commands': {
                   'metadata_locked_offline': 'PASS',
                   'check_release_locked_offline': 'PASS',
-                  'test_lib_locked_offline': 'PASS',
+                  'compile_all_lib_tests_locked_offline': 'PASS',
+                  'focused_tests_locked_offline': 'PASS',
                   'fmt_check': 'PASS',
                   'clippy_all_targets_all_features_locked_offline': 'PASS',
               },
-              'test_result': {
+              'focused_test_result_aggregate': {
                   'passed': passed,
                   'failed': failed,
                   'ignored': ignored,
                   'measured': measured,
-                  'filtered_out': filtered,
+                  'filtered_out_sum': filtered,
+                  'test_invocations': len(matches),
               },
-              'claim_ceiling': 'environment and dependency closure only; no Rust/Python semantic parity or scientific result',
+              'long_endpoint_tests_executed': False,
+              'claim_ceiling': 'environment/dependency closure and bounded native regression only; no Rust/Python semantic parity, performance, trajectory, endpoint, or scientific result',
           }
           (kit / 'OFFLINE_CLOSURE_RECEIPT.json').write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8')
           PY
