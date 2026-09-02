@@ -45,7 +45,7 @@ jobs:
           cp scripts/audit/_d079_tangent_primitives.py "$oracle/"
           cp scripts/audit/_d079_collision_jvp.py "$oracle/"
           cp scripts/audit/_d079_rhs_jvp.py "$oracle/"
-          cp scripts/audit/_d080a_tgamma_kinematics.py "$oracle/"
+          cp scripts/audit/_d080_tgamma_primitives.py "$oracle/"
           cp scripts/audit/_d080b_tgamma_collision.py "$oracle/"
           cp scripts/audit/_d080c_tgamma_rhs.py "$oracle/"
           cp scripts/audit/_d080e_prepared_jvp.py "$oracle/"
