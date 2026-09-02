@@ -1,0 +1,205 @@
+{
+  "actual_to_prepared_projection_ratio": 0.9778874377193199,
+  "claim_ceiling": "single-host measured fixed-state order-60 matrix construction and explicit-callback candidacy only; no solver, prefix, endpoint, N_eff, gate, release, or publication claim",
+  "classification": "EXECUTED_RETAINED_PRODUCTION_ORDER_JACOBIAN",
+  "correctness": {
+    "legacy_forward_relative_maximum": 1.7231101759072105e-09,
+    "maximum_equivalence_residual": 1.0432572279192872e-13,
+    "maximum_prepared_action_residual": 1.0432572279192872e-13,
+    "maximum_serial_basis_column_residual": 0.0,
+    "original_rhs_directional_ladders": [
+      {
+        "all_samples_same_branch": true,
+        "best_block_residual": 2.2341039938949794e-07,
+        "block_residuals": [
+          2.2341039938949794e-07,
+          3.311254507994153e-07,
+          2.872432825590497e-07,
+          9.038868005148239e-07
+        ],
+        "convergence_slope_first_three": -0.11261611627595398,
+        "direction_norm": 1.0080899118116884,
+        "epsilon_ladder": [
+          0.001,
+          0.0003,
+          0.0001,
+          3e-05
+        ],
+        "thermal_fraction": 0.015
+      },
+      {
+        "all_samples_same_branch": true,
+        "best_block_residual": 1.3119142426559677e-07,
+        "block_residuals": [
+          2.435790734117251e-07,
+          1.3119142426559677e-07,
+          3.960433930290188e-07,
+          3.4048776123411147e-07
+        ],
+        "convergence_slope_first_three": -0.19954594240466902,
+        "direction_norm": 1.0043586736616803,
+        "epsilon_ladder": [
+          0.001,
+          0.0003,
+          0.0001,
+          3e-05
+        ],
+        "thermal_fraction": -0.011
+      }
+    ],
+    "serial_oracle_columns": [
+      0,
+      59,
+      60,
+      119,
+      120,
+      179
+    ]
+  },
+  "d080e_projected_prepared_seconds": 425.011892322,
+  "d080e_projected_serial_seconds": 3019.588435722,
+  "elapsed_column_norm": 0.0,
+  "environment": {
+    "mkl_threads": "1",
+    "numpy": "2.5.2",
+    "omp_threads": "1",
+    "openblas_threads": "1",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "scipy": "1.18.1"
+  },
+  "equivalence_metrology": {
+    "amendment": "BD632_D080F_EQUIVALENCE_METROLOGY_AMENDMENT_2026-09-02.md",
+    "four_direction_action_maximum": 1.0432572279192872e-13,
+    "four_direction_forward_maximum": 1.7231101759072105e-09,
+    "legacy_forward_metric_is_diagnostic_only": true,
+    "legacy_internal_forward_maximum": 9.098989500537355e-10,
+    "localization_run": 33593370075,
+    "preserved_failed_run": 33592265710,
+    "reports": [
+      {
+        "action_metric": {
+          "elapsed": 0.0,
+          "elapsed_absolute_difference": 0.0,
+          "elapsed_contribution_scale": 4.126341234316844e+17,
+          "elapsed_forward_scale": 8.827656271101843e+16,
+          "maximum": 6.075961640389264e-14,
+          "spectral": 6.075961640389264e-14,
+          "spectral_contribution_scale": 7616078713.5735655,
+          "spectral_difference_norm": 0.00046275002113858193,
+          "spectral_forward_scale": 508572.980671374,
+          "temperature": 1.3009174315774119e-15,
+          "temperature_absolute_difference": 1.4210854715202004e-14,
+          "temperature_contribution_scale": 10.923717655140344,
+          "temperature_forward_scale": 8.42626491474481
+        },
+        "label": "original_direction_0",
+        "legacy_forward_relative_residual": 9.098989500537355e-10
+      },
+      {
+        "action_metric": {
+          "elapsed": 0.0,
+          "elapsed_absolute_difference": 0.0,
+          "elapsed_contribution_scale": 4.891671229943784e+17,
+          "elapsed_forward_scale": 1.337465838508489e+17,
+          "maximum": 6.891185357751888e-14,
+          "spectral": 6.891185357751888e-14,
+          "spectral_contribution_scale": 6882759272.43993,
+          "spectral_difference_norm": 0.0004743036991916908,
+          "spectral_forward_scale": 728536.252534909,
+          "temperature": 4.48373937957671e-16,
+          "temperature_absolute_difference": 4.440892098500626e-15,
+          "temperature_contribution_scale": 9.904438511142615,
+          "temperature_forward_scale": 5.267716515020026
+        },
+        "label": "original_direction_1",
+        "legacy_forward_relative_residual": 6.510365099078768e-10
+      },
+      {
+        "action_metric": {
+          "elapsed": 6.541414033442706e-17,
+          "elapsed_absolute_difference": 32.0,
+          "elapsed_contribution_scale": 4.891908666291621e+17,
+          "elapsed_forward_scale": 1.7940304789807546e+17,
+          "maximum": 6.794647284848686e-14,
+          "spectral": 6.794647284848686e-14,
+          "spectral_contribution_scale": 8622631624.78117,
+          "spectral_difference_norm": 0.0005858774055756979,
+          "spectral_forward_scale": 2112917.3792199306,
+          "temperature": 1.7205400532361097e-15,
+          "temperature_absolute_difference": 2.3092638912203256e-14,
+          "temperature_contribution_scale": 13.421738638847167,
+          "temperature_forward_scale": 11.078063992755677
+        },
+        "label": "holdout_direction_0",
+        "legacy_forward_relative_residual": 2.772836322601494e-10
+      },
+      {
+        "action_metric": {
+          "elapsed": 1.8522362072456467e-16,
+          "elapsed_absolute_difference": 128.0,
+          "elapsed_contribution_scale": 6.910565698871711e+17,
+          "elapsed_forward_scale": 1.9446415911735763e+17,
+          "maximum": 1.0432572279192872e-13,
+          "spectral": 1.0432572279192872e-13,
+          "spectral_contribution_scale": 7725843742.0943,
+          "spectral_difference_norm": 0.0008060042325714873,
+          "spectral_forward_scale": 467761.2864465439,
+          "temperature": 7.05041512270361e-17,
+          "temperature_absolute_difference": 8.881784197001252e-16,
+          "temperature_contribution_scale": 12.597533680535069,
+          "temperature_forward_scale": 5.512127828660446
+        },
+        "label": "holdout_direction_1",
+        "legacy_forward_relative_residual": 1.7231101759072105e-09
+      }
+    ],
+    "route_uses": "maximum contribution-scaled action residual across two original and two preregistered holdout directions",
+    "threshold_unchanged": 5e-10
+  },
+  "fixture_sha256": "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380",
+  "matrix_content_sha256": "714b83107c9302b55cd09a9d2c7d2dc260a5b7d1e9289265e6a844766ed388f8",
+  "matrix_file_sha256": "3594e861cc800bbfa2feedc4ec90f7de1f69e283a450484bdb600345caa0d4ae",
+  "matrix_raw_bytes": 264992,
+  "matrix_shape": [
+    182,
+    182
+  ],
+  "measured_full_build_seconds": 415.61379038300004,
+  "memory": {
+    "after_build": {
+      "hwm": 437039104,
+      "rss": 435425280
+    },
+    "after_seal": {
+      "hwm": 428658688,
+      "rss": 428658688
+    },
+    "initial": {
+      "hwm": 114970624,
+      "rss": 114970624
+    }
+  },
+  "order": 60,
+  "preparation_seconds": 32.475363648,
+  "prepared_state_seal": {
+    "all_arrays_readonly": true,
+    "array_count": 4002,
+    "cache_entry_delta": 0,
+    "cache_miss_delta": 0,
+    "cache_unique_bytes": 294865920,
+    "fingerprint_sha256": "ab0a2af7e1ec75e7acdcbb0665742aa218a13a98092306eb2e5bd844c9f440f8",
+    "fingerprint_unchanged": true,
+    "legacy_estimated_cache_bytes": 294865920,
+    "unique_array_bytes": 294992656
+  },
+  "route_decision": "EXPLICIT_CALLBACK_CANDIDATE",
+  "schema": "rabbit.d080f.retained_full_build.v2",
+  "serial_projection_to_actual_ratio": 7.2653711344355605,
+  "spectral_columns": 180,
+  "state_size": 182,
+  "temperature_cm_mev": 8.497022351366393,
+  "temperature_gamma_mev": 8.497129004420698,
+  "wall_budget_seconds": 900.0,
+  "y_max": 30.0
+}
