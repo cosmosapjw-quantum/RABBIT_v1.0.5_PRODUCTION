@@ -1,0 +1,100 @@
+{
+  "schema": "rabbit.d081r0.rust_python_semantic_gap.v1",
+  "classification": "NEW_EXACT_RUST_F10_SYSTEM_REQUIRED",
+  "python_oracle": {
+    "state_size": 182,
+    "state_order": [
+      "c_e[0:60]",
+      "c_mu[0:60]",
+      "c_tau[0:60]",
+      "T_gamma",
+      "elapsed_time"
+    ],
+    "chart": "strict-open complementary-log-log",
+    "radial_grid": "affine Gauss-Legendre, order 60, y in [0,30]",
+    "flavour_banks": 3,
+    "thermal_column": "analytic fixed-support T_gamma column",
+    "elapsed_input_column": "exact zero"
+  },
+  "existing_rust_isotropic_system": {
+    "state_size_at_selected_grid": 98,
+    "state_order": [
+      "T_gamma",
+      "elapsed_seconds",
+      "u_e[0:48]",
+      "u_heavy[0:48]"
+    ],
+    "chart": "pointwise logit",
+    "radial_grid": "selected exponential Gauss-Legendre positive-half-line rule, order 48",
+    "flavour_banks": 2,
+    "thermal_column": "centered finite difference in IsotropicBoltzmannFlrwSystem::write_jacobian",
+    "elapsed_input_column": "structural zero"
+  },
+  "noninvertible_fold": {
+    "map": "(e,mu,tau) -> (e,(mu+tau)/2)",
+    "exact_subspace": "mu=tau",
+    "lost_mode": "mu-tau antisymmetric direction",
+    "wolfram_residuals": {
+      "fold_after_embed": "zero",
+      "embed_after_fold_general": [
+        "0",
+        "(-mu+tau)/2",
+        "(mu-tau)/2"
+      ],
+      "embed_after_fold_mu_equals_tau": "zero",
+      "fold_mu_minus_tau_mode": "zero"
+    }
+  },
+  "reuse_matrix": [
+    {
+      "path": "native/rabbit_cpu/src/ode.rs",
+      "status": "REUSE_NOW",
+      "reason": "diffsol BDF/Rodas5P, OdeSystem rhs/jacobian/rhs_and_jacobian, exact-point cache and counters already exist"
+    },
+    {
+      "path": "native/rabbit_cpu/src/quadrature.rs",
+      "status": "REUSE_WITH_PARITY_GATE",
+      "reason": "Gauss-Legendre primitive exists; new affine [0,y_max] wrapper and Python node/weight parity are required"
+    },
+    {
+      "path": "native/rabbit_cpu/src/flrw.rs",
+      "status": "REUSE_WITH_PARITY_GATE",
+      "reason": "thermodynamic constants and EOS may be reused only after value and derivative parity"
+    },
+    {
+      "path": "native/rabbit_cpu/src/electron_spectral.rs",
+      "status": "REUSE_LOW_LEVEL_ONLY",
+      "reason": "the folded two-bank action is not the six-species oracle contract; unfurled event primitives require catalogue, sign, multiplicity and normalisation parity"
+    },
+    {
+      "path": "native/rabbit_cpu/src/neutrino_self_spectral.rs",
+      "status": "REUSE_LOW_LEVEL_ONLY",
+      "reason": "the current folded interface cannot represent mu-tau antisymmetric directions"
+    },
+    {
+      "path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "status": "DO_NOT_ADAPT_AS_EXACT_SYSTEM",
+      "reason": "state order, chart, grid, flavour dimension and T_gamma derivative semantics differ"
+    },
+    {
+      "path": "native/rabbit_cpu/src/lib.rs",
+      "status": "EXTEND_DIAGNOSTIC_SURFACE",
+      "reason": "currently exports NativeTier1Core, not exact F10 RHS/J/Jv diagnostics"
+    },
+    {
+      "path": "native/rabbit_cpu/Cargo.toml",
+      "status": "REUSE_NOW",
+      "reason": "Rust 1.94.1, diffsol 0.16.0, nalgebra/faer and PyO3 graph is exact-offline closed"
+    }
+  ],
+  "recommended_component": "native/rabbit_cpu/src/f10_comparator.rs",
+  "recommended_strategy": "create a new exact 182-state F10ComparatorSystem; reuse only low-level Rust primitives with explicit semantic gates; leave legacy IsotropicBoltzmannFlrwSystem unchanged",
+  "forbidden_shortcuts": [
+    "fold three flavours into two banks",
+    "replace the finite affine grid with the existing positive-half-line grid",
+    "replace cloglog with logit without the exact chart push-forward",
+    "call Python from production Rust",
+    "use Rust performance measurements before static semantic admission"
+  ],
+  "claim_ceiling": "inventory and design result only; no Rust/Python parity has yet passed"
+}
