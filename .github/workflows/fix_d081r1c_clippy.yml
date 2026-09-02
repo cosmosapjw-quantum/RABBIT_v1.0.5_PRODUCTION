@@ -1,0 +1,58 @@
+name: fix-d081r1c-clippy
+
+on:
+  push:
+    branches:
+      - research/d081r1c-kernel-primitives-20260902
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1c-kernel-primitives-20260902
+          fetch-depth: 1
+
+      - name: Exercise the species semantic helpers in the existing catalogue test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path("native/rabbit_cpu/src/f10_kernel_primitives.rs")
+          text = source.read_text(encoding="utf-8")
+          anchor = "        assert_eq!(category_counts, [6, 3, 6, 6, 6]);\n"
+          insertion = """
+
+          for species in F10Species::ALL {
+              let partner = species.cp_partner();
+              assert_ne!(partner, species);
+              assert_eq!(partner.cp_partner(), species);
+              assert_eq!(F10Species::from_name(species.name()).unwrap(), species);
+          }
+          """
+          if "assert_eq!(partner.cp_partner(), species);" in text:
+              raise SystemExit("semantic invariant assertions already present")
+          if text.count(anchor) != 1:
+              raise SystemExit(f"expected one insertion anchor, found {text.count(anchor)}")
+          source.write_text(text.replace(anchor, anchor + insertion), encoding="utf-8")
+          PY
+
+          rm .github/workflows/fix_d081r1c_clippy.yml
+          git diff --check
+
+      - name: Commit the bounded test-only repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "test(d081r1c): exercise species CP and name invariants"
+          git push origin HEAD:research/d081r1c-kernel-primitives-20260902
