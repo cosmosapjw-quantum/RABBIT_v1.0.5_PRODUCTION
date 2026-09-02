@@ -1,0 +1,28 @@
+{
+  "schema": "rabbit.d080f.wolfram_construction_receipt.v1",
+  "date": "2026-09-02",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "source_git_blob_sha": "bbcfa593e955bf00388a810c5be3dd92319bd3db",
+  "scope": "production-order state size, storage, measured-profile projection formulas, batch reuse formula, and passive elapsed-column Newton identity",
+  "natural_units": {
+    "hbar": 1,
+    "c": 1,
+    "k_B": 1
+  },
+  "results": {
+    "state_size_order_60": 182,
+    "spectral_columns_order_60": 180,
+    "dense_matrix_raw_bytes": 264992,
+    "d080e_serial_projection_seconds": 3019.5884357219998,
+    "d080e_prepared_projection_seconds": 425.01189292199996,
+    "batch_speedup_formula": "k (c0+c1)/(c0+k c1)",
+    "passive_elapsed_column_newton_determinant_residual": 0
+  },
+  "interpretation": {
+    "c0": "direction-independent fixed-state work",
+    "c1": "direction-dependent tangent work per direction",
+    "matrix_storage": "8 (3 n + 2)^2 bytes for float64; storage is not the dominant order-60 cost",
+    "passive_column": "det(I-gamma J)=det(I-gamma A) for J=[[A,0],[b^T,0]]"
+  },
+  "claim_ceiling": "formula-level corroboration only; actual build time, cache bytes, immutability, equivalence, solver behaviour, trajectory, endpoint, and gate status require executable evidence"
+}

@@ -1,0 +1,167 @@
+name: d080f-original-rhs-ladder-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d080f-retained-full-jacobian-build-20260902
+    paths:
+      - .github/workflows/d080f_rhs_ladder_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose-ladder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install frozen dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+      - name: Recover exact retained state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080f_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080f_state_1200.npz" \
+            | sha256sum -c -
+      - name: Measure extended same-branch ladders
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+          import numpy as np
+
+          from rabbit.decoupling import _independent_noqke as ind
+          from scripts.audit._d079_rhs_jvp import evaluate_static_rhs_from_packed_state
+          from scripts.audit._d080b_tgamma_collision import electron_tgamma_branch_signature
+          from scripts.audit._d080d_static_jacobian import (
+              evaluate_static_rhs_direction_jvp,
+              rhs_block_relative,
+          )
+          from scripts.audit.d080f_retained_full_build import deterministic_directions
+
+          with np.load("/tmp/d080f_state_1200.npz", allow_pickle=False) as archive:
+              state = np.asarray(archive["y"], dtype=np.float64)
+          order = 60
+          grid = ind.build_independent_grid(order, 30.0)
+          config = ind.IndependentCollisionConfig(
+              incoming_polar_order=4,
+              final_polar_order=4,
+              final_azimuth_order=4,
+              electron_radial_order=24,
+          )
+          c = state[: 3 * order].reshape(3, order)
+          tg = float(state[3 * order])
+          elapsed = float(state[-1])
+          tcm = 10.0 * np.exp(-0.16286930247517223)
+          epsilons = [1e-2, 3e-3, 1e-3, 3e-4, 1e-4, 3e-5, 1e-5]
+          base_signature = electron_tgamma_branch_signature(
+              grid=grid,
+              temperature_cm_mev=tcm,
+              temperature_gamma_mev=tg,
+              config=config,
+          )
+
+          reports = []
+          for index, (spectral, fraction) in enumerate(
+              zip(deterministic_directions(order), (0.015, -0.011))
+          ):
+              full = np.concatenate((spectral.ravel(), [fraction * tg, 0.0]))
+              analytic = evaluate_static_rhs_direction_jvp(
+                  grid=grid,
+                  pair_cloglog=c,
+                  full_direction=full,
+                  temperature_cm_mev=tcm,
+                  temperature_gamma_mev=tg,
+                  config=config,
+              ).jvp
+              residuals = []
+              same_branch = []
+              for epsilon in epsilons:
+                  plus_tg = tg + epsilon * full[-2]
+                  minus_tg = tg - epsilon * full[-2]
+                  same_branch.append(
+                      electron_tgamma_branch_signature(
+                          grid=grid,
+                          temperature_cm_mev=tcm,
+                          temperature_gamma_mev=plus_tg,
+                          config=config,
+                      ) == base_signature
+                      and electron_tgamma_branch_signature(
+                          grid=grid,
+                          temperature_cm_mev=tcm,
+                          temperature_gamma_mev=minus_tg,
+                          config=config,
+                      ) == base_signature
+                  )
+                  plus_state = np.concatenate(
+                      ((c + epsilon * spectral).ravel(), [plus_tg, elapsed])
+                  )
+                  minus_state = np.concatenate(
+                      ((c - epsilon * spectral).ravel(), [minus_tg, elapsed])
+                  )
+                  plus = evaluate_static_rhs_from_packed_state(
+                      grid=grid,
+                      packed_state=plus_state,
+                      temperature_cm_mev=tcm,
+                      config=config,
+                  )
+                  minus = evaluate_static_rhs_from_packed_state(
+                      grid=grid,
+                      packed_state=minus_state,
+                      temperature_cm_mev=tcm,
+                      config=config,
+                  )
+                  centered = (plus - minus) / (2.0 * epsilon)
+                  residuals.append(rhs_block_relative(analytic, centered, order))
+              local_slopes = [
+                  float(
+                      np.log(residuals[i] / residuals[i + 1])
+                      / np.log(epsilons[i] / epsilons[i + 1])
+                  )
+                  for i in range(len(epsilons) - 1)
+              ]
+              reports.append(
+                  {
+                      "direction": index,
+                      "thermal_fraction": fraction,
+                      "epsilons": epsilons,
+                      "residuals": residuals,
+                      "local_slopes": local_slopes,
+                      "all_samples_same_branch": all(same_branch),
+                      "best_residual": min(residuals),
+                      "best_index": int(np.argmin(residuals)),
+                  }
+              )
+
+          payload = {
+              "schema": "rabbit.d080f.original_rhs_ladder_diagnostic.v1",
+              "reports": reports,
+          }
+          Path("/tmp/d080f_rhs_ladder_diagnostic.json").write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + "\n"
+          )
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+      - name: Upload diagnostic receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: d080f-original-rhs-ladder-diagnostic
+          path: /tmp/d080f_rhs_ladder_diagnostic.json
+          if-no-files-found: error
+          retention-days: 2
