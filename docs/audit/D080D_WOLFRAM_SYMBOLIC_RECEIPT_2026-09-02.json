@@ -1,0 +1,22 @@
+{
+  "schema": "rabbit.d080d.wolfram_symbolic_receipt.v1",
+  "date": "2026-09-02",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "scope": "finite-dimensional square-Jacobian column assembly and passive elapsed-time block identities",
+  "representative_matrix": "J = [[A,0],[b^T,0]] with a two-dimensional symbolic active block A",
+  "results": {
+    "column_assembly_residual": [0, 0, 0],
+    "elapsed_column_residual": [0, 0, 0],
+    "newton_determinant_residual": 0,
+    "characteristic_factor_residual": 0,
+    "active_action_residual": [0, 0]
+  },
+  "derived_identities": {
+    "directional_action": "J v equals the linear combination of basis columns weighted by v",
+    "passive_null_vector": "J e_elapsed = 0",
+    "characteristic_polynomial": "chi_J(lambda) = -lambda chi_A(lambda) under Wolfram's det(M-lambda I) convention",
+    "newton_matrix": "det(I-gamma J) = det(I-gamma A)",
+    "interpretation": "The raw square Jacobian has a structural zero eigenvalue, while the passive elapsed-time accumulator does not add a determinant obstruction to I-gamma J."
+  },
+  "claim_ceiling": "Formula-level block closure only; no numerical Jacobian, conditioning, integrator, BDF/JFNK/Newton convergence, trajectory, performance, endpoint, or gate claim."
+}
