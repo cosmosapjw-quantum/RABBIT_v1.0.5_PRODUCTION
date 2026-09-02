@@ -42,6 +42,10 @@ def float_bits(value: float) -> str:
     return f"{np.float64(value).view(np.uint64).item():016x}"
 
 
+def bits_float(bits: str) -> float:
+    return float(np.asarray([int(bits, 16)], dtype=np.uint64).view(np.float64)[0])
+
+
 def encode_array(values: np.ndarray) -> dict[str, object]:
     array = np.ascontiguousarray(np.asarray(values, dtype=np.float64))
     return {
@@ -76,6 +80,26 @@ def action_moments(
     )
 
 
+def explicit_metrology(result: oracle.IndependentCollisionAction) -> dict[str, float]:
+    total = np.asarray(result.total, dtype=np.float64)
+    pair_total = 0.5 * np.stack(
+        (total[0] + total[1], total[2] + total[3], total[4] + total[5])
+    )
+    cp_absolute = max(
+        float(np.max(np.abs(total[2 * index] - total[2 * index + 1])))
+        for index in range(3)
+    )
+    mu_tau_absolute = float(np.max(np.abs(pair_total[1] - pair_total[2])))
+    return {
+        "total_max_abs": float(np.max(np.abs(total))),
+        "total_l1": float(np.sum(np.abs(total), dtype=np.float64)),
+        "cp_absolute": cp_absolute,
+        "mu_tau_absolute": mu_tau_absolute,
+        "legacy_cp_relative": float(result.diagnostics["charge_conjugation_residual"]),
+        "legacy_mu_tau_relative": float(result.diagnostics["mu_tau_residual"]),
+    }
+
+
 def build_case(
     *,
     name: str,
@@ -108,21 +132,23 @@ def build_case(
     first_law = float(result.diagnostics["first_law_residual"])
     if first_law > 5.0e-13:
         raise AssertionError(f"first-law residual too large in {name}: {first_law}")
-    if float(result.diagnostics["charge_conjugation_residual"]) > 5.0e-12:
-        raise AssertionError(f"CP residual too large in {name}")
+
+    metrology = explicit_metrology(result)
+    if name != "equilibrium" and metrology["legacy_cp_relative"] > 5.0e-12:
+        raise AssertionError(f"CP residual too large in non-null case {name}")
 
     if name == "equilibrium":
-        if float(np.max(np.abs(result.total))) > 1.0e-18:
+        if metrology["total_max_abs"] > 1.0e-18:
             raise AssertionError("equilibrium action is not numerically null")
-        if float(result.diagnostics["mu_tau_residual"]) > 5.0e-12:
-            raise AssertionError("equilibrium mu/tau symmetry failed")
     elif name == "thermal_split":
         qnu = float(result.diagnostics["event_neutrino_energy_transfer"])
         qem = float(result.electron_bath_energy_transfer)
         if not (qnu > 0.0 and qem < 0.0):
             raise AssertionError("thermal restoring energy-transfer sign failed")
+        if metrology["legacy_mu_tau_relative"] > 5.0e-12:
+            raise AssertionError("thermal-split mu/tau symmetry failed")
     elif name == "mu_tau_split":
-        if float(result.diagnostics["mu_tau_residual"]) <= 1.0e-8:
+        if metrology["legacy_mu_tau_relative"] <= 1.0e-8:
             raise AssertionError("mu/tau antisymmetric response was erased")
 
     arrays = {
@@ -159,6 +185,7 @@ def build_case(
             result.largest_matrix_roundoff_correction
         ),
         "diagnostics": encode_float_map(dict(result.diagnostics)),
+        "metrology": encode_float_map(metrology),
         "moments": {
             "self": action_moments(grid, result.self_interaction, temperature_cm),
             "electron": action_moments(grid, result.electron, temperature_cm),
@@ -181,6 +208,54 @@ def main() -> None:
         [-grid.nodes, -grid.nodes + profile, -grid.nodes - profile]
     )
 
+    cases = [
+        build_case(
+            name="equilibrium",
+            pair_logits=equilibrium_logits,
+            temperature_cm=2.0,
+            temperature_gamma=2.0,
+            grid=grid,
+        ),
+        build_case(
+            name="thermal_split",
+            pair_logits=equilibrium_logits,
+            temperature_cm=2.0,
+            temperature_gamma=2.05,
+            grid=grid,
+        ),
+        build_case(
+            name="mu_tau_split",
+            pair_logits=mu_tau_logits,
+            temperature_cm=2.0,
+            temperature_gamma=2.0,
+            grid=grid,
+        ),
+    ]
+    by_name = {case["name"]: case for case in cases}
+    equilibrium = by_name["equilibrium"]
+    thermal = by_name["thermal_split"]
+    thermal_scale = bits_float(thermal["metrology"]["total_max_abs"])
+    if not np.isfinite(thermal_scale) or thermal_scale <= 0.0:
+        raise AssertionError("thermal non-null normalization scale is invalid")
+
+    null_metrics = {
+        "equilibrium_total_over_thermal": (
+            bits_float(equilibrium["metrology"]["total_max_abs"]) / thermal_scale
+        ),
+        "equilibrium_cp_over_thermal": (
+            bits_float(equilibrium["metrology"]["cp_absolute"]) / thermal_scale
+        ),
+        "equilibrium_mu_tau_over_thermal": (
+            bits_float(equilibrium["metrology"]["mu_tau_absolute"]) / thermal_scale
+        ),
+    }
+    if null_metrics["equilibrium_total_over_thermal"] > 1.0e-10:
+        raise AssertionError("equilibrium action is not null relative to thermal scale")
+    if null_metrics["equilibrium_cp_over_thermal"] > 1.0e-12:
+        raise AssertionError("equilibrium CP absolute difference exceeds thermal scale gate")
+    if null_metrics["equilibrium_mu_tau_over_thermal"] > 1.0e-12:
+        raise AssertionError("equilibrium mu/tau absolute difference exceeds thermal scale gate")
+
     payload = {
         "schema": "rabbit.d081r1.full_collision_action.v1",
         "private_comparator_git_blob": blob,
@@ -199,29 +274,8 @@ def main() -> None:
         },
         "grid_nodes": encode_array(grid.nodes),
         "grid_weights": encode_array(grid.weights),
-        "cases": [
-            build_case(
-                name="equilibrium",
-                pair_logits=equilibrium_logits,
-                temperature_cm=2.0,
-                temperature_gamma=2.0,
-                grid=grid,
-            ),
-            build_case(
-                name="thermal_split",
-                pair_logits=equilibrium_logits,
-                temperature_cm=2.0,
-                temperature_gamma=2.05,
-                grid=grid,
-            ),
-            build_case(
-                name="mu_tau_split",
-                pair_logits=mu_tau_logits,
-                temperature_cm=2.0,
-                temperature_gamma=2.0,
-                grid=grid,
-            ),
-        ],
+        "null_state_metrology": encode_float_map(null_metrics),
+        "cases": cases,
         "claim_ceiling": (
             "frozen Python order-8 full-action oracle only; no Rust full-action "
             "parity, retained order-60 result, RHS/J/Jv, solver, performance, "
