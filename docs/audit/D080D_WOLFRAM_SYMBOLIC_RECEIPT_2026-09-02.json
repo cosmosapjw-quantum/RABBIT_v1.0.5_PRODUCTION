@@ -1,7 +1,13 @@
 {
   "schema": "rabbit.d080d.wolfram_symbolic_receipt.v1",
   "date": "2026-09-02",
-  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation repeated after the final source-only documentation binding; not a repository-native Wolfram replay",
+  "source_path": "scripts/audit/d080d_symbolic_checks.wl",
+  "source_git_blob_sha": "ed53bc6e6fc10cdd1060e43bf801330fe0f62729",
+  "controlling_records": [
+    "docs/audit/BD627_D080D_SQUARE_STATIC_JACOBIAN_CONTRACT_2026-09-02.md",
+    "docs/audit/BD628_D080D_SQUARE_STATIC_JACOBIAN_RESULT_2026-09-02.md"
+  ],
   "scope": "finite-dimensional square-Jacobian column assembly and passive elapsed-time block identities",
   "representative_matrix": "J = [[A,0],[b^T,0]] with a two-dimensional symbolic active block A",
   "results": {
