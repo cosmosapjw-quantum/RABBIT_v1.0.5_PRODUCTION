@@ -87,10 +87,7 @@ pub(crate) fn electron_half_line_rule(
         let one_minus = 1.0 - unit;
         let value = temperature * unit / one_minus;
         let mapped_weight = 0.5 * weight * temperature / one_minus.powi(2);
-        if !value.is_finite()
-            || value <= 0.0
-            || !mapped_weight.is_finite()
-            || mapped_weight <= 0.0
+        if !value.is_finite() || value <= 0.0 || !mapped_weight.is_finite() || mapped_weight <= 0.0
         {
             return Err("electron half-line quadrature is invalid");
         }
@@ -203,19 +200,11 @@ fn dot(left: [f64; 3], right: [f64; 3]) -> f64 {
 }
 
 fn add(left: [f64; 3], right: [f64; 3]) -> [f64; 3] {
-    [
-        left[0] + right[0],
-        left[1] + right[1],
-        left[2] + right[2],
-    ]
+    [left[0] + right[0], left[1] + right[1], left[2] + right[2]]
 }
 
 fn subtract(left: [f64; 3], right: [f64; 3]) -> [f64; 3] {
-    [
-        left[0] - right[0],
-        left[1] - right[1],
-        left[2] - right[2],
-    ]
+    [left[0] - right[0], left[1] - right[1], left[2] - right[2]]
 }
 
 fn scale(vector: [f64; 3], factor: f64) -> [f64; 3] {
@@ -304,11 +293,7 @@ pub(crate) fn two_body_kinematics(
             } else {
                 0.0
             };
-            let gamma = if support {
-                total_energy / sqrt_s
-            } else {
-                1.0
-            };
+            let gamma = if support { total_energy / sqrt_s } else { 1.0 };
             let parallel = if total_magnitude > 64.0 * f64::MIN_POSITIVE {
                 scale(total_vector, total_magnitude.recip())
             } else {
@@ -335,9 +320,7 @@ pub(crate) fn two_body_kinematics(
                     let shell3 = (square(energy3) - square(p3_magnitude) - mass3_squared).abs();
                     let shell4 = (square(energy4) - square(p4_magnitude) - mass4_squared).abs();
                     let shell_scale = square(total_energy).max(1.0);
-                    if support
-                        && (shell3 > 2.0e-10 * shell_scale
-                            || shell4 > 2.0e-10 * shell_scale)
+                    if support && (shell3 > 2.0e-10 * shell_scale || shell4 > 2.0e-10 * shell_scale)
                     {
                         return Err("two-body boost violates a final mass shell");
                     }
@@ -366,21 +349,9 @@ pub(crate) fn two_body_kinematics(
                         return Err("two-body kinematic output is non-finite");
                     }
                     batch.push(
-                        support,
-                        p2,
-                        values[0],
-                        values[1],
-                        values[2],
-                        values[3],
-                        values[4],
-                        values[5],
-                        values[6],
-                        values[7],
-                        values[8],
-                        values[9],
-                        values[10],
-                        values[11],
-                        values[12],
+                        support, p2, values[0], values[1], values[2], values[3], values[4],
+                        values[5], values[6], values[7], values[8], values[9], values[10],
+                        values[11], values[12],
                     );
                 }
             }

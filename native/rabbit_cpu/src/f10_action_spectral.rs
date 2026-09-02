@@ -14,10 +14,7 @@ fn validate_finite(values: &[f64]) -> Result<(), &'static str> {
         .ok_or("spectral input contains a non-finite value")
 }
 
-pub(crate) fn modal_basis(
-    grid: &F10ActionGrid,
-    query: &[f64],
-) -> Result<Vec<f64>, &'static str> {
+pub(crate) fn modal_basis(grid: &F10ActionGrid, query: &[f64]) -> Result<Vec<f64>, &'static str> {
     validate_finite(query)?;
     let mut basis = Vec::with_capacity(query.len() * grid.order);
     for &coordinate in query {
@@ -59,9 +56,7 @@ pub(crate) fn modal_coefficients(
         *coefficient = values
             .iter()
             .enumerate()
-            .map(|(index, value)| {
-                grid.weights[index] * basis[index * grid.order + mode] * value
-            })
+            .map(|(index, value)| grid.weights[index] * basis[index * grid.order + mode] * value)
             .sum();
     }
     validate_finite(&coefficients)?;
