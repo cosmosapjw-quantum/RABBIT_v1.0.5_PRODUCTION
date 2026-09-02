@@ -1,0 +1,88 @@
+name: d080e-profile-receipt-readback
+
+on:
+  push:
+    branches:
+      - research/d080e-production-jacobian-profile-20260902
+    paths:
+      - .github/workflows/d080e_profile_readback.yml
+
+permissions:
+  contents: read
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact profile authority
+        run: |
+          git merge-base --is-ancestor \
+            985fdacc63ce09b93eef4fc77d87ade12fdff284 HEAD
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git rev-parse HEAD:scripts/audit/d080e_production_profile.py)" = \
+            27ec71adbca78741bf844a46ec5e0d8646cab1be
+          test "$(git rev-parse HEAD:scripts/audit/_d080e_prepared_jvp.py)" = \
+            0913b3be5ad66af27ae7115deb603c88556cd6b4
+          test "$(git rev-parse HEAD:scripts/audit/_d080e_prepared_jvp_core.py)" = \
+            915196691eb166f5624d413a46d314b32faacfe6
+
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Recover exact retained state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080e_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080e_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Re-run profile and emit exact receipt
+        run: |
+          rm -rf /tmp/d080e-readback
+          python3 scripts/audit/d080e_production_profile.py \
+            --out-dir /tmp/d080e-readback \
+            --retained-state /tmp/d080e_state_1200.npz
+          cat /tmp/d080e-readback/probe_summary.md
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('/tmp/d080e-readback/research_receipt.json').read_text())
+          print('D080E_MACHINE_RECEIPT_BEGIN')
+          print(json.dumps({
+              'tested_head': r['tested_head'],
+              'maximum_same_physics_residual': r['maximum_same_physics_residual'],
+              'order8_direction_scaling': r['order8']['direction_scaling'],
+              'order8_cache_policy_ablations': r['order8']['cache_policy_ablations'],
+              'order60_retained': r['order60_retained'],
+              'environment': r['environment'],
+              'fairness_contract': r['fairness_contract'],
+          }, sort_keys=True))
+          print('D080E_MACHINE_RECEIPT_END')
+          PY
+          (cd /tmp/d080e-readback && sha256sum -c SHA256SUMS)
+
+      - name: Upload readback artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: d080e-profile-readback
+          path: /tmp/d080e-readback
+          if-no-files-found: error
+          retention-days: 14

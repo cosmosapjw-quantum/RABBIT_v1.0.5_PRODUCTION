@@ -1,0 +1,177 @@
+name: d080e-production-jacobian-profile
+
+on:
+  push:
+    branches:
+      - research/d080e-production-jacobian-profile-20260902
+    paths:
+      - .github/workflows/d080e_prepared_jvp.yml
+      - scripts/audit/_d080e_prepared_jvp.py
+      - scripts/audit/_d080e_prepared_jvp_core.py
+      - scripts/audit/d080e_production_profile.py
+      - tests/test_d080e_prepared_jvp.py
+      - docs/audit/D080E_*
+      - docs/audit/BD629_*
+
+permissions:
+  contents: read
+
+jobs:
+  prepared-jvp-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen predecessor identities
+        run: |
+          git merge-base --is-ancestor \
+            985fdacc63ce09b93eef4fc77d87ade12fdff284 HEAD
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git rev-parse HEAD:scripts/audit/_d079_collision_jvp.py)" = \
+            591a64702c58a2de265fb88636f186e2d1b7e019
+          test "$(git rev-parse HEAD:scripts/audit/_d079_rhs_jvp.py)" = \
+            6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
+          test "$(git rev-parse HEAD:scripts/audit/_d080c_tgamma_rhs.py)" = \
+            c18feacbd57c9519af14504027b7d465758eb1ef
+          test "$(git rev-parse HEAD:scripts/audit/_d080d_static_jacobian.py)" = \
+            c577fefaf7a83443a7531e59a283c4f15e8815e1
+          test "$(git rev-parse HEAD:scripts/audit/_d080e_prepared_jvp_core.py)" = \
+            915196691eb166f5624d413a46d314b32faacfe6
+          test "$(git rev-parse HEAD:scripts/audit/_d080e_prepared_jvp.py)" = \
+            0913b3be5ad66af27ae7115deb603c88556cd6b4
+          test "$(git rev-parse HEAD:docs/audit/D080E_WOLFRAM_FIXED_STATE_REUSE_CHECKS_2026-09-02.wl)" = \
+            2e80c69b9dabec0326fb1c478fb3fb59c1443305
+
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Compile D-080E source and tests
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d080e_prepared_jvp.py \
+            scripts/audit/_d080e_prepared_jvp_core.py \
+            scripts/audit/d080e_production_profile.py \
+            tests/test_d080e_prepared_jvp.py
+
+      - name: Run focused fixed-state reuse suite
+        run: python3 -m pytest -q tests/test_d080e_prepared_jvp.py -m "not slow"
+
+      - name: Recover exact retained creep-1200 state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080e_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080e_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Run retained order-60 correctness discriminator
+        env:
+          D080E_STATE_1200: /tmp/d080e_state_1200.npz
+        run: python3 -m pytest -q tests/test_d080e_prepared_jvp.py -m slow
+
+      - name: Generate same-physics two-arm profile
+        run: |
+          rm -rf /tmp/d080e-profile
+          python3 scripts/audit/d080e_production_profile.py \
+            --out-dir /tmp/d080e-profile \
+            --retained-state /tmp/d080e_state_1200.npz
+
+      - name: Audit profile and symbolic receipts fail-closed
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("/tmp/d080e-profile")
+          receipt = json.loads((root / "research_receipt.json").read_text())
+          assert receipt["classification"] == "FIXED_STATE_REUSE_TWO_ARM_PROFILE"
+          assert receipt["comparator_blob_sha"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          fairness = receipt["fairness_contract"]
+          for key in (
+              "same_equations",
+              "same_collision_catalogue",
+              "same_quadrature",
+              "same_matrix_roundoff_policy",
+              "same_state_and_directions",
+              "same_output_ordering",
+          ):
+              assert fairness[key] is True, key
+          assert fairness["tolerances_changed"] is False
+          assert fairness["approximation_added"] is False
+          assert receipt["maximum_same_physics_residual"] < 5.0e-11
+
+          for row in receipt["order8"]["direction_scaling"]:
+              assert row["same_physics_residual"] < 3.0e-12
+              assert row["serial"]["median_s"] > 0.0
+              assert row["prepared_preparation"]["median_s"] > 0.0
+              assert row["prepared_apply"]["median_s"] > 0.0
+              assert row["cache"]["kinematic_hits"] > 0
+              assert row["cache"]["matrix_hits"] > 0
+              assert row["cache"]["modal_basis_hits"] > 0
+          for item in receipt["order8"]["cache_policy_ablations"].values():
+              assert item["same_physics_residual"] < 3.0e-12
+
+          retained = receipt["order60_retained"]
+          assert retained["fixture_sha256"] == \
+              "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380"
+          assert retained["same_physics_residual"] < 5.0e-11
+          assert retained["first_law_tangent_residual"] < 2.0e-8
+          assert retained["cache"]["kinematic_hits"] > 0
+          assert retained["cache"]["matrix_hits"] > 0
+          assert retained["cache"]["modal_basis_hits"] > 0
+          assert retained["cache"]["estimated_cache_bytes"] > 0
+          assert retained["projected_serial_full_matrix_s"] > 0.0
+          assert retained["projected_prepared_full_matrix_s"] > 0.0
+          assert retained["projected_full_matrix_speedup"] > 0.0
+          assert retained["route_decision"] in {
+              "EXPLICIT_FULL_BUILD_MEASUREMENT_ADMISSIBLE",
+              "REUSE_VALID_TRUE_BATCHING_OR_MATRIX_FREE_DECISION_REQUIRED",
+              "REUSE_ROUTE_NOT_ADMITTED",
+          }
+
+          symbolic = json.loads(Path(
+              "docs/audit/D080E_WOLFRAM_FIXED_STATE_REUSE_RECEIPT_2026-09-02.json"
+          ).read_text())
+          assert symbolic["source_git_blob_sha1"] == \
+              "2e80c69b9dabec0326fb1c478fb3fb59c1443305"
+          assert set(symbolic["results"].values()) == {0}
+
+          expected = {
+              "SHA256SUMS",
+              "cache_policy_ablation.png",
+              "order60_cache_activity.png",
+              "order60_projected_full_matrix.png",
+              "order8_speedup.png",
+              "order8_total_wall_time.png",
+              "probe_summary.md",
+              "research_receipt.json",
+          }
+          actual = {path.name for path in root.iterdir() if path.is_file()}
+          assert actual == expected, (expected - actual, actual - expected)
+          for path in root.iterdir():
+              assert path.is_file() and path.stat().st_size > 0, path
+          PY
+          (cd /tmp/d080e-profile && sha256sum -c SHA256SUMS)
+
+      - name: Upload direct D-080E evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: d080e-production-jacobian-profile
+          path: /tmp/d080e-profile
+          if-no-files-found: error
+          retention-days: 14

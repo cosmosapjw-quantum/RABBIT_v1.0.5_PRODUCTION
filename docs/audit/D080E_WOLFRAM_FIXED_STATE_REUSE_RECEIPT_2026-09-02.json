@@ -1,0 +1,20 @@
+{
+  "schema": "rabbit.d080e.wolfram_fixed_state_reuse.v1",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation",
+  "native_repository_replay": false,
+  "source_path": "docs/audit/D080E_WOLFRAM_FIXED_STATE_REUSE_CHECKS_2026-09-02.wl",
+  "source_git_blob_sha1": "2e80c69b9dabec0326fb1c478fb3fb59c1443305",
+  "assumptions": [
+    "the physical state, T_cm, T_gamma, grid, quadrature configuration and electron mass are fixed",
+    "the discrete support and matrix-roundoff branch is unchanged",
+    "the event measure W and weak matrix element M are independent of the spectral tangent direction",
+    "only the Pauli/logit factors and their modal projections vary with the spectral direction"
+  ],
+  "results": {
+    "fixed_factor_cache_residual": 0,
+    "direction_linearity_residual": 0,
+    "basis_column_assembly_residual": 0,
+    "stable_pauli_jvp_residual": 0
+  },
+  "claim_ceiling": "formula-level corroboration of fixed-state reuse and direction linearity; not a cache implementation, performance, solver, trajectory, or endpoint validation"
+}
