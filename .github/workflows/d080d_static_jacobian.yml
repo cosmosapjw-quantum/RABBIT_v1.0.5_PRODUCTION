@@ -1,0 +1,207 @@
+name: d080d-square-static-jacobian
+
+on:
+  push:
+    branches:
+      - research/d080d-square-static-jacobian-20260902
+    paths:
+      - .github/workflows/d080d_static_jacobian.yml
+      - scripts/audit/_d080d_static_jacobian.py
+      - scripts/audit/d080d_static_jacobian_probe.py
+      - scripts/audit/d080d_symbolic_checks.wl
+      - tests/test_d080d_static_jacobian.py
+      - docs/audit/D080D_WOLFRAM_SYMBOLIC_RECEIPT_2026-09-02.json
+
+permissions:
+  contents: write
+
+jobs:
+  square-static-jacobian:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen predecessor identities
+        run: |
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git rev-parse HEAD:scripts/audit/_d079_rhs_jvp.py)" = \
+            6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
+          test "$(git rev-parse HEAD:scripts/audit/_d080b_tgamma_collision.py)" = \
+            78489c43f3046db09d8ba2d96070124ed7b0aa91
+          test "$(git rev-parse HEAD:scripts/audit/_d080c_tgamma_rhs.py)" = \
+            c18feacbd57c9519af14504027b7d465758eb1ef
+
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Compile D-080D source and tests
+        run: |
+          python3 -m py_compile \
+            scripts/audit/_d080d_static_jacobian.py \
+            scripts/audit/d080d_static_jacobian_probe.py \
+            tests/test_d080d_static_jacobian.py
+
+      - name: Run focused square-Jacobian suite
+        run: python3 -m pytest -q tests/test_d080d_static_jacobian.py -m "not slow"
+
+      - name: Recover exact retained creep-1200 state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080d_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080d_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Run retained-stiff combined-direction discriminator
+        env:
+          D080D_STATE_1200: /tmp/d080d_state_1200.npz
+        run: python3 -m pytest -q tests/test_d080d_static_jacobian.py -m slow
+
+      - name: Generate deterministic matrices, plots, and receipt
+        run: |
+          rm -rf docs/audit/artifacts/d080d
+          python3 scripts/audit/d080d_static_jacobian_probe.py \
+            --out-dir docs/audit/artifacts/d080d \
+            --retained-state /tmp/d080d_state_1200.npz
+
+      - name: Audit numerical and symbolic receipts fail-closed
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("docs/audit/artifacts/d080d")
+          receipt = json.loads((root / "research_receipt.json").read_text())
+          assert receipt["classification"] == "EXPLICIT_SQUARE_STATIC_JACOBIAN"
+          assert receipt["comparator_blob_sha"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          assert receipt["expected_d079_rhs_blob_sha"] == "6bcff2bc5627c0af0ad4df61c908d09e62ffaba5"
+          assert receipt["expected_d080c_rhs_blob_sha"] == "c18feacbd57c9519af14504027b7d465758eb1ef"
+          assert receipt["maximum_matrix_action_residual"] < 1.0e-11
+
+          thermal = receipt["thermal"]
+          equilibrium = receipt["equilibrium"]
+          weak = receipt["weak_tail"]
+          retained = receipt["retained_stiff"]
+          for regime in (thermal, equilibrium, weak):
+              matrix = regime["matrix"]
+              assert matrix["matrix_shape"] == [26, 26]
+              assert matrix["active_matrix_shape"] == [25, 25]
+              assert matrix["base_reconstruction_residual"] < 5.0e-13
+              assert matrix["column_assembly_residual"] < 5.0e-13
+              assert matrix["elapsed_column_norm"] == 0.0
+              assert matrix["elapsed_null_action_norm"] == 0.0
+              assert matrix["newton_active_block_residual"] < 5.0e-15
+              assert matrix["newton_final_column_residual"] < 5.0e-15
+
+          for direction in (thermal["direction_1"], thermal["direction_2"]):
+              assert direction["best_block_residual"] < 8.0e-5
+              assert direction["all_samples_same_branch"] is True
+              assert 1.5 < direction["convergence_slope"] < 2.5
+          assert equilibrium["direction"]["best_block_residual"] < 4.0e-4
+          assert weak["direction"]["best_block_residual"] < 4.0e-4
+          assert equilibrium["direction"]["all_samples_same_branch"] is True
+          assert weak["direction"]["all_samples_same_branch"] is True
+          assert equilibrium["dQ_nu_dTgamma"] > 0.0
+          assert equilibrium["dQ_em_dTgamma"] < 0.0
+          assert equilibrium["first_law_tangent_residual"] < 2.0e-10
+
+          assert retained["fixture_sha256"] == \
+              "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380"
+          assert retained["same_tgamma_branch"] is True
+          assert retained["block_residual"] < 6.0e-3
+
+          best = thermal["direction_1"]["best_block_residual"]
+          for name, value in receipt["mutation_block_residuals"].items():
+              assert value > max(1.0e-5, 30.0 * best), (name, value)
+
+          symbolic = json.loads(
+              Path("docs/audit/D080D_WOLFRAM_SYMBOLIC_RECEIPT_2026-09-02.json").read_text()
+          )
+          assert symbolic["results"]["column_assembly_residual"] == [0, 0, 0]
+          assert symbolic["results"]["elapsed_column_residual"] == [0, 0, 0]
+          assert symbolic["results"]["newton_determinant_residual"] == 0
+          assert symbolic["results"]["characteristic_factor_residual"] == 0
+          assert symbolic["results"]["active_action_residual"] == [0, 0]
+
+          expected = {
+              "SHA256SUMS",
+              "column_profiles.png",
+              "jacobian_structure.png",
+              "mutation_kills.png",
+              "probe_summary.md",
+              "regime_directional_residuals.png",
+              "research_receipt.json",
+              "thermal_base_rhs.npy",
+              "thermal_block_residuals.png",
+              "thermal_directional_residual_ladders.png",
+              "thermal_probe_directions.npy",
+              "thermal_static_jacobian.npy",
+          }
+          actual = {path.name for path in root.iterdir() if path.is_file()}
+          assert actual == expected, (expected - actual, actual - expected)
+          for path in root.iterdir():
+              assert path.is_file() and path.stat().st_size > 0, path
+          PY
+          (cd docs/audit/artifacts/d080d && sha256sum -c SHA256SUMS)
+
+      - name: Upload direct evidence bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d080d-static-jacobian-artifacts
+          path: docs/audit/artifacts/d080d
+          if-no-files-found: error
+          retention-days: 2
+
+      - name: Commit deterministic evidence
+        run: |
+          set -euo pipefail
+          git fetch origin research/d080d-square-static-jacobian-20260902
+          test "$(git rev-parse origin/research/d080d-square-static-jacobian-20260902)" = \
+            "$(git rev-parse HEAD)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit/artifacts/d080d
+          expected="$(cat <<'EOF'
+          docs/audit/artifacts/d080d/SHA256SUMS
+          docs/audit/artifacts/d080d/column_profiles.png
+          docs/audit/artifacts/d080d/jacobian_structure.png
+          docs/audit/artifacts/d080d/mutation_kills.png
+          docs/audit/artifacts/d080d/probe_summary.md
+          docs/audit/artifacts/d080d/regime_directional_residuals.png
+          docs/audit/artifacts/d080d/research_receipt.json
+          docs/audit/artifacts/d080d/thermal_base_rhs.npy
+          docs/audit/artifacts/d080d/thermal_block_residuals.png
+          docs/audit/artifacts/d080d/thermal_directional_residual_ladders.png
+          docs/audit/artifacts/d080d/thermal_probe_directions.npy
+          docs/audit/artifacts/d080d/thermal_static_jacobian.npy
+          EOF
+          )"
+          actual="$(git diff --cached --name-only | sort)"
+          if [[ -z "$actual" ]]; then
+            echo "Evidence is byte-reproducible; no commit required."
+            exit 0
+          fi
+          if [[ "$actual" != "$expected" ]]; then
+            printf 'Unexpected generated paths.\nExpected:\n%s\nActual:\n%s\n' \
+              "$expected" "$actual" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "research(d080d): record square static-Jacobian evidence"
+          git push origin HEAD:research/d080d-square-static-jacobian-20260902
