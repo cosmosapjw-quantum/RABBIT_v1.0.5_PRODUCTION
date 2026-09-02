@@ -1,0 +1,254 @@
+name: d081r1c-kernel-primitive-admission
+
+on:
+  push:
+    branches:
+      - research/d081r1c-kernel-primitives-20260902
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  admit:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d081r1c-kernel-primitives-20260902
+
+      - name: Verify frozen predecessor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 1f42af299273011475a5b147344dcf68b2b39c65 HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+
+      - name: Install exact Python oracle dependencies
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check \
+            "numpy==2.4.4" "scipy==1.17.1"
+
+      - name: Generate and check deterministic Python fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 native/rabbit_cpu/tests/fixtures/d081r1/generate_collision_kernel_case.py
+          cp native/rabbit_cpu/tests/fixtures/d081r1/collision_kernel_case.json /tmp/collision_kernel_case.first.json
+          python3 native/rabbit_cpu/tests/fixtures/d081r1/generate_collision_kernel_case.py
+          cmp /tmp/collision_kernel_case.first.json \
+              native/rabbit_cpu/tests/fixtures/d081r1/collision_kernel_case.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("native/rabbit_cpu/tests/fixtures/d081r1/collision_kernel_case.json")
+          data = json.loads(path.read_text())
+          assert data["schema"] == "rabbit.d081r1.kernel_primitives.v1"
+          assert data["private_comparator_git_blob"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          assert data["self_event_count"] == 27
+          assert data["electron_event_count"] == 15
+          assert len(data["pauli_cases"]) == 5
+          assert len(data["electron_matrix_cases"]) == 6
+          PY
+
+      - name: Install exact Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
+          rustc +1.94.1 --version --verbose
+          cargo +1.94.1 --version --verbose
+
+      - name: Recover D-081R0 exact offline vendor
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/d081r0-outer /tmp/d081r0-expanded
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip \
+            > /tmp/d081r0-offline.zip
+          echo "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/d081r0-offline.zip" \
+            | sha256sum -c -
+          unzip -q /tmp/d081r0-offline.zip -d /tmp/d081r0-outer
+
+          vendor_dir="$(find /tmp/d081r0-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            while IFS= read -r archive; do
+              case "${archive}" in
+                *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.tar.xz) tar -xJf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.tar) tar -xf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.zip) unzip -q "${archive}" -d /tmp/d081r0-expanded ;;
+              esac
+            done < <(find /tmp/d081r0-outer -type f \
+              \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' \
+                 -o -name '*.tar' -o -name '*.zip' \) -print)
+            vendor_dir="$(find /tmp/d081r0-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          cat > native/rabbit_cpu/.cargo/config.toml <<EOF
+          [source.crates-io]
+          replace-with = "d081r0-vendored-sources"
+
+          [source.d081r0-vendored-sources]
+          directory = "${vendor_dir}"
+
+          [net]
+          offline = true
+          EOF
+          printf '%s\n' "${vendor_dir}" > /tmp/d081r0-vendor-dir
+
+      - name: Run exact offline Rust admission
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/d081r1c-metadata.json
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline f10_kernel_primitives::tests -- --nocapture \
+            | tee /tmp/d081r1c-tests.log
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          grep -F "test result: ok. 10 passed; 0 failed" /tmp/d081r1c-tests.log
+
+      - name: Generate bounded result records
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf native/rabbit_cpu/.cargo
+          mkdir -p docs/audit/artifacts/d081r1c
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          fixture = Path("native/rabbit_cpu/tests/fixtures/d081r1/collision_kernel_case.json")
+          source = Path("native/rabbit_cpu/src/f10_kernel_primitives.rs")
+          generator = Path("native/rabbit_cpu/tests/fixtures/d081r1/generate_collision_kernel_case.py")
+
+          def sha(path: Path) -> str:
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          receipt = {
+              "schema": "rabbit.d081r1c.kernel_primitive_admission.v1",
+              "classification": "SELECTED_EXACT_KERNEL_PRIMITIVES_ADMITTED",
+              "tested_head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "tested_tree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),
+              "predecessor_head": "1f42af299273011475a5b147344dcf68b2b39c65",
+              "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+              "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+              "rust_toolchain": "1.94.1",
+              "offline_vendor_artifact_id": 9838506413,
+              "offline_vendor_outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+              "fixture_sha256": sha(fixture),
+              "rust_source_sha256": sha(source),
+              "generator_sha256": sha(generator),
+              "tests": {"passed": 10, "failed": 0},
+              "catalogue": {"self_events": 27, "electron_events": 15},
+              "covered_primitives": [
+                  "stable scalar Pauli gain-minus-loss",
+                  "Pauli detailed-balance restoring gradient",
+                  "self K_s and K_t weak matrices",
+                  "six selected electron elastic/pair matrix cases",
+                  "one event-measure point",
+                  "roundoff-only nonnegative projection and material-negative refusal",
+                  "six-species catalogue stoichiometry",
+              ],
+              "arxiv_sources_read_directly": [
+                  "2008.01074",
+                  "1605.09383",
+                  "1506.05266",
+                  "2012.02726",
+              ],
+              "claim_ceiling": (
+                  "selected scalar kernel primitives only; no full six-species collision action, "
+                  "retained-state RHS/J/Jv parity, solver call, trajectory, performance, endpoint, "
+                  "N_eff or F10 gate movement"
+              ),
+          }
+          Path("docs/audit/artifacts/d081r1c/kernel_primitive_receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          cat > docs/audit/BD635_D081R1C_KERNEL_PRIMITIVE_PARITY_RESULT_2026-09-02.md <<'EOF'
+          # BD635 — D-081R1C exact collision-kernel primitive parity
+
+          ## Verdict
+
+          `PASS_WITH_SELECTED_SCALAR_PRIMITIVE_SCOPE`
+
+          The Rust implementation matches a deterministic fixture generated directly from the
+          frozen private Python comparator for five stable Pauli cases, two self-matrix
+          normalisations, six electron elastic/pair matrix cases, and one event-measure point.
+          The exact Rust 1.94.1 / Cargo.lock offline vendor was used. Ten focused tests passed.
+
+          ## Physics contract
+
+          The admitted Pauli factor is
+
+          ```text
+          (1-f1)(1-f2)f3f4 - f1 f2 (1-f3)(1-f4),
+          ```
+
+          evaluated through a cancellation-resistant logit affinity. At detailed balance its
+          value is zero but its restoring gradient is `(-G,-G,+G,+G)`.
+
+          Self matrices use the frozen `K_s=d12*d34` and `K_t=d14*d23`
+          contractions with coefficients from the exact 27-event global catalogue. Electron
+          matrices preserve finite electron mass, flavour-dependent weak couplings, CP exchange,
+          the elastic factor `64 G_F^2`, and pair factor `128 G_F^2`. Event measure parity covers
+          the frozen `256*pi^4*p1*E2` denominator.
+
+          ## Direct arXiv reading
+
+          The primary methodological checks were read from arXiv:2008.01074,
+          arXiv:1605.09383, arXiv:1506.05266, and arXiv:2012.02726. They support the
+          gain-minus-loss/Pauli structure, spin-summed matrix elements, identical-particle
+          multiplicities, explicit antiparticle treatment, energy-exchange conservation, and
+          numerical-convergence separation. They do not validate the RABBIT discretisation;
+          the frozen Python fixture is the implementation oracle.
+
+          ## Deliberate exclusions
+
+          No angular/radial collision integral was assembled in Rust. No modal routing,
+          retained-state RHS, analytic JVP/Jacobian, PyO3 comparator surface, ODE solver,
+          performance result, endpoint, or `N_eff` was produced. The legacy folded two-bank
+          action remains a negative-control substrate, not the six-species oracle.
+
+          ## Next node
+
+          D-081R1D must assemble the full six-species self, elastic, and pair collision action
+          from these admitted primitives and compare the action, moments, support signature,
+          CP/flavour symmetries, weighted number/energy conservation, and first-law ledger with
+          frozen Python outputs before the packed RHS is opened.
+          EOF
+
+          python3 -m json.tool docs/audit/artifacts/d081r1c/kernel_primitive_receipt.json >/dev/null
+          git diff --check
+
+      - name: Commit admitted fixture and records, removing the temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/d081r1c_kernel_primitive_admission.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "test(d081r1c): admit exact collision-kernel primitives"
+          git push origin HEAD:research/d081r1c-kernel-primitives-20260902
