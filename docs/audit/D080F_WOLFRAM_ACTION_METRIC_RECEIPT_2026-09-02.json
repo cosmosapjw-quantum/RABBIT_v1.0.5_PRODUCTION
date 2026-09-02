@@ -1,0 +1,19 @@
+{
+  "schema": "rabbit.d080f.wolfram_action_metric_receipt.v1",
+  "date": "2026-09-02",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "source_git_blob_sha": "12aa65bb1970b204e8915dd7837f6897969cf772",
+  "scope": "triangle-dominating contribution scale, basis-direction reduction, and near-cancellation contrast",
+  "results": {
+    "triangle_dominance": "Abs[a1*v1 + a2*v2 + a3*v3] <= Abs[a1*v1] + Abs[a2*v2] + Abs[a3*v3]",
+    "basis_scale": "Abs[a2]",
+    "forward_cancellation_residual": "eta/delta",
+    "contribution_scaled_residual": "eta/(2-delta)"
+  },
+  "interpretation": {
+    "contribution_scale": "the rowwise quantity sum_j |J_ij v_j| bounds |(Jv)_i| and remains well conditioned under signed cancellation",
+    "basis_direction": "for v=e_j the contribution scale is exactly |J_ij|, so selected-column admission is unchanged",
+    "threshold": "the prospective numerical threshold remains 5e-10; only the ill-conditioned dense-action normalization is amended"
+  },
+  "claim_ceiling": "formula-level metrology corroboration only; executable order-60 residuals and route selection require a fresh rerun"
+}
