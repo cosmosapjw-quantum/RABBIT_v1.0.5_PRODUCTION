@@ -22,7 +22,7 @@ def _api() -> ModuleType:
         pytest.fail("D-080F frozen full-build module is not present")
 
 
-def _case(order: int = 4) -> tuple[
+def _case(order: int = 8) -> tuple[
     ind.IndependentNoQkeGrid,
     ind.IndependentCollisionConfig,
     np.ndarray,
