@@ -10,7 +10,6 @@ mod electron_hm;
 mod electron_thermal;
 mod electron_thermal_fd;
 mod f10_kernel_primitives;
-flrw_placeholder!();
 mod flrw;
 mod isotropic_boltzmann;
 mod minimal_bbn;
