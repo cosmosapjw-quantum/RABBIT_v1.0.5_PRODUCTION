@@ -1,0 +1,58 @@
+name: d080e-production-jacobian-profile
+
+on:
+  push:
+    branches:
+      - research/d080e-production-jacobian-profile-20260902
+    paths:
+      - .github/workflows/d080e_prepared_jvp.yml
+      - scripts/audit/_d080e_prepared_jvp.py
+      - scripts/audit/d080e_production_profile.py
+      - tests/test_d080e_prepared_jvp.py
+      - docs/audit/D080E_*
+
+permissions:
+  contents: write
+
+jobs:
+  prepared-jvp-red-green:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen predecessor identities
+        run: |
+          test "$(git rev-parse HEAD^)" = \
+            985fdacc63ce09b93eef4fc77d87ade12fdff284 || \
+          git merge-base --is-ancestor \
+            985fdacc63ce09b93eef4fc77d87ade12fdff284 HEAD
+          test "$(git rev-parse HEAD:src/rabbit/decoupling/_independent_noqke.py)" = \
+            de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git rev-parse HEAD:scripts/audit/_d079_collision_jvp.py)" = \
+            591a64702c58a2de265fb88636f186e2d1b7e019
+          test "$(git rev-parse HEAD:scripts/audit/_d079_rhs_jvp.py)" = \
+            6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
+          test "$(git rev-parse HEAD:scripts/audit/_d080c_tgamma_rhs.py)" = \
+            c18feacbd57c9519af14504027b7d465758eb1ef
+          test "$(git rev-parse HEAD:scripts/audit/_d080d_static_jacobian.py)" = \
+            c577fefaf7a83443a7531e59a283c4f15e8815e1
+
+      - name: Install frozen research dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Compile RED specification
+        run: python3 -m py_compile tests/test_d080e_prepared_jvp.py
+
+      - name: Run focused D-080E specification
+        run: python3 -m pytest -q tests/test_d080e_prepared_jvp.py -m "not slow"
