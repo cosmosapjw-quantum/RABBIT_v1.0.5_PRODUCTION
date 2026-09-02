@@ -1,4 +1,5 @@
 //! Exact grid and state-chart foundations for the six-species F10 comparator.
+//! The first GREEN admission is rerun only after exact Rust 1.94.1 formatting.
 
 #![cfg_attr(not(test), allow(dead_code))]
 
