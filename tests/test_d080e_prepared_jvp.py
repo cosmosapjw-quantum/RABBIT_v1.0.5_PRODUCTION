@@ -91,8 +91,6 @@ def test_prepared_multi_direction_jvp_matches_frozen_serial_oracle() -> None:
         )
         assert rhs_block_relative(candidate, reference.jvp, grid.order) < 2.0e-12
 
-    # Preparation evaluates the unchanged primal operator and should populate
-    # every direction-independent kinematic and matrix object needed later.
     assert after["kinematic_requests"] > before["kinematic_requests"]
     assert after["kinematic_misses"] == before["kinematic_misses"]
     assert after["self_matrix_misses"] == before["self_matrix_misses"]
@@ -102,7 +100,6 @@ def test_prepared_multi_direction_jvp_matches_frozen_serial_oracle() -> None:
     assert after["matrix_hits"] > before["matrix_hits"]
     assert after["modal_basis_hits"] > before["modal_basis_hits"]
 
-    # Research-only monkeypatching must be scoped and fully restored.
     assert ind._two_body_kinematics is original_kinematics
     assert ind._self_matrix is original_self_matrix
     assert ind._electron_matrix is original_electron_matrix
@@ -163,7 +160,10 @@ def test_cache_policy_mutations_preserve_physics_but_reduce_reuse() -> None:
         temperature_cm_mev=tcm,
         temperature_gamma_mev=tg,
         config=config,
-        policy=api.FixedStateReusePolicy(cache_kinematics=False),
+        policy=api.FixedStateReusePolicy(
+            cache_kinematics=False,
+            cache_matrices=False,
+        ),
     )
     full_value = api.evaluate_prepared_c_only_rhs_jvp(full, direction).jvp
     no_modal_value = api.evaluate_prepared_c_only_rhs_jvp(no_modal, direction).jvp
@@ -174,6 +174,13 @@ def test_cache_policy_mutations_preserve_physics_but_reduce_reuse() -> None:
     assert no_modal.cache.snapshot()["modal_basis_hits"] == 0
     assert full.cache.snapshot()["kinematic_hits"] > 0
     assert no_kinematics.cache.snapshot()["kinematic_hits"] == 0
+    assert no_kinematics.cache.snapshot()["matrix_hits"] == 0
+
+    with pytest.raises(ValueError, match="matrix caching requires"):
+        api.FixedStateReusePolicy(
+            cache_kinematics=False,
+            cache_matrices=True,
+        )
 
 
 def test_invalid_direction_batch_and_nested_cache_fail_closed() -> None:
