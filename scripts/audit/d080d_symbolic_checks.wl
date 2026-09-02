@@ -1,7 +1,12 @@
 (* D-080D symbolic closure checks.
    This source is evaluated statelessly through the Wolfram Language plugin.
    It verifies only finite-dimensional block identities; it does not execute
-   repository code or any ODE/nonlinear solver. *)
+   repository code or any ODE/nonlinear solver.
+
+   Controlling records:
+   - docs/audit/BD627_D080D_SQUARE_STATIC_JACOBIAN_CONTRACT_2026-09-02.md
+   - docs/audit/BD628_D080D_SQUARE_STATIC_JACOBIAN_RESULT_2026-09-02.md
+*)
 
 ClearAll[aa, bb, cc, dd, pp, qq, xx, yy, zz, gam, lam,
   jacMat, activeMat, vec];
