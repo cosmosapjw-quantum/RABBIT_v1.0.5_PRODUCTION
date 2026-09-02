@@ -26,7 +26,7 @@ jobs:
       - name: Install frozen dependencies
         run: |
           python3 -m pip install --disable-pip-version-check \
-            numpy==2.5.2 scipy==1.18.1 pytest==9.1.1
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
       - name: Recover exact retained state
         run: |
           git fetch --no-tags origin diagnosis_report
