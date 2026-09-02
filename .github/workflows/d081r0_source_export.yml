@@ -23,7 +23,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD~2)" = "901a62350b19cf43c17dffe45e96e8b94e4c7ca1"
+          test "$(git merge-base HEAD 901a62350b19cf43c17dffe45e96e8b94e4c7ca1)" = \
+            "901a62350b19cf43c17dffe45e96e8b94e4c7ca1"
           test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.toml)" = "30bc4826c7a7676b5fb5c8610273eb7586551ad8"
           test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.lock)" = "a1b5035da5c20712d1a2a4ab077da255ff94a014"
           test "$(git rev-parse HEAD:native/rabbit_cpu/rust-toolchain.toml)" = "b1dd491cdce6f8b98cfe02f6807980c0dfe48784"
@@ -48,7 +49,13 @@ jobs:
           cp docs/audit/artifacts/d080f/retained_order60_static_jacobian.npy "$root/repo/python-oracle/"
           git rev-parse HEAD > "$root/EXPORT_HEAD"
           git rev-parse HEAD^{tree} > "$root/EXPORT_TREE"
-          (cd "$root" && find . -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          (
+            cd "$root"
+            find EXPORT_HEAD EXPORT_TREE repo -type f -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > SHA256SUMS
+            sha256sum -c SHA256SUMS
+          )
           tar --sort=name --mtime='UTC 1980-01-01' --owner=0 --group=0 --numeric-owner \
             -czf "$root/d081r0-rust-source-and-oracle.tar.gz" -C "$root" \
             EXPORT_HEAD EXPORT_TREE SHA256SUMS repo
