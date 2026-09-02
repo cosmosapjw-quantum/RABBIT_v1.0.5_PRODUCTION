@@ -1,0 +1,212 @@
+name: d081r1d1-action-foundations
+
+on:
+  push:
+    branches:
+      - research/d081r1d1-foundations-20260903
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  admit:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d081r1d1-foundations-20260903
+
+      - name: Verify frozen predecessor and sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor ae673701ed7bbf9b052c518d73c9bf3b7e295b3d HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json)" = c94d2e72a1f8300b7c20c9c793417a5c4a5fa302
+
+      - name: Install exact Python oracle dependencies
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check \
+            "numpy==2.4.4" "scipy==1.17.1"
+
+      - name: Generate deterministic foundations fixture twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          generator=native/rabbit_cpu/tests/fixtures/d081r1/generate_action_foundations_case.py
+          fixture=native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json
+          python3 "${generator}"
+          cp "${fixture}" /tmp/action-foundations.first.json
+          python3 "${generator}"
+          cmp /tmp/action-foundations.first.json "${fixture}"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json").read_text())
+          assert data["schema"] == "rabbit.d081r1.action_foundations.v1"
+          assert data["private_comparator_git_blob"] == "de44feee0aa484abe26976c7dc34c579643005b5"
+          assert data["order"] == 8
+          assert len(data["kinematics"]["batches"]) == 3
+          assert {item["name"] for item in data["kinematics"]["batches"]} == {"self", "elastic", "pair"}
+          PY
+
+      - name: Install exact Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
+          rustc +1.94.1 --version --verbose
+          cargo +1.94.1 --version --verbose
+
+      - name: Recover exact D-081R0 offline vendor
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/d081r0-outer /tmp/d081r0-expanded
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip \
+            > /tmp/d081r0-offline.zip
+          echo "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/d081r0-offline.zip" | sha256sum -c -
+          unzip -q /tmp/d081r0-offline.zip -d /tmp/d081r0-outer
+          vendor_dir="$(find /tmp/d081r0-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            while IFS= read -r archive; do
+              case "${archive}" in
+                *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.tar.xz) tar -xJf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.tar) tar -xf "${archive}" -C /tmp/d081r0-expanded ;;
+                *.zip) unzip -q "${archive}" -d /tmp/d081r0-expanded ;;
+              esac
+            done < <(find /tmp/d081r0-outer -type f \
+              \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' -o -name '*.tar' -o -name '*.zip' \) -print)
+            vendor_dir="$(find /tmp/d081r0-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          cat > native/rabbit_cpu/.cargo/config.toml <<EOF
+          [source.crates-io]
+          replace-with = "d081r0-vendored-sources"
+
+          [source.d081r0-vendored-sources]
+          directory = "${vendor_dir}"
+
+          [net]
+          offline = true
+          EOF
+
+      - name: Run exact offline RED or GREEN admission
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/d081r1d1-metadata.json
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline f10_action_foundations_tests::tests -- --nocapture | tee /tmp/d081r1d1-tests.log
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          grep -F "test result: ok. 11 passed; 0 failed" /tmp/d081r1d1-tests.log
+
+      - name: Generate bounded result records
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf native/rabbit_cpu/.cargo
+          mkdir -p docs/audit/artifacts/d081r1d1
+          python3 - <<'PY'
+          from __future__ import annotations
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          paths = {
+              "fixture": Path("native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json"),
+              "generator": Path("native/rabbit_cpu/tests/fixtures/d081r1/generate_action_foundations_case.py"),
+              "grid_source": Path("native/rabbit_cpu/src/f10_action_grid.rs"),
+              "spectral_source": Path("native/rabbit_cpu/src/f10_action_spectral.rs"),
+              "kinematic_source": Path("native/rabbit_cpu/src/f10_action_kinematics.rs"),
+              "tests": Path("native/rabbit_cpu/src/f10_action_foundations_tests.rs"),
+          }
+          sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+          receipt = {
+              "schema": "rabbit.d081r1d1.action_foundations.v1",
+              "classification": "GRID_SPECTRAL_KINEMATIC_FOUNDATIONS_ADMITTED",
+              "tested_head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "tested_tree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),
+              "predecessor_head": "ae673701ed7bbf9b052c518d73c9bf3b7e295b3d",
+              "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+              "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+              "rust_toolchain": "1.94.1",
+              "offline_vendor_artifact_id": 9838506413,
+              "offline_vendor_outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+              "sha256": {name: sha(path) for name, path in paths.items()},
+              "tests": {"passed": 11, "failed": 0},
+              "scope": [
+                  "affine Gauss-Legendre order-8 grid on [0,8]",
+                  "strict cloglog-to-logit chart",
+                  "mapped orthonormal Legendre basis and modal contractions",
+                  "massless self, finite-mass elastic, and pair kinematic batches",
+                  "GL12 angular, four-midpoint azimuth, and GL48 electron half-line rules",
+              ],
+              "claim_ceiling": (
+                  "foundations only; no full six-species Rust collision action, retained-state RHS, "
+                  "JVP, Jacobian, solver, trajectory, performance, endpoint, N_eff or F10 gate movement"
+              ),
+          }
+          Path("docs/audit/artifacts/d081r1d1/action_foundations_receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          PY
+          cat > docs/audit/BD638_D081R1D1_ACTION_FOUNDATIONS_RESULT_2026-09-03.md <<'EOF'
+          # BD638 — D-081R1D1 action-foundation parity result
+
+          ## Verdict
+
+          `PASS_WITH_ORDER8_SELECTED_KINEMATIC_SCOPE`
+
+          Exact Rust 1.94.1 with the frozen offline Cargo vendor reproduced the
+          Python comparator's affine GL8 grid, strict cloglog chart, mapped
+          Legendre spectral operations, GL12/four-azimuth/GL48 rules, and selected
+          self, finite-electron elastic, and pair-annihilation kinematic points.
+          Eleven focused tests passed under release check and strict Clippy.
+
+          ## Scope boundary
+
+          This node admits reusable foundations only. It does not assemble
+          `W*M*C`, route any six-species collision action, evaluate a packed RHS,
+          construct a JVP/Jacobian, call an ODE solver, or establish performance,
+          endpoint, `N_eff`, production, publication, or F10-gate authority.
+
+          ## Next node
+
+          D-081R1D2 must implement the complete 27-event self action with the
+          frozen `(+,+,-,-)` modal routing and compare all six native/modal output
+          rows, all nine physical-family rows, support/correction signatures,
+          number/energy conservation, entropy production, CP/mu-tau symmetries,
+          the nonzero mu-tau antisymmetric response, and mandatory mutations
+          against the D-081R1D0 Python fixture.
+          EOF
+          python3 -m json.tool docs/audit/artifacts/d081r1d1/action_foundations_receipt.json >/dev/null
+          git diff --check
+
+      - name: Commit admitted fixture and records, removing temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/d081r1d1_foundations.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat(d081r1d1): admit exact action foundations"
+          git push origin HEAD:research/d081r1d1-foundations-20260903
