@@ -26,23 +26,24 @@ jobs:
 
           path = Path("native/rabbit_cpu/src/f10_kernel_primitives.rs")
           text = path.read_text(encoding="utf-8")
-          old = """
-
-for species in F10Species::ALL {
-    let partner = species.cp_partner();
-    assert_ne!(partner, species);
-    assert_eq!(partner.cp_partner(), species);
-    assert_eq!(F10Species::from_name(species.name()).unwrap(), species);
-}
-"""
-          new = """
-        for species in F10Species::ALL {
-            let partner = species.cp_partner();
-            assert_ne!(partner, species);
-            assert_eq!(partner.cp_partner(), species);
-            assert_eq!(F10Species::from_name(species.name()).unwrap(), species);
-        }
-"""
+          old = (
+              "\n\n"
+              "for species in F10Species::ALL {\n"
+              "    let partner = species.cp_partner();\n"
+              "    assert_ne!(partner, species);\n"
+              "    assert_eq!(partner.cp_partner(), species);\n"
+              "    assert_eq!(F10Species::from_name(species.name()).unwrap(), species);\n"
+              "}\n"
+          )
+          new = (
+              "\n"
+              "        for species in F10Species::ALL {\n"
+              "            let partner = species.cp_partner();\n"
+              "            assert_ne!(partner, species);\n"
+              "            assert_eq!(partner.cp_partner(), species);\n"
+              "            assert_eq!(F10Species::from_name(species.name()).unwrap(), species);\n"
+              "        }\n"
+          )
           if text.count(old) != 1:
               raise SystemExit(f"expected one unformatted block, found {text.count(old)}")
           path.write_text(text.replace(old, new), encoding="utf-8")
