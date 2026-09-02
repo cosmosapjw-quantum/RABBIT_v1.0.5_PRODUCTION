@@ -1,0 +1,231 @@
+{
+  "arxiv_sources": [
+    "2008.01074",
+    "1605.09383",
+    "1506.05266",
+    "2012.02726"
+  ],
+  "claim_ceiling": "selected scalar Pauli, weak-matrix and event-measure parity only; no full collision action, RHS, Jacobian, trajectory or performance claim",
+  "classification": "FROZEN_PYTHON_SELECTED_KERNEL_PRIMITIVES",
+  "constants": {
+    "electron_mass_bits": "0x3fe05a1a78514a75",
+    "g_f_bits": "0x3da9a6210054fe8e",
+    "matrix_roundoff_ulps_bits": "0x4090000000000000",
+    "sin2_theta_w_bits": "0x3fcd989df1172ef1"
+  },
+  "d080f_head": "901a62350b19cf43c17dffe45e96e8b94e4c7ca1",
+  "electron_event_count": 15,
+  "electron_matrix_cases": [
+    {
+      "category": "elastic_minus",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bced5a8e2b1502d",
+        "0x3bf3875edfd39247",
+        "0x0000000000000000",
+        "0x3be79918c7956e0f"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "nu_e"
+    },
+    {
+      "category": "elastic_minus",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bd6a3a732246a6e",
+        "0x3bdb8fb839bbf8bf",
+        "0x0000000000000000",
+        "0x3bf2a010f6f483c3"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "antinu_e"
+    },
+    {
+      "category": "elastic_plus",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bb1fe022324fd23",
+        "0x3bc5ab338a2219cb",
+        "0x0000000000000000",
+        "0x3bcc72aaa3e0564c"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "nu_mu"
+    },
+    {
+      "category": "elastic_plus",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bb0dd66ab68da75",
+        "0x3bc99d53ad34932b",
+        "0x0000000000000000",
+        "0x3bca511485e96566"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "antinu_tau"
+    },
+    {
+      "category": "pair",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3be75c083f48c979",
+        "0x3be9fd9bb0039465",
+        "0x0000000000000000",
+        "0x3c0322c282e03e48"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "nu_e"
+    },
+    {
+      "category": "pair",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bbe1423bbd32c6a",
+        "0x3bc766a2f672c526",
+        "0x0000000000000000",
+        "0x3bd7194433653df7"
+      ],
+      "largest_correction_bits": "0x0000000000000000",
+      "target": "nu_mu"
+    }
+  ],
+  "event_measure_case": {
+    "e2_bits": "0x3ff4de4a18b5373e",
+    "expected_bits": "0x3e9b02d97e48861e",
+    "outer_weight_bits": "0x3fc0000000000000",
+    "p1_bits": "0x4006000000000000",
+    "p2_bits": "0x3ff3333333333333",
+    "phase_space_bits": "0x3fd999999999999a",
+    "quadrature_weight_bits": "0x3fe0000000000000"
+  },
+  "invariants": {
+    "d12_bits": [
+      "0x3ff4000000000000",
+      "0x400c000000000000",
+      "0x4000000000000000",
+      "0x4014000000000000"
+    ],
+    "d13_bits": [
+      "0x3ff199999999999a",
+      "0x4000000000000000",
+      "0x3ff0000000000000",
+      "0x4004cccccccccccd"
+    ],
+    "d14_bits": [
+      "0x3ffccccccccccccd",
+      "0x400599999999999a",
+      "0x3ff0000000000000",
+      "0x4010cccccccccccd"
+    ],
+    "d23_bits": [
+      "0x400199999999999a",
+      "0x3ff6666666666666",
+      "0x3ff0000000000000",
+      "0x4008cccccccccccd"
+    ],
+    "d24_bits": [
+      "0x3ffb333333333333",
+      "0x400a666666666666",
+      "0x3ff0000000000000",
+      "0x3ffe666666666666"
+    ],
+    "d34_bits": [
+      "0x4000000000000000",
+      "0x4010000000000000",
+      "0x3ff0000000000000",
+      "0x3ff8000000000000"
+    ],
+    "support": [
+      true,
+      true,
+      false,
+      true
+    ]
+  },
+  "pauli_cases": [
+    {
+      "expected_bits": "0x0000000000000000",
+      "logits_bits": [
+        "0x0000000000000000",
+        "0x0000000000000000",
+        "0x0000000000000000",
+        "0x0000000000000000"
+      ],
+      "name": "detailed_balance_zero",
+      "relative_tolerance_bits": "0x3d4c25c268497682"
+    },
+    {
+      "expected_bits": "0x3fb41e80ac2be3ae",
+      "logits_bits": [
+        "0xbff3333333333333",
+        "0x3fd999999999999a",
+        "0x3ff199999999999a",
+        "0xbfd3333333333333"
+      ],
+      "name": "generic_asymmetric",
+      "relative_tolerance_bits": "0x3d4c25c268497682"
+    },
+    {
+      "expected_bits": "0xbc835ac8c9ce2fe6",
+      "logits_bits": [
+        "0x4034000000000000",
+        "0xc032000000000000",
+        "0x4033000000000000",
+        "0xc031800000000000"
+      ],
+      "name": "opposite_tails",
+      "relative_tolerance_bits": "0x3d4c25c268497682"
+    },
+    {
+      "expected_bits": "0x39abb5a8254514de",
+      "logits_bits": [
+        "0xc044000000000000",
+        "0xc03e000000000000",
+        "0xc041800000000000",
+        "0xc041000000000000"
+      ],
+      "name": "dilute_tails",
+      "relative_tolerance_bits": "0x3d4c25c268497682"
+    },
+    {
+      "expected_bits": "0x3d22d4f2f3443ef7",
+      "logits_bits": [
+        "0x4000000000000000",
+        "0xbff0000000000000",
+        "0x3fd3333333333333",
+        "0x3fe6666666668996"
+      ],
+      "name": "near_detailed_balance",
+      "relative_tolerance_bits": "0x3d4c25c268497682"
+    }
+  ],
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "schema": "rabbit.d081r1.kernel_primitives.v1",
+  "self_event_count": 27,
+  "self_matrix_cases": [
+    {
+      "coefficient_bits": "0x4030000000000000",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3bb9b2ae88ccda4e",
+        "0x3be1fd13c628ff36",
+        "0x0000000000000000",
+        "0x3bd34602e699a3ba"
+      ],
+      "kernel": "K_s",
+      "largest_correction_bits": "0x0000000000000000"
+    },
+    {
+      "coefficient_bits": "0x4050000000000000",
+      "corrections": 0,
+      "expected_value_bits": [
+        "0x3be45a50e3213829",
+        "0x3be36d7bc1886fca",
+        "0x0000000000000000",
+        "0x3c00bab8ca357cb6"
+      ],
+      "kernel": "K_t",
+      "largest_correction_bits": "0x0000000000000000"
+    }
+  ]
+}
