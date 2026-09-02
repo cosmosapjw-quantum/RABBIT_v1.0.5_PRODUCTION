@@ -1,0 +1,53 @@
+{
+  "cases": [
+    "equilibrium",
+    "thermal_split",
+    "mu_tau_split"
+  ],
+  "catalogue": {
+    "electron_events": 15,
+    "self_events": 27
+  },
+  "claim_ceiling": "frozen Python order-8 full-action oracle only; no Rust full-action parity, retained order-60 result, RHS/J/Jv, solver, performance, endpoint, N_eff or F10 gate movement",
+  "classification": "FULL_PYTHON_ACTION_ORACLE_FROZEN",
+  "equilibrium": {
+    "cp_absolute": 1.6731686647524977e-38,
+    "first_law_residual": 0.0,
+    "legacy_cp_relative": 0.00153002459381914,
+    "legacy_mu_tau_relative": 0.0012182241076484988,
+    "mu_tau_absolute": 1.3329255900167337e-38,
+    "total_max_abs": 1.4672342336576076e-35
+  },
+  "fixture_sha256": "5538473e3eefde2143c8b6033def7335a0c50ea5d8e6c4b84ffcf71a5e2179a2",
+  "generator_sha256": "62016f0831b09e2dd30fb4cc613ff8c075f7cecfc29b2622dd4c313bcc2adc46",
+  "mu_tau_split": {
+    "cp_relative": 2.51937085235691e-12,
+    "first_law_residual": 2.2411569297815026e-16,
+    "mu_tau_relative": 1.994109545556898
+  },
+  "null_state_metrology": {
+    "equilibrium_cp_over_thermal": 2.538510676353804e-15,
+    "equilibrium_mu_tau_over_thermal": 2.022298117532099e-15,
+    "equilibrium_total_over_thermal": 2.2260695202552013e-12
+  },
+  "order": 8,
+  "predecessor_head": "5e4adf6af6ae1983ba0a272074503a7d6f469a46",
+  "preserved_failed_measurement": {
+    "diagnostic_workflow_run": 33669459552,
+    "failure": "equilibrium legacy relative CP residual was 1.53002459381913996e-3 because both compared actions were numerical nulls",
+    "workflow_run": 33669293606
+  },
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "schema": "rabbit.d081r1d0.full_action_oracle_freeze.v1",
+  "tested_head": "14ff5fd9f7274496ec1383baab057993a24101d1",
+  "tested_tree": "6a37a90079d04f30f459873541a8eaae698c96d1",
+  "thermal_split": {
+    "cp_relative": 8.198275575814646e-14,
+    "first_law_residual": 0.0,
+    "mu_tau_relative": 1.1414341721105535e-14,
+    "q_em": -4.764316901390202e-21,
+    "q_nu": 4.764316901390202e-21,
+    "total_max_abs": 6.5911429104397456e-24
+  },
+  "y_max": 8.0
+}
