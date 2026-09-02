@@ -10,6 +10,7 @@ mod electron_hm;
 mod electron_thermal;
 mod electron_thermal_fd;
 mod f10_kernel_primitives;
+flrw_placeholder!();
 mod flrw;
 mod isotropic_boltzmann;
 mod minimal_bbn;
@@ -21,6 +22,9 @@ mod quadrature;
 mod thermal_bbn;
 mod thermal_weak;
 mod tier1_lrs;
+
+#[cfg(test)]
+mod f10_action_foundations_tests;
 
 #[cfg(test)]
 mod electron_event_falsifiers;
