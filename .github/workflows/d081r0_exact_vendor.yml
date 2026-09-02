@@ -1,0 +1,148 @@
+name: d081r0-exact-rabbit-offline-vendor
+
+on:
+  push:
+    branches:
+      - research/d081r0-rust-offline-semantic-admission-20260902
+    paths:
+      - .github/workflows/d081r0_exact_vendor.yml
+
+permissions:
+  contents: read
+
+jobs:
+  exact-vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen Rust graph and predecessor
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD 901a62350b19cf43c17dffe45e96e8b94e4c7ca1)" = \
+            "901a62350b19cf43c17dffe45e96e8b94e4c7ca1"
+          test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.toml)" = \
+            "30bc4826c7a7676b5fb5c8610273eb7586551ad8"
+          test "$(git rev-parse HEAD:native/rabbit_cpu/Cargo.lock)" = \
+            "a1b5035da5c20712d1a2a4ab077da255ff94a014"
+          test "$(git rev-parse HEAD:native/rabbit_cpu/rust-toolchain.toml)" = \
+            "b1dd491cdce6f8b98cfe02f6807980c0dfe48784"
+
+      - name: Install exact Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt --component clippy
+          rustc +1.94.1 --version --verbose
+          cargo +1.94.1 --version --verbose
+
+      - name: Create exact RABBIT vendor and portable config
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=/tmp/d081r0-rabbit-offline
+          rm -rf "$root"
+          mkdir -p "$root/crate"
+          cp -a native/rabbit_cpu/. "$root/crate/"
+          cd "$root/crate"
+          mkdir -p .cargo
+          cargo +1.94.1 vendor --locked vendor > .cargo/config.toml
+          grep -F 'replace-with = "vendored-sources"' .cargo/config.toml
+          grep -F 'directory = "vendor"' .cargo/config.toml
+
+      - name: Prove exact offline closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=/tmp/d081r0-rabbit-offline/crate
+          cd "$root"
+          export CARGO_NET_OFFLINE=true
+          cargo +1.94.1 metadata --locked --offline --format-version 1 \
+            > /tmp/d081r0-cargo-metadata.json
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --lib --offline -- --nocapture \
+            | tee /tmp/d081r0-cargo-test.txt
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+
+      - name: Create deterministic offline kit and receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          kit=/tmp/d081r0-rabbit-offline
+          crate="$kit/crate"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import pathlib
+          import re
+          import subprocess
+
+          kit = pathlib.Path('/tmp/d081r0-rabbit-offline')
+          crate = kit / 'crate'
+          lock = (crate / 'Cargo.lock').read_text(encoding='utf-8')
+          packages = len(re.findall(r'^\[\[package\]\]$', lock, flags=re.M))
+          registry_packages = len(re.findall(r'^source = "registry\+', lock, flags=re.M))
+          vendor_dirs = sorted(p for p in (crate / 'vendor').iterdir() if p.is_dir())
+          test_text = pathlib.Path('/tmp/d081r0-cargo-test.txt').read_text(encoding='utf-8')
+          match = re.search(r'test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out', test_text)
+          if not match:
+              raise SystemExit('could not parse cargo test result')
+          receipt = {
+              'schema': 'rabbit.d081r0.exact_offline_vendor.v1',
+              'classification': 'EXACT_RABBIT_CARGO_LOCK_OFFLINE_CLOSURE',
+              'source_head': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
+              'source_tree': subprocess.check_output(['git','rev-parse','HEAD^{tree}'], text=True).strip(),
+              'cargo_toml_git_blob': subprocess.check_output(['git','rev-parse','HEAD:native/rabbit_cpu/Cargo.toml'], text=True).strip(),
+              'cargo_lock_git_blob': subprocess.check_output(['git','rev-parse','HEAD:native/rabbit_cpu/Cargo.lock'], text=True).strip(),
+              'toolchain_git_blob': subprocess.check_output(['git','rev-parse','HEAD:native/rabbit_cpu/rust-toolchain.toml'], text=True).strip(),
+              'rustc': subprocess.check_output(['rustc','+1.94.1','--version','--verbose'], text=True).strip().splitlines(),
+              'cargo': subprocess.check_output(['cargo','+1.94.1','--version','--verbose'], text=True).strip().splitlines(),
+              'lock_package_stanzas': packages,
+              'lock_registry_sources': registry_packages,
+              'vendor_directory_count': len(vendor_dirs),
+              'commands': {
+                  'metadata_locked_offline': 'PASS',
+                  'check_release_locked_offline': 'PASS',
+                  'test_lib_locked_offline': 'PASS',
+                  'fmt_check': 'PASS',
+                  'clippy_all_targets_all_features_locked_offline': 'PASS',
+              },
+              'test_result': {
+                  'passed': int(match.group(1)),
+                  'failed': int(match.group(2)),
+                  'ignored': int(match.group(3)),
+                  'measured': int(match.group(4)),
+                  'filtered_out': int(match.group(5)),
+              },
+              'claim_ceiling': 'environment and dependency closure only; no Rust/Python semantic parity or scientific result',
+          }
+          (kit / 'OFFLINE_CLOSURE_RECEIPT.json').write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+          cp /tmp/d081r0-cargo-metadata.json "$kit/CARGO_METADATA.json"
+          cp /tmp/d081r0-cargo-test.txt "$kit/CARGO_TEST.txt"
+          git rev-parse HEAD > "$kit/SOURCE_HEAD"
+          git rev-parse HEAD^{tree} > "$kit/SOURCE_TREE"
+          (
+            cd "$kit"
+            find SOURCE_HEAD SOURCE_TREE OFFLINE_CLOSURE_RECEIPT.json CARGO_METADATA.json CARGO_TEST.txt crate \
+              -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum -c SHA256SUMS
+          )
+          tar --sort=name --mtime='UTC 1980-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf "$kit/RABBIT_D081R0_EXACT_OFFLINE_CARGO_KIT.tar.gz" -C "$kit" \
+            SOURCE_HEAD SOURCE_TREE OFFLINE_CLOSURE_RECEIPT.json CARGO_METADATA.json CARGO_TEST.txt SHA256SUMS crate
+          test -s "$kit/RABBIT_D081R0_EXACT_OFFLINE_CARGO_KIT.tar.gz"
+          sha256sum "$kit/RABBIT_D081R0_EXACT_OFFLINE_CARGO_KIT.tar.gz"
+
+      - name: Upload exact offline kit
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: d081r0-exact-rabbit-offline-cargo-kit
+          path: /tmp/d081r0-rabbit-offline/RABBIT_D081R0_EXACT_OFFLINE_CARGO_KIT.tar.gz
+          if-no-files-found: error
+          retention-days: 2
