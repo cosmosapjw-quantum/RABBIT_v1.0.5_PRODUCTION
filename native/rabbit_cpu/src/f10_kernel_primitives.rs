@@ -701,13 +701,12 @@ mod tests {
         });
         assert_eq!(category_counts, [6, 3, 6, 6, 6]);
 
-
-for species in F10Species::ALL {
-    let partner = species.cp_partner();
-    assert_ne!(partner, species);
-    assert_eq!(partner.cp_partner(), species);
-    assert_eq!(F10Species::from_name(species.name()).unwrap(), species);
-}
+        for species in F10Species::ALL {
+            let partner = species.cp_partner();
+            assert_ne!(partner, species);
+            assert_eq!(partner.cp_partner(), species);
+            assert_eq!(F10Species::from_name(species.name()).unwrap(), species);
+        }
 
         for event in self_events {
             let incoming_charge = event.legs[0].lepton_charge() + event.legs[1].lepton_charge();
