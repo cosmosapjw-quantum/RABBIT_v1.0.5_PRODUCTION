@@ -289,9 +289,7 @@ fn expit(value: f64) -> f64 {
 
 /// Stable scalar form of
 /// `(1-f1)(1-f2)f3f4 - f1f2(1-f3)(1-f4)`.
-pub(crate) fn stable_pauli_gain_minus_loss(
-    logits: [f64; 4],
-) -> Result<f64, F10KernelError> {
+pub(crate) fn stable_pauli_gain_minus_loss(logits: [f64; 4]) -> Result<f64, F10KernelError> {
     if logits.into_iter().any(|value| !value.is_finite()) {
         return Err(F10KernelError::NonFiniteInput);
     }
@@ -310,9 +308,7 @@ pub(crate) fn stable_pauli_gain_minus_loss(
     }
 }
 
-pub(crate) fn pauli_logit_gradient(
-    logits: [f64; 4],
-) -> Result<[f64; 4], F10KernelError> {
+pub(crate) fn pauli_logit_gradient(logits: [f64; 4]) -> Result<[f64; 4], F10KernelError> {
     if logits.into_iter().any(|value| !value.is_finite()) {
         return Err(F10KernelError::NonFiniteInput);
     }
@@ -384,7 +380,11 @@ pub(crate) fn f10_self_matrix(
         F10SelfKernel::Kt => invariants.d14 * invariants.d23,
     };
     let factor = coefficient * G_F_MEV_MINUS_2.powi(2);
-    checked_nonnegative_matrix(factor * contraction, factor * contraction.abs(), roundoff_ulps)
+    checked_nonnegative_matrix(
+        factor * contraction,
+        factor * contraction.abs(),
+        roundoff_ulps,
+    )
 }
 
 fn electron_couplings(target: F10Species) -> (f64, f64) {
@@ -490,11 +490,9 @@ pub(crate) fn f10_event_measure(input: F10EventMeasureInput) -> Result<f64, F10K
     {
         return Err(F10KernelError::InvalidMeasureDomain);
     }
-    let result = input.outer_weight
-        * input.quadrature_weight
-        * input.p2.powi(2)
-        * input.phase_space
-        / (input.e2 * 256.0 * core::f64::consts::PI.powi(4) * input.p1);
+    let result =
+        input.outer_weight * input.quadrature_weight * input.p2.powi(2) * input.phase_space
+            / (input.e2 * 256.0 * core::f64::consts::PI.powi(4) * input.p1);
     if result.is_finite() && result >= 0.0 {
         Ok(result)
     } else {
@@ -550,7 +548,10 @@ mod tests {
         );
         assert_eq!(value["self_event_count"], 27);
         assert_eq!(value["electron_event_count"], 15);
-        assert_eq!(bits(&value["constants"]["g_f_bits"]).to_bits(), G_F_MEV_MINUS_2.to_bits());
+        assert_eq!(
+            bits(&value["constants"]["g_f_bits"]).to_bits(),
+            G_F_MEV_MINUS_2.to_bits()
+        );
         assert_eq!(
             bits(&value["constants"]["sin2_theta_w_bits"]).to_bits(),
             SIN2_THETA_W.to_bits()
@@ -584,10 +585,8 @@ mod tests {
         assert!(collision.abs() <= 32.0 * f64::EPSILON);
 
         let occupations = logits.map(expit);
-        let gain = (1.0 - occupations[0])
-            * (1.0 - occupations[1])
-            * occupations[2]
-            * occupations[3];
+        let gain =
+            (1.0 - occupations[0]) * (1.0 - occupations[1]) * occupations[2] * occupations[3];
         let expected = [-gain, -gain, gain, gain];
         let gradient = pauli_logit_gradient(logits).unwrap();
         for (actual, reference) in gradient.into_iter().zip(expected) {
@@ -632,9 +631,13 @@ mod tests {
             .as_array()
             .expect("support array");
         let mass = bits(&value["constants"]["electron_mass_bits"]);
-        for case in value["electron_matrix_cases"].as_array().expect("electron cases") {
+        for case in value["electron_matrix_cases"]
+            .as_array()
+            .expect("electron cases")
+        {
             let target = F10Species::from_name(case["target"].as_str().unwrap()).unwrap();
-            let category = F10ElectronCategory::from_name(case["category"].as_str().unwrap()).unwrap();
+            let category =
+                F10ElectronCategory::from_name(case["category"].as_str().unwrap()).unwrap();
             let expected = case["expected_value_bits"].as_array().unwrap();
             for index in 0..expected.len() {
                 let actual = f10_electron_matrix(
@@ -690,7 +693,12 @@ mod tests {
             F10SelfCategory::DistinctOppositeSignElastic,
             F10SelfCategory::PairConversion,
         ]
-        .map(|category| self_events.iter().filter(|event| event.category == category).count());
+        .map(|category| {
+            self_events
+                .iter()
+                .filter(|event| event.category == category)
+                .count()
+        });
         assert_eq!(category_counts, [6, 3, 6, 6, 6]);
 
         for event in self_events {
@@ -706,10 +714,12 @@ mod tests {
                 .count(),
             3
         );
-        assert!(electron_events
-            .iter()
-            .filter(|event| event.category == F10ElectronCategory::Pair)
-            .all(|event| !event.target.is_antineutrino()));
+        assert!(
+            electron_events
+                .iter()
+                .filter(|event| event.category == F10ElectronCategory::Pair)
+                .all(|event| !event.target.is_antineutrino())
+        );
     }
 
     #[test]
@@ -746,14 +756,12 @@ mod tests {
         let (left, right) = electron_couplings(target);
         let ks = invariants.d12 * invariants.d34;
         let kt = invariants.d14 * invariants.d23;
-        let wrong_sign_terms = left * left * ks
-            + right * right * kt
-            + left * right * mass.powi(2) * invariants.d13;
+        let wrong_sign_terms =
+            left * left * ks + right * right * kt + left * right * mass.powi(2) * invariants.d13;
         let wrong_sign = 64.0 * G_F_MEV_MINUS_2.powi(2) * wrong_sign_terms;
         assert!(scaled_residual(wrong_sign, expected) > 1.0e-3);
 
-        let wrong_measure = 2.0
-            * bits(&value["event_measure_case"]["expected_bits"]);
+        let wrong_measure = 2.0 * bits(&value["event_measure_case"]["expected_bits"]);
         let correct_measure = bits(&value["event_measure_case"]["expected_bits"]);
         assert!(scaled_residual(wrong_measure, correct_measure) > 0.4);
     }
