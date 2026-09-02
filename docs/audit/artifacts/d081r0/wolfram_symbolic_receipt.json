@@ -1,0 +1,23 @@
+{
+  "schema": "rabbit.d081r0.wolfram_symbolic_receipt.v1",
+  "classification": "FORMULA_LEVEL_CORROBORATION",
+  "block_matrix": {
+    "elapsed_null_column": "PASS_ZERO_VECTOR",
+    "det_I_minus_gamma_J_factorization": "PASS_ZERO_RESIDUAL",
+    "permutation_similarity_roundtrip": "PASS_ZERO_MATRIX",
+    "matrix_action_linearity": "PASS_ZERO_VECTOR"
+  },
+  "chart_and_flavour_fold": {
+    "cloglog_to_logit_identity": "PASS_ZERO_RESIDUAL",
+    "fold_after_embed": "PASS_IDENTITY",
+    "embed_after_fold_general": [
+      "0",
+      "(-mu+tau)/2",
+      "(mu-tau)/2"
+    ],
+    "embed_after_fold_symmetric": "PASS_ZERO_VECTOR",
+    "mu_minus_tau_mode_is_lost": "PASS_ZERO_OUTPUT"
+  },
+  "preserved_failed_attempt": "the first block-matrix evaluation used an invalid ArrayFlatten shape and was rejected before correction",
+  "claim_ceiling": "stateless symbolic checks; not a repository-native Wolfram replay"
+}

@@ -1,0 +1,28 @@
+{
+  "base_rhs_sha256": "36437e28968836023406f260b9b125ea29e992ee4357673bba85f9ed8ae6d2ea",
+  "claim_ceiling": "cross-language oracle input/output bytes only; no Rust semantic parity or solver result",
+  "classification": "EXACT_SOURCE_INPUT_OUTPUT_ORACLE_BUNDLE",
+  "d080f_source_head": "901a62350b19cf43c17dffe45e96e8b94e4c7ca1",
+  "directions_sha256": "979710467df95aeaf47ff42866e6ef7f24111ccc80b6f4930e93ae388e72664c",
+  "export_head": "2c7704d4fb9586e698b29c66c6db594cb75ce7cd",
+  "export_tree": "8aa5daf2466636bd5e9f77d431a0484d9fbbf4ba",
+  "matrix_content_sha256": "714b83107c9302b55cd09a9d2c7d2dc260a5b7d1e9289265e6a844766ed388f8",
+  "matrix_file_sha256": "3594e861cc800bbfa2feedc4ec90f7de1f69e283a450484bdb600345caa0d4ae",
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "retained_state_sha256": "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380",
+  "retained_state_source_commit": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "schema": "rabbit.d081r0.source_input_output_oracle.v1",
+  "state_contract": {
+    "chart": "strict-open complementary-log-log occupation coordinate",
+    "order": 60,
+    "ordering": [
+      "c_e[0:60]",
+      "c_mu[0:60]",
+      "c_tau[0:60]",
+      "T_gamma",
+      "elapsed_time"
+    ],
+    "size": 182,
+    "y_max": 30.0
+  }
+}
