@@ -27,9 +27,13 @@ jobs:
           cd ../..
           rm .github/workflows/d081r1c_rustfmt_repair.yml
           changed="$(git diff --name-only | sort)"
-          expected="native/rabbit_cpu/src/f10_kernel_primitives.rs"
+          expected="$(cat <<'EOF'
+          .github/workflows/d081r1c_rustfmt_repair.yml
+          native/rabbit_cpu/src/f10_kernel_primitives.rs
+          EOF
+          )"
           if [[ "${changed}" != "${expected}" ]]; then
-            printf 'Unexpected rustfmt paths. Expected %s, got:\n%s\n' "${expected}" "${changed}" >&2
+            printf 'Unexpected rustfmt paths. Expected:\n%s\nGot:\n%s\n' "${expected}" "${changed}" >&2
             exit 1
           fi
           git diff --check
