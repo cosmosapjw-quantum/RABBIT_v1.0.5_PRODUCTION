@@ -1,9 +1,9 @@
 //! RED-first admission tests for D-081R1D1 action foundations.
 
-use crate::f10_action_grid::{decode_cloglog_to_logit, F10ActionGrid};
+use crate::f10_action_grid::{F10ActionGrid, decode_cloglog_to_logit};
 use crate::f10_action_kinematics::{
-    angular_rule, electron_half_line_rule, two_body_kinematics, F10CollisionConfig,
-    F10KinematicInput,
+    F10CollisionConfig, F10KinematicInput, angular_rule, electron_half_line_rule,
+    two_body_kinematics,
 };
 use crate::f10_action_spectral::{
     interpolate, modal_basis, modal_coefficients, modal_product, native_action,
@@ -41,7 +41,10 @@ fn assert_slice_close(actual: &[f64], expected: &[f64], tolerance: f64) {
         .zip(expected)
         .map(|(&left, &right)| scaled_residual(left, right))
         .fold(0.0_f64, f64::max);
-    assert!(maximum <= tolerance, "maximum scaled residual {maximum:.17e} exceeds {tolerance:.17e}");
+    assert!(
+        maximum <= tolerance,
+        "maximum scaled residual {maximum:.17e} exceeds {tolerance:.17e}"
+    );
 }
 
 fn batch_case<'a>(value: &'a Value, name: &str) -> &'a Value {
@@ -123,7 +126,10 @@ mod tests {
         assert_eq!(value["order"], 8);
         assert_eq!(bits(&value["y_max_bits"]).to_bits(), 8.0_f64.to_bits());
         assert_eq!(value["grid"]["nodes"]["shape"], serde_json::json!([8]));
-        assert_eq!(value["chart"]["pair_cloglog"]["shape"], serde_json::json!([3, 8]));
+        assert_eq!(
+            value["chart"]["pair_cloglog"]["shape"],
+            serde_json::json!([3, 8])
+        );
         assert_eq!(value["kinematics"]["batches"].as_array().unwrap().len(), 3);
     }
 
@@ -132,7 +138,11 @@ mod tests {
         let value = fixture();
         let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
         assert_slice_close(&grid.nodes, &bit_array(&value["grid"]["nodes"]), 2.0e-13);
-        assert_slice_close(&grid.weights, &bit_array(&value["grid"]["weights"]), 5.0e-13);
+        assert_slice_close(
+            &grid.weights,
+            &bit_array(&value["grid"]["weights"]),
+            5.0e-13,
+        );
         assert!(grid.nodes.windows(2).all(|pair| pair[0] < pair[1]));
         assert!(grid.weights.iter().all(|weight| *weight > 0.0));
     }
@@ -211,15 +221,44 @@ mod tests {
         let value = fixture();
         let config = F10CollisionConfig::default();
         let rule = angular_rule(config).unwrap();
-        assert_slice_close(&rule.incoming_mu, &bit_array(&value["rules"]["incoming_mu"]), 3.0e-13);
-        assert_slice_close(&rule.incoming_weights, &bit_array(&value["rules"]["incoming_weights"]), 8.0e-13);
-        assert_slice_close(&rule.final_mu, &bit_array(&value["rules"]["final_mu"]), 3.0e-13);
-        assert_slice_close(&rule.final_weights, &bit_array(&value["rules"]["final_weights"]), 8.0e-13);
-        assert_slice_close(&rule.azimuth, &bit_array(&value["rules"]["azimuth"]), 8.0e-16);
-        assert_slice_close(&rule.azimuth_weights, &bit_array(&value["rules"]["azimuth_weights"]), 8.0e-16);
-        let (p2, weights) = electron_half_line_rule(48, bits(&value["temperature_gamma_bits"])).unwrap();
+        assert_slice_close(
+            &rule.incoming_mu,
+            &bit_array(&value["rules"]["incoming_mu"]),
+            3.0e-13,
+        );
+        assert_slice_close(
+            &rule.incoming_weights,
+            &bit_array(&value["rules"]["incoming_weights"]),
+            8.0e-13,
+        );
+        assert_slice_close(
+            &rule.final_mu,
+            &bit_array(&value["rules"]["final_mu"]),
+            3.0e-13,
+        );
+        assert_slice_close(
+            &rule.final_weights,
+            &bit_array(&value["rules"]["final_weights"]),
+            8.0e-13,
+        );
+        assert_slice_close(
+            &rule.azimuth,
+            &bit_array(&value["rules"]["azimuth"]),
+            8.0e-16,
+        );
+        assert_slice_close(
+            &rule.azimuth_weights,
+            &bit_array(&value["rules"]["azimuth_weights"]),
+            8.0e-16,
+        );
+        let (p2, weights) =
+            electron_half_line_rule(48, bits(&value["temperature_gamma_bits"])).unwrap();
         assert_slice_close(&p2, &bit_array(&value["rules"]["electron_p2"]), 2.0e-12);
-        assert_slice_close(&weights, &bit_array(&value["rules"]["electron_weights"]), 3.0e-12);
+        assert_slice_close(
+            &weights,
+            &bit_array(&value["rules"]["electron_weights"]),
+            3.0e-12,
+        );
     }
 
     fn build_batch(name: &str) -> crate::f10_action_kinematics::F10KinematicBatch {
@@ -294,7 +333,8 @@ mod tests {
         let correct = build_batch("elastic");
         let massless = {
             let p1 = bits(&value["kinematics"]["p1_bits"]);
-            let (p2, weights) = electron_half_line_rule(48, bits(&value["temperature_gamma_bits"])).unwrap();
+            let (p2, weights) =
+                electron_half_line_rule(48, bits(&value["temperature_gamma_bits"])).unwrap();
             two_body_kinematics(F10KinematicInput {
                 p1,
                 p2_nodes: &p2,
@@ -310,15 +350,17 @@ mod tests {
             .as_u64()
             .unwrap() as usize;
         assert!(scaled_residual(correct.e2[index], massless.e2[index]) > 1.0e-5);
-        assert!(two_body_kinematics(F10KinematicInput {
-            p1: 0.0,
-            p2_nodes: &[1.0],
-            p2_weights: &[1.0],
-            mass2: 0.0,
-            mass3: 0.0,
-            mass4: 0.0,
-            config: F10CollisionConfig::default(),
-        })
-        .is_err());
+        assert!(
+            two_body_kinematics(F10KinematicInput {
+                p1: 0.0,
+                p2_nodes: &[1.0],
+                p2_weights: &[1.0],
+                mass2: 0.0,
+                mass3: 0.0,
+                mass4: 0.0,
+                config: F10CollisionConfig::default(),
+            })
+            .is_err()
+        );
     }
 }
