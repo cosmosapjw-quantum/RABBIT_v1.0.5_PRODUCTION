@@ -1,0 +1,163 @@
+name: d080f-equivalence-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d080f-retained-full-jacobian-build-20260902
+    paths:
+      - .github/workflows/d080f_equivalence_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Install frozen dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            numpy==2.5.2 scipy==1.18.1 matplotlib==3.11.1 pytest==9.1.1
+
+      - name: Recover exact retained state
+        run: |
+          git fetch --no-tags origin diagnosis_report
+          test "$(git rev-parse origin/diagnosis_report)" = \
+            78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          git show \
+            origin/diagnosis_report:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz \
+            > /tmp/d080f_state_1200.npz
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d080f_state_1200.npz" \
+            | sha256sum -c -
+
+      - name: Build once and decompose equivalence residuals
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+          import numpy as np
+
+          from rabbit.decoupling import _independent_noqke as ind
+          from scripts.audit._d079_rhs_jvp import evaluate_c_only_rhs_jvp
+          from scripts.audit._d080e_prepared_jvp import evaluate_prepared_c_only_rhs_jvp
+          from scripts.audit._d080f_frozen_full_build import (
+              assemble_sealed_static_jacobian,
+              prepare_and_seal_static_rhs,
+          )
+
+          def relative(a: np.ndarray, b: np.ndarray) -> float:
+              scale = max(float(np.linalg.norm(a)), float(np.linalg.norm(b)), np.finfo(float).tiny)
+              return float(np.linalg.norm(a - b) / scale)
+
+          def scalar_report(a: float, b: float) -> dict[str, float]:
+              scale = max(abs(float(a)), abs(float(b)), np.finfo(float).tiny)
+              return {
+                  "candidate": float(a),
+                  "reference": float(b),
+                  "absolute_difference": float(abs(float(a) - float(b))),
+                  "relative": float(abs(float(a) - float(b)) / scale),
+                  "scale": float(scale),
+              }
+
+          def report(a: np.ndarray, b: np.ndarray, order: int) -> dict[str, object]:
+              spectral = 3 * order
+              return {
+                  "spectral_relative": relative(a[:spectral], b[:spectral]),
+                  "spectral_candidate_norm": float(np.linalg.norm(a[:spectral])),
+                  "spectral_reference_norm": float(np.linalg.norm(b[:spectral])),
+                  "spectral_absolute_difference": float(np.linalg.norm(a[:spectral] - b[:spectral])),
+                  "temperature": scalar_report(float(a[-2]), float(b[-2])),
+                  "elapsed": scalar_report(float(a[-1]), float(b[-1])),
+              }
+
+          with np.load("/tmp/d080f_state_1200.npz", allow_pickle=False) as archive:
+              state = np.asarray(archive["y"], dtype=np.float64)
+          order = 60
+          grid = ind.build_independent_grid(order, 30.0)
+          config = ind.IndependentCollisionConfig(
+              incoming_polar_order=4,
+              final_polar_order=4,
+              final_azimuth_order=4,
+              electron_radial_order=24,
+          )
+          c = state[: 3 * order].reshape(3, order)
+          tg = float(state[3 * order])
+          tcm = 10.0 * np.exp(-0.16286930247517223)
+          sealed = prepare_and_seal_static_rhs(
+              grid=grid,
+              pair_cloglog=c,
+              temperature_cm_mev=tcm,
+              temperature_gamma_mev=tg,
+              config=config,
+              max_modal_basis_bytes=768 * 1024**2,
+          )
+          selected = (0, 59, 60, 119, 120, 179)
+          result = assemble_sealed_static_jacobian(
+              sealed,
+              direction_block_size=12,
+              serial_oracle_columns=(),
+          )
+
+          selected_reports: dict[str, object] = {}
+          for column in selected:
+              direction = np.zeros((3, order), dtype=np.float64)
+              direction.ravel()[column] = 1.0
+              reference = evaluate_c_only_rhs_jvp(
+                  grid=grid,
+                  pair_cloglog=c,
+                  direction_cloglog=direction,
+                  temperature_cm_mev=tcm,
+                  temperature_gamma_mev=tg,
+                  config=config,
+              )
+              selected_reports[str(column)] = report(
+                  result.spectral_columns[:, column], reference.jvp, order
+              )
+
+          x = np.linspace(-1.0, 1.0, order, dtype=np.float64)
+          probe_directions = (
+              np.stack((np.cos(0.89*x), np.sin(1.29*x+0.2), x*x-0.27)),
+              np.stack((np.sin(1.37*x-0.1), np.exp(-0.7*(x+0.1)**2), -0.3*x+np.cos(0.53*x))),
+          )
+          direction_reports: dict[str, object] = {}
+          for index, raw in enumerate(probe_directions):
+              direction = raw / np.linalg.norm(raw)
+              direct = evaluate_prepared_c_only_rhs_jvp(sealed.prepared, direction)
+              full = np.concatenate((direction.ravel(), [0.0, 0.0]))
+              direction_reports[str(index)] = report(result.jacobian @ full, direct.jvp, order)
+
+          payload = {
+              "schema": "rabbit.d080f.equivalence_diagnostic.v1",
+              "build_seconds": result.build_seconds,
+              "prepared_maximum_reported_residual": result.maximum_prepared_action_residual,
+              "serial_maximum_reported_residual": result.maximum_serial_oracle_residual,
+              "selected_columns": selected_reports,
+              "prepared_directions": direction_reports,
+              "cache_miss_delta": result.cache_miss_delta,
+              "cache_entry_delta": result.cache_entry_delta,
+              "seal_unchanged": result.seal_before_sha256 == result.seal_after_sha256,
+          }
+          path = Path("/tmp/d080f_equivalence_diagnostic.json")
+          path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload diagnostic receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: d080f-equivalence-diagnostic
+          path: /tmp/d080f_equivalence_diagnostic.json
+          if-no-files-found: error
+          retention-days: 2
