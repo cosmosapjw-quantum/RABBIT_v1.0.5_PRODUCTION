@@ -1,0 +1,1 @@
+Replay the committed D-081R1E0 retained oracle and exact GL60/Y30 grid identity. The bounded grid repair must be NOOP and the generated fixture must remain byte-identical. Remove this marker before final R1E closeout.
