@@ -12,6 +12,7 @@ mod electron_thermal_fd;
 mod f10_action_grid;
 mod f10_action_kinematics;
 mod f10_action_spectral;
+mod f10_combined_action;
 mod f10_electron_action;
 mod f10_kernel_primitives;
 mod f10_self_action;
@@ -29,6 +30,9 @@ mod tier1_lrs;
 
 #[cfg(test)]
 mod f10_action_foundations_tests;
+
+#[cfg(test)]
+mod f10_combined_action_tests;
 
 #[cfg(test)]
 mod f10_electron_action_tests;
