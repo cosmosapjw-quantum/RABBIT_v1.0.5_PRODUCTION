@@ -4,8 +4,7 @@ use crate::f10_action_grid::F10ActionGrid;
 use crate::f10_self_action::{F10SelfActionConfig, assemble_self_action};
 use serde_json::Value;
 
-const FIXTURE: &str =
-    include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");
+const FIXTURE: &str = include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");
 
 fn fixture() -> Value {
     serde_json::from_str(FIXTURE).expect("valid frozen D-081R1 full-action fixture")
@@ -79,8 +78,7 @@ fn assert_hybrid_close(
     let mut worst_ratio = 0.0_f64;
     let mut worst_index = 0_usize;
     for (index, (&observed, &reference)) in actual.iter().zip(expected).enumerate() {
-        let allowed = absolute_floor
-            + relative_tolerance * observed.abs().max(reference.abs());
+        let allowed = absolute_floor + relative_tolerance * observed.abs().max(reference.abs());
         let difference = (observed - reference).abs();
         let ratio = difference / allowed.max(f64::MIN_POSITIVE);
         if ratio > worst_ratio {
@@ -229,12 +227,28 @@ mod tests {
         )
         .unwrap();
         assert_eq!(
-            equilibrium.modal.iter().map(|value| value.to_bits()).collect::<Vec<_>>(),
-            thermal.modal.iter().map(|value| value.to_bits()).collect::<Vec<_>>()
+            equilibrium
+                .modal
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>(),
+            thermal
+                .modal
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>()
         );
         assert_eq!(
-            equilibrium.native.iter().map(|value| value.to_bits()).collect::<Vec<_>>(),
-            thermal.native.iter().map(|value| value.to_bits()).collect::<Vec<_>>()
+            equilibrium
+                .native
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>(),
+            thermal
+                .native
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>()
         );
 
         let split = assemble_self_action(
@@ -314,8 +328,7 @@ mod tests {
         let species_permutation = [0_usize, 1, 4, 5, 2, 3];
         for (observed_species, &reference_species) in species_permutation.iter().enumerate() {
             assert_hybrid_close(
-                &swapped.native
-                    [observed_species * grid.order..(observed_species + 1) * grid.order],
+                &swapped.native[observed_species * grid.order..(observed_species + 1) * grid.order],
                 &original.native
                     [reference_species * grid.order..(reference_species + 1) * grid.order],
                 maximum_absolute(&original.native),
