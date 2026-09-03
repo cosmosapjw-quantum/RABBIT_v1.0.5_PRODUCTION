@@ -1,0 +1,47 @@
+name: d081r1d1-closeout-identity-repair
+
+on:
+  push:
+    branches:
+      - research/d081r1d1-foundations-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d1-foundations-20260903
+          fetch-depth: 2
+
+      - name: Replace only the invalid tree-query expression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path(".github/workflows/d081r1d1_foundations_closeout.yml")
+          text = path.read_text(encoding="utf-8")
+          old = '          test "$(git show "${validated_head}^{tree}" --format=%T --no-patch)" = "${validated_tree}"\n'
+          new = '          test "$(git rev-parse "${validated_head}^{tree}")" = "${validated_tree}"\n'
+          if text.count(old) != 1:
+              raise SystemExit(f"expected exactly one invalid tree query, found {text.count(old)}")
+          path.write_text(text.replace(old, new), encoding="utf-8")
+          PY
+          rm .github/workflows/d081r1d1_closeout_identity_repair.yml
+          git diff --check
+          test "$(git diff --name-only | sort)" = $'.github/workflows/d081r1d1_closeout_identity_repair.yml\n.github/workflows/d081r1d1_foundations_closeout.yml'
+
+      - name: Commit the bounded closeout repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(d081r1d1): query admitted tree with rev-parse"
+          git push origin HEAD:research/d081r1d1-foundations-20260903
