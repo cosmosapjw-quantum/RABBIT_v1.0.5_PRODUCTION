@@ -96,11 +96,19 @@ jobs:
           cmp /tmp/holdout-a.json /tmp/holdout-b.json
           sha256sum /tmp/holdout-a.json /tmp/holdout-b.json
 
-      - name: Verify exact static substrate and structural gates
+      - name: Format holdout source and verify exact static substrate
         shell: bash
         working-directory: native/rabbit_cpu
         run: |
           set -euo pipefail
+          target='native/rabbit_cpu/src/f10_packed_rhs_holdout_tests.rs'
+          cargo +1.94.1 fmt --all
+          mapfile -t format_changed < <(git -C ../.. diff --name-only)
+          printf 'format_changed=%s\n' "${format_changed[*]-}"
+          test "${#format_changed[@]}" -le 1
+          if [[ "${#format_changed[@]}" -eq 1 ]]; then
+            test "${format_changed[0]}" = "${target}"
+          fi
           cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1e-holdout-metadata.json
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 check --release --locked --offline
@@ -137,6 +145,7 @@ jobs:
         shell: bash
         env:
           RECEIPT: docs/audit/D081R1E_STATE2000_HOLDOUT_RECEIPT_2026-09-04.json
+          FORMATTED_SOURCE: native/rabbit_cpu/src/f10_packed_rhs_holdout_tests.rs
         run: |
           set -euo pipefail
           PY=/tmp/d081r1e-holdout-venv/bin/python
@@ -166,7 +175,16 @@ jobs:
           test "$("$PY" -c 'import json; print(json.load(open("'"${RECEIPT}"'"))["classification"])')" = PASS_WITH_RETAINED_ORDER60_CONDITIONED_PACKED_RHS_SCOPE
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "${RECEIPT}"
-          test "$(git diff --cached --name-only)" = "${RECEIPT}"
+          git add "${RECEIPT}" "${FORMATTED_SOURCE}"
+          git diff --cached --check
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -ge 1
+          test "${#staged[@]}" -le 2
+          for path in "${staged[@]}"; do
+            case "${path}" in
+              "${RECEIPT}"|"${FORMATTED_SOURCE}") ;;
+              *) echo "unexpected staged path: ${path}" >&2; exit 1 ;;
+            esac
+          done
           git commit -m 'test(d081r1e): publish state-2000 holdout PASS receipt'
           git push origin HEAD:research/d081r1e-holdout-metrology-20260904
