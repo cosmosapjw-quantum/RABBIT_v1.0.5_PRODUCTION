@@ -1,0 +1,126 @@
+name: d081r1d1-grid-association-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1d1-foundations-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d1-foundations-20260903
+          fetch-depth: 1
+
+      - name: Reproduce the Rust quadrature and spectral association
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check \
+            "numpy==2.4.4" "scipy==1.17.1"
+          python3 native/rabbit_cpu/tests/fixtures/d081r1/generate_action_foundations_case.py
+          python3 - <<'PY'
+          import json
+          import math
+          import struct
+          from pathlib import Path
+
+          data = json.loads(Path("native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json").read_text())
+          order = int(data["order"])
+          ymax = struct.unpack(">d", bytes.fromhex(data["y_max_bits"]))[0]
+          eps = 2.220446049250313e-16
+
+          def decode(obj):
+              return [struct.unpack(">d", bytes.fromhex(item))[0] for item in obj["bits"]]
+
+          def rust_gl_rule(n):
+              rule=[]
+              for root_index in range((n+1)//2):
+                  root=math.cos(math.pi*(root_index+0.75)/(n+0.5))
+                  derivative=float("nan")
+                  for _ in range(64):
+                      previous=1.0
+                      current=root
+                      for degree in range(2,n+1):
+                          nxt=((2*degree-1)*root*current-(degree-1)*previous)/degree
+                          previous,current=current,nxt
+                      derivative=n*(root*current-previous)/(root*root-1.0)
+                      update=current/derivative
+                      root-=update
+                      if abs(update) <= 8.0*eps*max(abs(root),1.0):
+                          break
+                  weight=2.0/((1.0-root*root)*derivative*derivative)
+                  if abs(root) <= 32.0*eps:
+                      rule.append((0.0,weight))
+                  else:
+                      rule.append((-root,weight))
+                      rule.append((root,weight))
+              return sorted(rule)
+
+          def basis(query):
+              out=[]
+              for coordinate in query:
+                  mapped=2.0*coordinate/ymax-1.0
+                  previous=1.0
+                  out.append(math.sqrt(1.0/ymax))
+                  current=mapped
+                  out.append(math.sqrt(3.0/ymax)*current)
+                  for degree in range(2,order):
+                      nxt=((2*degree-1)*mapped*current-(degree-1)*previous)/degree
+                      out.append(math.sqrt((2*degree+1)/ymax)*nxt)
+                      previous,current=current,nxt
+              return out
+
+          def coeffs(nodes,weights,values):
+              b=basis(nodes)
+              return [sum(weights[i]*b[i*order+m]*values[i] for i in range(order)) for m in range(order)]
+
+          py_nodes=decode(data["grid"]["nodes"])
+          py_weights=decode(data["grid"]["weights"])
+          rust_unit=rust_gl_rule(order)
+          rust_nodes=[0.5*ymax*(1.0+x) for x,_ in rust_unit]
+          rust_weights=[0.5*ymax*w for _,w in rust_unit]
+          logits=decode(data["chart"]["pair_logits"])
+          expected=decode(data["spectral"]["modal_coefficients"])
+
+          for name,a,b in (("nodes",rust_nodes,py_nodes),("weights",rust_weights,py_weights)):
+              diffs=[abs(x-y) for x,y in zip(a,b)]
+              rel=[d/max(abs(x),abs(y),float.fromhex("0x1p-1022")) for d,x,y in zip(diffs,a,b)]
+              i=max(range(len(diffs)),key=diffs.__getitem__)
+              j=max(range(len(rel)),key=rel.__getitem__)
+              print(name,"max_abs",diffs[i],"index",i,"actual",a[i],"expected",b[i])
+              print(name,"max_rel",rel[j],"index",j,"actual",a[j],"expected",b[j])
+
+          max_block=max(max(map(abs,expected)),1.0)
+          floor=32.0*eps*max_block
+          print("expected_block_scale",max_block,"absolute_floor",floor)
+          for row in range(3):
+              values=logits[row*order:(row+1)*order]
+              actual=coeffs(rust_nodes,rust_weights,values)
+              ref=expected[row*order:(row+1)*order]
+              print("row",row)
+              for mode,(x,y) in enumerate(zip(actual,ref)):
+                  absolute=abs(x-y)
+                  scaled=absolute/max(abs(x),abs(y),float.fromhex("0x1p-1022"))
+                  if absolute > floor or scaled > 1e-8:
+                      print(" mode",mode,"actual",format(x,".17e"),"expected",format(y,".17e"),"abs",format(absolute,".17e"),"scaled",format(scaled,".17e"))
+
+          query=decode(data["spectral"]["query"])
+          qbasis=basis(query)
+          expected_interp=decode(data["spectral"]["interpolation"])
+          for row in range(3):
+              values=logits[row*order:(row+1)*order]
+              c=coeffs(rust_nodes,rust_weights,values)
+              actual=[sum(c[m]*qbasis[p*order+m] for m in range(order)) for p in range(len(query))]
+              ref=expected_interp[row*len(query):(row+1)*len(query)]
+              floor_i=32.0*eps*max(max(map(abs,actual)),max(map(abs,ref)),1.0)
+              worst=max(range(len(query)),key=lambda p: abs(actual[p]-ref[p]))
+              print("interp row",row,"max_abs",abs(actual[worst]-ref[worst]),"index",worst,"floor",floor_i,"actual",actual[worst],"expected",ref[worst])
+          PY
