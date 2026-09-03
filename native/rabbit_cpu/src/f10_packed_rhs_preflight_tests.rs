@@ -1,9 +1,12 @@
 //! RED-first preflight tests for D-081R1E retained packed-RHS admission.
 
 use crate::f10_action_grid::F10ActionGrid;
+use crate::f10_action_kinematics::{F10CollisionConfig, angular_rule, electron_half_line_rule};
 use serde_json::Value;
 
 const FIXTURE: &str = include_str!("../tests/fixtures/d081r1/retained_packed_rhs_case.json");
+const INNER_FIXTURE: &str =
+    include_str!("../tests/fixtures/d081r1/f10_inner_quadrature_case.json",);
 
 fn fixture() -> Value {
     serde_json::from_str(FIXTURE).expect("valid frozen D-081R1E retained fixture")
@@ -85,6 +88,97 @@ mod tests {
         assert_eq!(
             actual_weight_bits, expected_weight_bits,
             "generic Rust GL60/Y30 weights differ from the frozen NumPy operator"
+        );
+    }
+
+    #[test]
+    fn f10_inner_gl12_gl48_rules_match_frozen_numpy_binary64_operator() {
+        let value: Value =
+            serde_json::from_str(INNER_FIXTURE).expect("valid frozen inner quadrature fixture");
+        assert_eq!(value["schema"], "rabbit.d081r1e.f10_inner_quadrature.v1");
+        assert_eq!(value["numpy_version"], "2.4.4");
+        assert_eq!(
+            value["python_comparator_git_blob"],
+            "de44feee0aa484abe26976c7dc34c579643005b5"
+        );
+
+        let angular = angular_rule(F10CollisionConfig::default()).unwrap();
+        let expected_gl12_nodes = bit_array(&value["gl12_nodes"]);
+        let expected_gl12_weights = bit_array(&value["gl12_weights"]);
+        assert_eq!(
+            angular
+                .incoming_mu
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_gl12_nodes
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 incoming GL12 nodes differ from the frozen NumPy operator"
+        );
+        assert_eq!(
+            angular
+                .incoming_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_gl12_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 incoming GL12 weights differ from the frozen NumPy operator"
+        );
+        assert_eq!(
+            angular
+                .final_mu
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_gl12_nodes
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 final-state GL12 nodes differ from the frozen NumPy operator"
+        );
+        assert_eq!(
+            angular
+                .final_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_gl12_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 final-state GL12 weights differ from the frozen NumPy operator"
+        );
+
+        let temperature = bits(&value["temperature_probe_bits"]);
+        let (electron_p2, electron_weights) = electron_half_line_rule(48, temperature).unwrap();
+        let expected_p2 = bit_array(&value["electron_p2"]);
+        let expected_electron_weights = bit_array(&value["electron_weights"]);
+        assert_eq!(
+            electron_p2
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_p2
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 GL48 electron momenta differ from the frozen NumPy operator"
+        );
+        assert_eq!(
+            electron_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            expected_electron_weights
+                .iter()
+                .map(|item| item.to_bits())
+                .collect::<Vec<_>>(),
+            "F10 GL48 electron weights differ from the frozen NumPy operator"
         );
     }
 }

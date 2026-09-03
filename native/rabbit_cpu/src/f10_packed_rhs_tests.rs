@@ -424,7 +424,18 @@ mod tests {
             true,
             true,
         );
-        assert!(scaled_difference(&no_half, correct) > 0.5);
+        let doubled_correct: Vec<f64> = correct.iter().map(|value| 2.0 * value).collect();
+        assert_hybrid_close(
+            &no_half,
+            &doubled_correct,
+            maximum_absolute(&doubled_correct),
+            1.0e-13,
+        );
+        let factor_two_residual = scaled_difference(&no_half, correct);
+        assert!(
+            (factor_two_residual - 0.5).abs() <= 512.0 * f64::EPSILON,
+            "removing the particle/antiparticle one-half factor must give residual one-half; got {factor_two_residual:.17e}"
+        );
 
         let modal_as_native = spectral_from_native(
             &thermal.combined_action.modal_total,

@@ -6,6 +6,167 @@ use core::f64::consts::PI;
 
 use crate::quadrature::gauss_legendre_rule;
 
+// The frozen Python comparator defines the admitted F10 inner rules
+// through NumPy 2.4.4. Preserve those finite-dimensional binary64
+// operators only for GL12 and GL48; all other orders retain the
+// generic Rust quadrature implementation.
+const EXACT_F10_GL12_NODE_BITS: [u64; 12] = [
+    0xbfef68f1d8e42e81,
+    0xbfecee874ffb88b3,
+    0xbfe8a30aeed88f36,
+    0xbfe2cb4f05c077f9,
+    0xbfd78a8d20a8b19d,
+    0xbfc007a5f8f630e4,
+    0x3fc007a5f8f630e4,
+    0x3fd78a8d20a8b19d,
+    0x3fe2cb4f05c077f9,
+    0x3fe8a30aeed88f36,
+    0x3fecee874ffb88b3,
+    0x3fef68f1d8e42e81,
+];
+
+const EXACT_F10_GL12_WEIGHT_BITS: [u64; 12] = [
+    0x3fa8275d9dea6d53,
+    0x3fbb60602bce61af,
+    0x3fc47d7258f22d96,
+    0x3fca0163e6b1ab6b,
+    0x3fcde3155c256aae,
+    0x3fcfe40ce6d4f022,
+    0x3fcfe40ce6d4f022,
+    0x3fcde3155c256aae,
+    0x3fca0163e6b1ab6b,
+    0x3fc47d7258f22d96,
+    0x3fbb60602bce61af,
+    0x3fa8275d9dea6d53,
+];
+
+const EXACT_F10_GL48_NODE_BITS: [u64; 48] = [
+    0xbfeff5ee9d8af2e2,
+    0xbfefcaffc9af24a4,
+    0xbfef7df2d6c8eed7,
+    0xbfef0f161978472f,
+    0xbfee7ee011520dfa,
+    0xbfedcdeb7610754b,
+    0xbfecfcf63e4a4e84,
+    0xbfec0ce0c3f55453,
+    0xbfeafeaccf5eeb9e,
+    0xbfe9d37c81006d1d,
+    0xbfe88c91196f8e2d,
+    0xbfe72b49a0302d99,
+    0xbfe5b1216aac49a1,
+    0xbfe41fae84d5a001,
+    0xbfe2789ffd1f24a0,
+    0xbfe0bdbc159f3714,
+    0xbfdde1bcb894046a,
+    0xbfda27eb589dea3b,
+    0xbfd65204357a6388,
+    0xbfd26425a1527d42,
+    0xbfccc50f5488fbef,
+    0xbfc4a2ef25599831,
+    0xbfb8d54ccaa9b7b4,
+    0xbfa094223ea6196e,
+    0x3fa094223ea6196e,
+    0x3fb8d54ccaa9b7b4,
+    0x3fc4a2ef25599831,
+    0x3fccc50f5488fbef,
+    0x3fd26425a1527d42,
+    0x3fd65204357a6388,
+    0x3fda27eb589dea3b,
+    0x3fdde1bcb894046a,
+    0x3fe0bdbc159f3714,
+    0x3fe2789ffd1f24a0,
+    0x3fe41fae84d5a001,
+    0x3fe5b1216aac49a1,
+    0x3fe72b49a0302d99,
+    0x3fe88c91196f8e2d,
+    0x3fe9d37c81006d1d,
+    0x3feafeaccf5eeb9e,
+    0x3fec0ce0c3f55453,
+    0x3fecfcf63e4a4e84,
+    0x3fedcdeb7610754b,
+    0x3fee7ee011520dfa,
+    0x3fef0f161978472f,
+    0x3fef7df2d6c8eed7,
+    0x3fefcaffc9af24a4,
+    0x3feff5ee9d8af2e2,
+];
+
+const EXACT_F10_GL48_WEIGHT_BITS: [u64; 48] = [
+    0x3f69d50bc55d51a7,
+    0x3f7e037f45d9bc6d,
+    0x3f8781605954a664,
+    0x3f8fe80c5c315b36,
+    0x3f9416423e8cbb26,
+    0x3f9822eefbc974b7,
+    0x3f9c15b1e8f69982,
+    0x3f9fea4d40fed237,
+    0x3fa1ce51f31f7018,
+    0x3fa3945ed05d7d52,
+    0x3fa54565a91a83e9,
+    0x3fa6df9583af7196,
+    0x3fa86135edf0a9e7,
+    0x3fa9c8a8d586186b,
+    0x3fab146c443c7e03,
+    0x3fac431bfe4b318d,
+    0x3fad537300bfd4b4,
+    0x3fae444cde6cfffc,
+    0x3faf14a6f9e10aac,
+    0x3fafc3a19b11a281,
+    0x3fb028406fc86d22,
+    0x3fb05d56c2248c2d,
+    0x3fb080dac3f3724c,
+    0x3fb092a652a0fba4,
+    0x3fb092a652a0fba4,
+    0x3fb080dac3f3724c,
+    0x3fb05d56c2248c2d,
+    0x3fb028406fc86d22,
+    0x3fafc3a19b11a281,
+    0x3faf14a6f9e10aac,
+    0x3fae444cde6cfffc,
+    0x3fad537300bfd4b4,
+    0x3fac431bfe4b318d,
+    0x3fab146c443c7e03,
+    0x3fa9c8a8d586186b,
+    0x3fa86135edf0a9e7,
+    0x3fa6df9583af7196,
+    0x3fa54565a91a83e9,
+    0x3fa3945ed05d7d52,
+    0x3fa1ce51f31f7018,
+    0x3f9fea4d40fed237,
+    0x3f9c15b1e8f69982,
+    0x3f9822eefbc974b7,
+    0x3f9416423e8cbb26,
+    0x3f8fe80c5c315b36,
+    0x3f8781605954a664,
+    0x3f7e037f45d9bc6d,
+    0x3f69d50bc55d51a7,
+];
+
+fn decode_exact_rule<const N: usize>(
+    node_bits: [u64; N],
+    weight_bits: [u64; N],
+) -> Vec<(f64, f64)> {
+    node_bits
+        .into_iter()
+        .zip(weight_bits)
+        .map(|(node, weight)| (f64::from_bits(node), f64::from_bits(weight)))
+        .collect()
+}
+
+fn f10_gauss_legendre_rule(order: usize) -> Result<Vec<(f64, f64)>, &'static str> {
+    match order {
+        12 => Ok(decode_exact_rule(
+            EXACT_F10_GL12_NODE_BITS,
+            EXACT_F10_GL12_WEIGHT_BITS,
+        )),
+        48 => Ok(decode_exact_rule(
+            EXACT_F10_GL48_NODE_BITS,
+            EXACT_F10_GL48_WEIGHT_BITS,
+        )),
+        _ => gauss_legendre_rule(order),
+    }
+}
+
 #[derive(Clone, Copy, Debug)]
 pub(crate) struct F10CollisionConfig {
     pub(crate) incoming_polar_order: usize,
@@ -53,8 +214,8 @@ pub(crate) struct F10AngularRule {
 
 pub(crate) fn angular_rule(config: F10CollisionConfig) -> Result<F10AngularRule, &'static str> {
     config.validate()?;
-    let incoming = gauss_legendre_rule(config.incoming_polar_order)?;
-    let final_state = gauss_legendre_rule(config.final_polar_order)?;
+    let incoming = f10_gauss_legendre_rule(config.incoming_polar_order)?;
+    let final_state = f10_gauss_legendre_rule(config.final_polar_order)?;
     let azimuth_weight = 2.0 * PI / config.final_azimuth_order as f64;
     let azimuth: Vec<_> = (0..config.final_azimuth_order)
         .map(|index| (index as f64 + 0.5) * azimuth_weight)
@@ -82,7 +243,7 @@ pub(crate) fn electron_half_line_rule(
     }
     let mut momentum = Vec::with_capacity(order);
     let mut weights = Vec::with_capacity(order);
-    for (coordinate, weight) in gauss_legendre_rule(order)? {
+    for (coordinate, weight) in f10_gauss_legendre_rule(order)? {
         let unit = 0.5 * (coordinate + 1.0);
         let one_minus = 1.0 - unit;
         let value = temperature * unit / one_minus;
