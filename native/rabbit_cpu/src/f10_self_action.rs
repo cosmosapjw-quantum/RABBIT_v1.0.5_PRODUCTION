@@ -13,14 +13,13 @@ use core::f64::consts::PI;
 
 use crate::f10_action_grid::{F10ActionGrid, decode_cloglog_to_logit};
 use crate::f10_action_kinematics::{
-    F10CollisionConfig, F10KinematicBatch, F10KinematicInput, angular_rule,
-    two_body_kinematics,
+    F10CollisionConfig, F10KinematicBatch, F10KinematicInput, angular_rule, two_body_kinematics,
 };
 use crate::f10_action_spectral::{modal_basis, modal_coefficients, native_action};
 use crate::f10_kernel_primitives::{
     F10EventMeasureInput, F10Flavour, F10InvariantProducts, F10KernelError, F10SelfCategory,
-    F10SelfEvent, F10SelfKernel, F10Species, f10_event_measure, f10_self_events,
-    f10_self_matrix, stable_pauli_gain_minus_loss,
+    F10SelfEvent, F10SelfKernel, F10Species, f10_event_measure, f10_self_events, f10_self_matrix,
+    stable_pauli_gain_minus_loss,
 };
 
 const PAIR_COUNT: usize = 3;
@@ -113,10 +112,7 @@ fn species_index(species: F10Species) -> usize {
     }
 }
 
-fn self_event_row(
-    event: F10SelfEvent,
-    species: F10Species,
-) -> Result<usize, F10SelfActionError> {
+fn self_event_row(event: F10SelfEvent, species: F10Species) -> Result<usize, F10SelfActionError> {
     let flavour = species.flavour();
     let electron = F10Flavour::Electron;
     let other = event
@@ -223,9 +219,7 @@ fn interpolated_pair_logits(
     for pair in 0..PAIR_COUNT {
         for point in 0..point_count {
             let value = (0..order)
-                .map(|mode| {
-                    coefficients[pair * order + mode] * basis[point * order + mode]
-                })
+                .map(|mode| coefficients[pair * order + mode] * basis[point * order + mode])
                 .sum::<f64>();
             if !strict_open_logit(value) {
                 return Err(F10SelfActionError::Foundation);
@@ -365,7 +359,8 @@ pub(crate) fn assemble_self_action(
     if !config.matrix_roundoff_ulps.is_finite() || config.matrix_roundoff_ulps <= 0.0 {
         return Err(F10SelfActionError::InvalidConfiguration);
     }
-    let rule = angular_rule(config.collision).map_err(|_| F10SelfActionError::InvalidConfiguration)?;
+    let rule =
+        angular_rule(config.collision).map_err(|_| F10SelfActionError::InvalidConfiguration)?;
     let angular_size = rule
         .incoming_mu
         .len()
@@ -375,7 +370,8 @@ pub(crate) fn assemble_self_action(
 
     let logits = decode_pair_logits(grid, pair_cloglog)?;
     let coefficients = spectral_coefficients(grid, &logits)?;
-    let native_basis = modal_basis(grid, &grid.nodes).map_err(|_| F10SelfActionError::Foundation)?;
+    let native_basis =
+        modal_basis(grid, &grid.nodes).map_err(|_| F10SelfActionError::Foundation)?;
     let p2_nodes: Vec<f64> = grid
         .nodes
         .iter()
@@ -386,7 +382,9 @@ pub(crate) fn assemble_self_action(
         .iter()
         .map(|weight| temperature_cm * weight)
         .collect();
-    if p2_nodes.iter().any(|value| !value.is_finite() || *value <= 0.0)
+    if p2_nodes
+        .iter()
+        .any(|value| !value.is_finite() || *value <= 0.0)
         || p2_weights
             .iter()
             .any(|value| !value.is_finite() || *value <= 0.0)
@@ -444,11 +442,8 @@ pub(crate) fn assemble_self_action(
         for sample in 0..sample_count {
             let y3 = batch.p3_magnitude[sample] / temperature_cm;
             let y4 = batch.p4_magnitude[sample] / temperature_cm;
-            let in_domain = batch.support[sample]
-                && y3 > 0.0
-                && y3 < grid.y_max
-                && y4 > 0.0
-                && y4 < grid.y_max;
+            let in_domain =
+                batch.support[sample] && y3 > 0.0 && y3 < grid.y_max && y4 > 0.0 && y4 < grid.y_max;
             if in_domain {
                 valid_positions.push(sample);
                 y3_valid.push(y3);
@@ -470,10 +465,8 @@ pub(crate) fn assemble_self_action(
         let valid_count = valid_positions.len();
         let basis3 = modal_basis(grid, &y3_valid).map_err(|_| F10SelfActionError::Foundation)?;
         let basis4 = modal_basis(grid, &y4_valid).map_err(|_| F10SelfActionError::Foundation)?;
-        let outgoing3 =
-            interpolated_pair_logits(&coefficients, &basis3, valid_count, grid.order)?;
-        let outgoing4 =
-            interpolated_pair_logits(&coefficients, &basis4, valid_count, grid.order)?;
+        let outgoing3 = interpolated_pair_logits(&coefficients, &basis3, valid_count, grid.order)?;
+        let outgoing4 = interpolated_pair_logits(&coefficients, &basis4, valid_count, grid.order)?;
         let mut measures = Vec::with_capacity(valid_count);
         for &sample in &valid_positions {
             measures.push(f10_event_measure(F10EventMeasureInput {
@@ -508,8 +501,8 @@ pub(crate) fn assemble_self_action(
             matrix_roundoff_corrections = matrix_roundoff_corrections
                 .checked_add(matrix.corrections)
                 .ok_or(F10SelfActionError::DimensionOverflow)?;
-            largest_matrix_roundoff_correction = largest_matrix_roundoff_correction
-                .max(matrix.largest_correction);
+            largest_matrix_roundoff_correction =
+                largest_matrix_roundoff_correction.max(matrix.largest_correction);
 
             let [species1, species2, species3, species4] = event.legs;
             let u1 = logits[pair_index(species1) * grid.order + node_index];
@@ -526,8 +519,7 @@ pub(crate) fn assemble_self_action(
                 }
                 rates[rate_offset + sample] = rate;
                 let affinity = u1 + u2 - u3 - u4;
-                let energy_defect =
-                    p1 + batch.p2[sample] - batch.e3[sample] - batch.e4[sample];
+                let energy_defect = p1 + batch.p2[sample] - batch.e3[sample] - batch.e4[sample];
                 let entropy_increment = rate * affinity;
                 let energy_increment = rate * energy_defect;
                 if !entropy_increment.is_finite() || !energy_increment.is_finite() {
@@ -553,12 +545,9 @@ pub(crate) fn assemble_self_action(
                 vec![0.0; grid.order],
             ];
             for mode in 0..grid.order {
-                leg_modes[0][mode] =
-                    incoming1_sum * native_basis[node_index * grid.order + mode];
+                leg_modes[0][mode] = incoming1_sum * native_basis[node_index * grid.order + mode];
                 leg_modes[1][mode] = (0..grid.order)
-                    .map(|p2_index| {
-                        p2_sums[p2_index] * native_basis[p2_index * grid.order + mode]
-                    })
+                    .map(|p2_index| p2_sums[p2_index] * native_basis[p2_index * grid.order + mode])
                     .sum();
                 leg_modes[2][mode] = valid_positions
                     .iter()
