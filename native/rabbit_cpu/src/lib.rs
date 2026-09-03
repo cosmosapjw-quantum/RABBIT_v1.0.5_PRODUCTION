@@ -42,6 +42,9 @@ mod f10_electron_action_tests;
 mod f10_packed_rhs_preflight_tests;
 
 #[cfg(test)]
+mod f10_packed_rhs_holdout_tests;
+
+#[cfg(test)]
 mod f10_packed_rhs_tests;
 
 #[cfg(test)]
