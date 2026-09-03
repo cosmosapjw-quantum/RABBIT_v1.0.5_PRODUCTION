@@ -77,6 +77,7 @@ fn assert_hybrid_close(
     );
 }
 
+#[track_caller]
 fn assert_scalar_close(actual: f64, expected: f64, scale: f64, relative_tolerance: f64) {
     let absolute_floor = 262_144.0 * f64::EPSILON * scale.max(f64::MIN_POSITIVE);
     let allowed = absolute_floor + relative_tolerance * actual.abs().max(expected.abs());
