@@ -9,6 +9,7 @@ parity tolerances, or the packed-RHS implementation.
 from __future__ import annotations
 
 from pathlib import Path
+import runpy
 
 
 TESTS = Path("native/rabbit_cpu/src/f10_packed_rhs_tests.rs")
@@ -80,3 +81,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    runpy.run_path(
+        ".github/scripts/d081r1e_apply_component_diagnostic.py",
+        run_name="__main__",
+    )
