@@ -77,6 +77,23 @@ fn oracle_family_scale(value: &Value) -> f64 {
         .fold(f64::MIN_POSITIVE, f64::max)
 }
 
+fn oracle_bath_energy_scale(value: &Value) -> f64 {
+    value["cases"]
+        .as_array()
+        .expect("fixture cases")
+        .iter()
+        .flat_map(|case| {
+            case["bath_energy_by_family"]
+                .as_object()
+                .expect("bath-energy family map")
+                .values()
+                .map(bits)
+                .collect::<Vec<_>>()
+        })
+        .map(f64::abs)
+        .fold(f64::MIN_POSITIVE, f64::max)
+}
+
 fn assert_hybrid_close(
     actual: &[f64],
     expected: &[f64],
@@ -152,6 +169,8 @@ mod tests {
         let modal_scale = oracle_array_scale(&full, "electron_modal");
         let native_scale = oracle_array_scale(&full, "electron_native");
         let family_scale = oracle_family_scale(&full);
+        let bath_energy_scale = oracle_bath_energy_scale(&metrology);
+        assert!(bath_energy_scale.is_finite() && bath_energy_scale > 0.0);
 
         for case in full["cases"].as_array().expect("full fixture cases") {
             let name = case["name"].as_str().expect("case name");
@@ -227,10 +246,7 @@ mod tests {
                 assert_scalar_close(
                     result.bath_energy_by_family[index],
                     bits(&component["bath_energy_by_family"][family_name]),
-                    result.bath_energy_by_family[index]
-                        .abs()
-                        .max(bits(&component["bath_energy_by_family"][family_name]).abs())
-                        .max(f64::MIN_POSITIVE),
+                    bath_energy_scale,
                     5.0e-9,
                 );
             }
