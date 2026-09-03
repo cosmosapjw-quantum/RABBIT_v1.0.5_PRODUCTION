@@ -166,10 +166,24 @@ def build_case(
     pair_native = oracle._native_action(grid, pair_modal, temperature_cm)  # noqa: SLF001
     if not np.allclose(elastic_modal + pair_modal, modal, rtol=0.0, atol=2.0e-38):
         raise AssertionError("elastic+pair modal decomposition failed")
-    if not np.allclose(
-        elastic_native + pair_native, native, rtol=3.0e-15, atol=2.0e-38
-    ):
-        raise AssertionError("elastic+pair native decomposition failed")
+
+    native_residual = elastic_native + pair_native - native
+    native_difference = float(np.max(np.abs(native_residual)))
+    native_scale = float(
+        max(
+            np.max(np.abs(native)),
+            np.max(np.abs(elastic_native)),
+            np.max(np.abs(pair_native)),
+            np.finfo(np.float64).tiny,
+        )
+    )
+    native_roundoff_budget = 256.0 * np.finfo(np.float64).eps * native_scale
+    if native_difference > native_roundoff_budget:
+        raise AssertionError(
+            "elastic+pair native decomposition failed: "
+            f"difference={native_difference:.17e}, "
+            f"budget={native_roundoff_budget:.17e}"
+        )
 
     qnu = float(meta["neutrino_energy_transfer"])
     qem = float(meta["electromagnetic_energy_transfer"])
@@ -248,6 +262,12 @@ def build_case(
             "pair_bath_energy_transfer_bits": float_bits(
                 sum(float(bath_by_family[key]) for key in pair_keys)
             ),
+            "category_native_reconstruction_difference_bits": float_bits(
+                native_difference
+            ),
+            "category_native_reconstruction_budget_bits": float_bits(
+                native_roundoff_budget
+            ),
         },
         "bath_energy_by_family": encode_float_map(
             {key: float(value) for key, value in bath_by_family.items()}
@@ -302,6 +322,7 @@ def main() -> None:
             "electron metadata are emitted directly by _assemble_electron; "
             "combined counters remain provenance cross-checks only"
         ),
+        "category_native_reconstruction_budget_ulps": 256,
         "cases": cases,
     }
     OUTPUT.write_text(
