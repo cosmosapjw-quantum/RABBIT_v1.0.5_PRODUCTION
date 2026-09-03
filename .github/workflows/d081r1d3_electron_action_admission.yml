@@ -1,0 +1,108 @@
+name: d081r1d3-electron-action-admission
+
+on:
+  push:
+    branches:
+      - research/d081r1d3-electron-action-20260903
+    paths:
+      - .github/workflows/d081r1d3_electron_action_admission.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d3-electron-action-20260903
+          fetch-depth: 0
+
+      - name: Verify exact implementation parent and frozen authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = de698b912ed9739c6a0b699aaceacab96a7b8e6e
+          test "$(git diff --name-only HEAD^ HEAD)" = .github/workflows/d081r1d3_electron_action_admission.yml
+          git merge-base --is-ancestor 59e21cdf18e34cb5cbcc5ccf08f155f5975f29fb HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json)" = c94d2e72a1f8300b7c20c9c793417a5c4a5fa302
+          test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/electron_collision_action_metrology.json)" = b927389e5aa0c11d41d2e63c83b04ae633fc464d
+          test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/check_electron_collision_action_metrology.py)" = 13cd7c8a859425faddf60f3e249300d7e79b542b
+          test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/validate_electron_collision_action_authority.py)" = 74de6fd1f2756d386fff6021d0a0925f7360d28d
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+
+      - name: Replay immutable electron authority twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "numpy==2.4.4" "scipy==1.17.1"
+          checker=native/rabbit_cpu/tests/fixtures/d081r1/check_electron_collision_action_metrology.py
+          validator=native/rabbit_cpu/tests/fixtures/d081r1/validate_electron_collision_action_authority.py
+          python3 -m py_compile "${checker}" "${validator}"
+          python3 "${validator}" | tee /tmp/electron-authority.first.json
+          python3 "${validator}" | tee /tmp/electron-authority.second.json
+          cmp /tmp/electron-authority.first.json /tmp/electron-authority.second.json
+          python3 -m json.tool /tmp/electron-authority.first.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('/tmp/electron-authority.first.json').read_text())
+          assert data['verdict'] == 'PASS'
+          qnu = data['thermal_energy_transfer']['qnu']
+          qem = data['thermal_energy_transfer']['qem']
+          assert qnu > 0.0 and qem < 0.0
+          assert abs(qnu + qem) <= 2.0e-15 * max(abs(qnu), abs(qem))
+          PY
+          git diff --exit-code -- \
+            native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json \
+            native/rabbit_cpu/tests/fixtures/d081r1/electron_collision_action_metrology.json
+
+      - name: Install exact Rust toolchain
+        run: rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
+
+      - name: Recover exact offline vendor
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip > /tmp/vendor.zip
+          echo "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/vendor.zip" | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          vendor_dir="$(find /tmp/vendor-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            archive="$(find /tmp/vendor-outer -type f \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' -o -name '*.tar' -o -name '*.zip' \) -print -quit)"
+            case "${archive}" in
+              *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar.xz) tar -xJf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar) tar -xf "${archive}" -C /tmp/vendor-expanded ;;
+              *.zip) unzip -q "${archive}" -d /tmp/vendor-expanded ;;
+            esac
+            vendor_dir="$(find /tmp/vendor-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Run exact offline electron-action admission
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/metadata.json
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline f10_electron_action_tests::tests -- --nocapture | tee /tmp/d081r1d3-tests.log
+          grep -F 'test result: ok. 4 passed; 0 failed' /tmp/d081r1d3-tests.log
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
