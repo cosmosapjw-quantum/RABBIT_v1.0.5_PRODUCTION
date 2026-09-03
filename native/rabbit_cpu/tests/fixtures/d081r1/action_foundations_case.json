@@ -1,0 +1,993 @@
+{
+  "chart": {
+    "equilibrium_logits": {
+      "bits": [
+        "bfc454e34f5339a0",
+        "bfea06d536d82f88",
+        "bffe5dad4f9af698",
+        "c00a214dac30e32f",
+        "c012ef5929e78e68",
+        "c0186894ac19425a",
+        "c01cbf255924fa0f",
+        "c01f5d58e5856633",
+        "bfc454e34f5339a0",
+        "bfea06d536d82f88",
+        "bffe5dad4f9af698",
+        "c00a214dac30e32f",
+        "c012ef5929e78e68",
+        "c0186894ac19425a",
+        "c01cbf255924fa0f",
+        "c01f5d58e5856633",
+        "bfc454e34f5339a0",
+        "bfea06d536d82f88",
+        "bffe5dad4f9af698",
+        "c00a214dac30e32f",
+        "c012ef5929e78e68",
+        "c0186894ac19425a",
+        "c01cbf255924fa0f",
+        "c01f5d58e5856633"
+      ],
+      "shape": [
+        3,
+        8
+      ]
+    },
+    "pair_cloglog": {
+      "bits": [
+        "bfdeeadd6dcaa881",
+        "bff009f66ecd8b86",
+        "bfff7f099dd4abc4",
+        "c00a47c2bb11db1b",
+        "c012f3d58c85a94c",
+        "c01869b9c035f680",
+        "c01cbf887cae1968",
+        "c01f5d8c6d650374",
+        "bfde007f16949916",
+        "bfefa6cbd4eb0a8e",
+        "bfff56dedfdde2f9",
+        "c00a4062e744ed3b",
+        "c012f79315aa11d2",
+        "c0187479fe213201",
+        "c01ccfd7bf4632e6",
+        "c01f713621b834da",
+        "bfdfd62a63bebc87",
+        "bff040a7159b3ab4",
+        "bfffa73b3db10dc2",
+        "c00a4f22af3e9f7d",
+        "c012f018074b308e",
+        "c0185ef98a8eb840",
+        "c01caf394085eaa4",
+        "c01f49e2bdeef0a4"
+      ],
+      "shape": [
+        3,
+        8
+      ]
+    },
+    "pair_logits": {
+      "bits": [
+        "bfc454e34f5339a0",
+        "bfea06d536d82f88",
+        "bffe5dad4f9af698",
+        "c00a214dac30e32f",
+        "c012ef5929e78e68",
+        "c0186894ac19425a",
+        "c01cbf255924fa0f",
+        "c01f5d58e5856633",
+        "bfc1df8d680aae65",
+        "bfe9844e99adbf21",
+        "bffe32a018f69e3a",
+        "c00a19ca38926971",
+        "c012f31ae3b6cb47",
+        "c0187357f9c25871",
+        "c01ccf762cca481c",
+        "c01f710394bfaa8d",
+        "bfc6ca39369bc4db",
+        "bfea895bd4029fef",
+        "bffe88ba863f4ef6",
+        "c00a28d11fcf5ced",
+        "c012eb9770185189",
+        "c0185dd15e702c43",
+        "c01caed4857fac02",
+        "c01f49ae364b21d9"
+      ],
+      "shape": [
+        3,
+        8
+      ]
+    }
+  },
+  "claim_ceiling": "grid/chart/spectral/selected-kinematic foundations only; no full Rust collision action, RHS, JVP, Jacobian, solver, trajectory, performance, endpoint, N_eff or F10 gate movement",
+  "electron_mass_bits": "3fe05a1a78514a75",
+  "generator_git_blob": "31b080f1e740a2785e71175767ba15a54f14fb47",
+  "grid": {
+    "nodes": {
+      "bits": [
+        "3fc454e34f5339a0",
+        "3fea06d536d82f88",
+        "3ffe5dad4f9af698",
+        "400a214dac30e32f",
+        "4012ef5929e78e68",
+        "40186894ac19425a",
+        "401cbf255924fa0f",
+        "401f5d58e5856633"
+      ],
+      "shape": [
+        8
+      ]
+    },
+    "weights": {
+      "bits": [
+        "3fd9ea1d04ca03ae",
+        "3fec76fb531d2b94",
+        "3ff413c50a25560e",
+        "3ff736360b19933d",
+        "3ff736360b19933d",
+        "3ff413c50a25560e",
+        "3fec76fb531d2b94",
+        "3fd9ea1d04ca03ae"
+      ],
+      "shape": [
+        8
+      ]
+    }
+  },
+  "kinematics": {
+    "batches": [
+      {
+        "name": "self",
+        "samples": [
+          {
+            "flat_index": 0,
+            "support": true,
+            "values": {
+              "d12": "401072f24170cc72",
+              "d13": "401056bbd04ae750",
+              "d14": "3f9c367125e52000",
+              "d23": "3f9c367125e525b0",
+              "d24": "401056bbd04ae74c",
+              "d34": "401072f24170cc76",
+              "e2": "3fd454e34f5339a0",
+              "e3": "3fd7ce2fd45c21ac",
+              "e4": "4019e9b8e3e054ae",
+              "p2": "3fd454e34f5339a0",
+              "p3_magnitude": "3fd7ce2fd45c21ac",
+              "p4_magnitude": "4019e9b8e3e054af",
+              "phase_space": "3fdfffffffffffff",
+              "quadrature_weight": "3f673113ebf94eff"
+            }
+          },
+          {
+            "flat_index": 2304,
+            "support": true,
+            "values": {
+              "d12": "405ea35dfb972212",
+              "d13": "40272b4fcbb19392",
+              "d14": "405bbdf40220efa0",
+              "d23": "405bbdf40220efa0",
+              "d24": "40272b4fcbb19390",
+              "d34": "405ea35dfb972214",
+              "e2": "4022ef5929e78e68",
+              "e3": "401985310026bbc4",
+              "e4": "40233d677feca21e",
+              "p2": "4022ef5929e78e68",
+              "p3_magnitude": "401985310026bbc5",
+              "p4_magnitude": "40233d677feca21e",
+              "phase_space": "3fe0000000000001",
+              "quadrature_weight": "3f84c5df63fc1c37"
+            }
+          },
+          {
+            "flat_index": 4607,
+            "support": true,
+            "values": {
+              "d12": "3ffe396ff5184480",
+              "d13": "3ff71aeb55622e00",
+              "d14": "3fdc7a127ed85a44",
+              "d23": "3fdc7a127ed86400",
+              "d24": "3ff71aeb55622c6e",
+              "d34": "3ffe396ff5184304",
+              "e2": "402f5d58e5856633",
+              "e3": "4035f7dce95438b0",
+              "e4": "3fcf917a3d599a80",
+              "p2": "402f5d58e5856633",
+              "p3_magnitude": "4035f7dce95438af",
+              "p4_magnitude": "3fcf917a3d599b0c",
+              "phase_space": "3fe0000000000001",
+              "quadrature_weight": "3f673113ebf94eff"
+            }
+          },
+          {
+            "flat_index": 1536,
+            "support": true,
+            "values": {
+              "d12": "4024772d220539a9",
+              "d13": "401d07af23efce0f",
+              "d14": "4007cd5640354a90",
+              "d23": "4007cd5640354a8c",
+              "d24": "401d07af23efce10",
+              "d34": "4024772d220539ab",
+              "e2": "400e5dad4f9af698",
+              "e3": "3fe36f4a02508b0e",
+              "e4": "4023711d89da268d",
+              "p2": "400e5dad4f9af698",
+              "p3_magnitude": "3fe36f4a02508b10",
+              "p4_magnitude": "4023711d89da268d",
+              "phase_space": "3fe0000000000000",
+              "quadrature_weight": "3fa3585d4af27632"
+            }
+          },
+          {
+            "flat_index": 3072,
+            "support": true,
+            "values": {
+              "d12": "405b43304c3ab0e4",
+              "d13": "40414f0676fb2066",
+              "d14": "40529bad10bd20b1",
+              "d23": "40529bad10bd20ae",
+              "d24": "40414f0676fb206c",
+              "d34": "405b43304c3ab0e2",
+              "e2": "40286894ac19425a",
+              "e3": "400dac4cd4711d20",
+              "e4": "402e0e284d156caa",
+              "p2": "40286894ac19425a",
+              "p3_magnitude": "400dac4cd4711d20",
+              "p4_magnitude": "402e0e284d156ca9",
+              "phase_space": "3fdfffffffffffff",
+              "quadrature_weight": "3fa63b9007d38f70"
+            }
+          }
+        ],
+        "shape": [
+          8,
+          12,
+          12,
+          4
+        ],
+        "support_count": 4608
+      },
+      {
+        "name": "elastic",
+        "samples": [
+          {
+            "flat_index": 0,
+            "support": true,
+            "values": {
+              "d12": "400ac5070ad5bdbe",
+              "d13": "400986f4c6631a54",
+              "d14": "3fc3e124472a3700",
+              "d23": "3fc3e124472a363d",
+              "d24": "400b9dbad1b6189a",
+              "d34": "400ac5070ad5bdb8",
+              "e2": "3fe05a1dbaf546ba",
+              "e3": "3fd37c35d180ca9f",
+              "e4": "401af4ce06777f5c",
+              "p2": "3f54a6e31f8b10b6",
+              "p3_magnitude": "3fd37c35d180ca9f",
+              "p4_magnitude": "401ae0f0083c7a1e",
+              "phase_space": "3fdecc5f73997f9a",
+              "quadrature_weight": "3ee7b9a4483fa2c6"
+            }
+          },
+          {
+            "flat_index": 13824,
+            "support": true,
+            "values": {
+              "d12": "403cb27ae489dd92",
+              "d13": "403c6e3d1e7a4e00",
+              "d14": "3fd10f7183e3e380",
+              "d23": "3fd10f7183e3e440",
+              "d24": "403cb115dfe4adc9",
+              "d34": "403cb27ae489dd92",
+              "e2": "4001f803c5fd2b8a",
+              "e3": "4001bc91e9ad1757",
+              "e4": "401a3f069a58ed48",
+              "p2": "40017f636582db07",
+              "p3_magnitude": "4001bc91e9ad1758",
+              "p4_magnitude": "401a2a9e990f240b",
+              "phase_space": "3fdfdae61081b0f3",
+              "quadrature_weight": "3f503ca14c0db62c"
+            }
+          },
+          {
+            "flat_index": 27647,
+            "support": true,
+            "values": {
+              "d12": "4079199da8cef8c0",
+              "d13": "4078f64565de1c00",
+              "d14": "4001ac21786e7200",
+              "d23": "4001ac2178800000",
+              "d24": "4078fa72f1f3fa00",
+              "d34": "4079199da8ce3400",
+              "e2": "40aa0c07d43a53bc",
+              "e3": "40a9d93a8f437d1d",
+              "e4": "403feef5e6778880",
+              "p2": "40aa0c07cf185617",
+              "p3_magnitude": "40a9d93a8f437d1c",
+              "p4_magnitude": "403fede9f060a407",
+              "phase_space": "3fdffd5670aed7e2",
+              "quadrature_weight": "403dec50fa6e97d8"
+            }
+          },
+          {
+            "flat_index": 9216,
+            "support": true,
+            "values": {
+              "d12": "40255b6da6374f7c",
+              "d13": "4024fa9aab498526",
+              "d14": "3fc834bebb729500",
+              "d23": "3fc834bebb7294f8",
+              "d24": "4025804c2e1e44b8",
+              "d34": "40255b6da6374f7a",
+              "e2": "3fece8be27aa3290",
+              "e3": "3feb80b00c36760f",
+              "e4": "401a4e4f6f9f5abf",
+              "p2": "3fe7d7135ce63612",
+              "p3_magnitude": "3feb80b00c36760f",
+              "p4_magnitude": "401a39f352d9b2b5",
+              "phase_space": "3fdf9d0d2f83fd18",
+              "quadrature_weight": "3f3900c97eb137ba"
+            }
+          },
+          {
+            "flat_index": 18432,
+            "support": true,
+            "values": {
+              "d12": "4055394738e3dbf8",
+              "d13": "4047cc14e7d71c47",
+              "d14": "4042a67989f09ba8",
+              "d23": "4042a67989f09ba7",
+              "d24": "4047ed81488c4c2c",
+              "d34": "4055394738e3dbf6",
+              "e2": "401a45d583258d46",
+              "e3": "4017b2f86e5f6ded",
+              "e4": "401cb42ac0f70287",
+              "p2": "401a3172cfb4ea15",
+              "p3_magnitude": "4017b2f86e5f6dee",
+              "p4_magnitude": "401ca18336b5ff51",
+              "phase_space": "3fdff36bbe22e87f",
+              "quadrature_weight": "3f6c812edfd080d8"
+            }
+          }
+        ],
+        "shape": [
+          48,
+          12,
+          12,
+          4
+        ],
+        "support_count": 27648
+      },
+      {
+        "name": "pair",
+        "samples": [
+          {
+            "flat_index": 0,
+            "support": true,
+            "values": {
+              "d12": "401072f24170cc72",
+              "d13": "400f9cb5ada13216",
+              "d14": "3fc492ed54066d00",
+              "d23": "3fc492ed54066d70",
+              "d24": "400f9cb5ada1320c",
+              "d34": "400ecf1e778e9aaf",
+              "e2": "3fd454e34f5339a0",
+              "e3": "3fe2512b0d0bf062",
+              "e4": "40191c767f8498bd",
+              "p2": "3fd454e34f5339a0",
+              "p3_magnitude": "3fd082082bcfa69e",
+              "p4_magnitude": "401907219a1a6703",
+              "phase_space": "3fdde62b40839cbe",
+              "quadrature_weight": "3f673113ebf94eff"
+            }
+          },
+          {
+            "flat_index": 2424,
+            "support": true,
+            "values": {
+              "d12": "405b5d96676cbb56",
+              "d13": "4056e5a1aa9510c6",
+              "d14": "4031dfd2f35eaa40",
+              "d23": "4031dfd2f35eaa44",
+              "d24": "4056e5a1aa9510c6",
+              "d34": "405b4ce037122364",
+              "e2": "4022ef5929e78e68",
+              "e3": "4020c2be847a0bf2",
+              "e4": "401e7a82f70be81c",
+              "p2": "4022ef5929e78e68",
+              "p3_magnitude": "4020bac29bce89f4",
+              "p4_magnitude": "401e68f2277db67f",
+              "phase_space": "3fdfec6f4f0798c4",
+              "quadrature_weight": "3fc7444b9767b34c"
+            }
+          },
+          {
+            "flat_index": 4607,
+            "support": true,
+            "values": {
+              "d12": "3ffe396ff5184480",
+              "d13": "3ff5e93d795a3b80",
+              "d14": "3fe0a064f77c11e0",
+              "d23": "3fe0a064f77c1200",
+              "d24": "3ff5e93d795a3c10",
+              "d34": "3ffa0be3de724860",
+              "e2": "402f5d58e5856633",
+              "e3": "403458821c130b81",
+              "e4": "3ffde7dc1bbe0640",
+              "p2": "402f5d58e5856633",
+              "p3_magnitude": "403456dd7e8ed542",
+              "p4_magnitude": "3ffcc4312703b996",
+              "phase_space": "3fdb38354d274647",
+              "quadrature_weight": "3f673113ebf94eff"
+            }
+          },
+          {
+            "flat_index": 432,
+            "support": false,
+            "values": {
+              "d12": "3fde8f8cf0014074",
+              "d13": "400ab4743bb636ba",
+              "d14": "c006e2829db60eb0",
+              "d23": "3fc4c76270c6c3da",
+              "d24": "3fd42bdbb79dde84",
+              "d34": "4009ea24576fa4b7",
+              "e2": "3fd454e34f5339a0",
+              "e3": "3fe05a1a78514a75",
+              "e4": "40195b58921bed7a",
+              "p2": "3fd454e34f5339a0",
+              "p3_magnitude": "0000000000000000",
+              "p4_magnitude": "401b1edc80e49f2c",
+              "phase_space": "0000000000000000",
+              "quadrature_weight": "3f83ac844bdf65b3"
+            }
+          },
+          {
+            "flat_index": 552,
+            "support": false,
+            "values": {
+              "d12": "3fa397a98b764580",
+              "d13": "400ab4743bb636ba",
+              "d14": "c00a661595885da0",
+              "d23": "3fc4c76270c6c3da",
+              "d24": "bfbfc2f01bd264e0",
+              "d34": "4009ea24576fa4b7",
+              "e2": "3fd454e34f5339a0",
+              "e3": "3fe05a1a78514a75",
+              "e4": "40195b58921bed7a",
+              "p2": "3fd454e34f5339a0",
+              "p3_magnitude": "0000000000000000",
+              "p4_magnitude": "401b60e2e6098e72",
+              "phase_space": "0000000000000000",
+              "quadrature_weight": "3f8e9eded51dab68"
+            }
+          },
+          {
+            "flat_index": 1727,
+            "support": false,
+            "values": {
+              "d12": "3fdd430fe37dae40",
+              "d13": "400ab4743bb636ba",
+              "d14": "c0070c123f4680e0",
+              "d23": "3fff08ae7b0d3b01",
+              "d24": "bff7b7ea822dcf60",
+              "d34": "40141102b6f4eafe",
+              "e2": "400e5dad4f9af698",
+              "e3": "3fe05a1a78514a75",
+              "e4": "4023a270827a1a97",
+              "p2": "400e5dad4f9af698",
+              "p3_magnitude": "0000000000000000",
+              "p4_magnitude": "4024915b4bfafa5a",
+              "phase_space": "0000000000000000",
+              "quadrature_weight": "3f81f7be0f1704cf"
+            }
+          },
+          {
+            "flat_index": 1536,
+            "support": true,
+            "values": {
+              "d12": "4024772d220539a9",
+              "d13": "401ccf00c5d8fc3c",
+              "d14": "40083eb2fc62ee30",
+              "d23": "40083eb2fc62ee38",
+              "d24": "401ccf00c5d8fc3c",
+              "d34": "4023f17b9f307a1c",
+              "e2": "400e5dad4f9af698",
+              "e3": "3fe7345524eebbd9",
+              "e4": "402334ccd7b04380",
+              "p2": "400e5dad4f9af698",
+              "p3_magnitude": "3fe076bf272ef316",
+              "p4_magnitude": "40232dd594ac4c02",
+              "phase_space": "3fdf2c3808acc113",
+              "quadrature_weight": "3fa3585d4af27632"
+            }
+          },
+          {
+            "flat_index": 3072,
+            "support": true,
+            "values": {
+              "d12": "405b43304c3ab0e4",
+              "d13": "40415522580a8a9a",
+              "d14": "4052989f20356b98",
+              "d23": "4052989f20356b95",
+              "d24": "40415522580a8aa0",
+              "d34": "405b327a1be018f1",
+              "e2": "40286894ac19425a",
+              "e3": "400dc81609c05f05",
+              "e4": "402e0735ffc19c31",
+              "p2": "40286894ac19425a",
+              "p3_magnitude": "400d7feb1fa25f85",
+              "p4_magnitude": "402e02c1e37a6a3b",
+              "phase_space": "3fdfec5c572c49df",
+              "quadrature_weight": "3fa63b9007d38f70"
+            }
+          }
+        ],
+        "shape": [
+          8,
+          12,
+          12,
+          4
+        ],
+        "support_count": 4368
+      }
+    ],
+    "config": {
+      "electron_radial_order": 48,
+      "final_azimuth_order": 4,
+      "final_polar_order": 12,
+      "incoming_polar_order": 12
+    },
+    "p1_bits": "401a214dac30e32f"
+  },
+  "order": 8,
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "rules": {
+    "azimuth": {
+      "bits": [
+        "3fe921fb54442d18",
+        "4002d97c7f3321d2",
+        "400f6a7a2955385e",
+        "4015fdbbe9bba775"
+      ],
+      "shape": [
+        4
+      ]
+    },
+    "azimuth_weights": {
+      "bits": [
+        "3ff921fb54442d18",
+        "3ff921fb54442d18",
+        "3ff921fb54442d18",
+        "3ff921fb54442d18"
+      ],
+      "shape": [
+        4
+      ]
+    },
+    "electron_p2": {
+      "bits": [
+        "3f54a6e31f8b10b6",
+        "3f7b4046c18fc6dd",
+        "3f90cbd123489244",
+        "3f9f53e508f1609f",
+        "3fa94415df876de0",
+        "3fb2a4cbebd64280",
+        "3fb9eabf1e4046dd",
+        "3fc14244ee920264",
+        "3fc643236efd80e6",
+        "3fcc03f688435862",
+        "3fd1497384e2d486",
+        "3fd5004c3a0f4626",
+        "3fd93043b2be92a1",
+        "3fdde4be6dabe1b4",
+        "3fe19586c62c9184",
+        "3fe4896297b2fa31",
+        "3fe7d7135ce63612",
+        "3feb8952159d4ca4",
+        "3fefacc1ae4385f4",
+        "3ff2282a8539dbcc",
+        "3ff4c2e7b964aa4f",
+        "3ff7b133b43ec3b5",
+        "3ffaffcb5e1774f1",
+        "3ffebe1366651f41",
+        "40017f636582db07",
+        "4003ec6e2383a01f",
+        "4006b45ba52b3848",
+        "4009e8e1217010f4",
+        "400da04ef2b6ee80",
+        "4010fb89a8bee3a0",
+        "401388ecd8c37b7b",
+        "40169049d5d902de",
+        "401a3172cfb4ea15",
+        "401e975f0d48c51c",
+        "4021fe9970ec6748",
+        "40255b1265a00b3c",
+        "40299d2345017539",
+        "402f1dfedf17aeef",
+        "4033336879606448",
+        "403829b19c9e4ef5",
+        "403f2af1c8c4489d",
+        "4044c168d2736abd",
+        "404cda430775cdab",
+        "40554a5182e3fcd4",
+        "40612bb590f5aafb",
+        "407003600733fd57",
+        "4083bd4969187bba",
+        "40aa0c07cf185617"
+      ],
+      "shape": [
+        48
+      ]
+    },
+    "electron_weights": {
+      "bits": [
+        "3f6a82b5dbc9a11d",
+        "3f7ef6c95d60216d",
+        "3f887ae7d8897141",
+        "3f90d80064329a50",
+        "3f9597a0a1dab681",
+        "3f9a8764cd8330d9",
+        "3f9fb348299e4e0f",
+        "3fa294370f4f7cbf",
+        "3fa57ab5bd258456",
+        "3fa8954e764c62f7",
+        "3fabed46fe6c8b15",
+        "3faf8d3a6fb1edb9",
+        "3fb1c0b23738b2e0",
+        "3fb3ebfea8ec3705",
+        "3fb650d603d8769e",
+        "3fb8f909fa7401c9",
+        "3fbbf0438c2d5394",
+        "3fbf4473bc1cea49",
+        "3fc18331ace56c4d",
+        "3fc3a535f9772fe8",
+        "3fc614b3e39af982",
+        "3fc8e0f5f9b80ca8",
+        "3fcc1cf3e3095a3a",
+        "3fcfe067bf3c8891",
+        "3fd224a25ec1b3ad",
+        "3fd4bedb83e9e0b5",
+        "3fd7d77430d13315",
+        "3fdb8e7165403af6",
+        "3fe0070678854f22",
+        "3fe2c75c1d5f70f2",
+        "3fe62e839620e72f",
+        "3fea714c568dd8a3",
+        "3fefd9e671dca28b",
+        "3ff3695a2273512d",
+        "3ff7fbec890b6110",
+        "3ffe1a50cbc0a49a",
+        "40033da5d6b96133",
+        "4009227f685ea5ea",
+        "4010d9354cdb63d6",
+        "401750276dcfe876",
+        "4020c69ebee07225",
+        "402963170fc0cafb",
+        "40348718b078dded",
+        "404231d7ef892dc5",
+        "405276d24902ff11",
+        "406756c3e9f73635",
+        "40866dcaaaf7e84e",
+        "40c0b7d553a956ef"
+      ],
+      "shape": [
+        48
+      ]
+    },
+    "final_mu": {
+      "bits": [
+        "bfef68f1d8e42e81",
+        "bfecee874ffb88b3",
+        "bfe8a30aeed88f36",
+        "bfe2cb4f05c077f9",
+        "bfd78a8d20a8b19d",
+        "bfc007a5f8f630e4",
+        "3fc007a5f8f630e4",
+        "3fd78a8d20a8b19d",
+        "3fe2cb4f05c077f9",
+        "3fe8a30aeed88f36",
+        "3fecee874ffb88b3",
+        "3fef68f1d8e42e81"
+      ],
+      "shape": [
+        12
+      ]
+    },
+    "final_weights": {
+      "bits": [
+        "3fa8275d9dea6d53",
+        "3fbb60602bce61af",
+        "3fc47d7258f22d96",
+        "3fca0163e6b1ab6b",
+        "3fcde3155c256aae",
+        "3fcfe40ce6d4f022",
+        "3fcfe40ce6d4f022",
+        "3fcde3155c256aae",
+        "3fca0163e6b1ab6b",
+        "3fc47d7258f22d96",
+        "3fbb60602bce61af",
+        "3fa8275d9dea6d53"
+      ],
+      "shape": [
+        12
+      ]
+    },
+    "incoming_mu": {
+      "bits": [
+        "bfef68f1d8e42e81",
+        "bfecee874ffb88b3",
+        "bfe8a30aeed88f36",
+        "bfe2cb4f05c077f9",
+        "bfd78a8d20a8b19d",
+        "bfc007a5f8f630e4",
+        "3fc007a5f8f630e4",
+        "3fd78a8d20a8b19d",
+        "3fe2cb4f05c077f9",
+        "3fe8a30aeed88f36",
+        "3fecee874ffb88b3",
+        "3fef68f1d8e42e81"
+      ],
+      "shape": [
+        12
+      ]
+    },
+    "incoming_weights": {
+      "bits": [
+        "3fa8275d9dea6d53",
+        "3fbb60602bce61af",
+        "3fc47d7258f22d96",
+        "3fca0163e6b1ab6b",
+        "3fcde3155c256aae",
+        "3fcfe40ce6d4f022",
+        "3fcfe40ce6d4f022",
+        "3fcde3155c256aae",
+        "3fca0163e6b1ab6b",
+        "3fc47d7258f22d96",
+        "3fbb60602bce61af",
+        "3fa8275d9dea6d53"
+      ],
+      "shape": [
+        12
+      ]
+    }
+  },
+  "schema": "rabbit.d081r1.action_foundations.v1",
+  "spectral": {
+    "interpolation": {
+      "bits": [
+        "bcf147b54e1346fe",
+        "bfc000000000004e",
+        "bfe8000000000002",
+        "bffffffffffffff5",
+        "c011ffffffffffff",
+        "c01f800000000042",
+        "c020000000000029",
+        "3f947ae147ae1173",
+        "bfbb0a3d70a3d7ab",
+        "bfe77ae147ae148b",
+        "bfffd70a3d70a3d1",
+        "c012028f5c28f5c1",
+        "c01f93d70a3d70e8",
+        "c0200a3d70a3d735",
+        "bf947ae147ae1985",
+        "bfc27ae147ae14e5",
+        "bfe8851eb851eb90",
+        "c000147ae147ae11",
+        "c011fd70a3d70a3d",
+        "c01f6c28f5c28fa0",
+        "c01feb851eb8523e"
+      ],
+      "shape": [
+        3,
+        7
+      ]
+    },
+    "modal_basis": {
+      "bits": [
+        "3fd6a09e667f3bcd",
+        "bfe3988e1409212e",
+        "3fe94c583ada5b53",
+        "bfedeeea11683f49",
+        "3ff0f876ccdf6cd9",
+        "bff2c2fc595456a7",
+        "3ff465655f122ff6",
+        "bff5e8add236a58f",
+        "3fd6a09e667f3bcd",
+        "bfe2fbc9a368d825",
+        "3fe6f6ac966bf4a5",
+        "bfe889a87a72ffd9",
+        "3fe80ff3e998fa25",
+        "bfe5c780ff035221",
+        "3fe1f383586ac9b6",
+        "bfd9c8c7c2630bfe",
+        "3fd6a09e667f3bcd",
+        "bfdfd7e6e08ed5eb",
+        "3fd8cdda81b4178a",
+        "bfbd42cc4f8427dd",
+        "bfca544be8987f13",
+        "3fdc9f1506daa1c5",
+        "bfe094dfe936195a",
+        "3fd91aba6d57111d",
+        "3fd6a09e667f3bcd",
+        "bfd3988e1409212e",
+        "bfb94c583ada5b53",
+        "3fda310ccf3b3760",
+        "bfd39f495ce255db",
+        "bfbaf84ac0693c90",
+        "3fda5f1a11ec8403",
+        "bfd38e2f2621c6c6",
+        "3fd6a09e667f3bcd",
+        "3fb3988e1409212e",
+        "bfd81cc418181f0b",
+        "bfc5dd84fab7263a",
+        "3fd58d061d3ada22",
+        "3fd053164fbdc911",
+        "bfd18464b9e0a735",
+        "bfd4b532632511c9",
+        "3fd6a09e667f3bcd",
+        "3fe2fbc9a368d825",
+        "3fe6f6ac966bf4a5",
+        "3fe889a87a72ffd9",
+        "3fe80ff3e998fa25",
+        "3fe5c780ff035221",
+        "3fe1f383586ac9b6",
+        "3fd9c8c7c2630bfe",
+        "3fd6a09e667f3bcd",
+        "3fe3988e1409212e",
+        "3fe94c583ada5b53",
+        "3fedeeea11683f49",
+        "3ff0f876ccdf6cd9",
+        "3ff2c2fc595456a7",
+        "3ff465655f122ff6",
+        "3ff5e8add236a58f"
+      ],
+      "shape": [
+        7,
+        8
+      ]
+    },
+    "modal_coefficients": {
+      "bits": [
+        "c026a09e667f3bcc",
+        "c01a20bd700c2c4a",
+        "bd18b00000000000",
+        "bd18000000000000",
+        "bd15800000000000",
+        "bd05800000000000",
+        "bcd0000000000000",
+        "3ce0000000000000",
+        "c026a09e667f3bcd",
+        "c01a422f065e2763",
+        "bd18b00000000000",
+        "bd19800000000000",
+        "bd15c00000000000",
+        "bd05000000000000",
+        "bcc0000000000000",
+        "3cd0000000000000",
+        "c026a09e667f3bcd",
+        "c019ff4bd9ba3130",
+        "bd18900000000000",
+        "bd17c00000000000",
+        "bd15c00000000000",
+        "bd06c00000000000",
+        "bcd0000000000000",
+        "3ce0000000000000"
+      ],
+      "shape": [
+        3,
+        8
+      ]
+    },
+    "modal_product": {
+      "bits": [
+        "3fafadaa8f7eed57",
+        "3fe2d73566ff2d80",
+        "3f69c5c6af280d5f",
+        "3fe964da5d1444cc",
+        "3fc167454148d062",
+        "3fec899a953060a5",
+        "3fbacda5fd40aa25",
+        "3fea89a6e208c87c",
+        "3ff3f0057280ba72",
+        "bfeb94e5c3197a83",
+        "400aa13bf0500e31",
+        "bfd20fbdd087c4c1",
+        "4004d703e5437f00",
+        "bfd5b012a60b4911",
+        "4008f5db8cd01ad7",
+        "3fc8809a4c4383f2"
+      ],
+      "shape": [
+        2,
+        8
+      ]
+    },
+    "modal_seed": {
+      "bits": [
+        "bbc79ca10c924223",
+        "bbc0dd979b43e619",
+        "bbb43d1c53eb141e",
+        "bb9afc25c539702b",
+        "3b9afc25c5397025",
+        "3bb43d1c53eb141b",
+        "3bc0dd979b43e618",
+        "3bc79ca10c924223",
+        "3bc79ca10c924223",
+        "3bb983daa4f626a8",
+        "bbb3a6e813f52157",
+        "bbc76023300af5b8",
+        "bbbede110633b29f",
+        "3baaca87e294a4aa",
+        "3bc6abdf8d8f7de6",
+        "3bc1cd0f3ba28953"
+      ],
+      "shape": [
+        2,
+        8
+      ]
+    },
+    "native_action": {
+      "bits": [
+        "bc0c7a1be4f69337",
+        "bb91a49334b4b504",
+        "bba3fda050fe77ff",
+        "3b539bdae1944056",
+        "bb874dac0fd05f30",
+        "3b56574622b052d7",
+        "bb8fe0f86adee9c2",
+        "bb64454df5683915",
+        "3bf9d0c5e44e512a",
+        "3ba7fe610dc4874f",
+        "3b8fe0fb8be47d6c",
+        "3b6e2fa08100dd1c",
+        "3b77e066a571f81f",
+        "3b96f4960b5a7311",
+        "bb636691244c3a87",
+        "bb40135be7d9b8b5"
+      ],
+      "shape": [
+        2,
+        8
+      ]
+    },
+    "query": {
+      "bits": [
+        "0000000000000000",
+        "3fc0000000000000",
+        "3fe8000000000000",
+        "4000000000000000",
+        "4012000000000000",
+        "401f800000000000",
+        "4020000000000000"
+      ],
+      "shape": [
+        7
+      ]
+    },
+    "rates": {
+      "bits": [
+        "bfd0000000000000",
+        "bfc4444444444444",
+        "bfb1111111111110",
+        "3f999999999999a0",
+        "3fbddddddddddde0",
+        "3fcaaaaaaaaaaaac",
+        "3fd3333333333333",
+        "3ff0000000000000",
+        "3fefe0a8f5f8b664",
+        "3febb0bbd5b6ec4f",
+        "3fc5c17bbc13570b",
+        "bfefffb5e2294982",
+        "3fe6f536f653c9a2",
+        "3fe8d16f88830a7f"
+      ],
+      "shape": [
+        2,
+        7
+      ]
+    }
+  },
+  "temperature_cm_bits": "4000000000000000",
+  "temperature_gamma_bits": "4000666666666666",
+  "y_max_bits": "4020000000000000"
+}
