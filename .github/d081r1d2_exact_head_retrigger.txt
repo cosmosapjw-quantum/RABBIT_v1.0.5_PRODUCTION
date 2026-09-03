@@ -1,2 +1,0 @@
-D-081R1D2 exact-head retrigger after canonical Rust formatting.
-Delete before closeout.
