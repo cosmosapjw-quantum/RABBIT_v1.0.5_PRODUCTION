@@ -234,6 +234,31 @@ fn node_neutrino_h_rate(
     }
 }
 
+fn relative_max_difference(left: &[f64], right: &[f64]) -> Result<f64, F10CombinedActionError> {
+    if left.is_empty() || left.len() != right.len() {
+        return Err(F10CombinedActionError::InvalidInput);
+    }
+    let left_scale = left
+        .iter()
+        .map(|value| value.abs())
+        .fold(f64::MIN_POSITIVE, f64::max);
+    let right_scale = right
+        .iter()
+        .map(|value| value.abs())
+        .fold(f64::MIN_POSITIVE, f64::max);
+    let difference = left
+        .iter()
+        .zip(right)
+        .map(|(left_value, right_value)| (left_value - right_value).abs())
+        .fold(0.0_f64, f64::max);
+    let residual = difference / left_scale.max(right_scale).max(f64::MIN_POSITIVE);
+    if residual.is_finite() {
+        Ok(residual)
+    } else {
+        Err(F10CombinedActionError::NonFiniteOutput)
+    }
+}
+
 fn symmetry_residuals(
     native_total: &[f64],
     order: usize,
@@ -241,33 +266,25 @@ fn symmetry_residuals(
     if order == 0 || native_total.len() != SPECIES_COUNT * order {
         return Err(F10CombinedActionError::InvalidInput);
     }
-    let scale = native_total
-        .iter()
-        .map(|value| value.abs())
-        .fold(f64::MIN_POSITIVE, f64::max);
-    let mut cp_absolute = 0.0_f64;
+
+    let mut charge_conjugation = 0.0_f64;
     for pair in 0..PAIR_COUNT {
-        for node in 0..order {
-            cp_absolute = cp_absolute.max(
-                (native_total[(2 * pair) * order + node]
-                    - native_total[(2 * pair + 1) * order + node])
-                    .abs(),
-            );
-        }
+        let particle_start = (2 * pair) * order;
+        let antiparticle_start = particle_start + order;
+        charge_conjugation = charge_conjugation.max(relative_max_difference(
+            &native_total[particle_start..particle_start + order],
+            &native_total[antiparticle_start..antiparticle_start + order],
+        )?);
     }
-    let mut mu_tau_absolute = 0.0_f64;
+
+    let mut mu_pair = Vec::with_capacity(order);
+    let mut tau_pair = Vec::with_capacity(order);
     for node in 0..order {
-        let mu = 0.5 * (native_total[2 * order + node] + native_total[3 * order + node]);
-        let tau = 0.5 * (native_total[4 * order + node] + native_total[5 * order + node]);
-        mu_tau_absolute = mu_tau_absolute.max((mu - tau).abs());
+        mu_pair.push(0.5 * (native_total[2 * order + node] + native_total[3 * order + node]));
+        tau_pair.push(0.5 * (native_total[4 * order + node] + native_total[5 * order + node]));
     }
-    let cp = cp_absolute / scale;
-    let mu_tau = mu_tau_absolute / scale;
-    if cp.is_finite() && mu_tau.is_finite() {
-        Ok((cp, mu_tau))
-    } else {
-        Err(F10CombinedActionError::NonFiniteOutput)
-    }
+    let mu_tau = relative_max_difference(&mu_pair, &tau_pair)?;
+    Ok((charge_conjugation, mu_tau))
 }
 
 pub(crate) fn assemble_combined_action(

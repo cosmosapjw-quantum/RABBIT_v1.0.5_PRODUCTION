@@ -97,6 +97,151 @@ fn scaled_difference(actual: &[f64], expected: &[f64], scale: f64) -> f64 {
         / scale.max(f64::MIN_POSITIVE)
 }
 
+fn maximum_absolute_difference(left: &[f64], right: &[f64]) -> f64 {
+    assert_eq!(left.len(), right.len());
+    left.iter()
+        .zip(right)
+        .map(|(left_value, right_value)| (left_value - right_value).abs())
+        .fold(0.0_f64, f64::max)
+}
+
+fn pair_charge_conjugation_residual(values: &[f64], order: usize, pair: usize) -> (f64, f64, f64) {
+    assert!(order > 0);
+    assert_eq!(values.len(), 6 * order);
+    assert!(pair < 3);
+    let particle_start = (2 * pair) * order;
+    let antiparticle_start = particle_start + order;
+    let particle = &values[particle_start..particle_start + order];
+    let antiparticle = &values[antiparticle_start..antiparticle_start + order];
+    let scale = maximum_absolute(particle)
+        .max(maximum_absolute(antiparticle))
+        .max(f64::MIN_POSITIVE);
+    let difference = maximum_absolute_difference(particle, antiparticle);
+    (difference / scale, difference, scale)
+}
+
+fn assert_conditioned_charge_conjugation_close(
+    actual: &[f64],
+    expected: &[f64],
+    order: usize,
+    stored_actual: f64,
+    stored_expected: f64,
+) {
+    assert_eq!(actual.len(), expected.len());
+    assert_eq!(actual.len(), 6 * order);
+
+    let mut recomputed_actual = 0.0_f64;
+    let mut recomputed_expected = 0.0_f64;
+    let mut maximum_propagated_bound = 0.0_f64;
+
+    for pair in 0..3 {
+        let particle_start = (2 * pair) * order;
+        let antiparticle_start = particle_start + order;
+        let actual_particle = &actual[particle_start..particle_start + order];
+        let actual_antiparticle = &actual[antiparticle_start..antiparticle_start + order];
+        let expected_particle = &expected[particle_start..particle_start + order];
+        let expected_antiparticle = &expected[antiparticle_start..antiparticle_start + order];
+
+        let (actual_residual, _actual_difference, actual_scale) =
+            pair_charge_conjugation_residual(actual, order, pair);
+        let (expected_residual, expected_difference, expected_scale) =
+            pair_charge_conjugation_residual(expected, order, pair);
+        recomputed_actual = recomputed_actual.max(actual_residual);
+        recomputed_expected = recomputed_expected.max(expected_residual);
+
+        let perturbation = maximum_absolute_difference(actual_particle, expected_particle).max(
+            maximum_absolute_difference(actual_antiparticle, expected_antiparticle),
+        );
+        let propagated_bound = 2.0 * perturbation / actual_scale
+            + expected_difference * perturbation / (actual_scale * expected_scale)
+            + 262_144.0
+                * f64::EPSILON
+                * actual_residual.abs().max(expected_residual.abs()).max(1.0);
+        maximum_propagated_bound = maximum_propagated_bound.max(propagated_bound);
+        assert!(
+            (actual_residual - expected_residual).abs() <= propagated_bound,
+            "conditioned CP residual mismatch for pair {pair}: actual={actual_residual:.17e}, expected={expected_residual:.17e}, perturbation={perturbation:.17e}, propagated_bound={propagated_bound:.17e}"
+        );
+    }
+
+    assert_eq!(stored_actual.to_bits(), recomputed_actual.to_bits());
+    let fixture_roundoff = 64.0
+        * f64::EPSILON
+        * stored_expected
+            .abs()
+            .max(recomputed_expected.abs())
+            .max(1.0);
+    assert!(
+        (stored_expected - recomputed_expected).abs() <= fixture_roundoff,
+        "frozen CP diagnostic does not match its frozen total array: stored={stored_expected:.17e}, recomputed={recomputed_expected:.17e}, allowed={fixture_roundoff:.17e}"
+    );
+    assert!(
+        (stored_actual - stored_expected).abs() <= maximum_propagated_bound,
+        "combined CP diagnostic exceeds the array-propagated condition bound: actual={stored_actual:.17e}, expected={stored_expected:.17e}, bound={maximum_propagated_bound:.17e}"
+    );
+}
+
+fn pair_average(values: &[f64], order: usize, pair: usize) -> Vec<f64> {
+    assert!(order > 0);
+    assert_eq!(values.len(), 6 * order);
+    assert!(pair < 3);
+    let particle_start = (2 * pair) * order;
+    let antiparticle_start = particle_start + order;
+    (0..order)
+        .map(|node| 0.5 * (values[particle_start + node] + values[antiparticle_start + node]))
+        .collect()
+}
+
+fn mu_tau_residual_components(values: &[f64], order: usize) -> (f64, f64, f64) {
+    let mu = pair_average(values, order, 1);
+    let tau = pair_average(values, order, 2);
+    let difference = maximum_absolute_difference(&mu, &tau);
+    let scale = maximum_absolute(&mu)
+        .max(maximum_absolute(&tau))
+        .max(f64::MIN_POSITIVE);
+    (difference / scale, difference, scale)
+}
+
+fn assert_conditioned_mu_tau_close(
+    actual: &[f64],
+    expected: &[f64],
+    order: usize,
+    stored_actual: f64,
+    stored_expected: f64,
+) {
+    assert_eq!(actual.len(), expected.len());
+    assert_eq!(actual.len(), 6 * order);
+
+    let actual_mu = pair_average(actual, order, 1);
+    let actual_tau = pair_average(actual, order, 2);
+    let expected_mu = pair_average(expected, order, 1);
+    let expected_tau = pair_average(expected, order, 2);
+    let (actual_residual, _actual_difference, actual_scale) =
+        mu_tau_residual_components(actual, order);
+    let (expected_residual, expected_difference, expected_scale) =
+        mu_tau_residual_components(expected, order);
+
+    let mu_error = maximum_absolute_difference(&actual_mu, &expected_mu);
+    let tau_error = maximum_absolute_difference(&actual_tau, &expected_tau);
+    let numerator_perturbation = mu_error + tau_error;
+    let scale_perturbation = mu_error.max(tau_error);
+    let propagated_bound = numerator_perturbation / actual_scale
+        + expected_difference * scale_perturbation / (actual_scale * expected_scale)
+        + 262_144.0 * f64::EPSILON * actual_residual.abs().max(expected_residual.abs()).max(1.0);
+
+    assert_eq!(stored_actual.to_bits(), actual_residual.to_bits());
+    let fixture_roundoff =
+        64.0 * f64::EPSILON * stored_expected.abs().max(expected_residual.abs()).max(1.0);
+    assert!(
+        (stored_expected - expected_residual).abs() <= fixture_roundoff,
+        "frozen mu/tau diagnostic does not match its frozen total array: stored={stored_expected:.17e}, recomputed={expected_residual:.17e}, allowed={fixture_roundoff:.17e}"
+    );
+    assert!(
+        (actual_residual - expected_residual).abs() <= propagated_bound,
+        "conditioned mu/tau residual exceeds the array-propagated bound: actual={actual_residual:.17e}, expected={expected_residual:.17e}, mu_error={mu_error:.17e}, tau_error={tau_error:.17e}, propagated_bound={propagated_bound:.17e}"
+    );
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -278,17 +423,19 @@ mod tests {
                 result.self_event_energy_absolute.max(1.0),
                 6.0e-9,
             );
-            assert_scalar_close(
+            assert_conditioned_charge_conjugation_close(
+                &result.native_total,
+                &bit_array(&case["arrays"]["total_native"]),
+                grid.order,
                 result.charge_conjugation_residual,
                 bits(&diagnostics["charge_conjugation_residual"]),
-                1.0,
-                6.0e-9,
             );
-            assert_scalar_close(
+            assert_conditioned_mu_tau_close(
+                &result.native_total,
+                &bit_array(&case["arrays"]["total_native"]),
+                grid.order,
                 result.mu_tau_residual,
                 bits(&diagnostics["mu_tau_residual"]),
-                1.0,
-                6.0e-9,
             );
         }
     }
@@ -347,16 +494,21 @@ mod tests {
         assert!(thermal.mu_tau_residual <= 5.0e-12);
         assert!(split.mu_tau_residual > 1.0e-8);
 
-        let expected_total = bit_array(&thermal_case["arrays"]["total_native"]);
+        let self_scale = maximum_absolute(&thermal.self_action.native);
+        let electron_scale = maximum_absolute(&thermal.electron_action.native);
         assert!(
-            scaled_difference(&thermal.self_action.native, &expected_total, thermal_scale) > 1.0e-3
+            scaled_difference(
+                &thermal.self_action.native,
+                &thermal.native_total,
+                electron_scale,
+            ) > 0.5
         );
         assert!(
             scaled_difference(
                 &thermal.electron_action.native,
-                &expected_total,
-                thermal_scale
-            ) > 1.0e-3
+                &thermal.native_total,
+                self_scale,
+            ) > 0.5
         );
         let wrong_sign: Vec<_> = thermal
             .self_action
@@ -365,7 +517,57 @@ mod tests {
             .zip(&thermal.electron_action.native)
             .map(|(self_value, electron_value)| self_value - electron_value)
             .collect();
-        assert!(scaled_difference(&wrong_sign, &expected_total, thermal_scale) > 1.0e-3);
+        assert!(
+            scaled_difference(
+                &wrong_sign,
+                &thermal.native_total,
+                self_scale.max(electron_scale),
+            ) > 0.5
+        );
+
+        let mut swapped_coordinates = bit_array(&split_case["pair_cloglog"]);
+        for node in 0..grid.order {
+            swapped_coordinates.swap(grid.order + node, 2 * grid.order + node);
+        }
+        let swapped_combined = assemble_combined_action(
+            &grid,
+            &swapped_coordinates,
+            bits(&split_case["temperature_cm_bits"]),
+            bits(&split_case["temperature_gamma_bits"]),
+            F10CombinedActionConfig::default(),
+        )
+        .unwrap();
+        let species_permutation = [0_usize, 1, 4, 5, 2, 3];
+        let native_scale = maximum_absolute(&split.native_total);
+        let modal_scale = maximum_absolute(&split.modal_total);
+        for (observed_species, &reference_species) in species_permutation.iter().enumerate() {
+            assert_hybrid_close(
+                &swapped_combined.native_total
+                    [observed_species * grid.order..(observed_species + 1) * grid.order],
+                &split.native_total
+                    [reference_species * grid.order..(reference_species + 1) * grid.order],
+                native_scale,
+                6.0e-9,
+            );
+            assert_hybrid_close(
+                &swapped_combined.modal_total
+                    [observed_species * grid.order..(observed_species + 1) * grid.order],
+                &split.modal_total
+                    [reference_species * grid.order..(reference_species + 1) * grid.order],
+                modal_scale,
+                6.0e-9,
+            );
+        }
+        assert_scalar_close(
+            swapped_combined.mu_tau_residual,
+            split.mu_tau_residual,
+            swapped_combined
+                .mu_tau_residual
+                .abs()
+                .max(split.mu_tau_residual.abs())
+                .max(f64::MIN_POSITIVE),
+            6.0e-9,
+        );
     }
 
     #[test]
