@@ -1,0 +1,5 @@
+D-081R1E exact-head GREEN retrigger
+implementation_head=0ee7570105ecc356e29002bb2166c69bcf4fba11
+implementation_tree=5da471681b36c61004be6ec92340971688d0572a
+scope=full retained packed-RHS functional suite after exact F10 GL12/GL48 identity and factor-two contract repair
+remove_before_closeout=true
