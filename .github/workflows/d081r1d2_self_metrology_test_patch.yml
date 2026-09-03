@@ -1,0 +1,141 @@
+name: d081r1d2-self-metrology-test-patch
+
+on:
+  push:
+    branches:
+      - research/d081r1d2-self-action-20260903
+    paths:
+      - .github/workflows/d081r1d2_self_metrology_test_patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d2-self-action-20260903
+          fetch-depth: 2
+
+      - name: Bind self-only diagnostics to the component oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("native/rabbit_cpu/src/f10_self_action_tests.rs")
+          text = path.read_text(encoding="utf-8")
+
+          old = 'const FIXTURE: &str = include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");\n'
+          new = old + 'const SELF_METROLOGY_FIXTURE: &str = include_str!(\n    "../tests/fixtures/d081r1/self_collision_action_metrology.json"\n);\n'
+          if text.count(old) != 1:
+              raise SystemExit("unexpected full fixture declaration count")
+          text = text.replace(old, new)
+
+          old = '''fn fixture() -> Value {
+    serde_json::from_str(FIXTURE).expect("valid frozen D-081R1 full-action fixture")
+}
+'''
+          new = old + '''
+fn self_metrology_fixture() -> Value {
+    serde_json::from_str(SELF_METROLOGY_FIXTURE)
+        .expect("valid frozen D-081R1D2 self-action metrology fixture")
+}
+'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected fixture parser count")
+          text = text.replace(old, new)
+
+          old = '''    fn frozen_fixture_contract_is_exact() {
+        let value = fixture();
+'''
+          new = '''    fn frozen_fixture_contract_is_exact() {
+        let value = fixture();
+        let self_metrology = self_metrology_fixture();
+        assert_eq!(
+            self_metrology["schema"],
+            "rabbit.d081r1d2.self_action_metrology.v1"
+        );
+        assert_eq!(self_metrology["self_event_count"], 27);
+        assert_eq!(
+            self_metrology["private_comparator_git_blob"],
+            "de44feee0aa484abe26976c7dc34c579643005b5"
+        );
+        assert_eq!(
+            self_metrology["full_collision_fixture_git_blob"],
+            "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302"
+        );
+'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected fixture contract test header")
+          text = text.replace(old, new)
+
+          old = '''    fn six_species_self_action_matches_every_frozen_python_case() {
+        let value = fixture();
+'''
+          new = '''    fn six_species_self_action_matches_every_frozen_python_case() {
+        let value = fixture();
+        let self_metrology = self_metrology_fixture();
+'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected main parity test header")
+          text = text.replace(old, new)
+
+          old = '''        for case in value["cases"].as_array().expect("fixture cases") {
+            let pair_cloglog = bit_array(&case["pair_cloglog"]);
+'''
+          new = '''        for case in value["cases"].as_array().expect("fixture cases") {
+            let case_name = case["name"].as_str().expect("fixture case name");
+            let self_case = named_case(&self_metrology, case_name);
+            let expected_self = &self_case["self"];
+            let expected_combined = &self_case["combined"];
+            let expected_electron = &self_case["electron_by_difference"];
+            let self_rejections = expected_self["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("self rejection count");
+            let combined_rejections = expected_combined["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("combined rejection count");
+            let electron_rejections = expected_electron["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("electron rejection count");
+            assert_eq!(combined_rejections - self_rejections, electron_rejections);
+            assert!(combined_rejections > self_rejections);
+
+            let pair_cloglog = bit_array(&case["pair_cloglog"]);
+'''
+          if text.count(old) != 1:
+              raise SystemExit("unexpected parity loop header")
+          text = text.replace(old, new)
+
+          replacements = {
+              'case["whole_reaction_domain_rejections"]': 'expected_self["whole_reaction_domain_rejections"]',
+              'case["matrix_roundoff_corrections"]': 'expected_self["matrix_roundoff_corrections"]',
+              'case["largest_matrix_roundoff_correction_bits"]': 'expected_self["largest_matrix_roundoff_correction_bits"]',
+          }
+          for before, after in replacements.items():
+              if text.count(before) != 1:
+                  raise SystemExit(f"unexpected occurrence count for {before!r}: {text.count(before)}")
+              text = text.replace(before, after)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt
+          (cd native/rabbit_cpu && cargo +1.94.1 fmt --all)
+          git diff --check
+          test "$(git diff --name-only)" = "native/rabbit_cpu/src/f10_self_action_tests.rs"
+
+      - name: Commit bounded metrology-boundary repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add native/rabbit_cpu/src/f10_self_action_tests.rs
+          git diff --cached --check
+          git commit -m "test(d081r1d2): separate self and combined metrology"
+          git push origin HEAD:research/d081r1d2-self-action-20260903
