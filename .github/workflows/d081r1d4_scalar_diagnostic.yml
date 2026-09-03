@@ -1,4 +1,4 @@
-name: d081r1d4-track-caller-repair
+name: d081r1d4-definition-repair
 
 on:
   push:
@@ -19,33 +19,142 @@ jobs:
           ref: research/d081r1d4-combined-action-20260903
           fetch-depth: 2
 
-      - name: Preserve the scalar call site in failure diagnostics
+      - name: Match the frozen symmetry and component-mutation definitions
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
 
-          path = Path("native/rabbit_cpu/src/f10_combined_action_tests.rs")
-          text = path.read_text(encoding="utf-8")
-          old = "fn assert_scalar_close(actual: f64, expected: f64, scale: f64, relative_tolerance: f64) {\n"
-          new = "#[track_caller]\n" + old
-          if text.count(old) != 1:
-              raise SystemExit(f"unexpected scalar helper count: {text.count(old)}")
-          if "#[track_caller]\n" + old in text:
-              raise SystemExit("track_caller already present")
-          path.write_text(text.replace(old, new), encoding="utf-8")
-          PY
-          git diff --check
-          test "$(git diff --name-only)" = "native/rabbit_cpu/src/f10_combined_action_tests.rs"
+          source_path = Path("native/rabbit_cpu/src/f10_combined_action.rs")
+          source = source_path.read_text(encoding="utf-8")
+          start_marker = "fn symmetry_residuals(\n"
+          end_marker = "\npub(crate) fn assemble_combined_action(\n"
+          if source.count(start_marker) != 1 or source.count(end_marker) != 1:
+              raise SystemExit("unexpected symmetry-residual function boundaries")
+          start = source.index(start_marker)
+          end = source.index(end_marker, start)
+          replacement = '''fn relative_max_difference(
+              left: &[f64],
+              right: &[f64],
+          ) -> Result<f64, F10CombinedActionError> {
+              if left.is_empty() || left.len() != right.len() {
+                  return Err(F10CombinedActionError::InvalidInput);
+              }
+              let left_scale = left
+                  .iter()
+                  .map(|value| value.abs())
+                  .fold(f64::MIN_POSITIVE, f64::max);
+              let right_scale = right
+                  .iter()
+                  .map(|value| value.abs())
+                  .fold(f64::MIN_POSITIVE, f64::max);
+              let difference = left
+                  .iter()
+                  .zip(right)
+                  .map(|(left_value, right_value)| (left_value - right_value).abs())
+                  .fold(0.0_f64, f64::max);
+              let residual = difference / left_scale.max(right_scale).max(f64::MIN_POSITIVE);
+              if residual.is_finite() {
+                  Ok(residual)
+              } else {
+                  Err(F10CombinedActionError::NonFiniteOutput)
+              }
+          }
 
-      - name: Commit bounded test-diagnostic repair
+          fn symmetry_residuals(
+              native_total: &[f64],
+              order: usize,
+          ) -> Result<(f64, f64), F10CombinedActionError> {
+              if order == 0 || native_total.len() != SPECIES_COUNT * order {
+                  return Err(F10CombinedActionError::InvalidInput);
+              }
+
+              let mut charge_conjugation = 0.0_f64;
+              for pair in 0..PAIR_COUNT {
+                  let particle_start = (2 * pair) * order;
+                  let antiparticle_start = particle_start + order;
+                  charge_conjugation = charge_conjugation.max(relative_max_difference(
+                      &native_total[particle_start..particle_start + order],
+                      &native_total[antiparticle_start..antiparticle_start + order],
+                  )?);
+              }
+
+              let mut mu_pair = Vec::with_capacity(order);
+              let mut tau_pair = Vec::with_capacity(order);
+              for node in 0..order {
+                  mu_pair.push(
+                      0.5 * (native_total[2 * order + node] + native_total[3 * order + node]),
+                  );
+                  tau_pair.push(
+                      0.5 * (native_total[4 * order + node] + native_total[5 * order + node]),
+                  );
+              }
+              let mu_tau = relative_max_difference(&mu_pair, &tau_pair)?;
+              Ok((charge_conjugation, mu_tau))
+          }
+'''
+          source_path.write_text(source[:start] + replacement + source[end:], encoding="utf-8")
+
+          test_path = Path("native/rabbit_cpu/src/f10_combined_action_tests.rs")
+          tests = test_path.read_text(encoding="utf-8")
+          test_start_marker = '        let expected_total = bit_array(&thermal_case["arrays"]["total_native"]);\n'
+          test_end_marker = "    }\n\n    #[test]\n    fn component_failures_propagate_without_a_partial_result()"
+          if tests.count(test_start_marker) != 1 or tests.count(test_end_marker) != 1:
+              raise SystemExit("unexpected component-mutation test boundaries")
+          test_start = tests.index(test_start_marker)
+          test_end = tests.index(test_end_marker, test_start)
+          test_replacement = '''        let self_scale = maximum_absolute(&thermal.self_action.native);
+              let electron_scale = maximum_absolute(&thermal.electron_action.native);
+              assert!(
+                  scaled_difference(
+                      &thermal.self_action.native,
+                      &thermal.native_total,
+                      electron_scale,
+                  ) > 0.5
+              );
+              assert!(
+                  scaled_difference(
+                      &thermal.electron_action.native,
+                      &thermal.native_total,
+                      self_scale,
+                  ) > 0.5
+              );
+              let wrong_sign: Vec<_> = thermal
+                  .self_action
+                  .native
+                  .iter()
+                  .zip(&thermal.electron_action.native)
+                  .map(|(self_value, electron_value)| self_value - electron_value)
+                  .collect();
+              assert!(
+                  scaled_difference(
+                      &wrong_sign,
+                      &thermal.native_total,
+                      self_scale.max(electron_scale),
+                  ) > 0.5
+              );
+'''
+          test_path.write_text(
+              tests[:test_start] + test_replacement + tests[test_end:],
+              encoding="utf-8",
+          )
+          PY
+
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt
+          (cd native/rabbit_cpu && cargo +1.94.1 fmt --all)
+          git diff --check
+          expected="$(printf '%s\n' native/rabbit_cpu/src/f10_combined_action.rs native/rabbit_cpu/src/f10_combined_action_tests.rs)"
+          actual="$(git diff --name-only | sort)"
+          test "${actual}" = "${expected}"
+
+      - name: Commit the bounded definition repair
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add native/rabbit_cpu/src/f10_combined_action_tests.rs
+          git add native/rabbit_cpu/src/f10_combined_action.rs native/rabbit_cpu/src/f10_combined_action_tests.rs
           git diff --cached --check
-          git commit -m "test(d081r1d4): preserve scalar diagnostic call sites"
+          git commit -m "fix(d081r1d4): match frozen symmetry and component metrics"
           git push origin HEAD:research/d081r1d4-combined-action-20260903
