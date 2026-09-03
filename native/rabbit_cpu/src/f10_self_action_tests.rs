@@ -5,9 +5,16 @@ use crate::f10_self_action::{F10SelfActionConfig, assemble_self_action};
 use serde_json::Value;
 
 const FIXTURE: &str = include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");
+const SELF_METROLOGY_FIXTURE: &str =
+    include_str!("../tests/fixtures/d081r1/self_collision_action_metrology.json");
 
 fn fixture() -> Value {
     serde_json::from_str(FIXTURE).expect("valid frozen D-081R1 full-action fixture")
+}
+
+fn self_metrology_fixture() -> Value {
+    serde_json::from_str(SELF_METROLOGY_FIXTURE)
+        .expect("valid frozen D-081R1D2 self-action metrology fixture")
 }
 
 fn bits(value: &Value) -> f64 {
@@ -108,6 +115,20 @@ mod tests {
     #[test]
     fn frozen_fixture_contract_is_exact() {
         let value = fixture();
+        let self_metrology = self_metrology_fixture();
+        assert_eq!(
+            self_metrology["schema"],
+            "rabbit.d081r1d2.self_action_metrology.v1"
+        );
+        assert_eq!(self_metrology["self_event_count"], 27);
+        assert_eq!(
+            self_metrology["private_comparator_git_blob"],
+            "de44feee0aa484abe26976c7dc34c579643005b5"
+        );
+        assert_eq!(
+            self_metrology["full_collision_fixture_git_blob"],
+            "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302"
+        );
         assert_eq!(value["schema"], "rabbit.d081r1.full_collision_action.v1");
         assert_eq!(
             value["private_comparator_git_blob"],
@@ -122,12 +143,30 @@ mod tests {
     #[test]
     fn six_species_self_action_matches_every_frozen_python_case() {
         let value = fixture();
+        let self_metrology = self_metrology_fixture();
         let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
         let modal_scale = oracle_array_scale(&value, "self_modal");
         let native_scale = oracle_array_scale(&value, "self_native");
         let row_scale = oracle_row_scale(&value);
 
         for case in value["cases"].as_array().expect("fixture cases") {
+            let case_name = case["name"].as_str().expect("fixture case name");
+            let self_case = named_case(&self_metrology, case_name);
+            let expected_self = &self_case["self"];
+            let expected_combined = &self_case["combined"];
+            let expected_electron = &self_case["electron_by_difference"];
+            let self_rejections = expected_self["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("self rejection count");
+            let combined_rejections = expected_combined["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("combined rejection count");
+            let electron_rejections = expected_electron["whole_reaction_domain_rejections"]
+                .as_u64()
+                .expect("electron rejection count");
+            assert_eq!(combined_rejections - self_rejections, electron_rejections);
+            assert!(combined_rejections > self_rejections);
+
             let pair_cloglog = bit_array(&case["pair_cloglog"]);
             let temperature = bits(&case["temperature_cm_bits"]);
             let result = assemble_self_action(
@@ -203,7 +242,7 @@ mod tests {
             assert_eq!(
                 result.whole_reaction_domain_rejections,
                 usize::try_from(
-                    case["whole_reaction_domain_rejections"]
+                    expected_self["whole_reaction_domain_rejections"]
                         .as_u64()
                         .expect("whole-reaction domain rejection count"),
                 )
@@ -212,14 +251,14 @@ mod tests {
             assert_eq!(
                 result.matrix_roundoff_corrections,
                 usize::try_from(
-                    case["matrix_roundoff_corrections"]
+                    expected_self["matrix_roundoff_corrections"]
                         .as_u64()
                         .expect("matrix roundoff correction count"),
                 )
                 .expect("correction count fits usize"),
             );
             let expected_largest_correction =
-                bits(&case["largest_matrix_roundoff_correction_bits"]);
+                bits(&expected_self["largest_matrix_roundoff_correction_bits"]);
             assert_moment_close(
                 result.largest_matrix_roundoff_correction,
                 expected_largest_correction,
