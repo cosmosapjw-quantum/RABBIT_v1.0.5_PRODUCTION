@@ -1,0 +1,99 @@
+name: d081r1e-component-modal-diagnostic-v2
+
+on:
+  push:
+    branches:
+      - research/d081r1e-modal-reduction-diagnostic-20260904
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e-modal-reduction-diagnostic-20260904
+          fetch-depth: 0
+
+      - name: Verify frozen authorities and recover retained state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 0ee7570105ecc356e29002bb2166c69bcf4fba11 HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          git show '78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz' > /tmp/state_1200.npz
+          echo 'c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/state_1200.npz' | sha256sum -c -
+
+      - name: Install exact Python and Rust tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1e-component-venv
+          /tmp/d081r1e-component-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
+          rustup toolchain install 1.94.1 --profile minimal
+          test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
+          test "$(cargo +1.94.1 --version)" = "cargo 1.94.1 (29ea6fb6a 2026-03-24)"
+
+      - name: Recover exact offline vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip > /tmp/vendor.zip
+          echo '391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/vendor.zip' | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          vendor_dir="$(find /tmp/vendor-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            archive="$(find /tmp/vendor-outer -type f \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' -o -name '*.tar' -o -name '*.zip' \) -print -quit)"
+            case "${archive}" in
+              *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar.xz) tar -xJf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar) tar -xf "${archive}" -C /tmp/vendor-expanded ;;
+              *.zip) unzip -q "${archive}" -d /tmp/vendor-expanded ;;
+              *) echo 'no supported vendor archive' >&2; exit 1 ;;
+            esac
+            vendor_dir="$(find /tmp/vendor-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Generate host-local Python component fixture twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1e-component-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_component_diagnostic.py
+          "$PY" "$GEN" --retained /tmp/state_1200.npz --output /tmp/components-a.json
+          "$PY" "$GEN" --retained /tmp/state_1200.npz --output /tmp/components-b.json
+          cmp /tmp/components-a.json /tmp/components-b.json
+          sha256sum /tmp/components-a.json /tmp/components-b.json
+
+      - name: Run Rust component modal diagnostic
+        shell: bash
+        working-directory: native/rabbit_cpu
+        env:
+          D081R1E_COMPONENT_FIXTURE: /tmp/components-a.json
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1e-component-metadata.json
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_component_diagnostic_tests::tests::retained_component_modal_diagnostic \
+            -- --ignored --exact --nocapture
+          echo 'D-081R1E component modal diagnostic: COMPLETE'
