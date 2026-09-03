@@ -1,0 +1,100 @@
+name: d081r1e0-retained-packed-rhs-oracle
+
+on:
+  push:
+    branches:
+      - research/d081r1e0-retained-packed-rhs-oracle-20260903
+    paths:
+      - docs/audit/BD642_D081R1E0_RETAINED_PACKED_RHS_ORACLE_CONTRACT_2026-09-03.md
+      - native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_packed_rhs_case.py
+      - native/rabbit_cpu/tests/fixtures/d081r1/validate_retained_packed_rhs_case.py
+      - native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json
+      - .github/workflows/d081r1e0_retained_packed_rhs_oracle.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: d081r1e0-retained-packed-rhs-oracle
+  cancel-in-progress: false
+
+jobs:
+  freeze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e0-retained-packed-rhs-oracle-20260903
+          fetch-depth: 0
+
+      - name: Verify frozen authorities and D4 predecessor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 002086662bf2e553c78f4b247868cb1fd9e43f21 HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/_trajectory_core.py)" = 465a73f0ce40f7149bebdc2d67103f388e2344d9
+
+      - name: Recover exact retained state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show '78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz' > /tmp/state_1200.npz
+          echo 'c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/state_1200.npz' | sha256sum -c -
+
+      - name: Install exact Python oracle environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1e0-venv
+          /tmp/d081r1e0-venv/bin/python -m pip install --disable-pip-version-check --only-binary=:all: numpy==2.4.4 scipy==1.17.1
+          /tmp/d081r1e0-venv/bin/python - <<'PY'
+          import platform
+          import numpy
+          import scipy
+          assert platform.python_version() == '3.12.3'
+          assert numpy.__version__ == '2.4.4'
+          assert scipy.__version__ == '1.17.1'
+          print(platform.python_version(), numpy.__version__, scipy.__version__)
+          PY
+
+      - name: Generate and validate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1e0-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_packed_rhs_case.py
+          CHECK=native/rabbit_cpu/tests/fixtures/d081r1/validate_retained_packed_rhs_case.py
+          OUT=native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/retained_a.json
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/retained_b.json
+          cmp /tmp/retained_a.json /tmp/retained_b.json
+          "$PY" "$CHECK" --fixture /tmp/retained_a.json
+          "$PY" "$CHECK" --fixture /tmp/retained_b.json
+          cp /tmp/retained_a.json "$OUT"
+          "$PY" "$CHECK" --fixture "$OUT"
+          sha256sum "$OUT"
+
+      - name: Commit canonical fixture when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          OUT=native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json
+          git add "$OUT"
+          if git diff --cached --quiet; then
+            echo 'canonical fixture already matches'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(d081r1e0): freeze retained packed-RHS oracle'
+          git push origin HEAD:research/d081r1e0-retained-packed-rhs-oracle-20260903
