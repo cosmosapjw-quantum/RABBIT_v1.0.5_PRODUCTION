@@ -23,56 +23,61 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = 1db694531460fe849beb22afaa5f14a0abdf66f9
+          test "$(git rev-parse HEAD^)" = 484dd453ebeed226311ce826fa51a964bf8501c5
           python3 - <<'PY'
           from pathlib import Path
 
-          path = Path('native/rabbit_cpu/src/f10_electron_action_tests.rs')
-          text = path.read_text(encoding='utf-8')
+          path = Path("native/rabbit_cpu/src/f10_electron_action_tests.rs")
+          text = path.read_text(encoding="utf-8")
 
-          anchor = '\nfn assert_hybrid_close(\n'
-          replacement = '''
-fn oracle_bath_energy_scale(value: &Value) -> f64 {
-    value["cases"]
-        .as_array()
-        .expect("fixture cases")
-        .iter()
-        .flat_map(|case| {
-            case["bath_energy_by_family"]
-                .as_object()
-                .expect("bath-energy family map")
-                .values()
-                .map(bits)
-                .collect::<Vec<_>>()
-        })
-        .map(f64::abs)
-        .fold(f64::MIN_POSITIVE, f64::max)
-}
-
-fn assert_hybrid_close(
-'''
+          anchor = "\nfn assert_hybrid_close(\n"
+          function_lines = [
+              "fn oracle_bath_energy_scale(value: &Value) -> f64 {",
+              "    value[\"cases\"]",
+              "        .as_array()",
+              "        .expect(\"fixture cases\")",
+              "        .iter()",
+              "        .flat_map(|case| {",
+              "            case[\"bath_energy_by_family\"]",
+              "                .as_object()",
+              "                .expect(\"bath-energy family map\")",
+              "                .values()",
+              "                .map(bits)",
+              "                .collect::<Vec<_>>()",
+              "        })",
+              "        .map(f64::abs)",
+              "        .fold(f64::MIN_POSITIVE, f64::max)",
+              "}",
+              "",
+              "fn assert_hybrid_close(",
+          ]
+          replacement = "\n" + "\n".join(function_lines)
           if text.count(anchor) != 1:
-              raise SystemExit(f'unexpected assertion anchor count: {text.count(anchor)}')
-          text = text.replace(anchor, '\n' + replacement, 1)
-
-          anchor = '        let family_scale = oracle_family_scale(&full);\n'
-          replacement = anchor + '        let bath_energy_scale = oracle_bath_energy_scale(&metrology);\n        assert!(bath_energy_scale.is_finite() && bath_energy_scale > 0.0);\n'
-          if text.count(anchor) != 1:
-              raise SystemExit(f'unexpected family-scale anchor count: {text.count(anchor)}')
+              raise SystemExit(f"unexpected assertion anchor count: {text.count(anchor)}")
           text = text.replace(anchor, replacement, 1)
 
-          old = '''                    result.bath_energy_by_family[index]
-                        .abs()
-                        .max(bits(&component["bath_energy_by_family"][family_name]).abs())
-                        .max(f64::MIN_POSITIVE),
-'''
-          new = '''                    bath_energy_scale,
-'''
+          anchor = "        let family_scale = oracle_family_scale(&full);\n"
+          replacement = (
+              anchor
+              + "        let bath_energy_scale = oracle_bath_energy_scale(&metrology);\n"
+              + "        assert!(bath_energy_scale.is_finite() && bath_energy_scale > 0.0);\n"
+          )
+          if text.count(anchor) != 1:
+              raise SystemExit(f"unexpected family-scale anchor count: {text.count(anchor)}")
+          text = text.replace(anchor, replacement, 1)
+
+          old = (
+              "                    result.bath_energy_by_family[index]\n"
+              "                        .abs()\n"
+              "                        .max(bits(&component[\"bath_energy_by_family\"][family_name]).abs())\n"
+              "                        .max(f64::MIN_POSITIVE),\n"
+          )
+          new = "                    bath_energy_scale,\n"
           if text.count(old) != 1:
-              raise SystemExit(f'unexpected null-family scale block count: {text.count(old)}')
+              raise SystemExit(f"unexpected null-family scale block count: {text.count(old)}")
           text = text.replace(old, new, 1)
 
-          path.write_text(text, encoding='utf-8')
+          path.write_text(text, encoding="utf-8")
           PY
 
           rustup toolchain install 1.94.1 --profile minimal --component rustfmt
