@@ -1,0 +1,108 @@
+{
+  "schema": "rabbit.d081r1d2.six_species_self_action.v1",
+  "classification": "SIX_SPECIES_SELF_ACTION_ADMITTED",
+  "verdict": "PASS_WITH_ORDER8_SIX_SPECIES_SELF_ACTION_SCOPE",
+  "validated_head": "06d4c6b78c2b3749f0e60c7984f677c90137befb",
+  "validated_tree": "4981c9c5508922b3f9156843200c78493c367f94",
+  "authoritative_workflow_run": 33713911950,
+  "authoritative_workflow_job": 100518975648,
+  "predecessor_final_head": "3c84da625cf6829637045bcec61bacd5227a535a",
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "full_collision_fixture_git_blob": "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302",
+  "self_metrology_fixture_git_blob": "4a15f26e35f210fb666e27e0f09b40a5a975b280",
+  "self_metrology_fixture_sha256": "9e96e1c74434de420af4a04649248b4992f308b8da90cacb3a1f75f1cf38ee86",
+  "self_metrology_generator_git_blob": "52296ebfdc5d8ae5ea23051ef86a455d8772ddeb",
+  "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "rust_toolchain": "1.94.1",
+  "python_oracle_environment": {
+    "numpy": "2.4.4",
+    "scipy": "1.17.1"
+  },
+  "offline_vendor": {
+    "artifact_id": 9838506413,
+    "outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+    "package_directories": 174
+  },
+  "validated_git_blobs": {
+    "self_action_source": "da1decad01aef2f8056e60d3fcc1501e6aa635e9",
+    "self_action_tests": "dcb887960ec38e9055391aa4a8fe36f30e9402ef",
+    "action_grid": "c290857235c65c8e84234db468ed708442a18584",
+    "action_kinematics": "65be42e2344702add0af958c5a1844b1c90020a0",
+    "action_spectral": "fa0eca6f8f4d8f1573c6e24c704b6f5d2dc1c727",
+    "kernel_primitives": "03b0427820b5802540f6217391fe58ffff437ffc",
+    "crate_root": "8ab58b131fbdc2885fc1361d99b1dc9d8ab4327d"
+  },
+  "configuration": {
+    "grid_order": 8,
+    "y_max": 8.0,
+    "self_event_count": 27,
+    "species_count": 6,
+    "physical_family_rows": 9,
+    "incoming_polar_order": 12,
+    "final_polar_order": 12,
+    "final_azimuth_order": 4,
+    "matrix_roundoff_ulps": 1024.0,
+    "leg_routing": [1, 1, -1, -1]
+  },
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 301,
+    "focused_runtime_seconds": 2.70
+  },
+  "checks": {
+    "d1_final_head_is_ancestor": "pass",
+    "authority_blob_identity": "pass",
+    "self_metrology_regeneration_twice": "byte_identical",
+    "cargo_metadata_locked_offline": "pass",
+    "cargo_fmt": "pass",
+    "cargo_check_release_locked_offline": "pass",
+    "cargo_clippy_all_targets_all_features_deny_warnings": "pass",
+    "six_species_modal_and_native_python_parity": "pass",
+    "nine_row_reconstruction": "pass",
+    "number_and_energy_conservation": "pass",
+    "event_h_rate_and_entropy_sign": "pass",
+    "mu_tau_swap_equivariance": "pass",
+    "invalid_input_transactional_refusal": "pass",
+    "load_bearing_mutations": "pass"
+  },
+  "component_metrology": {
+    "root_cause": "the original test compared a self-only Rust rejection counter with the frozen full self-plus-electron counter",
+    "repair": "freeze self-only counters directly from the frozen Python _assemble_self authority; preserve the full fixture unchanged and retain combined=self+electron as a provenance cross-check",
+    "acceptance_threshold_changed": false,
+    "physics_implementation_changed": false,
+    "self_rejections_all_cases": 217728,
+    "combined_rejections": {
+      "equilibrium": 672960,
+      "thermal_split": 677520,
+      "mu_tau_split": 672960
+    },
+    "electron_rejections_by_difference": {
+      "equilibrium": 455232,
+      "thermal_split": 459792,
+      "mu_tau_split": 455232
+    },
+    "self_matrix_roundoff_corrections_all_cases": 0,
+    "largest_self_matrix_roundoff_correction": 0.0
+  },
+  "wolfram_checks": {
+    "component_decomposition_residual": 0,
+    "four_leg_number_residual": 0,
+    "status": "symbolically_checked_stateless"
+  },
+  "scope": [
+    "complete 27-event global neutrino self-collision catalogue",
+    "six explicit neutrino and antineutrino species",
+    "stable Pauli gain-minus-loss factor",
+    "fixed finite-domain four-leg event admission",
+    "modal and native self actions",
+    "nine physical-family row decomposition",
+    "weighted number and energy conservation",
+    "event H-rate and nonnegative entropy-production interpretation",
+    "CP and mu-tau symmetry diagnostics",
+    "nonzero mu-tau antisymmetric response",
+    "fail-closed domain and nonfinite handling"
+  ],
+  "claim_ceiling": "order-8 six-species neutrino self-action parity only; no electron elastic or pair action, combined collision action, retained-state packed RHS, analytic JVP or Jacobian, ODE solver, trajectory, performance, endpoint, N_eff, public-production authority, publication authority, or G-F10-INDEPENDENT-FLRW gate movement"
+}
