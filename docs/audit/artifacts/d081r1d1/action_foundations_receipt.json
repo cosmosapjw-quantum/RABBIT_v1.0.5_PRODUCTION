@@ -1,0 +1,56 @@
+{
+  "authoritative_workflow_run": 33702547853,
+  "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "checks": {
+    "cargo_check_release_locked_offline": "pass",
+    "cargo_clippy_all_targets_all_features_deny_warnings": "pass",
+    "cargo_fmt": "pass",
+    "cargo_metadata_locked_offline": "pass",
+    "fixture_regeneration": "byte_identical"
+  },
+  "claim_ceiling": "foundations only; no full six-species Rust collision action, retained-state RHS, JVP, Jacobian, solver, trajectory, performance, endpoint, N_eff or F10 gate movement",
+  "classification": "GRID_SPECTRAL_KINEMATIC_FOUNDATIONS_ADMITTED",
+  "exact_grid_identity": {
+    "acceptance_threshold_changed": false,
+    "authority": "NumPy 2.4.4 leggauss binary64 values used by the frozen Python comparator",
+    "order": 8,
+    "pre_repair_max_node_absolute_difference": 8.881784197001252e-16,
+    "pre_repair_max_weight_absolute_difference": 2.936539900133539e-14,
+    "repair": "specialize only the admitted order-8 y_max=8 comparator grid to frozen binary64 node/weight bits; retain generic Rust quadrature for all other domains",
+    "y_max": 8.0
+  },
+  "full_action_oracle_git_blob": "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302",
+  "offline_vendor_artifact_id": 9838506413,
+  "offline_vendor_outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+  "predecessor_head": "ae673701ed7bbf9b052c518d73c9bf3b7e295b3d",
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "python_oracle_environment": {
+    "numpy": "2.4.4",
+    "scipy": "1.17.1"
+  },
+  "rust_toolchain": "1.94.1",
+  "schema": "rabbit.d081r1d1.action_foundations.v2",
+  "scope": [
+    "exact affine Gauss-Legendre order-8 grid on [0,8]",
+    "strict cloglog-to-logit chart",
+    "mapped orthonormal Legendre basis, modal coefficients, interpolation and modal products",
+    "native action reconstruction",
+    "GL12 angular, four-midpoint azimuth and GL48 electron half-line rules",
+    "selected massless self, finite-electron elastic and pair-annihilation kinematic batches",
+    "fail-closed invalid inputs and load-bearing mutation checks"
+  ],
+  "sha256": {
+    "fixture": "9ce28f72e81a3bc9a2958ad5b33001cf83e533e1e8946e3823aac7de2e538b7f",
+    "generator": "7029d834f0932a63586cb4bb2f1f7ef62010defdebb065d2f537e56fe0cccbc1",
+    "grid_source": "7e967c9e7e6192d163d915b542e6bbef1f45f0ad95a91e1bb8218e0c6553e683",
+    "kinematic_source": "5b4aa56d877839676aa99d9feb35f8a9885ef130419468ad0d1a688058c72bb3",
+    "spectral_source": "1aa12727d73672c8dadb1320759f568fe2bc23da0d88c1e8897e1ea767a0a5de",
+    "tests": "02db41818a22e2c903b249c4dc9e5a8a99a941309df11fb1fff3e61f4395e0e2"
+  },
+  "tests": {
+    "failed": 0,
+    "passed": 11
+  },
+  "validated_head": "97158eaadf0d27862150c76f695d6028b506ca57",
+  "validated_tree": "f934574914b8691fb77dd609d5ec4832d835fdf9"
+}
