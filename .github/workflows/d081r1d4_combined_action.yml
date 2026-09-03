@@ -30,8 +30,8 @@ jobs:
           test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json)" = c94d2e72a1f8300b7c20c9c793417a5c4a5fa302
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
 
-      - name: Apply bounded definition repair
-        run: python3 .github/scripts/d081r1d4_apply_definition_repair.py
+      - name: Apply bounded definition and mu-tau repair
+        run: python3 .github/scripts/d081r1d4_apply_mu_tau_repair.py
 
       - name: Install exact Rust toolchain
         run: rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
@@ -87,5 +87,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add native/rabbit_cpu/src/f10_combined_action.rs native/rabbit_cpu/src/f10_combined_action_tests.rs
           git diff --cached --check
-          git commit -m "fix(d081r1d4): match frozen symmetry and component metrics"
+          git commit -m "fix(d081r1d4): condition symmetry metrics on array parity"
           git push origin HEAD:research/d081r1d4-combined-action-20260903
