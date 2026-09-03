@@ -1,0 +1,72 @@
+{
+  "schema": "rabbit.d081r1e0.openblas_core_aggregate.v1",
+  "status": "DIAGNOSTIC_ONLY_NO_SCIENTIFIC_GATE_MOVEMENT",
+  "classification": "BYTE_REPRODUCIBLE_IN_PINNED_NUMPY_OPENBLAS_CAPSULE",
+  "byte_reproducible": true,
+  "workflow": {
+    "run_id": 33765534480,
+    "head_sha": "6511b40be553ce4cd4fe14e42051601d92562898",
+    "head_tree": "62b76952c683a2b724d1d6cfc3cbf8e921b38673",
+    "conclusion": "success",
+    "aggregate_artifact_id": 9897356367,
+    "aggregate_artifact_digest": "sha256:8e602b3ecb3c78401225780b1df4f7657e5d8a043aee15362425006e39765255"
+  },
+  "capsule": {
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "numpy_disabled_cpu_features": "X86_V3,X86_V4",
+    "openblas_coretype": "Haswell",
+    "openblas_num_threads": "1",
+    "omp_num_threads": "1",
+    "mkl_num_threads": "1"
+  },
+  "replicas": [
+    {
+      "replica": 0,
+      "cpu_vendor": "GenuineIntel",
+      "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "fixture_sha256": "ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a"
+    },
+    {
+      "replica": 1,
+      "cpu_vendor": "AuthenticAMD",
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "fixture_sha256": "ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a"
+    },
+    {
+      "replica": 2,
+      "cpu_vendor": "AuthenticAMD",
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "fixture_sha256": "ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a"
+    },
+    {
+      "replica": 3,
+      "cpu_vendor": "AuthenticAMD",
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "fixture_sha256": "ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a"
+    }
+  ],
+  "singleton_hash_families": {
+    "packed_state": "623985fb3393bfa6d7eb4c78e7a5c359d14621146fc3f020956c4685eab54cc8",
+    "grid_nodes": "5429623566911d43c71625eb7e14722bd6108d07894800e0a0ca06cc99558c1f",
+    "grid_weights": "dd8480b3591b9bf84e85936fbed411529e3dd4676bc856ba341f2c07c276bf06",
+    "occupation": "87336f6cbd54791bf01d89561e5166c7c0ec7cc9c1fc0d3312cadebb92ae14aa",
+    "cloglog_chain": "426c19c56f61026761ec35df925f10977d0e97b7784a15542c185e577f5f621f",
+    "self_native": "99af5519073ac615ffe03578f995177a93e5424a014fa36b020a44661e69dc2a",
+    "electron_native": "929e3a1e20e5ed72c911df9ecdde4dff3db8a0a1f6404d113636e3d3d2c3bb5c",
+    "total_native": "77c801d3e314a1376d8466860d6e804a03e1282c2ee49468bf5c9d943d7d6bf3",
+    "self_modal": "d2753761f7223f55574b85589b051359f2a2381c6938c76a0ea633657d4686be",
+    "electron_modal": "c8e5a0a74364b53ea472eb4516b525c074ca51ade54a109012070057df1ee1de",
+    "total_modal": "7bcb567f7c62ff39ca6dad324b7c3acdbdfda7da7a5d8e828e1929255142de43",
+    "pair_rate": "34c3df1952759eb6b7cd0daac6c83572db5ece1e81d8abe57b72c13e9eb9d3de",
+    "spectral_rhs": "e5b8511d65cca6f5029d194abb8e7f817c58e90008b1a9a35e5efe65bccc3708",
+    "packed_rhs_trajectory_core": "027d9b31471e66de24d735d724dc73e7b06b3b66958b5a9f5d4bb2bfab0029fc"
+  },
+  "singleton_scalar_families": {
+    "temperature_rhs": "c020fe25574d3bf6",
+    "elapsed_rhs": "43faf23f28d97593",
+    "q_nu": "3bfc050e1efc2fa0",
+    "q_em": "bbfc050e1efc2fa0"
+  }
+}
