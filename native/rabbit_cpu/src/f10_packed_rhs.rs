@@ -45,6 +45,7 @@ pub(crate) struct F10PackedRhsDiagnostics {
 }
 
 #[derive(Clone, Debug)]
+#[cfg_attr(test, derive(PartialEq))]
 pub(crate) struct F10PackedRhs {
     pub(crate) values: Vec<f64>,
     pub(crate) combined_action: F10CombinedAction,
