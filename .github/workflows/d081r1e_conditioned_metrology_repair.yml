@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/d081r1e_conditioned_metrology_repair.yml
       - .github/scripts/d081r1e_apply_conditioned_metrology.py
+      - native/rabbit_cpu/src/f10_packed_rhs_tests.rs
 
 permissions:
   contents: write
@@ -68,20 +69,29 @@ jobs:
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
 
-      - name: Apply bounded test-only repair
+      - name: Apply bounded test-only repair idempotently
         shell: bash
         run: |
           set -euo pipefail
-          python3 .github/scripts/d081r1e_apply_conditioned_metrology.py
+          target='native/rabbit_cpu/src/f10_packed_rhs_tests.rs'
+          if grep -Fq 'let retained_modal_cap = 1.0e-7;' "${target}" \
+            && grep -Fq 'let retained_impact_cap = 1.0e-3;' "${target}" \
+            && grep -Fq 'fn spectral_error_decomposition_worst_ratio(' "${target}"; then
+            echo 'D-081R1E frozen-contract metrology: ALREADY_APPLIED'
+          else
+            python3 .github/scripts/d081r1e_apply_conditioned_metrology.py
+          fi
           cd native/rabbit_cpu
           cargo +1.94.1 fmt --all
           cd ../..
           mapfile -t changed < <(git diff --name-only)
           printf 'changed=%s\n' "${changed[*]-}"
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = "native/rabbit_cpu/src/f10_packed_rhs_tests.rs"
+          test "${#changed[@]}" -le 1
+          if [[ "${#changed[@]}" -eq 1 ]]; then
+            test "${changed[0]}" = "${target}"
+          fi
 
-      - name: Verify conditioned GREEN before commit
+      - name: Verify conditioned GREEN before optional commit
         shell: bash
         working-directory: native/rabbit_cpu
         run: |
@@ -96,13 +106,19 @@ jobs:
           cargo +1.94.1 clippy --all-targets --all-features \
             --locked --offline -- -D warnings
 
-      - name: Commit verified metrology repair
+      - name: Commit verified metrology repair only when changed
         shell: bash
         run: |
           set -euo pipefail
+          target='native/rabbit_cpu/src/f10_packed_rhs_tests.rs'
+          if git diff --quiet -- "${target}"; then
+            echo 'D-081R1E metrology already committed; no mutation required.'
+            exit 0
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add native/rabbit_cpu/src/f10_packed_rhs_tests.rs
+          git add "${target}"
           git diff --cached --check
+          test "$(git diff --cached --name-only)" = "${target}"
           git commit -m 'test(d081r1e): condition retained packed-RHS metrology'
           git push origin HEAD:research/d081r1e-retained-packed-rhs-20260903
