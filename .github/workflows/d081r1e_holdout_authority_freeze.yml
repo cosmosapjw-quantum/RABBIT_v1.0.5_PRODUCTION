@@ -1,0 +1,86 @@
+name: d081r1e-holdout-authority-freeze
+
+on:
+  push:
+    branches:
+      - research/d081r1e-holdout-metrology-20260904
+    paths:
+      - docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md
+      - .github/workflows/d081r1e_holdout_authority_freeze.yml
+
+permissions:
+  contents: read
+
+jobs:
+  freeze-authority:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e-holdout-metrology-20260904
+          fetch-depth: 0
+
+      - name: Verify prospective contract precedes holdout output
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md)" != ''
+          grep -q 'self_modal_global_relative     <= 1.0e-7' docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md
+          grep -q 'maximum_step_impact             <= 1.0e-3' docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md
+          grep -q 'holdout SHA-256:' docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md
+          grep -q 'AUTHORITY_FREEZE_PENDING' docs/audit/D081R1E_HOLDOUT_METROLOGY_CONTRACT_2026-09-04.md
+
+      - name: Recover exact state-2000 bytes and print authority only
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit=78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+          path='.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_2000.npz'
+          test "$(git rev-parse "${commit}:${path}")" = cfb17344ae166c01c2e5bcb14acae0d968e49477
+          git show "${commit}:${path}" > /tmp/state_2000.npz
+          test "$(stat -c '%s' /tmp/state_2000.npz)" = 2103
+          digest="$(sha256sum /tmp/state_2000.npz | awk '{print $1}')"
+          printf 'HOLDOUT_SOURCE_COMMIT=%s\n' "$commit"
+          printf 'HOLDOUT_PATH=%s\n' "$path"
+          printf 'HOLDOUT_GIT_BLOB=%s\n' cfb17344ae166c01c2e5bcb14acae0d968e49477
+          printf 'HOLDOUT_BYTES=%s\n' 2103
+          printf 'HOLDOUT_SHA256=%s\n' "$digest"
+
+      - name: Verify archive structure without evaluating collision or RHS
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import numpy as np
+          from pathlib import Path
+
+          path = Path('/tmp/state_2000.npz')
+          with np.load(path, allow_pickle=False) as archive:
+              keys = sorted(archive.files)
+              expected = ['h', 'order', 'raw', 't', 'y']
+              if keys != expected:
+                  raise SystemExit(f'unexpected keys: {keys}')
+              y = np.asarray(archive['y'], dtype=np.float64).reshape(-1)
+              t = np.asarray(archive['t'], dtype=np.float64).reshape(-1)
+              h = np.asarray(archive['h'], dtype=np.float64).reshape(-1)
+              order = np.asarray(archive['order'], dtype=np.float64).reshape(-1)
+              raw = np.asarray(archive['raw'], dtype=np.float64).reshape(-1)
+          if y.shape != (182,) or not np.all(np.isfinite(y)):
+              raise SystemExit(f'invalid state shape or values: {y.shape}')
+          for name, value in [('t', t), ('h', h), ('order', order), ('raw', raw)]:
+              if value.size == 0 or not np.all(np.isfinite(value)):
+                  raise SystemExit(f'invalid {name} metadata')
+          print('HOLDOUT_ARCHIVE_STRUCTURE=' + json.dumps({
+              'keys': keys,
+              'state_size': int(y.size),
+              'metadata_sizes': {
+                  't': int(t.size),
+                  'h': int(h.size),
+                  'order': int(order.size),
+                  'raw': int(raw.size),
+              },
+          }, sort_keys=True))
+          print('NO_COLLISION_OR_RHS_EVALUATED=true')
+          PY
