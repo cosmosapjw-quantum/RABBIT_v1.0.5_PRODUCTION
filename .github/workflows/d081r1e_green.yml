@@ -6,6 +6,7 @@ on:
       - research/d081r1e-retained-packed-rhs-green-20260903
     paths:
       - .github/scripts/d081r1e_apply_green.py
+      - .github/scripts/d081r1e_apply_config_repair.py
       - .github/workflows/d081r1e_green.yml
   workflow_dispatch:
 
@@ -32,7 +33,9 @@ jobs:
           test "$(git hash-object scripts/audit/_trajectory_core.py)" = 465a73f0ce40f7149bebdc2d67103f388e2344d9
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
           echo 'ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a  native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json' | sha256sum -c -
-          python3 -m py_compile .github/scripts/d081r1e_apply_green.py
+          python3 -m py_compile \
+            .github/scripts/d081r1e_apply_green.py \
+            .github/scripts/d081r1e_apply_config_repair.py
 
       - name: Install exact Rust toolchain
         shell: bash
@@ -76,6 +79,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 .github/scripts/d081r1e_apply_green.py
+          python3 .github/scripts/d081r1e_apply_config_repair.py
           cd native/rabbit_cpu
           cargo +1.94.1 fmt --all
           cd ../..
