@@ -2,13 +2,12 @@
 
 use crate::f10_action_grid::F10ActionGrid;
 use crate::f10_electron_action::{
-    F10ElectronActionConfig, F10ElectronActionError, F10_ELECTRON_MASS_MEV,
+    F10_ELECTRON_MASS_MEV, F10ElectronActionConfig, F10ElectronActionError,
     assemble_electron_action,
 };
 use serde_json::Value;
 
-const FULL_FIXTURE: &str =
-    include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");
+const FULL_FIXTURE: &str = include_str!("../tests/fixtures/d081r1/full_collision_action_case.json");
 const METROLOGY_FIXTURE: &str =
     include_str!("../tests/fixtures/d081r1/electron_collision_action_metrology.json");
 
@@ -214,9 +213,7 @@ mod tests {
                 5.0e-9,
             );
 
-            let expected_order = component["family_order"]
-                .as_array()
-                .expect("family order");
+            let expected_order = component["family_order"].as_array().expect("family order");
             let family_size = 6 * grid.order;
             for (index, encoded_name) in expected_order.iter().enumerate() {
                 let family_name = encoded_name.as_str().expect("family name");
@@ -446,7 +443,10 @@ mod tests {
         assert_scalar_close(
             bath_sum,
             thermal.electromagnetic_energy_transfer,
-            thermal.electromagnetic_energy_transfer.abs().max(f64::MIN_POSITIVE),
+            thermal
+                .electromagnetic_energy_transfer
+                .abs()
+                .max(f64::MIN_POSITIVE),
             6.0e-9,
         );
 
