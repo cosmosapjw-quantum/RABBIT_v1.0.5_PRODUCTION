@@ -1,0 +1,139 @@
+{
+  "schema": "rabbit.d081r1d3.six_species_electron_action.v1",
+  "classification": "SIX_SPECIES_ELECTRON_ACTION_ADMITTED",
+  "verdict": "PASS_WITH_ORDER8_SIX_SPECIES_ELECTRON_ACTION_SCOPE",
+  "validated_workflow_head": "bd74c1f62adf9dfcba88590afeb0306b8ff57129",
+  "validated_workflow_tree": "1b8cea73b534aa0b2f130b0f012d838efd1f2343",
+  "validated_implementation_parent": "b7e82de41d5d62475d2b67d1addfe4ac84125548",
+  "validated_implementation_tree": "46bbfcc14d4cd661d15c05265cf8794b4ca5224d",
+  "authoritative_workflow_run": 33730161205,
+  "authoritative_workflow_job": 100568011787,
+  "predecessor_final_head": "59e21cdf18e34cb5cbcc5ccf08f155f5975f29fb",
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "full_collision_fixture_git_blob": "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302",
+  "electron_metrology_fixture_git_blob": "b927389e5aa0c11d41d2e63c83b04ae633fc464d",
+  "electron_metrology_generator_git_blob": "968ed67ddd40dc6542e82a5d6530fb89694ef138",
+  "electron_metrology_checker_git_blob": "13cd7c8a859425faddf60f3e249300d7e79b542b",
+  "electron_authority_validator_git_blob": "74de6fd1f2756d386fff6021d0a0925f7360d28d",
+  "electron_authority_candidate_sha256": "ed31d6ea60f383156f13b0f6e40eac3dcf10ca5206424571b670ba5b4b3ed040",
+  "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "validated_git_blobs": {
+    "electron_action_source": "8d8acaa75ca15a17cfd5d8cbd85102915bfff352",
+    "electron_action_tests": "83d967f14bca33a0bc7dc9404f6e0af78316a8a2",
+    "crate_root": "2f8deb5124776129102d9c06647183289895c37a"
+  },
+  "rust_toolchain": "1.94.1",
+  "python_oracle_environment": {
+    "numpy": "2.4.4",
+    "scipy": "1.17.1"
+  },
+  "offline_vendor": {
+    "artifact_id": 9838506413,
+    "outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+    "package_directories": 174
+  },
+  "configuration": {
+    "grid_order": 8,
+    "y_max": 8.0,
+    "species_count": 6,
+    "elastic_event_count": 12,
+    "pair_event_count": 3,
+    "electron_event_count": 15,
+    "electron_mass_mev": 0.51099895,
+    "electron_radial_order": 48,
+    "incoming_polar_order": 12,
+    "final_polar_order": 12,
+    "final_azimuth_order": 4,
+    "matrix_roundoff_ulps": 1024.0,
+    "category_native_reconstruction_budget_ulps": 256
+  },
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 305,
+    "focused_runtime_seconds": 13.64
+  },
+  "authority_replay": {
+    "executions": 2,
+    "byte_identical": true,
+    "full_fixture_worst_difference": 0.0,
+    "component_fixture_worst_difference": 0.0,
+    "thermal_neutrino_energy_transfer": 4.764316901390202e-21,
+    "thermal_electromagnetic_energy_transfer": -4.764316901390202e-21,
+    "verdict": "PASS"
+  },
+  "checks": {
+    "d2_final_head_is_ancestor": "pass",
+    "authority_blob_identity": "pass",
+    "electron_authority_replay_twice": "byte_identical",
+    "cargo_metadata_locked_offline": "pass",
+    "cargo_fmt": "pass",
+    "cargo_check_release_locked_offline": "pass",
+    "cargo_clippy_all_targets_all_features_deny_warnings": "pass",
+    "six_species_modal_and_native_python_parity": "pass",
+    "elastic_pair_decomposition": "pass",
+    "fifteen_family_reconstruction": "pass",
+    "modal_to_native_reconstruction": "pass",
+    "equilibrium_near_null": "pass",
+    "thermal_restoring_energy_flow": "pass",
+    "neutrino_electromagnetic_first_law": "pass",
+    "finite_electron_mass_dependency": "pass",
+    "flavour_and_cp_routing": "pass",
+    "independent_h_functional_ledgers": "pass",
+    "invalid_input_transactional_refusal": "pass"
+  },
+  "failure_preservation": {
+    "red": {
+      "workflow_run": 33722560588,
+      "classification": "EXPECTED_NOT_IMPLEMENTED",
+      "fixture_contract_passed": 1,
+      "implementation_tests_failed": 3
+    },
+    "formatting": {
+      "workflow_run": 33728210222,
+      "classification": "RUSTFMT_ONLY",
+      "physics_changed": false
+    },
+    "analytic_null_family_metrology": {
+      "workflow_run": 33728741476,
+      "classification": "NULL_SCALE_METROLOGY_FAILURE",
+      "case": "equilibrium",
+      "family": "nu_e:elastic_minus",
+      "quantity": "electromagnetic_energy_transfer",
+      "rust_value": -9.744960794791936e-37,
+      "python_value": -1.661865958509191e-36,
+      "repair": "use the frozen nonzero thermal family-energy envelope as the absolute scale while retaining the 5e-9 relative tolerance",
+      "physics_changed": false,
+      "fixture_changed": false,
+      "relative_tolerance_changed": false
+    }
+  },
+  "wolfram_checks": {
+    "pauli_affinity_identity_residual": 0,
+    "elastic_first_law_residual": 0,
+    "pair_first_law_residual": 0,
+    "cp_swap_involution_residual": 0,
+    "elastic_relative_temperature_affinity_derivative": "(E1-E3)/T",
+    "elastic_energy_flow_core": "(E1-E3)^2/T",
+    "pair_relative_temperature_affinity_derivative": "(E1+E2)/T",
+    "pair_energy_flow_core": "(E1+E2)^2/T",
+    "status": "symbolically_checked_stateless"
+  },
+  "scope": [
+    "twelve neutrino-electron/positron elastic events",
+    "three electron-positron pair-annihilation events",
+    "six explicit neutrino and antineutrino species",
+    "finite electron mass",
+    "flavour- and CP-dependent weak couplings",
+    "moving electron half-line quadrature",
+    "finite-mass two-body kinematics",
+    "outgoing-neutrino spectral interpolation",
+    "elastic and pair modal/native decomposition",
+    "fifteen electron-family rows",
+    "neutrino and electromagnetic energy-transfer ledgers",
+    "first-law and H-functional diagnostics",
+    "fail-closed domain, nonfinite, and roundoff handling"
+  ],
+  "claim_ceiling": "order-8 six-species electron/positron elastic and pair-annihilation action parity only; no combined self-plus-electron action, retained-state packed RHS, analytic JVP or Jacobian, ODE solver, trajectory, performance, endpoint, N_eff, public-production authority, publication authority, or G-F10-INDEPENDENT-FLRW gate movement"
+}
