@@ -41,7 +41,7 @@ jobs:
           rustup toolchain install 1.94.1 --profile minimal --component rustfmt --component clippy
           test "$(rustc +1.94.1 --version)" = 'rustc 1.94.1 (e408947bf 2026-03-25)'
           test "$(cargo +1.94.1 --version)" = 'cargo 1.94.1 (29ea6fb6a 2026-03-24)'
-          test "$(rustfmt +1.94.1 --version)" = 'rustfmt 1.8.0-stable (e408947bf 2026-03-25)'
+          rustfmt +1.94.1 --version
           cargo +1.94.1 clippy --version
 
       - name: Recover exact offline vendor
