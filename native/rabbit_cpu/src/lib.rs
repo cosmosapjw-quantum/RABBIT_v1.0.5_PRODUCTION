@@ -31,6 +31,9 @@ mod tier1_lrs;
 mod f10_action_foundations_tests;
 
 #[cfg(test)]
+mod f10_combined_action_tests;
+
+#[cfg(test)]
 mod f10_electron_action_tests;
 
 #[cfg(test)]
