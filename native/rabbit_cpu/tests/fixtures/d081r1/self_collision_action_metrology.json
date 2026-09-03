@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "combined": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 672960
+      },
+      "electron_by_difference": {
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 455232
+      },
+      "name": "equilibrium",
+      "self": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 217728
+      }
+    },
+    {
+      "combined": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 677520
+      },
+      "electron_by_difference": {
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 459792
+      },
+      "name": "thermal_split",
+      "self": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 217728
+      }
+    },
+    {
+      "combined": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 672960
+      },
+      "electron_by_difference": {
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 455232
+      },
+      "name": "mu_tau_split",
+      "self": {
+        "largest_matrix_roundoff_correction_bits": "0000000000000000",
+        "matrix_roundoff_corrections": 0,
+        "whole_reaction_domain_rejections": 217728
+      }
+    }
+  ],
+  "component_boundary": "self fields are emitted directly by _assemble_self; combined fields come from evaluate_independent_collision_action only as a provenance cross-check and are not self-action acceptance targets",
+  "full_collision_fixture_git_blob": "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302",
+  "order": 8,
+  "private_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "schema": "rabbit.d081r1d2.self_action_metrology.v1",
+  "self_event_count": 27,
+  "y_max_bits": "4020000000000000"
+}
