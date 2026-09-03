@@ -104,7 +104,7 @@ jobs:
                           "native_scale": scale,
                           "max_native_over_scale": maximum / scale,
                           "max_native_over_eps_scale": maximum / (np.finfo(np.float64).eps * scale),
-                          "worst_index": list(index),
+                          "worst_index": [int(value) for value in index],
                           "reconstructed": float(reconstructed[index]),
                           "native": float(native[index]),
                           "elastic_native": float(elastic_native[index]),
