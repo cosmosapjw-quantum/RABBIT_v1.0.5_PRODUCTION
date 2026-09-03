@@ -1,0 +1,37 @@
+{
+  "schema": "rabbit.d081r1e.holdout_authority.v1",
+  "status": "HOLDOUT_BYTES_FROZEN_BEFORE_PHYSICS_OUTPUT",
+  "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+  "contract_commit": "d98d725c6e252180a4108fb572e97b6a90c00887",
+  "authority_freeze_commit": "d22923fd9211a66a4c385c5752b372a879168ea9",
+  "source_commit": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_2000.npz",
+  "git_blob": "cfb17344ae166c01c2e5bcb14acae0d968e49477",
+  "bytes": 2103,
+  "sha256": "780ad7c1388caec23f02012781717d43ffb85d96d4d501c40c504939e7c9a44d",
+  "workflow_run": 33804815829,
+  "workflow_job": 100812636614,
+  "completed_steps": {
+    "prospective_threshold_contract_present": true,
+    "historical_source_commit_verified": true,
+    "git_blob_verified": true,
+    "byte_count_verified": true,
+    "sha256_verified": true,
+    "collision_evaluated": false,
+    "packed_rhs_evaluated": false
+  },
+  "blocked_optional_step": {
+    "name": "archive_structure_check",
+    "classification": "CI_ORCHESTRATION_FAILURE_MISSING_NUMPY",
+    "message": "ModuleNotFoundError: No module named 'numpy'",
+    "scientific_failure": false
+  },
+  "prospective_caps": {
+    "self_modal_global_relative": 1e-7,
+    "electron_modal_global_relative": 1e-7,
+    "total_modal_global_relative": 1e-7,
+    "maximum_step_impact": 1e-3,
+    "first_law_residual": 5e-13
+  },
+  "claim_ceiling": "exact state_2000 byte authority and prospectively frozen metrology caps only; no holdout collision, RHS, Jacobian, solver, trajectory or F10 gate claim"
+}
