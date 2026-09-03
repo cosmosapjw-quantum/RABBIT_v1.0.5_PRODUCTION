@@ -27,7 +27,7 @@ jobs:
           set -euo pipefail
           validated_head=97158eaadf0d27862150c76f695d6028b506ca57
           validated_tree=f934574914b8691fb77dd609d5ec4832d835fdf9
-          test "$(git show "${validated_head}^{tree}" --format=%T --no-patch)" = "${validated_tree}"
+          test "$(git rev-parse "${validated_head}^{tree}")" = "${validated_tree}"
           git merge-base --is-ancestor "${validated_head}" HEAD
           test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/33702547853 --jq .head_sha)" = "${validated_head}"
           test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/33702547853 --jq .status)" = completed
@@ -95,7 +95,7 @@ jobs:
                   "cargo_fmt": "pass",
                   "cargo_check_release_locked_offline": "pass",
                   "cargo_clippy_all_targets_all_features_deny_warnings": "pass",
-                  "fixture_regeneration": "byte_identical",
+                  "fixture_regeneration": "byte_identical"
               },
               "exact_grid_identity": {
                   "order": 8,
@@ -104,7 +104,7 @@ jobs:
                   "pre_repair_max_node_absolute_difference": 8.881784197001252e-16,
                   "pre_repair_max_weight_absolute_difference": 2.936539900133539e-14,
                   "repair": "specialize only the admitted order-8 y_max=8 comparator grid to frozen binary64 node/weight bits; retain generic Rust quadrature for all other domains",
-                  "acceptance_threshold_changed": False,
+                  "acceptance_threshold_changed": False
               },
               "scope": [
                   "exact affine Gauss-Legendre order-8 grid on [0,8]",
@@ -113,12 +113,12 @@ jobs:
                   "native action reconstruction",
                   "GL12 angular, four-midpoint azimuth and GL48 electron half-line rules",
                   "selected massless self, finite-electron elastic and pair-annihilation kinematic batches",
-                  "fail-closed invalid inputs and load-bearing mutation checks",
+                  "fail-closed invalid inputs and load-bearing mutation checks"
               ],
               "claim_ceiling": (
                   "foundations only; no full six-species Rust collision action, retained-state RHS, "
                   "JVP, Jacobian, solver, trajectory, performance, endpoint, N_eff or F10 gate movement"
-              ),
+              )
           }
           Path("docs/audit/artifacts/d081r1d1/action_foundations_receipt.json").write_text(
               json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
