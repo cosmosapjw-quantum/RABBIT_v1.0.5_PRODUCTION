@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - research/d081r1d1-foundations-20260903
+    paths:
+      - .github/workflows/d081r1d1_foundations_closeout.yml
 
 permissions:
   contents: write
@@ -21,7 +23,7 @@ jobs:
           ref: research/d081r1d1-foundations-20260903
           fetch-depth: 0
 
-      - name: Verify the exact admitted head and authoritative workflow
+      - name: Verify exact admitted source and workflow
         shell: bash
         run: |
           set -euo pipefail
@@ -36,7 +38,7 @@ jobs:
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
           test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json)" = c94d2e72a1f8300b7c20c9c793417a5c4a5fa302
 
-      - name: Recreate and freeze the deterministic foundations fixture
+      - name: Recreate deterministic foundations fixture
         shell: bash
         run: |
           set -euo pipefail
@@ -190,43 +192,27 @@ jobs:
           EOF
           python3 -m json.tool docs/audit/artifacts/d081r1d1/action_foundations_receipt.json >/dev/null
 
-      - name: Remove temporary workflows and retrigger marker
+      - name: Commit evidence only
         shell: bash
         run: |
           set -euo pipefail
-          rm .github/d081r1d1_exact_head_retrigger.txt
-          rm .github/workflows/d081r1d1_foundations.yml
-          rm .github/workflows/d081r1d1_spectral_diagnostic.yml
-          rm .github/workflows/d081r1d1_grid_association_diagnostic.yml
-          rm .github/workflows/d081r1d1_exact_grid_bits.yml
-          rm .github/workflows/d081r1d1_foundations_closeout.yml
-
           expected="$(cat <<'EOF'
           docs/audit/BD638_D081R1D1_ACTION_FOUNDATIONS_RESULT_2026-09-03.md
           docs/audit/artifacts/d081r1d1/action_foundations_receipt.json
-          native/rabbit_cpu/src/f10_action_foundations_tests.rs
-          native/rabbit_cpu/src/f10_action_grid.rs
-          native/rabbit_cpu/src/f10_action_kinematics.rs
-          native/rabbit_cpu/src/f10_action_spectral.rs
-          native/rabbit_cpu/src/lib.rs
           native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json
-          native/rabbit_cpu/tests/fixtures/d081r1/generate_action_foundations_case.py
           EOF
           )"
-          actual="$(git diff --name-only ae673701ed7bbf9b052c518d73c9bf3b7e295b3d | sort)"
+          git add \
+            docs/audit/BD638_D081R1D1_ACTION_FOUNDATIONS_RESULT_2026-09-03.md \
+            docs/audit/artifacts/d081r1d1/action_foundations_receipt.json \
+            native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json
+          actual="$(git diff --cached --name-only | sort)"
           if [[ "${actual}" != "${expected}" ]]; then
-            printf 'Unexpected final paths.\nExpected:\n%s\nActual:\n%s\n' "${expected}" "${actual}" >&2
+            printf 'Unexpected staged paths.\nExpected:\n%s\nActual:\n%s\n' "${expected}" "${actual}" >&2
             exit 1
           fi
-          git diff --check
-
-      - name: Commit the final foundations closeout
-        shell: bash
-        run: |
-          set -euo pipefail
+          git diff --cached --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          git commit -m "feat(d081r1d1): admit exact Rust action foundations"
+          git commit -m "docs(d081r1d1): publish exact action-foundation evidence"
           git push origin HEAD:research/d081r1d1-foundations-20260903
