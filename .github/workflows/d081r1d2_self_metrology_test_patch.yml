@@ -35,78 +35,26 @@ jobs:
               raise SystemExit("unexpected full fixture declaration count")
           text = text.replace(old, new)
 
-          old = '''fn fixture() -> Value {
-    serde_json::from_str(FIXTURE).expect("valid frozen D-081R1 full-action fixture")
-}
-'''
-          new = old + '''
-fn self_metrology_fixture() -> Value {
-    serde_json::from_str(SELF_METROLOGY_FIXTURE)
-        .expect("valid frozen D-081R1D2 self-action metrology fixture")
-}
-'''
+          old = 'fn fixture() -> Value {\n    serde_json::from_str(FIXTURE).expect("valid frozen D-081R1 full-action fixture")\n}\n'
+          new = old + '\nfn self_metrology_fixture() -> Value {\n    serde_json::from_str(SELF_METROLOGY_FIXTURE)\n        .expect("valid frozen D-081R1D2 self-action metrology fixture")\n}\n'
           if text.count(old) != 1:
               raise SystemExit("unexpected fixture parser count")
           text = text.replace(old, new)
 
-          old = '''    fn frozen_fixture_contract_is_exact() {
-        let value = fixture();
-'''
-          new = '''    fn frozen_fixture_contract_is_exact() {
-        let value = fixture();
-        let self_metrology = self_metrology_fixture();
-        assert_eq!(
-            self_metrology["schema"],
-            "rabbit.d081r1d2.self_action_metrology.v1"
-        );
-        assert_eq!(self_metrology["self_event_count"], 27);
-        assert_eq!(
-            self_metrology["private_comparator_git_blob"],
-            "de44feee0aa484abe26976c7dc34c579643005b5"
-        );
-        assert_eq!(
-            self_metrology["full_collision_fixture_git_blob"],
-            "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302"
-        );
-'''
+          old = '    fn frozen_fixture_contract_is_exact() {\n        let value = fixture();\n'
+          new = '    fn frozen_fixture_contract_is_exact() {\n        let value = fixture();\n        let self_metrology = self_metrology_fixture();\n        assert_eq!(\n            self_metrology["schema"],\n            "rabbit.d081r1d2.self_action_metrology.v1"\n        );\n        assert_eq!(self_metrology["self_event_count"], 27);\n        assert_eq!(\n            self_metrology["private_comparator_git_blob"],\n            "de44feee0aa484abe26976c7dc34c579643005b5"\n        );\n        assert_eq!(\n            self_metrology["full_collision_fixture_git_blob"],\n            "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302"\n        );\n'
           if text.count(old) != 1:
               raise SystemExit("unexpected fixture contract test header")
           text = text.replace(old, new)
 
-          old = '''    fn six_species_self_action_matches_every_frozen_python_case() {
-        let value = fixture();
-'''
-          new = '''    fn six_species_self_action_matches_every_frozen_python_case() {
-        let value = fixture();
-        let self_metrology = self_metrology_fixture();
-'''
+          old = '    fn six_species_self_action_matches_every_frozen_python_case() {\n        let value = fixture();\n'
+          new = '    fn six_species_self_action_matches_every_frozen_python_case() {\n        let value = fixture();\n        let self_metrology = self_metrology_fixture();\n'
           if text.count(old) != 1:
               raise SystemExit("unexpected main parity test header")
           text = text.replace(old, new)
 
-          old = '''        for case in value["cases"].as_array().expect("fixture cases") {
-            let pair_cloglog = bit_array(&case["pair_cloglog"]);
-'''
-          new = '''        for case in value["cases"].as_array().expect("fixture cases") {
-            let case_name = case["name"].as_str().expect("fixture case name");
-            let self_case = named_case(&self_metrology, case_name);
-            let expected_self = &self_case["self"];
-            let expected_combined = &self_case["combined"];
-            let expected_electron = &self_case["electron_by_difference"];
-            let self_rejections = expected_self["whole_reaction_domain_rejections"]
-                .as_u64()
-                .expect("self rejection count");
-            let combined_rejections = expected_combined["whole_reaction_domain_rejections"]
-                .as_u64()
-                .expect("combined rejection count");
-            let electron_rejections = expected_electron["whole_reaction_domain_rejections"]
-                .as_u64()
-                .expect("electron rejection count");
-            assert_eq!(combined_rejections - self_rejections, electron_rejections);
-            assert!(combined_rejections > self_rejections);
-
-            let pair_cloglog = bit_array(&case["pair_cloglog"]);
-'''
+          old = '        for case in value["cases"].as_array().expect("fixture cases") {\n            let pair_cloglog = bit_array(&case["pair_cloglog"]);\n'
+          new = '        for case in value["cases"].as_array().expect("fixture cases") {\n            let case_name = case["name"].as_str().expect("fixture case name");\n            let self_case = named_case(&self_metrology, case_name);\n            let expected_self = &self_case["self"];\n            let expected_combined = &self_case["combined"];\n            let expected_electron = &self_case["electron_by_difference"];\n            let self_rejections = expected_self["whole_reaction_domain_rejections"]\n                .as_u64()\n                .expect("self rejection count");\n            let combined_rejections = expected_combined["whole_reaction_domain_rejections"]\n                .as_u64()\n                .expect("combined rejection count");\n            let electron_rejections = expected_electron["whole_reaction_domain_rejections"]\n                .as_u64()\n                .expect("electron rejection count");\n            assert_eq!(combined_rejections - self_rejections, electron_rejections);\n            assert!(combined_rejections > self_rejections);\n\n            let pair_cloglog = bit_array(&case["pair_cloglog"]);\n'
           if text.count(old) != 1:
               raise SystemExit("unexpected parity loop header")
           text = text.replace(old, new)
@@ -118,7 +66,9 @@ fn self_metrology_fixture() -> Value {
           }
           for before, after in replacements.items():
               if text.count(before) != 1:
-                  raise SystemExit(f"unexpected occurrence count for {before!r}: {text.count(before)}")
+                  raise SystemExit(
+                      f"unexpected occurrence count for {before!r}: {text.count(before)}"
+                  )
               text = text.replace(before, after)
 
           path.write_text(text, encoding="utf-8")
