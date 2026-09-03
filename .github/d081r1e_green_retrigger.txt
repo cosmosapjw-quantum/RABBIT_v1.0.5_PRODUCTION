@@ -1,0 +1,6 @@
+D-081R1E exact-head GREEN retrigger
+
+Formatted implementation parent:
+eeeaa446e90ff7543e55352e81eaf7b4978bbcdd
+
+This temporary marker exists only to trigger the exact-offline GREEN workflow after the bounded rustfmt repair. Remove it before final PR closeout.
