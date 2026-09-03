@@ -1,3 +1,4 @@
+# Exact-head RED rerun after Rust 1.94.1 formatting-only repair.
 name: d081r1d3-electron-action-red
 
 on:
