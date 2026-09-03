@@ -1,0 +1,164 @@
+name: d081r1e-retained-oracle-grid-preflight
+
+on:
+  push:
+    branches:
+      - research/d081r1e-retained-packed-rhs-20260903
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      R1E_BRANCH: research/d081r1e-retained-packed-rhs-20260903
+      RETAINED_COMMIT: 78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b
+      RETAINED_PATH: .agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz
+      RETAINED_SHA256: c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e-retained-packed-rhs-20260903
+          fetch-depth: 0
+
+      - name: Verify D4 lineage and frozen source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 002086662bf2e553c78f4b247868cb1fd9e43f21 HEAD
+          test "$(git rev-parse 002086662bf2e553c78f4b247868cb1fd9e43f21^{tree})" = d01ae7c0d3d9fbe8ce9513d054b835d3596f1de2
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/_trajectory_core.py)" = 465a73f0ce40f7149bebdc2d67103f388e2344d9
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+
+      - name: Install exact Python oracle environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 --version
+          python3 -m pip install --disable-pip-version-check --no-input \
+            numpy==2.4.4 scipy==1.17.1
+          python3 - <<'PY'
+          import numpy, scipy
+          assert numpy.__version__ == "2.4.4"
+          assert scipy.__version__ == "1.17.1"
+          print("NumPy", numpy.__version__)
+          print("SciPy", scipy.__version__)
+          PY
+
+      - name: Recover and verify retained state authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "${RETAINED_COMMIT}^{commit}"
+          git show "${RETAINED_COMMIT}:${RETAINED_PATH}" > /tmp/state_1200.npz
+          echo "${RETAINED_SHA256}  /tmp/state_1200.npz" | sha256sum -c -
+
+      - name: Generate retained packed-RHS oracle twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          generator=native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_packed_rhs_case.py
+          output=native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json
+          repair=native/rabbit_cpu/tests/fixtures/d081r1/apply_retained_order60_grid_identity.py
+          python3 -m py_compile "${generator}" "${repair}"
+          python3 "${generator}" --retained /tmp/state_1200.npz --output "${output}"
+          cp "${output}" /tmp/retained_packed_rhs_case.first.json
+          python3 "${generator}" --retained /tmp/state_1200.npz --output "${output}"
+          cmp /tmp/retained_packed_rhs_case.first.json "${output}"
+          sha256sum "${output}"
+
+      - name: Install exact Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
+          rustc +1.94.1 --version
+          cargo +1.94.1 --version
+
+      - name: Recover exact offline vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip > /tmp/vendor.zip
+          echo "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/vendor.zip" | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          vendor_dir="$(find /tmp/vendor-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            archive="$(find /tmp/vendor-outer -type f \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' -o -name '*.tar' -o -name '*.zip' \) -print -quit)"
+            case "${archive}" in
+              *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar.xz) tar -xJf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar) tar -xf "${archive}" -C /tmp/vendor-expanded ;;
+              *.zip) unzip -q "${archive}" -d /tmp/vendor-expanded ;;
+              *) echo "no supported vendor archive" >&2; exit 1 ;;
+            esac
+            vendor_dir="$(find /tmp/vendor-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Observe RED and apply only the bounded GL60 identity repair
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1e-metadata.json
+          set +e
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_preflight_tests::tests::retained_order60_grid_matches_frozen_numpy_binary64_operator \
+            -- --nocapture > /tmp/d081r1e-grid-red.log 2>&1
+          red_status=$?
+          set -e
+          cat /tmp/d081r1e-grid-red.log
+          if [[ ${red_status} -ne 0 ]]; then
+            grep -Eq 'generic Rust GL60/Y30 (nodes|weights) differ' /tmp/d081r1e-grid-red.log
+            cd ../..
+            python3 native/rabbit_cpu/tests/fixtures/d081r1/apply_retained_order60_grid_identity.py
+            cd native/rabbit_cpu
+            cargo +1.94.1 fmt --all
+          else
+            echo "generic Rust GL60/Y30 rule is already byte-identical to NumPy"
+          fi
+
+      - name: Run exact offline R1E0 preflight
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_preflight_tests::tests -- --nocapture \
+            | tee /tmp/d081r1e-preflight-tests.log
+          grep -Eq '2 passed; 0 failed' /tmp/d081r1e-preflight-tests.log
+          cargo +1.94.1 clippy --all-targets --all-features \
+            --locked --offline -- -D warnings
+
+      - name: Commit deterministic oracle and admitted grid identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json \
+            native/rabbit_cpu/src/f10_action_grid.rs
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "no generated authority or grid change"
+            exit 0
+          fi
+          git commit -m "test(d081r1e): freeze retained oracle and order-60 grid identity"
+          git push origin HEAD:${R1E_BRANCH}
