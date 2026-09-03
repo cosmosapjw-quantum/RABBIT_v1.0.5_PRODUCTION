@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Apply the bounded D-081R1E conditioning-aware admission metrology.
+"""Apply the frozen D-081R1E conditioning-aware admission metrology.
 
-This script changes only the retained packed-RHS test metrology. It does not
+This script changes only retained packed-RHS test metrology. It does not
 modify collision physics, coefficients, quadrature, fixtures, the Rust RHS
 implementation, or production solver tolerances. Raw modal, native, and
-spectral forward residuals remain reported. Admission uses the frozen modal
-block bound, propagation through modal-to-native reconstruction, an exact
-RHS discrepancy decomposition, and a prospectively fixed retained-step
-local-error-budget cap.
+spectral forward residuals remain reported. Admission uses the prospectively
+frozen holdout contract at commit d98d725c6e252180a4108fb572e97b6a90c00887:
+total modal global residual at most 1e-7, retained-step impact at most 1e-3,
+and first-law residual at most 5e-13. Component modal gates are evaluated by
+the dedicated component diagnostic and unseen state-2000 holdout lanes.
 """
 
 from __future__ import annotations
@@ -175,15 +176,16 @@ fn retained_step_impact_ratio(
 }
 
 fn spectral_error_decomposition_worst_ratio(
-    actual_rhs: &[f64],
-    expected_rhs: &[f64],
-    actual_pair_rate: &[f64],
-    expected_pair_rate: &[f64],
-    actual_chain: &[f64],
-    expected_chain: &[f64],
-    actual_hubble: f64,
-    expected_hubble: f64,
+    rhs: (&[f64], &[f64]),
+    pair_rate: (&[f64], &[f64]),
+    chain: (&[f64], &[f64]),
+    hubble: (f64, f64),
 ) -> f64 {
+    let (actual_rhs, expected_rhs) = rhs;
+    let (actual_pair_rate, expected_pair_rate) = pair_rate;
+    let (actual_chain, expected_chain) = chain;
+    let (actual_hubble, expected_hubble) = hubble;
+
     assert_eq!(actual_rhs.len(), expected_rhs.len());
     assert_eq!(actual_rhs.len(), actual_pair_rate.len());
     assert_eq!(actual_rhs.len(), expected_pair_rate.len());
@@ -243,9 +245,10 @@ fn spectral_error_decomposition_worst_ratio(
             modal_scale,
             5.0e-7,
         );
+        let retained_modal_cap = 1.0e-7;
         assert!(
-            modal_block_residual <= 5.0e-7,
-            "modal block residual exceeded the frozen threshold: {modal_block_residual:.17e}"
+            modal_block_residual <= retained_modal_cap,
+            "modal block residual exceeded the prospectively frozen threshold: {modal_block_residual:.17e}"
         );
 
         let temperature_cm = bits(&value["temperature_cm_bits"]);
@@ -286,7 +289,7 @@ fn spectral_error_decomposition_worst_ratio(
             "conditioned native gate did not kill an order-one native-only mutation"
         );
         eprintln!(
-            "D081R1E_METROLOGY modal_block={modal_block_residual:.17e} modal_local_forward_ratio={modal_local_forward_ratio:.17e} native_block={native_block_residual:.17e} native_conditioned_ratio={native_conditioned_ratio:.17e} native_local_forward_ratio={native_local_forward_ratio:.17e}"
+            "D081R1E_METROLOGY retained_modal_cap={retained_modal_cap:.17e} modal_block={modal_block_residual:.17e} modal_local_forward_ratio={modal_local_forward_ratio:.17e} native_block={native_block_residual:.17e} native_conditioned_ratio={native_conditioned_ratio:.17e} native_local_forward_ratio={native_local_forward_ratio:.17e}"
         );
 '''
     text = replace_once(text, old_action, new_action, "retained action parity block")
@@ -308,7 +311,7 @@ fn spectral_error_decomposition_worst_ratio(
         let retained_step = retained_h_values[0].abs();
         let retained_atol = 1.0e-9;
         let retained_rtol = 1.0e-6;
-        let retained_impact_cap = 1.0e-1;
+        let retained_impact_cap = 1.0e-3;
         let (step_impact_ratio, step_impact_index) = retained_step_impact_ratio(
             &result.values[..180],
             &expected_spectral,
@@ -323,14 +326,13 @@ fn spectral_error_decomposition_worst_ratio(
         let expected_chain = bit_array(&value["cloglog_chain_factor"]);
         let actual_chain = chart_chain(&state, 180);
         let decomposition_ratio = spectral_error_decomposition_worst_ratio(
-            &result.values[..180],
-            &expected_spectral,
-            &actual_pair_rate,
-            &expected_pair_rate,
-            &actual_chain,
-            &expected_chain,
-            result.diagnostics.hubble_mev,
-            bits(&value["hubble_mev_bits"]),
+            (&result.values[..180], expected_spectral.as_slice()),
+            (actual_pair_rate.as_slice(), expected_pair_rate.as_slice()),
+            (actual_chain.as_slice(), expected_chain.as_slice()),
+            (
+                result.diagnostics.hubble_mev,
+                bits(&value["hubble_mev_bits"]),
+            ),
         );
         assert!(
             decomposition_ratio <= 1.0e-9,
@@ -339,6 +341,19 @@ fn spectral_error_decomposition_worst_ratio(
         assert!(
             step_impact_ratio <= retained_impact_cap,
             "spectral discrepancy consumes too much of the frozen retained-step local-error budget: {step_impact_ratio:.17e} at index {step_impact_index}"
+        );
+
+        let first_law_cap = 5.0e-13;
+        let expected_first_law = bits(&value["first_law_residual_bits"]);
+        assert!(
+            result.diagnostics.first_law_residual.abs() <= first_law_cap,
+            "Rust first-law residual exceeded the frozen threshold: {:.17e}",
+            result.diagnostics.first_law_residual.abs(),
+        );
+        assert!(
+            expected_first_law.abs() <= first_law_cap,
+            "Python first-law residual exceeded the frozen threshold: {:.17e}",
+            expected_first_law.abs(),
         );
 
         let mut spectral_mutant = result.values[..180].to_vec();
@@ -358,7 +373,9 @@ fn spectral_error_decomposition_worst_ratio(
             "retained-step gate did not kill a two-budget spectral mutation"
         );
         eprintln!(
-            "D081R1E_METROLOGY spectral_block={spectral_block_residual:.17e} spectral_local_forward_ratio={spectral_local_forward_ratio:.17e} retained_step={retained_step:.17e} retained_atol={retained_atol:.17e} retained_rtol={retained_rtol:.17e} retained_impact_cap={retained_impact_cap:.17e} step_impact_ratio={step_impact_ratio:.17e} step_impact_index={step_impact_index} decomposition_ratio={decomposition_ratio:.17e}"
+            "D081R1E_METROLOGY spectral_block={spectral_block_residual:.17e} spectral_local_forward_ratio={spectral_local_forward_ratio:.17e} retained_step={retained_step:.17e} retained_atol={retained_atol:.17e} retained_rtol={retained_rtol:.17e} retained_impact_cap={retained_impact_cap:.17e} step_impact_ratio={step_impact_ratio:.17e} step_impact_index={step_impact_index} decomposition_ratio={decomposition_ratio:.17e} first_law_cap={first_law_cap:.17e} rust_first_law={:.17e} python_first_law={:.17e}",
+            result.diagnostics.first_law_residual.abs(),
+            expected_first_law.abs(),
         );
 '''
     text = replace_once(text, old_spectral, new_spectral, "spectral parity block")
@@ -370,7 +387,7 @@ fn spectral_error_decomposition_worst_ratio(
     )
 
     TESTS.write_text(text, encoding="utf-8")
-    print("D-081R1E conditioned step-impact metrology: CHANGED")
+    print("D-081R1E frozen-contract metrology: CHANGED")
 
 
 if __name__ == "__main__":
