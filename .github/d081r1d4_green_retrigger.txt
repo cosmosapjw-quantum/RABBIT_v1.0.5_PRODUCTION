@@ -1,0 +1,2 @@
+D-081R1D4 exact formatted-source admission retrigger.
+No physics, fixture, tolerance, or acceptance change.
