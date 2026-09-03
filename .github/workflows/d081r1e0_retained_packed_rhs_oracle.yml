@@ -1,4 +1,5 @@
 name: d081r1e0-retained-packed-rhs-oracle
+# Exact-head readback after the canonical fixture commit.
 
 on:
   push:
