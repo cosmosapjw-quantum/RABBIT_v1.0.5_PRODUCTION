@@ -277,8 +277,7 @@ pub(crate) fn evaluate_f10_packed_rhs(
         first_law_residual: combined_action.first_law_residual,
         whole_reaction_domain_rejections: combined_action.whole_reaction_domain_rejections,
         matrix_roundoff_corrections: combined_action.matrix_roundoff_corrections,
-        largest_matrix_roundoff_correction: combined_action
-            .largest_matrix_roundoff_correction,
+        largest_matrix_roundoff_correction: combined_action.largest_matrix_roundoff_correction,
     };
 
     if [

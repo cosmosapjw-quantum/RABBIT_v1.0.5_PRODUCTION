@@ -1,9 +1,7 @@
 //! RED-first admission tests for the D-081R1E retained packed RHS.
 
 use crate::f10_action_grid::F10ActionGrid;
-use crate::f10_packed_rhs::{
-    F10PackedRhsConfig, F10PackedRhsError, evaluate_f10_packed_rhs,
-};
+use crate::f10_packed_rhs::{F10PackedRhsConfig, F10PackedRhsError, evaluate_f10_packed_rhs};
 use serde_json::Value;
 
 const RETAINED_FIXTURE: &str =
@@ -66,13 +64,11 @@ fn assert_hybrid_close(
     relative_tolerance: f64,
 ) {
     assert_eq!(actual.len(), expected.len());
-    let absolute_floor =
-        1_048_576.0 * f64::EPSILON * reference_scale.max(f64::MIN_POSITIVE);
+    let absolute_floor = 1_048_576.0 * f64::EPSILON * reference_scale.max(f64::MIN_POSITIVE);
     let mut worst_ratio = 0.0_f64;
     let mut worst_index = 0_usize;
     for (index, (&observed, &reference)) in actual.iter().zip(expected).enumerate() {
-        let allowed = absolute_floor
-            + relative_tolerance * observed.abs().max(reference.abs());
+        let allowed = absolute_floor + relative_tolerance * observed.abs().max(reference.abs());
         let difference = (observed - reference).abs();
         let ratio = difference / allowed.max(f64::MIN_POSITIVE);
         if ratio > worst_ratio {
@@ -87,16 +83,9 @@ fn assert_hybrid_close(
 }
 
 #[track_caller]
-fn assert_scalar_close(
-    actual: f64,
-    expected: f64,
-    scale: f64,
-    relative_tolerance: f64,
-) {
-    let absolute_floor =
-        1_048_576.0 * f64::EPSILON * scale.abs().max(f64::MIN_POSITIVE);
-    let allowed = absolute_floor
-        + relative_tolerance * actual.abs().max(expected.abs());
+fn assert_scalar_close(actual: f64, expected: f64, scale: f64, relative_tolerance: f64) {
+    let absolute_floor = 1_048_576.0 * f64::EPSILON * scale.abs().max(f64::MIN_POSITIVE);
+    let allowed = absolute_floor + relative_tolerance * actual.abs().max(expected.abs());
     assert!(
         (actual - expected).abs() <= allowed,
         "scalar mismatch: actual={actual:.17e}, expected={expected:.17e}, allowed={allowed:.17e}"
@@ -119,8 +108,7 @@ fn pair_rate(native: &[f64], order: usize) -> Vec<f64> {
     for flavour in 0..3 {
         for node in 0..order {
             result[flavour * order + node] = 0.5
-                * (native[(2 * flavour) * order + node]
-                    + native[(2 * flavour + 1) * order + node]);
+                * (native[(2 * flavour) * order + node] + native[(2 * flavour + 1) * order + node]);
         }
     }
     result
@@ -182,10 +170,7 @@ mod tests {
     fn retained_oracle_and_control_contracts_are_exact() {
         let retained = retained_fixture();
         let control = control_fixture();
-        assert_eq!(
-            retained["schema"],
-            "rabbit.d081r1e.retained_packed_rhs.v1"
-        );
+        assert_eq!(retained["schema"], "rabbit.d081r1e.retained_packed_rhs.v1");
         assert_eq!(
             retained["d4_head"],
             "002086662bf2e553c78f4b247868cb1fd9e43f21"
@@ -201,10 +186,7 @@ mod tests {
         assert_eq!(retained["order"], 60);
         assert_eq!(retained["packed_state"]["shape"][0], 182);
         assert_eq!(retained["packed_rhs"]["shape"][0], 182);
-        assert_eq!(
-            control["schema"],
-            "rabbit.d081r1.full_collision_action.v1"
-        );
+        assert_eq!(control["schema"], "rabbit.d081r1.full_collision_action.v1");
         assert_eq!(control["order"], 8);
         assert_eq!(control["self_event_count"], 27);
         assert_eq!(control["electron_event_count"], 15);
@@ -216,13 +198,8 @@ mod tests {
         let grid = F10ActionGrid::affine_legendre(60, 30.0).unwrap();
         let state = bit_array(&value["packed_state"]);
         let ln_a = bits(&value["ln_a_bits"]);
-        let result = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let result =
+            evaluate_f10_packed_rhs(&grid, ln_a, &state, F10PackedRhsConfig::default()).unwrap();
 
         assert_eq!(result.values.len(), 182);
         assert_eq!(result.combined_action.native_total.len(), 360);
@@ -247,9 +224,8 @@ mod tests {
         );
 
         let expected_spectral = bit_array(&value["spectral_rhs"]);
-        let spectral_scale = maximum_absolute(&bit_array(
-            &value["absolute_envelopes"]["spectral_rhs"],
-        ));
+        let spectral_scale =
+            maximum_absolute(&bit_array(&value["absolute_envelopes"]["spectral_rhs"]));
         assert_hybrid_close(
             &result.values[..180],
             &expected_spectral,
@@ -295,10 +271,7 @@ mod tests {
             ),
             (result.diagnostics.rho_total, "rho_total_bits"),
             (result.diagnostics.hubble_mev, "hubble_mev_bits"),
-            (
-                result.diagnostics.neutrino_energy_transfer,
-                "q_nu_bits",
-            ),
+            (result.diagnostics.neutrino_energy_transfer, "q_nu_bits"),
             (
                 result.diagnostics.electromagnetic_energy_transfer,
                 "q_em_bits",
@@ -316,8 +289,7 @@ mod tests {
         assert_eq!(
             result.diagnostics.whole_reaction_domain_rejections,
             usize::try_from(
-                value["support_and_roundoff_metrology"]
-                    ["whole_reaction_domain_rejections"]
+                value["support_and_roundoff_metrology"]["whole_reaction_domain_rejections"]
                     .as_u64()
                     .unwrap(),
             )
@@ -326,23 +298,21 @@ mod tests {
         assert_eq!(
             result.diagnostics.matrix_roundoff_corrections,
             usize::try_from(
-                value["support_and_roundoff_metrology"]
-                    ["matrix_roundoff_corrections"]
+                value["support_and_roundoff_metrology"]["matrix_roundoff_corrections"]
                     .as_u64()
                     .unwrap(),
             )
             .unwrap()
         );
 
-        let repeated = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let repeated =
+            evaluate_f10_packed_rhs(&grid, ln_a, &state, F10PackedRhsConfig::default()).unwrap();
         assert_eq!(
-            result.values.iter().map(|value| value.to_bits()).collect::<Vec<_>>(),
+            result
+                .values
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>(),
             repeated
                 .values
                 .iter()
@@ -357,24 +327,19 @@ mod tests {
         let case = named_case(&value, "thermal_split");
         let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
         let (ln_a, state) = control_state(case, 0.0);
-        let result = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let result =
+            evaluate_f10_packed_rhs(&grid, ln_a, &state, F10PackedRhsConfig::default()).unwrap();
         let mut changed_elapsed = state.clone();
         changed_elapsed[25] = 9.876_543_21e18;
-        let passive = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &changed_elapsed,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let passive =
+            evaluate_f10_packed_rhs(&grid, ln_a, &changed_elapsed, F10PackedRhsConfig::default())
+                .unwrap();
         assert_eq!(
-            result.values.iter().map(|value| value.to_bits()).collect::<Vec<_>>(),
+            result
+                .values
+                .iter()
+                .map(|value| value.to_bits())
+                .collect::<Vec<_>>(),
             passive
                 .values
                 .iter()
@@ -383,24 +348,14 @@ mod tests {
         );
 
         assert_eq!(
-            evaluate_f10_packed_rhs(
-                &grid,
-                ln_a,
-                &state[..24],
-                F10PackedRhsConfig::default(),
-            ),
+            evaluate_f10_packed_rhs(&grid, ln_a, &state[..24], F10PackedRhsConfig::default(),),
             Err(F10PackedRhsError::InvalidInput)
         );
         for invalid_coordinate in [f64::NAN, f64::INFINITY, 1.0e3, -1.0e3] {
             let mut invalid = state.clone();
             invalid[0] = invalid_coordinate;
             assert_eq!(
-                evaluate_f10_packed_rhs(
-                    &grid,
-                    ln_a,
-                    &invalid,
-                    F10PackedRhsConfig::default(),
-                ),
+                evaluate_f10_packed_rhs(&grid, ln_a, &invalid, F10PackedRhsConfig::default(),),
                 Err(if invalid_coordinate.is_finite() {
                     F10PackedRhsError::Chart
                 } else {
@@ -422,21 +377,11 @@ mod tests {
         let mut invalid_elapsed = state.clone();
         invalid_elapsed[25] = f64::NAN;
         assert_eq!(
-            evaluate_f10_packed_rhs(
-                &grid,
-                ln_a,
-                &invalid_elapsed,
-                F10PackedRhsConfig::default(),
-            ),
+            evaluate_f10_packed_rhs(&grid, ln_a, &invalid_elapsed, F10PackedRhsConfig::default(),),
             Err(F10PackedRhsError::InvalidInput)
         );
         assert_eq!(
-            evaluate_f10_packed_rhs(
-                &grid,
-                f64::NAN,
-                &state,
-                F10PackedRhsConfig::default(),
-            ),
+            evaluate_f10_packed_rhs(&grid, f64::NAN, &state, F10PackedRhsConfig::default(),),
             Err(F10PackedRhsError::InvalidInput)
         );
         assert_eq!(
@@ -523,19 +468,13 @@ mod tests {
                 + thermal.diagnostics.pressure_electromagnetic)
             - thermal.diagnostics.electromagnetic_energy_transfer / hubble;
         assert!(
-            (wrong_qem / thermal.diagnostics.drho_electromagnetic_dt
-                - thermal.values[24])
-                .abs()
+            (wrong_qem / thermal.diagnostics.drho_electromagnetic_dt - thermal.values[24]).abs()
                 > 1.0e-8 * thermal.values[24].abs().max(1.0)
         );
         assert!(
-            (numerator - thermal.values[24]).abs()
-                > 1.0e-8 * thermal.values[24].abs().max(1.0)
+            (numerator - thermal.values[24]).abs() > 1.0e-8 * thermal.values[24].abs().max(1.0)
         );
-        assert_eq!(
-            thermal.values[25].to_bits(),
-            (1.0 / hubble).to_bits()
-        );
+        assert_eq!(thermal.values[25].to_bits(), (1.0 / hubble).to_bits());
         assert_ne!(thermal.values[25].to_bits(), (-1.0 / hubble).to_bits());
 
         let self_only = spectral_from_native(
@@ -575,24 +514,15 @@ mod tests {
         let case = named_case(&value, "mu_tau_split");
         let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
         let (ln_a, state) = control_state(case, 0.0);
-        let original = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let original =
+            evaluate_f10_packed_rhs(&grid, ln_a, &state, F10PackedRhsConfig::default()).unwrap();
         let mut swapped_state = state.clone();
         for node in 0..8 {
             swapped_state.swap(8 + node, 16 + node);
         }
-        let swapped = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &swapped_state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let swapped =
+            evaluate_f10_packed_rhs(&grid, ln_a, &swapped_state, F10PackedRhsConfig::default())
+                .unwrap();
 
         let permutation = [0_usize, 2, 1];
         let scale = maximum_absolute(&original.values[..24]);
@@ -604,8 +534,18 @@ mod tests {
                 1.0e-7,
             );
         }
-        assert_scalar_close(swapped.values[24], original.values[24], original.values[24].abs(), 1.0e-9);
-        assert_scalar_close(swapped.values[25], original.values[25], original.values[25].abs(), 1.0e-9);
+        assert_scalar_close(
+            swapped.values[24],
+            original.values[24],
+            original.values[24].abs(),
+            1.0e-9,
+        );
+        assert_scalar_close(
+            swapped.values[25],
+            original.values[25],
+            original.values[25].abs(),
+            1.0e-9,
+        );
         assert_scalar_close(
             swapped.diagnostics.rho_neutrino_by_flavour[1],
             original.diagnostics.rho_neutrino_by_flavour[2],
