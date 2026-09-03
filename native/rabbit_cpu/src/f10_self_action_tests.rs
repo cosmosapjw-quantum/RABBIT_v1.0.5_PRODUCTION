@@ -200,6 +200,35 @@ mod tests {
                 bits(&case["diagnostics"]["self_event_energy_residual"]),
                 result.event_energy_absolute.max(1.0),
             );
+            assert_eq!(
+                result.whole_reaction_domain_rejections,
+                usize::try_from(
+                    case["whole_reaction_domain_rejections"]
+                        .as_u64()
+                        .expect("whole-reaction domain rejection count"),
+                )
+                .expect("rejection count fits usize"),
+            );
+            assert_eq!(
+                result.matrix_roundoff_corrections,
+                usize::try_from(
+                    case["matrix_roundoff_corrections"]
+                        .as_u64()
+                        .expect("matrix roundoff correction count"),
+                )
+                .expect("correction count fits usize"),
+            );
+            let expected_largest_correction =
+                bits(&case["largest_matrix_roundoff_correction_bits"]);
+            assert_moment_close(
+                result.largest_matrix_roundoff_correction,
+                expected_largest_correction,
+                result
+                    .largest_matrix_roundoff_correction
+                    .abs()
+                    .max(expected_largest_correction.abs())
+                    .max(f64::MIN_POSITIVE),
+            );
         }
     }
 
