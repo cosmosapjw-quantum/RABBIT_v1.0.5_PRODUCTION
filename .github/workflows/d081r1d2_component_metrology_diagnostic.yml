@@ -1,0 +1,87 @@
+name: d081r1d2-component-metrology-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1d2-self-action-20260903
+    paths:
+      - .github/workflows/d081r1d2_component_metrology_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d2-self-action-20260903
+          fetch-depth: 0
+
+      - name: Reproduce component-specific versus combined metrology
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "numpy==2.4.4" "scipy==1.17.1"
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import sys
+          from pathlib import Path
+
+          import numpy as np
+
+          root = Path.cwd()
+          sys.path.insert(0, str(root / "src"))
+          from rabbit.decoupling import _independent_noqke as oracle
+
+          grid = oracle.build_independent_grid(order=8, y_max=8.0)
+          equilibrium = np.stack([-grid.nodes, -grid.nodes, -grid.nodes])
+          profile = 0.02 * (1.0 - 2.0 * grid.nodes / 8.0)
+          mu_tau = np.stack([-grid.nodes, -grid.nodes + profile, -grid.nodes - profile])
+          cases = [
+              ("equilibrium", equilibrium, 2.0, 2.0),
+              ("thermal_split", equilibrium, 2.0, 2.05),
+              ("mu_tau_split", mu_tau, 2.0, 2.0),
+          ]
+
+          payload = {"schema": "rabbit.d081r1d2.component_metrology.diagnostic.v1", "cases": []}
+          for name, logits, t_cm, t_gamma in cases:
+              cloglog = oracle.pair_logits_to_cloglog(logits)
+              spectra = oracle._SpectralLogits(grid, oracle._native_pair_logits(cloglog))
+              self_modal, row_modal, self_meta = oracle._assemble_self(
+                  grid, spectra, t_cm, oracle.IndependentCollisionConfig()
+              )
+              combined = oracle.evaluate_independent_collision_action(
+                  grid=grid,
+                  pair_cloglog=cloglog,
+                  temperature_cm_mev=t_cm,
+                  temperature_gamma_mev=t_gamma,
+              )
+              entry = {
+                  "name": name,
+                  "self": {
+                      "whole_reaction_domain_rejections": int(self_meta["whole_reaction_domain_rejections"]),
+                      "matrix_roundoff_corrections": int(self_meta["matrix_roundoff_corrections"]),
+                      "largest_matrix_roundoff_correction": float(self_meta["largest_matrix_roundoff_correction"]),
+                      "event_energy_residual": float(self_meta["event_energy_residual"]),
+                      "neutrino_h_rate": float(self_meta["neutrino_entropy_rate"]),
+                  },
+                  "combined": {
+                      "whole_reaction_domain_rejections": int(combined.whole_reaction_domain_rejections),
+                      "matrix_roundoff_corrections": int(combined.matrix_roundoff_corrections),
+                      "largest_matrix_roundoff_correction": float(combined.largest_matrix_roundoff_correction),
+                  },
+                  "electron_by_difference": {
+                      "whole_reaction_domain_rejections": int(combined.whole_reaction_domain_rejections - self_meta["whole_reaction_domain_rejections"]),
+                      "matrix_roundoff_corrections": int(combined.matrix_roundoff_corrections - self_meta["matrix_roundoff_corrections"]),
+                  },
+              }
+              assert entry["self"]["whole_reaction_domain_rejections"] != entry["combined"]["whole_reaction_domain_rejections"]
+              payload["cases"].append(entry)
+
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
