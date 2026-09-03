@@ -29,6 +29,9 @@ mod tier1_lrs;
 mod f10_action_foundations_tests;
 
 #[cfg(test)]
+mod f10_self_action_tests;
+
+#[cfg(test)]
 mod electron_event_falsifiers;
 
 #[cfg(test)]
