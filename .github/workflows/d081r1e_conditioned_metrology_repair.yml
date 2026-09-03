@@ -6,6 +6,7 @@ on:
       - research/d081r1e-retained-packed-rhs-20260903
     paths:
       - .github/workflows/d081r1e_conditioned_metrology_repair.yml
+      - .github/scripts/d081r1e_apply_conditioned_metrology.py
 
 permissions:
   contents: write
