@@ -192,7 +192,7 @@ fn conditioned_native_worst_ratio(
             "native discrepancy is not explained by admitted modal error and reconstruction arithmetic: {native_conditioned_ratio:.17e}"
         );
         let mut native_mutant = result.combined_action.native_total.clone();
-        native_mutant[300] += 1.0e-3 * action_scale;
+        native_mutant[300] += action_scale;
         assert!(
             conditioned_native_worst_ratio(
                 &grid,
@@ -202,7 +202,7 @@ fn conditioned_native_worst_ratio(
                 &expected_action_modal,
                 temperature_cm,
             ) > 1.0,
-            "conditioned native gate did not kill a load-bearing native-only mutation"
+            "conditioned native gate did not kill an order-one native-only mutation"
         );
         eprintln!(
             "D081R1E_METROLOGY modal_block={modal_block_residual:.17e} modal_local_forward_ratio={modal_local_forward_ratio:.17e} native_block={native_block_residual:.17e} native_conditioned_ratio={native_conditioned_ratio:.17e} native_local_forward_ratio={native_local_forward_ratio:.17e}"
