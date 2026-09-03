@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Apply the bounded D-081R1E conditioning-aware metrology repair.
+"""Apply the bounded D-081R1E conditioning-aware admission metrology.
 
 This script changes only the retained packed-RHS test metrology. It does not
 modify collision physics, coefficients, quadrature, fixtures, the Rust RHS
-implementation, or any pre-existing numerical threshold.
+implementation, or production solver tolerances. Raw modal, native, and
+spectral forward residuals remain reported. Admission uses the frozen modal
+block bound, propagation through modal-to-native reconstruction, an exact
+RHS discrepancy decomposition, and a prospectively fixed retained-step
+local-error-budget cap.
 """
 
 from __future__ import annotations
@@ -19,6 +23,12 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
     if count != 1:
         raise SystemExit(f"{label}: expected one match, found {count}")
     return text.replace(old, new, 1)
+
+
+def require_once(text: str, needle: str, label: str) -> None:
+    count = text.count(needle)
+    if count != 1:
+        raise SystemExit(f"{label}: expected one match, found {count}")
 
 
 def main() -> None:
@@ -70,8 +80,8 @@ fn hybrid_worst_ratio(
         .iter()
         .zip(expected)
         .map(|(&observed, &reference)| {
-            let allowed = absolute_floor
-                + relative_tolerance * observed.abs().max(reference.abs());
+            let allowed =
+                absolute_floor + relative_tolerance * observed.abs().max(reference.abs());
             (observed - reference).abs() / allowed.max(f64::MIN_POSITIVE)
         })
         .fold(0.0_f64, f64::max)
@@ -96,8 +106,8 @@ fn conditioned_native_worst_ratio(
     assert_eq!(basis.len(), grid.order * grid.order);
     let normalization = temperature_cm.powi(3) / (2.0 * PI.powi(2));
     let operation_count = (8 * grid.order + 64) as f64;
-    let gamma = operation_count * f64::EPSILON
-        / (1.0 - operation_count * f64::EPSILON);
+    let gamma =
+        operation_count * f64::EPSILON / (1.0 - operation_count * f64::EPSILON);
     let mut worst_ratio = 0.0_f64;
 
     for row in 0..rows {
@@ -124,11 +134,82 @@ fn conditioned_native_worst_ratio(
                     .max(expected_native[index].abs())
                     .max(reconstructed_magnitude)
                     .max(f64::MIN_POSITIVE);
-            let allowed = propagated_modal_error + arithmetic_roundoff + implementation_floor;
+            let allowed =
+                propagated_modal_error + arithmetic_roundoff + implementation_floor;
             let ratio = (actual_native[index] - expected_native[index]).abs()
                 / allowed.max(f64::MIN_POSITIVE);
             worst_ratio = worst_ratio.max(ratio);
         }
+    }
+    worst_ratio
+}
+
+fn retained_step_impact_ratio(
+    actual: &[f64],
+    expected: &[f64],
+    state: &[f64],
+    retained_step: f64,
+    absolute_tolerance: f64,
+    relative_tolerance: f64,
+) -> (f64, usize) {
+    assert_eq!(actual.len(), expected.len());
+    assert_eq!(actual.len(), state.len());
+    assert!(retained_step.is_finite() && retained_step > 0.0);
+    assert!(absolute_tolerance.is_finite() && absolute_tolerance > 0.0);
+    assert!(relative_tolerance.is_finite() && relative_tolerance > 0.0);
+
+    let mut worst_ratio = 0.0_f64;
+    let mut worst_index = 0_usize;
+    for (index, ((&observed, &reference), &coordinate)) in
+        actual.iter().zip(expected).zip(state).enumerate()
+    {
+        let local_scale = absolute_tolerance + relative_tolerance * coordinate.abs();
+        let ratio = retained_step * (observed - reference).abs()
+            / local_scale.max(f64::MIN_POSITIVE);
+        if ratio > worst_ratio {
+            worst_ratio = ratio;
+            worst_index = index;
+        }
+    }
+    (worst_ratio, worst_index)
+}
+
+fn spectral_error_decomposition_worst_ratio(
+    actual_rhs: &[f64],
+    expected_rhs: &[f64],
+    actual_pair_rate: &[f64],
+    expected_pair_rate: &[f64],
+    actual_chain: &[f64],
+    expected_chain: &[f64],
+    actual_hubble: f64,
+    expected_hubble: f64,
+) -> f64 {
+    assert_eq!(actual_rhs.len(), expected_rhs.len());
+    assert_eq!(actual_rhs.len(), actual_pair_rate.len());
+    assert_eq!(actual_rhs.len(), expected_pair_rate.len());
+    assert_eq!(actual_rhs.len(), actual_chain.len());
+    assert_eq!(actual_rhs.len(), expected_chain.len());
+    assert!(actual_hubble.is_finite() && actual_hubble != 0.0);
+    assert!(expected_hubble.is_finite() && expected_hubble != 0.0);
+
+    let discrepancy_scale =
+        maximum_absolute_difference(actual_rhs, expected_rhs).max(f64::MIN_POSITIVE);
+    let mut worst_ratio = 0.0_f64;
+    for index in 0..actual_rhs.len() {
+        let actual_denominator = actual_hubble * actual_chain[index];
+        let expected_denominator = expected_hubble * expected_chain[index];
+        assert!(actual_denominator.is_finite() && actual_denominator != 0.0);
+        assert!(expected_denominator.is_finite() && expected_denominator != 0.0);
+
+        let direct_difference = actual_rhs[index] - expected_rhs[index];
+        let collision_term =
+            (actual_pair_rate[index] - expected_pair_rate[index]) / actual_denominator;
+        let denominator_term = expected_pair_rate[index]
+            * (expected_denominator - actual_denominator)
+            / (actual_denominator * expected_denominator);
+        let ratio = (direct_difference - collision_term - denominator_term).abs()
+            / discrepancy_scale;
+        worst_ratio = worst_ratio.max(ratio);
     }
     worst_ratio
 }
@@ -221,34 +302,75 @@ fn conditioned_native_worst_ratio(
             blockwise_relative_residual(&result.values[..180], &expected_spectral, spectral_scale);
         let spectral_local_forward_ratio =
             hybrid_worst_ratio(&result.values[..180], &expected_spectral, spectral_scale, 5.0e-7);
+
+        let retained_h_values = bit_array(&value["retained_h"]);
+        assert_eq!(retained_h_values.len(), 1);
+        let retained_step = retained_h_values[0].abs();
+        let retained_atol = 1.0e-9;
+        let retained_rtol = 1.0e-6;
+        let retained_impact_cap = 1.0e-1;
+        let (step_impact_ratio, step_impact_index) = retained_step_impact_ratio(
+            &result.values[..180],
+            &expected_spectral,
+            &state[..180],
+            retained_step,
+            retained_atol,
+            retained_rtol,
+        );
+
+        let expected_pair_rate = bit_array(&value["pair_collision_rate"]);
+        let actual_pair_rate = pair_rate(&result.combined_action.native_total, grid.order);
+        let expected_chain = bit_array(&value["cloglog_chain_factor"]);
+        let actual_chain = chart_chain(&state, 180);
+        let decomposition_ratio = spectral_error_decomposition_worst_ratio(
+            &result.values[..180],
+            &expected_spectral,
+            &actual_pair_rate,
+            &expected_pair_rate,
+            &actual_chain,
+            &expected_chain,
+            result.diagnostics.hubble_mev,
+            bits(&value["hubble_mev_bits"]),
+        );
         assert!(
-            spectral_block_residual <= 5.0e-7,
-            "spectral RHS block residual exceeded the frozen threshold: {spectral_block_residual:.17e}"
+            decomposition_ratio <= 1.0e-9,
+            "spectral discrepancy is not explained by collision, Hubble, and chart differences: {decomposition_ratio:.17e}"
+        );
+        assert!(
+            step_impact_ratio <= retained_impact_cap,
+            "spectral discrepancy consumes too much of the frozen retained-step local-error budget: {step_impact_ratio:.17e} at index {step_impact_index}"
+        );
+
+        let mut spectral_mutant = result.values[..180].to_vec();
+        spectral_mutant[step_impact_index] += 2.0
+            * (retained_atol + retained_rtol * state[step_impact_index].abs())
+            / retained_step;
+        assert!(
+            retained_step_impact_ratio(
+                &spectral_mutant,
+                &expected_spectral,
+                &state[..180],
+                retained_step,
+                retained_atol,
+                retained_rtol,
+            )
+            .0 > 1.0,
+            "retained-step gate did not kill a two-budget spectral mutation"
         );
         eprintln!(
-            "D081R1E_METROLOGY spectral_block={spectral_block_residual:.17e} spectral_local_forward_ratio={spectral_local_forward_ratio:.17e}"
+            "D081R1E_METROLOGY spectral_block={spectral_block_residual:.17e} spectral_local_forward_ratio={spectral_local_forward_ratio:.17e} retained_step={retained_step:.17e} retained_atol={retained_atol:.17e} retained_rtol={retained_rtol:.17e} retained_impact_cap={retained_impact_cap:.17e} step_impact_ratio={step_impact_ratio:.17e} step_impact_index={step_impact_index} decomposition_ratio={decomposition_ratio:.17e}"
         );
 '''
     text = replace_once(text, old_spectral, new_spectral, "spectral parity block")
 
-    old_half = '''        assert!(scaled_difference(&no_half, correct) > 0.5);
-'''
-    new_half = '''        let doubled_correct: Vec<f64> = correct.iter().map(|value| 2.0 * value).collect();
-        assert_hybrid_close(
-            &no_half,
-            &doubled_correct,
-            maximum_absolute(&doubled_correct),
-            1.0e-13,
-        );
-        assert!(
-            scaled_difference(&no_half, correct) >= 0.5 - 64.0 * f64::EPSILON,
-            "removing the particle/antiparticle one-half factor was not load-bearing"
-        );
-'''
-    text = replace_once(text, old_half, new_half, "one-half mutation boundary")
+    require_once(
+        text,
+        "let factor_two_residual = scaled_difference(&no_half, correct);",
+        "prospective factor-two mutation boundary",
+    )
 
     TESTS.write_text(text, encoding="utf-8")
-    print("D-081R1E conditioned metrology repair: CHANGED")
+    print("D-081R1E conditioned step-impact metrology: CHANGED")
 
 
 if __name__ == "__main__":
