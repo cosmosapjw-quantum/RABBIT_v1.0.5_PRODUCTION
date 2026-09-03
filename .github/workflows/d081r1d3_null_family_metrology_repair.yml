@@ -23,7 +23,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = 484dd453ebeed226311ce826fa51a964bf8501c5
+          test "$(git rev-parse HEAD^)" = ffbdce2920af972baa61fd97f41c9e111b69f6f9
           python3 - <<'PY'
           from pathlib import Path
 
@@ -83,7 +83,18 @@ jobs:
           rustup toolchain install 1.94.1 --profile minimal --component rustfmt
           (cd native/rabbit_cpu && cargo +1.94.1 fmt --all)
           rm .github/workflows/d081r1d3_null_family_metrology_repair.yml
-          test "$(git diff --name-only)" = "native/rabbit_cpu/src/f10_electron_action_tests.rs"
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              ".github/workflows/d081r1d3_null_family_metrology_repair.yml",
+              "native/rabbit_cpu/src/f10_electron_action_tests.rs",
+          }
+          changed = set(subprocess.check_output(
+              ["git", "diff", "--name-only"], text=True
+          ).splitlines())
+          if changed != expected:
+              raise SystemExit(f"unexpected changed paths: {sorted(changed)}")
+          PY
           git diff --check
 
       - name: Commit and push bounded metrology repair
@@ -92,7 +103,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add native/rabbit_cpu/src/f10_electron_action_tests.rs
+          git add -A
           git diff --cached --check
           git commit -m "test(d081r1d3): scale null family ledgers by thermal envelope"
           git push origin HEAD:research/d081r1d3-electron-action-20260903
