@@ -324,7 +324,7 @@ mod tests {
 
     #[test]
     fn foundations_fail_closed_and_mutations_are_detected() {
-        let roundoff_actual = [-8.899_131_431_761_020e-16, 11.313_708_498_984_761];
+        let roundoff_actual = [-8.899_131_431_761_02e-16, 11.313_708_498_984_761];
         let roundoff_expected = [8.881_784_197_001_252e-16, 11.313_708_498_984_763];
         assert_slice_close(&roundoff_actual, &roundoff_expected, 2.0e-12);
 
