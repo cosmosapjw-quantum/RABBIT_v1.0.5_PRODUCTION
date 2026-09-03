@@ -34,7 +34,7 @@ jobs:
               bits(&case["diagnostics"]["self_event_energy_residual"]),
               result.event_energy_absolute.max(1.0),
           );
-'''
+          '''
           replacement = needle + '''            assert_eq!(
               result.whole_reaction_domain_rejections,
               usize::try_from(
@@ -64,7 +64,7 @@ jobs:
                   .max(expected_largest_correction.abs())
                   .max(f64::MIN_POSITIVE),
           );
-'''
+          '''
           if text.count(needle) != 1:
               raise SystemExit(f"expected exactly one insertion point, found {text.count(needle)}")
           path.write_text(text.replace(needle, replacement), encoding="utf-8")
