@@ -1,2 +1,0 @@
-D-081R1D4 exact-head rerun after committing the conditioned CP and mu-tau metrology plus distinct-state swap-equivariance gates.
-The repair scripts must be NOOP; no collision physics, fixture, array-parity tolerance, or acceptance threshold changed.

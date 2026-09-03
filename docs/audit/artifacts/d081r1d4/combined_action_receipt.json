@@ -1,0 +1,185 @@
+{
+  "schema": "rabbit.d081r1d4.six_species_combined_action.v1",
+  "classification": "SIX_SPECIES_COMBINED_COLLISION_ACTION_ADMITTED",
+  "verdict": "PASS_WITH_ORDER8_SIX_SPECIES_COMBINED_ACTION_SCOPE",
+  "date": "2026-09-03",
+  "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+  "branch": "research/d081r1d4-combined-action-20260903",
+  "validated_execution": {
+    "workflow_run_id": 33747522233,
+    "workflow_job_id": 100623328563,
+    "workflow_conclusion": "success",
+    "workflow_head": "6baa466b199087d2d19ee5feab37d0575b089e08",
+    "workflow_tree": "ef2b4b1426381b0b9ed7efd4597d46171faf470a",
+    "implementation_parent": "8aeae0ff29d15aa45eba39c7ff153193ad7ec948",
+    "implementation_tree": "6a4b92ccbea69fb8332c1c93ce7131ac7ef20cbe",
+    "repair_scripts_noop_on_exact_head": true,
+    "documentation_and_cleanup_not_reexecuted": true
+  },
+  "predecessor": {
+    "node": "D-081R1D3",
+    "head": "a604cc7af832c799687d29ba05765972f7ba0c9d",
+    "tree": "415a5ba83ed7b24fe941be45352e2ac037c87158"
+  },
+  "frozen_authorities": {
+    "private_python_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+    "full_collision_fixture_git_blob": "c94d2e72a1f8300b7c20c9c793417a5c4a5fa302",
+    "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014"
+  },
+  "validated_blobs": {
+    "native/rabbit_cpu/src/f10_combined_action.rs": "80963b73a498be080527c78cd6207e650117f836",
+    "native/rabbit_cpu/src/f10_combined_action_tests.rs": "6f6b5a0ccec89b08806ee5c11a0a537b5a0594e7",
+    "native/rabbit_cpu/src/lib.rs": "111a03b5307d88e6d82710dfefa14f5fee64d26a",
+    ".github/workflows/d081r1d4_combined_action.yml": "1a6e1c14a58625972c5dc99b07a63cdc92fbae1d"
+  },
+  "toolchain": {
+    "rust": "1.94.1",
+    "cargo_mode": "locked_offline",
+    "offline_vendor_artifact_id": 9838506413,
+    "offline_vendor_outer_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+    "offline_vendor_package_directories": 174
+  },
+  "configuration": {
+    "spectral_order": 8,
+    "y_max": 8.0,
+    "species_count": 6,
+    "self_event_count": 27,
+    "electron_event_count": 15,
+    "total_event_count": 42,
+    "electron_elastic_event_count": 12,
+    "electron_pair_event_count": 3,
+    "electron_mass_mev": 0.51099895,
+    "electron_radial_order": 48,
+    "incoming_polar_order": 12,
+    "final_polar_order": 12,
+    "azimuthal_order": 4,
+    "matrix_roundoff_ulps": 1024.0
+  },
+  "operator": {
+    "definition": "C_total = C_self + C_electron",
+    "modal_component_addition": true,
+    "native_component_addition": true,
+    "new_collision_quadrature": false,
+    "new_event_coefficients": false
+  },
+  "focused_tests": {
+    "passed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 309,
+    "runtime_seconds": 16.18,
+    "names": [
+      "frozen_full_action_contract_is_exact",
+      "combined_action_matches_every_frozen_python_case",
+      "component_addition_and_physical_ledgers_are_load_bearing",
+      "component_failures_propagate_without_a_partial_result"
+    ]
+  },
+  "checks": {
+    "predecessor_ancestry": "PASS",
+    "authority_identity": "PASS",
+    "cargo_metadata_locked_offline": "PASS",
+    "rustfmt": "PASS",
+    "release_check": "PASS",
+    "focused_combined_action_tests": "PASS",
+    "strict_clippy_all_targets_all_features": "PASS",
+    "frozen_total_modal_parity": "PASS",
+    "frozen_total_native_parity": "PASS",
+    "self_component_parity": "PASS",
+    "electron_component_parity": "PASS",
+    "component_addition": "PASS",
+    "number_and_energy_moments": "PASS",
+    "support_and_roundoff_counter_aggregation": "PASS",
+    "neutrino_electromagnetic_first_law": "PASS",
+    "entropy_and_h_function_ledgers": "PASS",
+    "conditioned_charge_conjugation_metrology": "PASS",
+    "conditioned_mu_tau_metrology": "PASS",
+    "distinct_state_mu_tau_modal_equivariance": "PASS",
+    "distinct_state_mu_tau_native_equivariance": "PASS",
+    "component_omission_and_wrong_sign_mutants": "PASS",
+    "transactional_component_failure_propagation": "PASS"
+  },
+  "conditioned_metrology": {
+    "direct_scalar_tolerance_widened": false,
+    "array_parity_tolerance_changed": false,
+    "physical_acceptance_threshold_changed": false,
+    "forward_residuals_retained": true,
+    "mu_tau_frozen_equilibrium_numerator": 1.3329255900167337e-38,
+    "mu_tau_frozen_equilibrium_scale": 1.0941546646861551e-35,
+    "mu_tau_frozen_equilibrium_ratio": 0.0012182241076484988,
+    "bound": "|r_actual-r_expected| <= (delta_mu+delta_tau)/s_actual + n_expected*max(delta_mu,delta_tau)/(s_actual*s_expected) + B_roundoff",
+    "wolfram_status": "SYMBOLICALLY_CHECKED_STATELESS"
+  },
+  "failure_preserving_history": [
+    {
+      "workflow_run_id": 33739325198,
+      "result": "2_passed_2_failed",
+      "classification": "CP_NORMALIZATION_AND_COMPONENT_MUTATION_METROLOGY"
+    },
+    {
+      "workflow_run_id": 33741259592,
+      "result": "3_passed_1_failed",
+      "classification": "PAIR_LOCAL_CP_SCALAR_METROLOGY"
+    },
+    {
+      "workflow_run_id": 33742086879,
+      "result": "3_passed_1_failed",
+      "classification": "CANCELLATION_SENSITIVE_MU_TAU_SCALAR_METROLOGY",
+      "actual": 0.00935958036985416,
+      "expected": 0.0012182241076484988
+    },
+    {
+      "workflow_run_id": 33746969006,
+      "result": "4_passed_0_failed",
+      "classification": "BOUNDED_REPAIR_GREEN_AND_CORE_COMMIT"
+    },
+    {
+      "workflow_run_id": 33747522233,
+      "result": "4_passed_0_failed",
+      "classification": "EXACT_COMMITTED_SOURCE_NOOP_REPLAY_GREEN"
+    }
+  ],
+  "literature_boundary": {
+    "supports": [
+      "explicit flavour and particle/antiparticle routing",
+      "conservation and entropy ledgers",
+      "weak-form or moment-preserving validation",
+      "symmetry-equivariance checks"
+    ],
+    "does_not_authorize": [
+      "RABBIT event multiplicities",
+      "weak-coupling encoding",
+      "quadrature bytes",
+      "support policy",
+      "modal normalization",
+      "matrix-roundoff policy",
+      "species ordering",
+      "fixture values",
+      "acceptance thresholds"
+    ],
+    "references": [
+      "arXiv:1605.09383",
+      "arXiv:2008.01074",
+      "DOI:10.1137/21M1423452"
+    ]
+  },
+  "claim_ceiling": {
+    "admitted": [
+      "static order-8 six-species combined collision action",
+      "stated total moments, physical ledgers, symmetry diagnostics, and failure semantics"
+    ],
+    "not_admitted": [
+      "retained order-60 182-component packed RHS",
+      "production Python or PyO3 surface",
+      "analytic Rust JVP or Jacobian",
+      "diffsol OdeSystem",
+      "stiff trajectory",
+      "solver performance",
+      "endpoint time or spectra",
+      "N_eff",
+      "G-F10-INDEPENDENT-FLRW movement",
+      "public-production or publication authority"
+    ]
+  },
+  "next_node": "D-081R1E_RETAINED_ORDER60_PACKED_RHS_PARITY"
+}
