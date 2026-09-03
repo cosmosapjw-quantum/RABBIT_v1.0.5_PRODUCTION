@@ -27,7 +27,7 @@ impl Default for F10ElectronActionConfig {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct F10ElectronActionMoments {
     pub(crate) signed_number_rate: f64,
     pub(crate) absolute_number_rate: f64,
@@ -35,7 +35,7 @@ pub(crate) struct F10ElectronActionMoments {
     pub(crate) absolute_energy_rate: f64,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub(crate) struct F10ElectronAction {
     pub(crate) modal: Vec<f64>,
     pub(crate) native: Vec<f64>,
