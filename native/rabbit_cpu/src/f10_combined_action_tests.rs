@@ -203,7 +203,10 @@ mod tests {
             assert_scalar_close(
                 result.largest_matrix_roundoff_correction,
                 bits(&case["largest_matrix_roundoff_correction_bits"]),
-                result.largest_matrix_roundoff_correction.abs().max(f64::MIN_POSITIVE),
+                result
+                    .largest_matrix_roundoff_correction
+                    .abs()
+                    .max(f64::MIN_POSITIVE),
                 6.0e-9,
             );
 
@@ -314,7 +317,8 @@ mod tests {
         for index in 0..thermal.native_total.len() {
             assert_eq!(
                 thermal.native_total[index].to_bits(),
-                (thermal.self_action.native[index] + thermal.electron_action.native[index]).to_bits()
+                (thermal.self_action.native[index] + thermal.electron_action.native[index])
+                    .to_bits()
             );
             assert_eq!(
                 thermal.modal_total[index].to_bits(),
@@ -347,8 +351,11 @@ mod tests {
             scaled_difference(&thermal.self_action.native, &expected_total, thermal_scale) > 1.0e-3
         );
         assert!(
-            scaled_difference(&thermal.electron_action.native, &expected_total, thermal_scale)
-                > 1.0e-3
+            scaled_difference(
+                &thermal.electron_action.native,
+                &expected_total,
+                thermal_scale
+            ) > 1.0e-3
         );
         let wrong_sign: Vec<_> = thermal
             .self_action

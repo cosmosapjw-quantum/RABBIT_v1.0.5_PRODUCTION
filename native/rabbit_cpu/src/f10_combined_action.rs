@@ -14,8 +14,7 @@ use crate::f10_action_grid::{F10ActionGrid, decode_cloglog_to_logit};
 use crate::f10_action_kinematics::F10CollisionConfig;
 use crate::f10_action_spectral::modal_coefficients;
 use crate::f10_electron_action::{
-    F10_ELECTRON_MASS_MEV, F10ElectronAction, F10ElectronActionConfig,
-    assemble_electron_action,
+    F10_ELECTRON_MASS_MEV, F10ElectronAction, F10ElectronActionConfig, assemble_electron_action,
 };
 use crate::f10_self_action::{F10SelfAction, F10SelfActionConfig, assemble_self_action};
 
@@ -198,13 +197,11 @@ fn pair_modal_coefficients(
         let logits: Vec<f64> = pair_cloglog[start..start + grid.order]
             .iter()
             .map(|&coordinate| {
-                decode_cloglog_to_logit(coordinate)
-                    .map_err(|_| F10CombinedActionError::Foundation)
+                decode_cloglog_to_logit(coordinate).map_err(|_| F10CombinedActionError::Foundation)
             })
             .collect::<Result<_, _>>()?;
         coefficients.extend(
-            modal_coefficients(grid, &logits)
-                .map_err(|_| F10CombinedActionError::Foundation)?,
+            modal_coefficients(grid, &logits).map_err(|_| F10CombinedActionError::Foundation)?,
         );
     }
     Ok(coefficients)
@@ -226,8 +223,8 @@ fn node_neutrino_h_rate(
     for species in 0..SPECIES_COUNT {
         let pair = species / 2;
         for mode in 0..grid.order {
-            result += modal_total[species * grid.order + mode]
-                * coefficients[pair * grid.order + mode];
+            result +=
+                modal_total[species * grid.order + mode] * coefficients[pair * grid.order + mode];
         }
     }
     if result.is_finite() {
@@ -237,7 +234,10 @@ fn node_neutrino_h_rate(
     }
 }
 
-fn symmetry_residuals(native_total: &[f64], order: usize) -> Result<(f64, f64), F10CombinedActionError> {
+fn symmetry_residuals(
+    native_total: &[f64],
+    order: usize,
+) -> Result<(f64, f64), F10CombinedActionError> {
     if order == 0 || native_total.len() != SPECIES_COUNT * order {
         return Err(F10CombinedActionError::InvalidInput);
     }
@@ -404,22 +404,17 @@ impl PartialEq for F10CombinedAction {
             && self.self_action.node_entropy_rate == other.self_action.node_entropy_rate
             && self.self_action.entropy_duality_residual
                 == other.self_action.entropy_duality_residual
-            && self.self_action.event_energy_residual
-                == other.self_action.event_energy_residual
-            && self.self_action.event_energy_absolute
-                == other.self_action.event_energy_absolute
+            && self.self_action.event_energy_residual == other.self_action.event_energy_residual
+            && self.self_action.event_energy_absolute == other.self_action.event_energy_absolute
             && self.electron_action == other.electron_action
             && self.modal_total == other.modal_total
             && self.native_total == other.native_total
             && self.moments == other.moments
-            && self.whole_reaction_domain_rejections
-                == other.whole_reaction_domain_rejections
+            && self.whole_reaction_domain_rejections == other.whole_reaction_domain_rejections
             && self.matrix_roundoff_corrections == other.matrix_roundoff_corrections
-            && self.largest_matrix_roundoff_correction
-                == other.largest_matrix_roundoff_correction
+            && self.largest_matrix_roundoff_correction == other.largest_matrix_roundoff_correction
             && self.neutrino_energy_transfer == other.neutrino_energy_transfer
-            && self.electromagnetic_energy_transfer
-                == other.electromagnetic_energy_transfer
+            && self.electromagnetic_energy_transfer == other.electromagnetic_energy_transfer
             && self.first_law_residual == other.first_law_residual
             && self.event_neutrino_h_rate == other.event_neutrino_h_rate
             && self.node_neutrino_h_rate == other.node_neutrino_h_rate
