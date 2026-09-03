@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d055-metrology-r2",
+  "generated_at": "2026-07-27T16:35:31+00:00",
+  "result_count": 3,
+  "unique_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "F-METRO2-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS; GATE FLIP DUE. Every M1..M5 comparison and the full B_native formula recomputed bit-exact from the recorded terms; freeze chronology verified (+93 s); the two-change supersession scope honored exactly; the gate pass_condition is satisfied (weak/mass-weighted ~1e-15 <= 1e-10; native diagnostics within the pre-output bound; measured summation, basis, transform, conditioning, interval, denominator, and state-envelope terms all recorded); no fail_condition clause triggered - the r2 reissue is not post-output fitting (no term or threshold changed; the corrected items were adjudicated design defects with supersession explicitly permitted) and the D-028 1/y^2 model and ~1.2e-8 cap were never consulted. G-F10-COVARIANCE-METROLOGY flips fail->pass citing run-20260728-f10-d055-metrology-r2. Limitations: single run, single platform (x86 80-bit longdouble), M5 margin ~4x at S-A, adjudication recomputed from the report without re-execution.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "m2_oracle_report.json",
+        "freeze 904acb2"
+      ],
+      "evidence_fingerprint": "sha256:4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-METRO2-ADJUDICATION",
+        "A-METRO2-CONTRACT",
+        "A-METRO2-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default",
+        "default",
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator",
+        "default",
+        "default"
+      ],
+      "supporting_agent_types": [
+        "adjudicator",
+        "default",
+        "default"
+      ],
+      "duplicate_count": 3
+    }
+  ],
+  "errors": []
+}

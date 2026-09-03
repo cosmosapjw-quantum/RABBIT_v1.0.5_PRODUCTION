@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d067-review-r9",
+  "assignment_id": "A-D067-R9-MEASUREMENT",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+  "independence_mode": "blind-results",
+  "discovery_mode": "independent",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Round 9, narrow target. Attack .agent-harness/scripts/check_ssot_consistency.py and .agent-harness/context/SSOT_FACTS.json at HEAD (4ec13b5), and nothing else. This tool exists to close finding F-D065-05, and it has now failed its own purpose THREE times: it once printed ok:true after checking zero status assertions; its declared measurements were later prose that nothing executed, so it reported 106 while the file held 108; and its coverage floor has needed repeated widening. Commit 7157bbe made measurements executable through a closed declarative vocabulary -- count_lines_matching and json_array_length -- specifically to avoid shell, because grep -c exits 1 and prints 0 on no match, which would report the number zero rather than an error. Your job is to find the fourth failure. Questions to answer executably, by mutating a scratch copy and running the checker, never by reading and reasoning alone: can a declared fact be made to measure something other than what its description says, and pass? can a measurement report a number where it should report an error -- missing file, unreadable file, malformed JSON, a json_path that does not resolve, a regex that compiles but matches nothing, a path outside the repo, a symlink? can the coverage floor be satisfied by prose that a human would not read as a status assertion, or defeated by phrasing that a human WOULD read as one? can a live region be made invisible, or a superseded region made to control? can a frozen or historical role be used to smuggle a current claim? does the negation handling have an inverse -- text that asserts a status while reading as a denial? Report each attack you tried with its exact input and the checker's exact output, INCLUDING the attacks that failed, because an attack surface reported as clean without saying what was tried is not evidence.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/assignments/A-D067-R9-MEASUREMENT.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/context/SSOT_FACTS.json"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-MEASUREMENT.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-MEASUREMENT.json",
+  "status": "registered"
+}

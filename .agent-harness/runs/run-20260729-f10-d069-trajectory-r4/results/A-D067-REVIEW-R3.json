@@ -1,0 +1,455 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d069-trajectory-r4",
+  "assignment_id": "A-D067-REVIEW-R3",
+  "context_version": "3c777b2ab50aa667b37369cb778bcddc3b072123a76033f1cd8399643b115cf6",
+  "agent_id": "d067-review-r3",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d069-trajectory-r4",
+    "assignment_id": "A-D067-REVIEW-R3",
+    "context_version": "3c777b2ab50aa667b37369cb778bcddc3b072123a76033f1cd8399643b115cf6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d905004b6d6986707159ffdb7b1280b116dac67634a25f7aaa19d7b57b7e70ce",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/results/A-D067-REVIEW-R3.json",
+  "started_at": "2026-07-29T03:50:21Z",
+  "completed_at": "2026-07-29T04:01:19Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "pytest": "9.0.3",
+    "git": "2.43.0"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/assignments/A-D067-REVIEW-R3.json",
+    "git diff ed7bc49 HEAD --stat -- .codex .agent-harness/scripts .agent-harness/tests",
+    "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py",
+    "venv/bin/python -m pytest -q -p no:cacheprovider -s /tmp/.../scratchpad/test_probe.py",
+    "venv/bin/python -m pytest -q -p no:cacheprovider -s /tmp/.../scratchpad/test_probe2.py",
+    "git ls-files '*ADMISSIONS.jsonl'",
+    "python3 -c \"<digest-match sweep of .agent-harness/runs and docs for raw admission tokens>\""
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/ADMISSIONS.jsonl",
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_out_d067-canary-c1.json",
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_out_d067-canary-c2-substitution.json",
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_out_d067-canary-c3-leasefail.json",
+    "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-R3-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Round-2 finding 1 (idempotent re-stop guard failed open via an `or result_sha` default, so a planted claim file yielded an accepted result with no attribution record) is FIXED in the committed bytes. subagent_stop_validate.py:395-408 now blocks on the same-agent re-claim path unless the receipt state is exactly 'consumed' AND the recorded result_sha256 equals the freshly computed digest; there is no defaulting expression anywhere in the file (grep for result_sha256 returns only lines 403, 430, 445, none of which supply a fallback). test_planted_claim_cannot_skip_attribution (test_hooks.py:1061) asserts the block, that the receipt stays 'open', and that no ledger file is created at all.",
+      "assumptions_used": [
+        "The stop hook is the only writer of consumed receipts under the stated threat model."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:375-415",
+        ".agent-harness/tests/test_hooks.py:1061-1082"
+      ],
+      "evidence_fingerprint": "sha256:287350a191dfc0fa87e95452ecbbf60fd4a1e4b4da8e4a53d4c6989053cd13cd",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py::test_planted_claim_cannot_skip_attribution"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Round-2 finding 2 (orphan receipt when the ledger append failed) is FIXED for the reported path. admit_agent.py:191-217 appends the 'minted' ledger row first and only then writes the receipt, and fails closed on OSError, so no receipt can outlive a failed mint. test_admit_agent_fails_closed_when_ledger_cannot_be_written (test_hooks.py:1102) chmods the run directory 0o500, asserts a non-zero exit with 'ledger could not be appended', and asserts the receipt file does not exist. The same ordering discipline was NOT applied to the consume side; see F-R3-11.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py:186-217",
+        ".agent-harness/tests/test_hooks.py:1102-1133"
+      ],
+      "evidence_fingerprint": "sha256:eb046b6cbc0a382b0581706e3c55e043e936ddd663a94494454241a19641de54",
+      "counterevidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:420-459"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py::test_admit_agent_fails_closed_when_ledger_cannot_be_written"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Round-2 finding 3 (result artifact read twice, so validated bytes could differ from digested bytes) is FIXED. subagent_stop_validate.py:338-346 performs one resolved.read_bytes(), parses the object from those bytes via decode, and computes result_sha from the same buffer. The identical single-read discipline is applied to the assignment at lines 156-168 (assignment_raw -> json.loads(assignment_raw.decode) -> recomputed_sha). No second read of either path exists in the file.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:156-168",
+        ".codex/hooks/subagent_stop_validate.py:336-346"
+      ],
+      "evidence_fingerprint": "sha256:287350a191dfc0fa87e95452ecbbf60fd4a1e4b4da8e4a53d4c6989053cd13cd",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n 'read_bytes' .codex/hooks/subagent_stop_validate.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Round-2 finding 4 (ledger never validated and gitignored) is FIXED as claimed, with two scope gaps recorded separately. validate_harness.py:194-239 walks every consumed receipt, requires a runs/<run>/ADMISSIONS.jsonl, and compares result_sha256, token_digest, and the writing agent (row.agent_id vs receipt.consumed_by_agent_id). Ledgers are tracked despite `/.agent-harness/runs/` being gitignored (.gitignore:62): `git ls-files '*ADMISSIONS.jsonl'` returns three force-added ledgers, including the D-067 canary run. Gaps: the cross-check is one-directional (a ledger 'consumed' row with no matching consumed receipt is never flagged) and it skips consumed receipts whose runs/<run> directory does not exist (see F-R3-10, F-R3-14).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:194-239",
+        ".gitignore:62",
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/ADMISSIONS.jsonl"
+      ],
+      "evidence_fingerprint": "sha256:a3c503252f765edfca5f8c1e29f69e14ccc1ec64432e9eb421deb22161b55343",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git ls-files '*ADMISSIONS.jsonl'",
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py::test_validate_harness_cross_checks_the_admission_ledger"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "No reverse ledger->receipt reconciliation exists."
+      ]
+    },
+    {
+      "finding_id": "F-R3-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Round-2 finding 5 (a live run wedged by the result-to-receipt rule before Stop was dispatched) is FIXED as described. validate_harness.py:171-186 reports a result whose receipt is still 'open' under `pending_results` and continues, instead of appending an error; the field is emitted in the ok:true payload at lines 244-255. Confirmed live: probe P1 shows `\"pending_results\": [\"A-HOOK-FIXTURE\"]` with ok:true while the receipt is open. This fix is correct for the reported symptom but is the enabling half of the new defect in F-R3-10.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:171-192",
+        ".agent-harness/scripts/validate_harness.py:244-255"
+      ],
+      "evidence_fingerprint": "sha256:a3c503252f765edfca5f8c1e29f69e14ccc1ec64432e9eb421deb22161b55343",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p1_reopen_unbinds_an_already_admitted_result"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Round-2 finding 6 (`??` porcelain entries misreported as tracked modifications) is FIXED. validate_harness.py:136-140 filters out lines beginning with '??' before turning the remainder into 'Tracked run evidence modified after commit' errors. Probes P1/P3/P4/P5/P6 all ran in fresh `git init` sandboxes whose entire .agent-harness/runs tree is untracked and none produced a tracked-evidence error.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:132-143"
+      ],
+      "evidence_fingerprint": "sha256:a3c503252f765edfca5f8c1e29f69e14ccc1ec64432e9eb421deb22161b55343",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p4_run_with_no_receipts_and_no_ledger"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-07",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Round-2 finding 7 (two false claims in the admit_agent.py docstring about token secrecy) is FIXED and the scrubber exists and was actually run. admit_agent.py:19-39 now states plainly that the token does not stay secret, that it appears in any transcript or captured stop-event JSON, that a captured BLOCKED stop is the dangerous case because the receipt is still open, and it carries an explicit THREAT MODEL paragraph. scrub_admission_proof.py exists and the retained canary stop-event JSONs are scrubbed: stop_event_d067-canary-c1/c2-substitution/c3-leasefail all carry `\"admission_proof\": \"sha256:...\"`. A digest-match sweep of every 20-64 char token-like string in .agent-harness/runs and docs against all 8 known token_digests found exactly one live raw token, in run-20260729-f10-d067-review-r2/results/A-D067-REVIEW-R2.json, which is precisely the residual the audit report discloses in section 5, and whose receipt is 'consumed' (spent). The disclosure is accurate. Coverage gap recorded in F-R3-12.",
+      "assumptions_used": [
+        "secrets.token_urlsafe(32) tokens are 43 chars of [A-Za-z0-9_-], which the sweep regex covers."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py:19-39",
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_event_d067-canary-c1.json",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:129-133"
+      ],
+      "evidence_fingerprint": "sha256:eb046b6cbc0a382b0581706e3c55e043e936ddd663a94494454241a19641de54",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -o 'admission_proof[^,}]*' .agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_event_d067-canary-c1.json",
+        "digest-match sweep: hash every [A-Za-z0-9_-]{20,64} substring under .agent-harness/runs and docs, compare to all token_digest values"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-08",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Round-2 finding 8 (concurrency test ran nothing concurrently) is FIXED. test_concurrent_stops_consume_receipt_once (test_hooks.py:1015-1058) spawns four Popen children, writes the payload to and closes every child's stdin in one loop (lines 1037-1040) before reading any stdout (lines 1042-1045), so the children genuinely overlap. Its invariant is the right one: exactly one 'consumed' ledger row, every non-empty stdout a block, at least one empty stdout. It passes in the 35/35 run.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py:1015-1058"
+      ],
+      "evidence_fingerprint": "sha256:37d1435559bc17a39dc80a7a8e0e32d2a0d612df7941fff55c8643a874c9baf3",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py::test_concurrent_stops_consume_receipt_once"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-09",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Round-2 finding 9 (the ACTIVE_RUN bypass merely relocated to deleting CONTEXT_INDEX.json) is FIXED as claimed. subagent_stop_validate.py:82-93 now judges 'harness installed' from `harness.is_dir()` -- the .agent-harness directory itself -- not from any single file inside it, and test_stop_blocks_when_active_run_is_deleted (test_hooks.py:1229) covers the ACTIVE_RUN deletion case. The keying is correct for the file-deletion class. The bypass does, however, relocate once more to how the harness directory is located at all; see F-R3-13.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:78-93",
+        ".agent-harness/tests/test_hooks.py:1229-1245"
+      ],
+      "evidence_fingerprint": "sha256:287350a191dfc0fa87e95452ecbbf60fd4a1e4b4da8e4a53d4c6989053cd13cd",
+      "counterevidence_refs": [
+        ".codex/hooks/_common.py:27-38"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py::test_stop_blocks_when_active_run_is_deleted"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-10",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "NEW defect introduced by the second fix pass: `admit_agent.py --reopen` silently clears the post-hoc-edit detector for a result that was already admitted. Reproduced end to end (probe P1). Sequence: agent stops and is accepted; validate_harness reports ok:true. The result artifact is then edited in place; validate_harness correctly reports ok:false with 'Result artifact changed after it was admitted'. Running `admit_agent.py --assignment-id <id> --reopen --reason ...` then flips the receipt back to state 'open', and the very next validate_harness run reports ok:true with `pending_results: [\"A-HOOK-FIXTURE\"]` -- against the same edited bytes. The mechanism is the interaction of the round-2 fix for finding 5 (an open receipt makes a result 'pending', not an error, validate_harness.py:176-181) with the reopen lifecycle (admit_agent.py:150-186), plus the absence of any reverse ledger->receipt reconciliation. The ledger does retain the earlier 'consumed' row and a 'minted' row with reopened:true (probe P8), so the event is forensically recoverable, but the validator -- the single automated check the D-067 report cites as detecting 'the D-066 incident class' -- returns ok:true. Reopen requires only ACTIVE_RUN, a non-stale assignment, and a --reason string, all of which an agent with exec_command can supply.",
+      "assumptions_used": [
+        "An adjudicator or CI reads the validator's ok field; pending_results is informational and does not change the exit code."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:171-192",
+        ".agent-harness/scripts/admit_agent.py:142-217",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:65"
+      ],
+      "evidence_fingerprint": "sha256:eaf27887afa7356c968930ab27badfaaa0ebdf64fc3eda4965fb4baafbd2299b",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/ADMISSIONS.jsonl"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p1_reopen_unbinds_an_already_admitted_result",
+        "observe: ok:false after the edit, then ok:true with pending_results after --reopen"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Suggested repair: treat a run whose ledger holds a 'consumed' row for an assignment whose receipt is now 'open' as an error, or record the last consumed result_sha256 in reopened_from and keep enforcing it."
+      ]
+    },
+    {
+      "finding_id": "F-R3-11",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "NEW defect: the ordering discipline that round-2 finding 2 imposed on the mint side was not applied to the consume side, producing the mirror-image orphan. subagent_stop_validate.py:420-453 writes the consumed receipt FIRST and appends the ledger row second, inside one try. Reproduced (probe P5): with the run directory made read-only, the stop is blocked with 'Admission receipt could not be consumed (PermissionError)' -- but the receipt on disk is already state='consumed' with result_sha256 recorded, and no ledger file exists. The agent's retry then takes the idempotent same-agent path (lines 384-409), matches the recorded digest, and is ACCEPTED with empty stdout, and the ledger row is still never written even though the directory is writable again. validate_harness does catch the end state ('Consumed receipt has no admission ledger'), so the system is fail-closed at validation time, but the Stop hook itself reports acceptance for a result with no durable attribution -- which is exactly the property the D-065 obligation names.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:420-459",
+        ".agent-harness/scripts/admit_agent.py:188-217"
+      ],
+      "evidence_fingerprint": "sha256:eaf27887afa7356c968930ab27badfaaa0ebdf64fc3eda4965fb4baafbd2299b",
+      "counterevidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:203-208"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p5_ledger_append_failure_in_stop_hook"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Suggested repair: append the ledger row before writing the consumed receipt, mirroring admit_agent.py, or make the idempotent path repair a missing ledger row."
+      ]
+    },
+    {
+      "finding_id": "F-R3-12",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "NEW/residual defect in the scrubber's coverage, silently. scrub_admission_proof.py only processes files that json.loads successfully (line 94-96 swallows every failure with `continue`) and --run only globs '*.json' (line 87). Probe P2 planted the same token five ways under a run's raw_logs and ran `--run`: the normal event JSON and a whitespace-padded key were scrubbed, but the token SURVIVED in (a) a twice-escaped payload -- a JSON file storing the whole stop event as a JSON *string*, where the regex at line 69 fails because the character after `admission_proof` is a backslash, not a quote; (b) a .log transcript; (c) a .md note. The tool then prints 'total tokens scrubbed: 2' with no indication that three files still carry the secret. Real .log and .txt files are retained under .agent-harness/runs today (e.g. run-.../raw_logs/*.log), so the shape is not hypothetical. No live leak exists in the current repository -- the digest-match sweep in F-R3-07 found only the one already-disclosed spent token -- so this is a latent coverage gap, not a present exposure.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/scrub_admission_proof.py:52-71",
+        ".agent-harness/scripts/scrub_admission_proof.py:87-101"
+      ],
+      "evidence_fingerprint": "sha256:fc60078396177a4dc0491cce57681b850cc4d7bee876cfc70124c80f3d1ef6ce",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py:1136-1174"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p2_scrubber_nested_and_non_json"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Suggested repair: scrub all retained files as text, count non-JSON and unparseable files, and report them instead of skipping silently."
+      ]
+    },
+    {
+      "finding_id": "F-R3-13",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "NEW defect: the Stop hook fails OPEN in exactly the condition for which validate_harness.py was hardened to fail CLOSED. validate_harness.py:126-131 appends an error when git cannot be run ('an unrunnable integrity check is not a passed one'). The Stop hook resolves the repository through _common.repo_root() (_common.py:27-38), which shells out to `git rev-parse --show-toplevel` and, on FileNotFoundError, falls back to Path.cwd(). If git is absent or broken and the hook's cwd is not the repository root, `harness.is_dir()` at subagent_stop_validate.py:86 is False and the hook returns at line 93 with exit 0 and empty stdout -- i.e. ACCEPT, with no lease, receipt, envelope, or contract check performed at all. Reproduced (probe P9): PATH stripped of git, cwd set to a subdirectory, valid harness present at the real root, result ACCEPTED with rc 0 and empty output. Under the recorded LOCAL-ADAPT the parent invokes the hook with cwd at the repo root and git is installed, so this is latent, not live; but it is the same 'harness installed' bypass class as round-2 finding 9, relocated from ACTIVE_RUN to CONTEXT_INDEX.json to root resolution.",
+      "assumptions_used": [
+        "The hook's cwd and PATH are set by the runtime, not by the subagent."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/_common.py:27-38",
+        ".codex/hooks/subagent_stop_validate.py:82-93",
+        ".agent-harness/scripts/validate_harness.py:118-131"
+      ],
+      "evidence_fingerprint": "sha256:e0faee1a1ed2d3b9b59512b7b2e6d03c6548c12233143c36e420667a97f9bc69",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe2.py::test_p9_stop_hook_without_git"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Suggested repair: block when repo_root() had to fall back, or search upward for .agent-harness instead of trusting cwd."
+      ]
+    },
+    {
+      "finding_id": "F-R3-14",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "NEW defect (minor): the ledger cross-check iterates run directories, not receipts, so a consumed receipt filed under a run id with no .agent-harness/runs/<id> directory is never cross-checked. validate_harness.py:198-202 builds run_receipts by filtering `consumed` on run_dir.name, so receipts for a missing run directory simply never appear in any iteration. Reproduced (probe P6): a planted consumed receipt at admissions/run-ghost/A-GHOST.json produced ok:true. Exploit value is low because deleting the run directory also deletes the results being attributed, but it is an unchecked path in a check whose stated scope is 'every consumed receipt'. Two legitimate states were confirmed NOT to false-positive: a run directory with no receipts and no ledger (probe P4, ok:true) and a reopened receipt consumed a second time by a different agent, producing two ledger consume rows (probe P3, ok:true, last row correctly matched).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:198-239"
+      ],
+      "evidence_fingerprint": "sha256:eaf27887afa7356c968930ab27badfaaa0ebdf64fc3eda4965fb4baafbd2299b",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p6_consumed_receipt_for_missing_run_dir",
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py::test_p3_reopen_then_second_consume_ledger_crosscheck"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-15",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "low",
+      "statement": "The agent_id half of the D-065 obligation ('bind one spawned agent_id to one run, assignment, and digest') is enforced only by operator convention, not by the tooling. admit_agent.py:84-89 defaults --expect-agent-id to the empty string, and subagent_stop_validate.py:236-242 skips the identity check entirely when it is empty, so a receipt minted without the flag admits ANY agent that holds the token. The docstring says 'Always pass --expect-agent-id' (admit_agent.py:24-27) but nothing warns or fails when it is omitted. Current practice is good: six of the eight receipts on disk carry expected_agent_id, including this assignment's ('d067-review-r3'); the two that do not are the pre-convention round-1 review receipts. Recommend making the flag required, or emitting a loud warning when it is absent.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py:84-89",
+        ".agent-harness/scripts/admit_agent.py:169",
+        ".codex/hooks/subagent_stop_validate.py:236-242"
+      ],
+      "evidence_fingerprint": "sha256:eb046b6cbc0a382b0581706e3c55e043e936ddd663a94494454241a19641de54",
+      "counterevidence_refs": [
+        ".agent-harness/admissions/run-20260729-f10-d069-trajectory-r4/A-D067-REVIEW-R3.json"
+      ],
+      "reproduction": [
+        "python3 -c \"import json,glob; [print(json.load(open(p)).get('expected_agent_id'), p) for p in sorted(glob.glob('.agent-harness/admissions/*/*.json'))]\""
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-16",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The stated residual (shared OS user, deliberate forgery unprevented) is disclosed honestly, completely, and consistently on every surface that matters -- admit_agent.py:33-39, .agent-harness/README.md (the 'defeats confusion, races, and prompt-level substitution; it is not a defence against an agent that deliberately writes outside its declared result path' paragraph), FROZEN_DECISIONS.md row D-067, docs/harness/VALIDATION_LEDGER.md row 2026-07-29, and audit report sections 2 and 5, with no gate flip anywhere. Section 5 even discloses the one surviving raw token by name, and I independently confirmed it is real, is in the file named, and belongs to an already-consumed receipt. But three surfaces overclaim a DIFFERENT property, the one F-R3-10 breaks: audit report section 2, table row 'Fabricated or post-hoc edited result | invisible | validator error'; FROZEN_DECISIONS.md D-067, 'validate_harness.py requires every result to carry a consumed receipt whose digest still matches'; and VALIDATION_LEDGER.md 2026-07-29, 'validator negative control on a tampered admitted result'. All three state an unconditional guarantee that the same slice's own pending_results carve-out and reopen path make conditional. The residual is honest; this specific capability claim is not.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:57-70",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:121-136",
+        ".agent-harness/context/FROZEN_DECISIONS.md:72",
+        "docs/harness/VALIDATION_LEDGER.md:5",
+        ".agent-harness/README.md:52-58"
+      ],
+      "evidence_fingerprint": "sha256:91e987433db7370bcea64e8e545b9ebd9fa4714ece9c1f330bb2239797a47d29",
+      "counterevidence_refs": [
+        ".agent-harness/scripts/admit_agent.py:33-39"
+      ],
+      "reproduction": [
+        "sed -n '48,70p' docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        "compare against <scratchpad>/test_probe.py::test_p1_reopen_unbinds_an_already_admitted_result"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Suggested repair: qualify the row as 'validator error while the receipt stays consumed', or close F-R3-10 and keep the row."
+      ]
+    },
+    {
+      "finding_id": "F-R3-17",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Live evidence and test count verified against the committed bytes. `git diff ed7bc49 HEAD -- .codex .agent-harness/scripts .agent-harness/tests` is empty, so the working tree under review is byte-identical to commit ed7bc49. `venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py` gives 35 passed in 1.67s, matching the claimed 12 -> 35. Canary evidence confirmed: C1 stop_out is empty (ACCEPT) and the ledger carries its attribution row (agent_id d067-canary-c1, result_sha256 sha256:0e7b3cac..., token_digest matching the mint row); C2 substitution stop_out is a block with 'admission_proof does not match the receipt for A-D067-CANARY-C2-VICTIM'; C3 stop_out is a block with 'No Start-time run lease exists for this agent ... Refusing to fall back to the mutable ACTIVE_RUN pointer'. The ledger holds 7 rows: 2 legacy consumes with no mint row (minted before the ledger-first ordering existed), 3 mints, 2 consumes; the victim receipt is correctly absent from the consumes and remains 'open'. All four D-065 obligation items have a concrete implementation and a fixture: same-run substitution (test_hooks.py:730), receipt/ledger-write failure (1102), lease-write failure (853), live overlapping-run canary with unique write attribution (C1).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/ADMISSIONS.jsonl",
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_out_d067-canary-c2-substitution.json",
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/raw_logs/stop_out_d067-canary-c3-leasefail.json",
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "evidence_fingerprint": "sha256:3475729a6985c9dcc16c42b2d414ed8db469d1f3e90e31c2bb9d1713f3c6a371",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git diff ed7bc49 HEAD --stat -- .codex .agent-harness/scripts .agent-harness/tests",
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R3-18",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "ADJUDICATION SUMMARY for D-070. Against the current committed bytes (ed7bc49) and the explicitly stated threat model, the D-065 obligation is PARTIALLY DISCHARGED. All nine round-2 findings are genuinely fixed in the current bytes, not merely claimed (F-R3-01..F-R3-09), and all four obligation clauses have real implementations, real negative fixtures, and a passing live overlapping-run canary with unique write attribution (F-R3-17). Clause 1 (atomic binding) is delivered by the parent-minted receipt plus the O_EXCL claim, with the caveat that the agent_id component is optional in the tool (F-R3-15). Clauses 2, 3, and 4 are fully delivered. What blocks a full discharge is that the second fix pass introduced a new defect in the exact capability the obligation depends on: `--reopen` clears the result-to-digest binding for an already-admitted result, so a post-hoc edited artifact validates ok:true (F-R3-10, reproduced end to end). Two further fail-open paths were introduced or left in place -- the consume-side ledger orphan (F-R3-11) and the Stop hook's silent accept when the repo root cannot be resolved (F-R3-13). None of these three require the residual (deliberate out-of-path writing); they are confusion-class and environment-class failures, which is precisely the class D-067 claims to remove. Recommendation: do not flip G-HARNESS-INTEGRITY on these bytes. F-R3-10 is a small, well-scoped fix; with it and F-R3-11 closed and the three surfaces in F-R3-16 requalified, the obligation would be dischargeable without further redesign.",
+      "assumptions_used": [
+        "The threat model as written is accepted: no defence against an agent deliberately writing outside its declared result path."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/admit_agent.py",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+      ],
+      "evidence_fingerprint": "sha256:287350a191dfc0fa87e95452ecbbf60fd4a1e4b4da8e4a53d4c6989053cd13cd",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d067-admission-canary/ADMISSIONS.jsonl"
+      ],
+      "reproduction": [
+        "venv/bin/python -m pytest -q -p no:cacheprovider .agent-harness/tests/test_hooks.py",
+        "venv/bin/python -m pytest -q -p no:cacheprovider -s <scratchpad>/test_probe.py <scratchpad>/test_probe2.py"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether PARTIALLY DISCHARGED is sufficient for a gate flip is D-070's call, not this review's."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/results/A-D067-REVIEW-R3.json"
+  ]
+}

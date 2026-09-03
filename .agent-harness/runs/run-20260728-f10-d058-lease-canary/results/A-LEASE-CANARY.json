@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d058-lease-canary",
+  "assignment_id": "A-LEASE-CANARY",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "agent_id": "d058-canary-agent-1",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d058-lease-canary",
+    "assignment_id": "A-LEASE-CANARY",
+    "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:31fdd12688a76b97bf8701619e8121cb23c6b321e452957c868e51531310ff8d",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d058-lease-canary/results/A-LEASE-CANARY.json",
+  "started_at": "2026-07-28T07:15:17+00:00",
+  "completed_at": "2026-07-28T07:15:54+00:00",
+  "tool_versions": {
+    "python": "Python 3.12.3"
+  },
+  "commands": [
+    "date -u +%Y-%m-%dT%H:%M:%S+00:00 && python3 --version",
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-canary/assignments/A-LEASE-CANARY.json",
+    "sha256sum verify_stdout.txt",
+    "date -u +%Y-%m-%dT%H:%M:%S+00:00"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-D058-LEASE-CANARY",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The canonical verifier reproduced the sealed hashes with VERIFY: PASS (review_role_sha256 prefix 403bfe1dffb4), and my Start-time run lease binds agent d058-canary-agent-1 to run-20260728-f10-d058-lease-canary with sealed assignment digest 31fdd12688a7, so this result remains admissible under that lease regardless of subsequent ACTIVE_RUN pointer movement.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d058-lease-canary/assignments/A-LEASE-CANARY.json",
+        ".agent-harness/runs/run-20260728-f10-d058-lease-canary/raw_logs/lease_snapshot.json"
+      ],
+      "evidence_fingerprint": "sha256:103e0972f93b7653dfa7f87c0a657a63154ccbe46852fd00341a6644d1ce981a",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260728-f10-d058-lease-canary/assignments/A-LEASE-CANARY.json"
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d058-lease-canary/results/A-LEASE-CANARY.json"
+  ]
+}

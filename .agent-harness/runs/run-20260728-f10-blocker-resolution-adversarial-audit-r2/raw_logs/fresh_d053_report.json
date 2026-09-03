@@ -1,0 +1,30 @@
+{
+ "checks": {
+  "E1_catalogue": {
+   "conversions": 6,
+   "events": 27,
+   "ok": true
+  },
+  "E3_emu_discriminator": {
+   "ok": true,
+   "self_emu_residual": 3.525406360939371e-11,
+   "single_member_residual": 1.0000171560718123
+  },
+  "E4_mu_tau_regression": {
+   "mu_tau_residual": 2.447560236182917e-11,
+   "ok": true
+  },
+  "E5_invariants": {
+   "charge_conjugation_residual": 3.138183248343415e-11,
+   "energy_ratio": 2.3321774904894606e-15,
+   "entropy_production": 9.691739087718254e-18,
+   "first_law_residual": 0.0,
+   "h_normalized_energy": 1.4820594018942042e-11,
+   "h_normalized_number": 5.8980696702487084e-12,
+   "number_ratio": 6.560719562181335e-17,
+   "ok": true
+  }
+ },
+ "contract": "BD622_D053_row9_closure_contract_2026-07-28",
+ "verdict": "PASS"
+}

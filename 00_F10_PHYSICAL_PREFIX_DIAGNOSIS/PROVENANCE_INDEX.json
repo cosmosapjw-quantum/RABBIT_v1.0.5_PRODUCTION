@@ -1,0 +1,869 @@
+{
+  "artifact_count": 58,
+  "artifacts": [
+    {
+      "artifact_id": "artifact-ab935a2c95a8482c",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "de44feee0aa484abe26976c7dc34c579643005b5",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "src/rabbit/decoupling/_independent_noqke.py",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-fa41c1b3246defcc",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "465a73f0ce40f7149bebdc2d67103f388e2344d9",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "scripts/audit/_trajectory_core.py",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "3ec42baa678a0f36baa79dab7ed6fcd136272be1634b50e78bc4b41b7e480cda",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-b8c70388cba06f56",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "d3e4e2bcfbfbe91535276c07808dc58aa1289289",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "scripts/audit/d069_independent_trajectory_r4.py",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "670bbbda461be5ac10d03671d47d89acdaca329640bb152676c5a76acc11cb0c",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-845090112713ab7e",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "2a6b7e4d06eccbc85e296a7ac3ad3850635a6964",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "native/rabbit_cpu/src/isotropic_boltzmann.rs",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "bc61b942d4d616f022a2681c79ba6e052c54caa659ef2da7840b57dbbb01e236",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-50226d5b50d9b686",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "f79f18b08195e0ef504219683f9bed0c387348ba",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "native/rabbit_cpu/src/electron_catalog.rs",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "930066ca47d729386eebe91091680fc2f6e2c7039f0760166f2c88c3af54b805",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-6c1de642f38fcf00",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "566a9c3fee911c6a51dafe561ce0a2d11a029a57",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "native/rabbit_cpu/src/quadrature.rs",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "356f4e92b3fcc270c822c6cc7bd785c681011af6de374cf4b88b3a895b904786",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-e0196d5b1a003cc4",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "4f50df999e6d1929ad6009db7b7cad2693a8ca07",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "tests/test_independent_noqke_comparator.py",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "8f6036fbe4db303e84c0c76f740f3f0ffd72411e504c5b282431e6592c9d9ad8",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-9864a1921b1fd43f",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "42a66e1c25c23004c1e67e93163f2d63ef2b8637",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "b732283c836797a917d7a43aca10b11aaf132a7669b8fe4e0b3fd09d1a481c7d",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-9e5235d275e86120",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "0e3b50c1c21fa2c589a3dbed7eb9f7bc0a16c512",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "docs/audit/BD622_V2_option3_closed_and_protocol_2026-08-04.md",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "3933180b16fc9baf5bf0f871b4d2e99ff3d151445252fb2249c996b958954e9c",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-2add9287e817a730",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "68f690aef1d757aff69ecae515f6820792e39553",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "docs/audit/BD622_V2_result_2026-08-05.md",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "770e7de8f81886b2a56a204fbf6db5aa90ad185bff77b6faf4e7fb17abc529fc",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-b0c9df0bec1a2912",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "9c236772870c90d419432290106e5677b77e2a11",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "docs/audit/BD622_V3_protocol_2026-08-05.md",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "83df9d0edc085fe5a0a58008d24b29f795541be10fe8a5618db6592618456c77",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-763ac32ec9cf49a2",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "dd6dc5e30467e5ef93a510b64d7429f9a51e09c9",
+      "notes": "Runtime/source byte locked to the exact F-10 base commit.",
+      "repo_path": "docs/audit/BD622_V3_report_2026-08-06.md",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source",
+      "sha256": "8b028acdbf4a4c3644f4fcdd0b1b8e112d635cb6979e8b9dac03b1516a17c78f",
+      "source_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-1491b7ee5f8c60b2",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "fb2d1a33fdf55315b5b8db6d1e9b90e91ffd50a8",
+      "notes": "Retained solver archive; exact ZIP and internal JVP/history bytes checked.",
+      "repo_path": "RABBIT_F10_SolverAlgorithm_Blocker_Research_Loop_2026-08-06.zip",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RHS-JVP"
+      ],
+      "role": "source_bundle",
+      "sha256": "8ffb9c34019e4bc9e431985df9fe69a347ced5da11f68308a1943187e3829fd8",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-d936182447507123",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "618758eae82753e9c54b4f5a59e2e7c817566097",
+      "notes": "Retained math/physics archive including bounded tail evidence and warning.",
+      "repo_path": "RABBIT_F10_MathPhysics_Blocker_Research_Loop_2026-08-06.zip",
+      "requirement_ids": [
+        "REQ-SOURCE",
+        "REQ-RECEIPTS"
+      ],
+      "role": "source_bundle",
+      "sha256": "bb3ca057d1ecee6b11e33bba5dbcd8325a23d95dfe925bb5a235866d05ed4fb0",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-bef02b59ddf474ac",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "8d47b77ceae58de74075bcd1f3a3c312c36b2ac8",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/instrumented_rhs.py",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "ad85f2731ff21bacc781c2a5cb96c7b6021d2f7ceb59c188bd5ac993c95a4cdb",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-feae15d4f34fc597",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "c46ed70d823d3e0f3bad074b57fb3f7924223615",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/instrumented_bdf.py",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "19f96e121f89c60b9e0380bf4a53b0b08c4e07b69bba7be295f4370d8a5ccf06",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-cb93fcd1dc27deea",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "4c2cc0a4e697e911718de2dfd0b2d631a0d0d05a",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/run_v3.py",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "78d124d850360d1aed723f2b3e3218a39e4c6c56a3f2544424fb4d2fbc83e307",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-3f9da8e8dff572f9",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "eaf224ab585b0c9e8c4b54934bcec2a855d0f004",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/analyse_v3.py",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "9c4275bde13d1539ee098e6b25ec2420c292aa9334176f0856223a5255303fb6",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-a6afa741977d2008",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "463d691ff058ae49641fcfa0c7bf8a1939fd34fd",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/render_v3.py",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "acc1b9bab83b61749042f25e358b5020803350a60a6f62a84461fe75a359ab26",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-1f7b0307a59becaa",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "383b7af1eee04d36be44122e246edfe6ec3135ad",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/ANALYSIS_V3.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "0f5ca81f7003c1f484d6ef0deab83f4c3202e561d13f727c2a5d544f832b8276",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-32fccd942db4241a",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "e8a2e0783cf644f14a74952aa292ed04a9471ee4",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/report_verification_output.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "c4796e00034a1079fefe20c65b54ad7cde704fbd5f26eaa42cb8bc6d32d8b0c4",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-3c9bddea92aba5c2",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "dbe7dd67cbe6ad09d52e860b3602c30482be2efe",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/r4_reference.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "18c92316f914c6e184472875fa7564d077397a3c5136244e6859ca0d0cc28f5c",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-0f2733361f9f0768",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "a3088d99268bb28766dbd3df1e73975367861baf",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/pins_verified.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "c86640d620cb6daf183bbf6321a26b104f221fd17df9bc25e8192cd7ab9bede6",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-e06dbd6fa8003fa9",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "c5c0ad90c09f76783ef0cafa6acbe92539f1cc77",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/selftest_result.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "16d12378225ef8b1fe0948ccbd09cb18a3155ef24efbfeec07dc342a13423193",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-d80a4a7511080be9",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "471a5c6be96e7c4c49346b0d7fa120bf985ef01c",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/driver.log",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "05124f03df2e19c3d10609dee93a5e1b30a1e86a6b42080fbbca37996500172e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-ff16f62f20690b67",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "471a5c6be96e7c4c49346b0d7fa120bf985ef01c",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/nohup.log",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "05124f03df2e19c3d10609dee93a5e1b30a1e86a6b42080fbbca37996500172e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-6c4258ab02c28eda",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "ea743097daa99ba48401ef889cda516e9f64a504",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/accepted.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "3d1077381bcff291a60343e556e76cf3eb20fe3324fd8961281eeb62baa5c7d1",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-903cfe2d6ebf1deb",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "e9a761043a5b3ebc2e4538535108dc05a171d46a",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/jac_factor.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "57ff04827629688b693d2162c465a292109e3afb7de31b32974b48520f879cb7",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-ad7093b4b14f5d7e",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "73d2912180151eb43608acb113d374d9f651677d",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/jacobian_events.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "6faf9cc66fa1563f5fe7620252f039a973a7b650292e2af363fd4fe18dea0de2",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-ded78d6eb7b6824b",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "d2eeb6e98b5110be2af1afa7cf9359bfb50bfc4b",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/newton_calls.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "f6e524959af67b21de0c6c52871c35cb282d2d4383679d3df2b890a3558b0871",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-0aae4e938f9ef5ee",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "85bf348d199c7a2c296dc2607244c0314a56bdd3",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_1200.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "bd904e4150fbf009cfd3f0918c78d68618769d10d98ae3c4b681132503f6ca49",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-485c1ebc9e098139",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "0ffeca0ff75337a7b54dac578da097e3feeaff97",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_2000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "9eb9ac920646a037ecfc4ebcb66de8d6e04599d4ac3fc7f73b883569a31d0f5f",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-c26c441de157ad2f",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "d3e5dcb8da81a43d86f04643b53192d5a027f0f9",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/obs_jac_3000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "595b107ea98ed9244a6199b2ea94d038a5aa3b7d84d9db5e13231cef520adf66",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-67b9594b98581834",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "598e3fc87f3fec5877fcd3a10cb8fe74118c97dd",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/ratcheted_cols_1200.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "93dba4914e08de49be4466e9b8973e2763c524c684c19860efa29a9f415c8d6e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-8d93c365d71f2241",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "172120631a71ebfe1794d50277256b03a8788d4d",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/ratcheted_cols_2000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "ac33162bca5a3b6c357a972d5ef2f5aed0748a68bb2a3effb3e3597c8f6a087e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-d65697dcbcaa6fad",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "8f9d9691058403d216c4f7169570a72951be115d",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/ratcheted_cols_3000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "3399b945fab9469c9997dd7e950992a2d323e7ddc7efa93c1d9338f42a065e6f",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-bd242dbde1c5c2b6",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "19e5dfd896231e5149e06f72c450fc9a212b4f32",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/rhs_calls.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "2ce10b05aec15c47b278de7279f495106430301eaacc44de099094b1cb778e7e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-bae2f547c5e1edef",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "af686f69b5eec6bc699f60e0e63fe47e958c0802",
+      "notes": "Original order-60 retained state at its canonical campaign path.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RECEIPTS"
+      ],
+      "role": "checkpoint",
+      "sha256": "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-64f968619bab4dc3",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "cfb17344ae166c01c2e5bcb14acae0d968e49477",
+      "notes": "Original order-60 retained state at its canonical campaign path.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_2000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RECEIPTS"
+      ],
+      "role": "checkpoint",
+      "sha256": "780ad7c1388caec23f02012781717d43ffb85d96d4d501c40c504939e7c9a44d",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-882995cf27da715a",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "e2dcc1c3229e2edc9fb8640be8c2071ec32c515f",
+      "notes": "Original order-60 retained state at its canonical campaign path.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_3000.npz",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RECEIPTS"
+      ],
+      "role": "checkpoint",
+      "sha256": "dbf760acfde72c2617192592995d6593043309d4c0de7dc6fab99d805f9504ad",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-0e0ace4ca80a811f",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "628a2c8a71bc2e5904ee28223a69a0ecb47e7768",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/step_events.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "5344b9420c2a172d42714aa3775d5662f0ab820415f411bb31b57f2c63da8334",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-6bfedeef0ff56068",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "04e7eb66ee87a1a7cd3d43d43e92341848152bad",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/summary.json",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "eae659168c8f6269db62a74729336837e9f00ca37a2b5b5a5f9b906ec6f67683",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-1edab6bf64e6ef03",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "53940b86a5d9d68014b846cfdf063ca3ff7e81d3",
+      "notes": "Canonical retained campaign or instrumentation provenance; not a direct JVP receipt.",
+      "repo_path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/trials.jsonl",
+      "requirement_ids": [
+        "REQ-CHECKPOINTS",
+        "REQ-RHS-JVP"
+      ],
+      "role": "audit",
+      "sha256": "c0998aeb5bd8a9cdad6e440acbfb554fbb27b2d7bfd17d02761a5b40603f3c3a",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_TRACKED"
+    },
+    {
+      "artifact_id": "artifact-fdaff42191fc2f02",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "cc30c4cf399bbe6be67df772182379e5d720a826",
+      "notes": "Machine-readable source/tree/archive identity.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/SOURCE_BUNDLE.json",
+      "requirement_ids": [
+        "REQ-SOURCE"
+      ],
+      "role": "source_bundle",
+      "sha256": "2fa75fc782fb512ebd66395a5b1951f1fe9966f36cd25ab25741b7254ebe8e8f",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-b52a23c7c37d075b",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "dcc60f36e7894eb7755019e3fc7cecf340062c4c",
+      "notes": "Deterministic order-60, y_max=30 input or value-level manifest.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/PREFIX_INPUTS.json",
+      "requirement_ids": [
+        "REQ-INPUTS"
+      ],
+      "role": "input",
+      "sha256": "927cd39f58d1414da45f80e4c8bc39692533d8741684f14e3ca760a3582e594f",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-939c2c7cb1b5d782",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "6762c8fc8881b12871536338219e0ea295c8ddfc",
+      "notes": "Deterministic order-60, y_max=30 input or value-level manifest.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/QUADRATURE_CATALOG_MANIFEST.json",
+      "requirement_ids": [
+        "REQ-INPUTS"
+      ],
+      "role": "input",
+      "sha256": "3dd211c9abf4701b0d527f58d170a8873ee3b044238a3972cad147d01c6d4d5d",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-207936751a373bdf",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "a417da9ef0fff629f8410116b9cd1e7ccac86621",
+      "notes": "Deterministic order-60, y_max=30 input or value-level manifest.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/initial_state_order60_ymax30.npz",
+      "requirement_ids": [
+        "REQ-INPUTS"
+      ],
+      "role": "input",
+      "sha256": "6df77abea95b71ba1c26953d6595197c4da689e1761a6f7186349c318504698e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-15c9e274887ee19b",
+      "claim_status": "SPECIFIED",
+      "git_blob_oid": "c4c45174c1c88132ec2f0b3b122dab3038ac96c4",
+      "notes": "Prospective contract committed before direct receipt output.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/PREFIX_CONTRACT.json",
+      "requirement_ids": [
+        "REQ-CONTRACT"
+      ],
+      "role": "contract",
+      "sha256": "c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-12b47a2869c78ec6",
+      "claim_status": "SPECIFIED",
+      "git_blob_oid": "7fb8b1f8a05263f4c792a28b4462dcd14977fa7d",
+      "notes": "Prospective contract committed before direct receipt output.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/PREFIX_CONTRACT.sha256",
+      "requirement_ids": [
+        "REQ-CONTRACT"
+      ],
+      "role": "contract",
+      "sha256": "6220c709dd29de3a049683ffb35a018be41b83c2fd5ba814b720301679cb486c",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-40592b986167cebd",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "8ce56eec12f313efb24cf7e8186eb96b73cff107",
+      "notes": "Executed four-state physical RHS/JVP diagnostic receipt; inspect its retained verdict.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "receipt",
+      "sha256": "7db72888d007d0ff736d6aaf0257b039a02508eab7b4905fd81af0ec5f024864",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-778f9e1d78edcfda",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "4f2540e1ffdbc4405d47f25a8fd6cf68b736861b",
+      "notes": "Raw direct RHS, collision, Arnoldi, direction, and JVP vectors.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/PHYSICAL_RHS_JVP_VECTORS.npz",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "jvp_provenance",
+      "sha256": "30d9dd1912291c2ff70a665dd7976e239975be66689b44053238cb7fe79d3289",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-47fa1119fb671e14",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "3cbbf6daa3275cabc32a61649a0323c2f1664333",
+      "notes": "Execution chronology and receipt/vector byte bindings.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts_v2/RECEIPT_RUN_LOG.json",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "rhs_provenance",
+      "sha256": "f5e75857766f759c645650b1dc67c98fdaf8b0d362a3cd50cf0f803ef8b782e1",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-f81365d4688c8313",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "cc3969445d125225680a1f206916220a61904336",
+      "notes": "Executed four-state physical RHS/JVP diagnostic receipt; inspect its retained verdict.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_RECEIPTS.json",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "receipt",
+      "sha256": "21bb4162a7cd2d1816c3f0965520dacfe2d4e2feb17165b32dc65c0ce4889b8a",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-de06f6a950f30eb5",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "b13049d3aefcad3ba2ed4bf6f11b628ac0ae0774",
+      "notes": "Raw direct RHS, collision, Arnoldi, direction, and JVP vectors.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/PHYSICAL_RHS_JVP_VECTORS.npz",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "jvp_provenance",
+      "sha256": "7a709729fa3d3039c5f5c72aa8e6322984e9fd1f4a30b67575e64b1ceaf4cb1c",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-078893b0e3e94667",
+      "claim_status": "VALIDATED",
+      "git_blob_oid": "e116c19aa9100e3d999dabd6b9b3b73cfa39b777",
+      "notes": "Execution chronology and receipt/vector byte bindings.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/receipts/RECEIPT_RUN_LOG.json",
+      "requirement_ids": [
+        "REQ-RHS-JVP",
+        "REQ-RECEIPTS"
+      ],
+      "role": "rhs_provenance",
+      "sha256": "d23c6ee0165c835d2fb6273b3df92a36e9eb3d7e90d226b7fea83a5d81813b1a",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-b335630551682c19",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "d3fb3cf334cd99df6d57fcada76db98f83454eb1",
+      "notes": "Branch-local external-reader navigation.",
+      "repo_path": "README.md",
+      "requirement_ids": [
+        "REQ-ENTRYPOINT"
+      ],
+      "role": "audit",
+      "sha256": "06a37a2816d3cd58f62ce4bc8794f4258d42e77b2d16ba96ecb8411793b902da",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-f1ef0bf3f24c36d3",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "9d2165b577cdd92ba5b0749b03a96576026db861",
+      "notes": "Branch-local external-reader navigation.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md",
+      "requirement_ids": [
+        "REQ-ENTRYPOINT"
+      ],
+      "role": "audit",
+      "sha256": "a16afc6128d76dae3bd8c03f3242fd363d086425b8bb26eabef95244af4ffe95",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    },
+    {
+      "artifact_id": "artifact-51029c3197391951",
+      "claim_status": "IMPLEMENTED",
+      "git_blob_oid": "ed9ad7c6d9c5d722c2d58b433c09549722d94617",
+      "notes": "Branch-local external-reader navigation.",
+      "repo_path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/FILE_LOCATIONS.md",
+      "requirement_ids": [
+        "REQ-ENTRYPOINT"
+      ],
+      "role": "audit",
+      "sha256": "536c6409b8f4a3374dc2613115ec104e7e678c86728dad9809bb1e9561a17b4e",
+      "source_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "status": "PRESENT_DERIVED_VALIDATED"
+    }
+  ],
+  "base_commit": "719987d0bc5a018d57fded1df2c8ad3f0c3fc24f",
+  "schema": "rabbit.f10.provenance_index.v1",
+  "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6"
+}

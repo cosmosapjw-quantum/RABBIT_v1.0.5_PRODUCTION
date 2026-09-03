@@ -1,0 +1,211 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d070-canary-c5",
+  "assignment_id": "A-D070-CANARY-C5",
+  "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+  "agent_id": "d070-canary-c5",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d070-canary-c5",
+    "assignment_id": "A-D070-CANARY-C5",
+    "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:9026a496a1d0071083469817026eacedd9cb2a9318c60b18396e376c3f7b276e",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d070-canary-c5/results/A-D070-CANARY-C5.json",
+  "started_at": "2026-07-29T10:11:41Z",
+  "completed_at": "2026-07-29T10:14:22Z",
+  "tool_versions": {
+    "python": "3.12.3"
+  },
+  "commands": [
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d070-canary-c5/assignments/A-D070-CANARY-C5.json",
+    "venv/bin/python .agent-harness/scripts/validate_harness.py  (live read-only run against the real repo)",
+    "git clone --no-local <repo> /tmp/.../scratchpad/c5_test_clone && git checkout d94270f",
+    "python3 pcor_test.py  (imports validate_harness.pending_carve_out_refusal directly and drives a 10-case boundary matrix)",
+    "python3 legacy_pin_test.py  (imports validate_harness.check_legacy_manifest_pin / declared_legacy_entry_count and reconciles the real 136-entry manifest against SSOT_FACTS.json)",
+    "python3 legacy_pin_test2.py  (imports validate_harness.canonical_legacy_digest / check_legacy_manifest_pin against synthetic append/swap entry sets)",
+    "rm .agent-harness/context/LEGACY_RESULTS_MANIFEST.json && python3 .agent-harness/scripts/validate_harness.py && git checkout -- .agent-harness/context/LEGACY_RESULTS_MANIFEST.json  (end-to-end tracked-but-deleted probe in the isolated clone, then restored)",
+    "grep -n legacy_results_manifest_entry_count -A 35 .agent-harness/context/SSOT_FACTS.json",
+    "sha256sum on every file cited as evidence below"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c5/results/A-D070-CANARY-C5.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D070-C5-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "All conditions for the open-receipt carve-out are AND-ed, and a non-active run cannot be excused. pending_carve_out_refusal() (validate_harness.py:399-482) requires, in order: (1) run_name == active, decided at line 440 'if active is None or run_name != active:' -- an open receipt sitting in any run other than the active one is refused outright; (2) the receipt's own run_id/assignment_id fields name the exact (run_name, assignment_id) being excused (lines 446-451); (3) an assignment file is still registered for it under runs/<run>/assignments/<aid>.json (lines 452-457); (4) a parseable, timezone-aware created_at (lines 458-467); (5) created_at is not in the future (lines 469-473); (6) age <= PENDING_ADMISSION_MAX_AGE_HOURS (line 474). The caller only ever consults this function through open_receipts.get(key) where key is the RESULT artifact's own (run_name, assignment_id) (main(), line 933), so a non-active-run result can never even reach a receipt that would excuse it. Live-verified against the running system: `venv/bin/python .agent-harness/scripts/validate_harness.py` right now reports active_run='run-20260729-f10-d070-canary-c5-decoy' while an open receipt sits at admissions/run-20260729-f10-d070-canary-c5/A-D070-CANARY-C5.json (this very assignment) -- exactly the pointer-move scenario this canary stages -- and pending_result_count is 0, i.e. the carve-out is correctly refused for it because run_name != active.",
+      "assumptions_used": [
+        "The parent's pointer move to a decoy run is the only relevant change to ACTIVE_RUN during this session",
+        "validate_harness.py at HEAD d94270f is byte-identical to the copy imported in the isolated test clone"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:399-482 (pending_carve_out_refusal)",
+        ".agent-harness/scripts/validate_harness.py:440-445 (the active-run gate)",
+        ".agent-harness/scripts/validate_harness.py:933-941 (sole call site, keyed by the result's own run_name/assignment_id)",
+        "live stdout of validate_harness.py: active_run='run-20260729-f10-d070-canary-c5-decoy', pending_result_count=0"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n 'if active is None or run_name != active' .agent-harness/scripts/validate_harness.py",
+        "venv/bin/python .agent-harness/scripts/validate_harness.py | python3 -m json.tool"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The age ceiling is PENDING_ADMISSION_MAX_AGE_HOURS = 24 (validate_harness.py:96), and the boundary comparison at line 474, 'if age > timedelta(hours=PENDING_ADMISSION_MAX_AGE_HOURS):', is strict greater-than: a receipt exactly 24h00m00.000000s old is still EXCUSED (falls through to `return None`), and only strictly past 24h is REFUSED. Verified empirically by importing pending_carve_out_refusal (the real function, not a reimplementation) in an isolated clone at frozen HEAD d94270f and driving it with created_at = now-24h exactly -> 'EXCUSED', and created_at = now-24h-1s -> 'REFUSED: ...has been open for 24.0h, past the 24h in-flight ceiling...'.",
+      "assumptions_used": [
+        "System clock used for `now` in the isolated test matches the semantics of datetime.now(timezone.utc) used in production"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:96 (PENDING_ADMISSION_MAX_AGE_HOURS = 24)",
+        ".agent-harness/scripts/validate_harness.py:474-481 (strict > comparison and its message)",
+        "scratchpad c5_test_clone/pcor_test.py cases 'exactly 24h old' -> EXCUSED and '24h+1s old' -> REFUSED, run against the imported real function"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '90,97p;474,481p' .agent-harness/scripts/validate_harness.py",
+        "import validate_harness as vh; vh.pending_carve_out_refusal(harness, run, aid, receipt_dated_exactly_24h_ago, active, now) is None"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "A receipt with no created_at, an unparseable one, or a naive (tz-less) one is refused: `raw = str(receipt.get('created_at') or '')`, then `datetime.fromisoformat(raw)` either raises (caught, created=None) or succeeds without tzinfo; the check `if created is None or created.tzinfo is None:` (lines 458-467) refuses both, with the message '...carries no parseable UTC created_at...'. A future-dated receipt is separately refused by `if age < timedelta(0):` (lines 469-473), message '...in the future; the carve-out cannot be extended by dating a receipt forward'. Verified empirically against the real function: created_at='' -> REFUSED (no parseable created_at); created_at='2026-07-28T12:00:00' (naive) -> REFUSED (same message, tzinfo is None); created_at=now+1s -> REFUSED (dated in the future).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:458-467 (created_at parse / tzinfo gate)",
+        ".agent-harness/scripts/validate_harness.py:469-473 (future-dated gate)"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 -c \"from datetime import datetime; datetime.fromisoformat('')\"  # raises ValueError, mirrors the guarded path",
+        "scratchpad c5_test_clone/pcor_test.py cases 'missing created_at', 'future timestamp +1s', 'naive datetime (no tz)' -> all REFUSED"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "There is no path where an open receipt excuses an artifact it does not name. Two independent checks must both agree: (a) the receipt is only ever reachable via open_receipts.get((run_name, assignment_id)) where the dict is built keyed by the RECEIPT FILE'S OWN location -- (path.parent.name, path.stem) at lines 758-772 -- i.e. it must physically sit at admissions/<run_name>/<assignment_id>.json to be a candidate at all; (b) pending_carve_out_refusal then separately re-checks the receipt's own internal run_id/assignment_id fields against that same (run_name, assignment_id) at lines 446-451, refusing with 'its open admission receipt names X/Y, not the artifact it is being read to excuse' on any mismatch. A receipt copied to the right filename but wrong internal content, or vice versa, fails one of the two checks. Verified empirically: a receipt whose content field assignment_id='A-2' looked up under key A-1 -> REFUSED with exactly that message.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:758-772 (open_receipts dict, keyed by file location)",
+        ".agent-harness/scripts/validate_harness.py:446-451 (content-name cross-check)",
+        ".agent-harness/scripts/validate_harness.py:933 (sole lookup site)"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "scratchpad c5_test_clone/pcor_test.py case 'mismatched name' -> REFUSED: 'its open admission receipt names fake-active-run/A-2, not the artifact it is being read to excuse'"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The legacy manifest's identity is pinned on three independently checked surfaces beyond the raw file bytes: (1) git tracking of LEGACY_RESULTS_MANIFEST.json itself, checked every run by git_porcelain_errors() (lines 485-508, called at 751-753) -- this alone stops at a commit, which was the round-5 hole; (2) an entry_count FACT declared in SSOT_FACTS.json under fact_id 'legacy_results_manifest_entry_count' (currently value 136, as_of_commit a1cdd8a), which validate_harness.py cross-checks against the manifest's own entry_count via declared_legacy_entry_count()/check_legacy_manifest_pin() (lines 304-396), AND which check_ssot_consistency.py independently re-verifies via three declared assertion sites in SSOT_FACTS.json: the manifest's own 'entry_count' field, the '(136 pinned)' figure in the live D-070 Part B1 row of docs/harness/VALIDATION_LEDGER.md, and the frozen '136 pre-admission results pinned' row for D-070-B1 in docs/harness/FROZEN_DECISIONS.md (pinned_to_commit a1cdd8a); (3) a canonical SHA-256 digest of the parsed (run_id, assignment_id, sha256) entry set, hardcoded as LEGACY_MANIFEST_PINNED_SHA256 in validate_harness.py itself (lines 83-88), computed by canonical_legacy_digest() (lines 275-286) and compared at lines 387-393. Confirmed live against the real repo: legacy_results_manifest reports 'ok (136 pinned); pinned by declared fact and digest (136)' and ssot_consistency reports 'ok'.",
+      "assumptions_used": [
+        "check_ssot_consistency.py's generic per-fact assertion mechanism (ASSERTION_KEYS/role handling, ~lines 1124-1190) is unmodified from what was read"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:54-96 (round-5 rationale and the two added surfaces)",
+        ".agent-harness/scripts/validate_harness.py:304-396 (declared_legacy_entry_count, check_legacy_manifest_pin)",
+        ".agent-harness/context/SSOT_FACTS.json:70-98 (legacy_results_manifest_entry_count fact, 3 assertion sites)",
+        ".agent-harness/scripts/check_ssot_consistency.py:1124-1190 (generic per-fact assertion cross-check)",
+        "live stdout: legacy_results_manifest='ok (136 pinned); pinned by declared fact and digest (136)', ssot_consistency='ok'"
+      ],
+      "evidence_fingerprint": "sha256:4fd0a5a7d8ba0da14f88d4b562bdfd8df942e0172e004f6f98ca5f93fbd24dff",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n legacy_results_manifest_entry_count -A 35 .agent-harness/context/SSOT_FACTS.json",
+        "venv/bin/python .agent-harness/scripts/validate_harness.py | python3 -m json.tool"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Appending one entry is always caught, and swapping one entry at unchanged count is caught only by the digest surface, never the count surface. Verified by driving the real check_legacy_manifest_pin()/canonical_legacy_digest() (imported, not reimplemented) against a synthetic 5-entry baseline in the isolated clone, with the module's own LEGACY_MANIFEST_PINNED_SHA256 monkeypatched to that baseline's digest so the comparison logic under test is unchanged: appending one entry with entry_count correctly bumped from 5 to 6 (i.e. the attacker also edited the declared-facts surface) -> caught solely by 'entries do not match the digest pinned in validate_harness.py' (lines 387-393); appending one entry while the declared count is left stale at 5 -> caught by BOTH the count-mismatch error (lines 379-386, 'holds 6 entries but the declared-facts file pins 5') AND the digest-mismatch error; swapping a single entry's digest while holding count at 5 -> the count cross-check is silent (5==5) but the digest cross-check still fails, because canonical_legacy_digest() hashes the full sorted set of (run_id, assignment_id, digest) triples, not just cardinality. In production this means: a swap is caught unconditionally by the digest pin (a constant baked into a file the attacker's manifest edit does not touch); a naive append is caught unconditionally too, and only stops tripping the count check if the attacker also lands a correct, coordinated edit to SSOT_FACTS.json -- a third, separately git-tracked and separately cross-checked file.",
+      "assumptions_used": [
+        "canonical_legacy_digest()'s use of NUL-separated, newline-joined, sorted (run_id, assignment_id, digest) triples (lines 275-286) is collision-resistant for this purpose, i.e. SHA-256 is not broken"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:275-286 (canonical_legacy_digest)",
+        ".agent-harness/scripts/validate_harness.py:361-396 (check_legacy_manifest_pin)",
+        "scratchpad c5_test_clone/legacy_pin_test2.py: 3 cases (bumped-count append, stale-count append, same-count swap) run against the imported real functions"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 legacy_pin_test2.py  # prints per-case status and errors for append(count-bumped), append(count-stale), swap(count-unchanged)"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C5-007",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "An absent manifest fails closed (nothing grandfathered) rather than passing open; a manifest tracked in git but deleted from the working tree is caught twice, independently. load_legacy_manifest() (lines 195-206) returns status 'absent (no legacy results are grandfathered)' with an empty index whenever the file is not a regular file on disk, regardless of git state. Because SSOT_FACTS.json in the live tree still declares entry_count=136 for this fact, check_legacy_manifest_pin() then raises 'Declared-facts file pins 136 legacy result artifacts, but the legacy results manifest is absent...The manifest cannot be removed or broken to drop the pin.' (lines 372-378) -- this is the fallback that does not depend on git at all. Separately and earlier in main(), git_porcelain_errors() on LEGACY_MANIFEST_REL (lines 485-508, 751-753) reports any tracked-file change under that path including a working-tree deletion (`git status --porcelain` emits ' D <path>', which does not start with '??' and so is not exempted) as 'Legacy results manifest modified after commit: D ...'. Verified end-to-end, not just by code reading: in the isolated clone at frozen HEAD d94270f, deleting the real, tracked, 136-entry LEGACY_RESULTS_MANIFEST.json from the working tree and running the actual validate_harness.py (unmodified) produced exactly both of the above errors plus 75 'Result artifact is not attributed: no consumed admission ledger row and no legacy manifest entry for ...' errors, one for every previously-grandfathered legacy result; `git checkout --` restored a clean tree afterward.",
+      "assumptions_used": [
+        "The isolated clone's set of legacy (ledger-less) result directories matches production at HEAD d94270f, which it does since the clone was made from that exact commit"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py:195-206 (load_legacy_manifest absence handling)",
+        ".agent-harness/scripts/validate_harness.py:372-378 (absence-vs-declared-count fallback error)",
+        ".agent-harness/scripts/validate_harness.py:485-508 and 751-753 (git_porcelain_errors and its call site)",
+        "scratchpad c5_test_clone: `rm .agent-harness/context/LEGACY_RESULTS_MANIFEST.json && python3 .agent-harness/scripts/validate_harness.py` full transcript"
+      ],
+      "evidence_fingerprint": "sha256:e05d01aa2bfb82be5dba253efd2ab7ce18c44103e7dd051a12b77b6753d4227e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cd <isolated clone at d94270f>; rm .agent-harness/context/LEGACY_RESULTS_MANIFEST.json; python3 .agent-harness/scripts/validate_harness.py; git checkout -- .agent-harness/context/LEGACY_RESULTS_MANIFEST.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c5/results/A-D070-CANARY-C5.json"
+  ]
+}

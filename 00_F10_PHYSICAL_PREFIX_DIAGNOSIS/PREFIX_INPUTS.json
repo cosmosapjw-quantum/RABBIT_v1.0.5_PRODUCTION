@@ -1,0 +1,75 @@
+{
+  "initial_state": {
+    "claim_status": "DERIVED",
+    "derivation": [
+      "scripts/audit/_trajectory_core.py::build_setup",
+      "scripts/audit/_trajectory_core.py::initial_state"
+    ],
+    "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/initial_state_order60_ymax30.npz",
+    "sha256": "6df77abea95b71ba1c26953d6595197c4da689e1761a6f7186349c318504698e"
+  },
+  "npz_loading": {
+    "allow_pickle": false
+  },
+  "output_directory": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS",
+  "quadrature_catalog_manifest": {
+    "path": "00_F10_PHYSICAL_PREFIX_DIAGNOSIS/QUADRATURE_CATALOG_MANIFEST.json",
+    "sha256": "3dd211c9abf4701b0d527f58d170a8873ee3b044238a3972cad147d01c6d4d5d"
+  },
+  "resolution": {
+    "order": 60,
+    "state_dim": 182,
+    "y_max": 30.0
+  },
+  "retained_creep_checkpoints": [
+    {
+      "N": 0.16286930247517223,
+      "fields": [
+        "h",
+        "order",
+        "raw",
+        "t",
+        "y"
+      ],
+      "h": 5.6475581308723655e-06,
+      "integrator_order": 3,
+      "path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz",
+      "raw_call": 1322,
+      "sha256": "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380",
+      "state_sha256": "623985fb3393bfa6d7eb4c78e7a5c359d14621146fc3f020956c4685eab54cc8"
+    },
+    {
+      "N": 0.16297062760991832,
+      "fields": [
+        "h",
+        "order",
+        "raw",
+        "t",
+        "y"
+      ],
+      "h": 1.378798371784451e-05,
+      "integrator_order": 1,
+      "path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_2000.npz",
+      "raw_call": 2118,
+      "sha256": "780ad7c1388caec23f02012781717d43ffb85d96d4d501c40c504939e7c9a44d",
+      "state_sha256": "bc6be3c38f32d888afbfea51833cdc8e61d5fd306bb1e8cb36c6df46ec5b743c"
+    },
+    {
+      "N": 0.1631703648662373,
+      "fields": [
+        "h",
+        "order",
+        "raw",
+        "t",
+        "y"
+      ],
+      "h": 1.6831034811842782e-05,
+      "integrator_order": 1,
+      "path": ".agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_3000.npz",
+      "raw_call": 3094,
+      "sha256": "dbf760acfde72c2617192592995d6593043309d4c0de7dc6fab99d805f9504ad",
+      "state_sha256": "cad23459ed67d49a69545d664a84e9af526778ec397e9c35f60f107b422b043a"
+    }
+  ],
+  "schema": "rabbit.f10.prefix_inputs.v1"
+}

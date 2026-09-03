@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+  "assignment_id": "A-CAS-SAGE",
+  "agent_type": "cas_sage_singular",
+  "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+  "agent_id": "019f8aac-5566-7880-b4d2-9fbb07559fae",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+    "assignment_id": "A-CAS-SAGE",
+    "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:703250e5a9a63695928c95e79ac7da5d12df5996d1087b003ea3a52d6c67733d"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-CAS-SAGE.json",
+  "started_at": "2026-07-23T01:35:47+09:00",
+  "completed_at": "2026-07-23T01:51:42+09:00",
+  "tool_versions": {
+    "sage": "SageMath 10.9, release 2026-05-04",
+    "singular": "Singular 4.3.2 (4330, 64 bit), GMP 6.3.0, NTL 11.5.1, FLINT 3.0.1",
+    "sage_coefficient_domains": "QQ, Q(i), polynomial rings over Q(i), and fraction field QQ(r,m)",
+    "singular_coefficient_domain": "QQ",
+    "singular_monomial_order": "dp",
+    "singular_extension_fields": "none",
+    "singular_localization": "elastic COM ideal saturated by r; no saturation or localization for the stoichiometric ideal; pair-shell identity holds in the unsaturated polynomial ideal",
+    "resource_limits": "single local process per engine invocation; exact symbolic algebra only; no W7/B3 numerical execution"
+  },
+  "commands": [
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; sage --version",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; Singular --version",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; sage d035_sage_axis.sage > d035_sage_axis.out 2>&1 (exit 1: default DOT_SAGE cache was read-only)",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; SAGE_DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage > d035_sage_axis.out 2>&1 (exit 1: unsupported environment variable did not move DOT_SAGE)",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage > d035_sage_axis.out 2>&1 (final exit 0)",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_electron_trace_probe.sage > d035_electron_trace_probe.out 2>&1 (final exit 0)",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; Singular -q d035_singular_axis.sing > d035_singular_axis.out 2>&1 (final exit 0)",
+    "cwd=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION; sha256sum .singularhistory",
+    "cwd=/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION; stat -c '%y|%Y|%s|%a|%n' .singularhistory",
+    "cwd=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp; sha256sum every listed ephemeral file"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md#sha256:3f3ac1936999a97a92c0fa037661090fb740bc57febb745f3e7ae751ec2326f5",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-CAS-SAGE.json#sha256:703250e5a9a63695928c95e79ac7da5d12df5996d1087b003ea3a52d6c67733d",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+    "scripts/audit/w7_b3v2_contract_source.py#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+    "docs/audit/BD622_W7_exact_test_vectors.json#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+    ".agent-harness/context/roles/cas_common.md#sha256:b448c46574d027ba06ade0007d98194164d3f72c2acf18ba0808bc798d604d1a",
+    ".agent-harness/context/roles/cas_sage_singular.md#sha256:812bce0150d6d46f9ac4ece9f66468e795e709a0aa54586ea4cfc235e2ef7307",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.sage#sha256:4c0cf884ca69517d8bd01d222bab12c8b75d49ea5e30b775d363ec45b9731946",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.sage.py#sha256:6091b2a3672ba4cb46dc09465ab4f1553d4cf0406993d9b12f20baa04130501a",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_electron_trace_probe.sage#sha256:2a0b3946bf8c90153e5105601477bf1cb20a9664884cabcfaba235cb0799f311",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_electron_trace_probe.sage.py#sha256:df66625b03ec70542ef19fd6313a3b5b5114c22c8df33a6decd1b6c136f12e45",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_electron_trace_probe.out#sha256:56071991ca69eca25b93da51566b05b14a25e02a2a6d60086e205874e633981e",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_singular_axis.sing#sha256:6c89659422c399aab1265051330d3cfee31f4c3a7c43c1c413101d19a09279a7",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_singular_axis.out#sha256:7bdc9414b51862825775396ba26183f893345598bac90954696c9a9f0692e689",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/sage_version.out#sha256:bead8e3d64e87f4fa82ff62d763d3f0a7b088e85521f575eefda2e01d7542b51",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/singular_version.out#sha256:b7a8de213463e5f090dc046e4a579cc6a8594ee707a0290ec1b210755377ebc2",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage/cache/60f160d2dfda6bb48601300d8abbab20558ab811c641a9c415c52530fd50a7fa-lazy_import_cache.pickle#sha256:926248e52d1fa532c317e37da24ed652ae64110f8219cb5e061668bd3091f048",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage/R/Makevars.user#sha256:95406dc42ef49a7df96dc5625fc4cc524f916dc828098d50fde1d6ee9b6c1dd1",
+    ".singularhistory#sha256:5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1#mtime:2026-07-22T22:57:09.962444306+09:00#size:903#mode:0600",
+    "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/*history*#ABSENT"
+  ],
+  "findings": [
+    {
+      "finding_id": "A-CAS-SAGE-F01",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "PASS",
+      "severity": "none",
+      "statement": "With eta_D=diag(+1,-1,-1,-1), Gamma^mu=gamma^mu P_L, and the direct amplitudes M_t=sqrt(2) G_F B_t and M_s=-sqrt(2) G_F B_s, the exact component Fierz tensor gives B_s=-B_t. The Wick exchange minus is therefore constructive: M_t+M_s=2 sqrt(2) G_F B_t. Exact polynomial gamma traces give sum|B_t|^2=16 K_t, so the coherent result is 128 G_F^2 K_t; the distinguishable single contraction is 32 G_F^2 K_t. Dirac conjugation maps gamma^mu P_L to itself, one occupied neutrino helicity is selected by P_L, and no spin average is used.",
+      "assumptions_used": [
+        "The four external wavefunctions are ordered as (nu_1, antinu_2; nu_3, antinu_4).",
+        "The relative minus between the two identical-current Wick contractions follows the stated external-fermion ordering.",
+        "All momenta are real and future directed; K_t=chi_14 chi_23 with chi equal to the eta_D dot product.",
+        "The neutral-current contact coefficient per contraction is sqrt(2) G_F in the P_L convention."
+      ],
+      "evidence_refs": [
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.sage#sha256:4c0cf884ca69517d8bd01d222bab12c8b75d49ea5e30b775d363ec45b9731946",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#row_ii_direct_trace_target#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage"
+      ],
+      "unresolved": [],
+      "evidence_fingerprint": "sha256:032b9a57c9a9ef3ec45e492d6d1381206dd3ffbba1a5577f9272b9281a187fca",
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F02",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "FAIL",
+      "severity": "blocking",
+      "statement": "The continuum factor ledger is algebraically consistent: dPhi_2=k_star/(16 pi^2 sqrt(s)), q has energy dimension one, distinct elastic gives (1/2)*1*2=1 and global 32 maps to tagged 32, identical elastic gives (1/2)*(1/4)*4=1/2 and global 128 maps to tagged 64, and exact gamma traces reproduce all three 32 G_F^2 electron bodies with the stated interference signs. The exact-byte executable contract nevertheless contradicts its binding A0 order. W6 requires incoming measure 1, incoming measure 2, isotropic angles, dPhi_2, O_r S_r, matrix element, weights, and finally 2 pi^2/T_cm^3 in that left-associated order; the source begins with reaction_weight(O_r S_r)*isotropic_angles before multiplying either incoming measure. Since association is frozen for binary64 A0/A1 comparison, this is a deterministic source/spec conflict and the exact-byte normalization claim fails.",
+      "assumptions_used": [
+        "The prose order in W6 section 7 and the reviewed source bytes are both declared binding.",
+        "Continuum multiplication is commutative, but binary64 association is not generally associative and the A0 graph freezes association.",
+        "Electron amplitudes use sqrt(2) G_F times the P_L neutrino current and g_L P_L+g_R P_R electron current."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:300-303#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:271-279#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_electron_trace_probe.out#sha256:56071991ca69eca25b93da51566b05b14a25e02a2a6d60086e205874e633981e"
+      ],
+      "counterevidence_refs": [
+        "The continuum rational factor and exact gamma-trace subchecks pass in the two Sage outputs, so the failure is exact executable ordering rather than a missing continuum multiplier."
+      ],
+      "reproduction": [
+        "sed -n '296,305p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '260,280p' scripts/audit/w7_b3v2_contract_source.py",
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_electron_trace_probe.sage"
+      ],
+      "unresolved": [
+        "The reviewed bytes must be made coherent by changing either the binding prose order or the source order before any arithmetic execution; this reviewer does not choose between them."
+      ],
+      "evidence_fingerprint": "sha256:543b9bdd1f78d9cbd32c750358299f76bf8f55709339d9efb6ddd8f3fd8ce34d",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F03",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "PASS",
+      "severity": "none",
+      "statement": "An independently enumerated 6-by-39 rational stoichiometric matrix has exactly 24 self and 15 electron records, rank 3, and left nullity 3. Sage returns exactly the span of (1,-1,0,0,0,0), (0,0,1,-1,0,0), and (0,0,0,0,1,-1). Independently, Singular over QQ with dp order reduces the full six nonzero column constraints and the three displayed generators into one another; its Groebner basis is l0+l1, l2+l3, l4+l5 and the variety dimension is 3.",
+      "assumptions_used": [
+        "Electron legs are omitted from the six species-count rows exactly as specified.",
+        "Every reaction column is outgoing minus incoming using (-1,-1,+1,+1).",
+        "Elastic columns are exact zero columns and reverse reactions are represented by R rather than duplicate records."
+      ],
+      "evidence_refs": [
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_singular_axis.sing#sha256:6c89659422c399aab1265051330d3cfee31f4c3a7c43c1c413101d19a09279a7",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_singular_axis.out#sha256:7bdc9414b51862825775396ba26183f893345598bac90954696c9a9f0692e689"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage",
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && Singular -q d035_singular_axis.sing"
+      ],
+      "unresolved": [],
+      "evidence_fingerprint": "sha256:7b41a4a77a27876b69ebf28b92c9dece24d3464094352ea13c61b09b1de76284",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F04",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "PASS",
+      "severity": "none",
+      "statement": "For strict-open occupations, F and R are positive and direct logarithm expansion gives log(F/R)=eta1+eta2-eta3-eta4. Strict monotonicity of log gives (F-R)(log F-log R)>=0 with equality exactly when F=R. Sage reproduces the frozen rational vector F=4/625, R=144/625, J=-28/125, and F/R=1/36, so J*log(F/R)>0. With Q_EM=-Q_nu, the stated bath entropy sign is consistent.",
+      "assumptions_used": [
+        "Each occupation lies strictly in (0,1), so F,R and every logarithm are defined.",
+        "Boundary occupations are excluded from this equality claim and require separate limiting statements.",
+        "J=F-R and Q_EM=-Q_nu use the frozen sign convention."
+      ],
+      "evidence_refs": [
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.sage#sha256:4c0cf884ca69517d8bd01d222bab12c8b75d49ea5e30b775d363ec45b9731946",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-ENTROPY-RATIONAL#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage"
+      ],
+      "unresolved": [],
+      "evidence_fingerprint": "sha256:178aff57299f5aafaeea29ba9f044791bb4a14433f579286c04f5b201661d365",
+      "confidence": 1.0
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F05",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "FAIL",
+      "severity": "blocking",
+      "statement": "The process-specific algebra itself passes: Sage and Singular verify the elastic and pair COM energies and shells, the principal-root interior formulas, dPhi_2=k_star/(16 pi^2 sqrt(s)), the exact elastic/pair vectors, conservation, and s+t+u=2 m_e^2. Elastic shell equality is proved after saturation by r=sqrt(s), explicitly excluding r=0; the pair shell equality holds directly, with the physical principal k_star>=0 branch imposed separately. The exact-byte source nevertheless violates the binding per-leg postcondition. W6 requires each shell residual to be compared with its own max(1,E_l^2,|p_l|^2,m_l^2) and forbids aggregate rescue, but source lines 577-583 take one maximum scale over all four legs, one maximum residual, and compare only those aggregates. A large-scale leg can therefore relax the cap for a different low-scale leg, and the returned object loses all individual residuals. The finite-mass executable-shell claim fails despite the underlying exact identities passing.",
+      "assumptions_used": [
+        "Interior elastic uses r>m_e>0; interior pair uses r>2m_e>0 and the principal nonnegative root.",
+        "Threshold equality is support-only and derivatives are physical-right only; no two-sided or cleared-root claim is made.",
+        "The per-leg postcondition in W6 is binding on the exact source bytes."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:203-209#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:577-583#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_sage_axis.out#sha256:4afbad16ea0313a3e526e87ab3bd01535b37cb0c37a0a49d47aa5ac1186369b3",
+        "/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/d035_singular_axis.out#sha256:7bdc9414b51862825775396ba26183f893345598bac90954696c9a9f0692e689"
+      ],
+      "counterevidence_refs": [
+        "Exact COM-shell identities, dPhi_2, rational shell vectors, conservation, and Mandelstam checks pass; the failure is the executable binary64 per-leg acceptance predicate."
+      ],
+      "reproduction": [
+        "sed -n '203,211p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '565,590p' scripts/audit/w7_b3v2_contract_source.py",
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && DOT_SAGE=/tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp/.sage sage d035_sage_axis.sage",
+        "cd /tmp/run-20260723-f10-b3v2-d035-A-CAS-SAGE-xGEqtp && Singular -q d035_singular_axis.sing"
+      ],
+      "unresolved": [
+        "The source must retain and test each leg residual against its own scale; no aggregate max can substitute."
+      ],
+      "evidence_fingerprint": "sha256:7243a2814231e14defbe7ac231e81a3d83c133083970c177163c7f47588aa9e6",
+      "confidence": 1.0
+    }
+  ],
+  "errors": [
+    "SETUP_ONLY: the first Sage execution exited 1 before the script imported because Sage attempted to write its lazy-import cache under read-only /home/cosmosapjw/.sage; no CAS result and no repository write occurred.",
+    "SETUP_ONLY: a second Sage execution using SAGE_DOT_SAGE also exited 1 because that variable is not the Sage cache selector; the final isolated runs used DOT_SAGE under the assignment temporary directory and exited 0.",
+    "ITERATION_ONLY: an early Singular draft attempted to concatenate system(version) into a string and did not explicitly materialize the saturation list before reduction; the final retained script records the external version output separately, materializes saturation by r, has zero required remainders, and exits 0."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-CAS-SAGE.json"
+  ]
+}

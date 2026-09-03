@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+  "assignment_id": "A-RESOLUTION-PHYSICS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-RESOLUTION-PHYSICS"
+  ],
+  "task": "Blind hostile physics audit of the row6 and row9 ordered-orientation closure on the frozen live bytes. Check metric and species conventions, incoming and outgoing leg orientation, Pauli gain-minus-loss sign, coefficient 16 plus 16 versus original normalization 32, detailed balance, number and energy nulls, entropy sign, flavour permutations, finite electron mass scope, catalogue completeness and whether the implementation fixes physics rather than only the reported covariance metric. Use only declared files and do not read sibling results. Execute self-discover then step-back then metacognitive self-ask then CoVe then adversarial self-ask then CCoT then PDR. Steelman acceptance and rejection, name a decisive falsifier and change-of-view conditions. Write only the registered result artifact.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-PHYSICS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json",
+    "src/rabbit/decoupling/_independent_noqke.py",
+    "tests/test_independent_noqke_comparator.py",
+    "scripts/audit/d047_ownerb_r6_target_replay.py",
+    "scripts/audit/d050_ownerc_closure_verification.py",
+    "scripts/audit/d053_row9_closure_verification.py",
+    "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md",
+    "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md",
+    "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-PHYSICS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-PHYSICS.json",
+  "status": "registered"
+}

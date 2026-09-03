@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d058-canary-agent-1",
+  "agent_type": "default",
+  "last_assistant_message": "Canary complete. The canonical verifier printed `VERIFY: PASS` and reproduced all three sealed digests (assignment `31fdd126...`, review_role `403bfe1d...`, result_template `936c043e...`), matching both the assignment file and my Start-time lease at `.agent-harness/leases/d058-canary-agent-1.json`. The schema-v2 result envelope was written to `/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/.agent-harness/runs/run-20260728-f10-d058-lease-canary/results/A-LEASE-CANARY.json` with one pass finding (F-D058-LEASE-CANARY) whose evidence fingerprint is the sha256 of the exact verifier stdout, and it validates field-by-field against the template. No other repo files were modified.\n\nHARNESS_RESULT: {\"assignment_id\":\"A-LEASE-CANARY\",\"context_version\":\"ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb\",\"status\":\"pass\",\"result_path\":\".agent-harness/runs/run-20260728-f10-d058-lease-canary/results/A-LEASE-CANARY.json\"}"
+}

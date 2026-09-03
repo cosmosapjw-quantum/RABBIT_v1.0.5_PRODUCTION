@@ -1,0 +1,235 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+  "assignment_id": "A-W7-METROLOGY",
+  "context_version": "11837c9fad62963dbc8def37e271b0aac04b865b93da0f2f033a73c5af445e1a",
+  "agent_id": "019f8b29-38b8-7d52-a531-d28124c37d2f",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d037-blind-review",
+    "assignment_id": "A-W7-METROLOGY",
+    "context_version": "11837c9fad62963dbc8def37e271b0aac04b865b93da0f2f033a73c5af445e1a",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:2c6a6f391673311af0e15d4d36898e29c601a49e0e28d64625668801d6def1ff",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+  "started_at": "2026-07-23T03:50:02+09:00",
+  "completed_at": "2026-07-23T03:56:26+09:00",
+  "tool_versions": {
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "review_method": "static exact-byte inspection and independent hand derivation; no W7 numerical execution"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/assignments/A-W7-METROLOGY.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json .agent-harness/generated/CONTEXT_PACK.md",
+    "python3 -c 'apply the registered hash_files path-NUL-bytes-NUL digest to independent_auditor.md'",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md docs/audit/BD622_W5_d028_discriminator_result.md",
+    "python3 -c 'ast.parse the sealed W7 contract source and list top-level definitions without importing or executing it'",
+    "sed -n '1,621p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '1,2198p' scripts/audit/w7_b3v2_contract_source.py",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "ee386cf29dfbb8e03b7d0f1762482067335930f42aa00c04669a55c574ff9103"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json",
+      "sha256": "d2780e2c763b134084b0143e7875cb8105a5e20e34ab524f5fa3225c096adc95"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+    },
+    {
+      "path": "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+      "sha256": "a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a"
+    },
+    {
+      "path": "docs/audit/BD622_W5_d028_discriminator_result.md",
+      "sha256": "83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-W7-ROWII-001",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The direct row-ii coherent trace closes under the locked conventions. Let X=(ubar3 gamma^mu P_L u1)(vbar2 gamma_mu P_L v4) and Y=(vbar2 gamma^mu P_L u1)(ubar3 gamma_mu P_L v4). The t contraction is M_t=sqrt(2) G_F X. The s Wick contraction carries the fermionic minus, M_s=-sqrt(2) G_F Y, while the commuting-external-spinor chiral Fierz identity gives Y=-X; therefore M_t+M_s=2 sqrt(2) G_F X. Dirac conjugation gives X*= (ubar1 gamma^nu P_L u3)(vbar4 gamma_nu P_L v2). With sum u ubar=sum v vbar=slash(p), the two locked chiral traces contract to 16 chi_14 chi_23=16 K_t. Thus the distinguishable base is 32 G_F^2 K_t and the coherent row-ii result is 128 G_F^2 K_t, exactly four times base. This is a direct u/v derivation, not a crossing-only inference.",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), P_L=(1-gamma5)/2, and all four external momenta are future null.",
+        "External wavefunctions are commuting spinor components; the separate Wick-contraction sign is retained explicitly.",
+        "One occupied neutrino helicity and no neutrino spin average, as fixed by the CAS contract."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/CAS_CONTRACT.json#row_ii_direct_v_spinor_trace",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#7-coefficient-provenance-partial-independent-spin-trace-derivation-f-5-coefficient-leg",
+        "scripts/audit/w7_b3v2_contract_source.py:184-191"
+      ],
+      "evidence_fingerprint": "sha256:a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a",
+      "counterevidence_refs": [
+        "W3 explicitly labels its row-ii result crossing-only; the direct derivation above supplies the missing independent sign and u/v trace obligation."
+      ],
+      "reproduction": [
+        "Apply (gamma^mu P_L) tensor Fierz to Y, retaining the external-spinor minus separately from the Wick minus.",
+        "Evaluate Tr[slash(p3) gamma^mu P_L slash(p1) gamma^nu P_L] Tr[slash(p2) gamma_mu P_L slash(p4) gamma_nu P_L]=16 chi_14 chi_23, then multiply by |2 sqrt(2) G_F|^2."
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-W7-NORMALIZATION-001",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The continuum normalization and global-to-tagged ledger are coherent. Integrating the outgoing delta function gives dPhi2=k_star/(16 pi^2 sqrt(s)) dz_star dphi_star. The source then multiplies the two incoming p^2 dp/[2E(2pi)^3] measures, fixed isotropic angles (4pi)(2pi), O_r S_r, the spin-summed unaveraged matrix element, five node weights, and 2pi^2/T_cm^3 exactly once. Distinct elastic records have two global neutrino depositions times O=1/2 and S=1, giving tagged factor one; identical same-sign records have four depositions times O S=(1/2)(1/4), giving factor one-half and mapping global 128 to tagged 64. Conversion and pair rows use O=1 and R supplies the reverse. Electron distributions are per spin and their amplitudes already sum electron spins, so no bath factor two or initial-spin average is present; every orbit multiplicity is one. The result has q dimension MeV and massless scaling G_F^2 T_cm^5.",
+      "assumptions_used": [
+        "phase_space_density supplied to invariant_event_prefactor is exactly the TwoBodyInterior dPhi2 density from the sealed process map.",
+        "matrix_element is the sealed global spin-summed amplitude selected by the reaction record.",
+        "The five quadrature weights correspond once each to the two incoming radial variables, mu12, z_star, and phi_star."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:45-145",
+        "scripts/audit/w7_b3v2_contract_source.py:42-219",
+        "scripts/audit/w7_b3v2_contract_source.py:234-316",
+        "scripts/audit/w7_b3v2_contract_source.py:565"
+      ],
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Substitute dPhi2 into dGamma and cancel no factors beyond the displayed outgoing delta integration.",
+        "Count explicit neutrino leg depositions for S00-S05, S06-S20, S21-S23, E00-E11, and E12-E14 against O_r and S_r."
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "This pass is mathematical/design-level only and is not W7 execution evidence."
+      ]
+    },
+    {
+      "finding_id": "F-W7-FINITE-ME-001",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The process-specific roots, boost signs, angular frame, dPhi2 coefficient, z_star rejection, and elastic/pair interference signs are coherent, but the executable shell contract violates its own fail-closed postconditions. At exact threshold two_body_outgoing returns ThresholdSupport before checking either incoming leg against the process-declared mass shells. In the interior it computes all four shell residuals but compares their maximum with one global scale taken from the largest component over all legs. The W6 requirement is a separate bound for every leg using that leg's own max(1,E^2,|p|^2,m^2), with no aggregate rescue. A high-energy leg can therefore enlarge the tolerance and admit an invalid lower-scale leg. The frozen threshold vectors exercise scalar s through two_body_com_shell and do not close this full-input-shell gap.",
+      "assumptions_used": [
+        "Every incoming and outgoing external momentum must be on its declared process shell before either support-only or interior success is returned.",
+        "The phrase no aggregate rescue in W6 applies independently to each of the four shell residuals."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:161-226",
+        "scripts/audit/w7_b3v2_contract_source.py:402-458",
+        "scripts/audit/w7_b3v2_contract_source.py:496-538",
+        "scripts/audit/w7_b3v2_contract_source.py:575-584",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-ELASTIC-THRESHOLD",
+        "docs/audit/BD622_W7_exact_test_vectors.json#V-PAIR-THRESHOLD"
+      ],
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "counterevidence_refs": [
+        "Interior construction eventually checks incoming residuals, but only under the nonconforming aggregate scale; threshold construction skips them entirely."
+      ],
+      "reproduction": [
+        "Inspect the support_only return at scripts/audit/w7_b3v2_contract_source.py:526-536 before the momenta/masses residual construction at lines 575-584.",
+        "Compare the single shell_scale at lines 578-583 with the per-leg scale mandated by W6 section 5."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Validate both incoming shells before the threshold return.",
+        "Apply and retain four separate shell residual/scale decisions, and add full two_body_outgoing threshold vectors that cannot pass on off-shell inputs."
+      ]
+    },
+    {
+      "finding_id": "F-W7-ARITHMETIC-001",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The A0-A4 contract is not reconstructible or bound-preserving on the sealed source. No trace-emitting evaluator or canonical loop-key constructor is defined. validate_arithmetic_trace checks only topological IDs, globally nondecreasing opaque loop keys, known owner/opcode names, and at least one node per owner; it does not bind exact owner/opcode/arity sequences, operation counts, final-output semantics, or the stage-specific allowed interface nodes. Any node may set declared_interface, and replay_arithmetic_trace rounds every such A1/A2 node, so the frozen completed-event, pairwise-reduction, basis-object, projected-state, and q-vector interfaces are not enforced. The source also has no A4 beta/P-beta trace-identity and componentwise-overlap certificate. metrology_bounds accepts anonymous float endpoint arrays, does midpoint/radius/difference/sum arithmetic without directed outward rounding, cannot prove the domain contains both beta partners, and native_permutation_defect accepts an arbitrary caller-provided denominator. structural_covariance_residual recomputes its own denominator, so it cannot enforce the one same denominator required for both R_q and R_M. These defects permit an apparently valid B_native that is neither the frozen graph nor a rigorous upper bound.",
+      "assumptions_used": [
+        "A metrology bound is admissible only if the sealed code makes nonconforming trace ownership, rounding interfaces, pair domains, and denominators impossible rather than relying on caller discipline.",
+        "All quantities called bounds must be computed with outward arithmetic through their final maximum, division, and factor-four composition."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:439-527",
+        "scripts/audit/w7_b3v2_contract_source.py:1742-1806",
+        "scripts/audit/w7_b3v2_contract_source.py:1810-1845",
+        "scripts/audit/w7_b3v2_contract_source.py:1948-1986",
+        "scripts/audit/w7_b3v2_contract_source.py:2014-2075",
+        "scripts/audit/w7_b3v2_contract_source.py:2084-2116"
+      ],
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "counterevidence_refs": [
+        "The prose STAGE_POLICIES names the intended interfaces and the replay rejects an undeclared directed-to-binary edge, but neither condition rejects extra declared interfaces or proves exact owner-specific traces."
+      ],
+      "reproduction": [
+        "Constructively inspect validate_arithmetic_trace: a trace with one arbitrary node per non-input owner and globally sorted loop keys passes its completeness conditions regardless of whether it represents the B3 evaluator.",
+        "Inspect replay_arithmetic_trace lines 1983-1984: every declared A1/A2 interface is rounded with no whitelist.",
+        "Inspect metrology_bounds lines 2038-2075 and note that its inputs contain no beta/P-beta identity, trace certificate, or directed arithmetic object."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Provide one trace-emitting A0 evaluator with exact typed loop-key constructors and owner/opcode/arity/interface schemas, then make A1-A4 replay consume only that sealed trace.",
+        "Implement and require the A4 permutation trace/interval-overlap certificate before bounds are constructible.",
+        "Carry MPFR outward endpoints through D_pair, all four B terms, B_native, R_native, and the shared R_q/R_M denominator."
+      ]
+    },
+    {
+      "finding_id": "F-W7-DESIGN-001",
+      "claim_id": "C-W7-METROLOGY-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The sealed D-035 W7 metrology design fails before numerical execution. In addition to the finite-shell and A0-A4 failures, Stage B cannot represent its required directed signed lost/tail enclosure: collision_refinement_metrics accepts one float q_lost_tail_upper per component and takes abs(value), whereas a signed enclosure requires both lower and upper endpoints and a supremum over them. TAIL_CONTRACT is prose-only and omits an executable transformed-integrand Jacobian and a rigorous quadrature remainder/enclosure construction; directed rounding of a Gauss-Legendre sum alone does not enclose the continuum integral. The 20-row ladder order and exact Stage-A/eligible-Stage-B set closure are correctly frozen, but those selection checks cannot rescue missing tail evidence or either critical subclaim failure. No W7 numeric output, B3 output, or authority follows.",
+      "assumptions_used": [
+        "q_lost_tail is a signed interval enclosure as stated in W6, so one scalar upper field is insufficient when the enclosure is negative or crosses zero.",
+        "A continuum tail enclosure requires an explicit validated interval extension or quadrature remainder, not only directed evaluation of the quadrature rule."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:321-374",
+        "scripts/audit/w7_b3v2_contract_source.py:1711-1726",
+        "scripts/audit/w7_b3v2_contract_source.py:1729-1739",
+        "scripts/audit/w7_b3v2_contract_source.py:2005-2011",
+        "docs/audit/BD622_W5_d028_discriminator_result.md#Consequences-for-the-solution"
+      ],
+      "evidence_fingerprint": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+      "counterevidence_refs": [
+        "LADDER_ROWS and select_ladder_row do enforce exactly 20 Stage-A records and exactly every eligible Stage-B record.",
+        "W5 remains localization-only and supplies no transferable D-028 native cap or tail authority."
+      ],
+      "reproduction": [
+        "Compare the two-endpoint signed q_lost_tail requirement in W6 section 8 with the Sequence[float] q_lost_tail_upper interface at source lines 1711-1726.",
+        "Inspect TAIL_CONTRACT lines 2005-2011: it names a map, GL32, and a stop rule but defines neither dz/du=2/(1-u)^2 in an executable integrand nor an integral remainder/enclosure theorem."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Represent every lost/tail component as a directed lower/upper interval and take its supremum with outward arithmetic.",
+        "Freeze an executable transformed tail integrand including dz/du and a mathematically rigorous interval integration enclosure/error rule.",
+        "Repair and re-review the finite-shell and arithmetic-graph failures on new exact bytes before any W7 execution decision."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+  ]
+}

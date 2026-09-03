@@ -1,0 +1,275 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-review-r6",
+  "assignment_id": "A-D067-R6-OBLIGATIONS",
+  "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+  "agent_id": "r6-obligations",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d067-review-r6",
+    "assignment_id": "A-D067-R6-OBLIGATIONS",
+    "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:fdb4a28d2cd66e1dcfe75494cfc0d1ecc75c815fbec836bf5be855405686e065",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-OBLIGATIONS.json",
+  "started_at": "2026-07-29T10:19:24Z",
+  "completed_at": "2026-07-29T10:37:12Z",
+  "tool_versions": {
+    "python": "venv/bin/python (CPython 3.12.3)",
+    "git": "2.43.0",
+    "git_head": "91ee741a31552443b87e70a9fd2e7074e3fe761f",
+    "working_tree": "clean at HEAD (git status --porcelain empty)"
+  },
+  "commands": [
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d067-review-r6/assignments/A-D067-R6-OBLIGATIONS.json  -> VERIFY: PASS",
+    "venv/bin/python .agent-harness/scripts/validate_harness.py  (read-only, live repo) -> ok:true, legacy manifest 'ok (136 pinned); pinned by declared fact and digest (136)'",
+    "git diff --stat d94270f..91ee741  (what moved under the C5 canary)",
+    "sha256sum .codex/hooks/subagent_stop_validate.py; git show d94270f:.codex/hooks/subagent_stop_validate.py | sha256sum  (byte identity across the C5 boundary)",
+    "for i in 1..5: date -Ins; python3 .codex/hooks/subagent_stop_validate.py <<< '{\"agent_id\":\"\"}'; date -Ins  -> 34.8-37.3 ms per no-op dispatch (C5 bracket-width plausibility control)",
+    "scratchpad/exp.py e1  -> admissions dir 0o500: admit_agent exits 1 'admission receipt could not be written (PermissionError)', no receipt, ORPHAN 'minted' ledger row survives",
+    "scratchpad/exp.py e2  -> same tree, SubagentStart reports 'Admission receipt: none found ...' and 'Hook preflight: PASS', systemMessage null",
+    "scratchpad/exp.py e4  -> sequential control: second stop by same agent_id BLOCKED ('already consumed an admission receipt for assignment ...')",
+    "scratchpad/exp.py e3  -> 6 trials of two CONCURRENT stops, one agent_id, two assignments: race won 5/6 (both stops accepted, two consume rows)",
+    "scratchpad/exp2.py e5 / exp3.py  -> validate_harness.py on the raced tree: exit 0, ok:true, zero errors",
+    "scratchpad/exp2.py e6  -> race reached through the supported CLI only (admit_agent.py --agent-id-unknown twice), no direct file writes",
+    "scratchpad/exp2.py e7  -> pending_carve_out_refusal boundary: 23h59m59s EXCUSED, exactly 24h00m00s EXCUSED, 24h+1us refused",
+    "mirror/ (isolated byte-identical copy of .codex/hooks + .agent-harness/{scripts,tests,templates,context}) : pytest .agent-harness/tests/test_hooks.py -q -> 74 passed",
+    "mirror mutations M1-M9 (each applied alone, suite re-run, then reverted): M1 conflicting_agent_assignment->no-conflict kills 2; M2 other_assignment_bound_to_agent->no-conflict kills 3; M3 24h ceiling->10y kills 1; M4 legacy pinned-digest check disabled kills 1; M5 expected_agent_id enforcement disabled kills 1; M6 receipt-write OSError swallowed in admit_agent.py kills 0 (74 passed); M7 Start receipt check neutered kills 8; M8 single-use receipt-state guard disabled kills 1; M9 admission_proof digest comparison disabled kills 1"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-OBLIGATIONS.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D067-R6-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "OBLIGATION 1 NOT DISCHARGED. The agent_id-to-assignment binding is real but NOT ATOMIC, which is the word the obligation turns on. Both new guards work as advertised in the sequential case and both are load-bearing under mutation: disabling admit_agent.other_assignment_bound_to_agent kills 3 fixtures (M2), disabling subagent_stop_validate.conflicting_agent_assignment kills 2 (M1), the --reopen same-assignment carve-out and the idempotent re-stop path both survive (test_admit_agent_reopen_same_assignment_is_exempt_from_the_binding_guard; test_subagentstop_ledger_conflict_check_ignores_same_assignment_restop accepts three consecutive re-stops), and my own sequential control reproduces the block. But conflicting_agent_assignment is a plain read of ADMISSIONS.jsonl at subagent_stop_validate.py:217, and the only atomic primitive in the acceptance path -- the O_EXCL claim at line 459 -- is keyed on '<assignment_id>.json.claim', so it provides NO mutual exclusion across two different assignments held by one agent_id. Classic TOCTOU. Reproduced: two SubagentStop processes launched together for one agent_id and two registered assignments, each with its own valid token, both ACCEPTED (empty stdout) and both consume rows appended, in 5 of 6 trials. Reached with no forgery and no direct file writes at all in a second experiment that minted both receipts through the supported CLI (admit_agent.py --agent-id-unknown, which skips the mint guard entirely because it is gated on 'if expect_agent_id:' at admit_agent.py:302). The primary route is the one the backstop's own docstring names as its reason for existing -- 'a receipt minted before the fix, or written directly'. There is also NO post-hoc detection: validate_harness.py on the raced tree returns exit 0 and ok:true with zero errors, and no check anywhere asserts the invariant 'one agent_id has at most one consume row per run'.",
+      "assumptions_used": [
+        "The obligation's 'atomically' is read as a property of the binding operation, not merely of the single-use receipt consume."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/admit_agent.py",
+        ".agent-harness/scripts/validate_harness.py",
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "evidence_fingerprint": "sha256:dc19da4d43b84e459c3b5a5a4ee5abbc94726ca83b7246f85364c29b820fda93",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+      ],
+      "reproduction": [
+        "Build a synthetic harness with two registered assignments, two results, one lease covering both, and two open receipts naming the SAME expected_agent_id (or mint both with admit_agent.py --agent-id-unknown).",
+        "Launch two subagent_stop_validate.py processes with Popen, write both stdin payloads before reading either stdout (communicate() in a loop serialises them and hides the race).",
+        "Observe both stdouts empty and two 'event: consumed' rows with the same agent_id and different assignment_id in ADMISSIONS.jsonl. Won 5/6 trials.",
+        "Run validate_harness.py against that tree: exit 0, ok:true."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Whether the intended fix is a per-agent O_EXCL claim taken before the ledger read, or a post-hoc invariant check in validate_harness.py, or both."
+      ]
+    },
+    {
+      "finding_id": "F-D067-R6-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "OBLIGATION 2 NOT DISCHARGED, and the structural-impossibility argument recorded in section 2 of the audit report is FALSE for exactly the failure the obligation names. I do NOT accept the reasoning as written. The lease half is fully met and well covered. For the receipt half the report states that 'a mint failure and a legitimately unregistered agent are indistinguishable from inside the hook' and that Start receives 'never any statement of the parent's intent'. Reproduced counterexample: make .agent-harness/admissions/<run>/ unwritable, run admit_agent.py. It exits 1 with 'admission receipt could not be written (PermissionError)', writes NO receipt -- and leaves behind a durable, machine-readable statement of the parent's intent that the same slice introduced: an '\"event\": \"minted\"' row in .agent-harness/runs/<run>/ADMISSIONS.jsonl carrying expected_agent_id for that exact agent. This is a direct consequence of the deliberate ledger-first ordering at admit_agent.py:402-411. SubagentStart never reads that file. It reports 'Admission receipt: none found for agent_id=...' and 'Hook preflight: PASS' with systemMessage null -- a receipt-creation failure producing a PASS preflight, which is precisely what the obligation forbids. Distinguishing 'ledger says minted, no receipt on disk' from 'unregistered helper agent' requires no assumption about dispatch mode, so the deployment-specific objection the report uses to decline the tightening (correct on its own terms, and I accept the narrower point that BARE absence must stay non-fatal) does not apply to this case. The compensating controls are real and I verified both -- admit_agent.py exits non-zero, and Stop refuses an unminted result -- so the system is fail-closed end to end; the obligation, however, is about Start, and Start says PASS. Two further facts belong on the record: the orphan 'minted' row is the mirror image of round-2 finding F-13 (orphan receipt on ledger-append failure), now reproduced in the other direction with nothing in Start, Stop or validate_harness.py reporting it; and if dump_json_atomic succeeds but the subsequent claim.unlink at admit_agent.py:409 raises, the process exits non-zero having written an open receipt whose token was never printed.",
+      "assumptions_used": [
+        "The recorded LOCAL-ADAPT (VS Code does not dispatch project Start/Stop hooks; the parent invokes them) is accurate.",
+        "'Hook preflight: PASS' is the operative Start verdict the obligation refers to."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        ".codex/hooks/subagent_start_context.py",
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:2d69d48479a8135e01c0599dde9560ae4cf72cb51f4fd2f3fde789a553cde146",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "reproduction": [
+        "Synthetic harness; mkdir .agent-harness/admissions/<run>; chmod 0o500 on it.",
+        "python3 .agent-harness/scripts/admit_agent.py --assignment-id <A> --expect-agent-id <G>  -> exit 1, no receipt, one 'minted' row in ADMISSIONS.jsonl naming <G>.",
+        "Call subagent_start_context.inject_subagent_context({'agent_id': <G>, 'agent_type': ...}, repo) -> 'Admission receipt: none found', 'Hook preflight: PASS', systemMessage null."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Whether the parent is willing to have Start hard-fail on 'ledger row minted for this agent_id but no usable receipt', which is the narrowest tightening that closes this without touching the unregistered-helper case."
+      ]
+    },
+    {
+      "finding_id": "F-D067-R6-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "OBLIGATION 3 NOT DISCHARGED. Round 5's 'DISCHARGED with one caveat' was wrong: the caveat was the obligation. The same-run substitution half is genuinely discharged -- test_subagentstop_blocks_same_run_assignment_substitution (test_hooks.py:737) pins the exact block reason and asserts both receipts stay open, and mutation M9 (disabling the admission_proof digest comparison) kills it and only it. The receipt-write-failure half DOES NOT EXIST. The docstring round 5 flagged is UNCHANGED: test_hooks.py:1336 still reads '\"\"\"Receipt-write-failure fixture: no receipt may outlive a failed mint.\"\"\"' while the body chmods runs/<RUN_ID> to 0o500 and asserts 'ledger could not be appended' in stderr -- an injection at admit_agent.py:406, not at the receipt write at admit_agent.py:411. This is not merely a labelling nit, and I established that by mutation rather than by reading: across all 74 fixtures the only chmod targets are .agent-harness/leases/ and runs/<RUN_ID>; nothing ever makes .agent-harness/admissions/ unwritable. Replacing admit_agent.py's 'except OSError: fail(receipt could not be written)' with 'except OSError: pass' -- so the tool prints the admission token and exits 0 while no receipt exists on disk -- leaves the suite at 74 passed, 0 failed (M6). That is the definition of an uncovered branch, and it is the exact branch the obligation names.",
+      "assumptions_used": [
+        "'receipt-write-failure negative fixture' means a fixture that injects the failure at the receipt write, not one that injects it elsewhere and then asserts about the receipt."
+      ],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py",
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:b931c94c1e031ff7de1fb29369fb29d87c804caddedaf616c08a338cc482efa5",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+      ],
+      "reproduction": [
+        "grep -n chmod .agent-harness/tests/test_hooks.py -> only leases/ (860, 1064) and run_dir (1343, 1529); never .agent-harness/admissions/.",
+        "In a byte-identical isolated mirror, replace the receipt-write except-branch in admit_agent.py with 'pass', re-run pytest .agent-harness/tests/test_hooks.py -q -> 74 passed."
+      ],
+      "confidence": 0.96,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R6-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "OBLIGATION 4 DISCHARGED. C5 does establish what the obligation asks, and its bytes DO match current HEAD. Byte identity: the artifact records stop_hook_sha256 dc19da4d43b84e459c3b5a5a4ee5abbc94726ca83b7246f85364c29b820fda93 at head_commit d94270f; 'git show d94270f:.codex/hooks/subagent_stop_validate.py | sha256sum' and sha256sum of the current working-tree file both return that value, git diff --stat d94270f..91ee741 touches no hook or script code (only one-line CONTEXT_INDEX/SSOT_FACTS/CONTEXT_PACK updates, C5's own run evidence, and the audit doc), and the working tree is clean at 91ee741. Overlap: ACTIVE_RUN named run-20260729-f10-d070-canary-c5-decoy at BOTH ends of a 39.156 ms bracket while the Start-time lease named run-20260729-f10-d070-canary-c5; raw_logs/stop_out.json is empty, which is acceptance. Independent corroboration I ran rather than took on trust: five timed no-op dispatches of this same hook cost 34.8-37.3 ms wall on this machine, so a 39 ms window is dimensionally consistent with containing exactly one full dispatch and is far too narrow to contain a steal-restore-resteal of the pointer. Attribution is unique: expected_agent_id enforced, consumed_by_agent_id d070-canary-c5, exactly one consume row, result digest pinned in a git-tracked ADMISSIONS.jsonl. The consumed_at concession IS sufficient and does not undermine the claim, because obligation 4 asks about the pointer state ACROSS the dispatch, not about sub-second ordering of the consume; the artifact disclaims the latter explicitly instead of asserting a containment it cannot prove, which is the correct move and the opposite of the C4 defect. C5 was also real work, not a stub: a 7-finding review executed against a 'git clone --no-local' checkout of d94270f. Two limits I record without treating them as defeating: (a) the bracket's two reads are operator-narrated -- the only machine-emitted stamp from inside the hook is the second-truncated consumed_at, so nothing in-band ties the two date reads to the hook process; (b) under the recorded LOCAL-ADAPT every hook event is parent-constructed, and the retained stop_event.json has had its raw token replaced by the digest by scrub_admission_proof.py, so the acceptance cannot be replayed from the retained evidence.",
+      "assumptions_used": [
+        "Empty stdout from subagent_stop_validate.py denotes acceptance (the hook prints a block decision and nothing else).",
+        "The operator's account that the two ACTIVE_RUN reads were issued in one shell command around the dispatch is truthful; the 39 ms width and the ~35 ms measured no-op dispatch cost are consistent with it."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c5/ADMISSIONS.jsonl",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c5/raw_logs/stop_event.json",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:c47ba76f11bd651a8cab4b95e37edbdca6c53a167ae09997d95c35fbf2d7de6f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sha256sum .codex/hooks/subagent_stop_validate.py; git show d94270f:.codex/hooks/subagent_stop_validate.py | sha256sum  -> both dc19da4d...",
+        "git diff --stat d94270f..91ee741  -> no hook or script code changed.",
+        "for i in 1..5: S=$(date -Ins); python3 .codex/hooks/subagent_stop_validate.py <<< '{\"agent_id\":\"\"}'; E=$(date -Ins)  -> 34.8-37.3 ms."
+      ],
+      "confidence": 0.87,
+      "unresolved": [
+        "A future canary could remove the operator-narration residual entirely by having the hook itself emit a nanosecond stamp and its own read of ACTIVE_RUN into the ledger row."
+      ]
+    },
+    {
+      "finding_id": "F-D067-R6-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The 74 fixtures are largely non-vacuous, with one hole that is exactly the obligation-3 hole and two named weak fixtures. Established by running the suite in a byte-identical isolated mirror (74 passed, 7.2 s) and then applying nine single-point mutations one at a time, reverting between each. Eight were killed: M1 Stop ledger conflict check -> 2 fixtures; M2 mint-time binding guard -> 3; M3 24 h carve-out ceiling -> 1; M4 legacy-manifest pinned-digest check -> 1; M5 expected_agent_id enforcement at Stop -> 1; M7 Start-time receipt classification -> 8; M8 single-use receipt-state guard -> 1; M9 admission_proof digest comparison -> 1. M6 (receipt-write failure swallowed in admit_agent.py) was killed by NOTHING. Two fixtures are demonstrably weak. test_hooks.py:1233 test_consumed_receipt_still_blocks_a_different_agent asserts only decision=='block' with no reason check, and M8 proves it vacuous for the property its name states -- deleting the single-use guard leaves it green, because validate_result_contract blocks the stop anyway on an agent_id mismatch (the guard itself is covered, but by test_hooks.py:776, not by this test). test_hooks.py:1246 test_concurrent_stops_consume_receipt_once neither captures stderr nor asserts returncode==0, so it cannot distinguish an idempotent-accept loser from a crashed child, and it has no arm proving contention actually occurred -- four serialised children satisfy every assertion. A third, test_hooks.py:764 test_subagentstop_blocks_missing_admission_proof, asserts only that the substring 'admission_proof' appears in the reason, which the ENVELOPE_HINT text satisfies from at least four different guards including the one that fires here (missing envelope field), sixteen guards before the admission layer it sets up; the hook's own 'admission_proof is empty' guard has no fixture.",
+      "assumptions_used": [
+        "The isolated mirror is byte-identical to the repo for the code under test (verified with diff -r on .codex/hooks and by 74/74 passing before any mutation)."
+      ],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:b931c94c1e031ff7de1fb29369fb29d87c804caddedaf616c08a338cc482efa5",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Copy .codex/hooks and .agent-harness/{scripts,tests,templates,context} to a scratch tree, git init, copy LEGACY_RESULTS_MANIFEST.json and SSOT_FACTS.json; pytest -q -> 74 passed.",
+        "Apply each mutation alone, re-run, revert. M6 (except OSError: pass on the receipt write) -> 74 passed. M8 (single-use guard behind 'if False') -> only test_subagentstop_blocks_replayed_consumed_admission fails."
+      ],
+      "confidence": 0.92,
+      "unresolved": [
+        "A full 74-fixture mutation sweep was not run; nine targeted mutations covering the obligation-relevant guards were."
+      ]
+    },
+    {
+      "finding_id": "F-D067-R6-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The legacy-manifest pin holds and the round-5 single-commit laundering route is closed; the residual is stated accurately by the record. All three surfaces are live on current bytes: validate_harness.py prints 'ok (136 pinned); pinned by declared fact and digest (136)', the SSOT_FACTS.json fact legacy_results_manifest_entry_count=136 is cross-checked against the manifest's own entry_count and against two prose surfaces by check_ssot_consistency.py, and LEGACY_MANIFEST_PINNED_SHA256 in validate_harness.py binds the canonical entry-set digest independently of file formatting. Mutation M4 (disabling the digest comparison) kills test_legacy_manifest_pin_survives_a_commit, whose own assertion explicitly proves the git-porcelain check is NOT what caught the plant. So it can no longer be laundered by one commit. It can still be laundered by a coordinated edit to four files across three checkers -- manifest entries plus entry_count, the SSOT_FACTS value, the VALIDATION_LEDGER.md 'current' prose surface, and the constant in validate_harness.py -- which is precisely and only what the code comment at validate_harness.py:72-80 claims ('one commit becomes coordinated edits across cross-checked surfaces, not cannot be forged'). Two refinements the record does not make. Understating: FROZEN_DECISIONS.md is a member of CONTEXT_INDEX.shared_files, so editing the frozen 136 row moves context_version and staleness-fails every registered assignment and every result -- the strongest surface of the four, and uncredited. Overstating-adjacent: the 'frozen' role in check_ssot_consistency.py resolves pinned_to_commit against values declared inside SSOT_FACTS.json itself (known = {current: current_commit} | priors), not by reading git history, so that surface is in-tree like the others rather than being a history-backed one.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py",
+        ".agent-harness/context/SSOT_FACTS.json",
+        ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json",
+        ".agent-harness/scripts/check_ssot_consistency.py"
+      ],
+      "evidence_fingerprint": "sha256:4fd0a5a7d8ba0da14f88d4b562bdfd8df942e0172e004f6f98ca5f93fbd24dff",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python .agent-harness/scripts/validate_harness.py -> legacy_results_manifest 'ok (136 pinned); pinned by declared fact and digest (136)'.",
+        "In the mirror, disable the LEGACY_MANIFEST_PINNED_SHA256 comparison -> test_legacy_manifest_pin_survives_a_commit fails.",
+        "python3 -c \"import json;print(json.load(open('.agent-harness/context/CONTEXT_INDEX.json'))['shared_files'])\" -> includes FROZEN_DECISIONS.md."
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R6-07",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The open-receipt carve-out's 24 h ceiling is handled at the boundary but is described one notch tighter than it behaves, and it CAN be abused inside the window in a way section 2 does not state. Boundary, measured by driving validate_harness.pending_carve_out_refusal directly: 23h59m59s EXCUSED, exactly 24h00m00s EXCUSED, 24h00m00.000001s refused, 24h00m01s refused. The comparison at validate_harness.py:474 is 'age > timedelta(hours=...)', so the ceiling is INCLUSIVE at the boundary, not 'strict at the boundary' as the audit report words it; and because admit_agent.py writes created_at with timespec='seconds', the real window is 24 h plus up to one second. That is a wording nit. The abuse inside the window is not. While the carve-out holds, validate_harness.py tolerates ARBITRARY bytes at the declared result path -- it reports them under pending_results and still returns ok:true -- and merge_results.py, which is what turns a run into its merged output, globs runs/<active>/results/*.json with no reference to ADMISSIONS.jsonl, receipts, attribution or pending status whatsoever. So for up to 24 h an unattributed, never-stopped result is merged into the run's output while the validator reports green. The route is narrow (it needs a parent-minted open receipt for a registered assignment in the ACTIVE run, which the other five AND-ed conditions correctly enforce) and the carve-out's own docstring is honest that pending bytes are 'tolerated, not verified' -- but the audit report does not carry that limit forward, and merge_results.py not distinguishing pending from attributed is the part that makes it reachable in practice.",
+      "assumptions_used": [
+        "merge_results.py output feeds run-level reporting and gate discussion."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/validate_harness.py",
+        ".agent-harness/scripts/merge_results.py",
+        ".agent-harness/scripts/admit_agent.py"
+      ],
+      "evidence_fingerprint": "sha256:14b84ec2e9f94b1882bbcb5a1495338a439d3b1909aed681dea8da01cfa31fe3",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "reproduction": [
+        "import validate_harness; call pending_carve_out_refusal with created_at = now - 24h exactly -> returns None (excused); now - (24h + 1us) -> returns the ceiling refusal.",
+        "grep -n 'pending|ADMISSIONS|consumed|attribut' .agent-harness/scripts/merge_results.py -> no matches."
+      ],
+      "confidence": 0.88,
+      "unresolved": [
+        "Whether merge_results.py should refuse, or at minimum annotate, results that are only pending."
+      ]
+    },
+    {
+      "finding_id": "F-D067-R6-08",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "OVERALL: 1 of 4 obligations discharged; the D-065 F-D065-01 remedy is NOT DISCHARGED on current bytes (HEAD 91ee741, clean working tree). Obligation 4 is discharged; obligations 1, 2 and 3 are not. On the accepted same-OS-user residual: I accept it as out of scope and it is stated honestly in three places. It does not, however, rescue anything here, and the four obligations cannot be called discharged while it stands only because they cannot be called discharged at all -- every failure above is reachable WITHOUT it. Obligation 1's double-consume runs entirely through the supported admit_agent.py CLI with no writes outside declared paths. Obligation 2's PASS preflight is produced by an ordinary filesystem permission error, not by an agent misbehaving. Obligation 3's gap is an absent fixture. The pattern round 3 named and round 4 named again recurs a third time: the audit record asserts as settled a property the code does not have -- here, that Start cannot in principle distinguish a mint failure from an unregistered helper, when the parent's intent is on disk in the ledger the same slice introduced, and that a receipt-write-failure fixture exists, when the only fixture bearing that name injects at the ledger. Recommendation: do not flip G-HARNESS-INTEGRITY. Round 5's own verdicts should also be corrected -- its obligation-3 'DISCHARGED with one caveat' was wrong, because the caveat was the whole obligation.",
+      "assumptions_used": [
+        "status=pass requires all four obligations discharged, per the assignment."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        ".agent-harness/tests/test_hooks.py",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:c6e6d33b51ae3c12d884b1ba36ba0f4fd62aa228453d1544a822d38271c05da5",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json"
+      ],
+      "reproduction": [
+        "See the per-obligation findings F-D067-R6-01 through F-D067-R6-04."
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "Whether the parent accepts a narrower reading of 'atomically' in obligation 1 under which the per-assignment O_EXCL claim suffices."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-OBLIGATIONS.json"
+  ]
+}

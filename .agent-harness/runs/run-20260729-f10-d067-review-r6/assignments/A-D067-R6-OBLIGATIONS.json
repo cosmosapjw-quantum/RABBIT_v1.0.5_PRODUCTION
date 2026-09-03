@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-review-r6",
+  "assignment_id": "A-D067-R6-OBLIGATIONS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "review_role_files": [
+    ".agent-harness/context/roles/context_mapper.md"
+  ],
+  "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "8ad086a5381c811a8a1a47845febded9e7777e6e47b0505182647d38352a54f6",
+  "independence_mode": "blind-results",
+  "discovery_mode": "independent",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Round-6: judge whether all four D-065 F-D065-01 obligations are DISCHARGED on the post-round-5 bytes.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260729-f10-d067-review-r6/assignments/A-D067-R6-OBLIGATIONS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/context_mapper.md",
+    ".codex/hooks/subagent_stop_validate.py",
+    ".codex/hooks/subagent_start_context.py",
+    ".agent-harness/scripts/admit_agent.py",
+    ".agent-harness/scripts/validate_harness.py",
+    ".agent-harness/tests/test_hooks.py",
+    "docs/audit/BD622_D067_admission_binding_2026-07-29.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-OBLIGATIONS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-review-r6/results/A-D067-R6-OBLIGATIONS.json",
+  "status": "registered"
+}

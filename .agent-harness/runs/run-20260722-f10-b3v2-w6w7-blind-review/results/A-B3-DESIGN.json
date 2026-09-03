@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-B3-DESIGN",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "agent_id": "019f8937-673e-7740-bf32-ae5b6f0052fa",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-B3-DESIGN",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:a5710e04b1b7b30e80a2b7a45eeb01de56e31bce76028b73bd331731d6d5510b"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-B3-DESIGN.json",
+  "started_at": "2026-07-22T09:45:00Z",
+  "completed_at": "2026-07-22T09:53:12Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "git_head": "00a15d32dd4e96c32b5fbc574abbc02a4132edda",
+    "audit_method": "manual exact-algebra and specification audit; no collision, CAS-axis, W7 numerical, Radau, trajectory, endpoint, or production execution",
+    "token_use_exact": "UNAVAILABLE: no reliable assignment-scoped token counter is exposed"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '261,620p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,260p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-B3-DESIGN.json",
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-B3-DESIGN.json",
+    "sed -n '1,260p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,200p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '201,360p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '1,220p' docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "sed -n '1,120p' docs/audit/BD622_W5_d028_discriminator_result.md",
+    "sed -n '1,240p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "sha256sum docs/audit/BD622_W6_comparator_design_proof_pack.md docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md docs/audit/BD622_W5_d028_discriminator_result.md .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "python3 -B -c '<targeted validate_result_contract on this assignment/result only>'"
+  ],
+  "artifacts": [
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+    "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md sha256:a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a",
+    "docs/audit/BD622_W5_d028_discriminator_result.md sha256:83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0",
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240",
+    "ordered four-input evidence fingerprint sha256:e03639f6494f925bfe5c49e6796dcc92427b81d7084c60e9a6cd036265dca9c8"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-B3D-CORE-001",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "DERIVED, bounded pass: the six-species entropy-variable state, Galerkin mass matrix, Cholesky solve, smooth-region directional derivative, fermionic entropy sign, finite-mass shell convention, and catalogue event counts are mutually coherent at the algebraic design level. This is not implementation or numerical validation.",
+      "assumptions_used": [
+        "All quadrature weights and nodes entering M are strictly positive, occupations satisfy 0<f<1, and the sampled basis matrix has full column rank.",
+        "The reaction flux is J=F-R and the stored leg sign is the stoichiometric vector nu=(-1,-1,+1,+1).",
+        "Electron bath occupations are equilibrium Fermi-Dirac functions of positive on-shell energy, although that formula is not stated in W6.",
+        "Each reversible microscopic channel is represented once, with reverse direction carried by J rather than duplicated as another event."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:43-67,69-132",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:19-74",
+        "Manual derivation: c^T M c=sum_j omega_j y_j^2 f_j(1-f_j)(sum_m c_m psi_m(y_j))^2>0 under positive weights and full rank; differentiating M F=q gives DF=M^-1(Dq-DM F).",
+        "Manual derivation: because log is strictly increasing, (F-R)(log F-log R)>=0 for F,R>0; with dS_F/df=-eta and q=nu J this equals the fermionic entropy production.",
+        "Independent count-level enumeration: self rows contribute 6 identical same-sign + 3 same-flavour nu-antinu + 6 distinct same-sign + 6 distinct-flavour opposite-sign + 3 pair-conversion events = 24; electron rows contribute 12 species-by-charge elastic + 3 flavour pair events = 15."
+      ],
+      "evidence_fingerprint": "sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:7,142-156 limits W3 to ratios/MB reduction and leaves direct row-ii, absolute normalization, and finite-m_e channels open.",
+        "The count derivation does not substitute for the absent exact reaction records, multiplicities, or stoichiometric matrix."
+      ],
+      "reproduction": [
+        "Read the fixed conventions and targets with: sed -n '1,162p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "Re-evaluate the displayed quadratic form, product derivative, entropy monotonicity argument, and integer event-count decomposition exactly; no floating output is needed."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Absolute phase-space normalization, direct row-ii trace, finite-m_e interference, and exact reaction records remain future W7 obligations."
+      ]
+    },
+    {
+      "finding_id": "F-B3D-SPEC-002",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The exact design bytes are not sufficiently specified to authorize a unique later B3 implementation. They state obligations but omit executable definitions for the reaction records and rational multiplicities; W_r, Lambda_r, epsilon_leg and their sign map; electron bath occupations/spin counting; finite-m_e invariant coordinates, root equations, Jacobians, branch ordering and excluded denominators; and the higher basis candidates, QR weight, y_bar, s_y, QR sign convention, rank/condition estimator, and reconstruction map. Independent conforming implementers can therefore construct inequivalent collision operators and mass matrices.",
+      "assumptions_used": [
+        "A design is implementation-sufficient only if two independent implementers can reconstruct the same mathematical operation graph without importing forbidden production tables or making discretionary physics/discretization choices.",
+        "A promised future W7 derivation is not present evidence for an exact definition in the reviewed bytes.",
+        "Missing sign, normalization, root-Jacobian, and basis choices are binding because they can change conservation, entropy, covariance, and absolute rates."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:45-55 gives a symbolic q formula and delegates the graph to W7 without defining W_r, Lambda_r, epsilon_leg, or listing records.",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:69-91 requires an invariant support/root solve but supplies no coordinate map, root polynomial/residual, delta-function Jacobian, branch order, or excluded threshold components.",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:105-112 leaves higher candidates, QR weights, y_bar, s_y, normalization/sign conventions, and the conditioning algorithm unspecified.",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:37-38 and 76-82 identify the missing phase-space, spin, graph, shell-elimination, and normalization obligations explicitly.",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md:7,142-156 explicitly does not close absolute normalization, direct row-ii, or finite-m_e rows."
+      ],
+      "evidence_fingerprint": "sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+      "counterevidence_refs": [
+        "W6 section 8 assigns these items to W7 and section 11 names falsifiers T01/T04/T05/T08, which is a sound fail-closed intent but not an executable definition.",
+        "CAS_CONTRACT supplies candidate target identities and phase-space conventions, but it expressly forbids assuming those candidates and requires independent derivation."
+      ],
+      "reproduction": [
+        "Run: nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md | sed -n '42,190p'",
+        "Attempt to instantiate one reaction record, one finite-m_e quadrature weight, and psi_2 from only the cited bytes; each attempt necessarily introduces an unstated choice."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Provide the exact six-species record list with rational multiplicities and an explicit Lambda/epsilon/sign convention tied to J and C_1.",
+        "Specify equilibrium electron/positron occupations, degeneracy accounting, invariant coordinates, root equations, delta-function Jacobians, deterministic branch ordering, threshold equality behavior, and excluded denominators.",
+        "Freeze the candidate basis sequence, y_bar and s_y formulas, QR inner product and deterministic sign convention, rank/condition estimator, reconstruction map, and stable logistic arithmetic."
+      ]
+    },
+    {
+      "finding_id": "F-B3D-LADDER-003",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The purported complete pre-output ladder is not executable as preregistered. The five M values and four (N_q,Y_max) values have no declared Cartesian/paired ordering or total order for 'smallest'; the radial/angular quadrature families and mappings are absent; and selection is said to occur before the first B3 collision output while requiring a base/reference collision budget, which itself requires collision evaluation. T08-T12 name obligations but do not define their norms, denominators, floors, tail functional, threshold vectors, or deterministic test-state generator.",
+      "assumptions_used": [
+        "The base/reference collision budget refers to the candidate B3 collision action because no alternative analytic quantity is defined.",
+        "Prospective selection requires an unambiguous evaluation order and tie-break before any candidate outputs can influence method choice.",
+        "Hash-locking future rows does not repair an underdefined current selection rule."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:159-181",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:234-275",
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json:143-155 forbids changing or silently completing targets after results."
+      ],
+      "evidence_fingerprint": "sha256:e03639f6494f925bfe5c49e6796dcc92427b81d7084c60e9a6cd036265dca9c8",
+      "counterevidence_refs": [
+        "W6 fixes finite candidate lists, thresholds, a stop-on-failure rule, and forbids adding a new order/domain after output; these are useful boundaries but do not determine the missing operation graph.",
+        "The JSONL field list preserves raw failures but does not define how any T08-T12 scalar is computed."
+      ],
+      "reproduction": [
+        "Run: nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md | sed -n '159,181p;234,275p'",
+        "Enumerate the stated arrays: 5 modal choices and 4 grid choices cannot be zipped one-to-one, while no Cartesian traversal or lexicographic tie-break is specified.",
+        "Observe that evaluating the stated base/reference collision criterion necessarily produces collision data, contradicting the clause that selection occurs before the first B3 collision output unless a separate oracle-only selection quantity is defined."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Define the candidate product set, traversal and tie-break; every quadrature rule/map; exact base/reference comparison norm and denominator; lost/tail functional; and all T08-T12 vectors/floors.",
+        "Repair sequencing by separating representation-only preselection from prospectively sealed collision evaluation, or define a non-B3 oracle quantity that supplies the collision budget without candidate output."
+      ]
+    },
+    {
+      "finding_id": "F-B3D-METROLOGY-004",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The D-030 metrology direction is scientifically appropriate but not yet auditable as a numerical bound. The design correctly refuses to transfer D-028's 1/y^2 cap and separates the binding weak/mass-weighted identity from native conditioning, yet B_sum, B_basis, B_solve, and B_interval are not expressed in one common normalized metric and have no numeric values, denominators, component floors, state envelope, or operation-order certificate. Consequently B_native cannot presently be checked for dimensional consistency, coverage, or prospectivity.",
+      "assumptions_used": [
+        "Terms added in B_native must be bounds on the same dimensionless normalized observable or must include explicit conversion factors.",
+        "W5 is localization evidence only and cannot supply a universal native cap.",
+        "A future W7 interval may close B_interval but does not define the other three terms."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:216-232",
+        "docs/audit/BD622_W5_d028_discriminator_result.md:26-50",
+        ".agent-harness/generated/CONTEXT_PACK.md gate G-F10-COVARIANCE-METROLOGY requires measured summation, basis, solve/conditioning, interval, denominator, and state-envelope terms."
+      ],
+      "evidence_fingerprint": "sha256:83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0",
+      "counterevidence_refs": [
+        "The factorized B_native formula and prospective-freeze requirement are coherent scaffolding and avoid the historical D-028 category error.",
+        "W6 explicitly says the missing numeric caps and configurations will be frozen before B3 output, so this finding is inconclusive rather than a claim that the eventual bound must fail."
+      ],
+      "reproduction": [
+        "Run: nl -ba docs/audit/BD622_W6_comparator_design_proof_pack.md | sed -n '216,232p'",
+        "Attempt unit/normalization propagation through B_sum+B_basis+B_solve+B_interval; the referenced bytes do not specify a common denominator or conversions, so the sum is not independently reconstructible."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Supply formulas and numeric pre-output values for every term in a shared normalized metric, including component floors, state maximization, canonical summand counts/scales, QR/reconstruction constants, Cholesky backward-error constants, MPFR interval propagation, and exact thread/BLAS/reduction settings."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-B3-DESIGN.json"
+  ]
+}

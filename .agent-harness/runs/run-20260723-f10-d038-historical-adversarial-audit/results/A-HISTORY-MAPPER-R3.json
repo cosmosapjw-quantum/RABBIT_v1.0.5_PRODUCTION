@@ -1,0 +1,669 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+  "assignment_id": "A-HISTORY-MAPPER-R3",
+  "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+  "agent_id": "019f8b4d-4a53-77a1-b12d-b09e038f8bfb",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d038-historical-adversarial-audit",
+    "assignment_id": "A-HISTORY-MAPPER-R3",
+    "context_version": "2321fda01cdd5ef03c84b059ef9ddd368e95edc52b99c6f9c79bedf894cff001",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e5b42951709b6d0ebe61787e5d5a8df23741fb7bbd49b29ecce0c8a250f1b8da",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R3.json",
+  "started_at": "2026-07-22T19:20:53Z",
+  "completed_at": "2026-07-22T19:40:45Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "review_method": "read-only Git/blob/run inspection and static current-source review; no scientific execution"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/build_context_pack.py",
+    "python3 -c \"import sys; from pathlib import Path; sys.path.insert(0,'.agent-harness/scripts'); import _harness; print(_harness.hash_files(Path('.'), ['.agent-harness/context/roles/independent_auditor.md']))\"",
+    "git rev-parse HEAD main f10-independent-validation-blocker solver-divergence-fair-harness",
+    "git log --all --date=iso-strict --format='%H %ad %D %s' -- docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py src/rabbit/decoupling/_independent_noqke.py",
+    "git diff --quiet 75e1821 00a15d3",
+    "git bundle verify .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py RABBIT_f10_independent_validation_branch_review.md .publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+    "rg -n 'ArithmeticNode\\(|event_key_prefix|TAIL_CONTRACT|tail|node_values|shell_scale' scripts/audit/w7_b3v2_contract_source.py",
+    "sed -n '1,320p' .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+    "sed -n '1,380p' .agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+    },
+    {
+      "path": "RABBIT_f10_independent_validation_branch_review.md",
+      "sha256": "a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "sha256": "9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D038-HIST-001",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "critical",
+      "causal_label": "root_cause",
+      "causal_taxonomy": "specification-to-source translation defect",
+      "statement": "The dominant recurrent cause is executable-contract debt: binding physical and numerical obligations were repeatedly present as prose, labels, caller assertions, or weak validators rather than as one constructive executable path. The current exact D-035 source therefore admits nonconforming shell, basis, tail, event-order, and A0-A4 executions even though several local algebraic claims are correct.",
+      "strongest_counterargument": "D-035 is unusually detailed, freezes exact bytes, and independently passes reaction nullspace, entropy-affinity, direct row-ii, and absolute-normalization subclaims; further demands could be disproportionate formalism.",
+      "assumptions_used": [
+        "A binding design obligation must make a nonconforming execution impossible or detectably fail, not depend on future caller discipline.",
+        "D-037's registered exact-byte results are stronger current evidence than earlier packet narratives."
+      ],
+      "current_evidence": [
+        "D-037 B3 exact-byte review finds a global shell tolerance instead of separate per-leg caps, node_values consumers bypassing the mandatory coefficient-Horner representation, no executable directed tail integrator, and incomplete canonical trace enforcement.",
+        "D-037 W7 exact-byte review independently finds threshold shell checks skipped, non-outward metrology arithmetic, arbitrary declared interfaces, no exact trace emitter/count schema, no A4 permutation certificate, and no common enforced denominator."
+      ],
+      "historical_evidence": [
+        "The 2026-07-17 Fort design review already failed before output on undefined constants, layout, physical mapping, terminal event, and norms.",
+        "D-029 rejected a locally plausible MaxEnt programme because its selector, support switch, Jacobian, covariance, and collision contracts were not executable."
+      ],
+      "first_introduced_interval": "Bounded no later than the first Fort exact-design packet reviewed on 2026-07-17; exact earlier introduction is unresolved because the public re-root changed path-level ancestry.",
+      "first_detectable_interval": "Detectable by the 2026-07-17 independent Fort review; recurrent B3-v2 form is directly detectable in the sealed D-035 bytes and was reported by D-037 on 2026-07-23.",
+      "why_earlier_checks_missed_it": "Earlier checks often proved named formulas or local invariants without attempting a source-level negative control that a nonconforming path could nevertheless pass.",
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-003",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-006",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json#F-W7-ARITHMETIC-001",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-029"
+      ],
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-001",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json#F-W7-NORMALIZATION-001"
+      ],
+      "reproduction": [
+        "Compare W6 section 5 per-leg shell bounds with two_body_outgoing's one global shell_scale.",
+        "Search all projection, mass, and reconstruction consumers for basis.node_values and compare with W6's all-consumer Horner rule.",
+        "Inspect validate_arithmetic_trace and verify that one arbitrary node per owner can satisfy its completeness tests without reproducing the frozen event graph."
+      ],
+      "confidence": 0.99,
+      "disconfirming_evidence": "A fresh sealed source in which all five obligations are constructively generated and source-level negative controls fail would disconfirm recurrence in the next candidate; it would not retroactively validate D-035.",
+      "constructive_recommendation": "If and only if the owner authorizes one final design-only remediation, amend the existing W6/source/vector trio so per-leg shells, one Horner representation, rigorous signed tail intervals, canonical event construction, exact trace counts/interfaces, A4 permutation overlap, and one outward denominator are executable and negatively tested.",
+      "forbidden_shortcut": "Do not treat prose declarations, caller-supplied arrays, or four bounded subclaim passes as whole-design authority.",
+      "unresolved": [
+        "The exact pre-2026-07-17 first introduction commit is bounded but not uniquely attributable."
+      ]
+    },
+    {
+      "finding_id": "F-D038-HIST-002",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "high",
+      "causal_label": "root_cause",
+      "causal_taxonomy": "scientific or mathematical specification defect",
+      "statement": "Representation and solver architecture were repeatedly selected before the full invariant and numerical envelope was frozen. Pointwise non-adjoint deposition, D-028's native covariance path, D-029's piecewise prior, and the current two-representation B3 basis then failed for structurally different reasons. These are not one repeated coefficient typo.",
+      "strongest_counterargument": "Each representation was a rational bounded experiment and later evidence could not have been known without constructing it; exploration is not itself a defect.",
+      "assumptions_used": [
+        "A route intended for independent endpoint validation must close conservation/covariance, support, representation uniqueness, and solver interface constraints before implementation expansion.",
+        "Different concrete failures sharing an omitted invariant envelope support a recurrent sequencing cause without proving the entire B3 family impossible."
+      ],
+      "current_evidence": [
+        "D-035 requires one coefficient-Horner representation, while the exact source stores and consumes independently rounded node_values.",
+        "The initial W6 branch review found a species-blind weak bracket, massless electron kinematics, and a nonexistent native SciPy Radau mass-matrix contract before later corrections."
+      ],
+      "historical_evidence": [
+        "D-027 passed a common-FD null case but failed the first non-null self, energy, and electron-exchange discriminators.",
+        "D-028 passed three focused checks but failed the evolved native mu-tau covariance cap at 4.666064e-10 > 1e-10.",
+        "D-029 passed local theorem/program checks but lacked a derived selector/support/Jacobian/covariance/collision contract and was rejected before implementation."
+      ],
+      "first_introduced_interval": "Bounded to the transition from D-025's Fort stop to D-026/D-027's smallest independent full-spectral comparator; analogous legacy solver/translation defects predate the public re-root but are antecedents, not the same bug.",
+      "first_detectable_interval": "D-027's first non-null discriminator made the pointwise defect detectable; D-028's native RHS check exposed the modal defect; D-029's preimplementation review exposed the selector gap.",
+      "why_earlier_checks_missed_it": "The route first optimized for a realizable local construction and only later applied the strongest native/non-null invariant, leaving representation choice ahead of acceptance physics.",
+      "evidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-027",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-028",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-029",
+        "RABBIT_f10_independent_validation_branch_review.md",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-004"
+      ],
+      "evidence_fingerprint": "sha256:a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575",
+      "counterevidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-035",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-001"
+      ],
+      "reproduction": [
+        "Read D-027 through D-029 in FROZEN_DECISIONS.md and classify each first failing discriminator by representation rather than coefficient.",
+        "Compare current basis construction and each basis.node_values consumer with W6 section 6's single-representation requirement."
+      ],
+      "confidence": 0.94,
+      "disconfirming_evidence": "A coherent predeclared invariant envelope followed by a fresh candidate that passes all binding static/source review would weaken the recurrence claim; current evidence does not establish that B3 itself is impossible.",
+      "constructive_recommendation": "Freeze acceptance invariants and negative controls before allowing another implementation expansion; keep the next decision design-only and bounded.",
+      "forbidden_shortcut": "Do not infer that a new basis, solver, or larger implementation automatically repairs an incompletely bound invariant envelope.",
+      "unresolved": [
+        "The relative causal weight of architecture choice versus incomplete translation differs across D-027, D-028, D-029, and D-035."
+      ]
+    },
+    {
+      "finding_id": "F-D038-HIST-003",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "high",
+      "causal_label": "detection_gap",
+      "causal_taxonomy": "test-oracle or coverage defect",
+      "statement": "The repeated delay arose because early tests and metrology emphasized analytic nulls, self-consistency, selected identities, or segment-only behavior rather than the cheapest discriminating non-null, native-evolution, negative-control, and matched-accuracy checks.",
+      "strongest_counterargument": "Analytic nulls and exact identities are appropriate first checks, and the later discriminators did eventually stop each route before a false endpoint claim.",
+      "assumptions_used": [
+        "A diagnostic with an ill-conditioned 0/0 ratio cannot qualify the signed-over-absolute non-null gate.",
+        "A local/modal pass is not transferable to the evolved native RHS."
+      ],
+      "current_evidence": [
+        "D-037's four valid subclaims coexist with seven binding failures; local algebra therefore did not predict whole-source conformance.",
+        "Current validators lack explicit negative controls for unequal-scale shells, node-value bypass, missing trace cardinality, and malformed permutation domains."
+      ],
+      "historical_evidence": [
+        "Fort r4's seven-row initial diagnostic localized the GL60 anomaly to strict lower-endpoint interpolation; r6 then showed the common-FD signed/absolute statistic was direction-dependent 0/0 and still produced no endpoint.",
+        "D-027's common-FD null passed before non-null self/energy/electron checks failed; D-028's focused checks passed before native covariance failed.",
+        "The fair solver harness showed that set_stop_time chunking could create an apparent Rodas advantage that vanished under an unconstrained comparison; matched-accuracy evidence remained missing."
+      ],
+      "first_introduced_interval": "Present by the initial Fort common-FD/null discriminator design and recurred in D-027/D-028; precise first origin is unresolved.",
+      "first_detectable_interval": "Fort r6 established the null ratio's 0/0 defect; D-027 and D-028 established the non-null/native gaps; the fair solver-harness branch exposed timing confounding.",
+      "why_earlier_checks_missed_it": "Checks asked whether a special case or selected formula was internally consistent rather than whether an independently chosen case could break the complete execution contract.",
+      "evidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-025",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-027",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-028",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a",
+      "counterevidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-023",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-037"
+      ],
+      "reproduction": [
+        "Contrast the passing subclaims and failing whole-design findings in the two D-037 exact-byte envelopes.",
+        "Trace D-025, D-027, and D-028 from null/local checks to their first non-null/native discriminator."
+      ],
+      "confidence": 0.97,
+      "disconfirming_evidence": "A preregistered suite whose first layer includes the strongest non-null/native/negative controls and catches defects before packet expansion would show this detection pattern has been corrected.",
+      "constructive_recommendation": "Make source-level negative controls and the cheapest native/non-null discriminator the first acceptance layer of any owner-authorized correction.",
+      "forbidden_shortcut": "Do not report analytic-null, self-consistency, segment timing, or selected CAS passes as endpoint or whole-design progress.",
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D038-HIST-004",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "high",
+      "causal_label": "recurrence_amplifier",
+      "causal_taxonomy": "workflow sequencing, authority or cost-control defect",
+      "statement": "Workflow sequencing amplified recurrence: the programme repeatedly expanded exact-byte authority, wrappers, and implementation surface before running the cheapest decisive scientific discriminator or completing a whole-source conformance review. Fail-closed gates prevented invalid output, but late discriminators converted avoidable work into no endpoint evidence.",
+      "strongest_counterargument": "Exact-byte admission and independent review were necessary for trustworthy evidence, and each loop did find and preserve a genuine defect rather than silently accepting it.",
+      "assumptions_used": [
+        "Cost-effectiveness is judged by new decisive evidence per added surface, not by the count of packets or passing local checks.",
+        "Authority work is justified only when the underlying design is ready to produce interpretable evidence."
+      ],
+      "current_evidence": [
+        "D-033 through D-035 corrected real constants, normalization, orientation, and finite-shell definitions, yet D-037 still stopped at binding source defects before output.",
+        "The current branch review documents earlier W6 implementation choices that outran the verified solver and finite-mass contracts."
+      ],
+      "historical_evidence": [
+        "The Fort path underwent multiple authority/cache/allowlist iterations before the full initial-only discriminator and then ended with no endpoint.",
+        "D-027/D-028 obtained local or focused passes before their first decisive non-null/native failure."
+      ],
+      "first_introduced_interval": "Bounded no later than the first Fort stage-2 authority sequence on 2026-07-17; exact starting packet is not uniquely assigned.",
+      "first_detectable_interval": "Detectable once r4/r6 produced no endpoint despite several authority iterations, and again when D-027/D-028/D-037 stopped after local passes.",
+      "why_earlier_checks_missed_it": "Process correctness and local progress were tracked more visibly than the absence of a minimally sufficient whole-route discriminator.",
+      "evidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-021",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-025",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-033",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-037",
+        "RABBIT_f10_independent_validation_branch_review.md"
+      ],
+      "evidence_fingerprint": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+      "counterevidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-023",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-035"
+      ],
+      "reproduction": [
+        "Order D-017 through D-037 by decision date and mark the first decisive physics discriminator versus each preceding authority or implementation expansion.",
+        "Verify D-037 stopped without W7/B3 numerical execution while preserving four bounded passes and seven failures."
+      ],
+      "confidence": 0.93,
+      "disconfirming_evidence": "A costed retrospective showing that an earlier decisive discriminator required the disputed authority surface would reduce this causal weight; no such dependency was found for the source-level D-037 defects.",
+      "constructive_recommendation": "Require one owner decision between stopping and one bounded design-only correction; judge it on deletion/consolidation and decisive source conformance, not packet count.",
+      "forbidden_shortcut": "Do not respond with a larger implementation/test push, new readiness plumbing, policy knobs, or more segment-only benchmarking.",
+      "unresolved": [
+        "Some authority iterations were necessary to make later evidence admissible; their individually avoidable share is not quantified."
+      ]
+    },
+    {
+      "finding_id": "F-D038-HIST-005",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "medium",
+      "causal_label": "non_cause",
+      "causal_taxonomy": "harness, identity, isolation or write-attribution defect; provenance, branch or history reconstruction defect",
+      "statement": "Harness and re-root defects delayed trustworthy admission and complicate exact first-introduction attribution, but they did not cause the current scientific/design failures. D-037 reviewed the current exact W6/source/vector hashes under the corrected schema-v2 contract and independently reproduced concrete source defects.",
+      "strongest_counterargument": "The public re-root hides ordinary path ancestry, while failed mapper/harness attempts show the review process itself can reject valid work for metadata reasons.",
+      "assumptions_used": [
+        "An exact current-byte counterexample remains valid regardless of missing prior path history.",
+        "A preserved complete legacy bundle is adequate to distinguish missing public ancestry from destruction of the legacy object graph."
+      ],
+      "current_evidence": [
+        "D-037 B3 and W7 results have validated schema-v2 spawn contracts, exact current hashes, pre-output static methods, and specific reproducible failures.",
+        "A-HISTORY-MAPPER R1 compared a raw role-file digest with the required aggregate hash; R2 required a missing default role file. Both are process-only failures."
+      ],
+      "historical_evidence": [
+        "The Jul-19 public re-root imported current source/tests/records in new commits and intentionally preserved the legacy bare Git, bundle, patches, and quarantine.",
+        "The legacy bundle verifies as complete with 37 refs and has SHA-256 9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920.",
+        "Three W3/W5 commits on the current and blocker branches have identical trees and must not be counted as independent evidence."
+      ],
+      "first_introduced_interval": "Harness identity/hash problems occurred across D-034 through D-036 and mapper R1/R2; the public ancestry discontinuity begins at the Jul-19 re-root commit interval 5cd57fee..36196c6.",
+      "first_detectable_interval": "Immediately detectable by schema/hash preflight for harness faults and by git log --follow plus bundle verification for the re-root discontinuity.",
+      "why_earlier_checks_missed_it": "Narrative branch names and raw file hashes were sometimes mistaken for effective context/runtime identity; public path history was read without the preserved legacy bundle.",
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER.json",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-036",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-037",
+        "docs/harness/DECISION_LOG.md",
+        ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle"
+      ],
+      "evidence_fingerprint": "sha256:9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER.json"
+      ],
+      "reproduction": [
+        "Run git bundle verify on the preserved bundle and inspect the advertised refs/completeness result.",
+        "Verify the two D-037 result hashes and their sealed W6/source/vector hashes, then reproduce their static source comparisons.",
+        "Run git diff --quiet 75e1821 00a15d3 and compare paired tree IDs before counting branch evidence."
+      ],
+      "confidence": 0.99,
+      "disconfirming_evidence": "A current failure that disappears when the same exact bytes are admitted under a corrected harness would implicate the harness; D-037's source-level counterexamples do not disappear that way.",
+      "constructive_recommendation": "Preserve the bundle/quarantine and cite exact hashes; keep process integrity and scientific verdicts as separate claims.",
+      "forbidden_shortcut": "Do not erase current design failures as re-root artifacts, and do not double-count identical cherry-picked trees as corroboration.",
+      "unresolved": [
+        "Some exact pre-re-root first-introduction commits remain bounded rather than uniquely mapped to current paths."
+      ]
+    },
+    {
+      "finding_id": "F-D038-HIST-006",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "pass",
+      "severity": "medium",
+      "causal_label": "proximate_cause",
+      "causal_taxonomy": "scientific or mathematical specification defect",
+      "statement": "The current B3-v2 route is not disproved as a scientific family, and D-035 genuinely repaired normalization, G_F, orientation, reaction-nullspace, entropy, and row-ii defects. Its sealed source is nevertheless implementation-insufficient because the remaining failures bind finite-shell support, numerical representation, tail enclosure, canonical execution, and covariance metrology.",
+      "strongest_counterargument": "Because four foundational subclaims now pass, the remaining defects may be small local corrections rather than evidence against the route.",
+      "assumptions_used": [
+        "A whole design can remain PROPOSED while individual subclaims are VALIDATED.",
+        "No numerical result may be inferred from a static design correction."
+      ],
+      "current_evidence": [
+        "D-037 records four bounded passes and seven unique binding failures, with both whole-design claims failing at the registered hard stop.",
+        "Pre/post non-run hashes matched; no W7, B3, T01-T12, Rust, Radau, trajectory, endpoint, or unblinding output was produced."
+      ],
+      "historical_evidence": [
+        "D-033 and D-034 identified normalization/orientation, G_F, finite-shell, basis/ladder, and A0-A4 defects; D-035 corrected a subset before the current exact review."
+      ],
+      "first_introduced_interval": "The current proximate defects are present in sealed D-035 source hash 60fc9668; their precise edit-level introductions across the uncommitted candidate are unresolved.",
+      "first_detectable_interval": "Directly detectable by static source/spec comparison on D-035; independently recorded by D-037.",
+      "why_earlier_checks_missed_it": "D-035 verification emphasized corrected constants and selected local validators without a hostile whole-source attempt to construct accepted but nonconforming executions.",
+      "evidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-033",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-034",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-035",
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-037",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json#F-B3-DESIGN-001",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json#F-W7-ROWII-001",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json#F-W7-NORMALIZATION-001"
+      ],
+      "reproduction": [
+        "Hash the three D-035 inputs and compare the exact hashes with D-037 artifact records.",
+        "Deduplicate the two D-037 envelopes by claim/evidence/verdict: retain four passes and seven binding failures without treating either set as the other."
+      ],
+      "confidence": 0.98,
+      "disconfirming_evidence": "A fresh blind exact-byte review passing every listed binding obligation would reverse implementation insufficiency for that new candidate, but not supply W7 or endpoint evidence.",
+      "constructive_recommendation": "Preserve the four bounded passes and repair only the enumerated binding defects if the owner chooses the final-remediation branch.",
+      "forbidden_shortcut": "Do not label the B3 family impossible; equally, do not promote bounded passes to design, implementation, execution, or endpoint validation.",
+      "unresolved": [
+        "Whether one bounded correction can close every defect without creating new surface is untested."
+      ]
+    },
+    {
+      "finding_id": "F-D038-HIST-007",
+      "claim_id": "C-D038-HISTORY-CAUSES",
+      "verdict": "fail",
+      "severity": "critical",
+      "causal_label": "proximate_cause",
+      "causal_taxonomy": "workflow sequencing, authority or cost-control defect",
+      "statement": "The current route is not ready for exact-byte remediation under present authority, W7 execution, B3 implementation, or independent-FLRW closure. A final exact-byte correction is technically plausible only after a new owner decision and must stop on any non-PASS source/design finding.",
+      "strongest_counterargument": "The remaining source defects are enumerated and local enough that immediate remediation could be the highest-value next action.",
+      "assumptions_used": [
+        "D-037's first admitted non-PASS result is the binding hard stop.",
+        "D-038 is read-only and cannot itself authorize remediation or execution."
+      ],
+      "current_evidence": [
+        "D-037 classifies the sealed design FAIL and explicitly requires a new owner decision before remediation or review.",
+        "No completed four-axis merge/adjudication, W7 output, B3 output, trajectory, or independent endpoint exists."
+      ],
+      "historical_evidence": [
+        "Repeated late failures show that scaling implementation before complete binding review has produced more surface without endpoint authority."
+      ],
+      "first_introduced_interval": "Current authority block begins at D-037's hard-stop decision on 2026-07-23.",
+      "first_detectable_interval": "Immediate from D-037's two admitted fail envelopes and FROZEN_DECISIONS entry.",
+      "why_earlier_checks_missed_it": "Not applicable to the current authority verdict; earlier packet progress did not supersede the later exact-byte hard stop.",
+      "evidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-037",
+        ".agent-harness/context/GATE_REGISTRY.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:d2780e2c763b134084b0143e7875cb8105a5e20e34ab524f5fa3225c096adc95",
+      "counterevidence_refs": [
+        ".agent-harness/context/FROZEN_DECISIONS.md#D-035"
+      ],
+      "reproduction": [
+        "Read D-037's stop condition and verify both result envelopes contain non-PASS whole-design findings.",
+        "Verify the gate registry still requires independent endpoint and D-037 evidence and does not authorize execution."
+      ],
+      "confidence": 1.0,
+      "disconfirming_evidence": "A new explicit owner authorization plus a fresh exact-byte design/source review with every binding claim PASS would change only remediation readiness; subsequent separately authorized evidence would still be required for W7, B3, and endpoint closure.",
+      "constructive_recommendation": "Ask the owner to choose STOP or ONE_FINAL_DESIGN_ONLY_REMEDIATION with a frozen defect list, deletion/consolidation accounting, negative controls, and a first-failure hard stop.",
+      "forbidden_shortcut": "Do not execute, implement, tune, unblind, open F-11/QKE, or infer closure from this historical audit.",
+      "unresolved": []
+    }
+  ],
+  "chronology": [
+    {
+      "interval": "2026-07-16",
+      "event": "Initial F-10 review retained 221/221 tests and conditionally preferred live FortEPiaNO, but supplied no independent endpoint.",
+      "classification": "starting condition"
+    },
+    {
+      "interval": "2026-07-17",
+      "event": "Fort design review failed before output on incomplete executable definitions; later packet amendments achieved an implementation-only stage-1 pass.",
+      "classification": "first bounded detection of executable-contract debt"
+    },
+    {
+      "interval": "2026-07-17 through 2026-07-18",
+      "event": "Fort exact-hash/authority reviews failed repeatedly; r4 ran seven zero-step rows and localized GL60 to an exact lower-node interpolation bug.",
+      "classification": "translation/metrology defect plus workflow amplification"
+    },
+    {
+      "interval": "2026-07-18",
+      "event": "r6 cleared the interpolation anomaly but proved the common-FD signed/absolute ratio direction-dependent 0/0; Fort stopped with no endpoint.",
+      "classification": "oracle defect and route stop"
+    },
+    {
+      "interval": "D-026 through D-029",
+      "event": "Pointwise, Galerkin, and MaxEnt alternatives respectively failed non-null deposition, native covariance, and executable selector/support/Jacobian contracts.",
+      "classification": "architecture-first recurrence"
+    },
+    {
+      "interval": "2026-07-19",
+      "event": "Public history was re-rooted while legacy Git/bundle/quarantine were preserved; path ancestry became discontinuous without changing science status.",
+      "classification": "provenance discontinuity, non-cause"
+    },
+    {
+      "interval": "D-033 through D-035",
+      "event": "Blind reviews found and packets corrected constants, normalization, orientation, finite-mass, basis, ladder, and metrology definitions in stages.",
+      "classification": "genuine partial correction with recurring whole-contract gaps"
+    },
+    {
+      "interval": "2026-07-23 D-037",
+      "event": "Exact current bytes passed four bounded claims and failed seven binding claims; hard stop occurred before W7/B3 output or adjudication.",
+      "classification": "current decisive evidence"
+    }
+  ],
+  "root_symptom_matrix": [
+    {
+      "surface": "Repeated pre-output review failures",
+      "classification": "symptom",
+      "underlying_cause": "Executable-contract debt and architecture-before-invariant sequencing"
+    },
+    {
+      "surface": "GL60 spike",
+      "classification": "proximate symptom",
+      "underlying_cause": "Strict lower-endpoint interpolation translation defect"
+    },
+    {
+      "surface": "Null/local checks pass while non-null/native checks fail",
+      "classification": "detection pattern",
+      "underlying_cause": "Weak early oracle coverage"
+    },
+    {
+      "surface": "Many authority/harness iterations",
+      "classification": "recurrence amplifier",
+      "underlying_cause": "Late decisive discriminator and process/science coupling"
+    },
+    {
+      "surface": "Public path history begins Jul-19",
+      "classification": "provenance discontinuity and non-cause",
+      "underlying_cause": "Intentional re-root with preserved legacy bundle"
+    }
+  ],
+  "audit_stage_completion": [
+    {
+      "stage": "self-discover",
+      "status": "PASS",
+      "record": "Inventoried current/main/blocker/solver refs, duplicate trees, preserved legacy bundle/quarantine, D-017 through D-037 decisions, exact D-035 inputs, both D-037 envelopes, and current source break surfaces."
+    },
+    {
+      "stage": "step-back",
+      "status": "PASS",
+      "record": "Separated concrete proximate bugs from recurrent root causes, detection gaps, workflow amplifiers, harness faults, and provenance non-causes in root_symptom_matrix."
+    },
+    {
+      "stage": "metacognitive self-ask",
+      "status": "PASS",
+      "record": "Checked hindsight bias, dependence on narrative ledgers, incomplete pre-re-root path ancestry, duplicate branch evidence, and risk of mistaking current B3 failure for proof that the family is impossible; bounded uncertain intervals explicitly."
+    },
+    {
+      "stage": "CoVe",
+      "status": "PASS",
+      "record": "Verified current exact-byte failure against both D-037 envelopes; verified partial passes coexist with binding failures; verified bundle completeness/hash and duplicate branch trees; verified source/spec mismatches for shells, Horner, tails, and traces."
+    },
+    {
+      "stage": "adversarial self-ask",
+      "status": "PASS",
+      "record": "Attempted all seven required counter-hypotheses and recorded their dispositions in falsifier_matrix."
+    },
+    {
+      "stage": "CCoT",
+      "status": "PASS",
+      "record": "Contrasted review-strictness, isolated-bug, harness, re-root, coherent-progress, and systemic-contract explanations using predicted versus observed evidence in cct_contrast_table."
+    },
+    {
+      "stage": "PDR",
+      "status": "PASS",
+      "record": "Reassessed severity/confidence, preserved residual uncertainty, selected a reversible owner decision, prohibited execution escalation, and defined verdict-reversal evidence."
+    }
+  ],
+  "falsifier_matrix": [
+    {
+      "hypothesis": "Failures are merely stricter review standards applied to an otherwise coherent design.",
+      "disposition": "REJECTED",
+      "break_test": "Concrete runtime failures (GL60 interpolation, D-027 non-null, D-028 native covariance) and current accepted-but-nonconforming source paths are not stylistic review differences."
+    },
+    {
+      "hypothesis": "Failures are isolated transcription bugs rather than recurrent architecture or sequencing problems.",
+      "disposition": "REJECTED",
+      "break_test": "Some bugs were transcription errors and were fixed, but pointwise, Galerkin, MaxEnt, Fort, and B3 failed on distinct representation/invariant/contract boundaries."
+    },
+    {
+      "hypothesis": "Harness defects caused the scientific failures rather than only delaying trustworthy admission.",
+      "disposition": "REJECTED",
+      "break_test": "Correctly admitted D-037 exact current bytes reproduce source-level failures; mapper R1/R2 and earlier harness faults remain process evidence only."
+    },
+    {
+      "hypothesis": "The current D-035 source is implementation-sufficient and auditors demand unneeded formalism.",
+      "disposition": "REJECTED",
+      "break_test": "The source admits a global shell rescue, node-value bypass, absent tail generator, arbitrary event key/interfaces, and incomplete trace/A4 certificates, directly violating its own binding design."
+    },
+    {
+      "hypothesis": "Historical churn is harmless because each later packet fixed the prior defect.",
+      "disposition": "REJECTED",
+      "break_test": "Later packets closed real subclaims, yet the recurring executable-contract class survived and no independent endpoint resulted."
+    },
+    {
+      "hypothesis": "A larger implementation-and-test push is more cost-effective than another exact-byte design pass.",
+      "disposition": "REJECTED",
+      "break_test": "Current failures are statically decisive before output; implementation would expand invalid surface without resolving shell, representation, tail, or trace authority."
+    },
+    {
+      "hypothesis": "Repeated failures are artifacts of branch re-rooting or missing legacy context.",
+      "disposition": "REJECTED",
+      "break_test": "The preserved legacy bundle is complete, duplicate trees were identified, and current exact D-035 bytes fail independently of ancestry."
+    }
+  ],
+  "cct_contrast_table": [
+    {
+      "explanation": "Stricter-review-only",
+      "predicted_evidence": "No reproducible numerical or executable counterexample; disputes confined to wording.",
+      "observed_evidence": "Multiple runtime discriminators and constructible accepted-but-nonconforming source paths.",
+      "verdict": "DISFAVORED"
+    },
+    {
+      "explanation": "Isolated-bug sequence",
+      "predicted_evidence": "Later local fixes eliminate the failure class and yield endpoint progress.",
+      "observed_evidence": "Local fixes close some claims, while new representations recur at unbound invariant boundaries and yield no endpoint.",
+      "verdict": "PARTIAL_ONLY"
+    },
+    {
+      "explanation": "Harness or re-root causation",
+      "predicted_evidence": "Failures vanish on exact bytes under corrected admission or restored history.",
+      "observed_evidence": "Corrected D-037 admission retains concrete current-source failures; legacy bundle is complete.",
+      "verdict": "NON_CAUSE"
+    },
+    {
+      "explanation": "Systemic executable-contract debt plus late discriminators",
+      "predicted_evidence": "Selected subclaims pass while whole routes fail at source/runtime boundaries; larger surface precedes decisive checks.",
+      "observed_evidence": "Fort, D-027, D-028, D-029, and D-037 match this pattern.",
+      "verdict": "BEST_SUPPORTED"
+    }
+  ],
+  "steelman_debate": {
+    "design_evolution_steelman": "Fort was a rational external candidate, each fail-closed packet preserved evidence, and later designs addressed genuinely new information. Current B3 exact bytes close four important subclaims and no evidence proves the B3 family impossible.",
+    "design_concessions": [
+      "Fort's lower-endpoint interpolation defect was real and repairable.",
+      "D-035 corrected real normalization, G_F, orientation, reaction, entropy, and row-ii issues.",
+      "Some exact-byte/harness work was necessary for admissible attribution."
+    ],
+    "audit_steelman": "Repeated failures occur at binding execution boundaries, not merely prose quality. Stopping before W7/B3 output avoided generating scientifically uninterpretable evidence, making the hard stop cost-effective.",
+    "audit_concessions": [
+      "Not every defect was knowable before the preceding bounded experiment.",
+      "The audits do not prove B3 scientifically impossible.",
+      "The process overhead amplified delay but did not create the scientific counterexamples."
+    ],
+    "joint_disposition": "Both cases support no execution now. The remaining dispute is whether one final bounded design-only correction has sufficient expected evidence gain; that requires an explicit owner decision.",
+    "discriminating_test": "On one newly sealed source only, a hostile static conformance review must fail closed unless per-leg shells, no node_values consumer, an executable directed signed-tail enclosure, canonical event/trace emission with exact counts/interfaces, A4 permutation overlap, and one outward denominator are all constructively enforced."
+  },
+  "route_readiness": {
+    "exact_byte_remediation": {
+      "verdict": "FAIL",
+      "reason": "D-037 requires a new owner decision; D-038 supplies no remediation authority. A bounded correction is technically plausible but not currently authorized."
+    },
+    "W7_execution": {
+      "verdict": "FAIL",
+      "reason": "W7 whole-design metrology fails before numerical output."
+    },
+    "B3_implementation": {
+      "verdict": "FAIL",
+      "reason": "The sealed B3 design/source has binding shell, representation, tail, and trace defects."
+    },
+    "independent_FLRW_closure": {
+      "verdict": "FAIL",
+      "reason": "No independent endpoint exists; current evidence is pre-output design failure plus bounded subclaim passes."
+    }
+  },
+  "ranked_recommendations": [
+    {
+      "rank": 1,
+      "decision": "Owner chooses STOP or ONE_FINAL_DESIGN_ONLY_REMEDIATION; default remains STOP without explicit authority.",
+      "evidence_gain_per_cost": "highest because it prevents another unauthorized implementation loop"
+    },
+    {
+      "rank": 2,
+      "decision": "If authorized, amend only the existing W6/source/vector surfaces, add the enumerated constructive enforcement and negative controls, and delete or consolidate obsolete wrapper surface so net code growth is minimized.",
+      "evidence_gain_per_cost": "high because every change maps to a current exact-byte falsifier"
+    },
+    {
+      "rank": 3,
+      "decision": "Run one fresh blind source/design review with a first-non-PASS hard stop; preserve bounded CAS/subclaim passes without allowing them to rescue a failed whole design.",
+      "evidence_gain_per_cost": "high only after rank 1 authority and rank 2 exact closure"
+    },
+    {
+      "rank": 4,
+      "decision": "If the bounded review does not pass, close G-F10-INDEPENDENT-FLRW as FAIL and preserve current same-code Rust evidence with its limitations.",
+      "evidence_gain_per_cost": "prevents further low-yield recurrence"
+    }
+  ],
+  "forbidden_actions": [
+    "W7 numerical execution",
+    "B3 collision implementation or execution",
+    "T01-T12",
+    "Rust collision execution",
+    "Radau, trajectory, endpoint, or RABBIT unblinding",
+    "cap, norm, grid, solver, or tolerance tuning",
+    "new standalone diagnostic, readiness, manifest, hash, figure, telemetry, or policy-wrapper plumbing",
+    "F-11, QKE, public runtime, or public-production claims",
+    "treating segment-only timing or bounded subclaim passes as endpoint progress"
+  ],
+  "pdr": {
+    "severity_reassessment": "Critical for route authority and scientific interpretation; medium for provenance/process because those are non-causes of current design failure.",
+    "confidence_reassessment": "High to very high for the current causal classification; moderate for exact earliest introduction dates across the public re-root.",
+    "residual_uncertainty": [
+      "Exact pre-re-root introduction commits for some recurring assumptions remain bounded rather than uniquely attributable.",
+      "It is unknown whether one bounded correction can close all current defects without opening new ones.",
+      "No evidence determines whether a corrected B3 design would pass W7 or endpoint gates because execution is forbidden."
+    ],
+    "reversible_next_action": "An owner-only decision on STOP versus one frozen, design-only remediation; no execution or implementation follows from choosing review.",
+    "prohibited_overreactions": [
+      "Do not declare B3 impossible.",
+      "Do not blame harness or re-root for current source counterexamples.",
+      "Do not launch a larger implementation/test push.",
+      "Do not add another wrapper gate."
+    ],
+    "minimal_reversal_evidence": "A newly authorized, exact-byte, independently reviewed candidate must pass every current binding source/design claim, including hostile negative controls, with no new wrapper surface and with all pre/post hashes preserved. That would reverse remediation readiness only; later execution and endpoint gates remain separate."
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R3.json"
+  ]
+}

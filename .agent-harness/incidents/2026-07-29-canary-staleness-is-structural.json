@@ -1,0 +1,10 @@
+{
+ "id": "2026-07-29-CANARY-STALENESS-IS-STRUCTURAL",
+ "artifact_class": "PROCESS_FINDING",
+ "what": "A live canary attests a specific `stop_hook_sha256`. Any subsequent change to that hook stales it. This has now happened THREE times: C1 staled by 96089f0, C4 rejected for a 286 s attestation gap, and C5 (which fixed C4) staled within hours by the round-6 fix pass -- C5 pins dc19da4d43b84e45, HEAD is 0533da884250e03e.",
+ "why_it_keeps_happening": "It was treated as an error to avoid rather than a property of the artifact. A canary is a point-in-time attestation; in a chain that keeps editing the attested file, it decays by default, not by mistake.",
+ "rule": "The canary is the LAST action before the commit that seals a slice, never an earlier step. If any byte of `subagent_stop_validate.py` or `subagent_start_context.py` changes afterwards, the canary is stale and must be re-run before the slice can be judged. Round 7's honest mitigation -- that the round-6 diff was 185 insertions and zero deletions, so every line C5 exercised survives in order -- is exactly the 'low risk by diff inspection' standard rounds 4 and 5 refused, and is recorded as a mitigation, not a discharge.",
+ "status": "OPEN -- C6 to be run at final bytes",
+ "recorded_at": "2026-07-29T12:19:42+00:00",
+ "head_commit": "cef6f00581a10ca5b6dd521ad064e2344cc54b81"
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+  "assignment_id": "A-D056-PROVENANCE",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa722-f9c0-7ca2-9d21-c6c5442641fc",
+  "agent_type": "context_mapper",
+  "runtime_agent_type": "context_mapper",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+    "assignment_id": "A-D056-PROVENANCE",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d64ff756d6b5aa7988c4963572a81d96bad2d9677dfb45c5b0bcd199ef4dcd17",
+    "runtime_agent_type": "context_mapper",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/results/A-D056-PROVENANCE.json",
+  "started_at": "2026-07-28T05:10:54Z",
+  "completed_at": "2026-07-28T05:12:36Z",
+  "tool_versions": {
+    "sha256sum": "GNU coreutils (host version not separately captured)",
+    "rg": "ripgrep (host version not separately captured)",
+    "git": "host git; read-only numstat used"
+  },
+  "commands": [
+    "sha256sum assignment, role/template, and bounded inputs",
+    "sed targeted reads of assignment, role/template, context pack, audit map, and D-056 gate-matrix note",
+    "rg targeted SSOT claim/gate/ledger consistency scan",
+    "git diff --numstat ab95ff52ebee55a90634ae62e6ad97e975e5af26 5f327804e6b1d3dae341b8c6eadf41dad5c638f1"
+  ],
+  "artifacts": [
+    {"path": ".agent-harness/runs/run-20260728-f10-d056-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json", "sha256": "sha256:c48e5a28c62fee4188f27977149e656010874fe5aa557d8e374f2a6307eae064"},
+    {"path": "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md", "sha256": "sha256:8e99e6d1251350ab7981a0bb5034ecb328bae81ce453097beb82fd75d4f60578"},
+    {"path": ".agent-harness/context/GATE_REGISTRY.json", "sha256": "sha256:34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897"},
+    {"path": ".agent-harness/context/CLAIM_REGISTRY.jsonl", "sha256": "sha256:4f91602630915051525b446b7d0236f19409eb7cac5a82480972f29b936886b3"},
+    {"path": "docs/harness/CLAIM_LEDGER.md", "sha256": "sha256:b0986cc6167fbf85a8d29f1dc341fbbd4e15f84e4fff37eb10984d42091299da"},
+    {"path": "docs/harness/PROJECT_STATE.md", "sha256": "sha256:c425b1f3894d3d6d9af78573a856f2cdae164787490356e7856307e084a86aa9"},
+    {"path": "docs/harness/VALIDATION_LEDGER.md", "sha256": "sha256:53107bfe8d04efa4c3e602c0e52e89eb40f3eecd507d199ff51806d083e76628"}
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D056-PROV-001",
+      "claim_id": "AUD-D056-PROVENANCE",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The D-056 terminal gate state is not SSOT-consistent: the gate registry, D-056 matrix, and current validation-ledger rows declare G-F10-INDEPENDENT-FLRW and G-F10-COVARIANCE-METROLOGY PASS, but the claim registry retains their pre-closeout SPECIFIED/failure contract and CLAIM_LEDGER/PROJECT_STATE retain explicit statements that both gates remain FAIL and no independent endpoint exists. Therefore the claimed terminal state is not admissible as an authority-consistent closeout until a designated single writer reconciles the stale surfaces with cited D-055/D-056 evidence.",
+      "assumptions_used": ["Current gate/claim/project/validation surfaces are jointly authoritative SSOT surfaces as assigned.", "A stale explicit FAIL statement is contradictory evidence, not silently superseded by a later overlay."],
+      "evidence_refs": [
+        "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md:16-30,32-67",
+        ".agent-harness/context/GATE_REGISTRY.json:67-104",
+        "docs/harness/VALIDATION_LEDGER.md:5-7",
+        ".agent-harness/context/CLAIM_REGISTRY.jsonl:8,16",
+        "docs/harness/CLAIM_LEDGER.md:141",
+        "docs/harness/PROJECT_STATE.md:39,48-60,84-86,375-376",
+        ".agent-harness/runs/run-20260728-f10-d056-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json:known_pre_audit_conflicts"
+      ],
+      "evidence_fingerprint": "sha256:c48e5a28c62fee4188f27977149e656010874fe5aa557d8e374f2a6307eae064",
+      "counterevidence_refs": [
+        "The D-056 matrix and validation ledger provide a coherent acceptance narrative: frozen contracts, named runs/reports, current PASS gate values, and stated scope limitations. This is insufficient to cure the explicit stale SSOT contradictions without reconciliation."
+      ],
+      "reproduction": ["rg -n -C 1 'D-05[2-6]|G-F10-INDEPENDENT-FLRW|G-F10-COVARIANCE-METROLOGY|independent FLRW|independent endpoint|all eight' docs/harness/CLAIM_LEDGER.md docs/harness/PROJECT_STATE.md docs/harness/VALIDATION_LEDGER.md .agent-harness/context/CLAIM_REGISTRY.jsonl .agent-harness/context/GATE_REGISTRY.json"],
+      "confidence": 0.99,
+      "unresolved": ["Assignment disallows sibling-result inspection; this audit neither validates nor disputes the scientific calculations or underlying result envelopes.", "No designated single-writer reconciliation evidence was named in the assignment inputs."]
+    },
+    {
+      "finding_id": "F-D056-AI-001",
+      "claim_id": "AUD-D056-ANTI-INFLATION",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The bounded evidence proves aggregate closeout growth of +18,125/-71 (net +18,054) across 209 files, but does not provide the required D-045--D-056 per-stage added/deleted/net accounting, blocker-movement ratios, or cost-effectiveness verdicts. Exact token availability is only stated globally as unavailable. The anti-inflation/cost-effectiveness verdict therefore cannot be established from the assigned evidence.",
+      "assumptions_used": ["Aggregate diff statistics do not substitute for per-PR anti-drift accounting.", "Token use must be reported UNAVAILABLE when unavailable rather than inferred."],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d056-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json:baseline",
+        "git diff --numstat ab95ff52ebee55a90634ae62e6ad97e975e5af26 5f327804e6b1d3dae341b8c6eadf41dad5c638f1 => files=209 added=18125 deleted=71 net=18054",
+        "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md:1-73",
+        "docs/harness/VALIDATION_LEDGER.md:5-13"
+      ],
+      "evidence_fingerprint": "sha256:c48e5a28c62fee4188f27977149e656010874fe5aa557d8e374f2a6307eae064",
+      "counterevidence_refs": ["D-049, D-053, D-055, and D-056 identify specific blocker/gate movements, so substantive progress is claimed; the missing accounting prevents a cost-effectiveness determination rather than proving inflation."],
+      "reproduction": ["git diff --numstat ab95ff52ebee55a90634ae62e6ad97e975e5af26 5f327804e6b1d3dae341b8c6eadf41dad5c638f1 | awk '{a+=$1; d+=$2; n+=1} END {printf \"files=%d added=%d deleted=%d net=%d\\n\",n,a,d,a-d}'"],
+      "confidence": 0.97,
+      "unresolved": ["The controlling anti-drift policy and any D-052--D-056 per-stage accounting receipts were not listed as assignment inputs."]
+    }
+  ],
+  "errors": [],
+  "files_written": [".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/results/A-D056-PROVENANCE.json"]
+}

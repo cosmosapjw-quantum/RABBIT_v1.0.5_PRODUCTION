@@ -1,0 +1,229 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-review-r8",
+  "assignment_id": "A-D067-R8-OBLIGATIONS",
+  "context_version": "048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0",
+  "agent_id": "r8-obligations",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d067-review-r8",
+    "assignment_id": "A-D067-R8-OBLIGATIONS",
+    "context_version": "048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:9be387ca75c39a887a6d3238c2ca9cfa86907e72bad3cb759f23e63f6c63142e",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-review-r8/results/A-D067-R8-OBLIGATIONS.json",
+  "started_at": "2026-07-29T12:48:12.861Z",
+  "completed_at": "2026-07-29T13:14:41.187Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)",
+    "pytest_invocation": "venv/bin/python -m pytest -q -p no:cacheprovider",
+    "git_head": "4305533899dbd6c039c74e51d19fdf20a263f213"
+  },
+  "commands": [
+    "git rev-parse HEAD  # 4305533899dbd6c039c74e51d19fdf20a263f213; git status --short empty (clean tree)",
+    "sha256sum .codex/hooks/subagent_stop_validate.py .codex/hooks/subagent_start_context.py .agent-harness/scripts/admit_agent.py .agent-harness/scripts/validate_harness.py .agent-harness/scripts/_harness.py .codex/hooks/_common.py .agent-harness/tests/test_hooks.py docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+    "venv/bin/python -m pytest .agent-harness/tests/ -q -p no:cacheprovider  # 161 passed",
+    "venv/bin/python -m pytest .agent-harness/tests/ --collect-only -q  # 161 collected; 106 in test_hooks.py",
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d067-review-r8/assignments/A-D067-R8-OBLIGATIONS.json  # VERIFY: PASS",
+    "venv/bin/python .agent-harness/scripts/validate_harness.py  # ok:true, active_run=run-20260729-f10-d067-review-r8",
+    "cp -a .codex .agent-harness <scratch>/mirror  # read-only mirror for mutation testing; live tree never modified",
+    "<scratch>/mutate.py  # 16 single-anchor mutants, each applied to the mirror, full test_hooks.py run, reverted",
+    "<scratch>/probe_obl1.py <hooks_dir> 60  # 2 concurrent SubagentStop processes, one agent_id, two token-only assignments, 60 independent trees",
+    "<scratch>/probe_obl2.py  # 18 Start-hook scenarios against HEAD bytes in scratch fixture trees",
+    "git log --format='%h %ci %s' -6; git diff --stat d564821..HEAD  # C6 window contains no code change",
+    "git show 5c474d0 -- docs/audit/BD622_D067_admission_binding_2026-07-29.md  # only edit was 102 -> 106",
+    "grep -n -i 'lock|flock|concurren|per-run' docs/audit/BD622_D067_admission_binding_2026-07-29.md  # no hit naming the consume lock",
+    "ast scan of test_hooks.py for zero-assert test functions  # none; minimum assert count 2"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c6/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c6/ADMISSIONS.jsonl",
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c6/raw_logs/start_out.json",
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c6/raw_logs/stop_event.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-R8-01-OBLIGATION-1",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Obligation 1 (atomically bind one spawned agent_id to one run, assignment, and digest) is DISCHARGED on HEAD 4305533, established by my own reproduction rather than by reading the writer's numbers. (a) RACE CLOSED: I built 60 independent fixture trees, each with two assignments minted through the real `admit_agent.py --agent-id-unknown` (the mode in which no mint-time agent guard is constructible), one agent_id holding both tokens, and two SubagentStop processes started before either was read. Breaches (more than one `consumed` row): 0/60. The same probe against a mirror whose ONLY edit was replacing `fcntl.flock(fd, LOCK_EX|LOCK_NB)` with `pass`: 28/60 breaches (47%). The lock, not chance, is what closes it; my probe is therefore a detector, not a hope. (b) EVERY CONSUMING PATH IS INSIDE THE LOCK, by construction not by inspection luck: `consumed` is written at exactly three sites in .codex/hooks and .agent-harness/scripts -- subagent_stop_validate.py:698 (ledger row), :716 (receipt state) and :741 (lease state) -- and all three lie inside `consume_under_agent_lock` (defined :370, body ends :751), which `main` calls only at :349 inside `try/finally: os.close(lock_fd)` (:348-367), the lock having been acquired at :330 BEFORE the `conflicting_agent_assignment` read it guards (:402). No other module in the tree writes an admission receipt or appends a consume row; `admit_agent.py` only ever writes `state: \"open\"`. (c) LOCK-FAILURE HANDLING IS FAIL-CLOSED IN ALL SHAPES: symlinked lock dir, mkdir OSError, O_NOFOLLOW open OSError, non-BlockingIOError flock OSError and ftruncate/write OSError all return `(None, msg)` and reach `block(...)` at :331-338; pure contention returns `(None, \"\")` and blocks at :339-347. Mutation M3 (force `lock_error = ''`, i.e. treat an unusable lock as a skip) was killed by test_agent_lock_directory_failure_is_fail_closed and test_planted_symlink_at_the_agent_lock_path_blocks. (d) THE PER-RUN SCOPE IS HONESTLY STATED, not silently assumed: the lock key is (bound_run, agent_id) (:56-62), the Stop-time conflict read is scoped to run_dir/ADMISSIONS.jsonl (:402-403), the block text says 'One agent_id may consume at most one assignment per run (D-065 obligation 1)', admit_agent.py's guard is scoped to `harness/admissions/<run>` (:487-503), validate_harness.check_one_agent_one_assignment is invoked per run directory (:918), and test_one_agent_bound_in_one_run_is_still_admissible_in_another fixtures cross-run rebinding as DELIBERATE with a docstring saying so in as many words. The digest half of the obligation is carried by three independent pins I checked on live bytes: the Start lease's assignment_digests vs recomputed assignment sha (:436-449), the receipt's assignment_sha256 (:484-489), and the consume row's result_sha256 + assignment_sha256 (:698-715). SCOPE I AM NOT CLAIMING: an agent_id may legitimately hold one assignment in each of several runs; and `admit_agent.py --reopen` does not take the consume lock, so a reopen concurrent with an in-flight stop for the same assignment is a race the lock does not cover -- it is named in that script's own stderr warning, and it is a parent-operated tool, not an agent-reachable path.",
+      "assumptions_used": [
+        "The 13-hour integration running on this host adds background load; it changes race timing but not the direction of the result (0/60 with the lock, 28/60 without it, same host, same load).",
+        "Concurrency was exercised through the real subagent_stop_validate.py as a subprocess pair with both stdins written before either stdout was read, so the children are genuinely concurrent (the failure mode the round-2 review found in an earlier fixture)."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:44-138 (AGENT_LOCK_DIRNAME, agent_lock_path, acquire_agent_lock)",
+        ".codex/hooks/subagent_stop_validate.py:323-367 (acquire before the guarded read; try/finally release)",
+        ".codex/hooks/subagent_stop_validate.py:370-751 (consume_under_agent_lock: the only writer of consumed state)",
+        ".codex/hooks/subagent_stop_validate.py:141-191 (conflicting_agent_assignment, run-scoped, fail-closed on garbage)",
+        ".agent-harness/scripts/validate_harness.py:215-282,918 (after-the-fact per-run detector)",
+        ".agent-harness/tests/test_hooks.py:3460-3510 (12-trial concurrency detector), :3510-3580 (false-positive control), :3860-3960 (cross-run scope fixture)",
+        "scratch probe_obl1.py: 0/60 breaches at HEAD hooks; 28/60 breaches with flock removed in the mirror"
+      ],
+      "evidence_fingerprint": "sha256:0533da884250e03e91670aa458e3915859d91b31fc856fa72537dae65a966625",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:75 -- the audit report still attributes concurrent-double-consume protection to `O_EXCL` alone and names no lock anywhere; see F-R8-05."
+      ],
+      "reproduction": [
+        "venv/bin/python <scratch>/probe_obl1.py /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION/.codex/hooks 60  -> {\"breaches\": 0}",
+        "sed -i 's/fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)/pass/' <mirror>/.codex/hooks/subagent_stop_validate.py",
+        "venv/bin/python <scratch>/probe_obl1.py <mirror>/.codex/hooks 60  -> {\"breaches\": 28}",
+        "grep -n '\"consumed\"' .codex/hooks/*.py .agent-harness/scripts/*.py  # classify write vs read"
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "`admit_agent.py --reopen` unlinks the O_EXCL claim (:708) without taking the per-agent consume lock, so a reopen issued while a stop for that assignment is inside the guarded region can interleave. Not an agent-reachable path and warned about on stderr, but it is the one write to admission state that the lock does not serialise."
+      ]
+    },
+    {
+      "finding_id": "F-R8-02-OBLIGATION-2",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Obligation 2 (receipt/lease creation failure is a hard Start failure) is DISCHARGED on HEAD 4305533, including the round-7 defect. The two round-7 reproductions are closed and I confirmed both closures by mutation rather than by reading the code's own account of itself. (a) UNCONDITIONAL EVALUATION: `describe_admission_receipt` (subagent_start_context.py:475-585) calls `classify_receipt_matches` (:529) and then `orphaned_mints` (:533-535) with no gate; the ledger read at :514-527 is guarded only by `ledger_path.is_file()`. Mutation M5 restored the round-6 `if (not matches) and ledger_path.is_file():` gating and was killed by test_subagentstart_hard_fails_when_a_valid_receipt_masks_an_orphaned_mint AND by the false-positive control's own second half. (b) THE PER-ASSIGNMENT QUALIFICATION IS CORRECT, NOT MERELY PRESENT -- this was the specific risk to check, and I probed it directly rather than trusting the fixture. Ten scenarios against HEAD bytes in scratch trees: healthy two-agent run with BOTH mints open -> PASS for each admitted agent and PASS for an unregistered helper; reopened chain (minted for g1, reopened for g2) -> PASS for the new agent, PASS for the superseded agent, PASS for a bystander; an open mint naming this agent in a DIFFERENT (non-active) run -> PASS, the check is active-run-scoped on both the receipt directory and the ledger; healthy token-only mint whose receipt landed -> PASS; an orphaned mint naming g1 -> FAIL for g1 and PASS for the unrelated admitted g2; fresh run with nothing minted -> PASS. No false positive was found on the agent-keyed arm. Mutation M9 (drop the `assignment_id != admitted_assignment_id` exclusion in the direction that clears everything once the agent holds any receipt) was killed; mutation M6 (return no orphans) and M8 (report the orphan but strip it from `errors`) each killed all seven Start-orphan fixtures, so the check is load-bearing in `Hook preflight: PASS|FAIL` and not merely printed. (c) TOKEN-ONLY ARM REACHABLE AND SCOPED HONESTLY: `--agent-id-unknown` writes `expected_agent_id: \"\"`, so `orphaned_mints` handles it in a separate run-scoped arm keyed on 'did this mint produce a receipt file at all' (:402-406). Mutation M7 (delete the arm) was killed by both token-only fixtures. I reproduced the stated over-breadth (probe P8): a token-only mint whose receipt write failed makes Start FAIL for a healthy, correctly admitted agent elsewhere in the same run. That is over-broad WITHIN the run, exactly as the module docstring (:117-148) says, and its three stated justifications hold on inspection -- the row only survives receipt-less when the receipt write actually failed, `admit_agent.py` then exits non-zero and prints no token, and a successful re-mint self-clears. (d) MALFORMED/UNREADABLE LEDGER IS A FAIL, NOT A SKIP: probes P4 and P9 returned FAIL for both the receipt-holding agent and a bystander; mutation M10 (silently drop a malformed line) was killed. (e) LEASE HALF unchanged and still fail-closed (:665-677). RESIDUAL I AM STATING RATHER THAN GLOSSING, because it is the one shape that still reaches `Hook preflight: PASS`: if the LEDGER append fails (I reproduced this with `chmod 0o500` on `.agent-harness/runs/<run>/`), `admit_agent.py` exits 1 with an EMPTY stdout and no token, no ledger row and no receipt exist, and Start reports 'none found' / PASS. This is NOT the round-6/round-7 defect (there the intent record existed and Start passed anyway); here nothing on disk distinguishes the case from an unregistered helper agent, no ADMISSION_TOKEN was ever emitted so no agent can be spawned bound to it, and Stop refuses any result without an open receipt. I verified the empty stdout and rc=1 directly, which is precisely the compensating-control claim the audit report makes -- and unlike the claim it retracted at round 6, this one is true.",
+      "assumptions_used": [
+        "Start is advisory relative to Stop by design: it reads only, and Stop performs the authoritative consume. I judged Start's verdict on whether it is load-bearing in `Hook preflight`, which the result contract's `subagent_start_preflight: \"PASS\"` requirement makes true in practice."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_start_context.py:29-148 (round-6 and round-7 corrections and the stated rule)",
+        ".codex/hooks/subagent_start_context.py:296-325 (read_admission_ledger, fail-closed), :328-363 (open_mints), :366-407 (orphaned_mints, both arms)",
+        ".codex/hooks/subagent_start_context.py:475-585 (describe_admission_receipt: unconditional ledger consultation)",
+        ".agent-harness/tests/test_hooks.py:4514-4755 (the four round-7 fixtures, each with an embedded negative control)",
+        "scratch probe_obl2.py: 18 scenarios, all matching the documented rule except the pre-existing consumed-receipt-at-Start rule noted below",
+        "scratch mutation run: M5, M6, M7, M8, M9, M10, M11 all killed by on-topic named fixtures"
+      ],
+      "evidence_fingerprint": "sha256:af8f7016a35f43771682839c94e44ad1a8e3700d069e31a90090800bfd1a2193",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:195-214 -- the report still describes a THREE-state Start rule and mentions neither the per-assignment predicate nor the run-scoped token-only FAIL; see F-R8-05."
+      ],
+      "reproduction": [
+        "venv/bin/python <scratch>/probe_obl2.py  # P1-P10",
+        "chmod 0o500 <tree>/.agent-harness/admissions/<run> ; admit_agent.py --assignment-id A --expect-agent-id g1  # rc=1, ledger row lands, receipt does not; Start -> MINT FAILED / FAIL",
+        "chmod 0o500 <tree>/.agent-harness/runs/<run> ; admit_agent.py --assignment-id A --expect-agent-id g1  # rc=1, empty stdout, NO ledger row; Start -> none found / PASS",
+        "mutate M5 (restore `if not matches:` gating) -> 2 fixtures fail"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Ledger-append failure leaves Start at PASS (reproduced). Judged in scope of the stated 'no record of intent' arm and covered by the mint's non-zero exit with empty stdout plus Stop's refusal, but it is the one receipt-creation failure that Start does not hard-fail.",
+        "An agent whose receipt is already `consumed` hard-FAILs at Start (probe P6) while Stop still admits its idempotent re-stop. Pre-existing round-6 behaviour with its own fixture, not introduced by the round-7 change, but it is a place where Start and Stop disagree despite the module docstring's 'Start must never contradict Stop's later verdict'.",
+        "The token-only run-scope FAIL will fail every agent starting into a run that holds an unconsumed, receipt-less `--agent-id-unknown` row. Deliberate and stated in code; NOT stated in the audit report."
+      ]
+    },
+    {
+      "finding_id": "F-R8-03-OBLIGATION-3",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Obligation 3 (same-run substitution and receipt-write-failure negative fixtures) is DISCHARGED on HEAD 4305533, and the fixtures are non-vacuous by mutation. Suite: 161 collected, 161 passed (106 in test_hooks.py, up from 102 at a9db6b2 -- I confirmed both counts from the git objects, so the 102 -> 106 claim is verified, not taken). I applied 16 single-anchor mutants to a scratch MIRROR of .codex and .agent-harness (the live tree was never modified), ran the full test_hooks.py after each, and reverted: ALL 16 WERE KILLED, each by an on-topic, correctly named fixture. THE RECEIPT-WRITE FIXTURE IS REAL AND ISOLATES THE RIGHT WRITE: test_admit_agent_fails_closed_when_the_receipt_cannot_be_written uses `_mint_with_unwritable_receipt_dir`, which chmods `.agent-harness/admissions/<run>` to 0o500 while leaving `.agent-harness/runs/<run>` writable -- so the ledger append succeeds and only `dump_json_atomic` fails. It asserts the split explicitly (ledger row present, receipt absent, no `.tmp.*` residue, stderr names the receipt and not the ledger, stdout empty and token-free). M12 (swallow the receipt-write OSError) and M13 (write the receipt before the ledger) both killed it. This is the fixture that round 6 proved did not exist; it exists, and it fails when the behaviour it names is removed. SAME-RUN SUBSTITUTION: test_subagentstop_blocks_same_run_assignment_substitution is killed by M16 (disable the token-digest compare). THE NEWEST FOUR (added at 5c474d0) ARE EACH TWO-SIDED: masks_an_orphaned_mint carries an in-test control that consumes the orphan and re-asserts PASS on the same tree; passes_when_the_open_mint_is_the_receipt_it_holds carries a control that relocates the receipt to a different assignment and re-asserts FAIL -- which is why M5 and M9 kill it and not only the positive fixture; hard_fails_on_an_unattributable_token_only_mint re-runs with a second agent_id to pin the run-scope over-breadth as intended rather than accidental; clears_a_token_only_mint_that_produced_a_receipt deletes the receipt and re-asserts FAIL. An AST sweep of test_hooks.py found no test function with zero assertions (minimum 2). NOT CLAIMED: 16 mutants over 106 fixtures is a sample, not exhaustive mutation coverage; the sample was chosen to hit the specific guards the four obligations rest on.",
+      "assumptions_used": [
+        "Mutation testing was run against a byte-identical mirror copy of .codex and .agent-harness so the live tree stayed read-only; the mirror's baseline was 161 passed, identical to the live tree."
+      ],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py:3304-3343 (_mint_with_unwritable_receipt_dir: chmods admissions/, not runs/)",
+        ".agent-harness/tests/test_hooks.py:3344-3381 (receipt-write fixture with the ledger-row assertion)",
+        ".agent-harness/tests/test_hooks.py:4514-4755 (newest four, each with an embedded control)",
+        ".agent-harness/tests/test_hooks.py:740-766 (same-run substitution)",
+        "scratch mutation_results.json: 16/16 killed, with the killing test names recorded per mutant",
+        "git show a9db6b2:.agent-harness/tests/test_hooks.py | grep -c '^def test_'  -> 102; at 5c474d0 -> 106"
+      ],
+      "evidence_fingerprint": "sha256:995a9f58030b7b8769b609934884008686a4074ab4745aeecfe801fba411237c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest .agent-harness/tests/ -q  # 161 passed",
+        "venv/bin/python <scratch>/mutate.py  # 16 mutants, each reverted; every line reports 1-7 failures",
+        "ast sweep for test functions with zero Assert nodes -> []"
+      ],
+      "confidence": 0.92,
+      "unresolved": [
+        "16 of 106 fixtures were mutation-probed. No vacuity was found in the sample or in the AST sweep, but the remaining 90 were exercised only by the green suite."
+      ]
+    },
+    {
+      "finding_id": "F-R8-04-OBLIGATION-4",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Obligation 4 (a replacement live overlapping-run canary with unique write attribution) is DISCHARGED on HEAD 4305533. C6 IS NOT STALE, which is where its three predecessors died: the artifact pins stop_hook_sha256 0533da88... and start_hook_sha256 af8f7016..., and I recomputed BOTH against HEAD -- both match exactly. The window is closed structurally as well as by digest: C6 ran at commit d564821 (21:38:50 +0900) and was sealed by 4305533 (21:47:02 +0900), and `git diff --stat d564821..HEAD` shows the only changes are the canary's own run artifacts -- no hook, script or test byte moved under it. LIVE: the C6 result is a real 3-finding review of the actual hook code written between 12:39:20Z and 12:45:14Z, its Start hook really ran (raw_logs/start_out.json is a 27 KB injected context reading 'Active run: run-...-canary-c6' and 'Admission receipt: open, bound to assignment A-D070-CANARY-C6'), and stop_out.json is zero bytes, i.e. the Stop hook emitted no block. OVERLAPPING: the decoy run directory exists with a RUN_PLAN created 12:40:24Z -- after the canary's 12:39:14Z mint and Start -- so the pointer theft is mid-flight, and the pointer named the decoy at BOTH ends of a 36 ms bracket (12:46:32.570862531Z / 12:46:32.606719483Z) around the dispatch. That is independently corroborated by a differently-authored artifact: the canary agent's own result, written at 12:45 before the stop, records '.agent-harness/ACTIVE_RUN currently reads run-20260729-f10-d070-canary-c6-decoy' from a direct read. UNIQUE WRITE ATTRIBUTION, verified on live bytes today: the consume row and the receipt both name agent_id d070-canary-c6 with expected_agent_id enforced, and pin result_sha256 sha256:66b5fb3c... which I recomputed against the result file on disk -- it still matches; assignment_sha256 sha256:8ceeb1ec... likewise matches, and the lease records the same run_id and the same sealed assignment digest. THE BRACKET ESTABLISHES WHAT OBLIGATION 4 ASKS: the property at issue is that the Stop bound the run from the Start-time lease while the mutable pointer named a different run for the whole dispatch. The bracket surrounds the process lifetime, so the pointer state is pinned across the consume rather than merely before it -- the exact defect C4 was rejected for. THE SECOND-RESOLUTION LIMITATION IS HONEST, NOT EVASIVE: `consumed_at` is stamped `timespec='seconds'` (subagent_stop_validate.py:687), so sub-second ordering genuinely cannot be proven from it, the artifact says so in as many words, and it does not need to -- the consume happens inside the bracketed process by construction, so the second-resolution stamp is a corroborating cross-check, not the load-bearing evidence. Recording the limit rather than asserting containment is the correct call. NOT ESTABLISHED: that the bracket was taken 'in one shell command with no intervening work' is the writer's assertion; there is no shell transcript. It is corroborated by the 36 ms width, by stop_out.json's mtime, and by the ledger consume falling in the same wall second, but it is attestation, not proof.",
+      "assumptions_used": [
+        "The retained stop_event.json shows `admission_proof` already replaced by its digest, which is scrub_admission_proof.py operating as designed; the real token is therefore not re-verifiable from evidence, but the receipt's and the ledger row's token_digest agree with each other."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c6/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json (both hook digests, bracket, resolution_limit)",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c6/ADMISSIONS.jsonl (minted 12:39:14Z, consumed 12:46:32Z, agent_id d070-canary-c6)",
+        ".agent-harness/admissions/run-20260729-f10-d070-canary-c6/A-D070-CANARY-C6.json (state consumed, expected_agent_id enforced, result_sha256)",
+        ".agent-harness/leases/d070-canary-c6.json (run_id = the true run, not the decoy)",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c6/raw_logs/start_out.json and stop_out.json (0 bytes = accepted)",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c6-decoy/RUN_PLAN.json (created 12:40:24Z, after the canary Start)",
+        "git diff --stat d564821..HEAD (run artifacts only)"
+      ],
+      "evidence_fingerprint": "sha256:7f9c29aa87233ca2d582bd3c3f1f7ab1c262870bcf0ce314d613b37560336312",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:128 -- the audit report still presents C5 as the replacement canary and never mentions C6; C5 pins stop_hook_sha256 dc19da4d..., which is NOT HEAD. See F-R8-05."
+      ],
+      "reproduction": [
+        "sha256sum .codex/hooks/subagent_stop_validate.py .codex/hooks/subagent_start_context.py  # 0533da88..., af8f7016... == the artifact's pins",
+        "sha256sum .agent-harness/runs/run-20260729-f10-d070-canary-c6/results/A-D070-CANARY-C6.json  # 66b5fb3c... == ledger result_sha256",
+        "git diff --stat d564821..HEAD  # only run artifacts",
+        "grep -o '\"stop_hook_sha256\": \"[a-f0-9]*\"' .agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/*.json  # dc19da4d..., stale"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "The bracket's 'one shell command' method is self-attested by the single writer; no shell transcript was retained. Corroborated but not proven.",
+        "C6 is valid only while the hooks do not move again. The staleness rule ('the canary is the last act before the sealing commit') is written in the artifact but is not enforced by any check the harness runs."
+      ]
+    },
+    {
+      "finding_id": "F-R8-05-RECORD-FIDELITY",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The D-067 audit report -- docs/audit/BD622_D067_admission_binding_2026-07-29.md, a required input to this review and the document §5 nominates as the D-070 adjudicator's evidence -- does NOT match the code at HEAD 4305533 on two of the four obligations under adjudication. This is the fourth instance of this chain's own named failure mode, inverted: the record is now BEHIND the mechanism rather than ahead of it. Its only edit at the round-7 commit 5c474d0 was the string '102 pass' -> '106 pass'; I diffed it. Specifics, each verified against current bytes: (1) OBLIGATION 4 IS MISDIRECTED. §2 line 128 says '**C5 replaces it**, run against frozen bytes at commit d94270f' and details C5 as the standing overlapping-run canary. C5 pins stop_hook_sha256 dc19da4d..., which is not HEAD (0533da88...); the project's own VALIDATION_LEDGER row for round 7 says so explicitly. C6, which IS current and which I verified in F-R8-04, appears nowhere in the report, and §4's 'Live canaries' table still lists only C1/C2/C3 -- no C4, C5 or C6. An adjudicator reading this report for obligation 4 is pointed at a canary the project has already declared stale. (2) OBLIGATION 2 IS MISDESCRIBED. §2's 'Start now distinguishes **three** states rather than two' (lines 195-214) is the round-6 rule. The shipped rule is different in two ways I reproduced: the ledger consultation is per-assignment (an orphan is cleared only by an admitting receipt for that same assignment), and there is a run-scoped token-only arm under which a receipt-less `--agent-id-unknown` row hard-FAILs EVERY agent starting into that run -- including a healthy, correctly admitted one (probe P8). Neither appears in the report. The over-breadth is an operational hazard disclosed in code and in the commit message but not in the audit record. (3) OBLIGATION 1'S MECHANISM IS UNRECORDED. `grep -i 'lock|flock|concurren|per-run'` over the whole report returns no hit naming the per-(run, agent_id) consume lock, the round-6 finding that O_EXCL alone admitted both stops in 126/200 trials, or the per-run scope of the binding. §2's table row 75 still reads 'Concurrent double consume | silent overwrite | `O_EXCL`, one attribution row'. The outcome claim is true on current bytes; the mechanism attribution is the pre-round-6 one, i.e. the description under which that defect hid. (4) A DANGLING CROSS-REFERENCE: line 110 says 'its fixes and the retraction above are recorded in the round-6 correction' -- there is no round-6 correction section; §2 has round-4 and round-5 corrections only. (5) §3, the section titled 'Review record', reads 'four rounds, all FAIL' and 'took four passes to stabilise'; seven rounds have completed, and round 7 appears nowhere in the report. WHAT THIS IS AND IS NOT: it is not a mechanism defect -- F-R8-01 through F-R8-04 are all pass, and the fix is a documentation update, not a code change. It is also not a case of the project having no accurate record: docs/harness/VALIDATION_LEDGER.md's round-7 row and the 5c474d0 commit message are both current and candid, and the C6 artifact is self-describing. But the audit report is the artifact this review was told to check against the code, it is the artifact a gate decision would be read from, and on obligations 2 and 4 it would mislead that decision today. Given that three of the defects in this chain were in the record rather than the code, I am recording this as a fail rather than an advisory.",
+      "assumptions_used": [
+        "I treat the audit report as a record surface whose accuracy is in scope, because the assignment lists it in required_inputs and the review question asks what is established versus asserted. I do not treat it as a mechanism defect and have not let it affect the four obligation verdicts."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:110 (dangling 'round-6 correction' reference)",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:128-155 (C5 presented as the replacement canary)",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:195-214 (three-state obligation-2 rule)",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md:75 (O_EXCL row), :229-283 (§3 four-round review record), :285-299 (§4 canary table, C1-C3 only)",
+        "git show 5c474d0 -- docs/audit/BD622_D067_admission_binding_2026-07-29.md (single hunk: 102 -> 106)",
+        "docs/harness/VALIDATION_LEDGER.md row for D-070 Part B4 (accurate and current, including 'Obligation 4 went stale: C5 pins stop_hook_sha256 dc19da4d, HEAD is 0533da88')",
+        ".codex/hooks/subagent_start_context.py:44-148 (the round-7 rule the report does not carry)"
+      ],
+      "evidence_fingerprint": "sha256:6397ac2ad51e10a8ab73468d4478fe09a8f25a948180baeb584ea6319c224dbf",
+      "counterevidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md (sha256:7fc4dbf4aa30dfd78c47bd60e236bcdfb0e6a9663f423da5b6b8c08ed3e9da4d) -- the round-7 row is accurate, current and candid, which materially reduces the severity of this finding but does not remove it.",
+        ".agent-harness/README.md:58 -- the same-OS-user residual IS stated there, so the report's claim at :225-227 that the residual is recorded in admit_agent.py, the README and the report is TRUE. I checked it because it is the same class of claim as the ones that were false."
+      ],
+      "reproduction": [
+        "git show 5c474d0 -- docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        "grep -n -i 'lock\\|flock\\|concurren\\|per-run' docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        "grep -n 'C4\\|C5\\|C6\\|round-6 correction' docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        "grep -o '\"stop_hook_sha256\": \"[a-f0-9]*\"' .agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/*.json"
+      ],
+      "confidence": 0.86,
+      "unresolved": [
+        "Whether a gate flip should be blocked on a record defect when the mechanism is established is an adjudication question, not mine. My position is stated: the four mechanism obligations are individually discharged on current bytes; the audit report is not a faithful description of them.",
+        "The same-OS-user residual stands and is out of scope as a finding. My judgement is that it does not prevent honest discharge of these four items, because none of the four claims forgery resistance and the residual is stated in three places I checked (admit_agent.py module docstring, .agent-harness/README.md:58, and the report's own table row). Discharge would become dishonest only if some surface began claiming more than confusion-class protection; none does."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r8/results/A-D067-R8-OBLIGATIONS.json"
+  ]
+}

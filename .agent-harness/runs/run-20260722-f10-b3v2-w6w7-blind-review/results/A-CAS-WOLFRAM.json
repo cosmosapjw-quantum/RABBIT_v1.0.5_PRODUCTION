@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-CAS-WOLFRAM",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "agent_id": "019f893b-2dc7-7b02-90d1-715a9d4c3b59",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-CAS-WOLFRAM",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:fd7b382fbb9057e03bebb71c550275bcc16442bc75637f0479c6a199f222f410"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-WOLFRAM.json",
+  "started_at": "2026-07-22T09:45:00Z",
+  "completed_at": "2026-07-22T09:58:49Z",
+  "tool_versions": {
+    "wolfram_language": "15.0.0 for Linux x86 (64-bit) (May 26, 2026)",
+    "system_id": "Linux-x86-64",
+    "xAct_xTensor": "1.3.0 (2025-12-29)",
+    "xAct_xPerm": "1.2.4 (2025-12-29); package loaded but external xPerm executable connection failed",
+    "shell_sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-CAS-WOLFRAM.json",
+    "/usr/local/bin/WolframKernel -noprompt -run 'Print[InputForm[$Version]]; Needs[\"xAct`xTensor`\"]; Print[InputForm[xAct`xTensor`$Version]]; Print[InputForm[xAct`xPerm`$Version]]; Quit[]'",
+    "/usr/local/bin/WolframKernel -noprompt -run '<copy the embedded A-CAS-WOLFRAM.wl source from artifacts[0] here>; Quit[]'",
+    "printf each canonical evidence string exactly as recorded in findings | sha256sum"
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "E-WOLFRAM-EXACT-SOURCE",
+      "name": "A-CAS-WOLFRAM.wl",
+      "storage": "embedded in this sole declared result JSON",
+      "language": "Wolfram Language",
+      "execution_mode": "exact symbolic and rational design checks only; no collision, numerical oracle, T01-T12, Radau, trajectory, endpoint, or RABBIT output",
+      "source": "(* CAS_CONTRACT statement: Independently determine whether the exact B3-v2/W7 design is algebraically coherent under the frozen conventions. A candidate target below is a falsifiable claim, not an allowed intermediate assumption. Any normalization, branch, graph, or convention mismatch is a fail or inconclusive result, never silently repaired. *)\nClearAll[dotD]; dotD[a_,b_]:=a[[1]]b[[1]]-a[[2]]b[[2]]-a[[3]]b[[3]]-a[[4]]b[[4]];\n(* Direct u/v row-ii spin sums in eta_D=diag(+---). *)\ns1={{0,1},{1,0}}; s2={{0,-I},{I,0}}; s3={{1,0},{0,-1}}; z=ConstantArray[0,{2,2}]; id=IdentityMatrix[2]; g0=ArrayFlatten[{{id,z},{z,-id}}]; gs=Table[ArrayFlatten[{{z,sg},{-sg,z}}],{sg,{s1,s2,s3}}]; gu=Prepend[gs,g0]; sig={1,-1,-1,-1}; gd=MapThread[#1 #2&,{sig,gu}]; g5=I gu[[1]].gu[[2]].gu[[3]].gu[[4]]; pl=(IdentityMatrix[4]-g5)/2; vu=Table[gu[[m]].pl,{m,4}]; vd=Table[gd[[m]].pl,{m,4}]; sl[p_]:=p[[1]]gu[[1]]-p[[2]]gu[[2]]-p[[3]]gu[[3]]-p[[4]]gu[[4]]; p1=Array[a,4]; p2=Array[b,4]; p3=Array[c,4]; p4=Array[d,4]; tt=Sum[Tr[sl[p3].vu[[m]].sl[p1].vu[[n]]]Tr[sl[p2].vd[[m]].sl[p4].vd[[n]]],{m,4},{n,4}]; ss=Sum[Tr[sl[p2].vu[[m]].sl[p1].vu[[n]]]Tr[sl[p3].vd[[m]].sl[p4].vd[[n]]],{m,4},{n,4}]; xx=2Sum[Tr[sl[p3].vu[[m]].sl[p1].vu[[n]].sl[p2].vd[[m]].sl[p4].vd[[n]]],{m,4},{n,4}]; Print[InputForm[Expand[{tt-16dotD[p1,p4]dotD[p2,p3],ss-16dotD[p1,p4]dotD[p2,p3],xx+32dotD[p1,p4]dotD[p2,p3]}]]];\n(* Invariant-measure normalization and MB reduction. *)\np2ang=(2Pi)/(2(2Pi)^3); phi2=(2Pi)/(32Pi^2); pref=FullSimplify[(1/(2e1))p2ang phi2]; ksint=Integrate[y2^3 Exp[-y2],{y2,0,Infinity}]Integrate[(1-mu)^2,{mu,-1,1}]Integrate[1,{zs,-1,1}]; Print[InputForm[{p2ang,phi2,pref,ksint,c0 ksint/(256Pi^3),c0 ksint/(3 256Pi^3)}]];\n(* Exact six-species reaction stoichiometry. First 33 elastic columns are zero; columns 34..39 are three pair conversions and three e+e- pair rows. *)\nflav={{1,2},{3,4},{5,6}}; un[k_]:=UnitVector[6,k]; pair[k_]:=un[flav[[k,1]]]+un[flav[[k,2]]]; conv={-pair[1]+pair[2],-pair[1]+pair[3],-pair[2]+pair[3]}; ann={-pair[1],-pair[2],-pair[3]}; S=Transpose[Join[Table[ConstantArray[0,6],{33}],conv,ann]]; left=NullSpace[Transpose[S]]; right=NullSpace[S]; rc=Join[Table[UnitVector[39,k],{k,33}],{UnitVector[39,34]-UnitVector[39,37]+UnitVector[39,38],UnitVector[39,35]-UnitVector[39,37]+UnitVector[39,39],UnitVector[39,36]-UnitVector[39,38]+UnitVector[39,39]}]; Print[InputForm[{MatrixRank[S],left,Length[right],Length[rc],MatrixRank[rc],Union[S.#&/@rc]}]];\n(* Entropy exact vector and positive secant representation. *)\nf={1/5,2/5,3/5,4/5}; ff=f[[1]]f[[2]](1-f[[3]])(1-f[[4]]); rr=f[[3]]f[[4]](1-f[[1]])(1-f[[2]]); Print[InputForm[{ff,rr,Log[ff/rr],ff-rr,FullSimplify[(ff-rr)Log[ff/rr]]}]]; Clear[F,R,t]; sec=Assuming[F>0&&R>0,FullSimplify[Integrate[1/(R+t(F-R)),{t,0,1}]]]; Print[InputForm[{sec,Assuming[F>0&&R>0,FullSimplify[(F-R)^2 sec-(F-R)(Log[F]-Log[R])]]}]];\n(* Finite-me shell root and exact rational test vectors. *)\nClear[P0,Px,Py,Pz,nx,ny,nz,m4]; gp[a_,b_]:=-a[[1]]b[[1]]+a[[2]]b[[2]]+a[[3]]b[[3]]+a[[4]]b[[4]]; P={P0,Px,Py,Pz}; n4={1,nx,ny,nz}; sv=-gp[P,P]; den=2(P0-Px nx-Py ny-Pz nz); ee=(sv-m4^2)/den; k3=ee n4; k4=P-k3; Print[InputForm[{ee,Factor[gp[k3,k3]],Factor[gp[k4,k4]+m4^2],FullSimplify[(gp[k4,k4]+m4^2)/.nz^2->1-nx^2-ny^2]}]];"
+    },
+    {
+      "artifact_id": "E-WOLFRAM-KEY-OUTPUTS",
+      "type": "stable InputForm transcript summary",
+      "outputs": [
+        "row ii generic polynomial residuals: {0,0,0}; therefore tt=16 K_t, ss=16 K_t, and 2 Re(t s*)=-32 K_t",
+        "measure: p2 angular=1/(8 Pi^2), final two-body azimuth=1/(16 Pi), total prefactor=1/(256 E1 Pi^3)",
+        "MB integrals: K_s dimensionless integral=32, giving c/(8 Pi^3); K_t is one third, giving c/(24 Pi^3)",
+        "reaction graph: 24 self plus 15 electron events; exact species matrix rank 3; left-null dimension 3; right-null dimension 36",
+        "entropy vector: F=4/625, R=144/625, A=-Log[36], J=-28/125, A J=56 Log[6]/125>0",
+        "shell vectors: massless s+t+u=0; elastic and pair vectors each give s+t+u=2 for m_e=1"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-CAS-WL-ROWII",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED at exact polynomial level. With V^mu=gamma^mu P_L, A_t=(ubar3 V^mu u1)(vbar2 V_mu v4), A_s=(vbar2 V^mu u1)(ubar3 V_mu v4), and the Wick/exchange sign M=A_t-A_s, direct u/v completeness gives sum|A_t|^2=16 K_t, sum|A_s|^2=16 K_t, and 2 Re sum(A_t A_s*)=-32 K_t. Hence sum|M|^2=64 K_t, exactly four times the distinguishable raw base 16 K_t. No initial helicity average or final identical-particle factor applies to nu_a antinu_a -> nu_a antinu_a. Under dot_D=chi this is the requested K_t canonical form; at V-NULL-COM-345 it is 5184/25.",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1)=-g_phys, gamma5=i gamma0 gamma1 gamma2 gamma3, P_L=(1-gamma5)/2",
+        "Massless spin completeness sum u ubar=slash(p) and sum v vbar=slash(p); the chiral projectors select the single occupied neutrino or antineutrino helicity",
+        "The relative minus between the two bare bilinears is fixed before squaring by the fermionic Wick contraction; no symmetry factor is applied to the distinct final nu and antinu legs"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "embedded:E-WOLFRAM-EXACT-SOURCE",
+        "embedded:E-WOLFRAM-KEY-OUTPUTS"
+      ],
+      "evidence_fingerprint": "sha256:c766f7583ab6ac5e61ad3344272244d59f7452d2fbbc27f0db6d94226b971676",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Copy artifacts[0].source to A-CAS-WOLFRAM.wl and run /usr/local/bin/WolframKernel -noprompt -script A-CAS-WOLFRAM.wl.",
+        "Verify the first InputForm result is {0,0,0}; these are generic component-polynomial residuals and use neither crossing nor sampled kinematics."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "The absolute map from the raw coefficient 64 to the tagged coefficient 128 depends on the separately unresolved effective-interaction normalization in C-W7-ABSOLUTE-NORMALIZATION."
+      ]
+    },
+    {
+      "finding_id": "F-CAS-WL-ABS-NORM",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "The invariant-measure and Maxwell-Boltzmann reductions are DERIVED exactly: after the p2 azimuth, dPi2 contributes p2 dp2 dmu/(8 pi^2); massless two-body phase space after the final azimuth contributes dz*/(16 pi); with the tagged-leg 1/(2E1), the coefficient is p2 dp2 dmu dz*/(256 pi^3 E1). The K_s integral is 32 and K_t is one third, yielding c/(8 pi^3) and c/(24 pi^3). Full absolute normalization is nevertheless INCONCLUSIVE because the assigned contract does not state the normalized low-energy four-fermion action/Feynman rule that fixes the raw-trace-to-G_F factor, and it does not fix whether the electron bath occupation is per spin or spin-summed and where its factor two is applied. Assuming a distinguishable-channel vertex sqrt(2) G_F V tensor V would multiply raw traces by 2 and reproduce c_base=32 and row-ii c=128, but that missing premise cannot be promoted to a derivation.",
+      "assumptions_used": [
+        "Invariant phase-space measure exactly as written in CAS_CONTRACT.json",
+        "Massless final two-body phase space dPhi2=dOmega*/(32 pi^2)",
+        "One occupied helicity state per neutrino species and no tagged incoming-neutrino average",
+        "No unnamed factor is allowed to absorb weak-current, spin, degeneracy, identical-final, or catalogue multiplicity conventions"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+        "embedded:E-WOLFRAM-EXACT-SOURCE",
+        "embedded:E-WOLFRAM-KEY-OUTPUTS"
+      ],
+      "evidence_fingerprint": "sha256:2f459a843cecec4f72e0e296e783fb26b75947e20a6b1490c1c95baef2c87021",
+      "counterevidence_refs": [
+        "CAS_CONTRACT.json explicitly says W3 supplies ratios and the MB reduction only, not independently validated absolute normalization."
+      ],
+      "reproduction": [
+        "Run the measure and MB sections of artifacts[0].source and obtain {1/(8 Pi^2),1/(16 Pi),1/(256 e1 Pi^3),32,c0/(8 Pi^3),c0/(24 Pi^3)}.",
+        "Supply a convention-locked effective Lagrangian/Feynman rule and electron occupation/degeneracy definition, then repeat the raw-to-tagged map without importing production coefficients."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact coefficient of the four-neutrino contact vertex when expressed with V^mu=gamma^mu P_L.",
+        "Electron and positron bath distribution normalization and whether spin degeneracy is inside the distribution, matrix-element spin sum, or an explicit multiplicity.",
+        "Consequent absolute tagged coefficients and finite-m_e electron-channel normalization."
+      ]
+    },
+    {
+      "finding_id": "F-CAS-WL-NULLSPACE",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED from an independently generated flavour-orbit graph. The 24 self events are 6 identical-species elastic, 3 same-flavour nu-antinu elastic, 6 distinct-flavour same-sign elastic, 6 ordered distinct-flavour opposite-sign elastic, and 3 unordered pair conversions. The 15 electron events are 12 species-by-charge elastic and 3 flavour pair annihilation/creation rows. With S mapping 39 event fluxes to the ordered six-species count change, rank_Q(S)=3. The exact left nullspace is precisely span_Q{(1,-1,0,0,0,0),(0,0,1,-1,0,0),(0,0,0,0,1,-1)}. The right nullspace has dimension 36: unit vectors e1 through e33 for count-neutral elastic columns, plus e34-e37+e38, e35-e37+e39, and e36-e38+e39 for the three pair-conversion/pair-annihilation cycles.",
+      "assumptions_used": [
+        "Species order is [nu_e, antinu_e, nu_mu, antinu_mu, nu_tau, antinu_tau]",
+        "Pair-conversion orientations are e to mu, e to tau, and mu to tau; reversing an event only negates a column and does not change either nullspace",
+        "Electron elastic rows have zero neutrino species-count stoichiometry; pair annihilation columns are minus the corresponding nu-antinu pair vector",
+        "S is 6 by 39, so left charge vectors obey l.S=0 and right event-cycle vectors obey S.r=0"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "embedded:E-WOLFRAM-EXACT-SOURCE",
+        "embedded:E-WOLFRAM-KEY-OUTPUTS"
+      ],
+      "evidence_fingerprint": "sha256:83c512e34a12ee90f9a8a1015711e2028b5d544026d28656b5666d4b385063e4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run the stoichiometry section of artifacts[0].source; require InputForm rank/dimensions {3,3,36} and canonical right-basis check {36,36,{{0,0,0,0,0,0}}}.",
+        "Verify each of the three declared lepton-charge rows annihilates all 39 exact integer columns."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Collision weights and absolute rational multiplicities do not affect this nullspace if nonzero, but their physical normalization remains unresolved under C-W7-ABSOLUTE-NORMALIZATION."
+      ]
+    },
+    {
+      "finding_id": "F-CAS-WL-ENTROPY",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "DERIVED on the strict-open occupation domain. Algebra gives A=eta1+eta2-eta3-eta4=log(F/R). With q proportional to nu J, nu=(-1,-1,+1,+1), J=F-R, and fermionic dS/df=-eta, the event contribution is A J. For F,R>0, A J=(F-R)^2 integral_0^1 dt/[R+t(F-R)]>=0, and the integral is strictly positive, so equality holds iff F=R. V-ENTROPY-RATIONAL gives F=4/625, R=144/625, A=-Log[36], J=-28/125, and A J=56 Log[6]/125>0. For electron exchange, the thermal electron affinities convert exactly into the bath term Q_EM/T_gamma, and Q_EM=-Q_nu gives the stated total sign.",
+      "assumptions_used": [
+        "0<f_i<1, hence F>0 and R>0 and real logarithms are on their positive branch",
+        "Forward orientation 1+2 to 3+4 with nu=(-1,-1,+1,+1) and J=F-R",
+        "Q_nu is the neutrino energy change under the same oriented event and Q_EM=-Q_nu",
+        "The electron/positron bath has zero chemical potential and thermal eta_e=-E_e/T_gamma"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "embedded:E-WOLFRAM-EXACT-SOURCE",
+        "embedded:E-WOLFRAM-KEY-OUTPUTS"
+      ],
+      "evidence_fingerprint": "sha256:f6dc492a315338a074f139de5d2c9543a7af767ebeabd48cc4d0231e9df78e43",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run the entropy section of artifacts[0].source and verify the rational vector and the exact zero residual for the secant identity.",
+        "At F=R use the unsimplified positive integral, whose continuous limit is 1/R; do not use the simplified Log[F/R]/(F-R) form at equality."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-CAS-WL-FINITE-ME-SHELL",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The shell core is DERIVED: with g_phys=(-,+,+,+), on-shell p_i^2=-m_i^2, and p1+p2=p3+p4, exact expansion gives s+t+u=sum_i m_i^2. The supplied elastic and pair rational vectors conserve four-momentum, have masses {0,1,0,1} and {0,0,1,1}, and each gives s+t+u=2. For P=p1+p2 and a chosen massless outgoing direction n, eliminating the other final shell gives E3=(s-m4^2)/[2(P0-Pvec.n)]; both p3^2 and p4^2+m4^2 reduce to zero when |n|=1. The denominator is strictly positive for future timelike P. In the COM frame, elastic k*=(s-m_e^2)/(2 sqrt(s)) and pair k*=sqrt(s-4m_e^2)/2; the pair branches collide at s=4m_e^2 and only the nonnegative root is physical. The full claim is INCONCLUSIVE because W6 does not specify the actual invariant-coordinate root polynomial/elimination used by the proposed implementation, so the axis cannot enumerate all cleared denominators, discriminants, spurious components, threshold branches, or one-sided derivative formulas for that design.",
+      "assumptions_used": [
+        "All physical legs are real, future-directed, and on shell under g_phys=(-,+,+,+)",
+        "Massive energies take the positive square-root branch and m_e>0",
+        "The generic one-shell elimination chooses a unit outgoing massless direction and does not square the equation",
+        "Physical pair production requires s>=4 m_e^2; physical elastic scattering has s>m_e^2 for a positive-energy neutrino incident on a massive future-directed electron"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "embedded:E-WOLFRAM-EXACT-SOURCE",
+        "embedded:E-WOLFRAM-KEY-OUTPUTS"
+      ],
+      "evidence_fingerprint": "sha256:2c5f455ca3f2b1edb4a1f63fae6a8761cdb43f4b143259ed59a0b72bbdec939d",
+      "counterevidence_refs": [
+        "W6 section 4 states only that support is solved in invariant coordinates; it supplies no executable root equation or elimination map to audit."
+      ],
+      "reproduction": [
+        "Run the shell section of artifacts[0].source and impose nx^2+ny^2+nz^2=1; require exact zero p3 and p4 shell residuals.",
+        "Evaluate the three CAS_CONTRACT rational vectors exactly and verify conservation, masses, K_s/K_t/K_u for V-NULL-COM-345, and s+t+u equal to the mass-square sum.",
+        "To close the claim, freeze the actual invariant-coordinate root equation and supply every algebraic elimination, denominator, discriminant, branch selector, and threshold derivative before implementation or output."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact support/root coordinate map for electron elastic and pair events.",
+        "All denominator exclusions and spurious components introduced by the intended elimination.",
+        "The explicit one-sided derivative evaluated at each threshold branch collision."
+      ]
+    }
+  ],
+  "errors": [
+    "xAct xTensor loaded, but its attempt to connect to the external xPerm executable failed with LinkOpen::linke. Exact explicit gamma-matrix, rational linear-algebra, and scalar-shell calculations did not use xPerm or ToCanonical."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-WOLFRAM.json"
+  ]
+}

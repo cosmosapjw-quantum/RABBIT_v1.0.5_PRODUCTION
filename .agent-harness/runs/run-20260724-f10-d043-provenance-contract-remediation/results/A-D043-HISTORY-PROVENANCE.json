@@ -1,0 +1,255 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+  "assignment_id": "A-D043-HISTORY-PROVENANCE",
+  "context_version": "00cbc4cea516a7377f85a3794a22ee2271588773b72910aa73b99bbfb911296c",
+  "agent_id": "019f9009-0f3c-7922-8acf-0151ea64b980",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-d043-provenance-contract-remediation",
+    "assignment_id": "A-D043-HISTORY-PROVENANCE",
+    "context_version": "00cbc4cea516a7377f85a3794a22ee2271588773b72910aa73b99bbfb911296c",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:63a975974b16e1c425626ee180d8732435912fa64c1b5af37737f9b61858c10f",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-HISTORY-PROVENANCE.json",
+  "started_at": "2026-07-23T17:30:25+00:00",
+  "completed_at": "2026-07-23T17:44:23+00:00",
+  "tool_versions": {
+    "git": "2.43.0",
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "ripgrep": "14.1.0",
+    "jq": "1.7",
+    "git_object_format": "sha1"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/assignments/A-D043-HISTORY-PROVENANCE.json .agent-harness/templates/RESULT_ENVELOPE.json .agent-harness/context/roles/context_mapper.md",
+    "git for-each-ref --sort=refname --format='%(refname) %(objectname) %(objecttype)'",
+    "git reflog show --all --date=iso-strict --format='%H%x00%gD%x00%gs'",
+    "git --no-replace-objects rev-list --objects --all --reflog",
+    "git fsck --full --no-reflogs --unreachable --dangling",
+    "python3 -c 'stream every object from git --no-replace-objects cat-file --batch-all-objects --unordered --batch; SHA-256 every blob; compare both target digests; hash the sorted oid/digest/size inventory'",
+    "python3 -c 'parse every tree from git cat-file --batch-all-objects; build reverse tree/commit ancestry for each matching blob; compare the closure with every ref root'",
+    "find . -path './.git' -prune -o -type f -exec sha256sum {} + | rg '^(4f4da8f0d5c2d6768affa28254c4cdb2145e65079bb251df9b4621c10606e43b|e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748) '",
+    "find .git -type f -exec sha256sum {} + | rg '^(4f4da8f0d5c2d6768affa28254c4cdb2145e65079bb251df9b4621c10606e43b|e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748) '",
+    "git --no-replace-objects ls-tree -r 4b7ade3eb17e834712ef508d5f605b8b182f3df4 -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json .agent-harness/context/FROZEN_DECISIONS.md .agent-harness/context/CONTEXT_INDEX.json .agent-harness/generated/CONTEXT_PACK.md",
+    "git --no-replace-objects ls-tree -r 204d3fa41cedb9b3102b27cc7bde7ded51df85f7 -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+    "git --no-replace-objects show 204d3fa41cedb9b3102b27cc7bde7ded51df85f7:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | sha256sum",
+    "git --no-replace-objects show 204d3fa41cedb9b3102b27cc7bde7ded51df85f7:.agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json | sha256sum",
+    "git --no-replace-objects cat-file blob e9b0db8245b881b169187392a66d501380e43880 | jq '{run_id,assignment_id,context_version,started_at,completed_at,status,result_path,artifacts:[.artifacts[]|select((.path // \"\")|test(\"CONTEXT_PACK|FROZEN_DECISIONS|CONTEXT_INDEX\"))]}'",
+    "python3 -c 'replace only the Built at line of blob 530a446b73863661f5365a645129941834ac677e for every UTC second from 2026-07-23T10:44:49+00:00 through 2026-07-23T13:30:52+00:00 and compare SHA-256 with e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748'",
+    "git --no-replace-objects cat-file -e 5de6d6e6438c44d68026208443e3abf3d1cb7fa7^{blob}",
+    "for ref in refs/heads/f10-independent-validation-blocker refs/remotes/origin/f10-independent-validation-blocker refs/heads/f10-independent-validation-b3v2 refs/remotes/origin/f10-independent-validation-b3v2; do git rev-parse \"$ref\"; git show \"$ref:.agent-harness/context/FROZEN_DECISIONS.md\" | sha256sum; git show \"$ref:.agent-harness/generated/CONTEXT_PACK.md\" | sha256sum; done"
+  ],
+  "artifacts": [
+    {
+      "path": "git-object:5d583891c9401439ec2a49cd6a572cf71194c5fd",
+      "sha256": "4f4da8f0d5c2d6768affa28254c4cdb2145e65079bb251df9b4621c10606e43b",
+      "size_bytes": 34379,
+      "classification": "original local Git blob; unreachable and unreferenced"
+    },
+    {
+      "path": "git-tree:4b7ade3eb17e834712ef508d5f605b8b182f3df4",
+      "sha256": "ef1b4f2ab6db7bbf2c156164c384d77f57c7b95929afe72bd956c2f07f8d8c3e",
+      "classification": "unreachable paired pre-D-042 content snapshot; hash is the contained context-pack SHA-256"
+    },
+    {
+      "path": "git-object:e9b0db8245b881b169187392a66d501380e43880",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6",
+      "classification": "commit-addressed EXT-01 adjudication attestation for the missing e3ea context-pack bytes"
+    },
+    {
+      "path": "posthoc-reconstruction:5de6d6e6438c44d68026208443e3abf3d1cb7fa7",
+      "sha256": "e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748",
+      "size_bytes": 74299,
+      "classification": "exact post-hoc timestamp-only reconstruction; computed Git blob OID is absent from the object database"
+    },
+    {
+      "path": "starting-required-input:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+      "classification": "starting assignment input and commit 204d3fa blob 1883fc65"
+    },
+    {
+      "path": "concurrent-main-writer-state:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "41e1347c2f8c8e86d01a886ee5ad8f15c5308a04e2d8ba66c7be4a74821c63ab",
+      "classification": "approved concurrent main-writer drift observed after the read; excluded from historical-object conclusions"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D043-HIST-001",
+      "claim_id": "C-D043-HISTORICAL-BYTES",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "No existing commit-, ref-, or reflog-addressed local evidence set contains both exact target byte sequences. The complete local object scan covered 1,561 objects, including all 1,249 blobs: SHA-256 4f4da8f0... occurs exactly once as blob 5d583891..., while SHA-256 e3ea99a9... occurs zero times. Blob 5d583891... and its full tree closure are unreachable even when reflogs are roots. The worktree and plain files under .git contain neither exact file. Therefore the requested original commit-addressed historical-byte provenance is unavailable in the present local repository.",
+      "assumptions_used": [
+        "The audit universe is this repository's complete local object database, alternates exposed by cat-file --batch-all-objects, all current refs, all reflogs, and all regular files under the worktree and .git.",
+        "No network fetch, Dropbox version-history query, or external archival store was authorized or treated as local evidence.",
+        "Git replacement objects were disabled so the scan measured stored bytes."
+      ],
+      "evidence_refs": [
+        "object inventory: 1,561 total = 1,249 blobs + 285 trees + 27 commits; inventory SHA-256 504fcba116e3185a9495ea91fe68a864bfc85c1433149ac03866ade002f0e648",
+        "canonical oid/blob-SHA256/size inventory SHA-256 b167040083cd525d1e9de62ce98f5ca6748b110650ddb7e9c857d6c0a2300df7",
+        "11 refs scanned; canonical ref listing SHA-256 fc8c48e20b5be8bb8d274b06828bb4857e1a3ca2c069e1554be13bc6fafdb707",
+        "65 reflog entries and 1,376 all-ref/all-reflog reachable object records; reachable listing SHA-256 703b2601f79de25daa4a16911aab81443bcf9d05d53668a02a4ebe79de028f69",
+        "fsck found 189 no-reflog-unreachable objects (104 blobs, 83 trees, 2 commits); sorted output SHA-256 a3e3a62d946f647ce400fb129cbfca5ed5f69f4de48d501146bbab007cc8f0e7",
+        "historical blocker tips: local 8eecb832 frozen=a381036a pack=b33b02ea; origin aba3c321 frozen=a381036a pack=b33b02ea"
+      ],
+      "evidence_fingerprint": "sha256:b167040083cd525d1e9de62ce98f5ca6748b110650ddb7e9c857d6c0a2300df7",
+      "counterevidence_refs": [
+        "Commit 204d3fa contains exact hash attestations in the D-042 prompt and EXT-01 adjudication.",
+        "Both targets remain byte-recoverable locally: 4f4d directly from a dangling blob and e3ea by an exact post-hoc reconstruction.",
+        "These countercases establish recoverability and attestation, not original commit-addressed chronology."
+      ],
+      "reproduction": [
+        "Run the all-object streaming SHA-256 inventory command listed above.",
+        "Run git --no-replace-objects rev-list --objects --all --reflog and git fsck --full --no-reflogs --unreachable --dangling.",
+        "Run both regular-file SHA-256 scans listed above.",
+        "A decisive falsifier would be an already-existing commit/ref/reflog that reaches blob 5d583891... and an original blob whose SHA-256 is e3ea99a9..., or a provenance-locked external archive that supplies those original objects with independently pre-D-042 chronology."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "External remotes or Dropbox historical versions not present in the local object database were not queried.",
+        "The unreachable 4f4d tree and reconstruction template can be garbage-collected unless main deliberately preserves them; preservation now would not retroactively establish historical commit provenance."
+      ]
+    },
+    {
+      "finding_id": "F-D043-HIST-002",
+      "claim_id": "C-D043-HISTORICAL-BYTES",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "A coherent original pre-D-042 content snapshot survives locally, but only as unreachable Git objects. Root tree 4b7ade3e... contains CONTEXT_INDEX blob 10b4a5bb..., exact FROZEN_DECISIONS blob 5d583891... (SHA-256 4f4da8f0...), and CONTEXT_PACK blob ead58c69... (SHA-256 ef1b4f2a...). The index and pack agree on context version f7ab1890..., the pack embeds the exact 4f4d source hash, was built at 2026-07-23T13:45:48Z, and its frozen-decision content ends at D-041. The D-042 prompt is absent from that tree. This is original blob/tree evidence and the strongest extant paired pre-D-042 snapshot, but it is neither commit-addressed nor ref-addressed.",
+      "assumptions_used": [
+        "Pre-D-042 describes the snapshot's content boundary: the last frozen decision is D-041 and the D-042 request path is absent.",
+        "The context-pack embedded build timestamp is accepted as content, not as independently signed chronology."
+      ],
+      "evidence_refs": [
+        "root tree 4b7ade3eb17e834712ef508d5f605b8b182f3df4",
+        "context subtree 697414065f0c913c458392f92df0a8f27f34ab43",
+        "generated pack blob ead58c697036614c16f28b3af013a5d29f6e2f4b",
+        "context index blob 10b4a5bb4a9387b80254189f4b409cbac3e749e9",
+        "frozen decisions blob 5d583891c9401439ec2a49cd6a572cf71194c5fd"
+      ],
+      "evidence_fingerprint": "sha256:ef1b4f2ab6db7bbf2c156164c384d77f57c7b95929afe72bd956c2f07f8d8c3e",
+      "counterevidence_refs": [
+        "Trees carry no native timestamp and the root is unreachable.",
+        "The paired pack hash is ef1b4f2a..., not the separately requested e3ea99a9... pack hash."
+      ],
+      "reproduction": [
+        "git --no-replace-objects ls-tree -r 4b7ade3eb17e834712ef508d5f605b8b182f3df4 -- .agent-harness/context/FROZEN_DECISIONS.md .agent-harness/context/CONTEXT_INDEX.json .agent-harness/generated/CONTEXT_PACK.md docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+        "git --no-replace-objects cat-file blob 5d583891c9401439ec2a49cd6a572cf71194c5fd | sha256sum",
+        "git --no-replace-objects cat-file blob ead58c697036614c16f28b3af013a5d29f6e2f4b | sha256sum"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "The object database alone cannot prove when root tree 4b7ade3e was created."
+      ]
+    },
+    {
+      "finding_id": "F-D043-HIST-003",
+      "claim_id": "C-D043-HISTORICAL-BYTES",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The missing e3ea99a9... context-pack bytes are exactly reproducible, but only post hoc. Dangling blob 530a446b... is a same-size (74,299-byte), same-context-version 77572ec5... pack built at 10:44:49Z. Replacing only its single Built at line and exhaustively checking every UTC second through the EXT-01 adjudicator start finds one and only one target match: 2026-07-23T12:38:26Z. The reconstructed bytes have SHA-256 e3ea99a9... and computed Git blob OID 5de6d6e6..., but git cat-file confirms that OID is absent. This proves exact byte reproducibility, not original-object or preseal provenance, so the reconstruction must not be promoted.",
+      "assumptions_used": [
+        "The build script's only volatile field within a fixed context version is the single top-level Built at timestamp; the exhaustive substitution tested that concrete byte hypothesis rather than assuming it.",
+        "The search window begins at the surviving same-version build and ends at the recorded adjudicator start."
+      ],
+      "evidence_refs": [
+        "template blob 530a446b73863661f5365a645129941834ac677e, SHA-256 1b9cad478928b28bbd7933c662603098cb356b3f2833d44bdbc0e58f4b933e84",
+        "9,964 timestamp candidates checked; unique match 2026-07-23T12:38:26+00:00",
+        "reconstructed SHA-256 e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748",
+        "computed absent Git blob OID 5de6d6e6438c44d68026208443e3abf3d1cb7fa7",
+        "same-version source snapshot root 1ac3f93852479997781cef148a98026455e9648c is also unreachable"
+      ],
+      "evidence_fingerprint": "sha256:e3ea99a943a52c80e4484f952a6d579958059192d587d366231c4195b4f64748",
+      "counterevidence_refs": [
+        "Commit-addressed EXT-01 adjudication blob e9b0db82... records that it read a context pack with this exact SHA-256.",
+        "A cryptographic byte match cannot establish that the reconstructed instance is the historically read file or that it preceded output."
+      ],
+      "reproduction": [
+        "Run the timestamp-only exhaustive reconstruction command listed above.",
+        "Recompute the Git SHA-1 object name as SHA1('blob ' + decimal_size + NUL + reconstructed_bytes).",
+        "git --no-replace-objects cat-file -e 5de6d6e6438c44d68026208443e3abf3d1cb7fa7^{blob}"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No original e3ea Git object or plain file remains locally.",
+        "The source-equivalent template and its exact source tree are themselves unreachable objects."
+      ]
+    },
+    {
+      "finding_id": "F-D043-HIST-004",
+      "claim_id": "C-D043-HISTORICAL-BYTES",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The smallest existing commit-addressed evidence set is the single commit 204d3fa41cedb9b3102b27cc7bde7ded51df85f7: it contains D-042 prompt blob 1883fc65... (SHA-256 6b5545bd..., citing frozen decisions 4f4d...) and EXT-01 adjudication blob e9b0db82... (SHA-256 18d6449d..., attesting context-pack e3ea...). This one commit is sufficient for the two hash attestations, but insufficient for either missing historical byte-provenance chain: it contains neither exact 4f4d bytes nor exact e3ea bytes. Consequently no byte-preserving commit-addressed evidence set exists now; the smallest honest handoff is commit 204d3fa plus separately labeled unreachable tree 4b7ade3e and post-hoc reconstruction recipe, with no provenance promotion.",
+      "assumptions_used": [
+        "Hash attestations are weaker than the exact source bytes under the D-042 authority ordering.",
+        "Adding a new commit or ref now can preserve recoverable bytes but cannot retroactively prove their pre-D-042 chronology."
+      ],
+      "evidence_refs": [
+        "commit 204d3fa41cedb9b3102b27cc7bde7ded51df85f7",
+        "D-042 prompt blob 1883fc65b38910fad4a2260a03fba52948282112, SHA-256 6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+        "EXT-01 adjudication blob e9b0db8245b881b169187392a66d501380e43880, SHA-256 18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6",
+        "the adjudication records context version 77572ec5... and artifact SHA-256 e3ea99a9..."
+      ],
+      "evidence_fingerprint": "sha256:18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6",
+      "counterevidence_refs": [
+        "The exact 4f4d bytes and exact reconstructed e3ea bytes are currently recoverable.",
+        "Recoverability plus committed hash attestations is the strongest case for a practical remediation bundle, but it remains weaker than original committed/presealed bytes."
+      ],
+      "reproduction": [
+        "git --no-replace-objects ls-tree -r 204d3fa41cedb9b3102b27cc7bde7ded51df85f7 -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+        "git --no-replace-objects show 204d3fa41cedb9b3102b27cc7bde7ded51df85f7:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | sha256sum",
+        "git --no-replace-objects show 204d3fa41cedb9b3102b27cc7bde7ded51df85f7:.agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json | sha256sum"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A separately preserved external object store could strengthen chronology if it contains the original e3ea blob and ref/commit metadata predating D-042."
+      ]
+    },
+    {
+      "finding_id": "F-D043-HIST-005",
+      "claim_id": "C-D043-HISTORICAL-BYTES",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Concurrent main-writer drift was isolated from this audit. The required D-042 prompt was initially read and hashed as 6b5545bd..., identical to commit 204d3fa's blob. During the read-only audit, the live path changed to 41e1347c... under the main writer's approved concurrent remediation. All historical-object conclusions use the starting committed blob, the object database, refs, and reflogs; none depends on the later working-tree bytes.",
+      "assumptions_used": [
+        "The parent confirmed that the prompt change was an authorized main-writer modification."
+      ],
+      "evidence_refs": [
+        "starting SHA-256 6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+        "later observed live SHA-256 41e1347c2f8c8e86d01a886ee5ad8f15c5308a04e2d8ba66c7be4a74821c63ab",
+        "commit 204d3fa retains the starting blob 1883fc65"
+      ],
+      "evidence_fingerprint": "sha256:6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873",
+      "counterevidence_refs": [
+        "The later live prompt was not reread or used as the assignment authority."
+      ],
+      "reproduction": [
+        "git --no-replace-objects show 204d3fa41cedb9b3102b27cc7bde7ded51df85f7:docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | sha256sum",
+        "sha256sum docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-HISTORY-PROVENANCE.json"
+  ]
+}

@@ -4,7 +4,8 @@ mod frozen {
     };
     use crate::electron_event::{
         neutrino_leg_direction, pauli_balance, pauli_directional_derivative, pauli_gradient,
-        weighted_event_gain_loss_mev, weighted_neutrino_event_jvp_mev,
+        weighted_dynamic_gain_loss_coefficients_mev, weighted_event_gain_loss_mev,
+        weighted_neutrino_event_jvp_mev,
     };
     const BOUNDARIES: [[f64; 4]; 6] = [
         [0.0, 0.0, 0.0, 0.0],
@@ -86,6 +87,43 @@ mod frozen {
         ] {
             assert!(pauli_balance(invalid).is_err());
             assert!(pauli_gradient(invalid).is_err());
+        }
+    }
+
+    #[test]
+    fn dynamic_coefficients_reconstruct_positive_event_gain_and_loss() {
+        for process in EXPLICIT_ELECTRON_PROCESSES {
+            for (occupancies, _) in SEEDS {
+                let weight = RateMeV::new(2.7).unwrap();
+                let coefficients =
+                    weighted_dynamic_gain_loss_coefficients_mev(process, occupancies, weight)
+                        .unwrap();
+                let weighted = weighted_event_gain_loss_mev(occupancies, weight).unwrap();
+                let [f1, f2, f3, _] = occupancies;
+                let (gain, loss) = match process.channel() {
+                    ElectronChannel::ElectronMinusElastic
+                    | ElectronChannel::ElectronPlusElastic => (
+                        coefficients.gain.value() * (1.0 - f1) * f3,
+                        coefficients.loss.value() * f1 * (1.0 - f3),
+                    ),
+                    ElectronChannel::Pair => (
+                        coefficients.gain.value() * (1.0 - f1) * (1.0 - f2),
+                        coefficients.loss.value() * f1 * f2,
+                    ),
+                };
+                assert!(coefficients.gain.value() >= 0.0);
+                assert!(coefficients.loss.value() >= 0.0);
+                assert!(relative(gain, weighted.gain.value()) <= 2.0e-15);
+                assert!(relative(loss, weighted.loss.value()) <= 2.0e-15);
+            }
+            assert!(
+                weighted_dynamic_gain_loss_coefficients_mev(
+                    process,
+                    SEEDS[0].0,
+                    RateMeV::new(-1.0).unwrap(),
+                )
+                .is_err()
+            );
         }
     }
 

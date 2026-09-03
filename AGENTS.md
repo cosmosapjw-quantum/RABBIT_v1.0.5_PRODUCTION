@@ -107,12 +107,25 @@ This repository uses spec-driven development and evidence-bearing subagent audit
 
 - Before spawning any subagent, the main agent MUST ensure that `.agent-harness/context/CONTEXT_INDEX.json` and `.agent-harness/generated/CONTEXT_PACK.md` are current by running:
   `python3 .agent-harness/scripts/build_context_pack.py`
-- Every spawned subagent MUST receive a spawn header containing all four fields:
-  `RUN_ID`, `ASSIGNMENT_ID`, `CONTEXT_VERSION`, and `INDEPENDENCE_MODE`.
+- Before spawning a subagent for an assignment, the main agent MUST mint that
+  assignment's single-use admission receipt:
+  `python3 .agent-harness/scripts/admit_agent.py --assignment-id <ASSIGNMENT_ID>`
+  (add `--expect-agent-id <id>` whenever the parent chooses the agent id).
+- Every spawned subagent MUST receive a spawn header containing all five fields:
+  `RUN_ID`, `ASSIGNMENT_ID`, `CONTEXT_VERSION`, `INDEPENDENCE_MODE`, and
+  `ADMISSION_TOKEN`. `SubagentStart` never receives the spawn prompt, so the
+  token is the only thing that binds one agent to one assignment; a receipt is
+  single-use and is consumed at `SubagentStop` with the writing `agent_id` and
+  the result SHA-256 recorded in `runs/<RUN_ID>/ADMISSIONS.jsonl`.
 - Every subagent MUST load, in this order:
   1. `.agent-harness/generated/CONTEXT_PACK.md`
   2. `.agent-harness/runs/<RUN_ID>/assignments/<ASSIGNMENT_ID>.json`
   3. only the role-specific and evidence files named by that assignment.
+- Assignment schema v2 separates the live Codex `runtime_agent_type` from the
+  logical `review_role`. The compatibility field `agent_type` MUST equal the
+  runtime event type. A supported `default` runtime may carry a CAS or adjudicator
+  `review_role` only when `new_assignment.py` seals the exact role files and result
+  template; neither the assignment nor result may impersonate a dedicated runtime.
 - The `SubagentStart` hook injects the shared context contract automatically. A subagent MUST NOT begin repo-wide exploration before validating that its assignment context version matches the current context index.
 - If the spawn header or assignment file is missing, stale, or inconsistent, the subagent MUST stop substantive work and report the contract violation.
 
@@ -148,7 +161,7 @@ Use explicit context tiers rather than relying on hidden parent-thread state:
 - Every substantive verdict MUST include exact evidence references, assumptions used, tool/version information, and a reproducible command or proof artifact when applicable.
 - Each subagent writes only to its unique result path declared in the assignment. It must not edit shared context, specs, gates, or another agent’s result.
 - Before stopping, every subagent MUST write a result envelope and end its final message with one line of the form:
-  `HARNESS_RESULT: {"assignment_id":"...","context_version":"...","status":"pass|fail|inconclusive|error","result_path":"..."}`
+  `HARNESS_RESULT: {"assignment_id":"...","context_version":"...","status":"pass|fail|inconclusive|error","result_path":"...","admission_proof":"<ADMISSION_TOKEN from the spawn header>"}`
 - The main agent deduplicates by `(claim_id, evidence_fingerprint, verdict)` before adjudication.
 
 ### 6. Spec and gate authority

@@ -1,0 +1,1 @@
+{"decision": "block", "reason": "No Start-time run lease exists for this agent, so its run identity cannot be established. Refusing to fall back to the mutable ACTIVE_RUN pointer. Re-run the agent after confirming that SubagentStart can write .agent-harness/leases/."}

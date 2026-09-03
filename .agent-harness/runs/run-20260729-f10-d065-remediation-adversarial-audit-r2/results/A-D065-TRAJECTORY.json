@@ -1,0 +1,220 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "assignment_id": "A-D065-TRAJECTORY",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "agent_id": "019fab3c-de41-70f0-a116-f5f5ffb9431e",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+    "assignment_id": "A-D065-TRAJECTORY",
+    "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:0de9f3361f631e1dc3a3a1c589ac3868247c42ac631dde70b2e7c0a649998490",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-TRAJECTORY.json",
+  "started_at": "2026-07-29T00:17:00Z",
+  "completed_at": "2026-07-29T00:27:37Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "numpy": "2.4.4",
+    "mpmath": "1.3.0",
+    "git": "2.43.0",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-TRAJECTORY.json",
+    "sha256sum docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py .agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+    "diff -u scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py",
+    "sha256sum src/rabbit/decoupling/_independent_noqke.py .agent-harness/runs/run-20260727-f10-d049-regression-fix/raw_logs/04_cargo_test_release.log .agent-harness/runs/run-20260727-f10-d045-regression-rerun/raw_logs/04_cargo_test_release.log",
+    "python3 - <<'PY' (AST-parse the frozen driver; independently recompute GL48 endpoint moments, N_eff, block densities, T8 full/in-support sup and maximizers, T9/M2 residuals from retained scalars, last-node proxy, equilibrium y>24 tail, r2/r3 exact common-payload equality, check census, and retained-state inventory) PY",
+    "python3 - <<'PY' (parse both retained Rust logs and prove all 48 embedded spectrum tuples are exactly equal to both logs) PY",
+    "python3 - <<'PY' (compare freeze/output Git commit times, report wall times, adjudication timestamps, and ancestor relations) PY",
+    "python3 - <<'PY' (parse the final JSON from each raw stdout log and compare it exactly with its retained report) PY"
+  ],
+  "artifacts": [
+    "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md sha256:40c5b54744b38c5941cbb28aee60347ddb41fd5f7ae05061a43fbbb36a6318ea",
+    "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md sha256:9197ec4989d53a09e83508ed006e3b6ec5b85cff3a36db3002b3d490a1ee284b",
+    "scripts/audit/d062_independent_trajectory_r2.py sha256:5ec384374c8e089c697ec3224528b16a41ca4e437c2c9c3b5e6877790318a112",
+    "scripts/audit/d063_independent_trajectory_r3.py sha256:00dbde9732364d87a813423353c7270c3d0c0dfa43eaad4cd915f4739a077c44",
+    ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json sha256:fc6f98bdabd19f8afe6e23f1d4a81161fb4d80ea7dcdf4d9691ac91a8736a70f",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json sha256:daf4fc06b8cc3bb5b07a92e436fd95f78cb208a10becaac22c7013e7f2fba9d4",
+    ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_stdout.log sha256:d13fd4758a87b36a7828c458b26fea4ce2fb97af3bc36c1e5d91690db1298986",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_stdout.log sha256:ce8171534f80480a23f0aded3aaa5a746eea4d64f688a26684254a99c27c2a3d"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D065-TRJ-01",
+      "claim_id": "C-F10-TRAJECTORY-R2",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The bounded D-063 numerical execution is real and internally coherent. The live comparator module hash is exactly 760a7c04..., both retained Rust log hashes match the frozen guards, and an independent parser proves all 48 embedded Rust spectrum tuples equal both logs exactly. The final stdout JSON equals the retained report byte-for-value. Independent arithmetic reproduces the endpoint moments, five block values, and N_eff exactly; reconstructs every retained coupled-energy residual to at most 2.71e-20 absolute error (M2 at most 4.34e-19); and reproduces the last-node proxy exactly. All 12 coded r3 predicates evaluate true. The r3 base and holdout physics payloads are bitwise identical to r2 on every common retained field. The r2-to-r3 executable diff has only the two declared behavioural changes plus reporting/documentation: T8 masks two low-y nodes, and the mutant window moves N=4.00 to N=2.00. Strongest acceptance steelman: correct completed-catalogue anchors, cross-code scalar/block/spectral evidence, the correct FLRW comoving-energy identity, an O(2) EM-sign mutant response, strict-open endpoint, deterministic repeats, and a tightened-rtol holdout make D-063 strong matched-cell supportive evidence rather than fabricated output.",
+      "assumptions_used": [
+        "Flat FLRW with N=ln(a), massless neutrinos P_nu=rho_nu/3, finite-mass electromagnetic EOS, and zero lepton asymmetry.",
+        "The two retained Rust release logs are the correct completed-catalogue BDF/Rodas reference artifacts.",
+        "Binary64 equality of repeated reports establishes deterministic replay only, not independent uncertainty."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md",
+        "scripts/audit/d063_independent_trajectory_r3.py",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_stdout.log",
+        ".agent-harness/runs/run-20260727-f10-d049-regression-fix/raw_logs/04_cargo_test_release.log",
+        ".agent-harness/runs/run-20260727-f10-d045-regression-rerun/raw_logs/04_cargo_test_release.log"
+      ],
+      "evidence_fingerprint": "sha256:fe1375409c619693e8dc5cd552a2ed2eca7f32a3be1d3391dbad52f4bdbe55e6",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json"
+      ],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python scripts/audit/d063_independent_trajectory_r3.py --out /tmp/d063_replay.json",
+        "diff -u scripts/audit/d062_independent_trajectory_r2.py scripts/audit/d063_independent_trajectory_r3.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No fresh 7.6-hour trajectory replay was performed in this bounded audit.",
+        "The scientific claim remains matched-resolution and single-platform."
+      ]
+    },
+    {
+      "finding_id": "F-D065-TRJ-02",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "D-063 does not satisfy the unchanged G-F10-INDEPENDENT-FLRW pass condition. Its T11 quantity is one GL node's weighted contribution, not an enclosure of the evolved integral for y>24. Independent quadrature gives the stated equilibrium beyond-domain fraction 1.043208513420627e-7, but neither runner computes or retains an evolved-tail integral, a monotonic/envelope proof, or a truncation-error certificate; the raw report has no beyond-domain field. The 31 checkpoint rows retain only N, two comoving energies, two finite-difference derivatives, the trace source, and residual/activity scalars; they retain no occupation/logit state, T_gamma, or time, so the D-057 requirement to retain checkpoint states is unmet and a third party cannot recompute the reductions from the artifact. The holdout changes only rtol and gates only three endpoint scalars; it supplies no radial/angular/tail uncertainty. These are partial-evidence failures under the unchanged full-spectral gate, even though the endpoint itself is credible.",
+      "assumptions_used": [
+        "A last-node quadrature summand is not a mathematical upper bound on an unrepresented half-line without an additional tail theorem.",
+        "Checkpoint-state retention means enough state to independently recompute the claimed checkpoint observables, not only their derived summaries.",
+        "The unchanged gate requires full-spectral and uncertainty evidence, not merely scalar endpoint repeatability."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+        "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md",
+        "scripts/audit/d063_independent_trajectory_r3.py",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json"
+      ],
+      "evidence_fingerprint": "sha256:fe1375409c619693e8dc5cd552a2ed2eca7f32a3be1d3391dbad52f4bdbe55e6",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+      ],
+      "reproduction": [
+        "Inspect base.residual_rows[0].keys() and base.endpoint_spectrum in r3_trajectory_report.json.",
+        "Inspect analyse_run() and T11_tail in scripts/audit/d063_independent_trajectory_r3.py.",
+        "mpmath: integral_24_inf y^3/(exp(y)+1) divided by integral_0_inf = 1.043208513420627e-7."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A new prospective tail enclosure and retained checkpoint states could move this failure without rerunning unrelated gates.",
+        "A spatial holdout could quantify the presently unmeasured representation component."
+      ]
+    },
+    {
+      "finding_id": "F-D065-TRJ-03",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The T8 r3 PASS is not a clean closure of the frozen all-48-node spectral predicate. The preserved full-domain maximum is still 2.0800641747316935e-3 > 2e-3 at the first Rust node y=0.001844..., and r3 passes at 1.5881626368027338e-3 only by excluding exactly nodes 0 and 1 after r2 exposed the miss. Calling y below the first Gauss-Legendre node outside the representation's support is imprecise: the affine degree-47 polynomial and physical truncated domain are defined on [0,24], although evaluation below the node hull is endpoint extrapolation and low-y moment weight is small. Strongest rejection steelman: this is outcome-informed metric-domain narrowing and same-code bitwise reruns do not cure it. Strongest acceptance steelman: the excluded discrepancy is transparent, physically low-weight, only 4 percent above the stricter local band, and remains below the broader 1e-2 resolved-pointwise cap. Therefore this item alone is INCONCLUSIVE rather than a physics FAIL, but it cannot supply an unqualified full-spectral PASS.",
+      "assumptions_used": [
+        "Affine Gauss-Legendre collocation has an interval domain larger than the convex hull of its interior nodes.",
+        "The local 2e-3 relative-sup band and the broader 1e-2 resolved-pointwise cap are distinct predicates.",
+        "Post-failure reissues may correct a proven contract defect, but the corrected rationale must be mathematically accurate."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md",
+        "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md",
+        "scripts/audit/d062_independent_trajectory_r2.py",
+        "scripts/audit/d063_independent_trajectory_r3.py",
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json"
+      ],
+      "evidence_fingerprint": "sha256:438bfbc39e5085d07ed4949311e3a9e4acd62b309033680d61db86d4b4ea0650",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/results/A-D062-ADJUDICATION.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+      ],
+      "reproduction": [
+        "Recompute abs(f_ind-f_rust)/max(f_rust,1e-8) for all 48 embedded Rust nodes and for the y>=GRID.nodes[0] mask."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "A prospectively declared endpoint-aware norm or an endpoint-enriched grid would resolve the support/domain ambiguity.",
+        "The full-domain mismatch is too small to establish a physical endpoint failure by itself."
+      ]
+    },
+    {
+      "finding_id": "F-D065-TRJ-04",
+      "claim_id": "C-F10-TRAJECTORY-R2",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The registered r2/r3 adjudication chronology is not admissible even though raw execution chronology is plausible. D-063 freeze commit db9d0e3 is an ancestor of output commit 8d92f24, and the 27654-second commit gap exceeds the 27325-second reported wall by 329 seconds. But a post-freeze run cannot finish before 08:13:25 KST, while A-D063-ADJUDICATION claims it started at 08:05:00 KST. The same result was committed at 08:18:54 KST while claiming completion at 08:20:00 KST. D-062's adjudication similarly claims completion 121 seconds after the commit that already contains it. These are impossible envelope timestamps, so the prior adjudications cannot serve as prospective gate authority. The stdout/report pairs remain exact and scientifically useful; this finding rejects lifecycle provenance, not the raw numerical values.",
+      "assumptions_used": [
+        "The frozen driver may not begin its claim-bearing run before the Git freeze commit.",
+        "A result artifact cannot be committed before its declared completion time.",
+        "Approximate hand-entered timestamps do not satisfy fail-closed chronology."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json",
+        ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/results/A-D062-ADJUDICATION.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+      ],
+      "evidence_fingerprint": "sha256:ea13063c460a8b9158928aa9cb01815c9e9eb16bd21c94b40f2920c7aa263485",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_stdout.log"
+      ],
+      "reproduction": [
+        "git show -s --format=%cI db9d0e339764d6ed632d25418a33dd6beee5bec7",
+        "git show -s --format=%cI 8d92f24b5d3c458475dbbb3f21beb36107ee4875",
+        "Add r3 report wall_seconds to the freeze time and compare with A-D063-ADJUDICATION started_at/completed_at."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "A new honest current adjudication can replace the defective envelope but cannot manufacture missing tail/checkpoint evidence."
+      ]
+    },
+    {
+      "finding_id": "F-D065-TRJ-05",
+      "claim_id": "C-F10-INDEPENDENT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Seven-stage hostile loop completed: self-discover mapped the frozen T1-T12 predicates; step-back separated raw numerical truth from gate admission; metacognitive self-ask asked what a deterministic 12/12 replay does not measure; CoVe independently recomputed hashes, anchors, moments, spectra, residuals, tail proxy, exact r2/r3 deltas, and chronology; adversarial self-ask attacked domain narrowing, tail enclosure, state retention, refinement, and timestamp causality; CCoT compared the strongest acceptance and rejection causal chains without voting; PDR returns FAIL for the unchanged G-F10-INDEPENDENT-FLRW gate. D-063 is strong matched-resolution supportive evidence and validates neither a full-half-line tail nor a spatial uncertainty ladder. Same-code bitwise reruns establish determinism, not independent convergence. The smallest reopen route is prospective and bounded: retain full checkpoint states, add a mathematically valid evolved y>24 enclosure, and add one spatial or endpoint-enriched holdout with a predeclared spectrum norm; then issue an honest post-output adjudication. No band, node mask, or tail proxy may be fitted after that output.",
+      "assumptions_used": [
+        "Gate evidence must cover every unchanged pass-condition component.",
+        "Raw supportive evidence is preserved even when terminal admission fails.",
+        "No downstream authority follows from this verdict."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+        "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md",
+        "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md",
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json"
+      ],
+      "evidence_fingerprint": "sha256:438bfbc39e5085d07ed4949311e3a9e4acd62b309033680d61db86d4b4ea0650",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json"
+      ],
+      "reproduction": [
+        "Execute the commands listed in this envelope against the exact retained bytes."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-TRAJECTORY.json"
+  ]
+}

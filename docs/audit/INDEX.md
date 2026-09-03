@@ -12,6 +12,57 @@ linked from canonical docs. Start from these anchors:
   [BD593_lrs_runtime_mass_scale_negative_result_2026-06-26.md](BD593_lrs_runtime_mass_scale_negative_result_2026-06-26.md)
 - Latest code-precision audit:
   [BD594_external_code_precision_audit_report_2026-06-27.md](BD594_external_code_precision_audit_report_2026-06-27.md)
+- D-044 external breakthrough intake closeout:
+  [BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md](BD622_D044_open_breakthrough_intake_closeout_2026-07-24.md)
+- D-045/D-046 owner grants + OWNER-A orbit-chart discriminator closeout:
+  [BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md](BD622_D045_D046_ownera_r6_orbit_chart_closeout_2026-07-27.md)
+- D-052/D-056 gate-matrix completion (row-9 closure, metrology, independent trajectory):
+  [BD622_D056_gate_matrix_completion_2026-07-28.md](BD622_D056_gate_matrix_completion_2026-07-28.md)
+  (contracts: [BD622_D053_row9_closure_contract_2026-07-28.md](BD622_D053_row9_closure_contract_2026-07-28.md),
+  [BD622_D054_covariance_metrology_contract_2026-07-28.md](BD622_D054_covariance_metrology_contract_2026-07-28.md),
+  [BD622_D055_covariance_metrology_contract_r2_2026-07-28.md](BD622_D055_covariance_metrology_contract_r2_2026-07-28.md),
+  [BD622_D056_independent_trajectory_contract_2026-07-28.md](BD622_D056_independent_trajectory_contract_2026-07-28.md))
+- D-057 adversarial correction of the claimed blocker closeout:
+  [BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md](BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md)
+- D-065 adversarial audit of the D-058--D-064 remediation:
+  [BD622_D065_remediation_adversarial_audit_2026-07-29.md](BD622_D065_remediation_adversarial_audit_2026-07-29.md)
+- D-070 Part A evidence closure and SSOT integrity machinery (four fail-closed
+  checkers; mixed-model panel returned 5/5 FAIL and all seven confirmed findings
+  were fixed; no gate movement):
+  [BD622_D070_evidence_closure_2026-07-29.md](BD622_D070_evidence_closure_2026-07-29.md)
+- D-070 Part B7 adjudication of the D-069 r4 execution (mechanical ERROR on the
+  wall budget, no `checks` block, no gate movement in either direction; the T13
+  companion is measured non-viable by 3-4 orders of magnitude, so F-D065-04
+  items 4 and 5 are undischarged in full and the gate has no available route to
+  PASS on current measurement; reissue not recommended, owner disposition
+  STOP/PRESERVE):
+  [BD622_D070_r4_adjudication_2026-07-30.md](BD622_D070_r4_adjudication_2026-07-30.md)
+- D-069 independent trajectory r4 contract (frozen before any output byte;
+  full-domain norms, evolved `y>24` enclosure, domain holdout, recomputable
+  checkpoints — execution adjudicated at D-070):
+  [BD622_D069_independent_trajectory_r4_contract_2026-07-29.md](BD622_D069_independent_trajectory_r4_contract_2026-07-29.md)
+- D-068 forward-only cost discipline and the shared trajectory core (record
+  written retrospectively at D-070; adds lines this cycle, saves on the next):
+  [BD622_D068_cost_discipline_2026-07-29.md](BD622_D068_cost_discipline_2026-07-29.md)
+- D-067 exact agent-to-assignment admission binding (harness lane; implemented
+  and reviewed, adjudication deferred to D-070):
+  [BD622_D067_admission_binding_2026-07-29.md](BD622_D067_admission_binding_2026-07-29.md)
+- D-066 write-attribution incident on a tracked D-057 evidence artifact
+  (both byte-sets preserved, authenticity open as `Q-ATTRIB-01`):
+  [BD622_D066_write_attribution_incident_2026-07-29.md](BD622_D066_write_attribution_incident_2026-07-29.md)
+- D-058–D-064 remedy DAG completion (lease repair, rebinding, covariance
+  r3/r4, trajectory r2/r3, gate reconsideration):
+  [BD622_D064_remedy_dag_completion_2026-07-29.md](BD622_D064_remedy_dag_completion_2026-07-29.md)
+  (contracts: [BD622_D060_covariance_metrology_contract_r3_2026-07-28.md](BD622_D060_covariance_metrology_contract_r3_2026-07-28.md),
+  [BD622_D061_covariance_metrology_contract_r4_2026-07-28.md](BD622_D061_covariance_metrology_contract_r4_2026-07-28.md),
+  [BD622_D062_independent_trajectory_r2_contract_2026-07-28.md](BD622_D062_independent_trajectory_r2_contract_2026-07-28.md),
+  [BD622_D063_independent_trajectory_r3_contract_2026-07-28.md](BD622_D063_independent_trajectory_r3_contract_2026-07-28.md))
+- D-049/D-051 lint fix, regression gate PASS, OWNER-C closure acceptance:
+  [BD622_D051_ownerc_closure_acceptance_2026-07-27.md](BD622_D051_ownerc_closure_acceptance_2026-07-27.md)
+  (contract: [BD622_D050_ownerc_row6_closure_contract_2026-07-27.md](BD622_D050_ownerc_row6_closure_contract_2026-07-27.md))
+- D-047 OWNER-B replay contract (frozen) and D-048 result:
+  [BD622_D047_ownerb_target_replay_contract_2026-07-27.md](BD622_D047_ownerb_target_replay_contract_2026-07-27.md),
+  [BD622_D048_ownerb_target_replay_result_2026-07-27.md](BD622_D048_ownerb_target_replay_result_2026-07-27.md)
 - Anti-drift rules: `../TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md`,
   `../../bbn_codex_anti_drift_cost_effective_policy.md`
 

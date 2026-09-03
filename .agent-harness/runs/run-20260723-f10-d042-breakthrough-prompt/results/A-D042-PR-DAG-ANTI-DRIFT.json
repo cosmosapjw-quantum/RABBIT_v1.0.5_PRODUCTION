@@ -1,0 +1,434 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-PR-DAG-ANTI-DRIFT",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f74-7aa9-77b1-80af-5cb41fe29f6f",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-PR-DAG-ANTI-DRIFT",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d04207ea01fc395f8cadad8b92ecf9fdf56031667ff210b1f5e2a6628409c4d5",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json",
+  "started_at": "2026-07-23T14:39:08Z",
+  "completed_at": "2026-07-23T15:03:13Z",
+  "tool_versions": {
+    "jq": "1.7",
+    "ripgrep": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "Read .agent-harness/generated/CONTEXT_PACK.md completely in bounded sed ranges.",
+    "sha256sum and read the registered assignment, canonical RESULT_ENVELOPE template, and independent-auditor role file.",
+    "Compute the registered ordered path-NUL-bytes-NUL role digest; it equals 9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1.",
+    "sha256sum and read only the named AGENTS, anti-drift policy, cost policy, D-039 external request, EXT-01 adjudication, decision log, and validation ledger inputs.",
+    "Compute the ordered SHA-256-list evidence-bundle digest bcfb973422f250b98180827b74a455a086e40134d6b5d5e8ea7d6f2aefec4c97."
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "43e7a00c81c2f5c60ccb60d3a679e242c56f7ac479d989738fa37aeb6cc8c712"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-PR-DAG-ANTI-DRIFT.json",
+      "sha256": "d04207ea01fc395f8cadad8b92ecf9fdf56031667ff210b1f5e2a6628409c4d5"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "raw_file_sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "ordered_role_bundle_sha256": "9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "3a8ab086fdac4c841b0f7cdb68d8167ee5daa2dbec29efe17481a64464e2ce43"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149"
+    },
+    {
+      "path": "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+      "sha256": "2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6"
+    },
+    {
+      "path": "docs/harness/DECISION_LOG.md",
+      "sha256": "1fe5e71dfb8afbbc2d1eff18a1004a599dde8b2afa16072696ba674a51d59c18"
+    },
+    {
+      "path": "docs/harness/VALIDATION_LEDGER.md",
+      "sha256": "2685bb4e6dddf8dae0424c56f597f2f34442a11f10b9d78c9a5b13f425860dad"
+    },
+    {
+      "purpose": "Ordered SHA-256-list bundle of the complete registered input slice",
+      "sha256": "bcfb973422f250b98180827b74a455a086e40134d6b5d5e8ea7d6f2aefec4c97"
+    }
+  ],
+  "route_verdict": "STOP_PRESERVE_CURRENT_PR_QUEUE_EMPTY",
+  "claim_status": {
+    "conditional_anti_drift_dag": "SPECIFIED",
+    "current_repository_design_authority": "FORBIDDEN",
+    "current_repository_implementation_authority": "FORBIDDEN",
+    "current_scientific_execution_authority": "FORBIDDEN",
+    "current_endpoint_authority": "FORBIDDEN",
+    "current_public_runtime_authority": "FORBIDDEN"
+  },
+  "current_disposition": {
+    "reachable_now": [
+      "EXT-NEW-0 or a reasoned external no-go",
+      "STOP/PRESERVE"
+    ],
+    "repository_prs_reachable_now": [],
+    "binding_reason": [
+      "D-041 records G-EXT-FEASIBILITY=FAIL with zero candidate-wide passes.",
+      "C-PETROV, C-ANALYTIC, and C-MEDVM are archived and may not be ranked or reopened from their bounded subclaim passes.",
+      "OWNER-1 is not reached and PR-01 must not be created.",
+      "A PR list presented as executable work while G-EXT fails would itself be gate and roadmap inflation."
+    ],
+    "shadow_dag_semantics": "Every PR-labelled node below is an inert conditional changeset, not a backlog item, authorization, or instruction to open a PR."
+  },
+  "seven_stage_adversarial_loop": [
+    {
+      "stage": 1,
+      "method": "self-discover",
+      "action": "Outside the repository, solicit two or three operation-level, mutually non-isomorphic alternatives, or accept a reasoned no-go. Existing EXT-01 candidates cannot fill an alternative slot without a new mechanism.",
+      "kill": "Fewer than two complete alternatives, more than three, a renamed archived route, or any repository write yields non-admission."
+    },
+    {
+      "stage": 2,
+      "method": "step-back",
+      "action": "Recheck scope, provenance, immutable hashes, independence, forbidden execution, and whether the request changes a mathematical or executable-contract mechanism.",
+      "kill": "Any provenance drift, cap/grid/tolerance tuning, imported target collision code, duplicate truth surface, or implied owner authority stops the affected candidate."
+    },
+    {
+      "stage": 3,
+      "method": "metacognitive self-ask",
+      "action": "Require one finite bidirectional clause-to-symbol-to-operation-to-consumer-to-evidence-to-falsifier matrix covering every common obligation and every candidate-specific branch.",
+      "kill": "Any unmapped binding item, unproved consumer, duplicated owner, deferred branch, or non-reconstructible operation is INCONCLUSIVE and therefore non-admitted."
+    },
+    {
+      "stage": 4,
+      "method": "CoVe",
+      "action": "Independently verify theorem, normalization, shell/tail, entropy, covariance, conditioning, derivative, novelty, binary64, and cost claims before numerical output.",
+      "kill": "A bounded local PASS cannot substitute for a candidate-wide theorem; any failed or missing conjunct kills that candidate."
+    },
+    {
+      "stage": 5,
+      "method": "adversarial self-ask",
+      "action": "Apply at least three prospectively frozen hostile mutations and the cheapest route-specific negative control to every survivor.",
+      "kill": "Failure to reject a hostile mutation, uniform-conditioning counterfamily, tail/shell bypass, permutation mutation, or operation-count/cost screen archives the candidate."
+    },
+    {
+      "stage": 6,
+      "method": "CCoT",
+      "action": "Compare complete causal and operation graphs against Fort, D-027, D-028, D-029, sealed B3-v2/W7, and the other new alternatives. Admit at most one uniquely surviving route.",
+      "kill": "Zero survivors means STOP. More than one non-dominated survivor is INCONCLUSIVE and admits none; no subjective tie-break or output-led ranking is allowed."
+    },
+    {
+      "stage": 7,
+      "method": "PDR",
+      "action": "Cross-examine the STOP and remedy steelmen, record exact PASS/FAIL/INCONCLUSIVE routes, archive all killed branches, and issue only G-EXT-FEASIBILITY plus one bounded owner choice.",
+      "kill": "Any attempt to turn editorial quality, vote count, owner preference, or a subclaim PASS into candidate readiness fails the loop."
+    }
+  ],
+  "external_candidate_contract": {
+    "candidate_count": {
+      "minimum_complete_alternatives": 2,
+      "maximum_alternatives": 3,
+      "reasoned_no_go_allowed": true
+    },
+    "mandatory_common_obligations": [
+      "complete six-species reaction and normalization graph",
+      "conservation and exact nullspace",
+      "detailed balance and candidate-wide fermionic entropy",
+      "positivity or strict-open state semantics",
+      "finite-m_e process-total shell and support",
+      "single directed half-line tail authority",
+      "covariance and deterministic permutation semantics",
+      "unique differentiable coefficient/state map and Jacobian existence",
+      "uniform conditioning certificate on a prospectively closed domain",
+      "complete deterministic binary64 operation/error ledger",
+      "operation-level non-isomorphism to all archived routes",
+      "permanent implementation LOC and same-change deletion plan"
+    ],
+    "hard_cost_screen": {
+      "permanent_candidate_implementation_loc_max": 800,
+      "same_integration_change_net_lines_max": -1000,
+      "new_gate_schema_manifest_wrapper_files": 0,
+      "token_use_exact": "UNAVAILABLE unless a reliable stage-scoped counter becomes available"
+    },
+    "selection_rule": "Only a candidate that passes every common and route-specific obligation may survive. If two or more survive, one must strictly dominate every other survivor under a prospectively frozen novelty, evidence-strength, permanent-LOC, deletion, and compute-cost order; otherwise the result is INCONCLUSIVE and no candidate is admitted.",
+    "current_result": "No candidate survives under the present D-041 evidence."
+  },
+  "conditional_pr_dag": {
+    "path": [
+      "EXT-NEW-0",
+      "EXT-7-STAGE",
+      "G-EXT-FEASIBILITY",
+      "OWNER-DESIGN",
+      "PR-DESIGN",
+      "BLIND-DESIGN-REVIEW",
+      "OWNER-IMPLEMENT",
+      "PR-PREOUTPUT-VERTICAL",
+      "EXACT-HASH-REVIEW",
+      "OWNER-STATIC-EXEC",
+      "RUN-STATIC",
+      "STATIC-ADJUDICATION",
+      "OWNER-TRAJECTORY",
+      "PR-SEGMENT-VERTICAL",
+      "SEGMENT-ADJUDICATION",
+      "OWNER-ENDPOINT",
+      "PR-ENDPOINT-VERTICAL",
+      "ENDPOINT-ADJUDICATION",
+      "OWNER-UNBLIND",
+      "RUN-INDEPENDENT-COMPARISON",
+      "GATE-CLOSEOUT",
+      "PR-FINAL-INTEGRATION-DEFLATION"
+    ],
+    "nodes": [
+      {
+        "node": "EXT-NEW-0 through EXT-7-STAGE",
+        "kind": "external_read_only",
+        "authority": "currently reachable",
+        "repository_change": "0/0/0",
+        "output": "At most one PROPOSED nominee, or STOP/INCONCLUSIVE; never a PR."
+      },
+      {
+        "node": "G-EXT-FEASIBILITY",
+        "kind": "existing_gate",
+        "pass": "Exactly one nominee has candidate-wide PASS evidence for every frozen obligation and no unresolved binding item.",
+        "fail": "Zero complete candidates or any explicit hard-obligation failure.",
+        "inconclusive": "A theorem, domain, operation graph, provenance item, cost plan, or unique-selection result is missing or ambiguous.",
+        "non_pass_route": "Archive all candidate bundles outside the active tree and return STOP/PRESERVE."
+      },
+      {
+        "node": "OWNER-DESIGN",
+        "kind": "owner_gate",
+        "pass": "A new explicit owner decision names the exact candidate hash, exact design-only write set, and one blind first-failure review.",
+        "non_pass_route": "No repository design branch or PR."
+      },
+      {
+        "node": "PR-DESIGN",
+        "kind": "conditional_draft_pr",
+        "scope": "Replace or consolidate one authoritative design surface; no runtime code or scientific output.",
+        "budget": "code +0; total net <=0; <=3 touched existing files; zero new gate/schema/manifest/CLI/public surfaces; achieved BMR 0.00.",
+        "pass": "Exact matrix has bidirectional zero-gap coverage and the change removes or consolidates at least as much active truth surface as it adds.",
+        "non_pass_route": "Close unmerged and archive exact diff/hash/result."
+      },
+      {
+        "node": "BLIND-DESIGN-REVIEW",
+        "kind": "review_gate",
+        "pass": "Unanimous whole-design PASS on exact bytes; bounded subclaim passes are insufficient.",
+        "fail_or_inconclusive": "Terminal archive for this candidate cycle; OWNER-IMPLEMENT is unreachable."
+      },
+      {
+        "node": "OWNER-IMPLEMENT",
+        "kind": "owner_gate",
+        "pass": "A separate explicit decision authorizes one private pre-output implementation and names allowed compile/nonphysical executions.",
+        "non_pass_route": "No executable implementation."
+      },
+      {
+        "node": "PR-PREOUTPUT-VERTICAL",
+        "kind": "conditional_draft_pr",
+        "scope": "One private candidate implementation plus its focused test, closing named static obligations without physical collision output.",
+        "budget": "preferred net <=80; hard net <=200; <=4 touched files; <=2 new persistent files campaign-wide; cumulative permanent candidate LOC <=800; achieved BMR >=0.25.",
+        "evidence_coupling": "Any net-positive code must execute the prospectively sealed nonphysical falsifiers in the same PR and close a named physics-correctness or executable-contract blocker. Compile-only, schema-only, or import-only evidence is DRIFT.",
+        "non_pass_route": "Close unmerged, preserve raw RED and exact hashes, and do not patch after output in the same cycle."
+      },
+      {
+        "node": "EXACT-HASH-REVIEW",
+        "kind": "review_gate",
+        "pass": "Implementation bytes, dependencies, environment, operation order, and negative controls match the approved design exactly.",
+        "fail_or_inconclusive": "No scientific execution; archive branch."
+      },
+      {
+        "node": "OWNER-STATIC-EXEC",
+        "kind": "owner_gate",
+        "pass": "A separate explicit decision authorizes one bounded static scientific run on the sealed candidate.",
+        "non_pass_route": "No collision observable, W7-equivalent output, or T01-T12."
+      },
+      {
+        "node": "RUN-STATIC and STATIC-ADJUDICATION",
+        "kind": "scientific_execution_and_review",
+        "pass": "All prospectively frozen static invariants, shell/tail, entropy, covariance, conditioning, binary64, resource, and mutation gates pass and independent adjudication is PASS.",
+        "fail_or_inconclusive": "Preserve raw output; no trajectory, endpoint, or target unblinding."
+      },
+      {
+        "node": "OWNER-TRAJECTORY",
+        "kind": "owner_gate",
+        "pass": "A separate explicit decision authorizes one bounded independent segment and its exact write/run set.",
+        "non_pass_route": "No integrator, segment, or trajectory."
+      },
+      {
+        "node": "PR-SEGMENT-VERTICAL",
+        "kind": "conditional_draft_pr",
+        "scope": "Add only the minimum independent FLRW consumer needed for the prospectively frozen segment.",
+        "budget": "preferred net <=80; hard net <=200; same existing private source/test surfaces; achieved BMR >=0.50.",
+        "evidence_coupling": "A net-positive code diff cannot pass without the real frozen segment executing in the same PR and preserving raw state, failure, covariance, and resource evidence.",
+        "fail_or_inconclusive": "Close unmerged; preserve the segment failure; OWNER-ENDPOINT is unreachable."
+      },
+      {
+        "node": "OWNER-ENDPOINT",
+        "kind": "owner_gate",
+        "pass": "A separate explicit decision authorizes one full independent endpoint on exact segment-approved bytes.",
+        "non_pass_route": "No endpoint."
+      },
+      {
+        "node": "PR-ENDPOINT-VERTICAL",
+        "kind": "conditional_draft_pr",
+        "scope": "Only endpoint-essential changes on the same private implementation; no new wrapper, figure, gate, telemetry, or policy surface.",
+        "budget": "preferred net <=80; hard net <=200; achieved BMR >=0.75; BMR 1.00 only if the configured independent full endpoint and all declared parity/floor checks pass.",
+        "evidence_coupling": "Any net-positive code must include the real frozen endpoint result in the same PR. A partial, segment-only, or same-code result is non-PASS.",
+        "fail_or_inconclusive": "Preserve raw endpoint/failure bytes; no target unblinding."
+      },
+      {
+        "node": "OWNER-UNBLIND",
+        "kind": "owner_gate",
+        "pass": "A separate explicit decision names the sealed independent bundle hash and permits comparison with the frozen RABBIT target.",
+        "non_pass_route": "Keep RABBIT output blinded."
+      },
+      {
+        "node": "RUN-INDEPENDENT-COMPARISON and GATE-CLOSEOUT",
+        "kind": "comparison_and_existing_gates",
+        "pass": "G-F10-INDEPENDENT-FLRW and G-F10-COVARIANCE-METROLOGY each pass their own frozen evidence, then the full current-tree G-F10C1-REGRESSION command bundle passes separately.",
+        "fail_or_inconclusive": "No F-10 scientific closeout; preserve the independent result and leave failed gates explicit.",
+        "separation": "Independent endpoint completion, cross-code agreement, covariance metrology, current-tree regression, Rust authority, and public production are distinct claims."
+      },
+      {
+        "node": "PR-FINAL-INTEGRATION-DEFLATION",
+        "kind": "only_mergeable_pr",
+        "scope": "Squash only the validated candidate stack, remove superseded active wrapper/truth surfaces without deleting immutable failure evidence, and update existing SSOT once.",
+        "budget": "final integration net <=-1000; permanent candidate implementation <=800 LOC; zero new gate/schema/manifest/figure/public surfaces.",
+        "pass": "All prior owner and scientific gates pass, exact evidence hashes remain closed, and the full regression reruns on the final diff.",
+        "fail_or_inconclusive": "Do not merge; archive the exact stack. A later repair requires a new external candidate cycle and new owner authority."
+      }
+    ]
+  },
+  "global_pass_fail_inconclusive_routes": {
+    "pass": "Every conjunctive obligation for the current node passes on exact prospectively sealed bytes. PASS advances only to the next named owner or evidence gate.",
+    "fail": "A declared falsifier, hostile mutation, provenance mismatch, budget breach, novelty failure, physics failure, or gate failure immediately kills that candidate branch.",
+    "inconclusive": "Missing definitions, proofs, domains, bytes, tools, consumers, uncertainty terms, or unique selection are non-PASS and grant no authority.",
+    "error": "Harness identity failure, unauthorized write, or corrupted provenance stops the entire run and preserves the incident.",
+    "no_retry_rule": "No output-led patch, cap/grid/tolerance change, or last-defect repair is allowed inside the failed cycle. Re-entry requires materially new external evidence and a new explicit owner decision."
+  },
+  "anti_inflation_invariants": [
+    "Reuse only the existing gate IDs; create no readiness, manifest, schema, hash-relay, figure, telemetry, or policy gate.",
+    "Author candidate facts once. Any generated view is ephemeral and non-authoritative.",
+    "No public export, registry entry, backend flag, CLI knob, runtime policy, or JAX forward-development surface.",
+    "No per-stage tracked narrative. Update existing SSOT once, only in the final integration/deletion change.",
+    "Preserve immutable Fort, D-027, D-028, D-029, D-037, D-038, D-041, raw RED, dirty-tree, and user-owned evidence.",
+    "Every net-positive code PR must carry same-PR executable evidence on the named blocker; otherwise deletions must exceed additions and no scientific BMR may be claimed.",
+    "A segment benchmark is labelled segment-only. A static PASS is labelled static-only. Neither counts as endpoint progress.",
+    "Exact token use is UNAVAILABLE unless exposed directly; it is never inferred from transcript size."
+  ],
+  "rollback_and_archive": {
+    "external_failure": "Hash and archive the external bundle outside the active repository; create no tracked tombstone or new gate.",
+    "draft_pr_failure": "Close the draft unmerged, preserve its exact patch/commit/result hashes and raw failures in the existing harness result mechanism, and remove only the isolated worktree after parent-side attribution.",
+    "post_merge_failure": "Use an explicit revert commit rather than history rewrite or destructive reset; preserve the failed bytes and evidence.",
+    "inconclusive": "Archive with the INCONCLUSIVE label and the precise missing evidence; do not silently rerun or repair.",
+    "unauthorized_write": "Return error, retain the write as incident evidence, and require parent adjudication before any cleanup."
+  },
+  "steelman_cross_examination": {
+    "strongest_stop_case": "G-EXT already failed a five-axis, two-steelman, pre-output tournament. A conditional PR list can become a de facto roadmap, reward governance surface, and collapse owner approval into evidence. The lowest-risk and currently highest-value action is therefore no repository PR at all.",
+    "strongest_remedy_case": "A fully inert shadow DAG is useful because it specifies how a genuinely new future mechanism would be killed cheaply and prevents design, code, execution, trajectory, endpoint, and unblinding authority from collapsing into one approval.",
+    "surviving_stance": "STOP/PRESERVE wins now. The remedy case survives only as this non-executable conditional contract; it does not justify opening, numbering, assigning, or scheduling a PR.",
+    "decisive_falsifier_of_any_immediate_pr_list": "The current adjudicated fact that zero candidates pass G-EXT-FEASIBILITY and OWNER-1 is unreachable.",
+    "decisive_falsifier_of_this_dag": "Any path that reaches a repository PR before exactly one candidate-wide G-EXT PASS plus OWNER-DESIGN, or lets net-positive code pass without same-PR executable blocker evidence, makes this plan FAIL as anti-drift.",
+    "stance_change_conditions": [
+      "A materially new external mechanism, not an archived route in disguise, arrives with verified provenance.",
+      "Two or three alternatives or a no-go are evaluated through the full seven-stage loop.",
+      "Exactly one candidate has zero unmapped binding items and PASS evidence for every common and candidate-specific obligation, including the <=800 permanent-LOC and <=-1000 same-change net-deletion plan.",
+      "Independent adjudication records G-EXT-FEASIBILITY PASS.",
+      "A new explicit owner decision authorizes only the next design-only node on the exact candidate hash."
+    ]
+  },
+  "endpoint_authority_separation": [
+    "External proposal: PROPOSED or SPECULATIVE only.",
+    "Whole-design PASS: supports only a later owner implementation decision.",
+    "Private implementation and nonphysical tests: IMPLEMENTED, not scientific VALIDATED output.",
+    "Static scientific PASS: validates only the declared static obligations; no trajectory.",
+    "Segment PASS: validates only that segment; no endpoint.",
+    "Independent endpoint PASS: validates only independent endpoint completion; target comparison remains blinded.",
+    "Cross-code PASS may close G-F10-INDEPENDENT-FLRW only with separately passing covariance metrology and adjudication.",
+    "G-F10C1-REGRESSION remains separate and must execute on the final current tree.",
+    "No result here authorizes F-11, Bianchi, QKE, public dispatch, public production, or publication-ready precision claims."
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D042-PR-DAG-001",
+      "claim_id": "C-D042-PR-DAG-ANTI-DRIFT",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "A fail-closed anti-drift DAG is specified, but its controlling current outcome is an empty repository PR queue. Only a new external multi-alternative kill tournament is reachable while G-EXT-FEASIBILITY remains FAIL. The shadow DAG admits at most one candidate and places separate owner gates before repository design, implementation, static execution, trajectory, endpoint, and unblinding; every net-positive code node is coupled to same-node executable blocker evidence, and endpoint authority remains separated from covariance, regression, Rust, and public-runtime claims.",
+      "assumptions_used": [
+        "D-039 STOP/PRESERVE and D-041 G-EXT-FEASIBILITY FAIL remain binding.",
+        "The existing anti-drift and cost policies control every future candidate change.",
+        "The existing gate IDs are sufficient; new governance surfaces are unnecessary.",
+        "PASS, FAIL, and INCONCLUSIVE are conjunctive candidate-wide outcomes, not vote counts.",
+        "Immutable failure evidence is preserved and is not counted as deletable active wrapper surface."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#gate_decision",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#candidate_decisions",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#steelmen",
+        "docs/harness/DECISION_LOG.md#2026-07-23-D-041",
+        "docs/harness/VALIDATION_LEDGER.md#2026-07-23-D-041",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md#1-binding-owner-decision",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md#7-candidate-contract",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md#hard-rule",
+        "bbn_codex_anti_drift_cost_effective_policy.md#line-budget",
+        "bbn_codex_anti_drift_cost_effective_policy.md#blocker-movement-ratio"
+      ],
+      "evidence_fingerprint": "sha256:bcfb973422f250b98180827b74a455a086e40134d6b5d5e8ea7d6f2aefec4c97",
+      "counterevidence_refs": [
+        "D-041 leaves no universal no-go for genuinely distinct Petrov, analytic-enriched, or moving-remap families.",
+        "C-PETROV retains constructive local determinant and conditional scalar-tail evidence.",
+        "C-ANALYTIC genuinely escapes the bounded same-space theorem.",
+        "A future complete moving-remap theorem could evade the fixed-lattice obstruction."
+      ],
+      "reproduction": [
+        "sha256sum the registered input paths in the artifacts list and verify the ordered SHA-256-list bundle digest.",
+        "jq '.gate_decision,.candidate_decisions,.steelmen' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+        "sed -n '1,12p' docs/harness/DECISION_LOG.md",
+        "sed -n '1,12p' docs/harness/VALIDATION_LEDGER.md"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "No materially new external candidate currently exists.",
+        "Future candidate-specific operation graphs, hostile controls, exact write sets, and measured costs cannot be preselected without violating the fail-closed boundary."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-PR-DAG-ANTI-DRIFT.json"
+  ]
+}

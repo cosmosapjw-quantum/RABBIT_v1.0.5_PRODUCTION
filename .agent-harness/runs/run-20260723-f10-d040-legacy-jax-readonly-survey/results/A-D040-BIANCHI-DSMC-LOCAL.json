@@ -1,0 +1,283 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+  "assignment_id": "A-D040-BIANCHI-DSMC-LOCAL",
+  "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+  "agent_id": "019f8b5e-30a8-73c3-9965-24439ce753c8",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+    "assignment_id": "A-D040-BIANCHI-DSMC-LOCAL",
+    "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8ba11f7fbe4a475de6d018d43a9be4df34a3f53181cb4c22b035b2f44996afce",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-BIANCHI-DSMC-LOCAL.json",
+  "started_at": "2026-07-23T10:12:00Z",
+  "completed_at": "2026-07-23T10:23:52Z",
+  "tool_versions": {
+    "analysis_mode": "static read-only source/specification audit; no JAX, test, solver, collision, trajectory, or scientific-output execution",
+    "rg": "locally installed",
+    "sed": "locally installed",
+    "sha256sum": "locally installed",
+    "python3": "used only for JSON and harness validation"
+  },
+  "commands": [
+    "sed -n in bounded ranges over .agent-harness/generated/CONTEXT_PACK.md, the registered assignment, sealed role/template, mapper result, and five assigned local target files",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/assignments/A-D040-BIANCHI-DSMC-LOCAL.json .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md src/rabbit/jax/geometry_bianchi_base.py src/rabbit/jax/characteristic_rays_nonlrs_jax.py src/rabbit/jax/driver_typeI_full_boltzmann.py",
+    "rg -n -i 'F-11|Bianchi|non-LRS|LRS|shear|oscillat|stiff|DSMC|anisotrop|quadrupole|moment|expansion|Hubble|Sigma|Pi|stress|determin|covari' over only the five assigned local target files",
+    "rg -n -i 'oscillat|decay|damp|stiff|eigen|overshoot|ringing|relaxation|determin|reproduc|covarian' over only the five assigned local target files",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-BIANCHI-DSMC-LOCAL.json",
+    "python3 .agent-harness/scripts/validate_harness.py",
+    "PYTHONPATH=.agent-harness/scripts python3 -c '<load only this assignment/result and call validate_result_contract with sealed run/context/assignment hash>'"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+      "kind": "allowed shared-core mapper result",
+      "sha256": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md",
+      "kind": "controlling future-scope specification",
+      "sha256": "sha256:900b5ebc2ff0b624fd71eba8b5b272f9a158cc8826ca3cd68874bd72425ca284"
+    },
+    {
+      "path": "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md",
+      "kind": "bounded historical parity record",
+      "sha256": "sha256:0dd11045ac884f47621a809a3bef4b030fc4f4dba5b3fb54a0e8b0fd2fcc5519"
+    },
+    {
+      "path": "src/rabbit/jax/geometry_bianchi_base.py",
+      "kind": "historical geometry equations",
+      "sha256": "sha256:228eeb6e650c661591210d811257b51f31a522547692b6b244d3f99b5a32fe08"
+    },
+    {
+      "path": "src/rabbit/jax/characteristic_rays_nonlrs_jax.py",
+      "kind": "historical diagonal non-LRS characteristic primitives",
+      "sha256": "sha256:b5989c2661e850d7a93d8c0595aace1ce133c3d347fcf46f8b4ae5dc46f965a8"
+    },
+    {
+      "path": "src/rabbit/jax/driver_typeI_full_boltzmann.py",
+      "kind": "historical LRS full-ray driver",
+      "sha256": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D040-BL-001",
+      "claim_id": "C-D040-BIANCHI-PREMISE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The exact future target is SPECIFIED and OWNER-PAUSED as Bianchi Type I, not the generic twelve-type surface suggested by the historical base module. F-11A is LRS/axisymmetric Type I, staged as geometry/shear with no anisotropic stress, then collisionless neutrino quadrupole/backreaction, then validated collisions. F-11B may remove axial symmetry only after F-11A closes and calls for full trace-free shear and anisotropic-stress tensors with rotational/permutation covariance and all LRS/FLRW embeddings. The specification does not yet freeze an explicit full-tensor component/frame state. The historical code exposes Hubble-normalized diagonal components Sigma_plus/Sigma_minus and Pi_plus/Pi_minus; the retained full driver additionally stores one integrated S_plus-like stretch, four species-by-ray-by-momentum distributions, thermal variables, and the nuclear state.",
+      "assumptions_used": [
+        "F-11 wording in the controlling plan is authoritative over generic historical module docstrings.",
+        "N=ln(a) is dimensionless and increasing; Sigma, Pi, q, K, Omega, and integrated shear S are dimensionless Hubble-normalized quantities.",
+        "The phrase full trace-free tensor is not silently reduced to the historical two-component diagonal fixed-frame representation."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:1158-1187",
+        "src/rabbit/jax/geometry_bianchi_base.py:1-24,88-140,217-269",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:244-302,2410-2460",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:82-196"
+      ],
+      "evidence_fingerprint": "sha256:900b5ebc2ff0b624fd71eba8b5b272f9a158cc8826ca3cd68874bd72425ca284",
+      "counterevidence_refs": [
+        "geometry_bianchi_base.py advertises all Class-A/Class-B types, but the controlling future plan names only Type I and keeps F-11 paused.",
+        "characteristic_rays_nonlrs_jax.py is exact only for orthogonal diagonal Type I; it does not instantiate the plan's unfrozen full-tensor state."
+      ],
+      "reproduction": [
+        "sed -n '1158,1187p' docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md",
+        "sed -n '244,302p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "sed -n '82,196p' src/rabbit/jax/characteristic_rays_nonlrs_jax.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A future authority packet must choose a frame/gauge and state whether F-11B evolves five independent components of each spatial symmetric trace-free tensor or a justified diagonal reduction."
+      ]
+    },
+    {
+      "finding_id": "F-D040-BL-002",
+      "claim_id": "C-D040-BIANCHI-PREMISE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The owner's highly oscillatory shear/expansion-rate-decay premise is not established by the assigned local evidence. For Type I, N_i=0 gives K=S_plus(curvature)=S_minus(curvature)=0. In the first F-11A stage Pi=0, q=1+Sigma_sq and dSigma_i/dN=-(1-Sigma_sq)Sigma_i, so d(Sigma_sq)/dN=-2(1-Sigma_sq)Sigma_sq. Under the physical Friedmann branch Omega=1-Sigma_sq>0, this is DERIVED monotone damping with no sign crossing or oscillation, and the deceleration correction delta_q=Sigma_sq also decreases monotonically. With neutrino stress, the norm equation gains 2 Sigma dot Pi; an oscillatory mode would require a derived, sign- and phase-resolved Pi[f] response spectrum that is absent. The driver passes Sigma_sq into H but contains no derivation of a coupled oscillatory expansion-rate law. Coupled oscillatory shear is therefore SPECULATIVE; expansion-rate decay beyond the no-stress anisotropic correction is absent/unproved.",
+      "assumptions_used": [
+        "Bianchi Type I sets all structure constants and curvature sources to zero.",
+        "Radiation-era q and Friedmann relations in geometry_bianchi_base.py are used without changing sign conventions.",
+        "The monotonic result is limited to Pi=0 and the physical branch 0<=Sigma_sq<1.",
+        "No claim is made about the sign of an unfrozen collision-coupled Pi response."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/geometry_bianchi_base.py:43-75,88-140,217-269",
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:1167-1177",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2071-2112,2410-2460",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:31-53"
+      ],
+      "evidence_fingerprint": "sha256:228eeb6e650c661591210d811257b51f31a522547692b6b244d3f99b5a32fe08",
+      "counterevidence_refs": [
+        "The historical driver comment reports an ell=2 collision relaxation rate per e-fold up to 107 at T=10, which supports a possible fast collision timescale but does not demonstrate an oscillatory shear eigenmode.",
+        "B6b reports a monotone abundance displacement between two initial-shear settings, not a time-resolved shear trajectory or expansion-rate oscillation."
+      ],
+      "reproduction": [
+        "Set N1=N2=N3=0 and cA_sq=0 in compute_q, curvature_sources, and shear_rhs; substitute Pi_plus=Pi_minus=0 and differentiate Sigma_plus^2+Sigma_minus^2.",
+        "rg -n -i 'oscillat|decay|damp|stiff|eigen|overshoot|ringing' over the five assigned target files."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No prospectively frozen linear-response kernel, eigenvalue analysis, or time-domain collision-shear trajectory exists for Pi[f].",
+        "No assigned evidence defines which expansion-rate residual the owner means or its required signal/error scale."
+      ]
+    },
+    {
+      "finding_id": "F-D040-BL-003",
+      "claim_id": "C-D040-BIANCHI-PREMISE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The historical local surface contains only a partial LRS feedback loop, not the SPECIFIED F-11B system. In that loop Sigma_plus drives ray momentum advection and dS/dN=Sigma_plus; ray energy quadrupoles produce Pi_plus; Pi_plus feeds dSigma_plus/dN; Sigma_sq feeds H; H rescales collision and nuclear rates per e-fold; and ray monopoles feed weak rates and the network. However Pi_minus is hard-coded to zero, nonzero initial Sigma_minus is rejected, and the state has only one integrated shear S even though the separate non-LRS characteristic primitives require S_plus and S_minus and expose both Pi kernels. Thus the local code cannot test non-LRS shear-stress oscillations, rotational covariance, or stochastic suitability for the future full-tensor problem.",
+      "assumptions_used": [
+        "Source wiring is evidence of a historical implementation shape, not current runtime or scientific authority.",
+        "The fixed-frame diagonal S2 characteristic primitives do not by themselves constitute a coupled solver.",
+        "Clipping and preflight collision modes in the historical driver are not treated as validated collision closure."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:244-302,317-397,1650-2035,2036-2216,2410-2552,2990-3070",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:31-238",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-001,F-D040-003,F-D040-004"
+      ],
+      "evidence_fingerprint": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e",
+      "counterevidence_refs": [
+        "characteristic_rays_nonlrs_jax.py supplies exact diagonal Type-I S2 maps and Pi_plus/Pi_minus extractors, but the assigned full driver does not wire them.",
+        "B6b exercises finite Sigma_plus axisymmetric shear, but Sigma_minus non-axisymmetric finite shear remains its stated gap."
+      ],
+      "reproduction": [
+        "rg -n 'i_Sp|i_Sm|i_S|Pi_plus|Pi_minus|dS =|Sigma_H_minus|NotImplementedError' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "rg -n 'S_plus|S_minus|extract_stress_plus|extract_stress_minus' src/rabbit/jax/characteristic_rays_nonlrs_jax.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No assigned file defines the full-tensor state, off-diagonal characteristic map, collision operator, Jacobian, or geometry coupling required by F-11B."
+      ]
+    },
+    {
+      "finding_id": "F-D040-BL-004",
+      "claim_id": "C-D040-BIANCHI-PREMISE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The local equations identify the low-signal channels a future solver must resolve. Near FLRW, delta_q=Sigma_sq and any no-stress decay signal are quadratic in small shear. Pi_plus/Pi_minus are signed traceless angular quadratures that vanish at isotropy; Pi_minus also vanishes on every LRS embedding, so small non-LRS signals are cancellation dominated. The plan reports only a manuscript argument that the leading angle-averaged weak-rate correction from a small neutrino quadrupole vanishes at first order; that is PROPOSED model guidance, not validated code evidence, but it makes abundance shifts a potentially second-order discriminator. B6 confirms that the shear-stretch path is dead at Sigma=0 and that its retained finite-shear cross-backend evidence is axisymmetric-only. These null-adjacent observables, plus the Friedmann residual, stress-energy exchange, and rotation/permutation invariants, must carry prospective absolute error budgets.",
+      "assumptions_used": [
+        "Symmetric S2 weights and the displayed quadrupole kernels define the isotropic null.",
+        "Quadratic small-shear scaling is asserted only for delta_q and the no-stress shear norm, not for an unfrozen Pi response.",
+        "The manuscript weak-rate cancellation is downscoped to PROPOSED because its derivation is not among the assigned files."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:68-76,1173-1187",
+        "src/rabbit/jax/geometry_bianchi_base.py:88-140",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:31-66,153-238",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:31-62"
+      ],
+      "evidence_fingerprint": "sha256:b5989c2661e850d7a93d8c0595aace1ce133c3d347fcf46f8b4ae5dc46f965a8",
+      "counterevidence_refs": [
+        "B6b's Sigma_plus=0.3 abundance shift is measurable, but it does not establish linear sensitivity, non-LRS covariance, or a stochastic precision floor."
+      ],
+      "reproduction": [
+        "At I=0 and J=1, apply the displayed Pi kernels to an isotropic angular distribution on the symmetric S2 rule.",
+        "Inspect the Sigma=0 and finite-axisymmetric honest-scope paragraphs in B6."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No prospective tolerance separates physical Pi_minus or abundance response from angular quadrature, collision, solver, and stochastic sampling error."
+      ]
+    },
+    {
+      "finding_id": "F-D040-BL-005",
+      "claim_id": "C-D040-DSMC-LOCAL-SCOPE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Local requirements exclude DSMC as either the primary solver or a precision validator. The coupled system must resolve an O(1) geometry timescale together with potentially fast collision relaxation; the historical driver explicitly built an implicit low-rank ell=2 Jacobian because its own comment places the rate as high as 107 per e-fold and says RHS-only stepping would overshoot. A future method must also preserve positivity, Hamiltonian/Friedmann and stress-energy constraints, small quadrupole moments, rotational/permutation covariance, LRS/FLRW embeddings, and reproducible deterministic comparisons. Stochastic error in Pi is dynamically fed back into Sigma, H, weak rates, and abundances, so it is not merely removable output noise. The assigned local evidence provides no DSMC estimator, invariant-preserving collision rule, asymptotic/stiff limit, bias analysis, covariance proof, variance budget, convergence rate, or reproducibility protocol.",
+      "assumptions_used": [
+        "The historical rate comment is treated as a stiffness clue only, not VALIDATED F-11 evidence.",
+        "A precision validator must bound its own uncertainty below the physical null-adjacent observables it judges.",
+        "Sampling noise entering the RHS can bias nonlinear coupled observables even if an ensemble mean is nominally unbiased at one isolated operator."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1950-2018,2036-2216",
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:1167-1187",
+        "src/rabbit/jax/geometry_bianchi_base.py:88-140",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:197-238"
+      ],
+      "evidence_fingerprint": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e",
+      "counterevidence_refs": [
+        "A variance-reduced or asymptotic-preserving stochastic construction might eventually address some requirements, but no such construction or evidence is present in the assigned local slice."
+      ],
+      "reproduction": [
+        "sed -n '1950,2018p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "Trace Pi through shear_rhs and Sigma_sq through H and per-e-fold weak/network rates in the assigned source."
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "No DSMC particle-number versus Pi/abundance error curve exists.",
+        "No prospective stiff-limit or pathwise conservation/covariance contract exists."
+      ]
+    },
+    {
+      "finding_id": "F-D040-BL-006",
+      "claim_id": "C-D040-DSMC-LOCAL-SCOPE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The only defensible local-requirements classification is PROPOSED bounded qualitative cross-check, conditional on a later explicit owner decision and prospective contract; it has no current execution authority. Such a check could target high-signal sign/order questions only: recovery of FLRW and LRS embeddings, the sign and coarse envelope of collisionless shear damping/backreaction, and broad strong-shear relaxation trends with symmetry-paired samples and error bars. It must not produce precision abundances, validate a collision kernel, set tolerances, or replace a deterministic stiff F-11 solver. Reconsideration requires a frozen no-QKE finite-mass collision sampler, unbiased Pi_plus/Pi_minus and monopole estimators, conservation and positivity controls, rotational/permutation tests, a stiff/asymptotic limit, independent seeded ensembles, confidence intervals below predeclared signals, and comparison against an independently validated deterministic F-11A reference.",
+      "assumptions_used": [
+        "D-039 STOP/PRESERVE and D-040 read-only scope remain controlling.",
+        "Qualitative means predeclared sign/order/envelope questions whose signal exceeds the full stochastic uncertainty budget.",
+        "No role is granted before the future deterministic F-11A contract and reference exist."
+      ],
+      "evidence_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md:1158-1187",
+        ".agent-harness/generated/CONTEXT_PACK.md:D-039,D-040",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-001,F-D040-003,F-D040-004",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:31-62"
+      ],
+      "evidence_fingerprint": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7",
+      "counterevidence_refs": [
+        "The assigned evidence contains no DSMC-specific implementation or primary-literature result, so even this bounded role is PROPOSED rather than IMPLEMENTED or VALIDATED."
+      ],
+      "reproduction": [
+        "Apply the F-11 required gates and the low-signal/stiff feedback findings above to each candidate role: primary solver, precision validator, bounded qualitative cross-check, or exclude."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "External primary literature and an explicit future owner decision are required before deciding whether a concrete variance-reduced DSMC method merits even the bounded cross-check."
+      ]
+    }
+  ],
+  "role_classification": {
+    "primary_solver": "EXCLUDE",
+    "precision_validator": "EXCLUDE",
+    "bounded_qualitative_cross_check": "PROPOSED, conditional, and currently FORBIDDEN to execute",
+    "unconditional_exclusion": "Not selected only because a later high-signal, variance-bounded qualitative check is logically conceivable; no local evidence establishes it."
+  },
+  "validation": {
+    "json_parse": "PASS",
+    "own_result_contract": "PASS",
+    "run_wide_harness": "FAIL_EXTERNAL_TO_ASSIGNMENT",
+    "run_wide_error": "Result contract violation (A-D040-JAX-PHYSICS-REUSE.json): spawn_contract.review_role_verified mismatch: expected True, got False",
+    "scope_note": "The unauthorized sibling result was not inspected or modified."
+  },
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-BIANCHI-DSMC-LOCAL.json"
+  ]
+}

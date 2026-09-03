@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r10-binder",
+  "agent_type": "default",
+  "last_assistant_message": "Round-10 binder attack complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R10-BINDER\", \"context_version\": \"1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-BINDER.json\", \"admission_proof\": \"sha256:0b93dc2515f5dbdc67a59ac2ce4989a17724471d10edb338b591845a61a4338c\"}"
+}

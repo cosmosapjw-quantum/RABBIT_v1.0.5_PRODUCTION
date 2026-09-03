@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit",
+  "assignment_id": "A-D056-NUMERICS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "AUD-D056-METROLOGY",
+    "AUD-D056-ENDPOINT"
+  ],
+  "task": "Blind adversarial numerical audit of D054/D055 covariance metrology and D056 endpoint. Check operation-count rigor, B_native dimensional/error-term validity, longdouble independence, state degeneracy, prospective bands, solver/quadrature/refinement evidence, same-code leakage, full-spectral meaning, endpoint reproducibility, and whether original gate predicates are met. Use assigned inputs only, no sibling results. Apply the seven-stage adversarial loop and opposing steelmen. Write only the registered result.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/assignments/A-D056-NUMERICS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md",
+    ".agent-harness/runs/run-20260728-f10-d056-adversarial-audit/artifacts/AUDIT_EVIDENCE_MAP.json",
+    "docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md",
+    "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+    "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+    "scripts/audit/d054_covariance_metrology_oracle.py",
+    "scripts/audit/d055_covariance_metrology_oracle.py",
+    "scripts/audit/d056_independent_trajectory.py",
+    ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology",
+    ".agent-harness/runs/run-20260728-f10-d055-metrology-r2",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory",
+    ".agent-harness/context/GATE_REGISTRY.json"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/results/A-D056-NUMERICS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit/results/A-D056-NUMERICS.json",
+  "status": "registered"
+}

@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r4-residual",
+  "agent_type": "default",
+  "last_assistant_message": "Review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R4-RESIDUAL\", \"context_version\": \"7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea\", \"status\": \"pass\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-RESIDUAL.json\", \"admission_proof\": \"sha256:609d084981a9c464c282699a38a3544603207270402415374d9e10219ea2bf0d\"}"
+}

@@ -1,0 +1,83 @@
+{
+  "d071_reopen_earned": false,
+  "direct_jvp_admissible_all_states": false,
+  "evidence": {
+    "limitations": [
+      "Static four-state calls are not a trajectory or physical prefix.",
+      "Equilibrium and edge-tail metrics are not a reaction-tail authority.",
+      "No gate or public capability status is changed by this index."
+    ],
+    "receipt": {
+      "failure_count": 1,
+      "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+      "state_count": 4,
+      "vector_count": 48
+    },
+    "seal": {
+      "contract_sha256": "c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc",
+      "head": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "protected_path_count": 53,
+      "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "working_tree_clean": false
+    },
+    "static_receipt_validation": {
+      "all_required_diagnostics_present": true,
+      "all_states_executed": true,
+      "all_states_successful": false,
+      "d071_reopen_earned": false,
+      "direct_jvp_provenance_present": true,
+      "historical_observation_jacobians_used": false,
+      "physical_prefix_executed": false,
+      "reaction_tail_authority_validated": false,
+      "states": [
+        {
+          "direct_jvp_present": true,
+          "domain_present": true,
+          "first_law_present": true,
+          "label": "initial",
+          "occupation_present": true,
+          "rhs_present": true,
+          "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+          "tail_present": true
+        },
+        {
+          "direct_jvp_present": true,
+          "domain_present": true,
+          "first_law_present": true,
+          "label": "creep_1200",
+          "occupation_present": true,
+          "rhs_present": true,
+          "status": "EXECUTED_WITH_RETAINED_JVP_FAILURE",
+          "tail_present": true
+        },
+        {
+          "direct_jvp_present": true,
+          "domain_present": true,
+          "first_law_present": true,
+          "label": "creep_2000",
+          "occupation_present": true,
+          "rhs_present": true,
+          "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+          "tail_present": true
+        },
+        {
+          "direct_jvp_present": true,
+          "domain_present": true,
+          "first_law_present": true,
+          "label": "creep_3000",
+          "occupation_present": true,
+          "rhs_present": true,
+          "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+          "tail_present": true
+        }
+      ]
+    }
+  },
+  "fixture_hashes_validated": true,
+  "physical_prefix_executed": false,
+  "prospective_contract_sealed_before_receipts": true,
+  "reaction_tail_authority_validated": false,
+  "requested_artifact_set_complete": true,
+  "schema": "rabbit.f10.physical_prefix_readiness.v1",
+  "static_physical_receipts_executed": true
+}

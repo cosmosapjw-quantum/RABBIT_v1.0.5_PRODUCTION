@@ -1,0 +1,130 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-d043-prompt-adjudication",
+  "assignment_id": "A-D043-ADJUDICATOR-R3",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f8d7c-1dc0-7390-9062-7586b6ae5860",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-d043-prompt-adjudication",
+    "assignment_id": "A-D043-ADJUDICATOR-R3",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e6044df944afc5929cbf929a3ab2cf26fd9f97bb882be20153ef55e18e869166",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260724-f10-d043-prompt-adjudication/results/A-D043-ADJUDICATOR-R3.json",
+  "started_at": "2026-07-23T18:07:00Z",
+  "completed_at": "2026-07-23T18:14:18Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "jq": "1.7",
+    "python": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none"
+  },
+  "commands": [
+    "Read .agent-harness/generated/CONTEXT_PACK.md and verify context version ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "Read the registered assignment, canonical result template, independent-auditor role, current corrected prompt, current D-043 SSOT overlays, and exactly the three allowed result envelopes",
+    "jq -s '[.[].findings[] | {claim_id,evidence_fingerprint,verdict}] | sort_by(.claim_id,.evidence_fingerprint,.verdict) | {raw:length, unique:(unique_by(.claim_id,.evidence_fingerprint,.verdict)|length), duplicates:(group_by(.claim_id,.evidence_fingerprint,.verdict)|map(select(length>1)|.[0]))}' <three-allowed-results>",
+    "sha256sum docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md <assignment> .agent-harness/templates/RESULT_ENVELOPE.json .agent-harness/context/roles/independent_auditor.md .agent-harness/generated/CONTEXT_PACK.md",
+    "git cat-file -e 'bede5a965267ef2dbfc628b56835a3563edf7396^{commit}'",
+    "git cat-file -e '204d3fa41cedb9b3102b27cc7bde7ded51df85f7^{commit}'",
+    "git merge-base --is-ancestor bede5a965267ef2dbfc628b56835a3563edf7396 204d3fa41cedb9b3102b27cc7bde7ded51df85f7",
+    "git diff --unified=0 HEAD -- docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md | rg '^[+-].*XG-(0[1-9]|1[01])'",
+    "python3 -m json.tool .agent-harness/runs/run-20260724-f10-d043-prompt-adjudication/results/A-D043-ADJUDICATOR-R3.json",
+    "python3 -c '<load assignment/result and call validate_result_contract with expected run, context, agent, and assignment SHA-256>'",
+    "python3 .agent-harness/scripts/validate_harness.py"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md",
+      "sha256": "2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+      "status": "reviewed current corrected bytes; must be committed and pushed before issuance"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-HISTORY-PROVENANCE.json",
+      "sha256": "f1acafa043a30db249b1a4a748d148118b8542595cfb11859cc2f772ef934f7a"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-ARTIFACT-BOUNDARY.json",
+      "sha256": "ec550f9dad83be9453df968264802898749a557de10be351ab0469f4266359a1"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260724-f10-d043-provenance-contract-remediation/results/A-D043-CONTRACT-REDESIGN.json",
+      "sha256": "a26ee4f19fdaabac01f880c269bac31a06582821da15ffa68795df10181c4994"
+    },
+    {
+      "deduplication": {
+        "raw_findings": 10,
+        "exact_unique_tuples": 10,
+        "duplicates": 0
+      }
+    },
+    {
+      "validation": {
+        "json_syntax": "pass",
+        "result_envelope": "pass; ok=true, errors=[]",
+        "validate_harness": "pass; ok=true, context_version=ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53, active_run=run-20260724-f10-d043-prompt-adjudication"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D043-ADJ-R3-001",
+      "claim_id": "C-D043-PROMPT-ADMISSION",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PASS for issuance-contract readiness only, conditional on first committing and pushing the exact corrected prompt and dispatching its fixed byte-identical PROMPT_COMMIT. The three allowed envelopes contain 10 raw findings and 10 exact-unique (claim_id, evidence_fingerprint, verdict) tuples with no duplicate. Their apparent tension is resolved without majority vote: the historical FAIL findings establish that the original 4f4... and e3ea... chains are not distributable and must not be reconstructed or promoted; the artifact-boundary FAIL applies to the superseded 6b5545bd... contract; its claim-local four-class remedy is now implemented. The current prompt binds CODE_HEAD and EVIDENCE_BASE by commit and 16 reproduced path hashes, requires ancestry and byte identity for the future PROMPT_COMMIT, honestly labels 4f4... unreachable and e3ea... absent from distributable history, records unavailable context as NOT_SUPPLIED without using it to close a gate, promotes every actually consumed replay-only/optional byte by content hash before seal, and keeps every new contract/source/test/raw-output/stderr/manifest byte under prospective XG-00. XG-01 through XG-11 are unchanged, STOP/PRESERVE and all owner/scientific authority stops remain closed, and Phase-A no-finalist/tie/provenance exits return no fictional ZIP. No historical provenance is laundered, no scientific claim is validated, and even a later external all-gate PASS may request only a separate owner intake review.",
+      "assumptions_used": [
+        "The owner commits and pushes prompt SHA-256 2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5 before issuance and supplies the exact resulting PROMPT_COMMIT; the present working-tree bytes are not yet issuance authority.",
+        "The received external request is byte-identical to the named PROMPT_COMMIT, and CODE_HEAD is an ancestor of EVIDENCE_BASE, which is an ancestor of PROMPT_COMMIT.",
+        "No historical replay-only or optional byte is consumed unless promoted by content hash to CURRENT_BINDING before the prospective seal.",
+        "This adjudication concerns contract executability and provenance only; it does not assess a candidate, run science, or change any gate."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:23-132 (authority, commit roles, ancestry, byte identity, and 16 published hashes)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:136-194 (honest historical ceiling, NOT_SUPPLIED, no reconstruction, and no historical context-pack prerequisite)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:342-394 (four consumed-input classes, preseal promotion, XG-00 through XG-11, and double prospective XG-00)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:589-660 (empty queue and unchanged conditional owner/PR authority ladder)",
+        "docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md:662-685 (conditional finalist package and explicit no-empty/no-fictional-ZIP branch)",
+        ".agent-harness/context/FROZEN_DECISIONS.md:47 (D-043 scope and unchanged gate/authority ceiling)",
+        "docs/harness/PROJECT_STATE.md:48-66 and docs/harness/DECISION_LOG.md:5 (current D-043 SSOT)",
+        "A-D043-HISTORY-PROVENANCE.json: five exact-unique findings establish non-distributability, bounded recoverability, and the no-promotion ceiling",
+        "A-D043-ARTIFACT-BOUNDARY.json: four exact-unique findings distinguish historical replay from prospective launch authority and specify the consumed-byte promotion remedy",
+        "A-D043-CONTRACT-REDESIGN.json: one exact-unique PASS finding verifies the 16 hashes/ancestry, prospective XG-00, unchanged XG-01..11, and authority stops"
+      ],
+      "evidence_fingerprint": "sha256:2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5",
+      "counterevidence_refs": [
+        "The original historical contract's strongest case is maximal substitution resistance, but A-D043-HISTORY-PROVENANCE proves that it demanded bytes unavailable from a published commit.",
+        "A-D043-ARTIFACT-BOUNDARY F-D043-ART-002 correctly fails the superseded 6b5545bd... contract; the current four-class/preseal-promotion and claim-local NOT_SUPPLIED clauses resolve that exact defect.",
+        "The corrected prompt remains an uncommitted working-tree artifact at adjudication time; issuance before commit/push and fixed-commit dispatch would fail this PASS precondition."
+      ],
+      "reproduction": [
+        "Run the recorded jq deduplication command; expect raw=10, unique=10, duplicates=[].",
+        "Verify the two published commits and CODE_HEAD-to-EVIDENCE_BASE ancestry with the recorded git commands; expect exit 0.",
+        "Recompute all 16 Section 1.1 commit/path hashes as recorded in A-D043-CONTRACT-REDESIGN; expect exact matches.",
+        "Hash the current corrected prompt; expect 2a7a4dbf30b5791d08dba04e5b1302d2e9b6f580025e5795135b9d8ed66381b5.",
+        "Run the recorded XG diff scan; expect no changed XG-01 through XG-11 line.",
+        "After main commits and pushes, verify EVIDENCE_BASE is an ancestor of the dispatched PROMPT_COMMIT and the received prompt bytes match that commit before issuing."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-d043-prompt-adjudication/results/A-D043-ADJUDICATOR-R3.json"
+  ]
+}

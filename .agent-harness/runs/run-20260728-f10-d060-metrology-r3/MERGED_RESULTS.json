@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d060-metrology-r3",
+  "generated_at": "2026-07-28T08:48:28+00:00",
+  "result_count": 1,
+  "unique_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "F-D060-ADJUDICATION",
+      "claim_id": "C-F10-METROLOGY-R3",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Adjudicated FAIL preserved: the r3 oracle report (exit 10) shows exactly one failing check anywhere — N7X_exchange on the three P-fixed SS states (sup_rel 4.91e-2 / 5.03e-2 / 5.36e-2) — while every physics-bearing check passes on all members, including N1/N2/N3 on the five asymmetric members under their caps (N3 max 5.09e-11 vs 1e-10, SB under 2.5e-10), N7X at fp level (max 7.68e-13), the certified interval residuals bracketing the float64 values within slack, M-INT-2 (1522656 containment checks, 0 containment and 0 identity failures, contraction ok), all five mutants killed with recorded margins plus a bitwise restoration canary, and the D-055 N8 anchors matched EXACTLY at all three SS states. The failure is a contract-design defect of the adjudicated D-054 S-B class (a relative metric applied to a degenerate observable): for P-fixed states the mu and tau logit rows are equal with a common slope, so for the four {mu,tau} distinct-elastic exchange events the Pauli affinity u3+u4-u1-u2 = (-1/s)(y3+y4-y_alpha-y_beta) vanishes identically by massless elastic energy conservation, leaving N7X to compare pure float64 cancellation noise against cancellation noise (rate magnitudes ~1e-34 at the diagonal node pair) — not a physics or implementation failure, since the same check passes at 2.3e-14..7.7e-13 on every member where the observable is nondegenerate. Permitted supersession scope per the D-054/D-055 precedent is exactly one change: restrict N7X gating to family members with distinct mu/tau state rows (the SA/SB blocks), with SS-state N7X values still computed and recorded non-gating alongside the degeneracy rationale; every other family member, threshold, formula, mutant, and interval tier must remain byte-identical in behaviour.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json"
+      ],
+      "evidence_fingerprint": "sha256:e40d80a747bfc907c67537b5f6898ac952976809cfec8d780a09fb1c8ea629e2",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "PYTHONPATH=src venv/bin/python scripts/audit/d060_covariance_metrology_r3_oracle.py --out <path>"
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-D060-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

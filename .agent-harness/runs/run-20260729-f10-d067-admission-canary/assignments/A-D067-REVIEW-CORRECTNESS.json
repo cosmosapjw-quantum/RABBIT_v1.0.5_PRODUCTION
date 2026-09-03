@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-admission-canary",
+  "assignment_id": "A-D067-REVIEW-CORRECTNESS",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "review_role_files": [
+    ".agent-harness/context/roles/context_mapper.md"
+  ],
+  "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b",
+  "independence_mode": "blind-results",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Blind review of the D-067 admission-receipt change for correctness and fail-closed behaviour.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/assignments/A-D067-REVIEW-CORRECTNESS.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/context_mapper.md",
+    ".codex/hooks/_common.py",
+    ".codex/hooks/subagent_start_context.py",
+    ".codex/hooks/subagent_stop_validate.py",
+    ".agent-harness/scripts/admit_agent.py",
+    ".agent-harness/scripts/_harness.py",
+    ".agent-harness/scripts/validate_harness.py",
+    ".agent-harness/tests/test_hooks.py"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-CORRECTNESS.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-CORRECTNESS.json",
+  "status": "registered"
+}

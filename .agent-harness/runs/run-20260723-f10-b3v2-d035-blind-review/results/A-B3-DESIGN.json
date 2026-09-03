@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+  "assignment_id": "A-B3-DESIGN",
+  "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+  "agent_id": "019f8aaa-a10f-7ef1-a9c1-d83468e9a4f3",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-b3v2-d035-blind-review",
+    "assignment_id": "A-B3-DESIGN",
+    "context_version": "b8f512c5940708392e35d285d761007ffba0e50ada77814c3f224cf7296844ff",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:40edc9817efe642e886ec20cf06550e783393bc6d0b12549814fdd18fca7a6ea"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-B3-DESIGN.json",
+  "started_at": "2026-07-22T16:24:00Z",
+  "completed_at": "2026-07-22T16:40:27Z",
+  "tool_versions": {
+    "review_method": "independent static design and source audit; no W7 or B3 numerical execution",
+    "bash": "GNU bash 5.2.21(1)-release",
+    "sed": "GNU sed 4.9",
+    "ripgrep": "ripgrep 14.1.0",
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sed -n '1,307p' .agent-harness/generated/CONTEXT_PACK.md (executed in bounded chunks)",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-B3-DESIGN.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-B3-DESIGN.json",
+    "sha256sum .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,621p' docs/audit/BD622_W6_comparator_design_proof_pack.md (executed in bounded chunks)",
+    "sed -n '1,2198p' scripts/audit/w7_b3v2_contract_source.py (executed in bounded chunks)",
+    "sed -n '1,100p' docs/audit/BD622_W7_exact_test_vectors.json",
+    "rg -n targeted-patterns docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json .agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json",
+    "rg -n 'permutation_certificate|trace IDs|componentwise' scripts/audit/w7_b3v2_contract_source.py (exit 1; no binding certificate implementation found)"
+  ],
+  "artifacts": [
+    ".agent-harness/generated/CONTEXT_PACK.md#sha256:3f3ac1936999a97a92c0fa037661090fb740bc57febb745f3e7ae751ec2326f5",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/assignments/A-B3-DESIGN.json#sha256:40edc9817efe642e886ec20cf06550e783393bc6d0b12549814fdd18fca7a6ea",
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+    "scripts/audit/w7_b3v2_contract_source.py#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+    "docs/audit/BD622_W7_exact_test_vectors.json#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+    ".agent-harness/context/roles/independent_auditor.md#sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836"
+  ],
+  "findings": [
+    {
+      "finding_id": "A-B3-DESIGN-F001",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The binding A0 event prefactor does not follow the frozen left-associated operation order. W6 requires incoming1, incoming2, fixed angles, dPhi2, O_r*S_r, matrix element, weights, then q normalization; the source starts with (O_r*S_r)*angles and only then multiplies the incoming measures. Those are mathematically commutative factors but not the same binary64 operation graph, so the exact A0 bytes and A0--A4 decomposition are not frozen coherently.",
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "assumptions_used": [
+        "The exact source hash is the D-035 binding contract source.",
+        "The W6 phrase 'strictly in its printed left-associated order' is normative for A0 metrology.",
+        "No reassociation equivalence is permitted for a bitwise arithmetic graph."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:299-305#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:252-280#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:137-141#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '295,305p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '252,281p' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "No numerical magnitude was evaluated because W7 and B3 output are forbidden; the finding is an exact-graph contradiction, not a measured discrepancy."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F002",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The source does not implement the required rigorous A0--A4/B_native certificate. metrology_bounds represents endpoints as float pairs and computes differences, midpoints, radii, divisions, and B_native with ordinary host arithmetic rather than the DirectedMPFR outward graph. It also has no implementation that compares beta/Pbeta A4 trace IDs, opcodes, loop keys, and component intervals, although W6 and CAS_CONTRACT make that permutation certificate mandatory. Therefore the proposed native triangle bound cannot be reconstructed or certified from the binding source.",
+      "evidence_fingerprint": "sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4",
+      "assumptions_used": [
+        "B_sum, B_basis, B_solve, and B_interval are certificate bounds and therefore require outward arithmetic through their final maxima and ratios.",
+        "A4 permutation trace identity and componentwise overlap are preconditions of the native triangle argument, not optional diagnostics.",
+        "A textual stage policy does not substitute for a binding executable comparison when the source claims to compute MetrologyBounds."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:477-509#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:2014-2074#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "scripts/audit/w7_b3v2_contract_source.py:2084-2115#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:149-163#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:661-773#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe (DirectedMPFR primitives exist, but metrology_bounds does not use them)"
+      ],
+      "reproduction": [
+        "sed -n '2014,2075p' scripts/audit/w7_b3v2_contract_source.py",
+        "sed -n '477,509p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "rg -n 'permutation_certificate|trace IDs|componentwise' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "validate_arithmetic_trace additionally checks only monotone caller-supplied loop keys and does not by itself establish the full canonical key/interface schema; the missing A4 pair certificate is already sufficient for FAIL."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F003",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "The exact 24-self/15-electron reaction generator has the claimed three-dimensional rational left nullspace. Every elastic record has zero six-species stoichiometric column; each pair record imposes w(nu_f)+w(antinu_f)=0; and each flavour-conversion column is then automatically annihilated. Hence every left-null vector is exactly (a,-a,b,-b,c,-c), with no extra or missing direction.",
+      "evidence_fingerprint": "sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+      "assumptions_used": [
+        "Stoichiometric columns use nu_leg=(-1,-1,+1,+1) and omit electron legs, exactly as specified.",
+        "Reverse reactions are represented by R and do not add independent columns.",
+        "The pair rows E12--E14 are present once for each flavour."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:100-131#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:50-154#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "docs/audit/BD622_W7_exact_test_vectors.json:91-98#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Exact proof artifact: pair columns give three independent equations w_2f+w_2f+1=0; conversion columns are -(w_2f+w_2f+1)+(w_2g+w_2g+1)=0; all elastic columns vanish."
+      ],
+      "unresolved": [
+        "This PASS is exact stoichiometric algebra only; it is not collision normalization, numerical null, or implementation authority."
+      ],
+      "confidence": 0.99
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F004",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "For strict-open occupations and eta=log(f/(1-f)), the specified drive satisfies F/R=exp(eta1+eta2-eta3-eta4), so A=log(F/R) has the claimed form and (F-R)A is nonnegative by monotonicity of log, with equality exactly at F=R. The rational vector is consistent: F=4/625, R=144/625, J=-28/125, and A=log(1/36), giving J*A>0.",
+      "evidence_fingerprint": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+      "assumptions_used": [
+        "All four occupations lie strictly between zero and one.",
+        "eta is the logit coordinate and J is F-R.",
+        "Boundary occupations are outside this logarithmic equality and require separate limits."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:56-64#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:222-234#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "docs/audit/BD622_W7_exact_test_vectors.json:86-90#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:117-121#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Exact derivation: F/R is the product of the four odds ratios with outgoing ratios inverted; (x-y)(log x-log y)>=0 for positive x,y."
+      ],
+      "unresolved": [
+        "This PASS does not execute total neutrino-plus-bath entropy on any state and does not authorize T06."
+      ],
+      "confidence": 0.995
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F005",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The finite-mass source weakens the frozen per-leg shell postcondition into one aggregate test. W6 requires each leg residual |p.p+m^2| to be compared with that leg's own max(1,E^2,|p|^2,m^2) scale and forbids aggregate rescue. The source instead takes the maximum scale over all four legs and compares only the maximum residual with that global scale, so a bad low-scale leg can be rescued by a different high-scale leg.",
+      "evidence_fingerprint": "sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+      "assumptions_used": [
+        "The phrase 'Every shell residual' and the no-aggregate-rescue clause require four separate residual/scale comparisons.",
+        "Input and output legs may have unequal energy scales in boosted elastic or pair events.",
+        "A global maximum scale is therefore not equivalent to per-leg postconditions."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:200-211#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:568-585#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:123-132#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:568-576#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe (conservation remains componentwise under its separately frozen global P_scale)"
+      ],
+      "reproduction": [
+        "sed -n '200,211p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "sed -n '568,590p' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "No shell vector was executed; the source/spec quantifier mismatch alone is binding."
+      ],
+      "confidence": 0.995
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F006",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The basis source violates the single-polynomial consumer contract. W6 forbids node-value lookup and requires every consumer, explicitly including projection, mass assembly, and reconstruction, to evaluate stored z-power coefficients by descending Horner. The source instead projects with basis.node_values and uses basis.node_values throughout mass assembly and the native observable. Because MGS node values and a later Horner replay can differ in binary64, this leaves two arithmetic representations and breaks the exact A0/A2 graph.",
+      "evidence_fingerprint": "sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+      "assumptions_used": [
+        "The W6 node-lookup prohibition applies even at design nodes.",
+        "Binary64 MGS updates and descending Horner are not assumed bitwise interchangeable.",
+        "Projection, mass assembly, and native reconstruction are binding consumers."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:251-266#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "scripts/audit/w7_b3v2_contract_source.py:1070-1081#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "scripts/audit/w7_b3v2_contract_source.py:1136-1190#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "scripts/audit/w7_b3v2_contract_source.py:1386-1426#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        "scripts/audit/w7_b3v2_contract_source.py:1517-1552#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:961-980#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe (PolynomialBasis.evaluate itself correctly uses Horner, but the named consumers bypass it)"
+      ],
+      "reproduction": [
+        "sed -n '251,266p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+        "rg -n 'basis\\.node_values|basis_values\\[' scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "The 20 LadderRow enumeration and lexicographic selection order are structurally coherent; the combined basis/ladder claim fails on the binding basis consumer graph."
+      ],
+      "confidence": 0.995
+    },
+    {
+      "finding_id": "A-B3-DESIGN-F007",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The claimed exact support-vector bundle is not present in the hashed vector bytes or generated by the source. W6 requires every GL node and both nextafter neighbours, zero and its positive successor, and each Y_max neighbour triple; the exact vector JSON stops after the nullspace vector, and the source contains no support-vector generator. The support-side/node/domain branch coverage is therefore specified only in prose and is not an exact reconstructible vector object.",
+      "evidence_fingerprint": "sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+      "assumptions_used": [
+        "The hashed exact-test-vector file is intended to carry or deterministically bind every named exact vector required before W7 execution.",
+        "A prose requirement without either the vector bytes or a binding generator is not an executable exact vector.",
+        "No unassigned file may silently supply the missing vectors."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:402-415#sha256:9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94",
+        "docs/audit/BD622_W7_exact_test_vectors.json:1-100#sha256:e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd",
+        "scripts/audit/w7_b3v2_contract_source.py:2116-2198#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/CAS_CONTRACT.json:184-188#sha256:99cfaf4555ac4126333ec3bba4f8dc5d35a912ca73fb336afc87bae2dd03d6b4"
+      ],
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:850-929#sha256:60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe (the GL rule generator exists, but it does not construct the required nextafter support bundle)"
+      ],
+      "reproduction": [
+        "rg -n 'support vectors|domain triples|nextafter' docs/audit/BD622_W6_comparator_design_proof_pack.md docs/audit/BD622_W7_exact_test_vectors.json scripts/audit/w7_b3v2_contract_source.py"
+      ],
+      "unresolved": [
+        "The four Y_max triples are human-readable in W6, but the all-node support set remains absent from the exact source/vector object."
+      ],
+      "confidence": 0.96
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-b3v2-d035-blind-review/results/A-B3-DESIGN.json"
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d070-canary-c4",
+  "assignment_id": "A-D070-CANARY-C4",
+  "context_version": "7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea",
+  "agent_id": "d070-canary-c4",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d070-canary-c4",
+    "assignment_id": "A-D070-CANARY-C4",
+    "context_version": "7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e1680a4cc2fe3c1dcfcfe815198a5b8a92c967a300e6d2c17c04444895ac9ca1",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d070-canary-c4/results/A-D070-CANARY-C4.json",
+  "started_at": "2026-07-29T08:40:05Z",
+  "completed_at": "2026-07-29T08:43:17Z",
+  "tool_versions": {
+    "python": "3.12"
+  },
+  "commands": [
+    "read-assignment",
+    "sha256sum .codex/hooks/subagent_stop_validate.py",
+    "grep -n active_run|active_path|ACTIVE_RUN .codex/hooks/subagent_stop_validate.py",
+    "grep -n bound_run .codex/hooks/subagent_stop_validate.py",
+    "verify_assignment.py A-D070-CANARY-C4.json",
+    "read .agent-harness/leases/d070-canary-c4.json",
+    "read .agent-harness/ACTIVE_RUN",
+    "read .agent-harness/runs/run-20260729-f10-d070-canary-c4/ADMISSIONS.jsonl",
+    "grep -n context_version .agent-harness/context/CONTEXT_INDEX.json"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c4/results/A-D070-CANARY-C4.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D070-C4-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "bound_run has exactly one assignment site in the file: line 149, `bound_run = str(lease[\"run_id\"])`, reached only inside the `if lease is not None:` branch after the lease has been validated (isinstance dict, agent_id matches event_agent_id, run_id matches ASSIGNMENT_ID_RE). The mutable ACTIVE_RUN pointer is read into `active_run` at lines 71-76 but that variable is used exactly once, at line 82 (`if not active_run and lease is None:`), purely as a boolean gate for the 'harness not installed / no active run and no lease' early-exit. `active_run` is never assigned to `bound_run` and never substituted for it anywhere in the file. `grep -n bound_run` confirms the only `=` assignment is line 149; every other reference (162,172,196,207,220,281,358,444) only reads the already-bound value.",
+      "assumptions_used": [
+        "The bytes of .codex/hooks/subagent_stop_validate.py read during this session are the bytes that will execute at SubagentStop time"
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py lines 47-48",
+        ".codex/hooks/subagent_stop_validate.py lines 71-82",
+        ".codex/hooks/subagent_stop_validate.py line 149",
+        ".codex/hooks/subagent_stop_validate.py lines 150-160 (comment: 'D-067: no ACTIVE_RUN fallback')"
+      ],
+      "evidence_fingerprint": "sha256:9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sha256sum .codex/hooks/subagent_stop_validate.py",
+        "grep -n 'active_run\\|active_path\\|ACTIVE_RUN' .codex/hooks/subagent_stop_validate.py",
+        "grep -n 'bound_run' .codex/hooks/subagent_stop_validate.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C4-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Absent, unparseable, and malformed leases are each handled by an explicit block, never a fallback to ACTIVE_RUN. Absent lease file: load_json(lease_file, None) returns None via the OSError branch in _common.py load_json; lines 64 (`if lease is None and lease_file.exists()`) is False so control proceeds, and because lease stays None the code always reaches the `else` at line 150 which blocks with 'No Start-time run lease exists for this agent... Refusing to fall back to the mutable ACTIVE_RUN pointer.' Unparseable lease (file exists, bad JSON): load_json catches JSONDecodeError and returns None, but lease_file.exists() is True, so lines 64-69 fire immediately: block('Run lease for this agent exists but cannot be parsed; refusing to resolve the run via the mutable ACTIVE_RUN pointer.'). Malformed lease (parses but wrong shape) or missing run_id: caught at lines 138-148 -- `not isinstance(lease, dict) or str(lease.get('agent_id') or '') != event_agent_id or not ASSIGNMENT_ID_RE.fullmatch(str(lease.get('run_id') or ''))` -- a missing run_id becomes the empty string, which fails ASSIGNMENT_ID_RE.fullmatch (requires >=1 char), so it blocks with 'Run lease for this agent is malformed; its run identity cannot be established.' None of these three paths reads active_path or active_run again after line 82.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py lines 56-69",
+        ".codex/hooks/subagent_stop_validate.py lines 138-160",
+        ".codex/hooks/_common.py lines 41-45 (load_json OSError/JSONDecodeError -> default)"
+      ],
+      "evidence_fingerprint": "sha256:9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Read _common.py load_json: json.loads on missing/bad-JSON file raises OSError/JSONDecodeError, caught, returns default",
+        "Read ASSIGNMENT_ID_RE = re.compile(r\"[A-Za-z0-9][A-Za-z0-9._-]*\\Z\") -- empty string does not match"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C4-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "A lease that names a run directory which no longer exists is not separately checked for directory existence, but is caught one step later with no bypass: run_dir = harness/'runs'/bound_run (line 162) is built unconditionally, then assignment_path.read_bytes() (line 165) raises FileNotFoundError (a subclass of OSError) if run_dir/assignments/<id>.json does not exist. That exception is caught at line 167, leaving assignment = None, and line 169 (`if not isinstance(assignment, dict)`) blocks with 'Registered assignment does not exist: <path>'. There is no code path in which a vanished run directory is silently tolerated or causes resolution to fall back to ACTIVE_RUN -- the failure surfaces as a block before any admission or result-file logic runs.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py lines 162-171"
+      ],
+      "evidence_fingerprint": "sha256:9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Trace: run_dir built from bound_run with no os.path.isdir check; first use is assignment_path.read_bytes() wrapped in try/except (OSError, UnicodeDecodeError, json.JSONDecodeError)"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Not executed as a live experiment against the real harness (prohibited by assignment scope); conclusion is from static trace only, not a copied-repo repro run."
+      ]
+    },
+    {
+      "finding_id": "F-D070-C4-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The only path that returns without printing a block decision (bare `return` at line 101, meaning the hook exits with no stdout and thus imposes no result-envelope requirement) requires ALL of: active_run is empty, lease is None, AND neither `harness` (repo_root()/.agent-harness) nor `installed_here` (the directory next to the hook file) exists as a directory -- i.e. the harness genuinely is not installed. Every other combination of 'lease is None' blocks explicitly: (a) harness installed + ACTIVE_RUN empty/missing + no lease -> block at lines 94-100 ('The agent harness is installed but ACTIVE_RUN is missing...'); (b) harness installed + ACTIVE_RUN non-empty + no lease -> falls through the line-82 gate (active_run truthy) and is later caught by the `else` at line 150 ('No Start-time run lease exists for this agent...'); (c) lease file exists but unparseable -> blocked immediately at lines 64-69 regardless of ACTIVE_RUN state; (d) lease parses but is malformed -> blocked at lines 138-148. So 'harness installed but this agent has no lease' always blocks; only genuine non-installation is silent, and that is the documented exemption described in the comment at lines 78-92 and 83-85.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py lines 78-101 (installed-vs-no-lease branch and comments)",
+        ".codex/hooks/subagent_stop_validate.py lines 138-160"
+      ],
+      "evidence_fingerprint": "sha256:9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Enumerate the 4 lease-is-None sub-cases against the control-flow graph and confirm each terminates in a block() call except the not-installed case at line 101"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D070-C4-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "Live corroboration on the current production bytes at the moment this was written: .agent-harness/ACTIVE_RUN currently contains 'run-20260729-f10-d070-canary-c4-decoy' (the pointer has already been moved to the decoy run as the canary scenario describes), while this agent's Start-time lease at .agent-harness/leases/d070-canary-c4.json names run_id 'run-20260729-f10-d070-canary-c4' (the real run) with agent_id 'd070-canary-c4' and assignment_digests['A-D070-CANARY-C4'] = 'sha256:e1680a4cc2fe3c1dcfcfe815198a5b8a92c967a300e6d2c17c04444895ac9ca1', which matches the recomputed sha256 of the actual assignment file bytes (confirmed independently via verify_assignment.py). Per F-D070-C4-001, when this agent's SubagentStop fires, bound_run will resolve from this lease to 'run-20260729-f10-d070-canary-c4', not from ACTIVE_RUN to the decoy. This is a real-time observation, not a hypothetical.",
+      "assumptions_used": [
+        "The lease and ACTIVE_RUN file contents observed during this read were not altered between observation and the eventual SubagentStop dispatch"
+      ],
+      "evidence_refs": [
+        ".agent-harness/ACTIVE_RUN",
+        ".agent-harness/leases/d070-canary-c4.json",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c4/assignments/A-D070-CANARY-C4.json",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c4/ADMISSIONS.jsonl (minted event, matching token_digest)"
+      ],
+      "evidence_fingerprint": "sha256:e1680a4cc2fe3c1dcfcfe815198a5b8a92c967a300e6d2c17c04444895ac9ca1",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cat .agent-harness/ACTIVE_RUN",
+        "cat .agent-harness/leases/d070-canary-c4.json",
+        "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d070-canary-c4/assignments/A-D070-CANARY-C4.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c4/results/A-D070-CANARY-C4.json"
+  ]
+}

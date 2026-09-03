@@ -1,0 +1,369 @@
+{
+ "agent_id": "d069-freeze-review",
+ "agent_type": "default",
+ "artifacts": [
+  ".agent-harness/runs/run-20260729-f10-d069-freeze-review/results/A-D069-FREEZE-REVIEW.json"
+ ],
+ "assignment_id": "A-D069-FREEZE-REVIEW",
+ "commands": [
+  "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d069-freeze-review/assignments/A-D069-FREEZE-REVIEW.json",
+  "venv/bin/python scratchpad/rev_probe1.py  (grids, Rust-rule moments, cross-rule floors, sub-support shares, tail fractions)",
+  "venv/bin/python scratchpad/rev_probe2.py  (identify the definition matching the contract's 8.894740214084245e-10)",
+  "venv/bin/python scratchpad/rev_probe3.py  (predict T8a/T8b/T8c from the preserved d063 endpoint spectrum)",
+  "venv/bin/python scratchpad/thr.py early|late  (BLAS thread-pin ordering demonstration)",
+  "byte-comparison of _f10c2_anchors.py against d063_independent_trajectory_r3.py constants",
+  "sha256 verification of the two retained release logs and the frozen module",
+  "grep -nE 'integration|status=|mutant' on the preserved r3 stdout log (phase wall times)"
+ ],
+ "completed_at": "2026-07-29T03:37:41Z",
+ "context_version": "3c777b2ab50aa667b37369cb778bcddc3b072123a76033f1cd8399643b115cf6",
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260729-f10-d069-freeze-review/results/A-D069-FREEZE-REVIEW.json"
+ ],
+ "findings": [
+  {
+   "assumptions_used": [
+    "OpenBLAS/OMP read their thread-count environment variables at library load time, not per call"
+   ],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.95,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:973905a5749f3c0cff14543caaf92bbab08447f1264225553cc17cb137daeaf2",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:48-57",
+    "scripts/audit/_trajectory_core.py:30-36",
+    "scripts/audit/d063_independent_trajectory_r3.py:43-49",
+    "probe: scratchpad/thr.py early=0.654s late=0.151s"
+   ],
+   "finding_id": "F-001",
+   "reproduction": [
+    "venv/bin/python thr.py early ; venv/bin/python thr.py late  (thr.py sets the three pins before vs after `import numpy`, then times 6 x 1500x1500 matmuls)"
+   ],
+   "severity": "high",
+   "statement": "BLOCKING. The single-thread BLAS pin is dead code in r4 because of import order: scripts/audit/d069_independent_trajectory_r4.py:53 executes `import numpy as np` BEFORE scripts/audit/_trajectory_core.py:30-31 sets OPENBLAS/OMP/MKL_NUM_THREADS (that module is only imported at line 56). OpenBLAS reads those variables at library initialisation, so the pin has no effect. Measured on this host: identical 6x(1500x1500) matmul takes 0.654 s with the pin set before `import numpy` and 0.151 s with the identical setdefault issued after it (4.3x -> multi-threaded). The preserved d063 driver set the pins correctly (d063_independent_trajectory_r3.py:43-44, BEFORE `import numpy` at line 48) and used hard assignment `os.environ[_pin] = '1'`; _trajectory_core.py:31 additionally weakens this to `os.environ.setdefault`, so an operator shell exporting OMP_NUM_THREADS would not be overridden even with correct ordering. Consequences: the r4 base run is no longer guaranteed to reproduce the preserved d063 base bitwise (numpy 2.4.4 / scipy 1.17.1 match d063's recorded versions, so bitwise reproduction was otherwise expected); multi-threaded GEMM reduction order is the one uncontrolled nondeterminism in a battery whose tightest gate (T9, see F-013) has exactly zero margin; and the report records nothing about the effective thread counts, so no auditor can detect it after the fact. Fix before freeze: set the three pins at the top of the driver before `import numpy`, use assignment rather than setdefault, and echo the effective values into report['config'].",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.97,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:ac3cd8e02193842323353ed9f1ad2bd765a9150e88a05b568de262d0498ca3ce",
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:122",
+    "scripts/audit/d069_independent_trajectory_r4.py:441-446",
+    "scripts/audit/d063_independent_trajectory_r3.py:152,626-630",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json checks.T11_tail"
+   ],
+   "finding_id": "F-002",
+   "reproduction": [
+    "PYTHONPATH=src:scripts/audit venv/bin/python -c \"import d069_independent_trajectory_r4 as m; print(hasattr(m,'TAIL_RHO_FRACTION'))\"  -> False"
+   ],
+   "severity": "high",
+   "statement": "BLOCKING. Contract section 6 line 122 asserts 'T1-T7, T9-T12 carry the r3 semantics unchanged', but T11 lost a gated predicate. r3's T11_tail gated `tail_last_node_fraction <= TAIL_RHO_FRACTION (5e-7)` together with the rejection range and roundoff cap (d063_independent_trajectory_r3.py:626-630, constant at :152). r4's T11_rejections (d069_independent_trajectory_r4.py:441-446) gates only `per_eval_ok and max_roundoff <= ROUNDOFF_CAP` and demotes the tail fraction to a recorded non-gating field named `tail_last_node_fraction_non_gating`; the constant TAIL_RHO_FRACTION does not exist in r4 (verified by attribute probe). Dropping the gate is defensible on the merits (D-065 item 3 showed the quantity is not a y>24 enclosure, and T13 replaces it), but removing a gate relative to the frozen predecessor while the contract states nothing changed is exactly the failure class F-D065-04 punished ('one of its predicates was narrowed after output'). Fix before freeze: the contract must name T11 in the 'new or replaced' list, state that the tail gate is dropped and why, and record the r3 value 1.2430778875527049e-08 as the retained non-gating reference.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.96,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:c3bbfc2b4121e33afbc4d1571bb0b6cd987b1076e0d7cc3fa250815c40fe4fd0",
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:73-74",
+    "find . -name d069_band_derivation.json -not -path ./.git/* -> (no repo hit)",
+    "scratchpad/d069_band_derivation.json (ephemeral)"
+   ],
+   "finding_id": "F-003",
+   "reproduction": [
+    "find . -name 'd069_band_derivation.json' -not -path './.git/*'"
+   ],
+   "severity": "high",
+   "statement": "BLOCKING (evidence provenance). Contract section 4 cites the band derivation as retained at `scripts/audit/../artifacts/d069_band_derivation.json` 'in the run directory'. That path resolves to scripts/artifacts/d069_band_derivation.json, which does not exist anywhere in the repository (`find . -name d069_band_derivation.json` returns nothing outside the ephemeral session scratchpad), and no d069 execution run directory exists yet. This file is the entire basis for the contract's central claim that every band is inherited or derived rather than fitted; freezing a contract whose sole non-fitting evidence is a dangling pointer into /tmp reproduces the D-065 evidence failure at the meta level. Note the CONTENT is correct: I reproduced every number in the scratchpad copy independently (see F-006 verified list). Only its retention is broken. Fix before freeze: commit the JSON to a real tracked path and cite that exact path.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.93,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:a253a4287624b06cf74f6c0285896531a70e71e9a82f5ae74b49fd44c8c0dc6b",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:26-28,285-317",
+    "scripts/audit/_trajectory_core.py:310-334,259-273",
+    "scratchpad/d069_smoke.json recompute.worst_relative_deviation = 0.0",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:153-157"
+   ],
+   "finding_id": "F-004",
+   "reproduction": [
+    "python3 -c \"import json;d=json.load(open('scratchpad/d069_smoke.json'));print(d['recompute']['worst_relative_deviation'])\" -> 0.0"
+   ],
+   "severity": "medium",
+   "statement": "T14 cannot fail numerically; the 1e-12 tolerance is unexercisable. recompute_from_stored (d069:285-317) rebuilds the state from analysis['checkpoint_states'], whose 'cloglog' entries are `float(v)` copies of the very array that coupled_residuals consumed via the same sol(n_k) call, and feeds them to the same core.comoving_energies. The time slot round-trips as t_seconds*MEV_TO_INVERSE_SECONDS (an exact inverse of the stored t_mev/MEV_TO_INVERSE_SECONDS) and is unused by comoving_energies anyway. The comparison is therefore bitwise identical by construction: the smoke report shows worst_relative_deviation = 0.0 and W_nu_rel = W_tot_rel = 0.0 at all three checkpoints. The check does prove FIELD SUFFICIENCY (a lossy retention would fail it), which is the real D-065 obligation, but contract section 6's claim that T14 'makes independent recomputation from the report a fact rather than a claim' overstates it: the check runs in-process on in-memory Python floats and never reads the written artifact. Its vacuity guards are correct and I could not break them (see F-011 verified list). Cheap fix: after the base-phase write, re-read the --out JSON and recompute from the deserialised values; otherwise soften the contract wording. Separate doc defect: the driver docstring line 28 claims T14 re-derives 'W_nu, W_tot, and R_total'; R_total is not re-derived (only W_nu and W_tot). The contract is correct here; the docstring overclaims.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [
+    "the equilibrium tail fraction beyond a fixed y_max is independent of the run"
+   ],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.94,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:79ac6a962149e24e58da6c0cc92972507a0e635b48008d82f53427b82741f998",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:456-461,561-574,98",
+    "scripts/audit/_trajectory_core.py:411-429",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:145-150",
+    "src/rabbit/decoupling/_independent_noqke.py:1093,1175"
+   ],
+   "finding_id": "F-005",
+   "reproduction": [
+    "PYTHONPATH=src:scripts/audit venv/bin/python -c \"import _trajectory_core as c; print(c.equilibrium_tail_fraction(30.0,power=3))\" -> 4.921721142238624e-10"
+   ],
+   "severity": "medium",
+   "statement": "Two of T13's four gated clauses are unfalsifiable constants, so T13 reduces to `domain_reached and |dN_eff| <= 2e-4`. (a) enclosure['analytic_residual_beyond_domain'] = core.equilibrium_tail_fraction(DOMAIN_YMAX=30.0, power=3), which I recompute as 4.921721142238624e-10. It depends on no run output whatsoever and is gated at BAND_ANALYTIC_RESIDUAL = 1e-6, i.e. 2032x slack: it cannot fail. (b) enclosure['total'] = |dN_eff| + 4.9217e-10 * N_eff ~= |dN_eff| + 1.49e-9, gated at BAND_ENCLOSURE = 3e-4; since the same |dN_eff| is separately gated at 2e-4, clause (b) is implied by clause (a')'s 2e-4 bound and adds nothing. Also, the 'upper bound' logic in contract section 6 is incomplete: the measured shift conflates three effects - domain truncation 24->30, collocation refinement (first node 0.014747912970887178 -> 0.011848151588460532), and a changed whole-reaction rejection count (the collision kernel's own domain guard at _independent_noqke.py:1093,1175 admits more reactions at y_max=30). The contract discloses the first two but not the third, and calling the combined difference an upper bound on domain truncation alone requires assuming the three do not cancel. Fix before freeze: state that the analytic clause is a pre-computable constant (quote 4.92e-10), and state the non-cancellation assumption explicitly.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [
+    "the r4 base configuration is identical to the r3 base configuration, so the r3 endpoint spectrum predicts the r4 T8a/T8b/T8c values"
+   ],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.92,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:389821f10580950477788bf41494c9c32f20fe8bcc82f7c8a79707a077c04b0d",
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:88-96",
+    "scripts/audit/d069_independent_trajectory_r4.py:71-84",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json base.endpoint_spectrum",
+    "scratchpad/rev_probe3.py output"
+   ],
+   "finding_id": "F-006",
+   "reproduction": [
+    "venv/bin/python scratchpad/rev_probe3.py  (recomputes T8a/T8b/T8c from the preserved d063 endpoint spectrum against _f10c2_anchors.RUST_SPECTRUM)"
+   ],
+   "severity": "medium",
+   "statement": "The 'headroom' argument that justifies the T8a/T8b bands is measured against the wrong reference, and the true margins are 3-4 orders smaller than stated. Contract section 4 says 'Headroom over the floor: ~5 orders' and driver comment lines 71-77 says 'three to five orders of headroom, so these are physics tolerances, not fitted ones'. Both compare the band to the RUST QUADRATURE FLOOR (5.4e-9 / 5.2e-8 / 3.2e-7 / 1.4e-6). The decision-relevant reference is the expected cross-code deviation, which is fully computable BEFORE the run from the preserved D-063 payload the r4 author holds. Reconstructing T8a/T8b from .../r3_trajectory_report.json base.endpoint_spectrum (grid_nodes reproduce build_independent_grid(48,24.0) exactly; my reconstruction reproduces d063's published sup values 1.5881626368027338e-3 in-support and 2.0800641747316935e-3 full-domain to all digits, so the reconstruction is faithful): T8a rel_after_tail_correction = +3.2482e-5 (M2,e), +4.0173e-5 (M3,e), +4.9645e-5 (M4,e), +6.1241e-5 (M5,e) and about half that for mu/tau -> 25x headroom on the 1e-3 band and 33x on the 2e-3 band, NOT five orders. T8a split |ind-rust| = 1.8019e-5 vs 2e-4 -> 11x. T8b weighted_rel_max = 2.0858e-4 vs 1e-3 -> 4.8x (the tightest NEW gate). T8c = 1.5882e-3 vs 2e-3 -> 1.26x (tightest gate overall; both value and band inherited from r3). Conclusion on the fitting question: NO band is fitted. Every gating constant is a pre-existing frozen value (see verified list F-011), 1e-3 is not the minimal passing choice for T8b (3e-4 would also pass), and BAND_MOMENT_HIGH = 2e-3 - the one constant that is asserted rather than inherited ('doubled') - is not needed to accommodate the predicted M4/M5 values, which would clear 1e-3 with 16x margin. But the stated margin is wrong by 3-4 orders and will not survive an adversarial read. Fix before freeze: replace the floor-based headroom claim with the D-063-predicted margins above.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [
+    "r4's base/mutant/rtol phases cost the same as d063's, since the configurations are identical"
+   ],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.9,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:c188f5163f78f42cf6d143f73287eccd67643db07f6974775ad1af00b59b1987",
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_stdout.log lines 1,76-82,170",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:167-170",
+    "scripts/audit/d069_independent_trajectory_r4.py:111,552-559,575-586"
+   ],
+   "finding_id": "F-007",
+   "reproduction": [
+    "grep -nE 'integration|status=|mutant' .agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_stdout.log"
+   ],
+   "severity": "medium",
+   "statement": "The section 7 wall-budget projection is not reproducible from the preserved d063 timings, and the real margin is about 11-17%, not the implied 26%. Contract projects 'mutants ~ 0.4 h'; the d063 stdout log measures the identical mutant battery at 10182.2 s -> 15856.6 s = 5674.4 s = 1.58 h for 2226 evals - four times the projection. Measured d063 phase walls: base 10182.0 s (2.83 h, 3694 evals, 2.757 s/eval, so the contract's 2.807 s/eval figure is right), mutants 5674.4 s, rtol holdout 11468.2 s (3.19 h, 4331 evals); total 27324.8 s = 7.59 h. r4 repeats all three phases essentially bitwise and adds the 60/30 domain run; scaling the base wall by the contract's own 4.754/2.807 per-eval ratio gives 4.9 h at equal eval count and 5.7 h at holdout-like eval count. Corrected total 12.5-13.3 h against the frozen 15 h budget. Second issue: a TimeoutError returns 20 with verdict 'ERROR' and NO 'checks' block at all, because evaluate() is never reached (d069:552-559 returns before line 575). So the front-loading claim in section 7 ('a wall-budget breach still leaves the D-065-critical evidence flushed') is true only for the raw data - the run yields no adjudicable verdict and must be redone in full. Fix before freeze: correct the section 7 table (mutants ~1.6 h, total ~13 h) and either raise the budget to ~18 h or state that a breach forfeits the verdict.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.96,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:7c1665d83e4005e070acd112420a1d67a5d2e689caeec83710bf39275e5e701b",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:466-472",
+    "scripts/audit/_trajectory_core.py:435-460"
+   ],
+   "finding_id": "F-008",
+   "reproduction": [],
+   "severity": "medium",
+   "statement": "`--out` is optional, so a mis-invocation silently discards the entire 13-hour report while still returning a verdict exit code. d069:468 declares `parser.add_argument('--out', default=None)` and core.Reporter.write (_trajectory_core.py:453-455) returns immediately when path is None. With --out omitted the run executes all four phases, prints progress lines, and exits 0 or 10 with no artifact at all - and unlike r3 the report body is deliberately NOT echoed to stdout (that de-duplication is otherwise a correct discharge of F-D065-SW-02), so nothing is recoverable from the captured log either. Fix before freeze: make --out required, or return 20 when it is absent.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.9,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:17730d520f0d84949aff108c198c7bd63cd5e0113d5d8aaaad302eb7a12ca73e",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:320-359",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json mutants.M1_pair_sign.mode",
+    "scratchpad/d069_smoke.json mutants"
+   ],
+   "finding_id": "F-009",
+   "reproduction": [],
+   "severity": "low",
+   "statement": "T10 counts any exception and any solver failure as a mutant kill, so both kills can be earned without discriminating evidence. d069:352-355 maps `except Exception` to {'killed': True, 'mode': 'fail-closed error: ...'} and d069:337-339 maps `sol.status != 0 or not sol.success` to a kill. This is not hypothetical: in the preserved r3 run M1_pair_sign was killed by 'solver failure: Required step size is less than spacing between numbers' rather than by a coupled-energy residual, and only M2_qem_sign produced an actual residual kill (7.0 in the r3 report). The smoke run reproduces the same split. TimeoutError is correctly re-raised rather than counted (d069:352-353), which closes the worst version of the hole. The behaviour is inherited from r3 unchanged and the 'mode' string is preserved in the report, so it is auditable post hoc - but the GATE itself is vacuous in the exception branch. Optional hardening (would be a semantics change, so it needs declaring): require at least one mutant to die by residual, or require evals > 0 for an error-branch kill.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.95,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:b4f828f8203d90c3385fa2bd9596333012fbf78ac7cdcd475316bf62a512a081",
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:50-53,63-65",
+    "scripts/audit/d069_independent_trajectory_r4.py:202-215",
+    "scratchpad/d069_smoke.json base.spectral.subsupport_nodes",
+    "scratchpad/rev_probe2.py output"
+   ],
+   "finding_id": "F-010",
+   "reproduction": [
+    "venv/bin/python scratchpad/rev_probe2.py  (enumerates candidate definitions; only the f_eq-weighted one matches 8.894740214084245e-10 to 1e-12 relative)"
+   ],
+   "severity": "low",
+   "statement": "Contract section 2's headline sub-support weight 8.894740214084245e-10 is the EQUILIBRIUM energy share, not the 'measured' share on the Rust anchor spectrum, and the driver will report a different number. I reproduced 8.894740214084245e-10 exactly as sum_sub(w y^3 f_eq)/sum(w y^3 f_eq) on the Rust rule. The driver's recorded field (d069:206-210, energy_weight_share) uses rust_fe and yields 8.812419234619085e-10 (f_e) / 8.860742685596509e-10 (f_x); the smoke report's two sub-support rows are 2.5850689280069213e-12 and 8.786568545339016e-10, summing to 8.8124e-10. Section 2 calls it 'the measured weight ... on the Rust energy measure', which it is not; the contract's headline number will appear nowhere in the report. The 0.9% difference is physically immaterial. The companion number '2.9e-7 of the number measure' does check out (2.9031978951895797e-07 on f_e). Related over-precision: section 3 quotes the Rust rule's exact-moment errors to 16 digits (-5.401621150369351e-09, -5.180810813687486e-08) but I recompute -5.401633806911832e-09 and -5.180810835891947e-08; the last ~4 digits are artefacts of how the closed-form (1-2^(1-s))Gamma(s)zeta(s) reference was evaluated. Quote 4-5 digits. Fix before freeze: relabel or requote 8.812e-10 / 8.861e-10.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.95,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:b064c5d6812420ef304068d83b24f27c3812e8a0ea466851b8cdc179a8d0c966",
+   "evidence_refs": [
+    "scripts/audit/_f10c2_anchors.py",
+    "scripts/audit/d063_independent_trajectory_r3.py",
+    "scripts/audit/d069_independent_trajectory_r4.py",
+    "scripts/audit/_trajectory_core.py",
+    "src/rabbit/decoupling/_independent_noqke.py:84-134,1093,1175",
+    "scratchpad/rev_probe1.py output"
+   ],
+   "finding_id": "F-011",
+   "reproduction": [
+    "venv/bin/python scratchpad/rev_probe1.py",
+    "byte-comparison probe of RUST_SPECTRUM and the 13 scalar anchors between d063 and _f10c2_anchors"
+   ],
+   "severity": "info",
+   "statement": "VERIFIED CORRECT (no defect). (1) Anchors: the RUST_SPECTRUM literal in scripts/audit/_f10c2_anchors.py is byte-identical to d063's embedded copy (both 4880 characters, string equality True), the parsed 48-tuples compare equal, spectrum_digest() = 3df5a9907f8a7e7e5168a4659504387f16a0c795878a833df97f7a7e2613fa58 = RUST_SPECTRUM_SHA256, and all 13 scalar anchors (MODULE_SHA256, BDF_N/T_S/NEFF, RODAS_N/T_S/NEFF, BLK_RHO_NU/N_E/RHO_E/N_X/RHO_X/SPLIT_RATIO) plus the ANCHOR_LOG_SHA256 dict are textually identical to d063's. Both retained release logs hash to their expected values; core.module_sha256() equals MODULE_SHA256 and the on-disk frozen module hashes to 760a7c04... (2) Bands: every claimed inheritance verified against d063 - T7 1e-3 = BAND_BLOCK_REL (d063:140), T7 split 2e-4 = BAND_SPLIT (d063:141), T12 2e-4 = BAND_HOLDOUT_NEFF (d063:149), T2 3e-4 = BAND_NEFF (d063:133), r3 2e-3 = BAND_SPECTRUM (d063:142). (3) Band derivation reproduced independently to all printed digits: cross-rule floors after tail correction at 48/24 = 5.401628699885919e-09, 5.180810291882665e-08, 3.188307391432943e-07, 1.3748035412319837e-06; at 60/30 = 5.401630254198153e-09, 5.180810647154033e-08, 3.188307404755619e-07, 1.3748035396776714e-06. The quoted floors 5.4e-9 / 5.2e-8 / 3.2e-7 / 1.4e-6 are all correct, and the two domains agree to 7 significant figures (the contract conservatively says four), which does validate that the analytic tail correction absorbs the domain difference. (4) Numerics: the tail correction direction is right - dividing the truncated [0,y_max] moment by (1-tail_k) scales it up to the half-line the Rust rule integrates; the integrand y^p e^-y/(1+e^-y) equals y^p/(1+e^y) with the same normalising denominator, so equilibrium_tail_fraction is correct (24 -> 1.0432084682901708e-07, 30 -> 4.921721142238624e-10). Rust moments use the right flavour columns (col 2 = f_e -> 'e'; col 3 = f_x -> both 'mu' and 'tau'), matching the anchors dict used for the pointwise deviations. The energy-weighted norm is normalised per flavour by sum(w y^3 f_rust^flavour), exactly the contract formula. recompute_from_stored's reconstruction is exact and its vacuity guards hold: a missing checkpoint yields {'available': False}, the `default=None` in max() then leaves worst=None, and ok requires worst is not None AND the available count to equal len(RECOMPUTE_CHECKPOINTS) AND worst <= tol - I could not construct a missing-checkpoint pass. T13 correctly gates on domain_reached, so a companion run that never reaches T_gamma=5 keV fails rather than passes. A zero moment or divergent correction would raise ZeroDivisionError and exit 20, not pass. (5) Grid-domain safety: the only interpolate call site is d069:171; the Rust node range is [0.0018440557621953763, 22.18412259016373], inside [0,24] for the base/rtol setups and inside [0,30] for the domain setup, and the rtol holdout reuses base_setup, so all three analyse() calls are safe. The collision kernel guards its own domain internally and counts rejections (_independent_noqke.py:1093,1175), so order 60 / y_max 30 needs no extra guard. Both setups have exactly two sub-support Rust nodes, so the '46 in-support' framing holds for both. build_independent_grid(60,30.0) has node density 60/30 = 2.0 per unit y, identical to 48/24 = 2.0; first nodes are 0.014747912970887178 (48/24) and 0.011848151588460532 (60/30), last nodes 23.985252087029114 and 29.98815184841154 - both contract figures confirmed, as is the 'order ~136' claim (135.7 by the y_max/order^2 scaling). (6) Phases and reporting: phase order is base -> T14 recompute -> mutants -> domain -> rtol, exactly as section 7 claims; both `except TimeoutError` and `except Exception` stamp and write the partial report before returning 20; the report is written once per phase through a tmp file plus os.replace and is never echoed to stdout (r3's `print(flush(report))` duplication is gone, discharging F-D065-SW-02); the initial write failure is caught and returns 20. (7) Contract-to-code fidelity: every gated predicate described in section 6 exists in evaluate() with the stated band, and every non-gating recorded item section 6 promises (full-domain sup, the 48x3 per-node deviation array, mapped values at all 48 nodes, the explicit sub-support list with y, w and energy-weight share, and both runs' rejection counters) is present. The only fidelity breaks are F-002 (T11) and the wording issues in F-004/F-005/F-006/F-010.",
+   "unresolved": [],
+   "verdict": "pass"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.9,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:3f31ea61af3640a8566d93485850b8da8dc1fc9caca6b8b0e9fa6d51de65764e",
+   "evidence_refs": [
+    "scripts/audit/_trajectory_core.py:177-196",
+    "scripts/audit/d069_independent_trajectory_r4.py:362-380,447-455,456-461,544-559"
+   ],
+   "finding_id": "F-012",
+   "reproduction": [],
+   "severity": "low",
+   "statement": "Dead gate clauses: base_occ_ok and holdout_occ_ok cannot be False when evaluate() runs. _trajectory_core.make_rhs sets stats.occ_ok = False and immediately raises IndependentNoQkeError (:182-184); scipy propagates it out of solve_ivp; main's `except Exception` (d069:556) returns 20 before evaluate() is ever called. So T1's and T12's occupancy conjuncts are unreachable-False, inherited unchanged from r3. Related asymmetry: domain_stats.occ_ok is never passed to evaluate() at all - T13 has no occupancy conjunct, gating only on domain_reached. In practice this is fail-closed (the exception aborts the run), so it is not an exploitable vacuous pass, but the three sibling predicates should be symmetric. Also note an occupation excursion - a genuine physics failure of the independent solver - is classified as exit 20 'mechanical' rather than exit 10 'FAIL', which is generous.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [
+    "r4's base integration is otherwise bitwise identical to r3's"
+   ],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.88,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:517e7557f015a4aab1523f9a436ed1d4eb7863855cf808cb34f7a131dfe16df2",
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json base.residual_rows, checks.T9_coupled_energy, versions",
+    "scripts/audit/d069_independent_trajectory_r4.py:89,235-240,431-438"
+   ],
+   "finding_id": "F-013",
+   "reproduction": [
+    "python3 probe printing |dW_nu/dN|/W_nu at each TRANSFER_WINDOW checkpoint of the preserved r3 report"
+   ],
+   "severity": "low",
+   "statement": "T9 is the fragile gate and has exactly zero margin. The preserved r3 base measured active = clean = 4 = MIN_ACTIVE, and the marginal window checkpoint N=3.75 clears the activity floor by only 18% (|dW_nu/dN|/W_nu = 5.8825e-4 against TRANSFER_FLOOR = 5e-4); the next checkpoint N=4.00 is already inactive at 3.8139e-4. MIN_ACTIVE is unchanged at 4 in r4 (d069:89) and the clean-window counting logic is correct and non-vacuous (clean_rows is a subset of active_rows, which is a subset of the 11 TRANSFER_WINDOW rows; empty residual_rows yields max_R_total None and fails). The recorded environment matches d063's exactly (numpy 2.4.4, scipy 1.17.1), so bitwise reproduction is expected and T9 should hold at 4 - but ONLY if F-001 is fixed, since multi-threaded BLAS is currently the one uncontrolled source of divergence from the d063 trajectory.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.9,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:2a29c4b2590e541348418ba5842622153ffdeabea1a37199aca587b25ed6c5ea",
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:156-165,370-374,410-425",
+    "scripts/audit/d063_independent_trajectory_r3.py:343,603",
+    "scratchpad/rev_probe3.py output"
+   ],
+   "finding_id": "F-014",
+   "reproduction": [
+    "venv/bin/python scratchpad/rev_probe3.py"
+   ],
+   "severity": "low",
+   "statement": "Minor hardening gaps in T8a and T8b. (a) moment_ok (d069:370-374) is an all() over a generator with no cardinality assertion, so it would return True on an empty moment mapping; it is not reachable with the literal MOMENT_POWERS = (2,3,4,5) and three flavours, but T14 does assert its own count and T8a does not, and the band selector `key in ('M2','M3')` silently misbands if MOMENT_POWERS is ever changed. (b) T8b records nodes_included = len(A.RUST_SPECTRUM) but does not gate it, so the 'all 48 nodes, nothing excluded' guarantee is documented rather than enforced. (c) T8a's split-ratio conjunct is algebraically identical to T7's: moment_split = M3_e/(0.5(M3_mu+M3_tau)) - 1 and T7's split_ratio = energy_e/(0.5(energy_mu+energy_tau)) - 1 share the same sum(w y^3 occ) with a cancelling 2 T_cm^4/(2 pi^2) prefactor; on the preserved d063 endpoint both evaluate to 0.005498364941979306 to all 16 digits, under the same 2e-4 band. It is not a new gate. It does carry one genuinely new fact worth naming: the Rust spectrum table's own split, 0.005480346367569444, agrees with the independent block anchor BLK_RHO_E/BLK_RHO_X - 1 = 0.005480346367569888 to 4.4e-13, which is a cross-anchor consistency check between two separately sourced anchor sets.",
+   "unresolved": [],
+   "verdict": "fail"
+  },
+  {
+   "assumptions_used": [],
+   "claim_id": "C-F10-INDEPENDENT",
+   "confidence": 0.85,
+   "counterevidence_refs": [],
+   "evidence_fingerprint": "sha256:2dd3c70ce416ca78d82f94156087c6a89c80550bbc420d747a4389565f99f1de",
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md:35-53,130-140",
+    "docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md:148-168",
+    "scripts/audit/d069_independent_trajectory_r4.py:181-201",
+    "scratchpad/rev_probe3.py output (T8b = 2.0858e-4, sub-support share 8.81e-10)"
+   ],
+   "finding_id": "F-015",
+   "reproduction": [
+    "venv/bin/python scratchpad/rev_probe3.py"
+   ],
+   "severity": "medium",
+   "statement": "ADJUDICATION EXPOSURE, not a code defect: the substantive answer to F-D065-04 items 1-2 is a reframing, and the report will carry a non-gating number above the previously frozen band. T8b is 'full-domain' in form only - including the two disputed Rust nodes at their true weight moves it by at most 8.81e-10 out of a predicted 2.0858e-4, i.e. about 4e-6 relative, and their actual contribution at the r3 deviation level is ~1.8e-12. So r4 does not gate the disputed quantity; it gates two quantities that are provably insensitive to it and records the disputed one. The contract argues this openly in section 2 and it is a defensible scientific position (no feasible N48-class grid can collocate y = 0.00184; order ~136 confirmed). But the recorded non-gating sup_rel_full_domain will land at approximately 2.0800641747316935e-3 - above the r3 T8 band of 2e-3 - inside a report whose verdict is PASS. That number is already known from the preserved D-062 run, so it should be pre-committed in the contract now, together with the statement that it does not overturn the verdict. Explaining it after it appears is indistinguishable from the post-output narrowing D-065 rejected. This is the single largest residual risk to the r4 PASS surviving adversarial review and I cannot resolve it - it is an owner/adjudicator call, not a driver fix.",
+   "unresolved": [
+    "whether an adjudicator accepts insensitive-by-construction full-domain norms as discharging the narrowed-predicate finding"
+   ],
+   "verdict": "inconclusive"
+  }
+ ],
+ "result_path": ".agent-harness/runs/run-20260729-f10-d069-freeze-review/results/A-D069-FREEZE-REVIEW.json",
+ "review_role": "context_mapper",
+ "run_id": "run-20260729-f10-d069-freeze-review",
+ "runtime_agent_type": "default",
+ "schema_version": 2,
+ "spawn_contract": {
+  "assignment_id": "A-D069-FREEZE-REVIEW",
+  "assignment_sha256": "sha256:673ec50ca980ac064ac198721d1c8abefe8cd1cdd7edc00e46ea94a90a1e6538",
+  "context_version": "3c777b2ab50aa667b37369cb778bcddc3b072123a76033f1cd8399643b115cf6",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "result_template_verified": true,
+  "review_role": "context_mapper",
+  "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+  "review_role_verified": true,
+  "run_id": "run-20260729-f10-d069-freeze-review",
+  "runtime_agent_type": "default",
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS"
+ },
+ "started_at": "2026-07-29T03:20:16Z",
+ "status": "fail",
+ "tool_versions": {
+  "numpy": "2.4.4",
+  "python": "3.12.3",
+  "scipy": "1.17.1",
+  "venv_python": "venv/bin/python"
+ }
+}

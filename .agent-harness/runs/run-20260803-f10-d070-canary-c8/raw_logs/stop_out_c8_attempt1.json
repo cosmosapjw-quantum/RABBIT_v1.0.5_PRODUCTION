@@ -1,0 +1,1 @@
+{"decision": "block", "reason": "Result artifact violates RESULT_ENVELOPE: non-error result must contain at least one finding; findings omit assigned claim_ids: C-HARNESS-INTEGRITY; status=pass requires every finding verdict to be pass"}

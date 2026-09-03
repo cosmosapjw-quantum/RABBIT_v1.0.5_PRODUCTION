@@ -1,0 +1,252 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d067-review-r9",
+  "assignment_id": "A-D067-R9-MEASUREMENT",
+  "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+  "agent_id": "r9-measurement",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260730-f10-d067-review-r9",
+    "assignment_id": "A-D067-R9-MEASUREMENT",
+    "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:09b4530cd868a835117149df9d5f59974cf592dab0a35c8f1360ae1288cc939f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-MEASUREMENT.json",
+  "started_at": "2026-08-01T12:41:40Z",
+  "completed_at": "2026-08-01T12:56:10Z",
+  "tool_versions": {
+    "python": "venv/bin/python (Python 3.12.3)",
+    "git": "used only for `git archive HEAD` to build the scratch tree; no other git operation was run"
+  },
+  "commands": [
+    "df -h / && date -u +%Y-%m-%dT%H:%M:%SZ",
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260730-f10-d067-review-r9/assignments/A-D067-R9-MEASUREMENT.json  # -> VERIFY: PASS",
+    "SCRATCH=$(mktemp -d -p <scratchpad>); git -C <repo> archive HEAD | tar -x -C \"$SCRATCH\"  # 27 MB, tracked files only, no .git/venv/.publish-local",
+    "cp <mutable target files> \"$SCRATCH.bak/...\"  # one-shot backups for restore between mutations",
+    "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_ssot_consistency.py  # baseline: exit 0, ok:true",
+    "sed -i 's/G-HARNESS-INTEGRITY. . FAIL/.../PASS/' docs/harness/PROJECT_STATE.md (D-066 board only, no masking) && venv/bin/python .agent-harness/scripts/check_ssot_consistency.py  # exit 1, single precise error -> F-DIRECT-FLIP-CAUGHT",
+    "restore; append '`G-F10-INDEPENDENT-FLRW` is FAIL, `G-HARNESS-INTEGRITY` is PASS.' to SHARED_CONTEXT.md Current-milestone bullet; run checker  # exit 0, ok:true -> F-COMMA-ADJACENCY",
+    "restore; append ' `G-HARNESS-INTEGRITY` is not PASS.' (direct negation) to SHARED_CONTEXT.md; run checker  # exit 0, ok:true, checked count unchanged -> F-NEGATION-DIRECT-CAUGHT",
+    "restore; insert fact hook_fixture_count_decoy_probe (description names test_hooks.py, measurement reads LICENSE) into SSOT_FACTS.json; append matching assertion line to FROZEN_DECISIONS.md; run checker  # exit 0, ok:true -> F-DESC-MEASURE-DECOUPLE",
+    "restore; ln -s <outside-repo file> .agent-harness/context/inside_looking_symlink.txt; insert fact symlink_escape_probe measuring that symlink; run checker  # exit 0, ok:true, measured value read from outside the repo -> F-SYMLINK-ESCAPE",
+    "restore; insert fact hook_fixture_count_typo_probe with pattern '^def tset_' (matches 0 lines) and value 0; run checker  # exit 0, ok:true, no error -> F-REGEX-SILENT-ZERO",
+    "restore; delete the sole '| `C-F10-SCOPE` | IMPLEMENTED |' row from PROJECT_STATE.md; insert disclaiming sentence '...with no bearing on `C-F10-SCOPE` whatsoever...' into SHARED_CONTEXT.md; run checker  # exit 0, ok:true, claims_covered unchanged -> F-NEGATION-CLOSED-VOCAB",
+    "restore; prepend 'As of right now, hooks are exercised by 999 hook fixtures...' to PROJECT_STATE.md '## Current status'; add fabricated prior {999, fake123f} + role:frozen assertion pinned to fake123f in SSOT_FACTS.json; run checker  # exit 0, ok:true, no error despite true value being 108 -> F-FROZEN-ROLE-SMUGGLE",
+    "restore; flip D-066 board G-HARNESS-INTEGRITY to PASS; insert a later '## 2026-07-30 rogue attacker overlay' heading (no controlling/superseded marker) before the real controlling D-066 heading, plus a true-value restatement of the 3 gates + 6 claims uniquely covered by D-066; run checker  # exit 1, but the specific G-HARNESS-INTEGRITY=PASS-vs-FAIL error is completely absent -> F-CONTROLLING-DATE-GAP",
+    "rm -rf \"$SCRATCH\" \"$SCRATCH.bak\" <outside-repo dir>; git status --porcelain in the real repo  # confirms 0 changes to the real repo",
+    "date -u +%Y-%m-%dT%H:%M:%SZ  # completed_at"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-COMMA-ADJACENCY",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "find_assertions() binds an id to the nearest STATUS token by raw character distance, not by clause structure. In ordinary comma-separated prose of the form '`ID1` is STATUS1, `ID2` is STATUS2' the separator before ID2 ('X, `', 3 chars: comma+space+backtick) is always 2 characters shorter than the separator after ID2 ('` is ', 5 chars: backtick+space+is+space), so ID2 systematically binds to ID1's PRECEDING status word instead of its own following one -- for every non-first item in such a list. Exploit: SHARED_CONTEXT.md's always-live 'Current milestone' bullet was extended with the single sentence 'Additionally, `G-F10-INDEPENDENT-FLRW` is FAIL, `G-HARNESS-INTEGRITY` is PASS.' G-HARNESS-INTEGRITY's registry status is FAIL (per GATE_REGISTRY.json / D-065), so this sentence is a plain, human-legible false PASS claim planted in the single most-read live surface in the whole handoff. check_ssot_consistency.py nonetheless printed {\"ok\": true, ...} at exit 0 with status_assertions_checked unchanged at 26 from the unmutated baseline: the checker recorded the id as asserting FAIL (borrowed from the neighboring clause, gap 3 chars) rather than the PASS explicitly written 5 characters to its right, silently deduplicated it against the pre-existing correct FAIL assertion on the same line, and moved on. This is not a contrived adversarial string -- 'A is X, B is Y' is completely ordinary handoff prose, so this is not a narrow edge case but the default failure mode of an entire common phrasing style.",
+      "assumptions_used": [
+        "GATE_REGISTRY.json's G-HARNESS-INTEGRITY status is FAIL at HEAD 4ec13b5, as also stated by the surrounding unmutated prose in SHARED_CONTEXT.md and PROJECT_STATE.md.",
+        "root() falls back to file-path resolution when git is unavailable (no .git in the scratch tree extracted by `git archive`); this affects only how the repo root is located, not the parsing/binding logic exercised here, which is identical on a real checkout."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:5b110ade1f6a3faa9ad0f8a9b3fb0ad34a45ba672a52f5f09f87a62cf4141976",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Extract a scratch tree: `git archive HEAD | tar -x -C $SCRATCH` (tracked files only).",
+        "Edit .agent-harness/context/SHARED_CONTEXT.md: after '...B3-v2/W7 remains `PROPOSED / DESIGN ONLY`.' append the single sentence 'Additionally, `G-F10-INDEPENDENT-FLRW` is FAIL, `G-HARNESS-INTEGRITY` is PASS.' (all on the existing '- Current milestone:' line).",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py` from the scratch tree root.",
+        "Observed: exit code 0; stdout begins '{\"ok\": true, \"gates\": 8, ... \"status_assertions_checked\": 26, ...}' -- identical status_assertions_checked to the unmutated baseline run, and no error mentioning G-HARNESS-INTEGRITY.",
+        "Control: with the checker's own (unmutated) surfaces, directly flipping the D-066 board's `G-HARNESS-INTEGRITY | FAIL |` cell to `| PASS |` with no adjacency trick produces exit 1 and the single error 'docs/harness/PROJECT_STATE.md:68: live surface says G-HARNESS-INTEGRITY=PASS but the gate registry says FAIL.', proving the detector works when the false status is not adjacency-shielded."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-DESC-MEASURE-DECOUPLE",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "A fact's free-text `description` field is never cross-checked against its `measurement` object (kind/path/pattern or json_path). measure_fact() and check_facts() read `measurement`, `value`, `as_of_commit`, `prior` and `assertions`; `description` is validated only for being a non-empty string if present (it is not even in FACT_REQUIRED) and is otherwise inert prose. A fact can therefore describe one thing and measure something entirely different, and pass, as long as `value` equals what `measurement` actually returns and at least one `role:current` assertion site's regex-captured number also equals `value`. Exploit: a fact literally titled 'Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py' (verbatim from the real hook_fixture_count fact's description) was given `measurement: {kind: count_lines_matching, path: LICENSE, pattern: '.'}` (non-blank lines of the LICENSE file) and `value: 17`, with one self-consistent current-role assertion in a decoy line. check_ssot_consistency.py printed ok:true with `fact_measurements.hook_fixture_count_decoy_probe: 17` -- a fact that visually claims to police the hook-test count while mechanically measuring an unrelated file.",
+      "assumptions_used": [
+        "FACT_KEYS/FACT_REQUIRED in check_ssot_consistency.py (lines ~973-989) show `description` is an allowed but not required key, and it never appears as an input to measure_fact(), describe_measurement(), or any comparison in check_facts()."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:3b156e02c9f98f4e6d1c1b5111fbc8f8414f676601eb7ee56bac6b5b31236298",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In the scratch tree, append to .agent-harness/context/FROZEN_DECISIONS.md: '<!-- decoy-fact-line: this repo has vetted 17 unrelated audits -->'.",
+        "Append to SSOT_FACTS.json's `facts` array: {fact_id: hook_fixture_count_decoy_probe, description: 'Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py, mirroring the real hook_fixture_count fact one-for-one.', measurement: {kind: count_lines_matching, path: LICENSE, pattern: '.'}, value: 17, as_of_commit: deadbeef, assertions: [{file: .agent-harness/context/FROZEN_DECISIONS.md, line_contains: decoy-fact-line, value_regex: 'vetted (\\\\d+) unrelated', role: current}]}.",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"fact_measurements\": {..., \"hook_fixture_count_decoy_probe\": 17}}` with no error about the mismatch between description and measurement target."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-SYMLINK-ESCAPE",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "_measured_path() refuses only an absolute `path` string or one containing a literal '..' path component (PurePosixPath checks). It never resolves the path and checks the *real* location, so a symlink that lives inside the repository tree at a syntactically clean relative path, but that points at a file outside the repository, is accepted by the path check and then silently followed by Path.read_text() in _read_measured_file(). This directly contradicts the module's own stated guarantee ('A measurement reads repository files and nothing else, so an absolute path or one containing .. is refused rather than followed') and the docstring's explicit '4. The vocabulary is closed... a path that is absolute or escapes the repository... is an error' claim -- a symlink escapes the repository without being absolute or containing '..' in its own text. Exploit: created /outside_repo_target/secret.txt (3 lines, entirely outside the scratch repo) and an in-repo symlink at .agent-harness/context/inside_looking_symlink.txt pointing at it; declared a fact measuring that symlink path with pattern 'line', value 3. check_ssot_consistency.py returned ok:true with fact_measurements.symlink_escape_probe: 3 -- content from outside the repository was read and treated as a repository-internal measurement with no error, warning, or distinction from a genuine in-repo file.",
+      "assumptions_used": [
+        "The scratch tree and the outside-repo target both live under the same POSIX filesystem and user, so a symlink dereference is unrestricted by mount boundaries or permissions -- the ordinary case for any checkout on a single-user or CI machine, and the same assumption the module's own docstring makes about same-OS-user code execution risk."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:1ce5c898c973385ab3d905f55fe458149e3ec4cc6853a65c9b8ae996c39966d5",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "mkdir -p <outside>/outside_repo_target; printf 'line one\\nline two\\nline three\\n' > <outside>/outside_repo_target/secret.txt (outside the scratch repo entirely).",
+        "ln -s <outside>/outside_repo_target/secret.txt $SCRATCH/.agent-harness/context/inside_looking_symlink.txt.",
+        "Append to FROZEN_DECISIONS.md a decoy assertion line 'outside count is 3 here'; add fact symlink_escape_probe: measurement {kind: count_lines_matching, path: '.agent-harness/context/inside_looking_symlink.txt', pattern: line}, value: 3, with one current-role assertion on that decoy line.",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"fact_measurements\": {..., \"symlink_escape_probe\": 3}}`."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-REGEX-SILENT-ZERO",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "_count_lines_matching() treats a pattern that compiles but matches zero lines exactly the same as a pattern that legitimately matches zero lines: it returns the integer 0 with no error, warning, or distinguishing signal. This is the identical failure shape the module's own docstring names as the reason the declarative vocabulary was built in the first place ('grep -c exits 1 and prints 0 when nothing matches. A mistyped pattern would therefore report the number zero rather than an error -- silence presenting as data'). The redesign moved the measurement out of the shell, but did not add the one check that would actually close this specific hole (e.g. requiring a nonzero match count, or a separate declared expectation of whether zero is a legitimate outcome for that fact). Exploit: declared a fact whose pattern was the real hook_fixture_count fact's pattern with a single-character typo ('^def tset_' instead of '^def test_') against the real .agent-harness/tests/test_hooks.py, with value: 0 to match. check_ssot_consistency.py printed ok:true with fact_measurements.hook_fixture_count_typo_probe: 0 and raised no error at all -- an editor who fat-fingers a pattern and 'corrects' the declared value to whatever the (wrong) measurement now returns gets a clean pass, exactly as a stale grep -c 0 would have.",
+      "assumptions_used": [
+        ".agent-harness/tests/test_hooks.py contains no line literally matching '^def tset_' (verified: the mistyped pattern returned 0, matching the file's real content, which only has '^def test_' functions)."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:e280c112aad5d9866728b99226df8a7ab3205812ccfcc47b30edb6f68fb39840",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Append to FROZEN_DECISIONS.md a decoy assertion line 'the zero count is 0 here'.",
+        "Add fact hook_fixture_count_typo_probe: measurement {kind: count_lines_matching, path: '.agent-harness/tests/test_hooks.py', pattern: '^def tset_'}, value: 0, one current-role assertion on the decoy line.",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"fact_measurements\": {..., \"hook_fixture_count_typo_probe\": 0}}`, no error."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-NEGATION-CLOSED-VOCAB",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "NEGATION_RE is a fixed, small vocabulary ('no longer|not|never|n\\'t|rather than|instead of|neither|nor|no more'). It does not include ordinary disclaiming phrases such as 'no bearing on', 'no relation to', 'unrelated to', or 'irrelevant to'. A sentence that a human reads as an explicit denial that a status word has anything to do with an id is therefore read by the checker as a genuine, uncontested assertion binding that word to that id, and can be used to satisfy the coverage floor for a claim that has no real live statement anywhere. Exploit: removed the sole live occurrence of `C-F10-SCOPE` (the D-066 claim board row '| `C-F10-SCOPE` | IMPLEMENTED |') so that claim had zero genuine coverage, then added to the always-live SHARED_CONTEXT.md bullet: 'The word IMPLEMENTED appears here only as an English adjective, with no bearing on `C-F10-SCOPE` whatsoever, cited purely as an example of unrelated vocabulary in a style note.' check_ssot_consistency.py still printed ok:true with claims_covered: 7, unchanged from the baseline where C-F10-SCOPE had real coverage -- the coverage floor accepted a sentence whose entire point, in plain English, is to deny any connection between the word and the id.",
+      "assumptions_used": [
+        "C-F10-SCOPE is not in coverage_policy.claims.exempt in SSOT_FACTS.json (confirmed by inspection), so it is one of the 7 claims the coverage floor actually requires live prose for; before the mutation its only live occurrence in the whole repository was the single D-066 board row that was deleted."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:6355ac61dbe660609cc3fc32b4c8da3bfdf03a0e2499d3df3ebf7347757da23f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Delete the line '| `C-F10-SCOPE` | IMPLEMENTED |' from docs/harness/PROJECT_STATE.md (its only live occurrence repo-wide).",
+        "Append to SHARED_CONTEXT.md's Current-milestone bullet: 'The word IMPLEMENTED appears here only as an English adjective, with no bearing on `C-F10-SCOPE` whatsoever, cited purely as an example of unrelated vocabulary in a style note.'",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"claims_covered\": 7, \"claims_coverage_exempt\": 14, ...}` -- identical coverage counters to the unmutated baseline, no error naming C-F10-SCOPE."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-FROZEN-ROLE-SMUGGLE",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "A fact-assertion's `role` is a free-standing label supplied by SSOT_FACTS.json; nothing ties a `role: frozen` assertion to actually appearing inside a document region that check_ssot_consistency.py itself treats as historical/frozen (the FROZEN_DECISIONS.md exclusion and the PROJECT_STATE.md/NEXT_SESSION_PROMPT.md supersession machinery apply only to the separate STATUS-assertion pass over gates/claims -- check_facts() reads arbitrary files/lines directly, unconstrained by region liveness). Nor is a `frozen` row's correctness checked against real git history: 'known' is built purely from the JSON's own self-declared `value`/`current_commit` plus whatever `prior` entries the same file lists, so any prior entry an editor cares to add is automatically 'true'. Exploit: fabricated a prior {value: 999, as_of_commit: 'fake123f'} for the real hook_fixture_count fact (true current value 108) and a matching `role: frozen, pinned_to_commit: 'fake123f'` assertion pointing at a sentence planted in PROJECT_STATE.md's '## Current status' section -- the very first, undated, always-live heading of the whole handoff, phrased in the present tense: 'As of right now, hooks are exercised by 999 hook fixtures, giving the current admission-binding surface its coverage.' check_ssot_consistency.py printed ok:true, raising no error despite a wildly wrong number (999 vs the true 108) sitting in present-tense prose in the document's lead section, because the frozen-role machinery only checks the row against its own fabricated pin, never against the real repository history or against where in the document it physically sits.",
+      "assumptions_used": [
+        "No commit 'fake123f' exists in this repository's real history; the fabrication is confined to SSOT_FACTS.json's `prior` array in the scratch copy and was never cross-checked against git log/blame by the tool, which has no code path that reads git history for this purpose at all."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:2f372243e75618ed5dcb7fb46153011a5eb17f02ae76b672f2b8c9850ff87549",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Prepend to PROJECT_STATE.md's '## Current status' section: 'As of right now, hooks are exercised by 999 hook fixtures, giving the current admission-binding surface its coverage.'",
+        "In SSOT_FACTS.json's hook_fixture_count fact, append to `prior`: {value: 999, as_of_commit: 'fake123f', note: 'fabricated'}; append to `assertions`: {file: 'docs/harness/PROJECT_STATE.md', line_contains: 'hooks are exercised by 999 hook fixtures', value_regex: 'exercised by (\\\\d+) hook fixtures', role: frozen, pinned_to_commit: 'fake123f'}.",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"fact_measurements\": {..., \"hook_fixture_count\": 108}}` -- the real measurement still correctly reads 108, yet no error is raised about the 999 sitting present-tense in the live Current-status section."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-CONTROLLING-DATE-GAP",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "overlay_regions() computes the file's overall 'newest' date from EVERY dated heading (controlling or not), and excludes any section whose date is older than that newest -- but it separately checks for ties/undated-ness only among headings that explicitly say 'controlling'. Nothing cross-checks that the controlling section's own date actually equals the file's true newest date. Adding a heading dated LATER than the real controlling section, that itself claims neither 'controlling' nor 'superseded', silently excludes the true controlling section from every live region with no dedicated error (the 'no controlling heading' check still passes, because the old controlling heading is still present in the raw block list, just no longer live). Exploit: flipped the D-066 board's `G-HARNESS-INTEGRITY | FAIL |` to `| PASS |` (a lie against the registry), then inserted an undated-relative-to-content but ISO-dated '## 2026-07-30 rogue attacker overlay' heading immediately before the real '## 2026-07-29 D-066 ... (controlling)' heading, plus a same-day restatement (with TRUE registry values) of the 3 gates and 6 claims that D-066 uniquely covered, so the coverage floor is independently satisfied. Result: the specific error 'live surface says G-HARNESS-INTEGRITY=PASS but the gate registry says FAIL', which fires with 100% reliability when the same flip is made without the rogue heading (see F-DIRECT-FLIP-CAUGHT), is completely ABSENT from the output. In THIS repository's current state the overall run still exits 1, but only because my hand-written restatement introduced unrelated wording errors when other ids landed in the same undelimited clauses (a second instance of the F-COMMA-ADJACENCY effect) -- the false-PASS-for-G-HARNESS-INTEGRITY contradiction itself is never reported, at any point, once the region is shadowed. Where a document's gate/claim coverage for the shadowed section happens to be fully redundant elsewhere (as SHARED_CONTEXT.md's Current-milestone bullet already is for 5 of D-066's 8 gates), this mechanism would produce a full ok:true while the false PASS sits untouched, still readable, in the document.",
+      "assumptions_used": [
+        "The historical branch of this file already uses 'superseded' headings correctly for genuinely-past sections (D-064, D-065 sections), so the exclusion-by-newest-date rule is exercised routinely in the real document and is not a purely theoretical code path.",
+        "This finding is reported at reduced confidence relative to the other six because the fully clean ok:true composite (false PASS retained + zero errors overall) was not independently re-isolated after the coverage-floor mismatch appeared from unrelated restatement wording; the core claim tested here -- that the specific false-PASS error vanishes once the section is shadowed -- was directly observed and is not itself in doubt."
+      ],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:ff8dffea3f90020761da543ec802b5f6d321a412ade38603949040da2374c443",
+      "counterevidence_refs": [
+        "The coverage floor for GATE_REGISTRY.json is unconditional (no exemption list for gates), so in this specific repository state 3 of the 8 gates D-066 covers (G-F10C1-RADIAL, G-F10-PERFORMANCE, G-F10-CATALOGUE) have no other live source, which is why the overall run does not reach ok:true without an explicit, correctly-worded restatement of those ids -- an attacker still has to do real work to fully neutralize the coverage floor, it is not defeated automatically."
+      ],
+      "reproduction": [
+        "Flip 'G-HARNESS-INTEGRITY | FAIL' to 'PASS' in the D-066 board of PROJECT_STATE.md.",
+        "Confirm baseline detection: run the checker with only this flip -- exit 1, single error naming line 68, G-HARNESS-INTEGRITY=PASS vs registry FAIL.",
+        "Insert '## 2026-07-30 rogue attacker overlay' (dated later than 2026-07-29, no 'controlling'/'superseded' text) immediately before the real controlling D-066 heading.",
+        "Run the checker again with both mutations present.",
+        "Observed: the line-68 G-HARNESS-INTEGRITY error is absent from the output entirely; remaining errors are coverage-floor gaps for the 3 gates and several claims uniquely stated inside the now-shadowed D-066 section (G-F10-CATALOGUE, G-F10-PERFORMANCE, G-F10C1-RADIAL, and 6 claim ids), confirming the section was excluded from every live region.",
+        "Added a same-day restatement of exactly those 3 gates + 6 claims with correct registry values in the rogue section; re-ran; the false-PASS error remained absent throughout, though unrelated comma-adjacency mis-bindings in the hand-written restatement produced other errors in this specific attempt."
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether a more carefully punctuated restatement (avoiding F-COMMA-ADJACENCY-triggering commas, e.g. using semicolons between each id/status pair) would reach a fully clean ok:true with the false PASS still present was not re-executed to a final clean transcript in this round; the mechanism producing the missing error was directly observed and reproduced twice, but the fully composed zero-error end state was not re-verified after the wording fix."
+      ]
+    },
+    {
+      "finding_id": "F-DIRECT-FLIP-CAUGHT",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Attack tried and FAILED, reported per the assignment's instruction to record negative results. Directly editing the D-066 status-board cell 'G-HARNESS-INTEGRITY | FAIL' to '| PASS |' with no masking, hiding, or adjacency trick is caught cleanly: the checker exits 1 with exactly one error, precisely localized to the mutated line, correctly identifying both the asserted value and the registry's true value. This confirms the core status-vs-registry contradiction detector works correctly on unshielded input, which is the necessary baseline against which F-COMMA-ADJACENCY and F-CONTROLLING-DATE-GAP (which mask this exact same mutation) are meaningful.",
+      "assumptions_used": [],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:b4c151acec8ed4e25171c3c81c5578d31dd21c68aefb66305c3f6789619a0318",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In a clean scratch tree, edit docs/harness/PROJECT_STATE.md line containing '| `G-HARNESS-INTEGRITY` | FAIL |' to '| `G-HARNESS-INTEGRITY` | PASS |' (D-066 board only; no other change).",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 1; stdout `{\"ok\": false, \"errors\": [\"docs/harness/PROJECT_STATE.md:68: live surface says G-HARNESS-INTEGRITY=PASS but the gate registry says FAIL.\"]}` -- exactly one error, correctly attributed."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-NEGATION-DIRECT-CAUGHT",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Attack tried and FAILED, reported per the assignment's instruction to record negative results. A direct, common denial -- 'For the avoidance of doubt, `G-HARNESS-INTEGRITY` is not PASS.' -- placed in the always-live SHARED_CONTEXT.md bullet is correctly suppressed by NEGATION_RE (the cue word 'not' sits in the 30-character lead window immediately before the PASS token). status_assertions_checked remained 26, identical to the unmutated baseline, and no false PASS assertion was recorded. This is the negation guard working exactly as designed for its explicitly-supported vocabulary, and contrasts with F-NEGATION-CLOSED-VOCAB, where a semantically equivalent but differently-worded denial ('no bearing on ... whatsoever') is NOT recognised because it uses cue words outside the closed NEGATION_RE list.",
+      "assumptions_used": [],
+      "evidence_refs": [],
+      "evidence_fingerprint": "sha256:61f2b83d1012e0576ab6f30aa28cc6700c6836f3149697543f879815deb9bbaf",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In a clean scratch tree, append to SHARED_CONTEXT.md's Current-milestone bullet: 'For the avoidance of doubt, `G-HARNESS-INTEGRITY` is not PASS.'",
+        "Run `venv/bin/python .agent-harness/scripts/check_ssot_consistency.py`.",
+        "Observed: exit code 0; `{\"ok\": true, ..., \"status_assertions_checked\": 26, ...}` -- identical to the unmutated baseline's status_assertions_checked, confirming the sentence asserted nothing (neither a false PASS nor a spurious count increase)."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-MEASUREMENT.json"
+  ]
+}

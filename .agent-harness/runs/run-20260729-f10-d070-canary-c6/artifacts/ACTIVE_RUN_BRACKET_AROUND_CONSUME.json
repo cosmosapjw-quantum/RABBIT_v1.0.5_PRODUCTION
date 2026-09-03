@@ -1,0 +1,28 @@
+{
+ "artifact_class": "CANARY_ATTESTATION",
+ "canary": "C6",
+ "supersedes": "C5, which round 7 found stale: C5 pinned stop_hook_sha256 dc19da4d and HEAD had moved to 0533da88. C1 and C4 failed the same class. Canary staleness is structural and is now a written rule: the canary is the LAST act before the sealing commit.",
+ "method": "Run against bytes ALREADY FROZEN at commit d564821, and ACTIVE_RUN read immediately before and immediately after the Stop dispatch in one shell command with no intervening work, so the consume instant is bracketed rather than merely preceded.",
+ "head_commit": "d56482196a2019b9deed29957b4394fa608a93fa",
+ "stop_hook_sha256": "0533da884250e03e91670aa458e3915859d91b31fc856fa72537dae65a966625",
+ "start_hook_sha256": "af8f7016a35f43771682839c94e44ad1a8e3700d069e31a90090800bfd1a2193",
+ "both_hooks_attested": "C5 attested only the stop hook; the round-7 fix changed the start hook, so C6 pins both.",
+ "pointer_before_dispatch": "run-20260729-f10-d070-canary-c6-decoy",
+ "captured_before": "2026-07-29T12:46:32.570862531Z",
+ "pointer_after_dispatch": "run-20260729-f10-d070-canary-c6-decoy",
+ "captured_after": "2026-07-29T12:46:32.606719483Z",
+ "bracket_width_seconds": 0.036,
+ "canary_lease_run_id": "run-20260729-f10-d070-canary-c6",
+ "overlap_held_across_the_whole_bracket": true,
+ "ledger_consumed_at": "2026-07-29T12:46:32+00:00",
+ "consume_second_interval": [
+  "2026-07-29T12:46:32+00:00",
+  "2026-07-29T12:46:33+00:00"
+ ],
+ "bracket_inside_the_consume_second": true,
+ "resolution_limit": "consumed_at is written with timespec='seconds', so sub-second ordering is unprovable and is NOT claimed. What is established is the pointer state across the dispatch, which is what obligation 4 asks.",
+ "receipt_state": "consumed",
+ "consumed_by_agent_id": "d070-canary-c6",
+ "expected_agent_id": "d070-canary-c6",
+ "result_sha256": "sha256:66b5fb3c701269abb97629c71e70c4d4ce5cac8165b7c57ea74e05fbc1fd390b"
+}

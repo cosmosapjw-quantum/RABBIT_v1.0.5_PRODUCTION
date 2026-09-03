@@ -1,0 +1,682 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-EXPERIMENT-PACKAGE",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f6c-832e-7783-9bbc-f40c21259623",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-EXPERIMENT-PACKAGE",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3d5b2f9330019568b0cb11aaffa0fe0face556914f35bcd0252c34f82e4fe21c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json",
+  "started_at": "2026-07-23T14:39:08Z",
+  "completed_at": "2026-07-23T14:56:25Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_cas_execution": "none",
+    "package_execution": "none; this result specifies but does not implement the package",
+    "token_use": "UNAVAILABLE - the harness exposes no reliable assignment-scoped exact token counter"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-EXPERIMENT-PACKAGE.json",
+    "sed -n over all 318 lines of .agent-harness/generated/CONTEXT_PACK.md and all 51 lines of the assignment",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "python3 -c import _harness.hash_files and compute the ordered path-NUL-bytes-NUL role digest",
+    "sed -n over all lines of AGENTS.md, docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md, and bbn_codex_anti_drift_cost_effective_policy.md",
+    "sed -n over all lines of .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "sed -n over all lines of .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+    "sed -n over all lines of BD622_D039_second_external_audit_report.md",
+    "date -u +%Y-%m-%dT%H:%M:%SZ; python3 --version; jq --version; sha256sum --version",
+    "jq -S -c '.experiment_package_specification' .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json | sha256sum",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json >/dev/null",
+    "python3 -c load the assignment and result, then call _harness.validate_result_contract with the exact run, context, agent, and assignment hash"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/generated/CONTEXT_PACK.md",
+      "sha256": "43e7a00c81c2f5c60ccb60d3a679e242c56f7ac479d989738fa37aeb6cc8c712"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-EXPERIMENT-PACKAGE.json",
+      "sha256": "3d5b2f9330019568b0cb11aaffa0fe0face556914f35bcd0252c34f82e4fe21c"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "raw_file_sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "ordered_role_bundle_sha256": "9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "3a8ab086fdac4c841b0f7cdb68d8167ee5daa2dbec29efe17481a64464e2ce43"
+    },
+    {
+      "path": "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+      "sha256": "d74325dbbaa6e176476bc7b7d08143687c2679606cdfe4484780f88deb58072f"
+    },
+    {
+      "path": "bbn_codex_anti_drift_cost_effective_policy.md",
+      "sha256": "9d3680e5f84d561aeccf7401c26ac597a992b1c2cb41402c28f862a02897e149"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+      "sha256": "9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6"
+    },
+    {
+      "path": "BD622_D039_second_external_audit_report.md",
+      "sha256": "1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7"
+    },
+    {
+      "purpose": "Canonical experiment_package_specification object",
+      "sha256": "sha256:0d5715d40e46074706aabe71c0853c0ebed3ebacfcd996ad98a3dceb65da4c79"
+    }
+  ],
+  "experiment_package_specification": {
+    "spec_id": "D042-EXTERNAL-MECHANISM-LAB-R1",
+    "claim_status": "SPECIFIED",
+    "implementation_status": "NOT_IMPLEMENTED",
+    "execution_status": "NOT_RUN",
+    "scientific_efficacy": "NOT_EVALUATED",
+    "authority_ceiling": "A complete pass is design-lab evidence only. It cannot authorize repository edits, a design cycle, W7, B3, collision output, trajectory, endpoint, RABBIT unblinding, F-11, QKE, public runtime, or any scientific claim.",
+    "objective": "Provide the smallest external, content-addressed, one-command lab that can kill a proposed structurally new mechanism before any scientific output. The lab must execute the candidate's real mechanism primitives, not merely validate prose, schemas, or expected-result fixtures.",
+    "governing_boundary": [
+      "D-039 STOP/PRESERVE and D-041 terminal archive remain controlling.",
+      "The current C-PETROV, C-ANALYTIC, and C-MEDVM artifacts are archived and may be used only as negative-control families; rewrapping them is not a new candidate.",
+      "All tests are algebraic, structural, software, metrology, or resource tests on synthetic exact inputs.",
+      "No package pass has scientific-validation or implementation authority."
+    ],
+    "one_command_contract": {
+      "command": "./run_lab.sh",
+      "arguments": "none",
+      "reason_for_no_arguments": "Candidate set, thresholds, seeds, tool hashes, archive root, and resource caps are sealed in MANIFEST.json before execution; command-line overrides would create a post-output tuning channel.",
+      "runtime": "A preloaded, digest-pinned OCI image is invoked with network=none, read-only root, package source mounted read-only, one write-only archive mount, non-root UID, two CPUs, 4 GiB RAM, 64 PIDs, and a 256 MiB temporary filesystem.",
+      "dependency_policy": "No installer runs. The main Python lane is standard-library-only. Any formal checker is already inside the OCI image and its binary and library hashes are listed in runtime.lock.json.",
+      "missing_image_or_hash_mismatch": "error; no candidate verdict and no fallback environment",
+      "exit_codes": {
+        "0": "all candidates pass the design-lab contract",
+        "10": "at least one reproducible binding failure",
+        "20": "no failure, but at least one required obligation is inconclusive",
+        "30": "harness, lock, schema, isolation, or archive error"
+      }
+    },
+    "package_layout": [
+      {
+        "path": "run_lab.sh",
+        "ownership": "shared",
+        "purpose": "Exact OCI invocation only; no candidate or threshold branching."
+      },
+      {
+        "path": "MANIFEST.json",
+        "ownership": "shared",
+        "purpose": "Single pre-output authority for candidate IDs, source hashes, schemas, thresholds, seeds, stages, and archive policy."
+      },
+      {
+        "path": "runtime.lock.json",
+        "ownership": "shared",
+        "purpose": "OCI digest plus exact Python, shell, formal-tool, library, locale, architecture, and executable hashes."
+      },
+      {
+        "path": "schemas/contract.schema.json",
+        "ownership": "shared",
+        "purpose": "Closed candidate contract; additionalProperties=false."
+      },
+      {
+        "path": "schemas/result.schema.json",
+        "ownership": "shared",
+        "purpose": "Closed result and stage schema; scientific-output fields are absent and forbidden."
+      },
+      {
+        "path": "lab.py",
+        "ownership": "shared",
+        "purpose": "Seal verification, isolation checks, seven-stage execution, canonical replay comparison, status aggregation, and append-only archive writing."
+      },
+      {
+        "path": "harness_canaries.py",
+        "ownership": "shared",
+        "purpose": "Expected-RED fixtures for tampered lock, RABBIT import, constant stub, surviving mutant, schema escape, and archive overwrite."
+      },
+      {
+        "path": "candidates/<candidate_id>/contract.json",
+        "ownership": "candidate",
+        "purpose": "Hypothesis, domains, branches, exact obligations, caps, hostile mutants, decisive falsifier, and no-go/stance conditions."
+      },
+      {
+        "path": "candidates/<candidate_id>/mechanism.py",
+        "ownership": "candidate",
+        "purpose": "Real executable representation, operation graph, invariant, support/tail, permutation, derivative, and error-bound primitives."
+      },
+      {
+        "path": "candidates/<candidate_id>/tests.py",
+        "ownership": "candidate",
+        "purpose": "Exact cases, deterministic property generator, boundary/limit cases, high-precision oracle, and mutation tests using the real mechanism module."
+      },
+      {
+        "path": "candidates/<candidate_id>/proof.<lean|v|thy>",
+        "ownership": "candidate",
+        "purpose": "Kernel-checked proof when a universal, continuity, positivity, entropy, or no-go theorem is binding; omitted only when contract.json proves no formal claim is used."
+      }
+    ],
+    "line_and_file_caps": {
+      "candidate_count": {
+        "minimum": 1,
+        "maximum": 3
+      },
+      "shared_authored_files_max": 7,
+      "shared_physical_loc_max": 300,
+      "candidate_authored_files_max_each": 4,
+      "candidate_physical_loc_max_each": 500,
+      "charged_loc_max_each": 800,
+      "charged_loc_formula": "shared physical LOC plus that candidate's physical LOC; shared LOC is not amortized",
+      "whole_package_authored_files_max_at_three_candidates": 19,
+      "whole_package_physical_loc_max_at_three_candidates": 1800,
+      "generated_lock_and_schema_bytes_max": 131072,
+      "archive_source_bytes_max": 2097152,
+      "loc_definition": "Every physical line in authored .py, .sh, .json, .toml, and proof files counts, including comments, documentation, schemas, and test vectors. Only machine-generated runtime lock records are excluded, and they are byte-capped.",
+      "cap_excess": "fail with reason PACKAGE_INFLATION; do not split the same candidate into a second package"
+    },
+    "candidate_contract": {
+      "novelty_requirement": "A candidate must state its operation-level difference from the complete sealed B3-v2 graph and from Fort, D-027, D-028, and D-029. A language, basis name, coordinate, compiler, or wrapper change alone fails.",
+      "closed_obligation_map": "Every declared obligation maps bidirectionally to exactly one executable primitive, one or more tests, at least one hostile mutant or falsifier, and every consumer. Duplicate authority and unmapped nodes fail.",
+      "required_primitives": [
+        {
+          "primitive_id": "P-REPRESENT",
+          "requirement": "Executable state/representation map with complete domain, branch, strict-open or proved closed-state semantics, and inverse or rejection behavior."
+        },
+        {
+          "primitive_id": "P-OPS",
+          "requirement": "Canonical typed operation DAG with source locations, deterministic topological order, and no caller-selected convention."
+        },
+        {
+          "primitive_id": "P-SUPPORT",
+          "requirement": "Executable process-total support/threshold and full-domain or directed-tail semantics; generic cleared-root or silent zero extension is forbidden."
+        },
+        {
+          "primitive_id": "P-REVERSAL",
+          "requirement": "Forward/reverse involution or an exact alternative that proves detailed balance without fitted weights."
+        },
+        {
+          "primitive_id": "P-INVARIANT",
+          "requirement": "Exact invariant and conservation algebra for the mechanism's abstract reaction/event representation."
+        },
+        {
+          "primitive_id": "P-ENTROPY",
+          "requirement": "Exact eventwise entropy sign plus the candidate-level contraction, pairing, or finite-state H-theorem used by the mechanism."
+        },
+        {
+          "primitive_id": "P-PERMUTE",
+          "requirement": "Executable CP and mu/tau permutation action with involution and operation-order covariance."
+        },
+        {
+          "primitive_id": "P-DERIVATIVE",
+          "requirement": "Exact directional derivative/Jacobian rule including branch-side derivatives and every state-dependent mass/remap term."
+        },
+        {
+          "primitive_id": "P-METROLOGY",
+          "requirement": "Prospectively frozen condition, rounding, denominator, operation-count, memory, and tail/error ledgers."
+        },
+        {
+          "primitive_id": "P-COST",
+          "requirement": "Permanent implementation estimate no greater than 800 LOC and a file-specific same-change deletion plan with projected net deletion of at least 1000 repository LOC."
+        }
+      ],
+      "not_applicable_rule": "A primitive may be marked not_applicable only when contract.json identifies a replacement primitive that closes the same invariant, branch, derivative, consumer, metrology, and falsifier obligations. Bare not_applicable is a binding failure.",
+      "real_implementation_rule": [
+        "mechanism.py must be imported and executed in every candidate stage after admission.",
+        "Each result row records function-qualified source hashes and executed operation-node IDs.",
+        "Deleting mechanism.py, replacing each exported primitive by a constant, returning the fixture's expected value, or bypassing the operation graph must make the candidate non-PASS.",
+        "unittest.mock, monkeypatching, import injection, expected-output lookup tables, demo modes, and golden-result-only assertions are forbidden in candidate evidence.",
+        "A test that asserts only schema shape, file existence, count, or prewritten expected output cannot satisfy a mechanism obligation."
+      ]
+    },
+    "scope_and_isolation_guards": {
+      "repository_location": "The package is unpacked and run outside every RABBIT checkout. No RABBIT path is mounted into the OCI container.",
+      "import_guards": [
+        "AST scan rejects imports rooted at rabbit and imports from any copied Rust, JAX, Fort, W7, D-027, D-028, or D-029 execution module.",
+        "Runtime audit rejects any loaded module or opened path whose normalized path is outside the package, runtime standard library, formal-tool prefix, or archive root.",
+        "PYTHONNOUSERSITE=1, python -I, empty PYTHONPATH, fixed locale C.UTF-8, TZ=UTC, PYTHONHASHSEED=0, and single-thread BLAS variables are mandatory."
+      ],
+      "execution_guards": [
+        "Network is disabled by the OCI runtime.",
+        "Package source and runtime root are read-only.",
+        "Only a fresh archive directory may be written; preexisting paths are opened with exclusive-create semantics.",
+        "Subprocess execution is allowlisted to exact-hash formal checkers and the second replay worker.",
+        "Randomness uses one declared integer seed and a local deterministic generator; system entropy, wall clock, and process IDs cannot enter canonical evidence."
+      ],
+      "forbidden_outputs": [
+        "RABBIT collision action or rate",
+        "spectrum or distribution claimed as physical",
+        "T01-T12 result",
+        "GL48 or GL64 collision result",
+        "Radau, BDF, DLSODA, or other trajectory segment",
+        "temperature history, N_eff, abundance, Hubble, elapsed cosmological time, endpoint, or unblinded comparison",
+        "JAX, Rust, Fort, B3, W7, F-11, Bianchi, QKE, or public-runtime execution result"
+      ],
+      "allowed_numeric_evidence": [
+        "Exact rational or algebraic identities",
+        "Kernel-checked theorem status",
+        "Synthetic dimensionless boundary and mutation cases",
+        "Condition and inf-sup bounds",
+        "Directed rounding and tail-bound terms",
+        "Operation, edge, branch, file, LOC, wall, RSS, and disk counts",
+        "Deterministic replay hashes"
+      ],
+      "output_enforcement": "result.schema.json has an allowlist with additionalProperties=false; raw stdout/stderr and all created paths are also scanned for forbidden fields and repository provenance. A violation is a binding fail and the raw bytes are retained."
+    },
+    "experiment_matrix": [
+      {
+        "stage_id": "E0-SEAL-ISOLATE",
+        "wall_seconds": 30,
+        "purpose": "Prove exact package/runtime bytes, closed schemas, source immutability, isolation, LOC/file limits, archive freshness, and harness fail-closed behavior.",
+        "required_experiments": [
+          "Recompute every sorted path, size, mode, and SHA-256 entry in MANIFEST.json.",
+          "Verify OCI, interpreter, shell, standard-library, and formal-tool hashes.",
+          "Reject undeclared files, duplicate paths, symlinks, executable drift, additional schema properties, and any RABBIT path or import.",
+          "Run six expected-RED canaries: tampered lock, forbidden import, constant stub, surviving mutant, schema escape, and attempted archive overwrite.",
+          "Preserve every expected RED under archive/harness_canaries without treating it as candidate evidence."
+        ],
+        "pass_rule": "All bytes and limits match, isolation holds, and every expected-RED canary is rejected with its declared reason.",
+        "fail_rule": "A validly sealed candidate violates scope, source, LOC, or isolation.",
+        "error_rule": "The runner, schema, lock, OCI image, or archive mechanism cannot be trusted; stop before candidate judgment."
+      },
+      {
+        "stage_id": "E1-REAL-MECHANISM",
+        "wall_seconds": 60,
+        "purpose": "Establish that the candidate contains and executes a complete mechanism rather than a package-shaped claim.",
+        "required_experiments": [
+          "Build the canonical operation DAG from contract.json and mechanism.py.",
+          "Check bidirectional obligation-to-operation-to-test-to-mutant-to-consumer coverage.",
+          "Trace every executed primitive to its sealed source hash and operation-node IDs.",
+          "Run deletion, constant-return, expected-fixture-lookup, bypass, and duplicate-authority mutants.",
+          "Reject unreachable branches and unowned consumers."
+        ],
+        "pass_rule": "Coverage is total and unique; all five reality mutants are killed by candidate-owned tests that execute mechanism.py.",
+        "fail_rule": "Any mechanism deletion/stub/bypass can pass, any obligation is unmapped, or any duplicate authority path exists.",
+        "inconclusive_rule": "No inference from partial coverage; a non-total graph is non-PASS."
+      },
+      {
+        "stage_id": "E2-EXACT-FORMAL",
+        "wall_seconds": 300,
+        "purpose": "Discharge the exact algebra and any theorem on which feasibility depends.",
+        "required_experiments": [
+          "Use exact integers, rationals, algebraic numbers, or symbolic polynomials for invariants, forward/reverse identities, branch partitions, permutation involutions, and limiting cases.",
+          "Compile every binding formal proof with no sorry, admit, Admitted, new axiom, unchecked oracle, or unsealed library.",
+          "Independently reproduce declared exact vectors with a separate standard-library rational implementation.",
+          "Run Decimal precision at 120 digits with absolute tolerance 1e-80 and relative tolerance 1e-70 only for claims explicitly labeled numerical witness, never as a theorem substitute."
+        ],
+        "pass_rule": "All exact equalities/inequalities and all binding kernel-checked proofs close under the sealed assumptions.",
+        "fail_rule": "An exact counterexample, branch contradiction, forbidden proof escape, or mismatched independent exact implementation is produced.",
+        "inconclusive_rule": "A required theorem is absent, a proof does not compile, assumptions do not align, or a formal lane reaches its timeout."
+      },
+      {
+        "stage_id": "E3-PROPERTY-BOUNDARY",
+        "wall_seconds": 120,
+        "purpose": "Attack the executable mechanism across its sealed domain without producing a scientific observable.",
+        "required_experiments": [
+          "Enumerate every declared exact boundary, threshold side, zero/massless/equilibrium limit, support switch, tie, and permutation orbit.",
+          "Run at least 4096 deterministic generated states with the sealed seed and record each minimal counterexample.",
+          "Check strict-open occupation or the proved replacement domain, positivity, normalization, reversal, invariants, entropy, tail ownership, and derivative consistency.",
+          "Use symmetric and one-sided derivative checks only where the contract declares those branches; a numerical derivative cannot override an exact branch rule.",
+          "Run operation-order and concrete-label permutations and compare canonical hex/decimal outputs."
+        ],
+        "pass_rule": "Every boundary and generated property passes the presealed exact or numerical condition, with no discarded case.",
+        "fail_rule": "One reproducible counterexample violates a binding property or a case is clipped, filtered, retried, symmetrized, or projected.",
+        "inconclusive_rule": "An unclassified branch, undefined limit, or ambiguous domain leaves a binding property untested."
+      },
+      {
+        "stage_id": "E4-HOSTILE-MUTATION",
+        "wall_seconds": 180,
+        "purpose": "Prove that tests detect the historical failure families and the candidate's claimed new mechanism.",
+        "required_mutant_classes": [
+          "factor, sign, orientation, or multiplicity",
+          "support, threshold, root, or branch side",
+          "tail, endpoint, truncation, or second consumer",
+          "permutation, concrete-label order, or reverse involution",
+          "mass/remap/solve or derivative term",
+          "rounding order, denominator, or reduction",
+          "selector, cell, edge, or topology switch",
+          "source deletion, constant stub, expected-value lookup, or duplicate authority"
+        ],
+        "minimum_candidate_specific_mutants": 8,
+        "mutation_score_required": "100% of all binding mutants; no equivalent-mutant waiver after execution",
+        "pass_rule": "Every predeclared mutant is killed by a named test and reason code; raw mutant output is retained.",
+        "fail_rule": "Any binding mutant survives, is skipped, is reclassified after output, or is killed only by a schema/count assertion.",
+        "inconclusive_rule": "An allegedly equivalent mutant lacks a pre-output exact equivalence proof."
+      },
+      {
+        "stage_id": "E5-METROLOGY-COST",
+        "wall_seconds": 120,
+        "purpose": "Reject numerically or economically unresolved candidates before any physical execution.",
+        "required_experiments": [
+          "Compute a prospective condition or inf-sup bound over the declared closed state/domain envelope.",
+          "Emit a directed binary64 ledger containing summation, basis/representation, solve/remap, interval/branch, denominator, tail, and operation-count terms.",
+          "Compare binary64 with the 120-digit independent witness at every sealed adversarial case without fitting a correction.",
+          "Measure operation count, maximum RSS, wall time, archive bytes, and deterministic edge/event graph count.",
+          "Verify candidate and package LOC/file caps and the file-specific projected repository deletion plan."
+        ],
+        "hard_caps": {
+          "condition_number_or_inverse_infsup_upper": "1e6",
+          "binary64_total_upper": "2.5e-11",
+          "candidate_permanent_loc_upper": 800,
+          "projected_same_change_repository_net_lines_upper": -1000,
+          "network_calls": 0,
+          "unexpected_writes": 0
+        },
+        "pass_rule": "Every directed bound and measured resource is within its presealed cap; all terms and domains are reconstructible.",
+        "fail_rule": "A cap is exceeded, a term is omitted, a range straddles a cap, a bound is fitted after output, or cost is reported only at a favorable sample.",
+        "inconclusive_rule": "A rigorous bound cannot be reconstructed even if sampled values look favorable."
+      },
+      {
+        "stage_id": "E6-REPLAY-ARCHIVE",
+        "wall_seconds": 1700,
+        "purpose": "Prove deterministic evidence and route it without erasing raw failure.",
+        "required_experiments": [
+          "Execute the complete E1-E5 candidate worker exactly twice in fresh sequential isolated processes from the same preseal; the E1-E5 wall caps apply separately inside each replay and E6's cap includes both replays plus comparison/archive work.",
+          "Canonicalize only by sorting declared maps and excluding run UUID, wall-clock timestamps, and resource counters; floats use hex and high-precision values use canonical decimal strings.",
+          "Require byte-identical canonical result, operation trace, exact proof status, generated case list, counterexamples, and artifact index.",
+          "Verify both raw run directories and every expected RED remain independently addressable.",
+          "Write a final sorted path-size-mode-SHA256 manifest with exclusive-create semantics and reverify it before exit."
+        ],
+        "pass_rule": "Both canonical evidence bundles are byte-identical and all earlier stages pass.",
+        "fail_rule": "Candidate evidence differs, a raw artifact is overwritten/missing, or a declared output cannot be hashed.",
+        "inconclusive_rule": "Externally interrupted replay with intact partial archive is non-PASS; do not infer determinism."
+      }
+    ],
+    "global_resource_caps": {
+      "total_wall_seconds": 1800,
+      "cpu_cores": 2,
+      "container_memory_bytes": 4294967296,
+      "candidate_peak_rss_bytes": 3221225472,
+      "pids": 64,
+      "temporary_bytes": 268435456,
+      "archive_bytes": 536870912,
+      "open_files": 256,
+      "network_calls": 0,
+      "formal_processes_concurrent": 1,
+      "property_cases_minimum": 4096,
+      "formal_timeout_disposition": "inconclusive unless an exact counterexample was already retained",
+      "candidate_resource_excess_disposition": "fail",
+      "external_runtime_kill_or_missing_locked_tool_disposition": "error"
+    },
+    "machine_readable_outputs": {
+      "canonical_run_result_path": "archive/<preseal_sha256>/<run_uuid>/result.json",
+      "canonical_candidate_result_path": "archive/<preseal_sha256>/<run_uuid>/candidates/<candidate_id>/result.json",
+      "raw_streams": [
+        "stdout.raw",
+        "stderr.raw"
+      ],
+      "required_artifacts": [
+        "PRESEAL.json",
+        "runtime.json",
+        "stage_results.jsonl",
+        "operation_trace.jsonl",
+        "property_cases.jsonl",
+        "mutants.jsonl",
+        "proofs.json",
+        "metrology.json",
+        "resources.json",
+        "replay_a/canonical.json",
+        "replay_b/canonical.json",
+        "ARTIFACT_MANIFEST.json"
+      ],
+      "run_result_required_fields": [
+        "schema_version",
+        "spec_id",
+        "run_uuid",
+        "preseal_sha256",
+        "status",
+        "reason_codes",
+        "authority_ceiling",
+        "candidate_results",
+        "tool_versions",
+        "commands",
+        "resource_caps",
+        "resource_observed",
+        "artifact_manifest_sha256",
+        "errors"
+      ],
+      "candidate_result_required_fields": [
+        "schema_version",
+        "spec_id",
+        "candidate_id",
+        "run_uuid",
+        "preseal_sha256",
+        "manifest_sha256",
+        "runtime_lock_sha256",
+        "source_tree_sha256",
+        "status",
+        "reason_codes",
+        "authority_ceiling",
+        "stages",
+        "obligations",
+        "tool_versions",
+        "commands",
+        "resource_caps",
+        "resource_observed",
+        "canonical_replay_sha256_a",
+        "canonical_replay_sha256_b",
+        "artifact_manifest_sha256",
+        "errors"
+      ],
+      "stage_result_required_fields": [
+        "stage_id",
+        "status",
+        "started_monotonic_ns",
+        "completed_monotonic_ns",
+        "checks_total",
+        "checks_passed",
+        "checks_failed",
+        "checks_inconclusive",
+        "reason_codes",
+        "counterexample_refs",
+        "artifact_refs"
+      ],
+      "obligation_result_required_fields": [
+        "obligation_id",
+        "primitive_id",
+        "verdict",
+        "assumptions",
+        "source_hashes",
+        "operation_node_ids",
+        "test_ids",
+        "mutant_ids",
+        "consumer_ids",
+        "evidence_refs",
+        "unresolved"
+      ],
+      "numeric_encoding": "Exact values are canonical strings; binary64 values are float.hex strings; Decimal values are normalized signed scientific strings with declared precision. NaN and infinities are rejected unless the exact negative control expects them.",
+      "schema_policy": "additionalProperties=false at every governed object; schema/version change after preseal is a fail"
+    },
+    "status_semantics": {
+      "pass": "E0 is trusted and every binding obligation in E1-E6 passes twice. The only permitted label is LAB_DESIGN_PASS / PROPOSED; no scientific or implementation authority follows.",
+      "fail": "With trusted E0, at least one reproducible exact counterexample, hostile mutant survivor, forbidden import/output, hard-cap excess, deterministic mismatch, overwrite, or scope violation exists.",
+      "inconclusive": "No binding failure is proved, but a theorem, branch, proof, bound, replay, tool result, or required experiment is absent, timed out, ambiguous, or not reconstructible.",
+      "error": "The runner, lock, schema, isolation, source seal, OCI environment, or archive path is untrustworthy before a candidate verdict can be admitted.",
+      "aggregation": "If E0 is untrusted, status=error. Otherwise any binding fail yields fail. Otherwise any inconclusive yields inconclusive. Only all-pass yields pass. Skipped, xfail, flaky retry, warning-only, and partial-pass states are forbidden.",
+      "structural_rule": "Exact structural failures cannot be rescued by uncertainty, high precision, majority vote, mutation score, or a favorable aggregate."
+    },
+    "archive_routes": {
+      "expected_harness_red": "archive/harness_canaries/EXPECTED_RED/<canary_id>/<raw_sha256>/",
+      "candidate_fail": "archive/candidates/<candidate_id>/FAIL/<preseal_sha256>/<run_uuid>/",
+      "candidate_inconclusive": "archive/candidates/<candidate_id>/INCONCLUSIVE/<preseal_sha256>/<run_uuid>/",
+      "candidate_error": "archive/candidates/<candidate_id>/ERROR/<preseal_sha256>/<run_uuid>/",
+      "candidate_pass": "archive/candidates/<candidate_id>/REVIEWABLE_DESIGN_ONLY/<preseal_sha256>/<run_uuid>/",
+      "terminal_rejection": "archive/terminal/<candidate_id>/<preseal_sha256>/",
+      "write_policy": "Every route is append-only and exclusive-create. No latest symlink, overwrite, cleanup, compaction, or result replacement is permitted.",
+      "terminal_rule": "A decisive candidate falsifier or new binding failure class copies the complete raw directory into terminal_rejection and permanently closes that candidate byte set. A later materially new candidate receives a new ID and contract hash rather than a remediation overwrite."
+    },
+    "post_output_tuning_barrier": {
+      "seal_order": [
+        "Validate closed schemas.",
+        "Hash runtime and all source bytes.",
+        "Freeze candidates, obligations, domains, seeds, exact vectors, tolerances, caps, mutants, expected reason codes, and archive paths.",
+        "Write PRESEAL.json once.",
+        "Remount source read-only.",
+        "Execute E0-E6."
+      ],
+      "forbidden_after_preseal": [
+        "threshold, norm, domain, branch, seed, sample count, timeout, resource cap, candidate, mutant, expected result, tool, proof assumption, or status-rule change",
+        "case deletion, clipping, retry, averaging, projection, symmetrization, fallback implementation, or environment substitution",
+        "renaming a failure as expected behavior without a new external candidate ID and a fresh preregistered review"
+      ]
+    },
+    "strongest_package_inflation_critique": {
+      "critique": "This lab can become D-038's failure pattern in miniature: more schemas, manifests, hashes, mutation dashboards, and synthetic algebra surrounding no executable breakthrough. Its strongest apparent claim could remain true if the candidate mechanism were deleted, while the package adds another non-scientific gate and consumes review attention.",
+      "binding_response": [
+        "The package remains external and cannot be merged or registered as a repository gate.",
+        "Shared code is capped at 300 physical LOC and every candidate is charged the full shared surface.",
+        "The real mechanism source must execute, and deletion, constant, expected-lookup, bypass, and duplicate-authority mutants must all be killed.",
+        "A pass requires candidate-owned exact, property, mutation, metrology, and replay evidence, not schema or count checks.",
+        "The first non-PASS archives the byte set; there is no remediation loop inside this package.",
+        "Even a complete pass changes only the owner-facing disposition from reject-current-bytes to eligible-for-one fresh design review."
+      ],
+      "package_level_decisive_falsifier": "If all stages can still pass after mechanism.py is deleted or replaced by contract-conforming constants or fixture lookups, the package is gate-only inflation. Discard the package itself; do not repair it into another harness layer."
+    },
+    "candidate_decisive_falsifier": {
+      "rule": "Each candidate contract must name one operation-level hypothesis whose exact or deterministic counterexample terminates that candidate byte set. A generic test failure is insufficient as the named falsifier, but any additional binding failure is still terminal.",
+      "minimum_examples": [
+        "A supposedly uniform inf-sup or condition lower bound reaches zero inside the predeclared closed domain.",
+        "A claimed one-owner tail/support path has a second consumer or an uncovered physical-side branch.",
+        "A moving/remap mechanism loses reversibility, invariants, positivity, entropy, differentiability, or the deterministic cost cap.",
+        "An exact graph isomorphism maps the proposed mechanism to sealed B3-v2 despite the novelty claim."
+      ]
+    },
+    "stance_change_conditions": {
+      "current_stance": "SPECIFY_ONLY under STOP/PRESERVE; no candidate or package has been executed.",
+      "toward_more_favorable": "Only an external archive with exact locked bytes may move to REVIEWABLE_DESIGN_ONLY after E0 passes, E1-E5 pass independently in both replays, E6 passes, the package-level deletion falsifier is killed, the candidate-specific decisive falsifier is not triggered, the complete raw archive is independently hash-reviewed, and no new failure class appears.",
+      "toward_rejection": "Any binding fail, surviving mutant, forbidden import/output, missing theorem, irreconstructible bound, resource excess, replay mismatch, package-inflation cap excess, or new failure class preserves or strengthens DO_NOT_REOPEN; a decisive falsifier terminally archives that candidate byte set.",
+      "authority_after_favorable_change": "A lab pass may support only a new explicit owner choice about one fresh design-only review. It does not itself activate that review or authorize W7, B3, numerical physics, implementation, trajectory, endpoint, unblinding, F-11, QKE, or public runtime.",
+      "later_authority_ladder": [
+        "Independent hash and archive audit of the lab pass.",
+        "Explicit owner decision for one fresh design-only review.",
+        "Fresh blind whole-design review under a new registered contract.",
+        "Separate owner decision for any exact/high-precision numerical oracle work.",
+        "Executed independent evidence and fresh adjudication before any implementation question.",
+        "No step may be inferred from a prior step."
+      ]
+    },
+    "required_seven_stage_adversarial_loop": [
+      {
+        "stage": "self-discover",
+        "status": "complete",
+        "public_record": "Mapped the assignment to executable mechanism, exact/formal, property, mutation, metrology, replay, resource, archive, authority, and cost obligations."
+      },
+      {
+        "stage": "step-back",
+        "status": "complete",
+        "public_record": "Identified package inflation, not candidate algebra, as the most dangerous meta-failure; imposed external-only placement, full shared-LOC charging, and the mechanism-deletion falsifier."
+      },
+      {
+        "stage": "metacognitive self-ask",
+        "status": "complete",
+        "public_record": "Separated a complete specification from an implemented package, a package pass from scientific validation, exact identities from sampled witnesses, and candidate non-admission from a universal no-go."
+      },
+      {
+        "stage": "CoVe",
+        "status": "complete",
+        "public_record": "Cross-checked the scope, status vocabulary, no-mock rule, exact-hash/result envelope, D-041 failures, prior 1e6 and 2.5e-11 caps, net-deflation obligation, and STOP/PRESERVE ceiling against the named inputs."
+      },
+      {
+        "stage": "adversarial self-ask",
+        "status": "complete",
+        "public_record": "Attacked the design with tampered locks, hidden RABBIT imports, constant stubs, fixture lookups, unowned branches, surviving mutants, formal skips, high-precision theorem substitution, tuned caps, nondeterministic replay, raw-RED overwrite, and package-splitting."
+      },
+      {
+        "stage": "CCoT",
+        "status": "complete",
+        "public_record": "Contrasted real-mechanism versus wrapper-only packages, exact/formal versus sampled evidence, candidate fail versus theorem-gap inconclusive, and lab reviewability versus every later authority step."
+      },
+      {
+        "stage": "PDR",
+        "status": "complete",
+        "public_record": "Retained STOP/PRESERVE, supplied package- and candidate-level decisive falsifiers, made first non-PASS terminal for the byte set, and stated the only bounded conditions that could change the owner-facing stance."
+      }
+    ],
+    "cost_accounting": {
+      "repository_added_lines": 0,
+      "repository_deleted_lines": 0,
+      "repository_net_lines": 0,
+      "repository_files_touched": 1,
+      "repository_file_scope": "Only this registered result artifact",
+      "token_use_exact": "UNAVAILABLE",
+      "token_use_basis": "No reliable assignment-scoped exact token counter is exposed by the harness.",
+      "runtime_behavior_changed": "no",
+      "physics_behavior_changed": "no",
+      "known_scientific_blocker_reduced": "no",
+      "blocker_movement_ratio": 0.0,
+      "validation_strengthened": "no executed validation; a prospective falsification package is only SPECIFIED",
+      "cost_effectiveness_verdict": "ACCEPT_WITH_LIMITS for the bounded result specification; no scientific progress claim"
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "F-D042-EXPERIMENT-PACKAGE-001",
+      "claim_id": "C-D042-EXPERIMENT-PACKAGE",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "A minimal external experiment package is fully SPECIFIED with a no-argument one-command run, real candidate-mechanism reachability, exact/formal and 120-digit checks where applicable, deterministic property tests, 100% predeclared hostile-mutant killing, prospective binary64/conditioning/cost gates, byte-identical replay, exact dependency/runtime locks, fail-closed statuses, resource caps, machine-readable outputs, append-only raw RED routes, and explicit package-inflation and authority stops. This is a design-specification PASS only; the package is not implemented or executed and no scientific, repository, design-cycle, numerical, or endpoint authority follows.",
+      "assumptions_used": [
+        "D-039 STOP/PRESERVE and D-041 archival disposition remain binding.",
+        "Future candidates must be materially new at the operation-graph level rather than remediations or renamings of archived candidates.",
+        "The external environment can provide a preloaded digest-pinned OCI image; absence is an error, not a fallback.",
+        "Exact structural obligations are not uncertainty-rescuable.",
+        "The prior conditioning ceiling 1e6, binary64 ceiling 2.5e-11, permanent implementation ceiling 800 LOC, and projected net-deletion requirement -1000 LOC are retained as no-loosening outer bounds."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-EXPERIMENT-PACKAGE.json#task",
+        "AGENTS.md#Research-Harness-Rules",
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md#Hard-Rule",
+        "bbn_codex_anti_drift_cost_effective_policy.md#Line-Budget",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#gate_decision",
+        "BD622_D039_second_external_audit_report.md#12-Prospective-negative-control-package",
+        "experiment_package_specification"
+      ],
+      "evidence_fingerprint": "sha256:0d5715d40e46074706aabe71c0853c0ebed3ebacfcd996ad98a3dceb65da4c79",
+      "counterevidence_refs": [
+        "The package itself could become gate-only inflation; the specification therefore makes a surviving mechanism-deletion mutant a package-level decisive falsifier.",
+        "No implementation or run proves that the LOC caps, OCI isolation, formal-tool lock, replay, or archive semantics are feasible on real candidate bytes.",
+        "D-041 proves that bounded exact subclaims and synthetic tests do not admit an incomplete whole candidate."
+      ],
+      "reproduction": [
+        "jq -S -c '.experiment_package_specification' .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json | sha256sum",
+        "Verify that the digest equals the finding evidence_fingerprint and artifacts canonical-spec digest.",
+        "Check every assignment requirement against one_command_contract, candidate_contract, experiment_matrix, global_resource_caps, machine_readable_outputs, status_semantics, archive_routes, strongest_package_inflation_critique, stance_change_conditions, and required_seven_stage_adversarial_loop."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No lab package exists or has run; implementation feasibility and candidate-specific scientific mechanism claims remain unevaluated.",
+        "A future candidate must supply its own exact domain, primitive implementation, proof obligations, decisive falsifier, and immutable runtime digest.",
+        "The package does not and cannot establish structural independence, physics correctness, or endpoint agreement without later separately authorized evidence."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-EXPERIMENT-PACKAGE.json"
+  ]
+}

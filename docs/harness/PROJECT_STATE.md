@@ -1,10 +1,33 @@
 # Project State
 
-Date: 2026-07-19
+**Branch-local `diagnosis_report` notice (2026-08-11).**
+
+The owner-authorized `diagnosis_report` branch publishes the exact F-10 source
+lock, original order-60 / `y_max=30` V3a retained states and raw provenance,
+deterministic input/grid/catalog manifests, and prospectively sealed static
+physical RHS/direct-JVP receipts. Start at
+`00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md`.
+
+The active recovery seal is
+`acb5641e8008f0c8305e8e83db4d7269ba9e1cd6`; its contract SHA-256 is
+`c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc`.
+The earlier seal and failed receipt remain byte-preserved. The recovery receipt
+retains valid base RHS, first-law, occupation, domain/roundoff, and tail
+diagnostics for all four states. Its fixed-rule direct JVP is a negative
+admissibility result at `creep_1200`, where the second shifted call leaves the
+strict occupation domain; this failure is not hidden or promoted.
+
+This is an artifact/provenance publication only. The physical prefix trajectory
+was not run, reaction-tail authority was not established, and no gate,
+registry, public capability, QKE scope, or `main` history changed. The remote
+delivery target is only `origin/diagnosis_report`.
+
+Date: 2026-07-29
 
 ## Current status
 
-The active repository is a curated fresh-history public baseline on `main`.
+The active remediation branch is `f10-independent-validation-b3v2`, based on the
+curated fresh-history public baseline `main@ca3a0138d496732edfc13559fd8f7ceec7ef4d6e`.
 The pre-publication Git database and local evidence were preserved rather than
 deleted under ignored `.publish-local/20260719T052443Z/`; they are not part of
 the publishable tree. `out_of_scope/`, raw harness runs, generated outputs,
@@ -31,18 +54,557 @@ a declared five-profile, two-auxiliary-rule `2.1%` envelope. F-10C2 now
 executes and internally validates all nine frozen classical diagonal collision
 rows and materially moves the whole-endpoint wall. The crate-private dual-
 solver endpoint and `N_eff` readouts remain internal regression evidence. Two
-private structurally independent full-spectral static formulations have run
-and failed their frozen M1 discriminators before trajectory authority. A third
-three-node maximum-relative-entropy route was rejected at blind design review
-before implementation because its derivation and executable selector are not
-one coherent continuous/covariant method. No independent FLRW endpoint has
-run.
+private structurally independent full-spectral static formulations failed
+their original frozen M1 discriminators, and a three-node
+maximum-relative-entropy route was rejected at design review. The later
+orientation-closed comparator executed one D-056 collision-coupled FLRW
+endpoint and agrees supportively with the completed Rust catalogue, but D-057
+finds that the prospective contract froze obsolete F10C1 anchors and therefore
+does not admit the endpoint as gate-closing evidence.
 JAX remains frozen as a non-dispatchable
 bounded component parity, AD, Jacobian, and numerical-method oracle. QKE and
 public production are FORBIDDEN. By the 2026-07-16 owner decision, the current
 programme stops after F-10 closes a collision-coupled isotropic neutrino
 Boltzmann FLRW endpoint. F-11 Bianchi/Type-I is owner-paused and must not be
 started without a new explicit instruction.
+
+## 2026-07-29 D-066 durability and lane-grant overlay (controlling)
+
+### Gate and claim board
+
+**This block is GENERATED from `GATE_REGISTRY.json` and `CLAIM_REGISTRY.jsonl` by
+`.agent-harness/scripts/build_status_board.py`. Do not edit it.** The checker requires it to
+equal a fresh render byte for byte, here and in `.agent-harness/generated/STATUS_BOARD.md`.
+
+It replaces two hand-written tables. Those were added at D-070 because the controlling overlay
+previously said only "the board remains 6 PASS / 2 FAIL" without naming a gate, leaving three
+gates and seven claims with no checkable statement anywhere current -- and the machinery that
+then checked the hand-written replacement was defeated seven times running, most recently by
+characters that render as ASCII and match nothing. Generation ends that argument by removing the
+thing being argued about: a status here can now be wrong only by being wrong in the registry.
+
+All 8 gates and all 21 claims are rendered, not the 8 + 7 the hand tables carried. Restating a
+sealed claim by hand was expensive enough that fourteen were exempted from having to appear;
+generation makes it free, so the exemption list loses its reason to exist and is removed with the
+parser. **No basis column:** a basis is narrative, a generator cannot invent one, and adding a
+registry field to feed it would be net-adding with a six-commit lifetime. It returns from the
+evidence packages, which carry an `implication` line per accepted package.
+
+<!-- BEGIN GENERATED STATUS BOARD -->
+
+| Gate | Status | Basis |
+|---|---|---|
+| `G-F10-CATALOGUE` | PASS | nine rows execute with rowwise invariants at module bytes 760a7c04 |
+| `G-F10-COVARIANCE-METROLOGY` | PASS | D-065 upholds it only on the frozen matched family and module bytes |
+| `G-F10-INDEPENDENT-FLRW` | FAIL | D-071 closes the old instrument on its current measurement; D-077 authorizes only a prospectively sealed numerical-equivalence lane; no grade movement |
+| `G-F10-PERFORMANCE` | PASS | measured whole-endpoint reduction, closed with its profile |
+| `G-F10-SCOPE` | PASS | the F-10 fence holds and downstream authority is closed |
+| `G-F10C1-RADIAL` | PASS | D-004/D-014: frozen direct and five-profile envelope |
+| `G-F10C1-REGRESSION` | PASS | retained tree passes its frozen regression set |
+| `G-HARNESS-INTEGRITY` | FAIL | D-065 restored FAIL. All four obligations are now discharged -- 1, 3 and 4 by the round-13 registered panel, 2 under the wording revised at D-075 -- and the gate still fails: the pass condition has eight conjuncts the obligations do not touch, operator and decision independence is absent, and no evidence package backs a move. |
+
+| Claim | Status |
+|---|---|
+| `C-F10-B3V2-DESIGN` | PROPOSED |
+| `C-F10-CATALOGUE` | VALIDATED |
+| `C-F10-COVARIANCE-METROLOGY` | VALIDATED |
+| `C-F10-FULL-AUTHORITY` | FORBIDDEN |
+| `C-F10-INDEPENDENT` | IMPLEMENTED |
+| `C-F10-INDEPENDENT-GALERKIN-M1` | VALIDATED |
+| `C-F10-INDEPENDENT-MAXENT3-DESIGN` | VALIDATED |
+| `C-F10-INDEPENDENT-POINTWISE-M1` | VALIDATED |
+| `C-F10-METROLOGY-R3` | VALIDATED |
+| `C-F10-PERF` | VALIDATED |
+| `C-F10-ROW9-CLOSURE` | VALIDATED |
+| `C-F10-SCOPE` | IMPLEMENTED |
+| `C-F10-TRAJECTORY-R2` | IMPLEMENTED |
+| `C-F10-W3-PARTIAL` | DERIVED |
+| `C-F10-W5-LOCALIZATION` | VALIDATED |
+| `C-F10C1-CACHE` | DEPRECATED |
+| `C-F10C1-ENDPOINT` | IMPLEMENTED |
+| `C-F10C1-N48` | VALIDATED |
+| `C-HARNESS-INTEGRITY` | IMPLEMENTED |
+| `C-R6-ORBIT-CHART` | VALIDATED |
+| `C-R6-ORBIT-CHART-RABBIT-APPLICABILITY` | VALIDATED |
+
+<!-- END GENERATED STATUS BOARD -->
+
+Fourteen further registered claims are closed records whose status is carried by
+their `FROZEN_DECISIONS` row and audit report; they are listed with written
+reasons in `SSOT_FACTS.json` under `coverage_policy.claims.exempt`. Anything added
+to the claim registry later is required here until someone writes down why not.
+
+- D-066 changes no gate. The board remains **6 PASS / 2 FAIL** as adjudicated by
+  D-065. It commits the D-065 audit and its run evidence durably, and records the
+  owner grant of 2026-07-29 authorising three bounded lanes with gate
+  reconsideration reserved for D-070: **D-067** exact parent-authenticated
+  agent-to-assignment admission, **D-068** forward-only cost discipline, **D-069**
+  prospectively frozen trajectory r4.
+- Write-attribution incident: the tracked D-057 artifact
+  `A-D057R5-CROSS-REJECT.json` was overwritten in the working tree at
+  `2026-07-29T00:18:33Z`, inside the D-065 window and outside its main writer.
+  Both byte-sets are preserved — committed `12d17ede` restored to the tracked
+  path, overwrite `1ae3dd15` retained under `.agent-harness/incidents/`.
+  Authenticity is **not** adjudicated and is tracked as `Q-ATTRIB-01`; the harness
+  had no write attribution when the write occurred, which is finding F-D065-01
+  itself. No gate, claim, or evidence key depends on the disputed file alone.
+  Report: `docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md`.
+- Two design facts fix the shape of D-069, both established before any output:
+  the Rust anchor node set is a half-line FD-tuned 48-node rule whose two
+  sub-support nodes carry `8.8e-10` of the energy weight, so a full-domain
+  pointwise sup is not gate-meaningful at N48 class and is replaced by frozen
+  moment and true-weight norms that mask nothing; and `build_independent_grid`
+  exposes `order`/`y_max` publicly, so the `y>24` enclosure and the domain holdout
+  come from a density-matched companion run with **zero** edits to the frozen
+  module `760a7c04`.
+
+## 2026-07-29 D-065 adversarial audit overlay (superseded in scope by D-066)
+
+- D-065 rejects D-064's all-eight-gates terminal claim while preserving its
+  genuine bounded evidence. `C-F10-ROW9-CLOSURE` remains VALIDATED as a
+  specified orientation repair, and `G-F10-COVARIANCE-METROLOGY` remains
+  PASS only for the frozen matched family on module bytes `760a7c04`.
+- `G-F10-INDEPENDENT-FLRW=FAIL`: D-063 is a genuine matched-cell endpoint
+  payload, but it retains no checkpoint full states, evolved `y>24` tail
+  enclosure, or spatial/tail uncertainty holdout; its prior adjudication
+  chronology is impossible.
+- `G-HARNESS-INTEGRITY=FAIL`: D-058 fixes cross-run pointer movement only
+  when a lease is written. The lease binds every assignment in the run
+  rather than one parent-admitted assignment, a controlled same-runtime
+  substitution was accepted, and lease-write failure restores the mutable
+  `ACTIVE_RUN` path. Structural validator PASS and `12/12` fixtures do not
+  cover these lifecycle failures.
+- `G-F10-SCOPE=PASS`; downstream authority remains closed. Anti-inflation
+  verdict is DRIFT (`D-057` parent through D-064: net `+21,384`; no
+  production physics change). Governing report:
+  `docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md`.
+
+## 2026-07-29 D-064 remedy-DAG completion overlay (superseded by D-065)
+
+- The D-057 five-step remedy DAG is complete: D-058 lease repair
+  (`G-HARNESS-INTEGRITY` pass), D-059 rebinding, D-060 covariance r3
+  FAIL preserved -> D-061 r4 PASS, D-062 trajectory r2 FAIL preserved ->
+  D-063 r3 PASS, D-064 single-writer reconsideration. **All eight F-10
+  gates are PASS** on catalogue bytes `760a7c04`, this time through the
+  corrected evidence contracts the audit demanded, with every
+  intermediate FAIL preserved and every reissue scoped by a registered
+  lease-validated adjudication.
+- Trajectory endpoint vs the completed-catalogue Rust BDF anchor:
+  `N_eff` delta `+1.83e-5` (band `3e-4`, rejecting the `7.44e-4`
+  obsolete-anchor class), `N_end` delta `+5.53e-6`, `t_end` delta
+  `+1.10 s`; base and holdout bitwise-reproduced across three
+  executions. Covariance: asymmetric N3 max `5.092e-11` under the
+  `1e-10` cap with interval-certified brackets and `1522656/0` deep-node
+  containment.
+- STOP/PRESERVE: the flips authorize nothing further. Unblinding/handoff,
+  public/production, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work,
+  F-11/Bianchi, and QKE remain closed owner decisions under
+  `G-F10-SCOPE`. Context `208c9c60`; closeout
+  `run-20260729-f10-d064-remedy-dag-closeout`.
+
+## 2026-07-28 D-060 covariance r3 FAIL-preserved overlay
+
+- D-057 remedy step 3 first attempt executed under freeze `17fedc6` and
+  preserved as an adjudicated FAIL (report `e40d80a7`, 867 s): the only
+  failing check is `N7X_exchange` on the three P-fixed SS continuity
+  states, where the `{mu,tau}` distinct-elastic exchange observable is
+  degenerate (elastic energy conservation zeroes the Pauli affinity when
+  the mu and tau logit rows share one slope; rates are `~1e-34`
+  cancellation noise, the relative metric is noise/noise `~5e-2`).
+- Everything physics-bearing passed: asymmetric equivariance N1/N2
+  `<=1.2e-15` and N3 max `5.092e-11` under caps; N7X `<=7.7e-13` where
+  nondegenerate; certified interval brackets at all eight states;
+  M-INT-2 full-node replay `1522656` containment checks, zero failures;
+  five mutant kills with a bitwise restoration canary; D-055 anchors
+  reproduced bitwise under the frozen venv.
+- Registered adjudication `A-D060-ADJUDICATION` (lease-validated Stop
+  accept) classified the cause as a contract-design defect of the D-054
+  S-B class and scoped the supersession to EXACTLY ONE change: D-061 r4
+  restricts N7X gating to members with distinct mu/tau state rows, SS
+  values recorded non-gating. The trajectory r2 program renumbers to
+  D-062; gate reconsideration to D-063. Context `a26149ab` -> `d9591408`.
+
+## 2026-07-28 D-059 claim/evidence rebinding overlay
+
+- D-057 remedy step 2 executed with zero scientific-gate movement:
+  registered `C-F10-ROW9-CLOSURE` (VALIDATED, bounded
+  discretization-repair only), `C-F10-METROLOGY-R3` and
+  `C-F10-TRAJECTORY-R2` (SPECIFIED successor obligations for D-060 and
+  D-061); defined the previously dangling `E-F10-D055-METROLOGY-R2` and
+  `E-F10-D056-INDEPENDENT-TRAJECTORY` as preserved supportive, NOT
+  gate-authoritative; added prospective `E-F10-D060-METROLOGY-R3` /
+  `E-F10-D061-TRAJECTORY-R2` to the two FAIL gates' required evidence;
+  reconciled the `C-HARNESS-INTEGRITY` statement with the D-058
+  resolution. Bounded cleanup: the two OWNER-A lab `__pycache__/*.pyc`
+  files untracked (`3f7a10a`), sealed source bytes untouched.
+- `G-F10-COVARIANCE-METROLOGY` and `G-F10-INDEPENDENT-FLRW` remain FAIL.
+  Context `c3adcd99` -> `a26149ab`; closeout
+  `run-20260728-f10-d059-closeout`.
+
+## 2026-07-28 D-058 run-identity lease repair overlay
+
+- D-057 remedy step 1 executed under the owner's full-DAG grant
+  (2026-07-28): `SubagentStart` now writes an atomic per-agent run lease
+  sealing the Start-time run id and every registered assignment digest;
+  `SubagentStop` resolves the run via the lease (legacy `ACTIVE_RUN`
+  fallback only when no lease exists), blocks unparseable leases and
+  post-Start assignment tampering, and consumes the lease only on
+  acceptance; `init_run.py` claims run directories and replaces the
+  pointer atomically with outstanding-lease warnings;
+  `verify_assignment.py` is the canonical sealed-hash verifier closing
+  the F-D057-04 role-hash false-positive trap.
+- Live canary: runs `run-20260728-f10-d058-lease-canary` / `-lease-decoy`
+  / `-lease-replacement-canary`. A real subagent result was accepted
+  under its Start-time lease after a decoy `init_run` moved the global
+  pointer; a post-Start one-byte tamper was blocked on the sealed digest
+  and accepted only after byte restoration; the replacement canary passed
+  the untouched path. Hook fixtures 12/12 (five new lease tests plus a
+  corrupt-lease regression). Two blind adversarial pre-seal reviews; the
+  one MAJOR (corrupt-lease fallback) was fixed pre-seal.
+- LOCAL-ADAPT recorded: VS Code does not dispatch project Start/Stop
+  hooks, so the canary invoked the real hook processes with real event
+  payloads; runs, pointer movement, and subagents were live.
+- `Q-HOOK-01` RESOLVED; `G-HARNESS-INTEGRITY` fail -> pass with evidence
+  `E-HARNESS-D058-LEASE-CANARY`; context `ead0407d` -> `c3adcd99`.
+  Science gates remain FAIL pending remedy steps 2-4 and the final
+  single-writer reconsideration.
+
+## 2026-07-28 D-057 adversarial closeout correction
+
+- The static 27-event orientation-artifact repair is retained as
+  **IMPLEMENTED** and bounded **VALIDATED**. Fresh asymmetric state/swap checks pass below
+  `1e-10`, while an in-memory reconstruction of the historical 24-event
+  single-orientation form fails by `1e-6` modal and `6.8e-3` native.
+  Absolute `V-A`/phase-space normalization and physical catalogue
+  completeness remain **INCONCLUSIVE**.
+- D-055 and D-056 are preserved as reproducible/supportive evidence, but
+  D-055 freezes only P-fixed inputs rather than asymmetric `F(Pf)=PF(f)`
+  pairs. Its `B_native` also omits the production split-map operation graph
+  and is not an end-to-end outward-rounded precision replay. D-056 freezes
+  the obsolete F10C1 partial-catalogue endpoint
+  rather than the already-existing completed-catalogue F10C2 endpoint; it
+  also lacks a cross-code block/spectrum predicate, refinement/tail budget,
+  and independently reduced coupled-trajectory energy-law check.
+- D-053 through D-056 registered all findings under the unrelated row-6
+  claim ID, leaving the covariance and independent-endpoint claims/evidence
+  unbound. A live audit also reproduced an `ACTIVE_RUN` race between
+  overlapping main sessions; static hook fixtures do not close that current
+  lifecycle failure.
+- Effective state: `G-F10-COVARIANCE-METROLOGY=FAIL`,
+  `G-F10-INDEPENDENT-FLRW=FAIL`, and
+  `G-HARNESS-INTEGRITY=FAIL` for the current workflow.
+  `G-F10C1-REGRESSION` remains PASS. Report:
+  `docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`.
+
+## 2026-07-28 D-052--D-056 gate-matrix completion overlay (superseded by D-057)
+
+- Under the D-052 omnibus grant (row-9 closure, covariance-metrology,
+  trajectory/endpoint, sequenced), all three stages closed in one session:
+  D-053 accepted the final static catalogue `760a7c04` (all pair
+  conversions orientation-closed); D-054's first metrology contract FAILED
+  on two adjudicated design defects (preserved) and the corrected D-055 r2
+  PASSED, flipping `G-F10-COVARIANCE-METROLOGY`; D-056's structurally
+  independent SciPy-BDF trajectory reached the 0.005 MeV cold endpoint
+  with `N_eff = 3.034054` (delta `+7.4e-4` vs the Rust N48 anchor, band
+  `3e-3`), `t_end` delta `-1.47 s`, clean blockwise hierarchy and first
+  law, flipping `G-F10-INDEPENDENT-FLRW`.
+- D-056 recorded **all eight F-10 gates PASS** on catalogue bytes `760a7c04`;
+  D-057 rejects that terminal interpretation while preserving the raw
+  execution records.
+- Boundaries unchanged: matched-resolution N48-class endpoint agreement on
+  the frozen 10 MeV -> 5 keV cell only; no continuum claim. Unblinding,
+  public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward
+  work, F-11/Bianchi, and QKE remain closed and are separate owner
+  decisions under `G-F10-SCOPE`.
+
+## 2026-07-27 D-049/D-050/D-051 lint-fix and OWNER-C closure overlay
+
+- D-049: the sole regression-bundle failure (test-only clippy lint on the
+  ten-argument `gk_recurse` recursion) was fixed by a single `#[allow]`
+  attribute (commit `1697e76`, zero codegen change); the full bundle then
+  passed (fmt/check/clippy clean, 238/0 release tests, 54-page report
+  clean) and **`G-F10C1-REGRESSION` flipped fail -> pass**.
+- D-050/D-051: under OWNER-C with a prospectively frozen contract, the
+  live comparator now carries the D-046/D-048-validated row-6 two-member
+  orientation closure (`_independent_noqke.py` sha256 `29a652fd` at
+  commit `d22d001`; catalogue 24 -> 25; both members at `K_t`/`16.0`).
+  All frozen checks pass: 3/3 focused tests including the D-028
+  executing-gate assertion; GL48 `mu_tau_residual =
+  2.6019033208963758e-11` (18x under the `1e-10` cap); conservation,
+  first law, CP, entropy, and the equilibrium null preserved at their
+  recorded classes. Terminal: `STATIC_GATES_PASS_ON_CLOSED_SOURCE`.
+- Unchanged: the historical D-028 FAIL for bytes `535370c1` stands;
+  `G-F10-COVARIANCE-METROLOGY` remains FAIL (identity + `B_native`
+  program unbuilt); `G-F10-INDEPENDENT-FLRW` remains FAIL. Row 9 remains
+  single-membered (open question). Trajectory/endpoint eligibility is
+  newly live as a question for a separate explicit owner decision.
+
+## 2026-07-27 D-047/D-048 OWNER-B target replay overlay
+
+- D-047 recorded the OWNER-B grant and prospectively froze the read-only
+  target replay (contract + script at commit `9c99ecf`): external mirror of
+  the row-6 event loop, caller-built reverse ordered member, D-046 derived
+  one-half closure, gated checks T-A..T-H, explicit D-028 non-reopen
+  scoping. `_independent_noqke.py` imported unmodified.
+- D-048 closed the replay as an adjudicated PASS on all nine gated checks
+  (single frozen execution, wall 18.88 s). T-A reproduced the recorded
+  D-028 residual digit-for-digit (`4.666064056497196e-10`); the live-code
+  identity `modal_M-(f) == P.modal_M+(Pf)` is bitwise zero on both frozen
+  states; the closed-total native mu-tau residual is
+  `3.8807636157303184e-11 <= 1e-10`; deleting row 6 alone gives
+  `4.1812242095923674e-11` (internal localization); the single-member
+  artifact is order one; conservation holds at `2e-16`.
+- Scientific status: the D-028 residual mechanism is internally established
+  as the row-6 single-ordered-member orientation artifact under `1/y^2`
+  amplification, removed by the derived-quotient closure.
+  `D046-r6-orbit-chart-rabbit-applicability = VALIDATED` (bounded to the
+  two frozen states; no metrology bound, general-state proof, or
+  trajectory/endpoint claim). The D-028 recorded FAIL for its exact bytes
+  stands unreopened; `G-F10-COVARIANCE-METROLOGY` does not move.
+- Terminal line `REQUEST_OWNER_C_CONSIDERATION` is a request only;
+  `OWNER-C=REQUIRED_NOT_GRANTED` for any `_independent_noqke.py`
+  modification. Recorded limitations: same-model reviews, single
+  deterministic execution, T-B bitwise-false at `1.01e-14`, undecomposed
+  `4.18e-11` sub-cap floor, W5 drift provenance, adapted identity state.
+
+## 2026-07-27 D-045/D-046 owner-grant and OWNER-A discriminator overlay
+
+- D-045 recorded the 2026-07-27 owner grants: handoff durability, one
+  validation-only `G-F10C1-REGRESSION` bundle re-run, and OWNER-A for one
+  prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+  discriminator with local sealed execution. OWNER-B (target replay) and
+  OWNER-C (`_independent_noqke.py` modification) were defined and remain
+  ungranted.
+- The regression bundle ran in full on commit `b2542fc`: fmt, check, the
+  238/0 release test suite, and the 54-page report build all pass; clippy
+  fails with `too_many_arguments` on `gk_recurse`
+  (`src/isotropic_boltzmann.rs:2513`, lib-test target), a successor-branch
+  lint regression absent from historical closeouts. `G-F10C1-REGRESSION`
+  therefore stays FAIL on fresh current-tree evidence; the fix is a separate
+  owner decision (validation-only stage edited no source).
+- D-046 closed the OWNER-A discriminator as an adjudicated PASS. The sealed
+  lab (`BD622_OWNERA_R6_ORBIT_CHART_LAB/`, seal `4c05ce2`, run
+  `run-20260727-f10-ownera-r6-orbit-chart-lab`) proves on manufactured
+  nonphysical objects that the two-ordered-member orientation orbit with the
+  derived Reynolds one-half quotient restores mu/tau modal equivariance that
+  a single ordered member exactly lacks, with retained antisymmetric
+  response, exact conservation/entropy certificates, two-contribution JVP,
+  10/10 preregistered mutant kills, and three byte-identical isolated
+  replays.
+- Claim statuses: `C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured
+  nonphysical microcase only), lab code `IMPLEMENTED`,
+  `C-R6-ORBIT-CHART-RABBIT-APPLICABILITY=PROPOSED`. Recorded limitations:
+  same-model blind reviews, pre-seal static fix loop, probabilistic MUT-5
+  kill, single-host determinism, version-string pins.
+- Terminal line `REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW` is
+  a request only. `OWNER-B=REQUIRED_NOT_GRANTED`; every scientific gate is
+  unchanged; all hard stops remain in force.
+
+## 2026-07-24 D-044 open-breakthrough intake closeout overlay
+
+- The external response `F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` to the D-043
+  corrected request was intook read-only in registered run
+  `run-20260724-f10-open-breakthrough-intake` (closeout run
+  `run-20260724-f10-open-breakthrough-intake-closeout`, context `815eb4b9`).
+- ZIP transport and the 15-file manifest verify, but package admission is
+  `PROVENANCE_FAIL` at `XG-00-PROVENANCE` with `PR_DAG=UNREACHABLE` and
+  `DO_NOT_REOPEN` for these exact bytes. The package has no prospective
+  `EXPERIMENT_CONTRACT.json`, pre-output chronology, single no-argument
+  runner, one-finalist execution, raw stdout/stderr, complete manifest,
+  pinned network-off isolation, semantic mutants, clean replays, or
+  accounting/terminal route, and it imports the live RABBIT comparator while
+  emitting physical collision actions.
+- Six pre-adjudication envelopes contain 40/40 exact-unique findings; the
+  final adjudication `7beccc88` resolves the sole substantive conflict by
+  separating flavour permutation from incoming/outgoing slot reversal. Two
+  invalid Stops (provenance direct-file role-hash, cross-admit
+  aggregate-status) were blocked before corrected envelopes were accepted.
+- Row-6 localization is retained as bounded external evidence only.
+  Label-only OCAR is rejected: with `P` acting on mu/tau labels the correct
+  slot identity is `D(Pf;z)=-D(f;Rz)`, so flavour canonicalization alone
+  cannot produce a reverse orientation chart. The narrower, explicitly
+  orientation-closed `C-R6-ORBIT-CHART` remains `PROPOSED` with
+  `OWNER-A=REQUIRED_NOT_GRANTED`.
+- No collision runner, target replay, code/spec/gate edit, W7/B3, T01--T12,
+  Rust/JAX, Radau, trajectory, endpoint, or unblinding ran. Every scientific
+  gate state is unchanged.
+
+## 2026-07-24 D-043 provenance-contract correction overlay
+
+- The first external D-042 attempt is preserved as `PROVENANCE_FAIL` at
+  `XG-00`. It correctly refused to reconstruct a requested frozen-decision
+  snapshot or accept missing historical context-pack and `/tmp` artifacts.
+- A full local search of branches, tags, remote refs, reflogs, reachable and
+  dangling objects found `4f4da8f0` only as unreachable blob `5d583891` in
+  orphan trees; it was never a distributable commit. `e3ea99a9` is absent from
+  the Git object corpus. Neither byte is promoted or reconstructed.
+- The owner authorized an in-place prompt correction. The external input
+  contract now uses immutable code snapshot `bede5a9`, published evidence
+  floor `204d3fa`, and the future commit containing the corrected prompt.
+  Missing old contextual evidence prevents reuse of the affected old claim but
+  does not block an independently derived, prospectively sealed candidate.
+- `XG-00` remains strict for every binding published input and all new
+  contract/source/test/raw-output/manifest bytes. The correction opens only the
+  already bounded external 6--10-family screen and at most one repository-free,
+  nonphysical microprototype. `G-EXT-FEASIBILITY` and every scientific gate
+  remain FAIL; the repository PR queue remains empty.
+
+## 2026-07-22 B3-v2 successor entry-gate overlay
+
+- The rejected branch is preserved. The successor branch starts from
+  `main@ca3a013`; `.claude/settings.json` was not carried forward. The
+  pre-existing AD/Bianchi design is retained only as `PROPOSED/PARKED`, with
+  implementation `FORBIDDEN` while F-11 is owner-paused.
+- W3 is limited to `DERIVED` coefficient-ratio/kernel-assignment and MB-reduction
+  evidence. W5 is `VALIDATED` localization evidence, not an exclusive root-cause
+  proof. The corrected W6 B3-v2/W7 contract is `PROPOSED / DESIGN ONLY`.
+- The successor method evolves six explicit species, separates finite-`m_e`
+  electron shells from massless self kinematics, uses reaction-specific weak
+  invariants and Cholesky `M^-1q`, and requires W7 absolute-normalization plus
+  method-specific MPFR metrology before any B3 collision output.
+- Preserved run `run-20260722-f10-b3v2-blocker-remediation` contains two failed
+  canaries. R2 observed `SubagentStart`, but its preflight incorrectly searched a
+  payload that cannot contain the spawn prompt; after the controlled negative stop,
+  `stop_hook_active=true` bypassed validation of the incomplete retry artifact.
+- Reloaded-session R3 proved that `SubagentStart` injection, retry-safe
+  `SubagentStop` blocking, final envelope validation, and result-only writes work.
+  It also proved that VS Code collaboration `spawn_agent` bypasses project
+  `PreToolUse`: both allow-rewrite attestation and a reserved-field block probe
+  failed at launch. Those raw failures are preserved and D-031 is superseded.
+- The executable workaround is **VALIDATED** for the registered R4 chain: main owns registered
+  launch admission plus pre/post hashing; `SubagentStart` injects context/identity;
+  each result carries a prompt/Start `spawn_contract` and assignment-file SHA-256;
+  `SubagentStop` validates that contract and the final envelope on every attempt.
+  Four isolated fixtures pass. R4 result `5a979857` records Start preflight PASS,
+  the blocked invalid first stop, and accepted corrected result; identical pre/post
+  non-run diff `828cd996` and status `7ad89840` prove result-only writes.
+- R4 validated only the supported parent/Start/Stop lifecycle. The later D-034
+  Sage/Singular axis created undeclared repository-root `.singularhistory`
+  (`5abbc842`) while the tracked non-run diff remained `eb4e436c`. Effective
+  `G-HARNESS-INTEGRITY` is therefore **FAIL** until D-035 confines that tool to an
+  assignment-specific temporary cwd and a fresh run preserves every non-run hash.
+  VS Code collaboration `PreToolUse` remains unavailable and is not an authority
+  boundary.
+- The registered review `run-20260722-f10-b3v2-w6w7-blind-review` is complete.
+  B3 design `fc283d4f` and W7 metrology `8d490da0` failed; Wolfram `4d81d99c`,
+  Sage `722dfa8a`, Lean `b5c61f02`, and SymPy `21abb162` are overall
+  inconclusive under the four-axis contract. The normalized merge is
+  `1c28dcfb`; adjudication `e5b21e26` is **FAIL**.
+- The bounded exact reaction-nullspace subclaim passes all four engines, and
+  three engines agree on the direct row-ii trace and entropy affinity. Those
+  algebraic results do not repair missing all-channel normalization, exact
+  reaction/sign/multiplicity records, finite-`m_e` implementation roots and
+  Jacobians, deterministic basis/QR and ladder definitions, or MPFR/`B_native`
+  numeric bytes.
+- Dedicated CAS/adjudicator collaboration types could not start because their
+  forced model is unsupported for this ChatGPT Codex account. Registered
+  default-agent fallbacks used the actual Wolfram, Sage/Singular, Lean, and
+  SymPy tools plus the exact role files. This retains evidence but not a claim
+  of canonical dedicated-agent completion.
+- W7 numerical execution and static implementation still require explicit
+  owner authority, but owner authority is not sufficient now. Remediation and
+  a fresh blind PASS on exact bytes must occur first. No forbidden execution or
+  production edit occurred.
+- The owner approved D-033 remediation and a fresh blind review only. D-034 now
+  freezes candidate W6 `e0103e29`, unexecuted W7 contract source `5e8842d9`, and
+  exact vectors `5a16c903`. A source-only structural check passes the 24+15 graph
+  and source/vector identity. This is `SPECIFIED_NOT_EXECUTED`, not validation.
+- The fresh D-034 run `run-20260722-f10-b3v2-d034-blind-review` is terminal
+  **FAIL**. CAS contract `04e0960b`, B3 `39e9394a`, W7 `98a73fce`, Wolfram
+  `91c45257`, Sage `d8e4b2c8`, Lean `f19f64a9`, SymPy `c9f65215`, merged
+  `a172b68f`, and adjudication `95870216` retain 31 submitted/31 unique findings.
+  The exact reaction-nullspace passes all four axes; row-ii and entropy retain
+  bounded three-axis passes with a Lean tool ceiling; physical-interior finite-
+  `m_e` shell formulas are derived. Those subclaims do not repair global/tagged
+  orientation normalization, the Tier-0 `G_F` drift, finite-mass source branches,
+  arbitrary-`y` basis/ladder definitions, or A0--A4/`B_native` completeness.
+- On 2026-07-23 the owner approved D-035 only: correct those exact bytes, isolate
+  Sage/Singular outside the repository, and perform one fresh registered blind
+  review. The approval does not authorize W7 numerical output, B3 collision or
+  static implementation, T01--T12, Rust edits, Radau, trajectory, endpoint,
+  unblinding, F-11, QKE, or public runtime.
+- The sealed D-035 bytes remain W6 `9caaa445`, unexecuted contract source
+  `60fc9668`, exact vectors `e991d415`, and Sage/Singular role `812bce01`.
+  Source-only checks reproduce global-to-tagged 64/32, the three threshold
+  outcomes, 24+15 reactions, 20 ladder rows, and source/vector object equality.
+  D-037 proves that these consistency checks do not close the executable shell,
+  single-basis, directed-tail, event-trace, or A0--A4 contracts.
+- The D-035 fresh run stopped before merge/adjudication. B3 `4cb9132c` and W7
+  `a998edb4` are admitted FAIL envelopes. Wolfram `4d768662` is preserved but not
+  admitted because live Stop rejected the fallback `default` runtime against a
+  falsely registered dedicated role. Sage `ff1620c1` is not admitted because its
+  uppercase finding verdicts violate the canonical enum; Lean and SymPy were
+  interrupted without results. The run establishes no fresh design verdict.
+- The owner then authorized D-036 harness repair only. Assignment schema v2 keeps
+  `agent_type` and `runtime_agent_type` equal to the actual Start/Stop event and
+  independently binds `review_role`, its exact role files, and the canonical
+  result template by SHA-256. Static fixtures pass `6/6`, including Stop-side
+  rejection of an unregistered logical role. Final live R3 result `1b2f2e23`,
+  assignment `7b62b201`, and context `a364e7b4` verify the supported
+  `default` runtime with sealed `cas_sage_singular` review role, exact role and
+  template hashes, Start preflight PASS, blocked invalid first Stop, accepted
+  corrected envelope, `/tmp` Sage/Singular confinement, unchanged `.singularhistory`
+  `5abbc842`, and identical pre/post non-run diff/status hashes `a66f19fc`/
+  `b1d0bc24`. `G-HARNESS-INTEGRITY` is therefore **PASS** only within this
+  supported schema-v2 parent/Start/Stop boundary.
+- D-037 used shared CAS contract `d2780e2c` and admitted two schema-v2 results:
+  B3 `bead9788` and W7 `f785c2d2`, both **FAIL**. Their 11/11 unique findings
+  retain four bounded passes—reaction nullspace, entropy affinity, direct row-ii
+  trace, and absolute normalization—but identify seven binding failures in
+  per-leg/threshold shell enforcement, coefficient-Horner basis authority,
+  directed tail enclosures, canonical event/trace completeness, A0--A4 rigor,
+  and the whole B3/W7 designs. D-035's non-PASS rule stopped the run before
+  four-axis completion: Wolfram/Sage were interrupted without results,
+  Lean/SymPy were registered but never spawned, and no merge/adjudicator ran.
+  Parent pre/post diff/status stayed `cea5aa70`/`b1d0bc24`; `.singularhistory`
+  stayed `5abbc842`. The effective design verdict is **FAIL at the hard stop**,
+  not a completed adjudicator verdict.
+- No staged authority opened. W7 execution/static implementation and any B3
+  implementation/T01--T12 remain forbidden. A new explicit owner decision is
+  required before exact-byte remediation or another review may begin.
+- D-038 completed a read-only current/legacy historical audit, two blind audit
+  axes, mutual steelman, six-round debate, and final adjudication `c145f298`.
+  Its 32/32 exact-unique findings consolidate to seven causal families. Current
+  D-035/W6 executable-contract debt is the sealed-candidate root cause;
+  history-wide architecture-first is a recurrence amplifier rather than a
+  universal root over Fort/D-027/D-028/D-029. Default remains STOP/PRESERVE;
+  all four route-readiness verdicts remain **FAIL**.
+- D-039 records the owner's final choice of **STOP/PRESERVE**. D-038's optional
+  one-final-design-cycle path is frozen. R2 `898fcf02` rejected the first prompt;
+  the corrected exact request passed targeted R3 `a424e9c9` with 30 hash checks.
+  It may return at most three ranked proposals or a no-go; neither it nor its answer grants repository,
+  design-cycle, W7, B3, numerical, implementation, or endpoint authority.
+- D-040's read-only current/legacy JAX, primary-literature, Bianchi, and DSMC
+  survey is complete under
+  `run-20260723-f10-d040-legacy-jax-readonly-survey`. Five registered audit
+  axes and adjudication `d7d34e41` normalized 37 raw findings to 34 exact keys.
+  The no-stress Type-I shear norm is `DERIVED` monotone; coupled highly
+  oscillatory shear remains `SPECULATIVE`. Conventional DSMC is excluded from
+  future Bianchi primary, precision, covariance/derivative, and endpoint lanes;
+  only a separately authorized bounded qualitative cross-check remains
+  `PROPOSED`. Legacy JAX is formula/mechanism evidence only and does not reopen
+  JAX development, F-11 implementation, scientific execution, or any D-039
+  authority ladder.
+- D-041/EXT-01 completed the authorized one-shot, pre-output feasibility
+  tournament. Five blind formal/CAS axes, two cross-steelman reviews, and
+  adjudication `18d6449d` reduce 33 raw findings to 30 exact keys. The
+  same-space PCR-DG wording fails its endpoint theorem, while the distinct
+  Petrov, analytic-enriched, and moving-remap families remain unproved rather
+  than universally impossible. Zero current candidates close the conjunctive
+  gate, so `G-EXT-FEASIBILITY=FAIL`; all three are archived and OWNER-1/PR-01
+  are not reached. STOP/PRESERVE and every downstream prohibition remain
+  binding.
+- D-042 produced the original bounded external executable-breakthrough request
+  (`6b5545bd`) and no scientific candidate. Four blind design inputs and two
+  hostile reviews forced one-finalist/one-authority-path deflation, prospective
+  operation-graph/domain/norm/arithmetic definitions, semantic rather than
+  hash/import mutation kills, and separation of mathematical feasibility from
+  future repository deletion. Replacement adjudication `9607e9cf` marks the
+  original prompt contract internally coherent, but the first external attempt
+  returned `PROVENANCE_FAIL` on non-distributable historical prerequisites.
+  D-043 supersedes those input/output clauses. The current PR queue is empty,
+  `G-EXT-FEASIBILITY=FAIL`, and any returned PASS may only request a new owner
+  intake decision.
 
 ## 2026-07-18 independent-static fail-closed overlay
 
@@ -1141,21 +1703,51 @@ with limits because it closes the declared N48 radial envelope with durable
 falsifiers and reuses existing solver/report/ledger surfaces; it does not close
 F-10C.
 
-## Next action
+## Next action as of D-051 (HISTORICAL — superseded by the controlling overlay at the top of this file)
 
-Stop the independent F-10 path at D-029. Preserve the completed Rust N48
-representation, nine-row catalogue, exact solver-local BDF cache, four-topology
-production aggregation, both failed private independent candidates, the
-rejected three-node design, and all raw evidence. Do not implement that design
-or run a collision call, GL64, Radau, a trajectory, an independent endpoint,
-FortEPiaNO endpoint work, or RABBIT unblinding.
+This section was last updated at D-051 and describes the D-044--D-051 situation.
+It is retained as a record and is **not** current guidance: every gate status,
+owner grant, and "next step" below has been superseded. For the live board and the
+current next action, read `## Current status` and the topmost `(controlling)`
+overlay above. Statements here such as `G-F10C1-REGRESSION` staying FAIL were true
+when written and were superseded within this same section by D-049--D-051.
 
-`G-F10-INDEPENDENT-FLRW` remains **FAIL**. Reopening requires an explicit owner
-decision backed by a materially new, prospectively registered coherent
-numerical design and fresh blind review. It must close support-switch
-continuity/Jacobian/covariance and collision-specific conservation,
-detailed-balance, entropy, and native mu-tau evidence before implementation;
-wrapper, telemetry, cap/norm adjustment, symmetry repair, or renewed
-whole-program FortEPiaNO work does not qualify. F-11
-Bianchi/Type-I remains owner-paused; QKE/coherence, public dispatch, and public
-production remain `FORBIDDEN`.
+D-044 closed the external open-breakthrough intake as `PROVENANCE_FAIL`
+(`DO_NOT_REOPEN` for those exact bytes); the external prompt chain is
+consumed and must not be re-dispatched. D-045 records the 2026-07-27 owner
+grants: handoff durability (executed), one validation-only
+`G-F10C1-REGRESSION` bundle re-run, and **OWNER-A** for exactly one
+prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+discriminator with local sealed execution. OWNER-B (target replay) and
+OWNER-C (`_independent_noqke.py` modification) are defined in D-045 and are
+not granted.
+
+Both granted actions are complete. The regression bundle ran in full and
+FAILED at clippy only (`gk_recurse` too-many-arguments,
+`src/isotropic_boltzmann.rs:2513`); `G-F10C1-REGRESSION` stays FAIL on
+fresh evidence and its fix needs a separate owner decision. The D-046
+OWNER-A discriminator passed adjudication:
+`C-R6-ORBIT-CHART-MICROCASE=VALIDATED` (manufactured nonphysical microcase
+only) and the sealed run's terminal line requests OWNER-B authorization.
+
+D-049 through D-051 are complete: `G-F10C1-REGRESSION` is PASS on the
+lint-fixed tree, and the live comparator carries the validated row-6
+closure with all frozen static gates passing on the accepted bytes
+(`STATIC_GATES_PASS_ON_CLOSED_SOURCE`). The open owner decisions are now:
+(1) whether to authorize the **covariance-metrology program** — the
+weak/mass-weighted identity plus the prospectively frozen `B_native`
+bound (summation, basis, mass-solve, conditioning, interval, denominator,
+state-envelope terms) that `G-F10-COVARIANCE-METROLOGY` requires;
+(2) whether to grant **trajectory/endpoint eligibility** on the accepted
+static bytes (the module ceiling makes this a separate decision, newly
+live now that the static gates pass) — this is the route toward
+`G-F10-INDEPENDENT-FLRW`; (3) whether to validate and close **row 9**
+orientation members. Absent those grants, STOP/PRESERVE controls.
+Exact-byte
+remediation readiness, W7 execution, B3 implementation, and
+independent-FLRW closure remain **FAIL**; preserve every exact failure,
+bounded pass, unfinished D-037 axis, legacy bundle, user-owned review, and
+raw `.singularhistory` evidence.
+
+F-11 Bianchi/Type-I remains owner-paused. QKE/coherence, public dispatch, and
+public production remain `FORBIDDEN`.

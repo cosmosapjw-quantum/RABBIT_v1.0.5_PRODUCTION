@@ -2510,6 +2510,10 @@ mod f10_independent_evidence {
         })
     }
 
+    // The adaptive Gauss-Kronrod recursion threads its full frozen control
+    // surface explicitly; a parameter struct would only relabel the same
+    // ten values (D-049 validation-only lint fix).
+    #[allow(clippy::too_many_arguments)]
     fn gk_recurse<F>(
         integrand: &mut F,
         left: f64,

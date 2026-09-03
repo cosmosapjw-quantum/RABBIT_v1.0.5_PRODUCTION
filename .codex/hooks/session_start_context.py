@@ -27,7 +27,7 @@ Repository root: {root}
 Context version: {version}
 Active run: {active_run}
 Before spawning agents, run `python3 .agent-harness/scripts/build_context_pack.py` and register each assignment with `new_assignment.py`.
-The main agent must include RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, and INDEPENDENCE_MODE in every spawn prompt.
+Mint each assignment's single-use admission receipt with `admit_agent.py` before spawning, and include RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, INDEPENDENCE_MODE, and ADMISSION_TOKEN in every spawn prompt.
 AGENTS.md policy and .agent-harness files are authoritative; hidden parent-thread context is not a substitute for the context contract.
 """
     emit_additional_context("SessionStart", text)

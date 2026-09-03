@@ -1,0 +1,123 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d070-canary-c6",
+  "assignment_id": "A-D070-CANARY-C6",
+  "context_version": "048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0",
+  "agent_type": "default",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d070-canary-c6/results/A-D070-CANARY-C6.json",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "agent_id": "d070-canary-c6",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d070-canary-c6",
+    "assignment_id": "A-D070-CANARY-C6",
+    "context_version": "048e646268be160a395fccca0a5e3c236aff590014cfbb85a5274abd7469c6f0",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:8ceeb1ecbb69997c0918dfa8c60d554ae538230c31599d4da7be569522f4b566",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "started_at": "2026-07-29T12:39:20Z",
+  "completed_at": "2026-07-29T12:45:14Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)"
+  },
+  "commands": [
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d070-canary-c6/assignments/A-D070-CANARY-C6.json",
+    "sha256sum .codex/hooks/subagent_stop_validate.py .codex/hooks/subagent_start_context.py .codex/hooks/_common.py .agent-harness/scripts/admit_agent.py .agent-harness/scripts/_harness.py",
+    "cat .agent-harness/ACTIVE_RUN",
+    "cat .agent-harness/leases/d070-canary-c6.json",
+    "cat .agent-harness/runs/run-20260729-f10-d070-canary-c6/ADMISSIONS.jsonl",
+    "grep -n '\"consumed\"' .codex/hooks/*.py .agent-harness/scripts/*.py"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-A-run-resolution",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "subagent_stop_validate.py assigns bound_run exactly once, at line 302 (`bound_run = str(lease[\"run_id\"])`), and that is reachable only through the `if lease is not None:` branch (lines 291-302) after the malformed-lease guard. No other statement in the file assigns bound_run, and the local `active_run` variable read from ACTIVE_RUN (lines 224-229) is never referenced again after the early-exit block at lines 235-254, so its string value never reaches bound_run. Concretely for this canary: my own lease file .agent-harness/leases/d070-canary-c6.json records run_id 'run-20260729-f10-d070-canary-c6', while .agent-harness/ACTIVE_RUN currently reads 'run-20260729-f10-d070-canary-c6-decoy' (verified by direct read of both files) -- so bound_run for my Stop resolves to the true run, not the pointer-stolen decoy. Failure modes: (1) lease file absent and ACTIVE_RUN also empty and harness not installed -> lines 235-254 `if not active_run and lease is None: ... if harness.is_dir() or installed_here.is_dir(): block(...); return` else silently `return` -- this is the documented 'harness not installed, validation disabled' exemption. (2) lease absent, ACTIVE_RUN empty, harness installed -> same block explicitly fires: 'The agent harness is installed but ACTIVE_RUN is missing or empty and this agent has no Start-time lease, so no result can be bound to a run.' (3) lease absent, ACTIVE_RUN non-empty (the common 'harness installed, this agent has no lease' case) -> skips the not-active_run branch, falls to lines 303-313, `else: block('No Start-time run lease exists for this agent, so its run identity cannot be established. Refusing to fall back to the mutable ACTIVE_RUN pointer. ...')` -- blocks, does not fall back. (4) lease file exists but is unparseable JSON -> load_json(lease_file, None) returns None while lease_file.exists() is True, so lines 217-222 fire: `if lease is None and lease_file.exists(): block('Run lease for this agent exists but cannot be parsed; refusing to resolve the run via the mutable ACTIVE_RUN pointer.'); return`. (5) lease parses but is malformed (not a dict, agent_id mismatch, or run_id fails ASSIGNMENT_ID_RE) -> lines 292-301 block: 'Run lease for this agent is malformed; its run identity cannot be established.' (6) lease names a run_id that has no run directory on disk -> not rejected at resolution time (no existence check on bound_run itself); acquire_agent_lock's mkdir(parents=True, exist_ok=True) at line 109 will even create .agent-harness/admissions/<bogus-run>/.agent-locks/. It still fails closed shortly after, in consume_under_agent_lock: run_dir/'assignments'/f'{assignment_id}.json' does not exist, assignment_raw read raises OSError, assignment stays None, and line 429 blocks with 'Registered assignment does not exist: ...'. So a nonexistent-run lease is never admitted, but is caught by the downstream assignment-file check rather than by an explicit run-existence check at resolution time -- a minor gap in the failure message, not in the security property.",
+      "assumptions_used": [
+        "The Stop hook's stdin event is trusted only for agent_id/agent_type/last_assistant_message/stop_hook_active, exactly the fields it reads (verified by grep of `event.get` and `event[` in subagent_stop_validate.py)."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:198-254 (lease/ACTIVE_RUN resolution and installed-vs-no-lease branch)",
+        ".codex/hooks/subagent_stop_validate.py:291-313 (bound_run assignment and no-fallback else branch)",
+        ".codex/hooks/subagent_stop_validate.py:422-433 (nonexistent-run downstream block via missing assignment file)",
+        ".codex/hooks/_common.py:41-45,52-56 (load_json default-on-parse-failure; lease_path)",
+        ".agent-harness/leases/d070-canary-c6.json (run_id=run-20260729-f10-d070-canary-c6)",
+        ".agent-harness/ACTIVE_RUN (currently run-20260729-f10-d070-canary-c6-decoy)"
+      ],
+      "evidence_fingerprint": "sha256:0533da884250e03e91670aa458e3915859d91b31fc856fa72537dae65a966625",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "cat .agent-harness/leases/d070-canary-c6.json  # run_id: run-20260729-f10-d070-canary-c6",
+        "cat .agent-harness/ACTIVE_RUN  # run-20260729-f10-d070-canary-c6-decoy",
+        "grep -n 'bound_run' .codex/hooks/subagent_stop_validate.py  # only assignment is line 302, inside the lease-present branch"
+      ],
+      "confidence": 0.93,
+      "unresolved": [
+        "The nonexistent-run lease case blocks via 'assignment does not exist' rather than a dedicated run-existence check; behavior is fail-closed but the diagnostic message is indirect. Not scored as a fail because no admission path exists through it."
+      ]
+    },
+    {
+      "finding_id": "F-B-agent-lock",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Every write of a `consumed` admission-receipt state or a `consumed` ADMISSIONS.jsonl row across .codex/hooks/ and .agent-harness/scripts/ occurs inside consume_under_agent_lock, which subagent_stop_validate.main() only calls (lines 348-360) after acquire_agent_lock returned a real fd (lines 330-347), and only inside a `try/finally: os.close(lock_fd)` (lines 348-367) so the flock is held across the whole guarded region. Grep for literal `\"consumed\"` across both directories: subagent_stop_validate.py lines 702 (`\"event\": \"consumed\"` in the ledger.write at 698-715), 720 (`\"state\": \"consumed\"` in the admission write_json_atomic at 716-726), and 745 (`\"state\": \"consumed\"` in the lease write_json_atomic at 741-749) are the only writes; all three sit inside consume_under_agent_lock's body, after the lock is held. Every other hit -- admit_agent.py:201,239,361; subagent_start_context.py:357; scrub_admission_proof.py; validate_harness.py; merge_results.py; init_run.py -- is a read/comparison against the literal, never a write of it. admit_agent.py's mint path always writes `\"state\": \"open\"` (line 625); its `reopened_from.state` (line 635) and ledger `row[\"superseded_state\"]` (line 692) fields copy a PRIOR receipt's state into an audit sub-field, they do not set the live receipt's own state to 'consumed'. Lock-failure handling (acquire_agent_lock, lines 105-138): symlinked lock dir -> (None, \"the agent lock directory is a symlink\"); mkdir OSError -> (None, \"... could not be created\"); O_NOFOLLOW open OSError -> (None, \"... could not be opened\"); flock BlockingIOError (held by a concurrent stop) -> (None, \"\"); other flock OSError -> (None, msg); ftruncate/write OSError -> (None, msg). In main(), every one of these results in a `block(...)` call (lines 331-347) -- an unusable lock or unusable lock directory always blocks the stop; it is never treated as a skip.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py:44-138 (AGENT_LOCK_DIRNAME, agent_lock_path, acquire_agent_lock)",
+        ".codex/hooks/subagent_stop_validate.py:323-367 (lock acquisition and try/finally around consume_under_agent_lock in main())",
+        ".codex/hooks/subagent_stop_validate.py:687-751 (the three consumed writes, all inside consume_under_agent_lock)",
+        ".agent-harness/scripts/admit_agent.py:612-696 (mint always writes state=open; reopened_from/superseded_state are historical copies, not new consumed writes)",
+        "grep -n '\"consumed\"' .codex/hooks/*.py .agent-harness/scripts/*.py (full hit list, classified read-vs-write above)"
+      ],
+      "evidence_fingerprint": "sha256:53c7d89fd14043c75c5c118884a653497977af9d0e51aa0a543e57e315c0ded4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n '\"consumed\"' .codex/hooks/*.py .agent-harness/scripts/*.py",
+        "sed -n '105,138p;323,367p;687,751p' .codex/hooks/subagent_stop_validate.py",
+        "sed -n '612,696p' .agent-harness/scripts/admit_agent.py"
+      ],
+      "confidence": 0.92,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C-orphan-detection",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "describe_admission_receipt (subagent_start_context.py:475-585) calls classify_receipt_matches first (line 529) and then calls orphaned_mints unconditionally (lines 533-535), with no `if not matches` or similar gate around it -- this is the explicit round-7 fix documented in the module docstring (lines 44-116), which names the prior bug as 'ONE RECEIPT MASKS THE ORPHAN': holding a valid receipt for assignment B used to suppress the ledger check entirely, hiding an orphaned mint for assignment A. orphaned_mints (lines 366-407) computes `bound_to_this_agent` as assignments whose latest unconsumed mint names this agent_id AND `assignment_id != admitted_assignment_id` (line 400) -- so an orphan for assignment A is reported even when classify_receipt_matches already found this agent admitted for a *different* assignment B (admitted_assignment_id='B' != 'A'), which is exactly 'the check is evaluated even when the agent DOES hold a receipt for a different assignment.' What clears an orphan, precisely, per open_mints/orphaned_mints: (1) an agent-named orphan for assignment X clears only if X equals admitted_assignment_id -- i.e. this agent currently holds an open, active-run-matching receipt for that SAME assignment (classify_receipt_matches lines 443-472 must return exactly that X) -- or if the ledger's latest minted/reopened row for X is followed anywhere after by a `consumed` row, which open_mints (lines 348-358) uses to drop X from its returned dict entirely (`consumed.add(assignment_id)` then filtered out at line 362), reflecting that Stop only appends `consumed` after successfully claiming and validating an on-disk admission file (line 337, cross-checked against subagent_stop_validate.py's actual consumed-writing behavior in Finding B). (2) a token-only orphan (`--agent-id-unknown`, expected_agent_id='') for assignment X clears the moment ANY receipt file for X exists on disk in any state naming any agent (`assignment_id not in receipts_on_disk` becomes false, orphaned_mints line 404-406) -- it is checked at run scope, not agent scope, because a token-only mint row names no agent to compare against.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_start_context.py:44-116 (round-7 docstring naming and fixing the mask bug)",
+        ".codex/hooks/subagent_start_context.py:328-363 (open_mints)",
+        ".codex/hooks/subagent_start_context.py:366-407 (orphaned_mints, the != admitted_assignment_id exclusion and the receipts_on_disk clearing rule)",
+        ".codex/hooks/subagent_start_context.py:475-536 (describe_admission_receipt: unconditional call to orphaned_mints after classify_receipt_matches)"
+      ],
+      "evidence_fingerprint": "sha256:af8f7016a35f43771682839c94e44ad1a8e3700d069e31a90090800bfd1a2193",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sed -n '328,407p' .codex/hooks/subagent_start_context.py",
+        "sed -n '475,536p' .codex/hooks/subagent_start_context.py"
+      ],
+      "confidence": 0.92,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d070-canary-c6/results/A-D070-CANARY-C6.json"
+  ]
+}

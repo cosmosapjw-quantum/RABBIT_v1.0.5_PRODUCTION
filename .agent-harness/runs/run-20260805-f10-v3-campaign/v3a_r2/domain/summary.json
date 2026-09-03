@@ -1,0 +1,20 @@
+{
+  "leg": "v3a",
+  "config": 60,
+  "y_max": 30.0,
+  "start_N": 0.0,
+  "caps": {
+    "call_cap": 4000,
+    "wall_cap": 25200.0
+  },
+  "lift_N": null,
+  "init_raw_calls": 221,
+  "stop_reason": "call_cap:4000",
+  "raw_calls_integration": 4000,
+  "saved_states": {
+    "1200": "state_1200.npz",
+    "2000": "state_2000.npz",
+    "3000": "state_3000.npz"
+  },
+  "N_reached": 0.16339363906241333
+}

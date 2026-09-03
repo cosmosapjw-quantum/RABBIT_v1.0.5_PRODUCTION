@@ -1,0 +1,344 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+  "assignment_id": "A-D057R4-TRAJECTORY",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa728-508f-7b93-8f08-a467b336b1f0",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+    "assignment_id": "A-D057R4-TRAJECTORY",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:33c7ea1258909e1fa36d191b706eac4f0c2fb680a0850e884c1aaec21046bea1",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json",
+  "started_at": "2026-07-28T05:17:14Z",
+  "completed_at": "2026-07-28T05:26:45Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "numpy": "2.4.2",
+    "scipy": "1.17.0",
+    "git": "2.43.0",
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/assignments/A-D057R4-TRAJECTORY.json",
+    "python3 -c \"from pathlib import Path; import sys; sys.path.insert(0,'.agent-harness/scripts'); import _harness; print(_harness.hash_files(Path('.'), ['.agent-harness/context/roles/independent_auditor.md']))\"",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,180p' docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+    "sed -n '1,260p' scripts/audit/d056_independent_trajectory.py",
+    "sed -n '1,1325p' src/rabbit/decoupling/_independent_noqke.py",
+    "rg -n -C 6 \"3\\.034035983584400|3\\.033904967773792|7\\.936693339485084|full_catalogue|catalogue|endpoint\" native/rabbit_cpu/src/isotropic_boltzmann.rs",
+    "rg --files .agent-harness/runs/run-20260728-f10-d056-independent-trajectory",
+    "sha256sum .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_time.txt scripts/audit/d056_independent_trajectory.py docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md src/rabbit/decoupling/_independent_noqke.py",
+    "git show -s --format='%H%n%aI%n%cI%n%s' 5d9f521",
+    "git diff --exit-code 5d9f521 -- docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md scripts/audit/d056_independent_trajectory.py src/rabbit/decoupling/_independent_noqke.py",
+    "python3 -c \"import json, pathlib; r=json.loads(pathlib.Path('.agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json').read_text()); c=r['checks']; assert r['verdict']=='PASS' and all(v['ok'] for v in c.values()); print('recorded_T1_T6_arithmetic=PASS'); print('complete_catalogue_deltas', c['T2_neff']['N_eff']-3.034035983584400, c['T3_n_end']['N_end']-7.936693339485084, c['T4_t_end']['t_end_s']-52677.63448707955)\"",
+    "rg -n -C 8 \"3\\.033310324|3\\.034035983|7\\.936721419|7\\.936693339|F10C1|F-10C2|catalogue|independent\" docs/RABBIT_report/sections/11_incomplete_decoupling_and.tex",
+    "rg -n 'claim_ids|C-R6-ORBIT|required_inputs|traj_report|agent_id|fable-main|subagent_start_injected|started_at|completed_at|commands|artifacts|required_outputs' .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+    "stat -c '%n|%y|%s' .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-EXECUTION.json"
+  ],
+  "artifacts": [
+    "sha256:8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3 .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+    "sha256:f041cb90ed51b88d94b10bfe8a335678bec57a2bea7aca3bd8bf73e4c70c4c5b .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_time.txt",
+    "sha256:760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a src/rabbit/decoupling/_independent_noqke.py",
+    "sha256:35c889e6fb9b28dbf7143665227e9daa223c4ba436cc5797b569c8324800e819 scripts/audit/d056_independent_trajectory.py",
+    "sha256:61e39fa7f250050a65c8b364db173e4fd7c7bd365b8768aea3f337e9203a2091 docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+    "sha256:f16480e9282693722da2f1059cc7280d0f24c3303750b9dae8d7a85e3e230271 .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+    "git:5d9f521ffa4e900a6cd9dde1e820351a22cbe9b4 pre-output contract-and-driver freeze"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057R4-TRAJ-001",
+      "claim_id": "C-D057-SOFTWARE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 1-2, strongest software steelman: the frozen RHS equations, signs, units and transforms are internally coherent. c=log(-log(1-f)) gives df/dc=exp(c-exp(c)); action.total has natural-time units so dc/dN=pair_rate/(H*df/dc); q_EM enters dT_gamma/dN with the correct bath-gain sign; dt/dN=1/H and division by MEV_TO_INVERSE_SECONDS converts MeV^-1 to seconds. The six-helicity energy density and N_eff multiplicities are consistent. The comparator module imports no Rabbit physics module and supplies its own affine grid, adaptive finite-mass EOS and constants block, which supports implementation independence from the Rust stack. This PASS is only for static formulation coherence, not collision normalization revalidation, trajectory convergence, or lifecycle admission.",
+      "assumptions_used": [
+        "evaluate_independent_collision_action.total is df/dt in natural units, as declared by the module and contract.",
+        "The accepted D-053/D-055 module bytes are the intended collision consumer.",
+        "Shared physical constants and conventions are allowed test inputs; independence means separate implementation, not different numerical constants."
+      ],
+      "evidence_refs": [
+        "scripts/audit/d056_independent_trajectory.py:42-78",
+        "scripts/audit/d056_independent_trajectory.py:137-156",
+        "src/rabbit/decoupling/_independent_noqke.py:1-30",
+        "src/rabbit/decoupling/_independent_noqke.py:149-176",
+        "src/rabbit/decoupling/_independent_noqke.py:263-386",
+        "src/rabbit/decoupling/_independent_noqke.py:1025-1048",
+        "src/rabbit/decoupling/_independent_noqke.py:1251-1309",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:20-28",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:475-484"
+      ],
+      "evidence_fingerprint": "sha256:760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+      "counterevidence_refs": [
+        "The constants are independently declared but not independently sourced.",
+        "The assigned Rust slice imports its EOS body from crate::flrw, so this audit verifies dependency separation rather than a line-by-line two-EOS equivalence proof."
+      ],
+      "reproduction": [
+        "sed -n '1,380p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1035,1325p' src/rabbit/decoupling/_independent_noqke.py",
+        "sed -n '1,196p' scripts/audit/d056_independent_trajectory.py"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Change of view toward software FAIL: an independent dimensional derivation or semantic mutant would need to show that action.total is not df/dt, the bath-transfer sign is reversed, or the pair multiplicity is not two."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-002",
+      "claim_id": "C-D057-ENDPOINT",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 3, strongest numerical-PASS steelman: the retained report is hash-stable, names the exact accepted module SHA-256, and its recorded T1-T6 arithmetic passes the written thresholds. Git commit 5d9f521 freezes the unchanged contract and driver before the 2:45:28 report. More importantly, although the contract used the wrong historical target, the independent endpoint agrees fortuitously and much more closely with the pre-existing completed-catalogue Rust BDF anchor: delta(N_eff)=+1.8324492e-5, delta(N)=+5.5258786e-6 and delta(t)=+1.09743 s; it also agrees with the completed-catalogue Rodas5P partner. Thus no scientific mismatch is demonstrated by the endpoint numbers themselves. This PASS is raw numerical support only and does not admit the gate.",
+      "assumptions_used": [
+        "The retained JSON bytes are the output of the frozen driver; no trajectory was rerun in this audit.",
+        "The completed-catalogue anchors in the July 16 validation record and current Rust test are the correct production comparands."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_time.txt",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1230-1367",
+        "docs/harness/VALIDATION_LEDGER.md:40",
+        "git commit 5d9f521ffa4e900a6cd9dde1e820351a22cbe9b4"
+      ],
+      "evidence_fingerprint": "sha256:8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+      "counterevidence_refs": [
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:49-60",
+        "The report retains only aggregates, not the endpoint state or trajectory checkpoints."
+      ],
+      "reproduction": [
+        "sha256sum .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json src/rabbit/decoupling/_independent_noqke.py",
+        "python3 -c \"import json, pathlib; r=json.loads(pathlib.Path('.agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json').read_text()); c=r['checks']; print(c['T2_neff']['N_eff']-3.034035983584400, c['T3_n_end']['N_end']-7.936693339485084, c['T4_t_end']['t_end_s']-52677.63448707955)\"",
+        "git diff --exit-code 5d9f521 -- docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md scripts/audit/d056_independent_trajectory.py src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "This raw match cannot by itself cure the contract, gate-predicate, diagnostic-independence, refinement, or lifecycle findings below."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-003",
+      "claim_id": "C-D057-ENDPOINT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Seven-stage audit stage 4, target-identity falsifier: D-056 says it decides the endpoint on the D-053 final catalogue, but freezes the historical F10C1 anchors N_eff=3.0333103242, N=7.9367214190 and t=52680.2048 s. The cited report explicitly states that this F10C1 endpoint is not complete-catalogue authority and that seven catalogue rows were absent. The completed-catalogue Rust anchors had already been recorded as N_eff=3.034035983584400, N=7.936693339485084 and t=52677.63448707955 s. Therefore the prospective contract binds the wrong production target and cannot formally decide a completed-catalogue gate. The favorable post-hoc calculation against the correct anchor is strong counterevidence to a physics failure, but it is not the frozen T2-T4 predicate.",
+      "assumptions_used": [
+        "G-F10-INDEPENDENT-FLRW targets the completed catalogue, as its statement and D-052/D-053 sequencing require.",
+        "A frozen target value is part of the input contract and cannot be silently replaced after seeing output."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:4-7",
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:49-58",
+        "docs/RABBIT_report/sections/11_incomplete_decoupling_and.tex:224-255",
+        "native/rabbit_cpu/src/isotropic_boltzmann.rs:1230-1234",
+        "docs/harness/VALIDATION_LEDGER.md:40",
+        "docs/harness/VALIDATION_LEDGER.md:42"
+      ],
+      "evidence_fingerprint": "sha256:61e39fa7f250050a65c8b364db173e4fd7c7bd365b8768aea3f337e9203a2091",
+      "counterevidence_refs": [
+        "The independent endpoint passes the unchanged numerical bands against the correct completed-catalogue BDF and Rodas5P anchors with substantially smaller deltas.",
+        "The obsolete-to-complete anchor shift itself is still inside the broad D-056 bands."
+      ],
+      "reproduction": [
+        "rg -n -C 8 \"3\\.033310324|3\\.034035983|F10C1|complete-catalogue|catalogue\" docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md docs/RABBIT_report/sections/11_incomplete_decoupling_and.tex docs/harness/VALIDATION_LEDGER.md native/rabbit_cpu/src/isotropic_boltzmann.rs",
+        "python3 -c \"ind={'N':7.936698865363719,'t':52678.731916604454,'neff':3.034054308076679}; complete={'N':7.936693339485084,'t':52677.63448707955,'neff':3.034035983584400}; print({k:ind[k]-complete[k] for k in ind})\""
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Change of view: a new prospectively sealed run must bind the completed-catalogue Rust anchors, or explicit owner/adjudication authority must establish that applying the already-published correct anchors with unchanged bands to preserved output is permissible without violating the no-refit rule."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-004",
+      "claim_id": "C-D057-ENDPOINT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Seven-stage audit stage 4, gate-predicate falsifier: the canonical G-F10-INDEPENDENT-FLRW pass condition requires the independent full-spectral endpoint and discriminating blockwise observables to agree within predeclared tolerances. D-056 T5 tests only an internal qualitative ordering e-enhancement > mu/tau-enhancement > 0 and internal mu-tau equality. It freezes no Rust electron/heavy block anchor, no cross-code blockwise delta or tolerance, no mapped spectrum norm, and retains no endpoint spectrum. Distinct wrong spectra can share total N_eff and satisfy this ordering, so T1-T6 do not imply the authoritative pass condition. The gate flip is therefore unsupported even if every written T check is true.",
+      "assumptions_used": [
+        "The gate registry pass condition is authoritative over the narrower D-056 test table.",
+        "Blockwise agreement means a comparison to the production endpoint, not only a qualitative property of the independent run."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md GATE_REGISTRY source, G-F10-INDEPENDENT-FLRW pass_condition",
+        "git HEAD:.agent-harness/context/GATE_REGISTRY.json:67-81",
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:54-60",
+        "scripts/audit/d056_independent_trajectory.py:147-174",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json"
+      ],
+      "evidence_fingerprint": "sha256:34779d7941e9f271ba97bfde1504966e2cbb33790520bb4ab1988a8fa5309897",
+      "counterevidence_refs": [
+        "The independent run reports physically ordered flavour heating and a 4.69e-10 mu-tau gap.",
+        "The scalar endpoint agrees closely with the correct completed-catalogue anchors."
+      ],
+      "reproduction": [
+        "git show HEAD:.agent-harness/context/GATE_REGISTRY.json | sha256sum",
+        "rg -n -C 8 'G-F10-INDEPENDENT-FLRW|discriminating blockwise' .agent-harness/context/GATE_REGISTRY.json",
+        "rg -n 'T5|energy_moments|enhancements|heavy_rel_gap' docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md scripts/audit/d056_independent_trajectory.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Falsifier: hold total neutrino energy and e>heavy>0 fixed while redistributing endpoint spectral shape or block magnitudes; D-056 T2 and T5 can remain true although cross-code blocks disagree.",
+        "Change of view: freeze production electron/heavy energy moments and mapped spectral observables with tolerances, retain the independent endpoint state, and show cross-code agreement."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-005",
+      "claim_id": "C-D057-SOFTWARE",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 5, circular-diagnostic falsifier: T6 does not test the coupled trajectory first law. The driver copies action.diagnostics[first_law_residual] before constructing dc/dN and dT_gamma/dN. That diagnostic is abs(qnu+qem)/(abs(qnu)+abs(qem)), where qnu and qem are reductions of the same event rates and the same on-shell four-momenta. It therefore validates event-level bookkeeping, not the independently evolved neutrino-energy derivative plus electromagnetic-temperature derivative. A sign error in dc/dN or in the q_EM term of dT_gamma/dN leaves reported T6 unchanged. Calling 8.31e-15 first-law consistency at every trajectory evaluation overstates what was checked.",
+      "assumptions_used": [
+        "The T6 phrase first-law consistency sampled along the trajectory is intended to constrain the coupled ODE, not only event kinematics.",
+        "An acceptance diagnostic must be sensitive to errors in the quantities it purports to validate."
+      ],
+      "evidence_refs": [
+        "scripts/audit/d056_independent_trajectory.py:58-78",
+        "scripts/audit/d056_independent_trajectory.py:172-174",
+        "src/rabbit/decoupling/_independent_noqke.py:1160-1236",
+        "src/rabbit/decoupling/_independent_noqke.py:1279-1296",
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:60"
+      ],
+      "evidence_fingerprint": "sha256:2b901eda4f8490abc938ea3b01f0fd849575995107c098124e17dc3153b03bb2",
+      "counterevidence_refs": [
+        "The event-level qnu+qem residual is genuinely small and is useful collision-kinematics evidence.",
+        "The endpoint N, t and N_eff bands would catch many large coupling-sign errors, but they do not make T6 independent."
+      ],
+      "reproduction": [
+        "rg -n 'max_first_law|pair_rate|dc_dn|q_em|dtg_dn|first_law_residual|qnu, qem' scripts/audit/d056_independent_trajectory.py src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Falsifier: a semantic mutant that negates dc_dn or the q_em/hubble term leaves the current T6 calculation byte-for-byte unchanged.",
+        "Change of view: independently reduce d rho_nu/dN from the returned native/modal derivative and combine it with drho_EM/dT*dT_gamma/dN and 3(rho+P); require this coupled residual to pass and kill the sign mutants."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-006",
+      "claim_id": "C-D057-ENDPOINT",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "Seven-stage audit stage 5, numerical-adequacy boundary: D-056 is one SciPy-BDF run at GL48-Y24, angular 4/4/4, electron order 24 and rtol 1e-6. No retained trajectory grid/angular/tolerance ladder bounds accumulated endpoint error. The claimed pre-freeze discriminator is one mid-annihilation energy-rate comparison and has no raw artifact in the D-056 run; it does not bound spectral action, self-collision blocks, endpoint state, or the whole path. The finite-domain evaluator counts rejected outgoing events at y outside (0,24), but the driver neither records that counter nor encloses the omitted tail. The report retains no checkpoint states, spectra, solver step/Jacobian statistics, event residual, dependency/platform manifest, stdout, or stderr. The evidence is therefore a credible matched-resolution scalar endpoint observation, not reproducible full-spectral or convergence validation.",
+      "assumptions_used": [
+        "A local rate discriminator at one state does not automatically bound a nonlinear 10 MeV to 5 keV trajectory.",
+        "Full-spectral validation needs enough retained state to inspect spectra or a prospectively justified reduction proving the retained observables sufficient."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:31-45",
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md:63-74",
+        "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md:68-72",
+        "scripts/audit/d056_independent_trajectory.py:23-32",
+        "scripts/audit/d056_independent_trajectory.py:117-192",
+        "src/rabbit/decoupling/_independent_noqke.py:1093-1134",
+        "src/rabbit/decoupling/_independent_noqke.py:1175-1238",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_time.txt"
+      ],
+      "evidence_fingerprint": "sha256:35c889e6fb9b28dbf7143665227e9daa223c4ba436cc5797b569c8324800e819",
+      "counterevidence_refs": [
+        "The contract explicitly disclaims a continuum result.",
+        "The correct completed-catalogue endpoint match is much tighter than the frozen scalar bands.",
+        "D-053 and D-055 provide separate static catalogue and covariance evidence on the same module bytes."
+      ],
+      "reproduction": [
+        "rg --files .agent-harness/runs/run-20260728-f10-d056-independent-trajectory",
+        "rg -n 'whole_reaction_domain_rejections|domain =' src/rabbit/decoupling/_independent_noqke.py",
+        "rg -n 'nfev|njev|nlu|solution\\.t|solution\\.y|config|endpoint' scripts/audit/d056_independent_trajectory.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Change of view: retain a prospectively frozen tolerance/angular/grid/tail ladder, checkpoint spectra and domain-rejection/tail bounds, and demonstrate endpoint/block stability inside an allocated error budget.",
+        "A no-continuum claim can remain, but the phrase full-spectral gate validation must be narrowed unless spectral agreement evidence is retained."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-007",
+      "claim_id": "C-D057-SOFTWARE",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Seven-stage audit stage 6, lifecycle and claim-binding falsifier: every D-056 assignment and result is keyed to the unrelated row-6 claim C-R6-ORBIT-CHART-RABBIT-APPLICABILITY, so MERGED_RESULTS contains no endpoint claim finding. The contract/execution envelopes use synthetic fable-main identifiers while asserting SubagentStart injection; no event log exists. Their assignments do not list the contract, driver, module or raw report among required inputs, yet their findings claim review/execution of those bytes. The execution assignment declares only its result path as output, while the claimed execution necessarily writes raw_logs outside that path; commands and artifacts are empty. The result timestamps are also impossible as UTC records: the files were already committed at 2026-07-27T19:44:35Z, while envelopes claim starts on 2026-07-28T04:45Z or later. Exact assignment, role and template hashes pass, and raw freeze/report chronology supports a real main-side run, but the schema-v2 provenance and endpoint-claim admission do not.",
+      "assumptions_used": [
+        "AGENTS.md result-only write ownership and exact SubagentStart identity apply to the D-056 evidence run.",
+        "Missing claim binding and untrusted lifecycle cannot be repaired by numerical majority or a locally passing JSON."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments/A-TRAJ-CONTRACT.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments/A-TRAJ-EXECUTION.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments/A-TRAJ-BLIND-REVIEW.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments/A-TRAJ-ADJUDICATION.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-CONTRACT.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-EXECUTION.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-BLIND-REVIEW.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-ADJUDICATION.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/artifacts/AUDIT_EVIDENCE_MAP.json"
+      ],
+      "evidence_fingerprint": "sha256:f16480e9282693722da2f1059cc7280d0f24c3303750b9dae8d7a85e3e230271",
+      "counterevidence_refs": [
+        "All four assignment SHA-256 values recorded in the envelopes match the assignment files.",
+        "Role aggregate and result-template hashes are correct.",
+        "Commit 5d9f521 and the raw report/time artifacts establish a plausible pre-output freeze and completed process independent of the defective envelopes."
+      ],
+      "reproduction": [
+        "sha256sum .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments/*.json .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+        "rg -n 'claim_ids|C-R6-ORBIT|required_inputs|required_outputs|fable-main|subagent_start_injected|started_at|completed_at|commands|artifacts' .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/assignments .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+        "git log --diff-filter=A -1 --format='%H%n%aI%n%cI%n%s' -- .agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Change of view: provide retained live Start/Stop events tying real agent IDs to these exact envelopes, or classify the run honestly as main-executed and perform a fresh registered claim-correct review/adjudication with authorized inputs and result-only writes.",
+        "A fresh physical replay is not automatically required to preserve the raw numerical observation, but trusted scientific gate admission requires an explicit owner-approved provenance remedy."
+      ]
+    },
+    {
+      "finding_id": "F-D057R4-TRAJ-008",
+      "claim_id": "C-D057-ENDPOINT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Seven-stage audit stage 7 synthesis after steelmanning both sides: the strongest PASS case is unusually strong at the raw-number level—sound derivative pack, exact frozen module bytes, successful terminal JSON, physically ordered heating, and near-coincidence with the correct completed-catalogue BDF/Rodas endpoints. The strongest FAIL case governs admission—wrong frozen production anchor, no cross-code blockwise predicate, circular T6, no trajectory refinement/state artifact, wrong claim key, and untrusted lifecycle envelopes. Exact contradictions cannot be majority-resolved. Verdict: D-056 is VALIDATED only as a preserved one-run matched-resolution endpoint observation; the claim that it closes G-F10-INDEPENDENT-FLRW is FAIL on the registered evidence, without asserting that the underlying physics result is false.",
+      "assumptions_used": [
+        "Raw numerical plausibility, scientific sufficiency, claim binding and lifecycle trust are separate axes.",
+        "The authoritative gate predicate and harness contract are not optional because the numerical result is favorable."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/artifacts/AUDIT_EVIDENCE_MAP.json",
+        "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+        "scripts/audit/d056_independent_trajectory.py",
+        "src/rabbit/decoupling/_independent_noqke.py",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+        ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/MERGED_RESULTS.json",
+        ".agent-harness/generated/CONTEXT_PACK.md"
+      ],
+      "evidence_fingerprint": "sha256:863c1ed2e986f7348716a771015cf1b2fd4be64c38973aa85ae1fe2c6ceee36f",
+      "counterevidence_refs": [
+        "The raw endpoint passes both old and correct completed-catalogue scalar bands.",
+        "No sign, unit, transform, EOS-formula or solver-success defect was found in the named source slice."
+      ],
+      "reproduction": [
+        "Apply findings F-D057R4-TRAJ-001 through F-D057R4-TRAJ-007 without treating PASS subclaims as gate admission."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Minimal change-of-view set: bind the correct completed-catalogue anchors; predeclare and pass Rust-vs-independent block/spectral comparisons; replace T6 with an independently reduced coupled-energy residual and mutant kills; retain a bounded trajectory refinement/tail/state package; and restore claim-correct, live-attributed schema-v2 provenance.",
+        "If owner policy permits a provenance-only re-adjudication of preserved physical bytes, that authority must explicitly say which defects can be repaired without a new 2:45 trajectory; it must not silently retrofit the current failed contract."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json"
+  ]
+}

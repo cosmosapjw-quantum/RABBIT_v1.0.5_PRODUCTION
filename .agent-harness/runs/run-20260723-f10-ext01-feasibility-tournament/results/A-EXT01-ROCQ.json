@@ -1,0 +1,234 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-ROCQ",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f11-acc7-7d52-9259-3c54a4baf199",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-ROCQ",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:1ff64360f9f719835c329b763861e4bf142c243d24af2420e50e5f0be85fedae",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "inconclusive",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json",
+  "started_at": "2026-07-23T12:44:00Z",
+  "completed_at": "2026-07-23T13:19:00Z",
+  "tool_versions": {
+    "rocq_prover": "9.0.1",
+    "ocaml": "4.14.2",
+    "opam": "2.5.2",
+    "kernel": "Linux 6.17.0-35-generic x86_64",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-ROCQ.json",
+    "unzip -t BD622_D039_second_audit_bundle.zip",
+    "opam exec -- coqc --version",
+    "opam exec -- coqc -q Ext01Endpoint.v  # first development compile: exit 1, unavailable Rdiv_lt_iff lemma; theorem statement was not weakened",
+    "opam exec -- coqc -q Ext01Endpoint.v  # final: exit 0",
+    "rg -n '(^|[^A-Za-z])(Axiom|Axioms|Admitted|admit|Parameter)([^A-Za-z]|$)' Ext01Endpoint.v  # no matches",
+    "opam exec -- coqchk Ext01Endpoint  # final: Modules were successfully checked",
+    "sha256sum Ext01Endpoint.v Ext01Endpoint.vo Ext01Endpoint.glob",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json  # exit 0",
+    "python3 .agent-harness/scripts/validate_harness.py  # ok=true"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v",
+      "kind": "rocq_source",
+      "sha256": "sha256:7e41c0eecc34800d60e0d765f3ec4dfa8e07fd3b2b1db3325a163c96a101d410",
+      "repository_write": false
+    },
+    {
+      "path": "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.vo",
+      "kind": "rocq_kernel_object",
+      "sha256": "sha256:5362512db6ec914b7942c45bbfea771b2813e8f8d078bf68fe17b5cbda48d3f6",
+      "repository_write": false
+    },
+    {
+      "path": "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.glob",
+      "kind": "rocq_global_index",
+      "sha256": "sha256:00d1424914715e9499806d3cdff0f7ff161c749ffbea8b6c1c0f7fc6cccd100c",
+      "repository_write": false
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-ROCQ-001",
+      "claim_id": "C-EXT01-SAME-SPACE-NOGO",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Rocq kernel-checks that any finite real-coefficient weighted sum of basis functions whose left limits at xi=1 are zero also has left limit zero. Exact equality on a nonempty terminal interval with either the constant invariant 1 or p_star*xi/(1-xi), for p_star>0, yields a contradiction. This proves NC-SAME-SPACE under its frozen finite-span assumptions and does not imply that a distinct Petrov test space or analytic invariant component works.",
+      "assumptions_used": [
+        "The span contains finitely many basis functions.",
+        "All expansion coefficients are finite real constants independent of xi.",
+        "Every basis function has left limit zero at xi=1.",
+        "Claimed representation is pointwise equality on a nonempty terminal interval.",
+        "p_star>0 for compactified momentum."
+      ],
+      "evidence_refs": [
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v#sha256:7e41c0eecc34800d60e0d765f3ec4dfa8e07fd3b2b1db3325a163c96a101d410",
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.vo#sha256:5362512db6ec914b7942c45bbfea771b2813e8f8d078bf68fe17b5cbda48d3f6",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#negative_control",
+        "BD622_D039_second_external_audit_report.md#8.4-semidiscrete-state-and-operation-graph"
+      ],
+      "evidence_fingerprint": "sha256:4c0c690948cbfa05f39bef8188cb1ce05fe5e228efaba71d52b3b739fdd38a5b",
+      "counterevidence_refs": [
+        "CAS_CONTRACT C-PETROV deliberately changes the test space, and C-ANALYTIC adds a separate invariant component; neither is covered by the same-space theorem."
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqc -q Ext01Endpoint.v",
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqchk Ext01Endpoint"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The proof uses the standard Rocq real-number library, whose Print Assumptions reports only its existing ClassicalDedekindReals and functional-extensionality dependencies; the proof adds no Axiom, Parameter, Admitted, or admit."
+      ]
+    },
+    {
+      "finding_id": "F-ROCQ-002",
+      "claim_id": "C-EXT01-PETROV-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The strongest admission case is that a distinct conservative test space containing exact 1 and p evades NC-SAME-SPACE while a terminal-vanishing trial space controls the endpoint. The decisive rejection case is that the sealed evidence supplies no fully specified pairing/local mass map, uniform inf-sup lower bound, nonsymmetric fermionic entropy proof, process-total shell/tail closure, binary64 bound, or net-deflation plan. Rocq kernel-checks the typed dependency implication petrov_dependency_gap, but that theorem audits the frozen evidence-status table and is not a mathematical impossibility theorem for all Petrov methods.",
+      "assumptions_used": [
+        "All eleven G-EXT-FEASIBILITY obligations are binding.",
+        "A conditional mechanism is not Established evidence.",
+        "A missing theorem is INCONCLUSIVE, never an implicit pass.",
+        "No post-hoc conservation projection is allowed."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe-C-PETROV",
+        "BD622_D039_second_external_audit_report.md#8-rank-1-candidate-contract",
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v#petrov_dependency_gap"
+      ],
+      "evidence_fingerprint": "sha256:af8abb3db34a817f210d7a62bb9350ed75a0360e5c072fbc04f59ae867877a32",
+      "counterevidence_refs": [
+        "A prospectively frozen trial/test pairing with a uniform inf-sup certificate and derived entropy inequality could reverse this verdict without contradicting NC-SAME-SPACE."
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqc -q Ext01Endpoint.v"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "Decisive falsifier: exhibit an interior state where the inf-sup bound vanishes, the p test diverges, entropy needs unavailable symmetry/positivity, or conservation occurs outside the weak form.",
+        "Verdict-changing evidence: one exact artifact discharging all candidate-specific and eleven common obligations, with no deferred implementation choice."
+      ]
+    },
+    {
+      "finding_id": "F-ROCQ-003",
+      "claim_id": "C-EXT01-ANALYTIC-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The strongest admission case is that one analytic equilibrium/invariant component plus vanishing local perturbations could own the full half-line and remove the finite-Y_max tail split. The opposing case remains decisive on present bytes: no unique differentiable coefficient map, exact pre-quadrature conservation/entropy theorem, single-consumer tail authority, bypass exclusion, prospective conditioning/binary64 certificate, or exact non-isomorphism to B3-v2 is supplied. Rocq kernel-checks analytic_dependency_gap at the novelty obligation, but the missing scientific premises are encoded audit facts rather than proved no-go theorems.",
+      "assumptions_used": [
+        "The analytic component must be part of one total representation, not a second tail oracle or correction surface.",
+        "Every binding property must be fixed before output.",
+        "Basis/domain relabeling is not structural novelty.",
+        "Missing proof is INCONCLUSIVE."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe-C-ANALYTIC",
+        "BD622_D039_second_external_audit_report.md#8.4-semidiscrete-state-and-operation-graph",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#8-fully-preregistered-basis-grid-event-ladder",
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v#analytic_dependency_gap"
+      ],
+      "evidence_fingerprint": "sha256:e32de738d3cd083fed6c2e25b14ca46992a33696011f17476eeda8705181c446",
+      "counterevidence_refs": [
+        "A single typed coefficient map with exact invariant ownership, a consumer-total half-line representation, and a formal operation-graph non-isomorphism proof could change the verdict."
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqc -q Ext01Endpoint.v"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Decisive falsifier: singular/discontinuous coefficient map, a bypassable analytic component, a second tail consumer, or an exact reduction to B3-v2.",
+        "The compactified equilibrium baseline described externally is only SPECULATIVE and is not a closed analytic-component construction."
+      ]
+    },
+    {
+      "finding_id": "F-ROCQ-004",
+      "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "A finite reversible edge network with nonnegative symmetric conductances conditionally offers exact invariants, Pauli-compatible positivity, detailed balance, and a fermionic H-theorem. The simplest fixed dimensionless lattice fails the exact two-temperature finite-mass closure test, but that does not prove a universal moving-lattice no-go. The moving/remap candidate remains non-admitted because no theorem preserves occupations, invariants, reversibility, positivity, entropy, differentiability, tail enclosure, deterministic angular extension, and the cost bound across the continuous temperature domain. Rocq kernel-checks medvm_dependency_gap at the finite-m_e-shell obligation.",
+      "assumptions_used": [
+        "Forward and reverse edges must be exactly on shell and share nonnegative conductance.",
+        "Temperature varies continuously over the frozen domain.",
+        "A fixed-lattice failure does not imply every moving-remap scheme is impossible.",
+        "Stochastic angular sampling cannot satisfy the deterministic obligation.",
+        "Missing remap theorem is INCONCLUSIVE."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate_universe-C-MEDVM",
+        "BD622_D039_second_external_audit_report.md#9-rank-2-candidate-contract",
+        "BD622_D039_second_external_audit_report.md#12-prospective-negative-control-package",
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#why-dsmc-is-not-the-primary-bianchi-route",
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v#medvm_dependency_gap"
+      ],
+      "evidence_fingerprint": "sha256:277663d21f508f05dad12777a360c162849c21b878d0790b313b87f7cc542d3b",
+      "counterevidence_refs": [
+        "A rigorous moving-lattice/remap theorem plus sparse deterministic edge factorization could overturn the current likely-no-go assessment."
+      ],
+      "reproduction": [
+        "unzip -t BD622_D039_second_audit_bundle.zip",
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqc -q Ext01Endpoint.v"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Decisive falsifier: any remap loses exact reversibility, invariants, Pauli bounds, entropy, differentiability, or exceeds the frozen edge/cost budget.",
+        "The fixed-lattice subroute is rejected; the broader moving-remap feasibility claim remains unproved rather than universally falsified."
+      ]
+    },
+    {
+      "finding_id": "F-ROCQ-005",
+      "claim_id": "C-EXT01-NOVELTY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "No candidate supplies the binding exact operation-graph non-isomorphism proof against sealed B3-v2. Petrov and analytic-component variants are materially different readings of the externally proposed compactified DG outline, but their complete operators do not exist. MEDVM would be structurally distinct if a full on-shell moving edge/remap graph existed, but that graph is absent. Consequently local endpoint and dependency theorems cannot establish novelty or G-EXT-FEASIBILITY.",
+      "assumptions_used": [
+        "Novelty is assessed against B3-v2 basis, finite-domain/tail ledger, mass solve, event trace, and A0-A4 graph as a whole.",
+        "A change of basis, domain coordinates, language, or compiler wrapper alone is not novelty.",
+        "A compiler can reduce authority divergence but does not prove physics independence."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#common_conventions-b3_comparison",
+        "BD622_D039_second_external_audit_report.md#8.7-structural-novelty-test",
+        "BD622_D039_second_external_audit_report.md#10-clause-to-symbol-compiler",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#10-w7-oracle-and-d-030-arithmetic-metrology-graph",
+        "/tmp/A-EXT01-ROCQ.aQssf3/Ext01Endpoint.v#feasibility_gate_not_closed"
+      ],
+      "evidence_fingerprint": "sha256:483f94a75728be187872e4d82e85e418736b574a00b2007e306807ab0e69c2a3",
+      "counterevidence_refs": [
+        "An exact bidirectional operation-DAG comparison proving that one fully specified candidate cannot be mapped to B3-v2 would change this verdict."
+      ],
+      "reproduction": [
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqc -q Ext01Endpoint.v",
+        "cd /tmp/A-EXT01-ROCQ.aQssf3 && opam exec -- coqchk Ext01Endpoint"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "PDR: preserve STOP/PRESERVE. The strongest admission steelman does not overcome missing novelty, shell, stability, binary64, and cost closure.",
+        "Any future exact artifact must pass all eleven binding obligations; a single non-PASS remains terminal and cannot be rescued by the local Rocq theorem."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json"
+  ]
+}

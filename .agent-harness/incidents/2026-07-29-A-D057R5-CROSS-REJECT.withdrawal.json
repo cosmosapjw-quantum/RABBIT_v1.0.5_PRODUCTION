@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+  "assignment_id": "A-D057R5-CROSS-REJECT",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "agent_id": "019fa739-89e9-7ab3-8cfc-49d016fd456b",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+    "assignment_id": "A-D057R5-CROSS-REJECT",
+    "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3bd0c23d3f0c12516df90d215448aa58a9989ba28cff46a84b9d8d08cfc50a23",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-REJECT.json",
+  "started_at": "2026-07-28T05:39:25Z",
+  "completed_at": "2026-07-28T05:42:47Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "token_counter": "UNAVAILABLE: the harness exposes no exact per-agent token counter"
+  },
+  "commands": [
+    "Read the canonical context, assignment, result template, role file, D-057 report, and four authorized R4 result envelopes.",
+    "sha256sum docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md and the four authorized R4 result envelopes",
+    "Repeated the same sha256sum after the evidence-drift alert."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+      "initial_observed_sha256": "f5c16c421a7434689e9f14229bc51c69fbe65c663d20c7eca55d0bb742abadba",
+      "later_observed_sha256": "d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PROVENANCE.json",
+      "sha256": "3ff2fa107e8895bcb97ae5231ad21096df8439d562d0a95e0e5d25d337b1f0f1"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json",
+      "sha256": "624fa6a507cdb45a5b1513a3b3030469b6fe139ca96a59c6f68a0013980f8576"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json",
+      "sha256": "5d840c7cc80e49401ff6a6268ea5fa91205c24fbf8b59208a0e629f473b81750"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json",
+      "sha256": "79803c857997ed3e96115eaf016c57af9f8d4cd8c95205e0a6712dece6ea1283"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057R5-EVIDENCE-DRIFT-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The assignment-authorized D-057 report changed while this review was active: its initially observed SHA-256 was f5c16c421a7434689e9f14229bc51c69fbe65c663d20c7eca55d0bb742abadba and its later observed SHA-256 was d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a. The substantive draft combined reasoning from the earlier bytes with a later current artifact and is therefore withdrawn. No C-F10-INDEPENDENT, C-F10-COVARIANCE-METROLOGY, or C-HARNESS-INTEGRITY gate verdict from this assignment is admitted.",
+      "assumptions_used": [
+        "An adjudication must bind one immutable evidence set.",
+        "A changed required input cannot be cured by silently adopting the later bytes after analysis."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+        "Two assignment-local sha256sum observations recorded in this envelope"
+      ],
+      "evidence_fingerprint": "sha256:d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a",
+      "counterevidence_refs": [
+        "The four authorized R4 result hashes, context pack, assignment, role bundle, and result template remained stable across the recheck."
+      ],
+      "reproduction": [
+        "Compare the initial and later SHA-256 observations recorded above."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "A fresh registered assignment may adjudicate one prospectively frozen D-057 report version."
+      ]
+    }
+  ],
+  "errors": [
+    "Required input drifted during the assignment; mixed-byte scientific and gate verdicts were withdrawn fail-closed."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-REJECT.json"
+  ]
+}

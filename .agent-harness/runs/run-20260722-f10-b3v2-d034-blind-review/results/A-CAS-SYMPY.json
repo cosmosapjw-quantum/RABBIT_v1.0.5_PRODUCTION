@@ -1,0 +1,442 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-CAS-SYMPY",
+  "agent_id": "019f8a13-ea3c-7ba2-8227-636ff794911d",
+  "agent_type": "default",
+  "role": "cas_sympy",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "independence_mode": "blind-results",
+  "status": "fail",
+  "started_at": "2026-07-22T13:42:32Z",
+  "completed_at": "2026-07-22T14:01:56Z",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SYMPY.json",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0",
+    "kernel": "6.17.0-35-generic",
+    "libc": "glibc 2.39"
+  },
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SYMPY.json"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SYMPY.json"
+  ],
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-CAS-SYMPY",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:07ae08b800feca93921feea65eb3eec67b0be97bd707271d0dbeec29290743a8"
+  },
+  "contract_reproduced_before_calculation": {
+    "problem_id": "BD622-D033-D034-B3V2-W7-EXACT-BYTES",
+    "status_boundary": "Blind design and exact-algebra review only. No W7 numerical output, B3 collision output, T01-T12, Rust edit, Radau, trajectory, endpoint, unblinding, F-11, QKE, or public runtime authority.",
+    "canonical_targets": {
+      "row_ii": "Direct coherent t+s u/v spin trace equals four times the distinguishable K_t base before the tagged map; crossing-only is forbidden.",
+      "mb_loss": "C_loss^Ks(c)/(G_F^2 T^5 y exp(-y))=c/(8pi^3); Kt=c/(24pi^3); rows i-v 8/pi^3,16/(3pi^3),4/pi^3,4/(3pi^3),4/(3pi^3).",
+      "mandelstam": "s+t+u=sum masses^2; electron elastic and pair both 2m_e^2.",
+      "entropy": "A=log(F/R)=eta1+eta2-eta3-eta4; J A>=0 with equality iff F=R; electron bath sign follows Q_EM/T_gamma.",
+      "derivative": "D(M^-1q)[delta]=M^-1(Dq[delta]-DM[delta]M^-1q)."
+    }
+  },
+  "source_hashes": {
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json": "04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md": "e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "scripts/audit/w7_b3v2_contract_source.py": "5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "docs/audit/BD622_W7_exact_test_vectors.json": "5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44",
+    ".agent-harness/context/roles/cas_common.md": "b448c46574d027ba06ade0007d98194164d3f72c2acf18ba0808bc798d604d1a",
+    ".agent-harness/context/roles/cas_sympy.md": "513df1add7123ca2871bcc126cd4b6368ffa787a9952f8ac6d15024e543fe334"
+  },
+  "engine": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "implementation": "CPython",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0",
+    "sympy_ground_types": "python",
+    "machine": "x86_64",
+    "kernel": "6.17.0-35-generic",
+    "libc": "glibc 2.39",
+    "numerical_backend_scope": "mpmath 100-decimal spot checks only; no numerical check is used as proof"
+  },
+  "method_contract": {
+    "source_script": "Inline Python/SymPy stdin programs recorded by the agent transcript; no auxiliary script was written because the assignment grants write ownership only for this result path. The exact algorithms and canonical outputs are recorded below.",
+    "symbol_assumptions": [
+      "Four-momentum components are real.",
+      "Physical energies are future-directed and positive.",
+      "The CAS metric is eta_D=diag(+1,-1,-1,-1), equal to -g_phys, so chi_ij is the CAS scalar product.",
+      "Masses, temperatures, and G_F are positive real quantities.",
+      "Occupations satisfy 0<f_i<1, hence F>0 and R>0.",
+      "Square roots are principal nonnegative roots and logarithms are the real principal logarithm on positive arguments."
+    ],
+    "simplification_rules": [
+      "All rational test-vector inputs were created as SymPy Rational objects.",
+      "Gamma identities were checked componentwise in an explicit Dirac representation before invariant reduction.",
+      "Polynomial/rational conclusions were compared under expand, simplify, cancel, factor, and together where applicable.",
+      "No floating-point substitution was used to establish an exact equality or inequality."
+    ],
+    "denominator_exclusions": [
+      "P0=0",
+      "s<=0 for a physical COM frame",
+      "beta^2=0 is handled only by the separate identity branch",
+      "Gram norm=0",
+      "F=0 or R=0 for the finite entropy-affinity logarithm",
+      "T=0 and E1=0 in the Maxwell-Boltzmann loss reduction"
+    ],
+    "singular_and_branch_loci": [
+      "The apparent beta^2 denominator is removable only through the explicit beta=0 identity branch.",
+      "Elastic s=m_e^2 and pair s=4m_e^2 have k*=0 and only physical-side derivatives.",
+      "Entropy equality F=R is regular as a limit of (F-R)log(F/R), while occupation-boundary logarithms are outside the strict-open domain.",
+      "No complex-domain continuation, alternate square-root sheet, or two-sided threshold derivative is claimed."
+    ],
+    "resource_limits": "Exact 4x4 matrix traces, 256 component Fierz check, a 6x39 rational nullspace, and closed symbolic integrals only; no W7/B3 evaluator was imported or executed."
+  },
+  "reproduction": {
+    "executable_command": "python -c \"import json; p='.agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SYMPY.json'; exec('\\n'.join(json.load(open(p))['reproduction']['source_script_lines']))\"",
+    "source_script_lines": [
+      "import sympy as s",
+      "I=s.I; Z=s.zeros(2); E=s.eye(2)",
+      "sig=[s.Matrix([[0,1],[1,0]]),s.Matrix([[0,-I],[I,0]]),s.Matrix([[1,0],[0,-1]])]",
+      "def B(a,b,c,d): return a.row_join(b).col_join(c.row_join(d))",
+      "g=[B(E,Z,Z,-E)]+[B(Z,x,-x,Z) for x in sig]",
+      "g5=I*g[0]*g[1]*g[2]*g[3]; PL=(s.eye(4)-g5)/2; PR=(s.eye(4)+g5)/2",
+      "eta=[1,-1,-1,-1]; Vu=[x*PL for x in g]; Vd=[eta[i]*Vu[i] for i in range(4)]",
+      "assert all(g[mu]*g[nu]+g[nu]*g[mu]==2*(eta[mu] if mu==nu else 0)*s.eye(4) for mu in range(4) for nu in range(4))",
+      "assert all(s.simplify(sum(Vu[mu][a,b]*Vd[mu][c,d]+Vu[mu][c,b]*Vd[mu][a,d] for mu in range(4)))==0 for a in range(4) for b in range(4) for c in range(4) for d in range(4))",
+      "ps=[s.symbols(' '.join(f'p{k}{j}' for j in range(4)),real=True) for k in range(1,5)]; p1,p2,p3,p4=ps",
+      "def sl(p): return g[0]*p[0]-sum((g[i]*p[i] for i in range(1,4)),s.zeros(4))",
+      "def dot(p,q): return p[0]*q[0]-sum(p[i]*q[i] for i in range(1,4))",
+      "tr=sum(s.trace(sl(p3)*Vu[mu]*sl(p1)*Vu[nu])*s.trace(sl(p2)*Vd[mu]*sl(p4)*Vd[nu]) for mu in range(4) for nu in range(4))",
+      "trace_diff=s.expand(tr-16*dot(p1,p4)*dot(p2,p3))",
+      "assert all(fn(trace_diff)==0 for fn in (s.simplify,s.cancel,s.factor,s.together))",
+      "m,gL,gR=s.symbols('m gL gR',real=True); C=gL*PL+gR*PR",
+      "N=[[s.trace(sl(p3)*g[mu]*PL*sl(p1)*g[nu]*PL) for nu in range(4)] for mu in range(4)]",
+      "def electron_trace(a4,a2): return s.expand(sum(N[mu][nu]*s.trace(a4*(eta[mu]*g[mu]*C)*a2*(eta[nu]*g[nu]*C)) for mu in range(4) for nu in range(4)))",
+      "Ks=dot(p1,p2)*dot(p3,p4); Kt=dot(p1,p4)*dot(p2,p3); Ku=dot(p1,p3)*dot(p2,p4)",
+      "same=electron_trace(sl(p4)+m*s.eye(4),sl(p2)+m*s.eye(4))",
+      "assert s.expand(same-16*(gL**2*Ks+gR**2*Kt-gL*gR*m**2*dot(p1,p3)))==0",
+      "opp=s.expand(sum(N[mu][nu]*s.trace((sl(p2)-m*s.eye(4))*(eta[mu]*g[mu]*C)*(sl(p4)-m*s.eye(4))*(eta[nu]*g[nu]*C)) for mu in range(4) for nu in range(4)))",
+      "assert s.expand(opp-16*(gL**2*Kt+gR**2*Ks-gL*gR*m**2*dot(p1,p3)))==0",
+      "Npair=[[s.trace(sl(p2)*g[mu]*PL*sl(p1)*g[nu]*PL) for nu in range(4)] for mu in range(4)]",
+      "pair=s.expand(sum(Npair[mu][nu]*s.trace((sl(p3)+m*s.eye(4))*(eta[mu]*g[mu]*C)*(sl(p4)-m*s.eye(4))*(eta[nu]*g[nu]*C)) for mu in range(4) for nu in range(4)))",
+      "assert s.expand(pair-16*(gL**2*Kt+gR**2*Ku+gL*gR*m**2*dot(p1,p2)))==0",
+      "mu,zs,E1,E2,T=s.symbols('mu zs E1 E2 T',positive=True,real=True); sh=2*E1*E2*(1-mu)",
+      "outKs=s.integrate((sh**2/4)/(16*s.pi),(zs,-1,1)); outKt=s.integrate((sh**2*(1+zs)**2/16)/(16*s.pi),(zs,-1,1))",
+      "rateKs=s.simplify(1/(2*E1)*s.integrate(E2*s.exp(-E2/T)/(8*s.pi**2)*s.integrate(outKs,(mu,-1,1)),(E2,0,s.oo)))",
+      "rateKt=s.simplify(1/(2*E1)*s.integrate(E2*s.exp(-E2/T)/(8*s.pi**2)*s.integrate(outKt,(mu,-1,1)),(E2,0,s.oo)))",
+      "assert rateKs==E1*T**4/(8*s.pi**3) and rateKt==E1*T**4/(24*s.pi**3)",
+      "species=('nu_e','antinu_e','nu_mu','antinu_mu','nu_tau','antinu_tau'); flavours=('e','mu','tau')",
+      "nu={'e':'nu_e','mu':'nu_mu','tau':'nu_tau'}; anti={'e':'antinu_e','mu':'antinu_mu','tau':'antinu_tau'}; rows=[]",
+      "rows += [(a,a,a,a) for a in species]; rows += [(nu[f],anti[f],nu[f],anti[f]) for f in flavours]",
+      "for cp in (nu,anti):",
+      " for i,f in enumerate(flavours): rows += [(cp[f],cp[h],cp[f],cp[h]) for h in flavours[i+1:]]",
+      "rows += [(nu[f],anti[h],nu[f],anti[h]) for f in flavours for h in flavours if f!=h]",
+      "for i,f in enumerate(flavours): rows += [(nu[f],anti[f],nu[h],anti[h]) for h in flavours[i+1:]]",
+      "rows += [(a,q,a,q) for a in species for q in ('e-','e+')]; rows += [(nu[f],anti[f],'e-','e+') for f in flavours]",
+      "assert len(rows)==39; idx={a:i for i,a in enumerate(species)}; A=s.zeros(6,39)",
+      "for j,legs in enumerate(rows):",
+      " for sign,leg in zip((-1,-1,1,1),legs):",
+      "  if leg in idx: A[idx[leg],j]+=sign",
+      "L=s.Matrix.hstack(*A.T.nullspace()); Target=s.Matrix.hstack(s.Matrix([1,-1,0,0,0,0]),s.Matrix([0,0,1,-1,0,0]),s.Matrix([0,0,0,0,1,-1]))",
+      "assert A.rank()==3 and L.cols==3 and L.row_join(Target).rank()==3 and Target.T*A==s.zeros(3,39)",
+      "f1,f2,f3,f4=s.Rational(1,5),s.Rational(2,5),s.Rational(3,5),s.Rational(4,5)",
+      "F=f1*f2*(1-f3)*(1-f4); R=f3*f4*(1-f1)*(1-f2); J=F-R; Aff=s.log(F/R)",
+      "assert (F,R,J,s.simplify(Aff),s.ask(s.Q.positive(J*Aff)))==(s.Rational(4,625),s.Rational(144,625),-s.Rational(28,125),-s.log(36),True)",
+      "mm=s.symbols('mm',positive=True,real=True); sub_s=mm**2/4; lam=(sub_s-mm**2)**2; k=s.sqrt(lam)/(2*s.sqrt(sub_s)); E4=s.sqrt(k**2+mm**2)",
+      "assert s.simplify(lam-9*mm**4/16)==0 and s.simplify(k-3*mm/4)==0 and s.simplify(k+E4-s.sqrt(sub_s)-3*mm/2)==0",
+      "print('PASS exact rowii/electron/normalization/nullspace/entropy checks; PASS discriminator for locked-source finite-mass branch failure')"
+    ]
+  },
+  "findings": [
+    {
+      "claim_id": "C-W7-ROWII-TRACE",
+      "finding_id": "F-SYMPY-ROWII-TRACE-PASS",
+      "severity": "info",
+      "verdict": "pass",
+      "evidence_fingerprint": "sha256:e2d44890dbe348b79a4fddee4f803ecc3a17e11ab07ec0a939fa319fb72edf49",
+      "confidence": 0.99,
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1)",
+        "real future-directed massless external momenta",
+        "P_L=(1-gamma5)/2 and one occupied neutrino helicity",
+        "locked sqrt(2) G_F current normalization"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run reproduction.executable_command in this result artifact.",
+        "Inspect command id sympy-rowii-fierz-trace."
+      ],
+      "unresolved": [],
+      "statement": "The direct same-flavour nu+antinu coherent t+s amplitude is twice the distinguishable amplitude and its squared trace is four times the distinguishable K_t base.",
+      "exact_evidence": [
+        "With V^mu=gamma^mu P_L, all 256 components satisfy (V^mu)_{ab}(V_mu)_{cd}+(V^mu)_{cb}(V_mu)_{ad}=0.",
+        "The external-fermion Wick contraction supplies the relative minus between the t bilinear and raw s bilinear. Combined with the negative Fierz identity, M_t-M_s,raw=2 M_t, so the interference is constructive.",
+        "The general spin trace is exactly Tr[p3slash V^mu p1slash V^nu] Tr[p2slash V_mu p4slash V_nu]=16 chi_14 chi_23=16 K_t. simplify, cancel, factor, and together all return zero for the difference.",
+        "With the locked sqrt(2) G_F current normalization, the distinguishable base is 32 G_F^2 K_t and the coherent row-ii result is 128 G_F^2 K_t.",
+        "For V-NULL-COM-345, K_t=81/25 and the raw trace is 1296/25 exactly."
+      ],
+      "evidence_refs": [
+        "CAS_CONTRACT.json:canonical_targets.row_ii",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:104-110",
+        "scripts/audit/w7_b3v2_contract_source.py:130-137"
+      ],
+      "limitations": "This is an exact algebra/design result, not executed W7 or collision evidence."
+    },
+    {
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "finding_id": "F-SYMPY-ABSOLUTE-NORMALIZATION-PASS",
+      "severity": "info",
+      "verdict": "pass",
+      "evidence_fingerprint": "sha256:f75770ba3639851b2601f0b90175ddecf0f33b55305b37a3e5cad2b6de4efa71",
+      "confidence": 0.97,
+      "assumptions_used": [
+        "locked invariant four-leg phase-space measure",
+        "massless thermal Maxwell-Boltzmann loss limit for the closed-form reduction",
+        "per-spin electron bath occupations and spin-summed unaveraged electron amplitudes",
+        "declared global symmetry factors, orbit multiplicity one, and q normalization"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run reproduction.executable_command in this result artifact.",
+        "Inspect command ids sympy-electron-traces and sympy-phase-space-mb."
+      ],
+      "unresolved": [
+        "No W7 quadrature, MPFR metrology, collision action, or T01 execution was authorized or performed."
+      ],
+      "statement": "The locked invariant measure, current normalization, spin convention, symmetry/deposition convention, and q prefactor reproduce the canonical absolute self and electron normalization formulas.",
+      "exact_evidence": [
+        "After the outgoing spatial delta function, (2pi)^4/(2pi)^6 and the two 1/(2E) factors give 1/(16pi^2 E3 E4); the radial energy-delta Jacobian gives dPhi2=k*/(16pi^2 sqrt(s)) dz* dphi*.",
+        "For massless outgoing legs, the exact angular integrals are integral dPhi2 K_s=s^2/(32pi) and integral dPhi2 K_t=s^2/(96pi).",
+        "Including the fixed-target 1/(2E1), the partner measure E2 dE2 dmu/(8pi^2), s=2E1E2(1-mu), and integral E2^3 exp(-E2/T)dE2=6T^4 gives C_loss^Ks/(c G_F^2 f1)=E1 T^4/(8pi^3) and C_loss^Kt/(c G_F^2 f1)=E1 T^4/(24pi^3). With E1=Ty these are the locked c/(8pi^3) and c/(24pi^3) targets.",
+        "The coefficients 64 K_s, 128 K_t, 32 K_s, 32 K_t, 32 K_t therefore give rows i-v 8/pi^3, 16/(3pi^3), 4/pi^3, 4/(3pi^3), 4/(3pi^3).",
+        "The global identical row uses S=1/(2!2!) and four identical leg depositions; all other records have S=1 and orbit multiplicity one. The q prefactor 2pi^2/T_cm^3 inverts the declared radial number-density factor T_cm^3/(2pi^2). No extra target, CP, bath, or flavour multiplicity remains.",
+        "Exact Dirac traces give 16[g_L^2 K_s+g_R^2 K_t-g_L g_R m_e^2 chi_13] for nu e-, 16[g_L^2 K_t+g_R^2 K_s-g_L g_R m_e^2 chi_13] for nu e+, and 16[g_L^2 K_t+g_R^2 K_u+g_L g_R m_e^2 chi_12] for pair production. Multiplication by 2G_F^2 gives the specified 32G_F^2 amplitudes, including the negative elastic and positive pair interference signs.",
+        "The neutrino P_L trace selects the single active helicity; full electron u/v completeness sums two electron spins. No neutrino or electron initial-spin average and no separate bath degeneracy was inserted."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:50-80",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:89-110",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:119-148",
+        "scripts/audit/w7_b3v2_contract_source.py:40-165"
+      ],
+      "limitations": "The factor ledger is exact design evidence only. No quadrature, MPFR metrology, collision action, or T01 execution occurred."
+    },
+    {
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "finding_id": "F-SYMPY-REACTION-NULLSPACE-PASS",
+      "severity": "info",
+      "verdict": "pass",
+      "evidence_fingerprint": "sha256:0154b0f05a1e54f42f9c95397f1d7c2fa02e42def9044fb420dcbd478341a13c",
+      "confidence": 1.0,
+      "assumptions_used": [
+        "species order [nu_e,antinu_e,nu_mu,antinu_mu,nu_tau,antinu_tau]",
+        "nu_leg=(-1,-1,+1,+1)",
+        "electron legs omitted from the six species-count rows",
+        "the declared 24+self and 15+electron generator loops"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run reproduction.executable_command in this result artifact.",
+        "Inspect command id sympy-nullspace."
+      ],
+      "unresolved": [],
+      "statement": "The independently enumerated 24-self plus 15-electron stoichiometric graph has exactly the required rational left nullspace.",
+      "exact_evidence": [
+        "The graph was reconstructed from the declared loops without importing the contract source: 24 self records and 15 electron records.",
+        "The exact 6x39 integer stoichiometric matrix has rank 3; its transpose has nullity 3.",
+        "The concatenated rank test is rank(L)=rank(T)=rank([L T])=3, where T contains (1,-1,0,0,0,0), (0,0,1,-1,0,0), and (0,0,0,0,1,-1). Each target row times the stoichiometric matrix is exactly zero."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:82-117",
+        "scripts/audit/w7_b3v2_contract_source.py:40-115",
+        "docs/audit/BD622_W7_exact_test_vectors.json:V-NULLSPACE-SPECIES"
+      ],
+      "limitations": "The nullspace is species-count algebra only; energy conservation remains an eventwise four-momentum obligation."
+    },
+    {
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "finding_id": "F-SYMPY-ENTROPY-AFFINITY-PASS",
+      "severity": "info",
+      "verdict": "pass",
+      "evidence_fingerprint": "sha256:ebaadad28675bcecf680419fa3499355f2150445d54a31f389efa33da9db6e26",
+      "confidence": 1.0,
+      "assumptions_used": [
+        "strict-open occupations 0<f_i<1",
+        "real principal logarithm on positive F/R",
+        "J=F-R and nu_leg=(-1,-1,+1,+1)",
+        "equilibrium bath logit eta_e=-E/T_gamma"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run reproduction.executable_command in this result artifact.",
+        "Inspect command id sympy-entropy."
+      ],
+      "unresolved": [],
+      "statement": "On the strict-open occupation domain, the affinity and entropy-production sign follow exactly, including the electron-bath sign.",
+      "exact_evidence": [
+        "For eta_i=log(f_i/(1-f_i)), exact log combination gives A=log(F/R)=eta1+eta2-eta3-eta4.",
+        "Writing x=F/R>0 gives J A=R(x-1)log(x)>=0 because log is strictly increasing; equality holds exactly at x=1, equivalently F=R.",
+        "For V-ENTROPY-RATIONAL, F=4/625, R=144/625, J=-28/125, A=-log(36)=log(1/36), and J A=56 log(6)/125>0 exactly.",
+        "For bath electrons eta_e=-E/T_gamma, -sum_e eta_e nu_leg J equals Q_EM/T_gamma. Thus the bath term has the declared sign and combines with the neutrino entropy terms into the same event affinity."
+      ],
+      "nonproof_checks": "At 100 decimal digits, (x-1)log(x) was positive for x=1+/-1e-40, x=1+/-1e-80, x=11, and x=0.1. These checks only probe cancellation near equality and are not used as proof.",
+      "evidence_refs": [
+        "CAS_CONTRACT.json:canonical_targets.entropy",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:401-403",
+        "docs/audit/BD622_W7_exact_test_vectors.json:V-ENTROPY-RATIONAL"
+      ],
+      "limitations": "At f=0 or 1 the finite-log formula is outside the declared strict-open domain; only interior values and their limits are claimed."
+    },
+    {
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "finding_id": "F-SYMPY-FINITE-ME-SHELL-SOURCE-BRANCH-FAIL",
+      "severity": "critical",
+      "verdict": "fail",
+      "evidence_fingerprint": "sha256:3f981f9667a2e69795d8273e5aa5759631dcf0c03fd3f91ac0654cc245d83f79",
+      "confidence": 1.0,
+      "assumptions_used": [
+        "principal nonnegative square roots",
+        "elastic physical support requires s>m_e^2",
+        "pair physical support requires s>4m_e^2",
+        "exact thresholds are k*=0 support values only with physical-side derivatives",
+        "the locked source bytes are part of the claim under review"
+      ],
+      "counterevidence_refs": [
+        "The off-threshold V-ELASTIC-ME-345 and V-PAIR-ME-345 vectors pass their exact shells and conservation checks.",
+        "The proof-pack analytic shell and Jacobian formulas are algebraically correct on their declared physical branches."
+      ],
+      "reproduction": [
+        "Run reproduction.executable_command in this result artifact.",
+        "Inspect command ids sympy-shell-vectors-jacobian and sympy-elastic-subthreshold-discriminator.",
+        "Evaluate the locked source branch at exact s=m_e^2/4 to obtain energy residual 3m_e/2."
+      ],
+      "unresolved": [
+        "The exact-byte source must be remediated and freshly blind-reviewed before W7 numerical execution can be considered."
+      ],
+      "statement": "The document's finite-mass shell and phase-space formulas are exact, but the locked unexecuted source bytes do not implement the binding elastic threshold branch and therefore fail the exact-byte claim.",
+      "exact_evidence": [
+        "For elastic s>m_e^2, k*=(s-m_e^2)/(2sqrt(s)), E3*=k*, and E4*=(s+m_e^2)/(2sqrt(s)) satisfy both shells and E3*+E4*=sqrt(s). For pair s>4m_e^2, k*=sqrt(s-4m_e^2)/2 and E3*=E4*=sqrt(s)/2 satisfy both shells and the energy sum.",
+        "The delta-function radial derivative independently reduces to k*/[16pi^2(E3+E4)]=k*/(16pi^2 sqrt(s)).",
+        "V-ELASTIC-ME-345 and V-PAIR-ME-345 have exact shell residuals zero, exact four-momentum residuals zero, and s+t+u=2. V-NULL-COM-345 gives (K_s,K_t,K_u)=(4,81/25,1/25).",
+        "However, source lines 253-256 use lambda=(s-(m3+m4)^2)(s-(m3-m4)^2), reject only lambda<=0, and then take sqrt(lambda). For elastic (m3,m4)=(0,m_e), lambda=(s-m_e^2)^2 is positive on the forbidden subthreshold interval 0<s<m_e^2. The source therefore accepts those inputs and chooses |s-m_e^2|/(2sqrt(s)), not the required positive-side branch.",
+        "Exact discriminator: at s=m_e^2/4 the source branch gives lambda=9m_e^4/16, k*=3m_e/4, E3*+E4*=2m_e, while sqrt(s)=m_e/2; the energy-conservation residual is 3m_e/2.",
+        "At the exact elastic or pair threshold lambda=0, source lines 254-255 raise, while the binding document lines 170-171 require the k*=0 value to be included in support and one-sided-derivative tests.",
+        "Source line 262 additionally applies max(0,1-z_star^2) before the principal square root, which is a clipping operation absent from the exact branch contract."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:150-194",
+        "scripts/audit/w7_b3v2_contract_source.py:245-272",
+        "docs/audit/BD622_W7_exact_test_vectors.json:V-ELASTIC-ME-345,V-PAIR-ME-345"
+      ],
+      "impact": "This is a binding exact-byte branch failure. Passing off-threshold shell vectors do not authorize W7 numerical execution because they do not exercise the specified threshold controls or the elastic subthreshold rejection.",
+      "reopen_condition": "Freeze source bytes with explicit process-specific support tests s>m_e^2 and s>4m_e^2, a separately specified k*=0 threshold-test value, the locked algebraic root order, and an unclipped in-domain angular branch; then repeat fresh blind exact-byte review."
+    }
+  ],
+  "exact_vector_checks": {
+    "source_json_identity": "PASS via ast.literal_eval of EXACT_TEST_VECTORS without importing or executing the contract source",
+    "V-NULL-COM-345": "PASS: shells and conservation exact; K_s=4, K_t=81/25, K_u=1/25",
+    "V-ELASTIC-ME-345": "PASS: shells and conservation exact; s=4, t=-9/40, u=-71/40, sum=2",
+    "V-PAIR-ME-345": "PASS: shells and conservation exact; s=25/4, t=-5/8, u=-29/8, sum=2",
+    "V-ENTROPY-RATIONAL": "PASS: F=4/625, R=144/625, J=-28/125, A=log(1/36), J*A>0",
+    "V-NULLSPACE-SPECIES": "PASS: exact displayed span"
+  },
+  "commands": [
+    {
+      "id": "embedded-result-reproduction",
+      "command": "python -c \"import json; p='.agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-CAS-SYMPY.json'; exec('\\n'.join(json.load(open(p))['reproduction']['source_script_lines']))\"",
+      "exit_code": 0,
+      "result": "PASS exact rowii/electron/normalization/nullspace/entropy checks; PASS discriminator for locked-source finite-mass branch failure"
+    },
+    {
+      "id": "sympy-rowii-fierz-trace",
+      "command": "python - <<'PY' (explicit Dirac gamma matrices, 256-component P_L Fierz identity, general symbolic trace and four simplifiers) PY",
+      "exit_code": 0,
+      "result": "Clifford PASS; all Fierz components zero; general trace difference from 16 K_t zero under simplify/cancel/factor/together."
+    },
+    {
+      "id": "sympy-electron-traces",
+      "command": "python - <<'PY' (general symbolic nu e-, nu e+, and nu antinu -> e- e+ traces) PY",
+      "exit_code": 0,
+      "result": "All three differences from the locked 16-times bodies are identically zero."
+    },
+    {
+      "id": "sympy-phase-space-mb",
+      "command": "python - <<'PY' (exact dPhi2 angular and Maxwell-Boltzmann integrals) PY",
+      "exit_code": 0,
+      "result": "K_s and K_t loss bases are E1*T^4/(8*pi^3) and E1*T^4/(24*pi^3); four simplifiers agree."
+    },
+    {
+      "id": "sympy-nullspace",
+      "command": "python - <<'PY' (independent declared-loop enumeration and exact 6x39 rational matrix) PY",
+      "exit_code": 0,
+      "result": "24+15 records, rank 3, left nullity 3, exact target span."
+    },
+    {
+      "id": "sympy-entropy",
+      "command": "python - <<'PY' (exact rational affinity plus mpmath 100-decimal nonproof checks) PY",
+      "exit_code": 0,
+      "result": "Exact vector and general sign theorem PASS; all numerical spot checks positive."
+    },
+    {
+      "id": "sympy-shell-vectors-jacobian",
+      "command": "python - <<'PY' (exact rational shell/conservation/Mandelstam vectors and general radial delta Jacobian) PY",
+      "exit_code": 0,
+      "result": "Document formulas and all named vectors PASS exactly."
+    },
+    {
+      "id": "sympy-elastic-subthreshold-discriminator",
+      "command": "python - <<'PY' (exact source Kallen branch at s=m^2/4) PY",
+      "exit_code": 0,
+      "result": "Source branch accepts subthreshold lambda>0 and has exact energy residual 3m/2; binding source conflict confirmed."
+    },
+    {
+      "id": "ast-vector-identity",
+      "command": "python - <<'PY' (ast.parse plus ast.literal_eval; no source import) PY",
+      "exit_code": 0,
+      "result": "Source EXACT_TEST_VECTORS equals JSON vectors byte-semantically."
+    }
+  ],
+  "non_authoritative_command_failures": [
+    {
+      "command": "first execution of the embedded result reproduction program",
+      "exit_code": 1,
+      "error": "SymPy ShapeError because the first embedded draft reused a 2x2 identity symbol in massive 4x4 spin sums; corrected to s.eye(4), after which the exact embedded command passed."
+    },
+    {
+      "command": "initial general-trace stdin draft",
+      "exit_code": 1,
+      "error": "IndexError from malformed temporary SymPy symbol-range construction; corrected command passed and no conclusion used this failed draft."
+    },
+    {
+      "command": "initial corrected-variable MB stdin draft",
+      "exit_code": 1,
+      "error": "SyntaxError from one missing parenthesis; corrected command passed."
+    },
+    {
+      "command": "first MB exploratory stdin program",
+      "exit_code": 0,
+      "error": "Incoming and outgoing angular variables were conflated in two printed intermediate angular integrals; those intermediates were discarded. The separately corrected two-angle derivation produced the retained exact formulas."
+    }
+  ],
+  "scope_attestation": {
+    "sibling_results_read": false,
+    "rabbit_production_collision_imported": false,
+    "historical_d028_imported": false,
+    "w7_numerical_output_run": false,
+    "b3_collision_run": false,
+    "t01_t12_run": false,
+    "rust_run": false,
+    "radau_or_trajectory_run": false,
+    "result_only_write": true
+  },
+  "design_verdict": "FAIL",
+  "design_verdict_reason": "Four assigned exact claims pass, but C-W7-FINITE-ME-SHELL fails on the exact locked source branch. Under D-034, any claim-level FAIL keeps W7 numerical execution and all B3 authority closed.",
+  "permit_w7_numerical_execution": false,
+  "permit_b3_implementation_or_output": false,
+  "errors": []
+}

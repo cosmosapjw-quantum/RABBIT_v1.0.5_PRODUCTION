@@ -1,0 +1,11 @@
+{
+ "id": "2026-07-29-ENVELOPE-CONTRACT-CONFLATES-COVERAGE-WITH-REGRESSION",
+ "artifact_class": "PROCESS_FINDING",
+ "recorded_at": "2026-07-29T12:35:32+00:00",
+ "head_commit": "cef6f00581a10ca5b6dd521ad064e2344cc54b81",
+ "what": "RESULT_ENVELOPE enforces `status=pass requires every finding verdict to be pass`. The round-7 regression reviewer answered its assignment question -- 'did the round-6 fix pass introduce a regression or a new bypass?' -- with a well-evidenced NO, while also recording five advisory coverage-class findings (uncovered guard clauses, an untested and unwired ~600-line feature, cross-run coupling in the merge gate, and an independently reproduced Start masking bug). It set status=pass and was blocked.",
+ "why_it_matters": "The contract cannot distinguish 'I found no regression' from 'I found no problems at all'. That creates pressure in the wrong direction: the cheapest way for a reviewer to reach status=pass is to downgrade or omit advisory findings. This chain's whole purpose is to make that pressure absent.",
+ "what_was_done": "The reviewer was told explicitly NOT to soften, downgrade or delete any finding, and to set status=fail instead while stating the distinction inside the envelope so an adjudicator reads both facts. The contract was NOT bent to fit the result.",
+ "recommendation": "Consider a separate envelope field for the assignment's own question (e.g. `assignment_verdict`) distinct from the aggregate finding roll-up, so a reviewer can report 'no regression' and 'here are coverage gaps' without the schema forcing a choice. Not done here: changing the envelope contract mid-chain would invalidate every result already admitted against it.",
+ "status": "OPEN -- recorded, deliberately not actioned during this chain"
+}

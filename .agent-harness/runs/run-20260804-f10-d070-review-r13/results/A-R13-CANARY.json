@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-review-r13",
+  "assignment_id": "A-R13-CANARY",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "agent_id": "r13-canary",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260804-f10-d070-review-r13",
+    "assignment_id": "A-R13-CANARY",
+    "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:afabd1fefdcf64de52503d1967c28e5488921bd58696dbd566639f418a014919",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-CANARY.json",
+  "started_at": "2026-08-03T15:56:30Z",
+  "completed_at": "2026-08-03T16:06:30Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)",
+    "git": "system git"
+  },
+  "commands": [
+    "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+    "cd $SCRATCH && git init -q && git add -f -A . && git commit -q -m baseline   # make the archive a real git repo so is_tracked/is_git_repo behave like the real tree",
+    "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json   # baseline: ok=true, exit 0, live=[C8,C9]",
+    "python3 -c '<edit stop_hook_sha256 in C9 attestation to all-zero>'  # control: verify staleness is caught",
+    "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json   # control: ok=false, exit 1, \"canary C9 is STALE\"",
+    "python3 -c '<same corruption PLUS append a duplicate \"artifact_class\": \"NOT_A_CANARY_DECOY\" as the LAST key>'",
+    "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json   # exploit: ok=true, exit 0, C9 absent from attestations/live, no error",
+    "python3 -c '<duplicate a non-classifying key, e.g. \"canary\", instead of artifact_class>'  # positive control",
+    "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json   # positive control: ok=false, exit 1, ambiguous-evidence error fires as designed",
+    "rm -rf $SCRATCH/.agent-harness/runs/run-20260803-f10-d070-canary-c9 && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # ok=true, exit 0 (min_live=1 satisfied by C8 alone)",
+    "<write two sacrificial attestations reusing ids C8 and C9 to attempt mutual retirement (2-cycle)> && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # ok=false, exit 1, cycle caught + zero-live-floor caught",
+    "<write one sacrificial attestation id=C8 supersedes=[C9] to attempt id-reuse retirement> && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # ok=false, exit 1, duplicate-id caught",
+    "git rm --cached .agent-harness/context/CANARY_POLICY.json; git commit; edit min_live to 0 on disk; rerun  # ok=false, exit 1, 'untracked declaration' error fires",
+    "rm .agent-harness/context/CANARY_POLICY.json (leave tracked); rerun  # ok=false, exit 1, 'tracked but missing' error fires",
+    "python3 -c 'from _harness import loads_strict; loads_strict(<top-level, nested, array-nested, same-value duplicate keys>)'  # all four raise JSONDecodeError; loads_strict itself has no bypass found"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-R13-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "check_canary_freshness.py's find_attestations() defeats its own stated invariant. When strict parsing rejects a document for a duplicate key, the code re-reads it with plain json.loads (last-value-wins) and reports the ambiguity LOUDLY only if that loose parse's 'artifact_class' still equals 'CANARY_ATTESTATION'; otherwise it silently `continue`s -- neither counted, nor reported as an error, nor even mentioned. Duplicating the 'artifact_class' key itself, with a non-matching value as the textually LAST occurrence, makes the loose fallback classify the document as 'not ours' and drop it with zero trace. Demonstrated end-to-end on a scratch copy of C9's real attestation (.agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json): first, corrupting only its stop_hook_sha256 to a wrong value was correctly caught ('canary C9 is STALE', exit 1) -- confirming staleness detection works normally. Then, adding one more line -- a second 'artifact_class': 'NOT_A_CANARY_DECOY' key as the object's last field, alongside the same wrong hash -- made check_canary_freshness.py --json report {\"ok\": true, \"attestations\": 4, \"live\": [\"C8\"], ...} with exit 0 and an EMPTY errors list. C9 does not appear anywhere in the output: not as live, not as superseded, not as an error. The genuinely mismatched hook digest is never evaluated because the document carrying it is dropped before the digest-comparison loop ever runs. C8 (an independent, untouched, genuinely live and correctly-backed canary) remained in 'live', so the pass is not an artifact of the min_live=1 floor masking the result -- it is the specific fallback-classification logic failing on its own terms. This is exactly the scenario the code's own comment says it exists to prevent ('an attestation with a duplicate key would become invisible ... ambiguous bytes would be a way to retire a canary from its own freshness check').",
+      "assumptions_used": [
+        "Attack performed only against a scratch copy (mktemp -d + git archive HEAD, then git init/add -f/commit to restore tracked-file semantics); the real repository's evidence files were never modified -- verified by re-hashing .agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json in the real repo after the attack (sha256:54603d53bd4346a81cdf39fc3e8d5944ad717912d8f7a7d8a6b21fbda654bcd6, matching its pre-attack value)."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py:98-118 (find_attestations fallback branch)",
+        ".agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json (real, unmodified source used as the attack's starting point)"
+      ],
+      "evidence_fingerprint": "sha256:e75501235b058ff0ec3ec2d4a9dbf2581c429e1640ba110501a49680ff121161",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); cd /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION; git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "cd \"$SCRATCH\" && git init -q && git add -f -A . && git commit -q -m baseline",
+        "In .agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/CONCURRENT_STOP_RACE.json: change stop_hook_sha256 to 32 zero bytes (hex), then append ',\\n \"artifact_class\": \"NOT_A_CANARY_DECOY\"\\n' just before the final closing brace.",
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "Observed: {\"ok\": true, \"attestations\": 4, \"live\": [\"C8\"], \"superseded\": [\"C5\",\"C6\",\"C7\"], \"errors\": []}, exit code 0."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Whether the adjudicator considers this in-scope given the shared-OS-user forgery residual is already documented -- this finding does NOT require forging a receipt/ledger/result; it only requires write access to an existing evidence file's bytes, which is a strictly weaker precondition than the residual the codebase already accepts as open."
+      ]
+    },
+    {
+      "finding_id": "F-R13-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Attempted mutual retirement: two new 'sacrificial' attestation files, one reusing id C8 with supersedes_canary=[C9], the other reusing id C9 with supersedes_canary=[C8], each borrowing its authorization from the genuine same-id attestation elsewhere in the tree (authorised is computed per-id, not per-document). This DID succeed at making both C8 and C9 land in the 'retired' set (bypassing the per-attestation duplicate/backing/staleness checks entirely, since retired canaries are skipped before any of those run) -- but the combined supersession graph forms a 2-cycle (C8->C9->C8), which _supersession_cycles() detects regardless of authorization, and the resulting zero countable canaries also trips the min_live floor. Result: ok=false, exit 1, both a cycle error and a '0 live retained canary attestation(s) found, at least 1 required' error. The graph-based cycle detector and the floor check together closed this path.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py:237-324 (_supersession_cycles, superseded_ids)"
+      ],
+      "evidence_fingerprint": "sha256:98ba236cd11fbfc5d09678c60fc5f0b502a7fb97fe712b503e011eff63a45cee",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In scratch tree, add .agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/SACRIFICIAL_A.json = {\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C8\",\"supersedes_canary\":[\"C9\"]}",
+        "add .agent-harness/runs/run-20260803-f10-d070-canary-c9/artifacts/SACRIFICIAL_B.json = {\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C9\",\"supersedes_canary\":[\"C8\"]}",
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "Observed: ok=false, exit 1, errors=[\"canaries C8 -> C9 -> C8 form a supersession cycle...\", \".agent-harness/runs: 0 live retained canary attestation(s) found, at least 1 required...\"]"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Attempted id-reuse retirement: a single sacrificial attestation reusing id C8 (no receipt fields of its own) with supersedes_canary=[C9], relying solely on the genuine C8 attestation elsewhere to make 'C8' authorised. This DOES retire C9 (confirmed: C9 lands in 'superseded'), but the sacrificial document itself shares C8's id with the genuine C8 attestation and neither is retired, so the duplicate-id detector fires: 'canary C8 is attested by 2 live files'. It is also independently flagged for its own missing receipt fields and missing hook digest. Result: ok=false, exit 1. The duplicate-id check closed this path even though the authorization-by-id (rather than by-document) design gap is real.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py:444-467 (countable/duplicated bookkeeping)"
+      ],
+      "evidence_fingerprint": "sha256:14df8750023a515fc1726da4f0cefddea41fd24dfbf067edd4bd08465b6a34b4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In scratch tree, add .agent-harness/runs/run-20260803-f10-d070-canary-c8/artifacts/SACRIFICIAL.json = {\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C8\",\"supersedes_canary\":[\"C9\"]}",
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "Observed: ok=false, exit 1, errors include 'canary C8 declares no canary_lease_run_id...', 'canary C8 attests no hook digest...', 'canary C8 is attested by 2 live files (...ACTIVE_RUN_BRACKET_AROUND_CONSUME.json, ...SACRIFICIAL.json)'"
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "The underlying design gap (authorised is a set of ids, not a set of (id, path) pairs, so any document sharing an already-authorised id is treated as authorised to retire) is real and only fails to matter here because it also collides on the duplicate-id check. A future change that let a live canary's id be authorised WITHOUT also being counted (e.g. if retirement checks ran before duplicate detection, or if the retiring id differed from any currently-countable id) would reopen this. Recommend authorising by (canary id, attesting file) pair, not by id alone."
+      ]
+    },
+    {
+      "finding_id": "F-R13-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "CANARY_POLICY.json's two guard branches both hold under direct test. (a) Deleting the tracked file from the working tree while it remains in git's index: 'is tracked in git but missing from the working tree' error, ok=false, exit 1. (b) Untracking it (git rm --cached + commit) and lowering min_live to 0 in the now-untracked working copy: 'exists but git does not track it' error, ok=false, exit 1. Editing the CONTENT of a file that stays git-tracked (e.g. lowering min_live in place without untracking) is NOT distinguished from a legitimately committed value -- the checker only checks path presence in the index, not content-vs-HEAD -- but this is an ordinary reviewable config edit, not a silent bypass of a stated invariant, and is not treated as a finding here.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py:373-422 (required_live)"
+      ],
+      "evidence_fingerprint": "sha256:7d397d855885f11603e931820100272cef99c66bb2890facf04f9d2828b80067",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "rm .agent-harness/context/CANARY_POLICY.json (tracked, deleted from disk); check --json -> ok=false, exit 1",
+        "git rm --cached .agent-harness/context/CANARY_POLICY.json && git commit; set min_live:0 on disk; check --json -> ok=false, exit 1"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "loads_strict() in _harness.py itself was not broken: tested top-level duplicate keys, duplicate keys inside a nested object, duplicate keys inside an object nested in an array, and a duplicate key repeated with the IDENTICAL value (to check it isn't only comparing values) -- all four raise json.JSONDecodeError as designed. The defect in F-R13-001 lives entirely in check_canary_freshness.py's downstream handling of that exception (the loose-reparse fallback), not in the strict parser itself.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/_harness.py:45-73 (loads_strict, _no_duplicate_keys)"
+      ],
+      "evidence_fingerprint": "sha256:d18da8016e1d87e22b89ef04cb0a8072106480c74cf115cac5abe7092004e035",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "python3 -c \"import sys; sys.path.insert(0,'.agent-harness/scripts'); from _harness import loads_strict; loads_strict('{\\\"a\\\":1,\\\"a\\\":1}')\"  # raises JSONDecodeError"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R13-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "inconclusive",
+      "severity": "medium",
+      "statement": "Under the CURRENT CANARY_POLICY.json (min_live: 1), simply deleting C9's entire run directory (no tampering, no JSON tricks) yields ok=true, exit 0, live=[C8]. This is consistent with the floor's own declared semantics -- min_live is a minimum, not a requirement that every previously-live canary stay retained -- so it is not a parsing or graph-logic defect. It does mean the checker cannot by itself guarantee that BOTH C8 and C9 specifically remain retained; that guarantee, if intended, requires raising min_live to 2. Flagging for the adjudicator as a policy question, not asserting a code defect.",
+      "assumptions_used": [
+        "CANARY_POLICY.json's own stated purpose text describes min_live as a floor ('how many LIVE canary attestations this repository must retain'), which reads as intentionally not tracking specific ids."
+      ],
+      "evidence_refs": [
+        ".agent-harness/context/CANARY_POLICY.json"
+      ],
+      "evidence_fingerprint": "sha256:024a93d1d2efc8dc37b39df147a69eec9ec68dbdc93c649fba754dfb607661ae",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "rm -rf .agent-harness/runs/run-20260803-f10-d070-canary-c9 (in scratch tree)",
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json -> {\"ok\": true, \"attestations\": 4, \"live\": [\"C8\"], ...}"
+      ],
+      "confidence": 0.6,
+      "unresolved": [
+        "Should CANARY_POLICY.json declare min_live: 2 (or per-id required ids) now that two independently-obligated canaries (C8, C9) exist? Adjudicator's call."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-CANARY.json"
+  ]
+}

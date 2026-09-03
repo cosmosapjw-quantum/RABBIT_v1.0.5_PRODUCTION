@@ -1,0 +1,51 @@
+{
+ "artifact_class": "CANARY_ATTESTATION",
+ "canary": "C10",
+ "supersedes_canary": [],
+ "why_this_supersedes_nothing": "C8, C9 and C10 measure three different properties and none retires another.",
+ "obligation": "D-065 obligation 1, re-run in the configuration a round-13 registered ADJUDICATOR showed C9 had missed.",
+ "what_the_adjudicator_found": "C9 launched 24 concurrent stops sharing ONE agent_id and ONE assignment. The consume path takes a per-(run, agent_id) flock BEFORE the per-assignment O_EXCL claim, so one lock file served all 24: at most one process was ever inside the region O_EXCL guards, and O_EXCL only ever executed sequentially. A plainly non-atomic existence check would have produced byte-identical output. C9 therefore discriminates against 'no downstream guard at all' but NOT between atomic and non-atomic, which is the property the audit asked to be rerun. The verdict was accepted in full, not disputed.",
+ "the_configuration_that_actually_broke": "acquire_agent_lock's own docstring records it: one agent_id on TWO DIFFERENT assignments. Two assignments take two different claim files, so O_EXCL excluded nothing and the round-5 code was 'measured to admit both stops in most trials'. That is what this canary runs.",
+ "first_result_the_sanctioned_tooling_refuses_it": "admit_agent.py REFUSES to mint the second receipt: 'agent_id already holds an open or consumed admission receipt for assignment A-D070-C10-A. One admission token binds one agent_id to exactly one assignment (D-065 obligation 1)'. The historical configuration is unreachable through the sanctioned path -- the binding is enforced at MINT time, one layer earlier than the audit was looking.",
+ "so_the_second_receipt_was_forged": "To reach the code path behind that guard, the second receipt was hand-written with its own token digest. That is the stated shared-OS-user residual being exercised deliberately; it is not a new weakness and is not claimed as one. The point is defence in depth: what happens if the mint-time guard is bypassed.",
+ "head_commit": "c63ab3c4ed79d86834edad91543fac9404d45c13",
+ "start_hook_sha256": "8b28351235d32bb74c7bb84ee32acf910f2bccb4eef993bfbf86baecc6522d17",
+ "stop_hook_sha256": "79eb19fcd35c100b9b0e58e4dc6416fb0e9f840ff860e29da7bdf066107f4bc0",
+ "processes": 2,
+ "agent_id_shared": "d070-canary-c10",
+ "assignments": [
+  "A-D070-C10-A",
+  "A-D070-C10-B"
+ ],
+ "slot_a_stdout_bytes": 0,
+ "slot_b_decision": "block",
+ "slot_b_reason": "Another SubagentStop for agent_id 'd070-canary-c10' is inside the consume path for run 'run-20260804-f10-d070-canary-c10' right now. One agent_id may consume at most one assignment per run (D-065 obligation 1), so concurrent stops by one agent are serialised rather than interleaved. Retry this stop once the other has finished.",
+ "ledger_rows_before": 1,
+ "ledger_rows_after": 2,
+ "consumed_rows": 1,
+ "THE_MEASURED_PROPERTY": "Two concurrent stops, one agent_id, two DIFFERENT assignments, one forged receipt: exactly 1 consumed row, for A-D070-C10-A. The second was refused by the per-agent flock. The configuration that historically admitted BOTH stops now admits one.",
+ "raw_evidence_files": {
+  "ledger_after_race.jsonl": "sha256:9d54fcf3c731f2aa8601a40bf2276713bc42570812a53ecd3a778990646282b1",
+  "ledger_before_race.jsonl": "sha256:fad0ea0fe993701f22dedde6e557776fae5bcf7bd914b3d803c7574a974e3950",
+  "race_err_A.txt": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "race_err_B.txt": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "race_exit_A.txt": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "race_exit_B.txt": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "race_out_A.json": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "race_out_B.json": "sha256:bb910d28c3e4e3e5c25a5a8a1f9c4c80488715173502cb92cc0f32dff38eb388",
+  "start_err_c10.txt": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "start_event_c10.json": "sha256:b4e9491e9df305142f58817408f3e4ec8b3d7cf09dc7e17d9ff97b508e8aadc6",
+  "start_out_c10.json": "sha256:8019b026d0805721d4479b98f536ba69189fde8148018fad5c10aec709fce14d"
+ },
+ "canary_lease_run_id": "run-20260804-f10-d070-canary-c10",
+ "consumed_by_agent_id": "d070-canary-c10",
+ "consumed_assignment_id": "A-D070-C10-A",
+ "result_sha256": "sha256:debcca06e846f6c1f70ae50d524aa409d10a9371cff8cad9b972fa8746fe5ee9",
+ "resolution_limit": "Two processes, one trial, one filesystem. Not a proof of atomicity.",
+ "what_this_does_not_claim": "Nothing about the shared-OS-user residual -- this canary DEPENDS on it to construct its input. It moves no gate.",
+ "refused_result_artifact": {
+  "path": ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-B.json",
+  "sha256": "sha256:9297a0aa77c337c5f2326f84eab66afcfe2bc9bb78c022cbf6d679276164df67",
+  "why_it_is_not_retained": "Slot B's envelope was the losing side of the race: its stop was refused by the per-agent flock, so it was never admitted, and its FORGED receipt stays open. Same reasoning as C9's refused artifact -- the digest and the ledger's `minted` row preserve the fact; the unattributed file is cleared."
+ }
+}

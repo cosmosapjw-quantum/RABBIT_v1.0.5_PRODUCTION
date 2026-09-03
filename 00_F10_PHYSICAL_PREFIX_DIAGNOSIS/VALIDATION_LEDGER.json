@@ -1,0 +1,158 @@
+{
+  "anti_drift_cost": {
+    "added_lines": 2618,
+    "blocker_movement_ratio": 0.25,
+    "cost_effectiveness_verdict": "FAILURE_MODE_RELOCATION",
+    "deleted_lines": 0,
+    "files_touched": 19,
+    "known_blocker_reduced": false,
+    "net_lines": 2618,
+    "physics_behavior_changed": false,
+    "runtime_behavior_changed": false,
+    "token_use_exact": "UNAVAILABLE",
+    "token_use_basis": "Harness exposes no exact per-task token counter.",
+    "validation_strengthened": true,
+    "verdict_basis": "The frozen direct-JVP path became executable on exact retained states and localized a strict-domain failure, but no endpoint, trajectory, performance, or production blocker improved. Line cost includes owner-requested raw receipts, canonical evidence indexes, and navigation."
+  },
+  "automatic_checks": [
+    {
+      "check": "protected seal bytes and contract digest",
+      "evidence": {
+        "contract_sha256": "c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc",
+        "head": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+        "protected_path_count": 53,
+        "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+        "working_tree_clean": false
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "receipt/vector/run-log byte bindings",
+      "evidence": {
+        "failure_count": 1,
+        "overall_status": "EXECUTED_WITH_RETAINED_FAILURES",
+        "state_count": 4,
+        "vector_count": 48
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "four-state required static diagnostics",
+      "evidence": {
+        "all_required_diagnostics_present": true,
+        "all_states_executed": true,
+        "all_states_successful": false,
+        "d071_reopen_earned": false,
+        "direct_jvp_provenance_present": true,
+        "historical_observation_jacobians_used": false,
+        "physical_prefix_executed": false,
+        "reaction_tail_authority_validated": false,
+        "states": [
+          {
+            "direct_jvp_present": true,
+            "domain_present": true,
+            "first_law_present": true,
+            "label": "initial",
+            "occupation_present": true,
+            "rhs_present": true,
+            "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+            "tail_present": true
+          },
+          {
+            "direct_jvp_present": true,
+            "domain_present": true,
+            "first_law_present": true,
+            "label": "creep_1200",
+            "occupation_present": true,
+            "rhs_present": true,
+            "status": "EXECUTED_WITH_RETAINED_JVP_FAILURE",
+            "tail_present": true
+          },
+          {
+            "direct_jvp_present": true,
+            "domain_present": true,
+            "first_law_present": true,
+            "label": "creep_2000",
+            "occupation_present": true,
+            "rhs_present": true,
+            "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+            "tail_present": true
+          },
+          {
+            "direct_jvp_present": true,
+            "domain_present": true,
+            "first_law_present": true,
+            "label": "creep_3000",
+            "occupation_present": true,
+            "rhs_present": true,
+            "status": "EXECUTED_WITH_RECORDED_BREAKDOWN",
+            "tail_present": true
+          }
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "direct JVP admissible at frozen rule for every state",
+      "evidence": {
+        "all_states_successful": false
+      },
+      "status": "FAIL"
+    }
+  ],
+  "contract_sha256": "c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc",
+  "executed_commands": [
+    {
+      "command": "PYTHONPATH=src:. python -m pytest -q tests/test_f10_physical_prefix_fixture.py tests/test_independent_noqke_comparator.py",
+      "exit_code": 0,
+      "result": "22 passed before active recovery seal"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py verify-preseal --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS",
+      "exit_code": 0,
+      "result": "53 protected paths, four states, active receipt outputs absent"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py run-receipts --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit 27afe5d817f0382c47cdc2cef2703cca69d827ed",
+      "exit_code": 2,
+      "result": "first attempt retained with one state-level error; never overwritten"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py run-receipts --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "exit_code": 2,
+      "result": "four base diagnostics and all direct-JVP attempts retained; creep_1200 JVP failure explicit"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py verify-receipts --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "exit_code": 0,
+      "result": "active contract/seal/receipt/vector/run-log bindings pass"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py finalize --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "exit_code": 0,
+      "result": "first four artifact readiness booleans true; JVP admissibility and three scientific ceilings false"
+    },
+    {
+      "command": "PYTHONPATH=src:. python scripts/audit/f10_physical_prefix_fixture.py verify-final --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "exit_code": 1,
+      "result": "sealed verifier tuple/list representation defect; regenerated and stored catalogue canonical JSON bytes compare equal"
+    },
+    {
+      "command": "PYTHONPATH=src:. python -m pytest -q tests/test_f10_physical_prefix_final_verify.py",
+      "exit_code": 0,
+      "result": "1 passed; post-seal wrapper normalizes only JSON container representation"
+    },
+    {
+      "command": "PYTHONPATH=src:. python 00_F10_PHYSICAL_PREFIX_DIAGNOSIS/verify_final_json_normalized.py --repo . --output-dir 00_F10_PHYSICAL_PREFIX_DIAGNOSIS --seal-commit acb5641e8008f0c8305e8e83db4d7269ba9e1cd6",
+      "exit_code": 0,
+      "result": "52 checksums, 110 Markdown links, 58 provenance artifacts, and all sealed receipt/chronology/tracking checks pass"
+    },
+    {
+      "command": "set -e final candidate sequence: focused fixture/comparator tests; normalized final verifier; SHA256SUMS; claim/surface tests; SSOT checker; staged whitespace and protected-path checks",
+      "exit_code": 0,
+      "result": "23 focused tests passed; 52 checksums passed; 23 claim/surface tests passed; SSOT 8 gates/21 claims/29 board rows passed; no protected-path diff"
+    }
+  ],
+  "schema": "rabbit.f10.validation_ledger.v1",
+  "seal_commit": "acb5641e8008f0c8305e8e83db4d7269ba9e1cd6"
+}

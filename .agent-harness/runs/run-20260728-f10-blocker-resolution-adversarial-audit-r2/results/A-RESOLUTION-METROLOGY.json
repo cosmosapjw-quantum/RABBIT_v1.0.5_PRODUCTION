@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+  "assignment_id": "A-RESOLUTION-METROLOGY",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "agent_id": "019fa724-9aa6-77c0-8dfa-06c303f2b241",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+    "assignment_id": "A-RESOLUTION-METROLOGY",
+    "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "FAIL",
+    "assignment_sha256": "sha256:48b800b421cecc94b65afcef41be0dd9146296f327a15df2b781d12447333fb8",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": false,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-METROLOGY.json",
+  "started_at": "2026-07-28T14:13:00+09:00",
+  "completed_at": "2026-07-28T14:14:21+09:00",
+  "tool_versions": {
+    "sha256sum": "GNU coreutils 9.4"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,320p' .agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-METROLOGY.json",
+    "sha256sum .agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-METROLOGY.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,260p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,360p' .agent-harness/templates/RESULT_ENVELOPE.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-METROLOGY.json",
+      "sha256": "48b800b421cecc94b65afcef41be0dd9146296f327a15df2b781d12447333fb8"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-RESOLUTION-METROLOGY-BOOTSTRAP-001",
+      "claim_id": "C-RESOLUTION-METROLOGY",
+      "verdict": "error",
+      "severity": "critical",
+      "statement": "Mandatory launch admission failed before substantive audit: the assignment seals independent_auditor.md as sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1, but the named role file hashes to sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836.",
+      "assumptions_used": [
+        "The assignment's sealed review_role_sha256 is binding.",
+        "A role-file hash mismatch requires a pre-analysis stop under the injected bootstrap contract."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/assignments/A-RESOLUTION-METROLOGY.json",
+        ".agent-harness/context/roles/independent_auditor.md"
+      ],
+      "evidence_fingerprint": "sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "counterevidence_refs": [
+        ".agent-harness/templates/RESULT_ENVELOPE.json"
+      ],
+      "reproduction": [
+        "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "The injected hook identifies active run run-20260728-f10-blocker-resolution-adversarial-audit-r3 while the prompt header and assignment identify run-20260728-f10-blocker-resolution-adversarial-audit-r2; the parent must reconcile the run identity before relaunch.",
+        "No D-054/D-055 evidence was opened and no metrology verdict was formed."
+      ]
+    }
+  ],
+  "errors": [
+    "REVIEW_ROLE_HASH_MISMATCH: expected sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1; observed sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+    "ACTIVE_RUN_MISMATCH: injected active run run-20260728-f10-blocker-resolution-adversarial-audit-r3; prompt and assignment run run-20260728-f10-blocker-resolution-adversarial-audit-r2"
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/results/A-RESOLUTION-METROLOGY.json"
+  ]
+}

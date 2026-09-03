@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r4",
+  "head": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+  "base": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "pre_spawn_non_run_diff_sha256": "68a0e8e570d91823036e5df26d1494462a85e044bba6b17e19c5607eac129de5",
+  "pre_spawn_status_porcelain_v2_sha256": "3b56f0d340a4bc0728750957327c72398d02cf48786c5322d045eaaa260237cb",
+  "preserved_dirty_paths": [
+    ".agent-harness/context/CONTEXT_INDEX.json",
+    ".agent-harness/generated/CONTEXT_PACK.md"
+  ],
+  "change_accounting": {
+    "files_changed": 209,
+    "added_lines": 18125,
+    "deleted_lines": 71,
+    "net_lines": 18054
+  },
+  "primary_inputs": {
+    "source": "src/rabbit/decoupling/_independent_noqke.py",
+    "source_sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+    "metrology_report": ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json",
+    "metrology_report_sha256": "4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8",
+    "trajectory_report": ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+    "trajectory_report_sha256": "8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+    "previous_complete_map": ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r2/artifacts/AUDIT_EVIDENCE_MAP.json",
+    "previous_complete_map_sha256": "caaa9a1eeb4a1828bc71e7cc1f0e98701e87c8a9c07e681e084674792a9797c2"
+  },
+  "adversarial_leads": [
+    "GATE_REGISTRY says the metrology and independent-FLRW gates pass while SHARED_CONTEXT and CLAIM_REGISTRY retain the older fail or specified states.",
+    "D-053, D-055 and D-056 findings are keyed to the row-6 applicability claim rather than catalogue, metrology and endpoint claims.",
+    "Several retained result envelopes use fable-main identifiers while asserting SubagentStart injection; no event log is retained.",
+    "D-055 B_native is 0.058 to 0.079 while the native cap is 1e-10; determine whether it is a useful complete metrology enclosure.",
+    "D-056 uses the historical incomplete-catalogue N48 anchor N_eff=3.0333103242 rather than the retained complete-catalogue Rust endpoint N_eff=3.034035983584400.",
+    "D-056 is a single run/platform at one resolution and rtol with no retained trajectory refinement ladder.",
+    "The branch delta contains 209 files, net +18054 lines and tracked __pycache__ bytecode.",
+    "Audit setup r1 sealed a nonexistent map path; r2 was superseded while its agents ran; r3 agents misread the schema-v2 aggregate role digest as a raw file SHA. All raw failures are preserved."
+  ],
+  "role_digest_rule": {
+    "definition": "review_role_sha256 is _harness.hash_files over the ordered review_role_files, including each relative path, NUL separators and file bytes; it is not sha256sum of the single file.",
+    "independent_auditor_expected": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "context_mapper_expected": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093"
+  },
+  "decision_rule": "Separate raw numerical reproducibility, scientific validity, claim binding, lifecycle provenance and SSOT consistency. A local numerical pass cannot repair a missing independent claim key, circular oracle, incomplete gate predicate or untrusted lifecycle. Exact contradictions are FAIL or INCONCLUSIVE, never majority-resolved.",
+  "forbidden": [
+    "new trajectory or endpoint execution",
+    "shared or production edits by reviewers",
+    "threshold changes",
+    "sibling-result access before adjudication",
+    "W7, B3, T01-T12, Radau, Rust or JAX forward work",
+    "F-11, Bianchi, QKE, unblinding or public work"
+  ]
+}

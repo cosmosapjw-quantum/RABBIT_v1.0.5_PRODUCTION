@@ -1,0 +1,182 @@
+{
+  "summary": "Adversarial pre-commit verification of the V3 report: recompute every figure from raw bytes; three-way seal/code/prose comparison",
+  "agentCount": 2,
+  "logs": [],
+  "result": {
+    "numbers": {
+      "verdict": "MATERIAL_DEFECT",
+      "findings": [
+        {
+          "severity": "HIGH",
+          "claim_in_report": "Section 2, r4-drop bullet: \"0.1629 at eval 951 is an *accepted* creep state 5.478e-05 past the pre-failure state - r4 was creeping, not regressing (U7; closes what V1C left open)\".",
+          "what_the_data_says": "The U7-assigned accepted state (V2 accepted.jsonl raw 927, t=0.16285800735891048) is 3.614e-05 past the pre-failure accepted state (raw 714, t=0.16282186298687312). An exhaustive pair search over ALL V2 rhs N values and all accepted/failed-trial t values finds NO pair separated by 5.478e-05. The figure is hand-carried from docs/audit/BD622_V1C_correction_and_revised_plan_2026-08-04.md line 92, where it describes a different state: r4's print-derived ln(10/8.49696)=0.16287664 - the very state V1C used to argue the drop was NOT accounted for, and which U7's evidence does not assign as accepted (its accepted matches are 0.1628580/0.1628591/0.1628603, all ~3.6-3.8e-05 past pre-failure). 5.478e-05 appears nowhere in ANALYSIS_V3.json or any tier0 artifact. This is exactly the hand-transcribed-figure defect class the report claims to have eliminated.",
+          "required_change": "Replace 5.478e-05 with 3.614e-05 (gap from pre-failure accepted state raw 714 to the U7-assigned accepted state raw 927), or restate explicitly that 5.478e-05 is V1C's reconstruction of r4's print-derived eval state while V2's matched accepted state sits 3.61e-05 past pre-failure. Either way the number must be derivable from the cited V3 evidence."
+        },
+        {
+          "severity": "HIGH",
+          "claim_in_report": "Section 0: \"the set of most-corrupted components coincides exactly (17/17, at all three checkpoints) with the ratcheted set\"; Section 1 link 3: \"The corrupted set IS the ratcheted set: overlap 17/17 at every checkpoint\".",
+          "what_the_data_says": "Arithmetic verified (17/17 at checkpoints 1200/2000/3000), but the statistic is tautological: deviations were computed only for the 51 ratcheted columns (non-ratcheted columns were never recomputed - U1's own evidence note says \"identical by construction\"), and the \"top-deviation set\" is defined as the top third (max(3, 51//3)=17) of those same 51 ratcheted columns. Recomputation confirms every recomputed column index lies in the ratcheted set at all three checkpoints, so overlap 17/17 is guaranteed by construction and carries no evidential weight for the coincidence claim. Additionally, \"coincides exactly with the ratcheted set\" is wrong as set arithmetic even at face value: the top set has 17 elements, the ratcheted set 51 - a subset relation, not coincidence.",
+          "required_change": "Rewrite both sentences to what was measured: the 17 most-deviant columns are all ratcheted columns, a subset relation guaranteed by the measurement design since only ratcheted columns were recomputed; the substantive U1 content (deviation magnitudes of ratcheted columns vs pinned) stands on its own. Drop \"coincides exactly\" and \"IS the ratcheted set\", and do not present U2's overlap as independent corroboration of link 2."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Header: \"Every figure in this document is rendered from ANALYSIS_V3.json by render_v3.py or quoted from Tier-0 artifacts; none is hand-transcribed.\"",
+          "what_the_data_says": "The Ledger/Per-item/Exclusions section is byte-identical to render_v3.py output (verified by diff), but multiple prose figures appear in neither ANALYSIS_V3.json nor any tier0 artifact and were derived by hand from raw bytes: 5.478e-05 (wrong - see finding 1); N=4.3 for the 1e18 refresh (correct: v3b jac_factor row at_raw 3114 has t=4.2959); \"224 accepts, 9 error-test failures, 1 hard Newton failure\" (correct: v3b trials.jsonl outcomes accepted=224, error_test_failure=9, newton_failure=1); the entire Cost block (correct: v3a 4000 integration + 702 observation rhs rows, wall 6.348 h; v3b 3275+294, 2.827 h; v3c 1500x4+1066+352=7418, walls 0.500-2.235 h); \"208 files, 7.0 MB\" (correct). The blanket provenance claim is false, and one of the hand-carried figures is in fact wrong.",
+          "required_change": "Either extend the rendered/Tier-0 pipeline to cover these figures, or amend the provenance sentence to state that the named figures are computed from the retained raw jsonl/npz bytes (and fix the one that is wrong)."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "\"The two governance mechanisms introduced across V2/V3 (digest-loaded criteria with two-way cover; the observation manifest with a startup self-test) each caught at least one real defect during this campaign and are the reason its letter is clean.\"",
+          "what_the_data_says": "The only defect caught during this campaign per retained bytes was caught by a third mechanism, the pin/ancestor check: v3a/FAIL_PROTOCOL.json and v3b/FAIL_PROTOCOL.json show mismatch {}, ancestor:false, and the nohup logs show \"fatal: Not a valid object name 0af4c7ce\" (the commit-id typo of limitation 6). No retained FAIL_PROTOCOL records a criteria-digest/two-way-cover refusal, and every retained selftest_result.json has ok:true (the refused legs never reached the self-test, which runs after the pin check). Count per retained evidence: pin check 1 catch, digest mechanism 0, observation-manifest self-test 0.",
+          "required_change": "Either produce retained evidence of a catch by each named mechanism during this campaign, or correct the sentence (the verifiable statement is that the pin check caught the commit-id typo, and the two named mechanisms ran clean)."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Section 2: \"the creep window evals 951-1201, silently skipped by V1's checker, is now compared point-by-point - 25 points, zero mismatches (U6)\".",
+          "what_the_data_says": "Recomputed from V2 rhs_calls.jsonl vs the r4 reference: 25 is the count of ALL overlapping print indices in the r4 reference (its complete index set), of which exactly 6 fall in the creep window (951, 1001, 1051, 1101, 1151, 1201). All 25 compared, 0 mismatches, 0 skipped - verified. The sentence attributes the 25 to the creep window.",
+          "required_change": "Reword to \"all 25 overlapping points - including the 6 creep-window points 951-1201 that V1's checker skipped - zero mismatches\"."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Section 0: the factor \"ratchets one decade per Jacobian refresh\" (and link 1: \"ratchets x10 per refresh\") \"in every configuration measured, including the healthy one\".",
+          "what_the_data_says": "v3b's recomputed staircase advances 16 decades (100x to 1e18x sqrt(EPS)) over 17 post-init refreshes: the refresh at raw 760 left the max flat at 1e4 (599: 1e4 -> 760: 1e4 -> 921: 1e5). \"One decade per refresh\" holds for 16 of 17 refreshes, not all. Separately, \"in every configuration measured\" sits in tension with the report's own U5 data: the v3c N=7.0 segment is a measured configuration in which the factor never exceeded 100x sqrt(EPS) (ratchet=false), as link 7 itself states. (v3a's peak, for reference, is 1e19x, consistent with U12's ~1e19 for V2.)",
+          "required_change": "Qualify to \"one decade per refresh with a single flat refresh in the base leg\" (or \"~one decade\"), and scope \"every configuration measured\" to the two solver configurations (60/30 and 48/24) so it does not contradict the N=7.0 segment where the ratchet never engages."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Limitation 5: \"the module digest line in the protocol text contains a character transposition\".",
+          "what_the_data_says": "Protocol section 2 pin: ...44f6466d92322c46...; runtime-verified value in every pins_verified.json: ...44f6466d96322c46... The difference is a single-character substitution (6 written as 2 at one position), not a transposition (no adjacent characters are swapped). The governing runtime value and the pre-declared resolution rule are correctly described.",
+          "required_change": "Call it a single-character transcription error (substitution) rather than a transposition."
+        }
+      ]
+    },
+    "threeway": {
+      "verdict": "MATERIAL_DEFECT",
+      "findings": [
+        {
+          "severity": "HIGH",
+          "claim_in_report": "Section 2 (U7 bullet): \"0.1629 at eval 951 is an *accepted* creep state 5.478e-05 past the pre-failure state\".",
+          "what_the_data_says": "No retained byte supports 5.478e-05. From V2 accepted.jsonl, the last accepted state before the 0.1813 Newton-failure trial (raw 904) is t=0.16282186298687312 (raw 714); the 0.1629-matching accepted state is t=0.16285800735891048 (raw 927); the delta is 3.614e-05. I scanned every V2 accepted/trial state and the r4 trajectory report for any pair with delta in [5.3e-5, 5.7e-5] against the 0.1629-matching states: none exists. The figure is also absent from ANALYSIS_V3.json and the U7 evidence payload — it is a hand-derived figure, and it is wrong.",
+          "required_change": "Replace 5.478e-05 with 3.614e-05 (accepted raw 927, t=0.162858007…, minus pre-failure accepted raw 714, t=0.162821863…), or drop the number and cite only the U7 assignment evidence. This is exactly the V1 hand-transcription failure mode the report claims to have eliminated."
+        },
+        {
+          "severity": "HIGH",
+          "claim_in_report": "Section 0: \"the set of most-corrupted components coincides exactly (17/17, at all three checkpoints) with the ratcheted set\"; Section 1 link 3: \"The corrupted set IS the ratcheted set: overlap 17/17 at every checkpoint\".",
+          "what_the_data_says": "The overlap statistic is tautological as implemented. In analyse_v3.py u2_c2, the top-deviation set is selected only from the recomputed ratcheted columns (devs is keyed by cols from ratcheted_cols_*.npz), and I verified from the raw npz that cols is a subset of the last-refresh ratcheted set at all three checkpoints (51 of 51 each). Non-ratcheted columns were never recomputed — U1's own evidence note says they are \"identical by construction (same pinned J)\" — so no deviation measurement for them exists and the 17/17 overlap cannot come out any other way. Also, the top set (17) is a proper subset of the ratcheted set (51), so \"IS\" / \"coincides exactly\" is wrong even ignoring the circularity. The sealed conjunct only required the statistic be computed, so U2's CLOSED status stands; the prose claim is stronger than the measurement can support.",
+          "required_change": "Reword links 3 and the §0 sentence to what was measured: among the 51 ratcheted columns, the 17 most-deviant are all ratcheted by construction; deviations of non-ratcheted columns were not (and could not meaningfully be) measured. Remove \"coincides exactly\" and \"IS the ratcheted set\", or explicitly label the statistic as containment-by-design."
+        },
+        {
+          "severity": "HIGH",
+          "claim_in_report": "Header and closing: \"Raw data, instrument, and adjudicator: .agent-harness/runs/run-20260805-f10-v3-campaign/ (208 files, 7.0 MB)\"; \"the raw bytes, the adjudicator, and the sealed criteria all retained\".",
+          "what_the_data_says": "r4_reference.json, a required input of the retained adjudicator (analyse_v3.py sets R4REF to the campaign directory; u6_c1/u7_c1 read it), is absent from the campaign directory — the only copy is in run-20260804-f10-v1-diagnostic/instrument/. It must have been present when ANALYSIS_V3.json was produced (U6/U7 carry real evidence), but re-running analyse_v3.py against the retained root today raises FileNotFoundError in u6_c1/u7_c1, which the harness would record as unevaluable, demoting U6 and U7 and breaking the 15/15 headline's reproducibility. The \"208 files\" census matches the current, file-missing state.",
+          "required_change": "Restore r4_reference.json into the campaign run directory (and update the file count if it changes to 209), or repoint R4REF at the retained V1 copy with a note in the report; verify analyse_v3.py re-runs to the banked ANALYSIS_V3.json before commit."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Header: \"Every figure in this document is rendered from ANALYSIS_V3.json by render_v3.py or quoted from Tier-0 artifacts; none is hand-transcribed\" — combined with §1 link 6 attributing \"224 accepts, 9 error-test failures, 1 hard Newton failure\" and \"to 1e18×√EPS by N=4.3\" to U3.",
+          "what_the_data_says": "Those four figures appear in neither ANALYSIS_V3.json nor any tier0 artifact. U3's adjudicated evidence contains only stop_reason/solver_status/N_reached/factor_rows, the factor trajectory (which has no N field — u3_c2 strips the t that jac_factor.jsonl carries), and the exceeded-100x flag. I recomputed the figures from raw v3b_r2/domain bytes and they are correct (224 accepted trials; 9 error_test_failure; 1 non-converged Newton with current Jacobian; factor hits 1e18×√EPS at raw 3114, t=N=4.2959), but they are hand-transcribed from raw jsonl, and the mechanism table attributes them to an item whose adjudicated payload does not contain them. The same header claim is also falsified by the §2 figure in finding 1.",
+          "required_change": "Either extend the U3 evidence payload (or a rendered appendix) to carry these counts and the N-at-1e18, then re-render; or change link 6's \"Closed by\" to cite the raw files explicitly and weaken the header provenance sentence to admit the exceptions."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Section 0: the step factor ratchets one decade per refresh \"in every configuration measured, including the healthy one\" and \"the ratchet is universal\".",
+          "what_the_data_says": "U5's adjudicated classification shows the measured N=7.0 segment with ratchet: false — the report itself says in link 7 that \"at 7.0 the ratchet never even engages\". Six of seven measured runs ratchet; one does not. The universal quantifier as written is contradicted by the report's own adjudicated evidence unless \"configuration\" is read narrowly as {60/30, 48/24} grids only.",
+          "required_change": "Qualify the sentence, e.g. \"in every configuration measured that refreshes its Jacobian in the collision-dominated epoch — including the healthy 48/24 base; only the latest-epoch segment (N=7), where the ratchet never engages, is exempt\", or scope \"configuration\" explicitly to the two grid configurations."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Section 0: the mechanical account is \"complete, measured, multiply-cross-checked\" and \"every link in it was measured rather than inferred\".",
+          "what_the_data_says": "The report's own §1 residual-caution paragraph (and Limitation 2) states that the causal arrow from column corruption to Newton failure \"remains extremely well-supported inference, not a controlled measurement\", because the controlled single-variable experiment is a forbidden repair. \"Every link was measured rather than inferred\" is stronger than the report's own adjudicated position.",
+          "required_change": "Weaken to \"every link's ingredients were measured; the causal chaining from corruption to Newton failure is inference, as stated in §1\" (or equivalent)."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Implicit in \"no threshold re-typed\" / the ledger: U3 condition 1 was adjudicated as sealed (\"the base run reaches its terminal event or its call cap with factor logging active throughout\").",
+          "what_the_data_says": "analyse_v3.py u3_c1 also returns True for stop_reason == \"wall_cap\", which the sealed conjunct does not list — a weakened predicate that could have closed U3 on a ground outside the sealed text. It did not bite: v3b finished (solver_status \"finished\", stop_reason null). Similarly, \"factor logging active throughout\" is only checked as \"jac_factor.jsonl non-empty\" (18 rows).",
+          "required_change": "No status change (outcome unaffected), but record the divergence in the report's limitations or verification note: the wall_cap acceptance in u3_c1 is broader than the sealed conjunct and was not exercised."
+        },
+        {
+          "severity": "MEDIUM",
+          "claim_in_report": "Implicit: U6's predicates implement the sealed measurement-existence rule (\"Closure conditions are measurement-existence predicates... measuring is not confirming\").",
+          "what_the_data_says": "analyse_v3.py u6_c1 returns True only if there are zero mismatches (ok = creep window fully compared AND not mism). That strengthens the sealed conjunct (\"V2 prints are compared... at every overlapping index\"): a genuine, fully-measured non-reproduction would have wrongly yielded PARTIAL instead of CLOSED-with-mismatch-evidence, violating the sealed \"measuring is not confirming\" principle. Harmless on this data (25 compared, 0 mismatches, 0 skipped).",
+          "required_change": "No status change, but record the strengthened predicate in the verification note; if the adjudicator is ever re-run for a follow-up, decouple the mismatch payload from the truth value."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Limitation 5: the protocol §2 digest slip is \"a character transposition\".",
+          "what_the_data_says": "Both digests are 64 hex chars differing at exactly one position (index 40: '2' in the table line vs '6' in the note/runtime value). That is a single-character substitution, not a transposition. The rest of limitation 5 is accurate: the protocol pre-declared the runtime value governs, run_v3.py PINS carries the '6' value, and every leg's pins_verified.json confirms 760a7c04…b558a.",
+          "required_change": "Change \"character transposition\" to \"single-character substitution\" (or \"one-hex-character slip\")."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Ledger U15b condition 2: \"trial, newton and factor records cover raw calls 1 through 351\" adjudicated TRUE.",
+          "what_the_data_says": "The predicate (u15b_c2) operationalizes \"cover 1 through 351\" as \"first trial/newton/factor records exist and trials reach raw >= 180 within the window\"; the firsts are at raw 223/223/221 because calls 1-220 are the init-Jacobian phase in which no trial/Newton/factor event physically occurs (rhs_calls.jsonl does cover them). The evidence payload transparently shows the firsts, so the report does not overclaim, but the predicate is a loose proxy for the sealed wording and could not detect a gap inside 1-220.",
+          "required_change": "Optional: one clause in the verification note acknowledging the operationalization (records begin at the first physically possible event; rhs log covers calls 1-351 in full)."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Header: adjudication per the sealed status rule, whose FAIL_PROTOCOL clause includes \"a leg that began integration without a passing observation-manifest self-test\".",
+          "what_the_data_says": "The adjudicator does not check selftest results; that trigger is enforced only at launch by run_v3.py (which did refuse the first v3a/v3b launch). All eight retained leg roots have selftest_result.json with ok: true and pins_verified.json with the correct digest, so the gap has no effect on this campaign.",
+          "required_change": "None required for this report; optionally note that the third FAIL_PROTOCOL trigger is enforced by the launcher, not re-verified by the adjudicator."
+        },
+        {
+          "severity": "LOW",
+          "claim_in_report": "Section 1 residual-caution: \"no plausible alternative driver survived measurement (... the iteration matrix is not near-singular)\"; §0: LSODA-family naming of FortEPiaNO/NEVO/Bennett; Verification note: \"The full verification outputs are retained in the campaign run directory.\"",
+          "what_the_data_says": "No V3 item measures iteration-matrix conditioning (U4 measures the operator spectrum only), and no tier0 artifact mentions FortEPiaNO/NEVO/Bennett — U10 establishes the contrast only for SciPy's LSODA class and ODEPACK's fresh-increment PRJA; the named external codes come from earlier campaign documents. The verification outputs are not yet present in the run directory at draft time.",
+          "required_change": "Attribute the iteration-matrix and named-codes statements to their actual source campaigns (or drop them), and ensure the reviewer outputs are actually deposited in the run directory before commit (or reword to future tense)."
+        }
+      ]
+    }
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Verify"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "verify:numbers",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a6f9e5621773a51e5",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785948446580,
+      "queuedAt": 1785948441789,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MATERIAL_DEFECT",
+      "promptPreview": "You are verifying a report BEFORE it is committed. This project's history: two prior\nresult documents (V1 at e5fcae8, V2 at 0d1736d) shipped defects that adversarial review caught only\nAFTER commit — re-typed sealed criteria, hand-transcribed figures, overclaimed prose. Your job is to\ncatch that class NOW.\n\nREPORT DRAFT: /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60c…",
+      "lastProgressAt": 1785949157032,
+      "tokens": 148232,
+      "toolCalls": 26,
+      "durationMs": 710452,
+      "resultPreview": "{\"verdict\":\"MATERIAL_DEFECT\",\"findings\":[{\"severity\":\"HIGH\",\"claim_in_report\":\"Section 2, r4-drop bullet: \\\"0.1629 at eval 951 is an *accepted* creep state 5.478e-05 past the pre-failure state - r4 was creeping, not regressing (U7; closes what V1C left open)\\\".\",\"what_the_data_says\":\"The U7-assigned accepted state (V2 accepted.jsonl raw 927, t=0.16285800735891048) is 3.614e-05 past the pre-failure…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "verify:threeway",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a4b30a10e7d3b4fbc",
+      "model": "claude-fable-5",
+      "state": "done",
+      "startedAt": 1785948449888,
+      "queuedAt": 1785948441789,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "MATERIAL_DEFECT",
+      "promptPreview": "You are verifying a report BEFORE it is committed. This project's history: two prior\nresult documents (V1 at e5fcae8, V2 at 0d1736d) shipped defects that adversarial review caught only\nAFTER commit — re-typed sealed criteria, hand-transcribed figures, overclaimed prose. Your job is to\ncatch that class NOW.\n\nREPORT DRAFT: /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60c…",
+      "lastProgressAt": 1785949154122,
+      "tokens": 117219,
+      "toolCalls": 20,
+      "durationMs": 704234,
+      "resultPreview": "{\"verdict\":\"MATERIAL_DEFECT\",\"findings\":[{\"severity\":\"HIGH\",\"claim_in_report\":\"Section 2 (U7 bullet): \\\"0.1629 at eval 951 is an *accepted* creep state 5.478e-05 past the pre-failure state\\\".\",\"what_the_data_says\":\"No retained byte supports 5.478e-05. From V2 accepted.jsonl, the last accepted state before the 0.1813 Newton-failure trial (raw 904) is t=0.16282186298687312 (raw 714); the 0.1629-matc…"
+    }
+  ],
+  "totalTokens": 265451,
+  "totalToolCalls": 46
+}

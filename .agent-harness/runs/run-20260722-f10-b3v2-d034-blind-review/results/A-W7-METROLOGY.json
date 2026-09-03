@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-W7-METROLOGY",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "agent_id": "019f8a21-9908-7eb2-b9ae-be6f88567e8f",
+  "agent_type": "default",
+  "independence_mode": "blind-results",
+  "status": "fail",
+  "verdict": "FAIL",
+  "started_at": "2026-07-22T13:42:32Z",
+  "completed_at": "2026-07-22T14:09:21Z",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-W7-METROLOGY.json",
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "errors": [
+    "Initial SubagentStop attempt was rejected for RESULT_ENVELOPE schema omissions; this artifact is the corrected retry."
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-W7-METROLOGY.json"
+  ],
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-W7-METROLOGY",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:16a709939a023a9ba092bd34aff7bde3853eb5de8f49b2a08280cc6c070daae7"
+  },
+  "source_lock": {
+    ".agent-harness/generated/CONTEXT_PACK.md": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/assignments/A-W7-METROLOGY.json": "16a709939a023a9ba092bd34aff7bde3853eb5de8f49b2a08280cc6c070daae7",
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json": "04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md": "e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "scripts/audit/w7_b3v2_contract_source.py": "5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "docs/audit/BD622_W7_exact_test_vectors.json": "5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44",
+    ".agent-harness/context/roles/independent_auditor.md": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836"
+  },
+  "scope": {
+    "claim_ids": [
+      "C-W7-METROLOGY-DESIGN",
+      "C-W7-ABSOLUTE-NORMALIZATION",
+      "C-W7-FINITE-ME-SHELL",
+      "C-W7-ARITHMETIC-GRAPH"
+    ],
+    "design_only": true,
+    "w7_numeric_output_produced": false,
+    "b3_collision_output_produced": false,
+    "sibling_results_read": false,
+    "permit_w7_execution": false,
+    "permit_b3_implementation": false,
+    "permit_output": false
+  },
+  "assumptions": [
+    "The locked global event measure, q leg-deposition definition, reaction orientation, and Maxwell-Boltzmann loss targets in the named inputs are authoritative.",
+    "The isolated loss coefficient for an identical incoming species counts the two incoming depositions; outgoing depositions belong to the gain side and do not double the isolated loss term.",
+    "The unexecuted Python file is part of the exact-byte design contract, so a contradiction between its branch or operation semantics and W6 is a design failure even when the formulas are algebraically equivalent in exact real arithmetic.",
+    "No inference from prior or sibling verdicts was used."
+  ],
+  "findings": [
+    {
+      "finding_id": "F-W7-D034-001",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "fail",
+      "severity": "fatal",
+      "title": "The identical same-sign row is lower by an exact factor of two relative to the locked MB target",
+      "statement": "The identical same-sign row is lower by an exact factor of two relative to the locked MB target.",
+      "evidence_fingerprint": "sha256:6349f937aae66c00fcd2826fdd98b0c57f28a4e9aadb7b76181e9a8992dca783",
+      "assumptions_used": [
+        "The locked global event q definition and MB targets are authoritative.",
+        "Incoming identical-leg depositions count twice in the isolated loss term; outgoing depositions contribute to gain."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:54-68",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:89-110",
+        "scripts/audit/w7_b3v2_contract_source.py:40-46",
+        "scripts/audit/w7_b3v2_contract_source.py:130-137",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:39-55",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:110-112"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Multiply the locked S00 symmetry 1/4, N64_KS coefficient 64, and two incoming identical-species depositions; compare c=32 with c=64 required by row i = 8/pi^3 under the locked Ks reduction c/(8*pi^3)."
+      ],
+      "unresolved": [
+        "Whether the intended remediation is a matrix-element coefficient change or a symmetry/deposition-contract change must be frozen by the owner/main writer."
+      ],
+      "confidence": 0.99,
+      "derivation": "For S00--S05 the exact global coefficient multiplying an incoming tagged loss deposition is (symmetry 1/4) times (amplitude 64) times (two identical incoming legs) = 32 for K_s. The locked MB reduction is c/(8*pi^3), while row i is required to be 8/pi^3, which requires c=64. The candidate therefore implies 4/pi^3 for row i. The two outgoing depositions affect the reverse/gain contribution and cannot repair this isolated loss coefficient. Rows ii--v do not have this particular mismatch: their listed symmetry and single tagged incoming deposition reproduce their stated effective c values.",
+      "evidence": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:54-68",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:89-110",
+        "scripts/audit/w7_b3v2_contract_source.py:40-46",
+        "scripts/audit/w7_b3v2_contract_source.py:130-137",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:39-55",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:110-112"
+      ],
+      "reproducible_check": "Symbolically multiply the locked S00 symmetry, N64_KS amplitude coefficient, and the count of negative identical-species legs in nu_leg; compare the resulting c=32 with the c=64 implied by the locked row-i MB target.",
+      "reopen_condition": "Freeze one consistent identical-row amplitude/symmetry/deposition ledger across W6, CAS_CONTRACT, and the source, then obtain a fresh blind absolute-normalization derivation."
+    },
+    {
+      "finding_id": "F-W7-D034-002",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "fatal",
+      "title": "The exact source does not implement the frozen elastic threshold and support branches",
+      "statement": "The exact source does not implement the frozen elastic threshold and support branches.",
+      "evidence_fingerprint": "sha256:0b609cbd964d95628fd4742eed17759a3eeeb9a114a8cf064435b6cf690fc15e",
+      "assumptions_used": [
+        "The W6 reaction-specific elastic and pair threshold clauses bind the exact source.",
+        "The exact-threshold value is support-only and must not be silently converted to a raw rejection."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:150-190",
+        "scripts/audit/w7_b3v2_contract_source.py:235-272",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:69-75"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Substitute outgoing masses (0,m_e) into lambda=(s-(m3+m4)^2)(s-(m3-m4)^2) and simplify to (s-m_e^2)^2.",
+        "Compare the source lambda<=0 rejection and max(0,1-z_star^2) expression with the frozen physical-side threshold and no-clipping clauses."
+      ],
+      "unresolved": [
+        "The exact API behavior for support-only threshold vectors must be made executable without admitting subthreshold elastic events."
+      ],
+      "confidence": 0.99,
+      "derivation": "W6 requires elastic support only for s>m_e^2 and retains equality as a k*=0 support value. The source instead evaluates the generic Kallen product. For outgoing masses (0,m_e), lambda=(s-m_e^2)^2, so every 0<s<m_e^2 has lambda>0 and is incorrectly admitted; equality has lambda=0 and is rejected. The same routine clips 1-z_star^2 with max(0,...), although the contract forbids clipping. These are branch changes, not harmless rearrangements.",
+      "evidence": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:150-190",
+        "scripts/audit/w7_b3v2_contract_source.py:235-272",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:69-75"
+      ],
+      "reproducible_check": "Substitute (m3,m4)=(0,m_e) into the source lambda expression and simplify exactly to (s-m_e^2)^2; compare the source lambda<=0 branch with the frozen physical s>m_e^2 and equality-support branches.",
+      "reopen_condition": "Encode reaction-specific elastic and pair threshold predicates, the exact k*=0 support-only equality behavior, and raw rejection rather than z_star clipping."
+    },
+    {
+      "finding_id": "F-W7-D034-003",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "fail",
+      "severity": "major",
+      "title": "The source changes the binding binary64 boost operation graph",
+      "statement": "The source changes the binding binary64 boost operation graph.",
+      "evidence_fingerprint": "sha256:b9c068e18d4fa6a587879ce8220c16052ffd5c96c1fc54f362b3e0a22a24903d",
+      "assumptions_used": [
+        "A0 is an operation-order-sensitive binary64 graph.",
+        "Exact-real algebraic equivalence does not establish bitwise equivalence."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:152-161",
+        "scripts/audit/w7_b3v2_contract_source.py:192-219",
+        "scripts/audit/w7_b3v2_contract_source.py:243-260",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:69-75"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Compare the frozen expression gamma=P0/sqrt(s) with source gamma=1/sqrt(1-dot(beta,beta)) as floating-point expression trees."
+      ],
+      "unresolved": [
+        "One gamma expression and its stage interfaces remain to be selected and frozen."
+      ],
+      "confidence": 0.98,
+      "derivation": "The frozen map defines gamma=P0/sqrt(s). Both source boost functions recompute gamma as 1/sqrt(1-|beta|^2). These are equal over exact reals but are not the same binary64 operation graph. Because A0 and the stage differences are explicitly operation-order sensitive, this unresolved source/spec divergence prevents exact-byte metrology authority.",
+      "evidence": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:152-161",
+        "scripts/audit/w7_b3v2_contract_source.py:192-219",
+        "scripts/audit/w7_b3v2_contract_source.py:243-260",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:69-75"
+      ],
+      "reproducible_check": "Compare the exact floating-point expression trees required by W6 and used by boost_to_com/boost_from_com; no numerical evaluation is needed.",
+      "reopen_condition": "Choose and freeze one gamma expression and its inputs at every A0--A4 interface."
+    },
+    {
+      "finding_id": "F-W7-D034-004",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "fatal",
+      "title": "The common native denominator and permutation defect are not defined well enough for the claimed triangle bound",
+      "statement": "The common native denominator and permutation defect are not defined well enough for the claimed triangle bound.",
+      "evidence_fingerprint": "sha256:24767503fd18c198dccabd440bba0745b73ab1c71b616aac19038142b0385eea",
+      "assumptions_used": [
+        "The bound must apply to both beta and its exact mu/tau permutation P beta.",
+        "A common normalization is required for a triangle-inequality comparison against B_native."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:337-386",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:84-101"
+      ],
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:377-386"
+      ],
+      "reproduction": [
+        "Attempt to instantiate O_mp from A3/A4 and the native defect denominator from the exact bytes; record the inequivalent possible definitions.",
+        "Check whether the frozen state domain explicitly contains P beta for every beta; it does not state that closure."
+      ],
+      "unresolved": [
+        "O_mp stage/interval semantics, the native numerator, the pair denominator, and permutation closure are unspecified."
+      ],
+      "confidence": 0.97,
+      "derivation": "D_state refers to O_mp without selecting A3, A4, a midpoint, or an interval supremum. The text never gives the native permutation-defect numerator or a pairwise denominator involving both beta and P beta. The frozen adversarial stream is not stated to be closed under P. Therefore bounds normalized by D_state(beta) cannot automatically bound both computations in O_64(P beta)-P O_64(beta), and the frozen factor four is not by itself a rigorous composition proof. R_q and R_M do define a two-state common denominator, which makes the omission for the native metric explicit.",
+      "evidence": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:337-386",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:84-101"
+      ],
+      "reproducible_check": "Attempt to write the native diagnostic as a total function of beta using only the named bytes: O_mp and the denominator for the beta/P beta pair have multiple inequivalent completions.",
+      "reopen_condition": "Define O_mp exactly, define the native defect equation and one permutation-invariant pair denominator, include both beta and P beta in every bound domain, and give the explicit triangle inequality leading to B_native."
+    },
+    {
+      "finding_id": "F-W7-D034-005",
+      "claim_id": "C-W7-ARITHMETIC-GRAPH",
+      "verdict": "fail",
+      "severity": "fatal",
+      "title": "A0--A4 are labels rather than a reconstructible directed-interval operation graph",
+      "statement": "A0--A4 are labels rather than a reconstructible directed-interval operation graph.",
+      "evidence_fingerprint": "sha256:b97fc944be501269f8b9f101524fc7e411471cf0a9c8dcfbc51baf4f83dc1d20",
+      "assumptions_used": [
+        "The exact-byte candidate must determine every operation and directed-rounding interface before numerical output.",
+        "A nearest-rounded Newton iterate with a stopping tolerance is not by itself a rigorous interval enclosure of the exact GL root."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:198-232",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:345-375",
+        "scripts/audit/w7_b3v2_contract_source.py:291-344",
+        "scripts/audit/w7_b3v2_contract_source.py:347-382",
+        "scripts/audit/w7_b3v2_contract_source.py:432-438"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Statically enumerate functions in the named source and verify that no O, A0--A4, directed interval, B-term, or native-defect evaluator exists.",
+        "Compare the source value**degree operation with W6's required left-associated product order."
+      ],
+      "unresolved": [
+        "Directed root enclosures, interval data structures, rounding interfaces, mass/q/O graph, and B-term evaluators are absent."
+      ],
+      "confidence": 0.98,
+      "derivation": "The exact source provides a nearest-rounded MPFR GL generator and string descriptions of A0--A4, but no directed interval representation, directed GL root enclosure, interval QR, mass assembly, q/O reconstruction, stage-interface rounding functions, or B-term evaluators. W6 also says every product is left-associated, while the binding basis source forms higher monomials with value**degree, whose exponentiation order is not specified as repeated left-associated multiplication. A Newton stopping test at nearest precision is not a directed enclosure of the true GL root. Consequently B_interval cannot yet be a rigorous residual arithmetic bound and A0 is not byte-reconstructible from these files.",
+      "evidence": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:198-232",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:345-375",
+        "scripts/audit/w7_b3v2_contract_source.py:291-344",
+        "scripts/audit/w7_b3v2_contract_source.py:347-382",
+        "scripts/audit/w7_b3v2_contract_source.py:432-438"
+      ],
+      "reproducible_check": "Static source inspection: the file ends after METROLOGY_STAGES and exact-vector data and contains no implementation of O, A0--A4, interval endpoints, B_sum/B_basis/B_solve/B_interval, or the native defect.",
+      "reopen_condition": "Freeze the complete directed endpoint graph, root enclosures, exact stage interfaces, denominator construction, and left-associated monomial implementation before any W7 execution."
+    },
+    {
+      "finding_id": "F-W7-D034-006",
+      "claim_id": "C-W7-METROLOGY-DESIGN",
+      "verdict": "fail",
+      "severity": "fatal",
+      "title": "The W7 design cannot authorize numerical execution",
+      "statement": "The W7 design cannot authorize numerical execution.",
+      "evidence_fingerprint": "sha256:a49101ad0c266c1bde3d5d8c3abfe1a20821dcce8c0f38fcf8477d5661eef5f0",
+      "assumptions_used": [
+        "Any fatal assigned-claim finding keeps the design gate closed.",
+        "Bounded subclaim checks cannot override an absolute-normalization or arithmetic-certificate failure."
+      ],
+      "evidence_refs": [
+        "F-W7-D034-001",
+        "F-W7-D034-002",
+        "F-W7-D034-003",
+        "F-W7-D034-004",
+        "F-W7-D034-005"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Deduplicate findings by claim_id, evidence_fingerprint, and verdict; observe that multiple independent fatal findings remain."
+      ],
+      "unresolved": [
+        "Corrected exact bytes and a fresh blind review are required before any owner W7 execution decision."
+      ],
+      "confidence": 0.99,
+      "derivation": "The exact factor conflict independently fails absolute normalization, and the shell/operation/denominator defects prevent the proposed arithmetic certificate from being reconstructed. These failures are pre-output design failures; they do not assess any W7 numerical result or any B3 collision behavior.",
+      "evidence": [
+        "F-W7-D034-001",
+        "F-W7-D034-002",
+        "F-W7-D034-003",
+        "F-W7-D034-004",
+        "F-W7-D034-005"
+      ],
+      "reproducible_check": "Deduplicate the preceding findings by claim and evidence fingerprint; any one fatal finding keeps the design gate closed.",
+      "reopen_condition": "Freeze corrected exact bytes and obtain a fresh registered blind design review before requesting owner authority for W7 execution."
+    }
+  ],
+  "bounded_checks": [
+    {
+      "check": "source hashes",
+      "status": "pass",
+      "note": "All named W6/source/vector hashes match CAS_CONTRACT.json."
+    },
+    {
+      "check": "dimensions",
+      "status": "pass",
+      "note": "The invariant measure has MeV^4, q has MeV after the 2*pi^2/T_cm^3 factor, and the massless rate scales as G_F^2 T_cm^5."
+    },
+    {
+      "check": "two-body phase-space coefficient",
+      "status": "pass",
+      "note": "k*/(16*pi^2*sqrt(s)) dz* dphi* integrates to the standard beta/(8*pi) two-body phase space. This bounded algebraic pass does not cure the source branch failures."
+    },
+    {
+      "check": "reaction-record structure",
+      "status": "pass",
+      "note": "Static inspection shows the declared 24 self plus 15 electron record loops and charge/CP dispatch structure. Absolute normalization fails separately."
+    }
+  ],
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/assignments/A-W7-METROLOGY.json",
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json",
+    "sha256sum docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sha256sum scripts/audit/w7_b3v2_contract_source.py",
+    "sha256sum docs/audit/BD622_W7_exact_test_vectors.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md",
+    "sed/nl targeted reads of only the assignment-named inputs",
+    "rg targeted formula-location search over only CAS_CONTRACT.json, W6, and the W7 source"
+  ],
+  "tool_versions": {
+    "reasoning_axis": "independent exact algebra and static source audit",
+    "numerical_engine": "not used",
+    "w7_engine": "not executed",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter"
+  },
+  "claim_summary": {
+    "C-W7-METROLOGY-DESIGN": "fail",
+    "C-W7-ABSOLUTE-NORMALIZATION": "fail",
+    "C-W7-FINITE-ME-SHELL": "fail",
+    "C-W7-ARITHMETIC-GRAPH": "fail"
+  },
+  "authority_statement": "FAIL at design review. Keep W7 numerical execution, B3 implementation/collision output, T01--T12, Radau, trajectory, endpoint, and RABBIT unblinding closed."
+}

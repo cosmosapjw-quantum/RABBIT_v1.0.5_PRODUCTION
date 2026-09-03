@@ -1,0 +1,30 @@
+{
+  "schema": "rabbit.d080c.wolfram_symbolic_receipt.v1",
+  "date": "2026-09-02",
+  "evaluation_mode": "stateless Wolfram Language plugin evaluation; not a repository-native Wolfram replay",
+  "scope": "full static original-RHS T_gamma quotient identities at fixed c and T_cm",
+  "natural_units": {
+    "hbar": 1,
+    "c": 1,
+    "k_B": 1
+  },
+  "results": {
+    "spectral_quotient_residual": "0",
+    "photon_temperature_numerator_residual": "0",
+    "photon_temperature_quotient_residual": "0",
+    "elapsed_time_row_residual": "0",
+    "elapsed_time_input_column": ["0", "0", "0"],
+    "differentiated_first_law_residual": "0",
+    "restoring_sign_follows_from_negative_electromagnetic_tangent": true,
+    "massless_eos_second_derivative_residual": "0"
+  },
+  "verified_identities": {
+    "hubble": "H_T/H = rho_em,T/(2 rho_total)",
+    "spectral": "F_c,T = P_T/(H q) - F_c H_T/H",
+    "temperature_numerator": "N_gamma,T = -3(rho_em,T+p_em,T) + Q_em,T/H - (Q_em/H)(H_T/H)",
+    "temperature_quotient": "F_gamma,T = N_gamma,T/chi_gamma - F_gamma chi_gamma,T/chi_gamma",
+    "elapsed_output": "F_t,T = -(1/H)(H_T/H)",
+    "elapsed_input": "partial F/partial t_elapsed = 0"
+  },
+  "claim_ceiling": "Formula-level static quotient closure only; no numerical RHS column, square Jacobian, integrator, trajectory, endpoint, performance, or gate claim."
+}

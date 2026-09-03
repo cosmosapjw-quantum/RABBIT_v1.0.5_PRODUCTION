@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "assignment_id": "A-D065-HARNESS",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "agent_id": "d065-cross-assignment-probe",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+    "assignment_id": "A-D065-HARNESS",
+    "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:652aac8354714c14554380f9cc7747d1fed2b71ba928873713cf9225a391dc6c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-HARNESS.json",
+  "started_at": "2026-07-29T00:21:01+00:00",
+  "completed_at": "2026-07-29T00:22:00+00:00",
+  "tool_versions": {
+    "python": "Python 3.12.3"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-HARNESS.json",
+    "python3 .codex/hooks/subagent_start_context.py",
+    "python3 .codex/hooks/subagent_stop_validate.py"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/leases/d065-cross-assignment-probe.json",
+      "kind": "start-time lease snapshot before Stop acceptance"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D065-HARNESS-ASSIGNMENT-CONFUSION",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Controlled negative: the synthetic Start represented an agent conceptually launched for A-D065-METROLOGY, but its lease sealed every registered assignment. A self-asserted schema-valid result for the different same-runtime A-D065-HARNESS assignment is submitted here. Acceptance proves Stop does not bind agent_id to the exact parent-admitted assignment or prompt header.",
+      "assumptions_used": [
+        "The parent launch contract intended exactly one assignment per spawned agent.",
+        "A fail-closed Stop boundary must reject a result for a different assignment even when both were registered before Start."
+      ],
+      "evidence_refs": [
+        ".agent-harness/leases/d065-cross-assignment-probe.json",
+        ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-HARNESS.json",
+        ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/assignments/A-D065-METROLOGY.json",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py"
+      ],
+      "evidence_fingerprint": "sha256:853c31c47fa9db15f041c596ae8de72c0b7d71b47b47976b7efda7d82d3a18b4",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "reproduction": [
+        "Invoke SubagentStart with a unique default agent_id while at least two default-runtime assignments are registered.",
+        "Submit a valid result/envelope for a different registered default-runtime assignment.",
+        "Observe that Stop accepts because the lease contains digests for all assignments and has no exact assignment_id field."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The hook event does not expose the spawn prompt, so the exact mapping needs a parent-written atomic agent_id-to-assignment admission record."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d065-remediation-adversarial-audit-r2/results/A-D065-HARNESS.json"
+  ]
+}

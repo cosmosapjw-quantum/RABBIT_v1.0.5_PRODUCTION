@@ -1,0 +1,259 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260801-f10-d067-review-r10",
+  "assignment_id": "A-D067-R10-REGRESSION",
+  "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+  "agent_id": "r10-regression",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260801-f10-d067-review-r10",
+    "assignment_id": "A-D067-R10-REGRESSION",
+    "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:92827ec20bd89bbd356767ac822831fa7ea6b967879f9ff43bcafd2bf5f14648",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-REGRESSION.json",
+  "started_at": "2026-08-01T14:01:27Z",
+  "completed_at": "2026-08-01T14:27:14Z",
+  "tool_versions": {
+    "python": "venv/bin/python (Python 3.12.3)",
+    "pytest": "as pinned in pyproject.toml (>=7.0)",
+    "git": "system git, host toolchain"
+  },
+  "commands": [
+    "git -C <repo> archive HEAD | tar -x -C $SCRATCH   (per-guard scratch trees, never a tree copy)",
+    "venv/bin/python -m pytest .agent-harness/tests/ -q   (baseline: 204 passed at HEAD 32ba566)",
+    "venv/bin/python -m pytest .agent-harness/tests/test_ssot_consistency.py -q   (per-mutation, 7 isolated guard reverts)",
+    "venv/bin/python -m pytest .agent-harness/tests/test_canary_freshness.py -q   (per-mutation, 7 isolated guard reverts / 5 grouped guards)",
+    "venv/bin/python .agent-harness/scripts/check_ssot_consistency.py   (direct run against the real repo, exit 0 ok:true)",
+    "venv/bin/python .agent-harness/scripts/check_canary_freshness.py   (direct run against the real repo, exit 0 ok:true, live=[C7] superseded=[C5,C6])",
+    "venv/bin/python .agent-harness/scripts/validate_harness.py   (end-to-end wiring, exit 0 ok:true)",
+    "grep -rn find_assertions/find_board_assertions --include=*.py .   (consumer sweep)",
+    "python3 <adversarial fixture using test_ssot_consistency.py's own helpers>   (role=historical smuggle attempt, real unmutated checker)",
+    "git archive 915e2e4 / 5c198c0 into separate scratch trees   (counted collected/def-count tests at each commit for record verification)",
+    "sha256sum src/rabbit/decoupling/_independent_noqke.py; sha256sum .codex/hooks/*.py   (frozen module and hook hash checks)"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Independently re-derived (not trusted): all 7 SSOT guards in check_ssot_consistency.py genuinely die when surgically, individually reverted in a scratch tree. Each revert (word-order binding/F-COMMA-ADJACENCY, F-REGEX-SILENT-ZERO, F-SYMLINK-ESCAPE, F-DESC-MEASURE-DECOUPLE, F-FROZEN-ROLE-SMUGGLE, F-CONTROLLING-DATE-GAP, and the affirmative-coverage/F-NEGATION-CLOSED-VOCAB inversion) kills EXACTLY one test in test_ssot_consistency.py (85 passed/1 failed each time, no collateral), and in every case the failing assertion targets the guard's own specific on-topic diagnostic string or the checker's overall ok/exit status -- not an unrelated baseline. This confirms the coordinator's '7 of 7 SSOT guards die when reverted' claim under independent adversarial re-derivation, and finds no third undiscriminating fixture beyond the two the coordinator's own record already admits.",
+      "assumptions_used": [
+        "A 'guard' is counted at the granularity of the 7 named round-9 defect classes (F-COMMA-ADJACENCY, F-REGEX-SILENT-ZERO, F-SYMLINK-ESCAPE, F-DESC-MEASURE-DECOUPLE, F-FROZEN-ROLE-SMUGGLE, F-CONTROLLING-DATE-GAP, F-NEGATION-CLOSED-VOCAB), matching the 7 attack fixtures under the 'Round 9' section of test_ssot_consistency.py plus their 3 control fixtures.",
+        "Mutations were surgical (neutralised exactly one guard's condition/branch) rather than reverting to the whole pre-915e2e4 file, to avoid conflating guards that share code (e.g. word-order binding and affirmative-coverage both touch find_assertions)."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py",
+        ".agent-harness/tests/test_ssot_consistency.py (lines 1105-1255, the 'Round 9' fixture section)"
+      ],
+      "evidence_fingerprint": "sha256:cd2197d96a979e15dbb501a0126632934e32baf7f097f12976d8a38e40b7e00c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git archive HEAD into a scratch tree (never a tree copy)",
+        "For each of the 7 guards, apply the exact surgical patch (see evidence text F-001) to check_ssot_consistency.py in the scratch tree only",
+        "venv/bin/python -m pytest .agent-harness/tests/test_ssot_consistency.py -q",
+        "Observe: 1 failed, 85 passed each time; read the failing assertion and the JSON payload to confirm the missing message/behaviour is the guard's own",
+        "Restore pristine file from a pre-mutation backup before the next guard"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Independently re-derived: all canary-freshness guards in check_canary_freshness.py genuinely die when reverted. At code granularity there are 7 independently revertible checks (staleness digest-compare, supersession/retirement, unresolvable-id-is-error, no-hook-digest-is-error, unmappable-digest-is-error, missing-attested-file-is-error, NON_FILE_DIGESTS false-positive exclusion); grouped the way the commit narrative groups them (staleness=1 concept covering 3 fixtures, supersession=1, id-resolution=1, digest-field validation=1 concept covering 3 fixtures, non-file exclusion=1) this is exactly 5 conceptual guards covering all 9 non-baseline fixtures of the 10 collected ('10 canary regression cases' matches exactly). Every mutation kills exactly its targeted fixture(s) with no collateral, and every failure is on the guard's own specific message. Confirms 'canary guards die when reverted' under independent adversarial re-derivation, whichever of the two defensible countings ('5' or '7') is used.",
+      "assumptions_used": [
+        "'5 of 5 guards' is read as the conceptual grouping (staleness / supersession / id-resolution / digest-field-validation / non-file-exclusion) rather than a literal 1:1 mapping to the 7 independently mutable code branches, since this grouping is the only one that reconciles with the stated '10 canary regression cases' test count."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py",
+        ".agent-harness/tests/test_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:6185bef8eea63924f702a745248aba876a1c482b4a57fd195c5baae0233e298a",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git archive HEAD into a scratch tree",
+        "For each of the 7 code-level checks, apply the exact surgical patch (see evidence text F-002) to check_canary_freshness.py in the scratch tree only",
+        "venv/bin/python -m pytest .agent-harness/tests/test_canary_freshness.py -q",
+        "Observe exactly the targeted fixture(s) fail each time; restore pristine file between mutations"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Swept every consumer of find_assertions() (which changed its return shape from 3-tuples to 4-tuples in 915e2e4) across the whole repository. Exactly two call sites exist, both inside check_ssot_consistency.py: check_status_assertions (unpacks 'number, identifier, status, affirmative') and _matching_exemption (unpacks '_line, _id, found_status, _aff'). Both correctly unpack the new 4-tuple. find_board_assertions still legitimately returns 3-tuples and find_assertions correctly widens them ('(n, i, s, True) for n, i, s in board'). No test file calls either function directly (all test coverage is black-box subprocess). The unpacking-mismatch class that 'already bit once during the fix pass and was found only by a crashing test' does not recur anywhere in the current tree.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py:1032-1070 (find_assertions)",
+        ".agent-harness/scripts/check_ssot_consistency.py:1096 (check_status_assertions call site)",
+        ".agent-harness/scripts/check_ssot_consistency.py:1163 (_matching_exemption call site)"
+      ],
+      "evidence_fingerprint": "sha256:20353482e8b5dc8bab3dd10ed477c809ea8d3c7acf2cfda33d6c3b53fa49125b",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -rn \"find_assertions\" --include=\"*.py\" . from repo root",
+        "grep -rn \"find_board_assertions\" --include=\"*.py\" . from repo root",
+        "Read each call site and compare against find_assertions' declared return type"
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Audited the measurement machinery (F-SSOT-10) for a fail-open path, focusing on the one place the module docstring says was 'deliberately made non-strict' (_measured_path's use of Path.resolve(strict=False), to preserve a more specific 'unreadable' diagnosis for a merely-missing file rather than a vaguer containment error). Traced every return-None branch in _measured_path/measure_fact/_count_lines_matching/_json_array_length/_read_measured_file: each is paired with an errors.append() in the same branch, with no bare skip. Confirmed live: a genuinely missing measurement target still produces the specific 'cannot be run...unreadable...never a skip' error (test_f_ssot_10_unreadable_measurement_target_is_an_error_not_a_skip passes), and an in-tree symlink escaping the repository is still followed and caught (test_f_r9_in_tree_symlink_pointing_outside_the_repo_is_refused passes, and reverting only that check makes it fail cleanly with no other change in behaviour -- see F-001 guard G3). No path was found where a failed/unrunnable measurement leaves the checker's errors list empty; check_facts()'s errors list is checked unconditionally by main(), so any single populated error anywhere forces exit 1 regardless of which check populated it.",
+      "assumptions_used": [
+        "'The measurement changes altered several error messages and one of them was deliberately made non-strict' in the assignment refers to the resolve()/containment logic in _measured_path, the only spot in the file carrying an explicit 'NON-strict' comment."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py:1253-1311 (_measured_path, _read_measured_file)",
+        ".agent-harness/scripts/check_ssot_consistency.py:1612-1660 (check_facts main loop)"
+      ],
+      "evidence_fingerprint": "sha256:ac28b3cbe39ca3042871ef76e98a7c685ace1444e5489b9a813f5c285db7614e",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n \"NON-strict\" .agent-harness/scripts/check_ssot_consistency.py to locate the one deliberately-non-strict spot",
+        "Static trace of every `return None` in the measurement call chain",
+        "venv/bin/python -m pytest .agent-harness/tests/test_ssot_consistency.py -q -k f_ssot_10_unreadable or f_r9_in_tree_symlink -- both pass at HEAD"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The narrowing of the frozen-role live-region guard from 'all non-current roles' to 'role==frozen' alone does NOT reopen the specific hole it was built to close (test_f_r9_frozen_role_cannot_sit_in_a_live_region still passes at HEAD; git-diffed the historical-role handling branch and it is byte-identical between 5c198c0, pre-915e2e4, and HEAD, so nothing was reopened there). However, the record's stated justification for exempting role=historical -- 'already constrained by the same-line commit test... licence earned by content rather than position' -- is empirically false. Using ONLY the stock test fixture's own already-declared data (no fabricated fact, no fabricated prior value), adding one extra role=historical assertion site and planting 'There are 35 hook tests actually (ed7bc49)' in the always-live SHARED_CONTEXT.md 'Current milestone' bullet (true current value is 39; 35/ed7bc49 is a real, legitimately-declared prior pair from the stock fixture) makes the real, unmutated checker return exit 0 / ok:true. A stale, superseded number reads as a plain present-tense claim in the exact region the F-COMMA-ADJACENCY and F-D065-05 attacks target, with the only 'protection' being a bare, unconstrained substring match for a commit-looking token. This is a live, unremediated instance of the F-D065-05 defect class (a stated fact diverging from reality with no machine check) via an adjacent, un-audited path; it predates 915e2e4 rather than being introduced by it, but 915e2e4's own comment and the D-070-B9/B10 frozen row both assert a protection that does not hold under adversarial testing.",
+      "assumptions_used": [
+        "The threat model treated is the same one the module's own docstring already assumes for role=frozen and for SSOT_FACTS.json generally: an editor who can write both SSOT_FACTS.json and the live prose surface. This is not a new or unfair assumption -- it is the exact threat model the frozen-role fix, and the whole F-D065-05 lineage, is built against."
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_ssot_consistency.py:1762-1830 (frozen-role live check and the historical-role dated/prior branch)",
+        ".agent-harness/context/FROZEN_DECISIONS.md (D-070-B9/B10 row, 'role: historical may still sit in a live region... already constrained by the same-line commit test')"
+      ],
+      "evidence_fingerprint": "sha256:c6a2f7d64e7714f21ccf5b41022095aa6508c8f27941eb47d3caf3d201e808fb",
+      "counterevidence_refs": [
+        ".agent-harness/tests/test_ssot_consistency.py::test_f_r9_frozen_role_cannot_sit_in_a_live_region (confirms the frozen-specific case IS still correctly blocked)"
+      ],
+      "reproduction": [
+        "Import test_ssot_consistency.py's own fixture helpers (write/facts_document/run_checker) against a fresh temp git repo",
+        "Use the stock facts_document() unmodified (hook_fixture_count=39, prior 35@ed7bc49 already present)",
+        "Add one extra_assertions entry: {file: SHARED_CONTEXT.md, line_contains: 'actually', value_regex: '(\\d+) hook tests actually', role: 'historical'}",
+        "Write SHARED_CONTEXT.md's Current-milestone bullet as: '- Current milestone: the board is unchanged. There are 35 hook tests actually (ed7bc49).'",
+        "Run the real check_ssot_consistency.py via subprocess against this repo",
+        "Observe: exit code 0, {\"ok\": true, ...}"
+      ],
+      "confidence": 0.9,
+      "unresolved": [
+        "Whether the owner considers a numeric-fact smuggle (vs. a gate/claim status smuggle) in scope for this checker's threat model at all; the module's design intent for role=historical was explicit and may be an accepted risk rather than an oversight -- but the record's specific claim that it is 'already constrained' is not supported by this reproduction."
+      ]
+    },
+    {
+      "finding_id": "F-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The test_hooks.py `_repinned_validator` fixture change (copying check_ssot_consistency.py and check_canary_freshness.py alongside _harness.py into the fixture's temp scripts dir) is a genuine, correctly-scoped bug fix and does not weaken any existing fixture. Reverting it in isolation (copying only _harness.py, as before 32ba566) against the current validate_harness.py reproduces exactly the claimed regression: both test_legacy_manifest_pin_survives_a_commit and test_legacy_manifest_pin_cannot_be_dropped_by_deleting_its_declaration fail with payload {'errors': ['Canary freshness checker is missing: check_canary_freshness.py'], 'ok': False}. With the fix applied, direct inspection of the full validate_harness.py payload against this fixture shows 'ssot_consistency': 'not applicable (no gate registry)' (correctly scoped out -- this narrow fixture creates no GATE_REGISTRY.json and isn't testing SSOT consistency) and 'canary_freshness': 'ok' (genuinely zero CANARY_ATTESTATION artifacts exist in this fixture, so there is nothing that can be stale -- a legitimate, non-vacuous 'ok', not a bypass). Neither test passes for a new-and-wrong reason.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py:2385-2408 (_repinned_validator)",
+        ".agent-harness/scripts/validate_harness.py:1289-1391 (ssot_applicable gate and the two subprocess dispatches)"
+      ],
+      "evidence_fingerprint": "sha256:c0ced21d5bc45b5d6a1be3dcdb6a31931e3968c7a6a65fcabf6f559ed645eba7",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "In a scratch tree, revert _repinned_validator to copy only _harness.py",
+        "venv/bin/python -m pytest .agent-harness/tests/test_hooks.py -q -k \"legacy_manifest_pin_survives_a_commit or legacy_manifest_pin_cannot_be_dropped\"",
+        "Observe 2 failed with 'Canary freshness checker is missing' in the payload",
+        "Restore the fixture; call test_hooks._pinned_fixture()/_validate_with() directly and print the full JSON payload to confirm ssot_consistency/canary_freshness fields are legitimate, not silently tolerant"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-007",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Independently re-derived every numeric and hash claim in the VALIDATION_LEDGER.md/FROZEN_DECISIONS.md rows for D-070 Parts B9 and B10 that could be mechanically checked against the repository, except 'production suites 36 unchanged' (see F-008). All confirmed exact: '82 SSOT regression cases (was 72)' matches grep -c '^def test_' at HEAD (82) and at 5c198c0 pre-915e2e4 (72), and matches the live declared+measured ssot_regression_case_count fact; '10 canary regression cases' matches both grep -c and pytest --collect-only; 'whole harness suite 194' (at 915e2e4) and '204' (at HEAD) both match pytest .agent-harness/tests/ -q exactly; 'hook suite 108 unchanged' matches at both commits; 'module sha256 stays 760a7c04' matches sha256sum of src/rabbit/decoupling/_independent_noqke.py exactly, and neither commit touches that path; 'board stays 6 PASS / 2 FAIL' matches GATE_REGISTRY.json exactly; the C6 'start_hook_sha256 af8f7016 / tree holds 8b283512' and C5 'stop_hook_sha256 dc19da4d / tree holds 0533da88' claims both match the retained attestation JSON and the current tree byte-for-byte, and a live run of check_canary_freshness.py against the real repo confirms live=[C7], superseded=[C5,C6] exactly as narrated.",
+      "assumptions_used": [
+        "The ledger's SSOT/canary 'regression case' counts are read as counting `def test_` source occurrences (matching their own declared SSOT_FACTS.json measurement), which differs from, but does not contradict, pytest's collected-item count (86/76) that includes one parametrized test's 4 extra instances."
+      ],
+      "evidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md (D-070 Part B9 and B10 rows)",
+        ".agent-harness/context/FROZEN_DECISIONS.md (D-070-B9/B10 row)",
+        ".agent-harness/context/SSOT_FACTS.json (declared facts and measurements)",
+        ".agent-harness/context/GATE_REGISTRY.json"
+      ],
+      "evidence_fingerprint": "sha256:9cffc9eda6156eaca973ec19c292347f09c8af1fd8a463c434249fcfa4bb80fb",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -c '^def test_' .agent-harness/tests/test_ssot_consistency.py at HEAD and at git-archived 5c198c0 / 915e2e4",
+        "venv/bin/python -m pytest .agent-harness/tests/ -q at git-archived 915e2e4 (194 passed) and at HEAD (204 passed)",
+        "venv/bin/python .agent-harness/scripts/check_ssot_consistency.py against the real repo -- exit 0, fact_measurements.ssot_regression_case_count=82",
+        "sha256sum src/rabbit/decoupling/_independent_noqke.py",
+        "venv/bin/python -c 'json.load(GATE_REGISTRY.json)' and count PASS/FAIL",
+        "cat the C5/C6 CANARY_ATTESTATION artifact JSON and diff against sha256sum of the current .codex/hooks/*.py files",
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py against the real repo"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-008",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "The claim 'production suites 36 unchanged' (identical wording in both the VALIDATION_LEDGER.md D-070 Part B10 row and the merged FROZEN_DECISIONS.md D-070-B9/B10 row) is unverifiable against the tracked record. `git log --all -S \"production suites\" -- docs/harness/VALIDATION_LEDGER.md .agent-harness/context/FROZEN_DECISIONS.md` shows this exact phrase first appears in 32ba566 itself, so there is no prior recorded baseline anywhere in the SSOT record for 'unchanged' to be measured against. It is not one of the four facts declared in SSOT_FACTS.json (legacy_results_manifest_entry_count, hook_fixture_count, ssot_regression_case_count, canary_regression_case_count) -- i.e. it is asserted but not mechanically measured by the very tooling this commit chain built specifically to eliminate asserted-but-unmeasured numbers (the F-R9-007 defect class the same commit chain repeatedly criticises). Checked three plausible candidate populations and none is 36: `find tests -maxdepth 1 -name 'test_*.py' | wc -l` = 256 files; `pytest -m production --collect-only -q` = 446 collected test items; `pytest -m gold --collect-only -q` = 105 collected test items. No candidate matching 36 was identified within reasonable effort. This does not prove the claim is false, only that it cannot currently be checked against the record or the repository, which is itself the defect class this project's own SSOT machinery exists to prevent.",
+      "assumptions_used": [
+        "'Production suites' was interpreted as some countable population of Python test files or pytest-collected items under the top-level tests/ tree (the only 'production' pytest surface with markers named 'production'/'gold'/'release_smoke' etc. in pyproject.toml); no Rust/cargo suite count of 36 was checked, since the two commits under review touch zero Rust lines and the claim appears specifically alongside the Python-harness-suite numbers."
+      ],
+      "evidence_refs": [
+        "docs/harness/VALIDATION_LEDGER.md (D-070 Part B10 row)",
+        ".agent-harness/context/FROZEN_DECISIONS.md (D-070-B9/B10 row)",
+        ".agent-harness/context/SSOT_FACTS.json (does not declare a production-suite-count fact)"
+      ],
+      "evidence_fingerprint": "sha256:9cffc9eda6156eaca973ec19c292347f09c8af1fd8a463c434249fcfa4bb80fb",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git log --all --oneline -S \"production suites\" -- docs/harness/VALIDATION_LEDGER.md .agent-harness/context/FROZEN_DECISIONS.md   (only 32ba566 returned)",
+        "venv/bin/python -c \"json.load(open('.agent-harness/context/SSOT_FACTS.json'))\" and enumerate fact_ids -- no production-suite fact present",
+        "find tests -maxdepth 1 -name 'test_*.py' | wc -l   (256)",
+        "venv/bin/python -m pytest -m production --collect-only -q   (446 collected)",
+        "venv/bin/python -m pytest -m gold --collect-only -q   (105 collected)"
+      ],
+      "confidence": 0.75,
+      "unresolved": [
+        "What exact population 'production suites 36' is intended to count is unknown; the author may have a specific, correct definition in mind that was simply never written down or measured anywhere in the tracked record."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-REGRESSION.json"
+  ]
+}

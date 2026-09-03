@@ -1,0 +1,198 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260729-f10-d067-review-r4",
+  "assignment_id": "A-D067-R4-RESIDUAL",
+  "context_version": "7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea",
+  "agent_id": "r4-residual",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "context_mapper",
+  "spawn_contract": {
+    "run_id": "run-20260729-f10-d067-review-r4",
+    "assignment_id": "A-D067-R4-RESIDUAL",
+    "context_version": "7e2ef390baff203431b576ee416fb057dad9b5b916fe6e4b3518385ff45a88ea",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b728dab8908423e747c1198ff5de7e642b26bbdc4fd5175705e33b065c744579",
+    "runtime_agent_type": "default",
+    "review_role": "context_mapper",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:403bfe1dffb42a2fac090eaf875d6f5031a005631810847c4ce4b153bc050093",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-RESIDUAL.json",
+  "started_at": "2026-07-29T07:45:00Z",
+  "completed_at": "2026-07-29T07:55:02Z",
+  "tool_versions": {
+    "python": "3.12"
+  },
+  "commands": [
+    "read-assignment",
+    "read-context-pack",
+    "read-audit-document",
+    "read-frozen-decisions",
+    "read-shared-context",
+    "read-validation-ledger",
+    "read-decision-log",
+    "read-code-hooks",
+    "read-code-scripts",
+    "read-test-suite",
+    "verify-threat-model-table",
+    "verify-counts",
+    "verify-residual-placement",
+    "comprehensive-analysis"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-RESIDUAL.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D067-R4-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The stated residual (OS user sharing enables receipt forgery) is completely and correctly stated in all required surfaces: D-067 audit report, admit_agent.py docstring, SHARED_CONTEXT.md Q-HOOK-01 remediation row, and DECISION_LOG.md. No softening observed in secondary surfaces.",
+      "assumptions_used": [
+        "The record authors wrote the documents and code faithfully",
+        "Code has not been secretly modified after audit"
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 2",
+        ".agent-harness/scripts/admit_agent.py lines 33-39",
+        ".agent-harness/context/SHARED_CONTEXT.md line 126",
+        "docs/harness/DECISION_LOG.md D-067 row"
+      ],
+      "evidence_fingerprint": "sha256:129d93470c1193995fad168e94aa2b4df43d397d65e99ed8c9f51bb2f83cab43",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n 'same OS user' docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+        "grep -n 'THREAT MODEL' .agent-harness/scripts/admit_agent.py",
+        "grep -n 'Q-HOOK-01 remediation' .agent-harness/context/SHARED_CONTEXT.md"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R4-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "All eight rows of the threat-model table are accurate to the delivered code. Row 1-7 list mechanisms defeated (prompt substitution, assignment mix-up, pointer races, lease failures, ACTIVE_RUN deletion, concurrent consume, edited results). Row 8 honestly states deliberate forgery is still possible and records this as a residual.",
+      "assumptions_used": [
+        "Code implementation reflects the intended mechanism"
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 2",
+        ".codex/hooks/subagent_stop_validate.py lines 138-250",
+        ".codex/hooks/subagent_start_context.py lines 143-155",
+        ".agent-harness/scripts/validate_harness.py lines 189-244",
+        ".agent-harness/tests/test_hooks.py"
+      ],
+      "evidence_fingerprint": "sha256:9b6a48100392d7e3b153c058c08f9f71900902a7cd780e64651e6010e08cac1f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "test_subagentstop_blocks_same_run_assignment_substitution",
+        "test_subagentstart_hard_fails_when_lease_cannot_be_written",
+        "test_concurrent_stops_consume_receipt_once",
+        "test_planted_claim_cannot_skip_attribution"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R4-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "No surface claim overstates what the mechanism delivers. The language carefully distinguishes what's defeated ('confusion') from what's not ('deliberate forgery'). Explicit disclaimers appear in section 2 ('Nothing in this slice should be read as a claim that a hostile agent cannot mis-attribute a result') and section 5 ('What is deliberately not claimed').",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 2 line 60",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 2 line 73-75",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 5"
+      ],
+      "evidence_fingerprint": "sha256:129d93470c1193995fad168e94aa2b4df43d397d65e99ed8c9f51bb2f83cab43",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Search D-067 audit for 'defeats confusion' vs 'prevents forgery'",
+        "Read section 5 'What is deliberately not claimed' in full"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R4-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "No unmentioned residuals found. The OS user sharing residual covers all significant threat modes. The LOCAL-ADAPT (hooks invoked explicitly, not IDE-dispatched) is properly recorded in section 5. The evidence token tradeoff is documented. Checked for: IDE dispatch scenarios, agent-deleted leases, fabricated ledger entries, lease corruption, and evidence token reuse.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 5 lines 163-164",
+        ".agent-harness/context/SHARED_CONTEXT.md E-HARNESS-D058-LEASE-CANARY"
+      ],
+      "evidence_fingerprint": "sha256:ea9aca6308bded6138d0ffe10a6eab0dadca5960b047bc2178ffc095ab5e15f8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Verify VS Code pre-tooluse hook dispatch is mentioned as LOCAL-ADAPT",
+        "Confirm no surface claims IDE dispatch as a threat model assumption"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R4-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Test, review, and canary counts are accurate and internally consistent. Code contains exactly 39 test functions matching the document claim. Four reviews across three rounds all returned FAIL status. Three named canaries (C1/C2/C3) are verified with matching test coverage. Cost block correctly notes 35 tests at D-067 seal, 39 after round-3 fixes.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/tests/test_hooks.py (39 test functions)",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 3",
+        "docs/harness/VALIDATION_LEDGER.md D-067 row",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 6"
+      ],
+      "evidence_fingerprint": "sha256:42dd9e45309ca15c73f5ea392595bc1a8f85fa59aebc3110becc5cdde4a70ef8",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep '^def test_' .agent-harness/tests/test_hooks.py | wc -l → 39",
+        "Verify VALIDATION_LEDGER D-067 row lists 'four reviews', 'all FAIL'",
+        "Verify test names include substitution, concurrent, tamper detection, scrubber"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D067-R4-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The record is honest about its limitations and does not grade its own remedy. Gate G-HARNESS-INTEGRITY stays FAIL pending D-070 adjudication. Q-HOOK-01 moves to REMEDIATED (not RESOLVED). The single writer correctly refused to flip gates, following the project's anti-drift policy. Round 3 found three new regressions introduced by round-2 fixes, but all were documented and fixed before sealing.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 5 line 151-155",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 5 line 156",
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md section 3 line 77-90",
+        "docs/harness/DECISION_LOG.md D-067 row"
+      ],
+      "evidence_fingerprint": "sha256:129d93470c1193995fad168e94aa2b4df43d397d65e99ed8c9f51bb2f83cab43",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Confirm G-HARNESS-INTEGRITY status stays FAIL in the row",
+        "Read section 5 'No gate flips here'",
+        "Read section 3 paragraph on round 3 and the three new defects fixed"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260729-f10-d067-review-r4/results/A-D067-R4-RESIDUAL.json"
+  ]
+}

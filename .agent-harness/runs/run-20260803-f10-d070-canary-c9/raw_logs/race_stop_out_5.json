@@ -1,0 +1,1 @@
+{"decision": "block", "reason": "Another SubagentStop for agent_id 'd070-canary-c9' is inside the consume path for run 'run-20260803-f10-d070-canary-c9' right now. One agent_id may consume at most one assignment per run (D-065 obligation 1), so concurrent stops by one agent are serialised rather than interleaved. Retry this stop once the other has finished."}

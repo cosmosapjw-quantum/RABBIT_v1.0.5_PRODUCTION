@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "agent_id": "d058-canary-agent-1",
+  "agent_type": "default",
+  "run_id": "run-20260728-f10-d058-lease-canary",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "created_at": "2026-07-28T07:14:04+00:00",
+  "assignment_digests": {
+    "A-LEASE-CANARY": "sha256:31fdd12688a76b97bf8701619e8121cb23c6b321e452957c868e51531310ff8d"
+  }
+}

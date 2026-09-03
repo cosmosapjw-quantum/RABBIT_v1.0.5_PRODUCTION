@@ -1,0 +1,82 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-SEAL-EXECUTION",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "fable-main-seal-execution",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-SEAL-EXECUTION",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:3a3306a433048075ecb740cc5f8b5c5eb24d0baabef8716229e1071b22e90035",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-SEAL-EXECUTION.json",
+ "started_at": "2026-07-27T12:41:00+00:00",
+ "completed_at": "2026-07-27T12:47:30+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0",
+  "unshare": "util-linux"
+ },
+ "commands": [
+  "sha256sum <authored> > MANIFEST_AUTHORED.sha256",
+  "git commit 4c05ce2 (seal, pre-output)",
+  "./run_lab.sh (single sealed execution under unshare -rn)"
+ ],
+ "artifacts": [
+  "BD622_OWNERA_R6_ORBIT_CHART_LAB/RESULTS.json",
+  "BD622_OWNERA_R6_ORBIT_CHART_LAB/MUTANTS.json",
+  "BD622_OWNERA_R6_ORBIT_CHART_LAB/MANIFEST.sha256",
+  "BD622_OWNERA_R6_ORBIT_CHART_LAB/raw/"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-SEAL-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "The single sealed execution completed with exit 0 and terminal line REQUEST_OWNER_B_AUTHORIZATION_FOR_TARGET_REPLAY_REVIEW. Seal chronology: contract sha256 41bfb8ba..., git_head 4c05ce2 committed at 2026-07-27T21:41:05+09:00 strictly before the first output at 12:41:31Z; python 3.12.3 / numpy 2.4.2 / scipy 1.17.0 runtime-asserted. Isolation: unshare -rn user+net namespaces, both negative network probes false, host uid 1000, namespace uid 0. Three phases (primary + two fresh-process replays) all exit 0; RESULTS.json and MUTANTS.json byte-identical across all three. Acceptance battery ANCHOR, A1-A7, A9, A10-scramble, A10-sweep (4096 cases) all PASS: exact witness 1/12 vs 5/144 reproduced; single-member equivariance fails exactly (max residual -3254999227/17179869184) while the closed two-member object is equivariant exactly and bitwise; Reynolds one-half idempotence holds and kills q in {1, 1/4}; antisymmetric response retained (s_anti_rat 2194213851/268435456, gl8 7.264887185935607, symmetric fixture exactly zero); number/energy/entropy nulls exact with 84 traced events; JVP carries both member contributions (sample tau0 eps 470698029/1073741824). All 10 mutants KILLED for their preregistered reasons. Wall 353 s under the 1800 s cap. Evidence hashes: RESULTS b2ac53f7, MUTANTS 9da373d1, MANIFEST 504095f2, SEAL_CHRONOLOGY 69fec2dd.",
+   "assumptions_used": [
+    "Local sealed execution per D-045 LOCAL-ADAPT: local git commit replaces GitHub pinning; runtime version assertion replaces digest-pinned OCI image."
+   ],
+   "evidence_refs": [
+    "raw/SEAL_CHRONOLOGY.json",
+    "raw/ISOLATION.json",
+    "raw/PHASES.txt",
+    "RESULTS.json",
+    "MUTANTS.json",
+    "MANIFEST.sha256"
+   ],
+   "evidence_fingerprint": "sha256:b2ac53f7c32e5eb44a8c21f9ca986cf308221744433e8431222e54402a0b3f45",
+   "counterevidence_refs": [
+    "The invoking wrapper's LAB_EXIT echo landed in the task output stream rather than the tee'd console log; exit 0 is corroborated by PHASES.txt, ACCOUNTING exit_code=0, and the process exit code."
+   ],
+   "reproduction": [
+    "cd BD622_OWNERA_R6_ORBIT_CHART_LAB && sha256sum -c MANIFEST.sha256"
+   ],
+   "confidence": 0.95,
+   "unresolved": [
+    "Applicability to live RABBIT row 6 requires OWNER-B target replay; nothing here validates collision physics, absolute normalization, or any F-10 gate."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-SEAL-EXECUTION.json"
+ ]
+}

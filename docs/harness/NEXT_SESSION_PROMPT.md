@@ -1,5 +1,572 @@
 # Next Session Prompt
 
+## 2026-08-11 `diagnosis_report` preservation overlay (branch-local, controlling)
+
+Open `00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md` first. Preserve active seal
+`acb5641e8008f0c8305e8e83db4d7269ba9e1cd6`, contract SHA-256
+`c26ef7b9c6e9ba1f8fd0a57b1f9f068c89ea336f3aa58751d7e708d2becd88bc`,
+the first failed receipt under `receipts/`, and the active recovery receipt
+under `receipts_v2/` byte-for-byte.
+
+Do not rerun, replace, amend, normalize, or regrade either receipt set. The
+active evidence contains all four base RHS/first-law/occupation/domain/tail
+diagnostics and an explicit `creep_1200` direct-JVP strict-domain failure. A
+future change to source, state, epsilon, Krylov dimension, tolerance, threshold,
+or output semantics needs new owner authority, a new contract identity, and a
+new prospective seal. Static receipts are not a trajectory; do not claim a
+physical-prefix execution, reaction-tail authority, registry/gate movement,
+public production, QKE scope, or a merge to `main`.
+
+This overlay records preservation state only and grants no new work. The remote
+ref for these bytes is `origin/diagnosis_report`.
+
+## 2026-08-04 D-074 FREEZE — harness development is closed; read this before anything (controlling)
+
+**The programme is stopped. Nothing in this file authorises work.**
+
+**Current status is the generated board** — `.agent-harness/generated/STATUS_BOARD.md`, rendered from
+the registries and shown in the controlling overlay of `PROJECT_STATE.md`. It is the ONLY authority.
+Nothing else in this repository restates a status, this file included, and a live line that names a
+registry id beside a status token is refused by `check_ssot_consistency.py`.
+
+### What happened, in one paragraph
+
+Two gates were restored to FAIL by the D-065 audit. The trajectory lane ran an 18-hour frozen
+integration that exhausted its wall budget with no scientific predicate evaluated, and D-071 sealed
+that lane on a re-derived measurement: the instrument needs about 3.27e7 further evaluations, roughly
+4.58 years on this host, an ~8,305x miss against its own frozen projection. The harness lane ran
+fourteen adversarial rounds, discharged three of four D-065 obligations under an independent panel,
+falsified the fourth's wording, and then replaced its own status architecture because the prose parser
+had been defeated seven consecutive times. D-074 froze it. **No gate moved in any of it.**
+
+### If you are picking this up
+
+1. **Do not start harness work.** D-074 lists the only five conditions that reopen it, and "I found a
+   guard that could be stronger" is not among them.
+2. **Do not reissue the trajectory run.** D-071's reopen conditions require a materially new method
+   with a prospectively sealed contract and a bounded discriminator projecting completion inside the
+   existing budget. Generic optimization, faster hardware and a larger budget are explicitly excluded.
+3. **Two owner decisions are open and are not a writer's to make:** whether to revise D-065
+   obligation 2 to match measured behaviour (`SubagentStart` has no non-zero exit path for any input,
+   so the effect is fail-closed but the literal wording is unmet), and whether to correct
+   `G-HARNESS-INTEGRITY.pass_condition`, which requires an "exact four-line prompt" while `AGENTS.md`
+   mandates five fields including `ADMISSION_TOKEN`.
+4. **If you change a gate's status**, it must arrive with an accepted evidence package under
+   `.agent-harness/evidence/` whose contract is provably frozen before its inputs. A hand edit is
+   refused.
+
+### The limits that are not work items
+
+Shared OS user, so any repo-local artifact is forgeable — canary C13 depends on this to construct its
+input. **Operator and decision independence is absent**: every reviewer in this chain was spawned,
+prompted, admitted and recorded by the writer under review, and no receipt makes a judgment
+independent. One host, one filesystem. False semantic prose carrying no registry id is not detected
+anywhere. Cited evidence is not proved to support its claim. These are recorded, not scheduled.
+
+Read `docs/audit/BD622_D074_harness_freeze_2026-08-04.md` before proposing anything.
+
+## 2026-07-29 IN FLIGHT — D-069 r4 integration is running; do not restart it (superseded by D-071)
+
+A ~13 h integration was launched at `2026-07-29T03:49:25Z`, 13 s after its freeze
+commit `0fb94f2`. If this session ended before it finished, the process may still
+be running or may have completed unattended.
+
+- Report (written once per phase): `.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json`
+- Progress log: the sibling `r4_trajectory_stdout.log`
+- Phase order: base → T14 re-derivation → mutants → domain holdout (order 60 /
+  `y_max` 30) → rtol holdout. `verdict` stays `IN_PROGRESS` until all phases land.
+
+**Before doing anything else:** check whether the process is alive
+(`pgrep -af d069_independent_trajectory_r4`) and read the report's `verdict`.
+
+- If `verdict` is `PASS` or `FAIL`: adjudicate it through a registered agent, in
+  a run initialised at the then-current context. The verdict stands as-is; a FAIL
+  is preserved and refitting any band, node mask, or tail proxy is forbidden by
+  the frozen contract.
+- If the process died mid-run: the partial report is evidence of exactly that.
+  Do not silently relaunch — record the interruption, then decide.
+- Confirmed healthy at eval 401: r4 tracks the frozen r3 base run to every
+  printed digit (N=0.1001, T_cm=9.04760 at the same eval index), ~3% faster.
+
+Both blocking gates are still failing; the generated board in `.agent-harness/generated/STATUS_BOARD.md` is the only authority for which, and this prompt deliberately restates no status. No
+gate has moved in the D-066..D-069 chain. D-070 is the only place a flip may be
+considered, and only on an adjudicator's verdict — not the single writer's.
+
+For the harness lane, the D-067 round-3 review returned **PARTIALLY DISCHARGED**
+and recommended not flipping on those bytes; its three findings were then fixed
+in `07e3507`. A fourth review of the current bytes is the natural input to D-070.
+
+## 2026-07-29 D-066 controlling overlay — lanes authorised, gates unchanged
+
+The owner granted all three D-065 lanes on 2026-07-29. Execution order is fixed
+and gate reconsideration is reserved for the end:
+
+1. **D-067 harness** — parent-authenticated `agent_id` to one-assignment admission
+   receipt (nonce capability, since `SubagentStart` never sees the spawn prompt);
+   hard Start failure on receipt/lease write error; substitution and write-failure
+   negative fixtures; replacement live overlapping-run canary with unique write
+   attribution.
+2. **D-068 cost discipline** — forward-only: one shared trajectory core module,
+   canonical single-report output, mandatory cost fields. No historical evidence
+   is deleted.
+3. **D-069 trajectory r4** — prospectively frozen: full-domain moment and
+   true-weight spectral norms with nothing masked, full 146-state/`T_gamma`/`t`
+   checkpoint retention, a measured `y>24` enclosure and domain holdout via a
+   density-matched `build_independent_grid(60, 30.0)` companion run, machine
+   timestamps, and a mechanically checked adjudication chronology.
+4. **D-070** — single-writer gate reconsideration only if D-067 and D-069 both
+   PASS, then STOP.
+
+D-066 itself changes no gate: the board stays 6 PASS / 2 FAIL. It records the
+D-065 audit durably, preserves both byte-sets of the overwritten
+`A-D057R5-CROSS-REJECT.json`, and opens `Q-ATTRIB-01`
+(`docs/audit/BD622_D066_write_attribution_incident_2026-07-29.md`).
+
+All D-065 prohibitions stand: no production/physics/solver/Rust edit, no
+modification of `src/rabbit/decoupling/_independent_noqke.py`, and unblinding,
+public/production claims, W7/B3, T01--T12, GL64/Radau, Rust/JAX forward work,
+F-11/Bianchi, and QKE remain closed.
+
+## 2026-07-29 D-065 overlay — superseded in scope by the D-066 lane grant
+
+D-065 adversarially rejects the D-064 all-eight-gates claim.
+
+- PASS: bounded row-9/orientation repair; frozen matched-family covariance
+  metrology; F-10 scope boundary.
+- FAIL: `G-F10-INDEPENDENT-FLRW` (no checkpoint full states, evolved
+  half-line tail enclosure, or spatial/tail uncertainty; inadmissible D-063
+  adjudication chronology).
+- FAIL: `G-HARNESS-INTEGRITY` (same-run assignment substitution accepted;
+  lease-write failure restores mutable `ACTIVE_RUN`).
+- DRIFT: D-057-parent through D-064 net `+21,384` lines with near-duplicate
+  scripts and report/stdout copies; no production physics change.
+
+Preserve all D-058--D-064 successes and failures. Do not modify production
+code, rerun the seven-hour trajectory, unblind, or open W7/B3, T01--T12,
+GL64/Radau, Rust/JAX forward work, F-11/Bianchi, QKE, or public work.
+
+The next session has no automatic implementation authority. It must receive
+an explicit owner decision selecting one bounded lane:
+
+1. exact agent-to-assignment lease remediation plus replacement live canary;
+2. prospective trajectory evidence completion (full checkpoint state,
+   evolved `y>24` enclosure, one spatial holdout, honest adjudication);
+3. evidence deflation without deleting provenance.
+
+Governing report:
+`docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md`.
+
+## 2026-07-29 D-064 overlay — superseded by D-065
+
+**All eight F-10 gates are PASS** on catalogue bytes `760a7c04` at context
+`208c9c60`, closing the D-057 remedy DAG through the corrected evidence
+contracts the audit demanded: run-identity leases with a live
+overlapping-run canary (D-058), stable claim/evidence bindings (D-059),
+asymmetric covariance with identical-graph outward-interval certification
+(D-060 FAIL preserved → D-061 r4 PASS), and a completed-catalogue endpoint
+replay with discriminating bands, coupled-energy sign-mutant kills,
+retained state/tail evidence, and a `rtol 3e-7` holdout (D-062 FAIL
+preserved → D-063 r3 PASS). Every intermediate FAIL is preserved; every
+reissue was scoped by a registered, lease-validated adjudication.
+
+Endpoint of record vs the completed-catalogue Rust BDF anchor: `N_eff`
+delta `+1.83e-5` (band `3e-4`, rejecting the `7.44e-4` obsolete-anchor
+class), `N_end` delta `+5.53e-6`, `t_end` delta `+1.10 s`; base and
+holdout bitwise-reproduced across three executions. Covariance of record:
+asymmetric `N3` max `5.092e-11` under the `1e-10` cap with
+interval-certified brackets and `1522656/0` deep-node containment.
+
+**The next session preserves this state and has NO open technical task.**
+Remaining items are owner-level programme decisions under `G-F10-SCOPE`:
+
+1. whether to unblind / hand off F-10 (the 2026-07-16 stop condition is
+   met at matched-resolution class, now on audit-corrected evidence);
+2. whether to open any public/production claim (currently FORBIDDEN);
+3. whether to un-pause F-11 Bianchi/Type-I;
+4. QKE remains FORBIDDEN.
+
+Do not modify `_independent_noqke.py` or the Rust tree; do not re-run
+frozen historical scripts against new bytes; do not re-dispatch any
+external prompt. Governing note:
+`docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md`.
+
+## 2026-07-28 D-057 overlay — STOP/PRESERVE (superseded by D-064)
+
+The claimed D-056 all-gates closeout failed adversarial audit. Preserve every
+D-053/D-055/D-056 artifact, but keep
+`G-F10-COVARIANCE-METROLOGY=FAIL`,
+`G-F10-INDEPENDENT-FLRW=FAIL`, and the effective current
+`G-HARNESS-INTEGRITY=FAIL`.
+
+The 27-event orientation-artifact repair is retained as **IMPLEMENTED** and
+bounded **VALIDATED**: D-053/D-055 replay byte-identically, three fresh
+asymmetric state/swap tests pass `1e-10`, and the historical 24-event negative
+control fails strongly. Absolute physical normalization and catalogue
+completeness remain **INCONCLUSIVE**. The gate flips are not admissible
+because D-055 froze only P-fixed states and its `B_native` omits the
+production split-map operation graph/full precision interval, D-056 froze
+obsolete F10C1 rather than completed-catalogue F10C2 anchors and lacks
+cross-code block/spectrum, coupled-energy, and refinement/tail predicates,
+all D-053--D-056 findings reused the unrelated row-6 claim ID, and
+overlapping main sessions changed `ACTIVE_RUN` between Start and Stop.
+
+Next order is fixed:
+
+1. **DONE (D-058, 2026-07-28):** run-identity leasing repaired and
+   canary-tested under two live overlapping runs (race accept under a moved
+   pointer, post-Start tamper block, replacement canary, 12/12 hook
+   fixtures); `Q-HOOK-01` RESOLVED; `G-HARNESS-INTEGRITY` fail -> pass;
+   evidence `E-HARNESS-D058-LEASE-CANARY`; context `c3adcd99`;
+2. **DONE (D-059, 2026-07-28):** distinct claim IDs registered
+   (`C-F10-ROW9-CLOSURE` VALIDATED bounded; `C-F10-METROLOGY-R3` /
+   `C-F10-TRAJECTORY-R2` SPECIFIED), dangling evidence IDs defined as
+   preserved supportive, prospective `E-F10-D060-METROLOGY-R3` /
+   `E-F10-D061-TRAJECTORY-R2` added to the two FAIL gates, no science
+   gate moved; context `a26149ab`;
+3. **DONE (D-060 FAIL preserved -> D-061 r4 PASS):** the r3 contract
+   (freeze `17fedc6`) FAILED only on the degenerate P-fixed N7X check
+   (contract-design defect, D-054 S-B class; FAIL preserved at
+   `a754a4b`); the adjudicated one-change r4 reissue (freeze `8492382`,
+   report `56529e65`) PASSED all 11 checks on all 8 members with physics
+   bitwise-identical to r3. `C-F10-METROLOGY-R3` VALIDATED; the gate
+   flip waits for D-063;
+4. **IN PROGRESS (D-062 FAIL preserved, D-063 r3 pending):** the r2
+   completed-catalogue replay (freeze `3849193`) executed and FAILED on
+   exactly two frozen-parameter design defects (T8 sub-support node; T10
+   mutant window below the measured activity floor) while every physics
+   check passed (base bitwise-replays D-056; holdout drift `-1.2e-5`).
+   The adjudicated exactly-two-change r3 reissue decides the program.
+
+Do not unblind or open public/production, W7/B3, T01--T12, GL64/Radau,
+Rust/JAX forward work, F-11/Bianchi, or QKE. Governing report:
+`docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md`.
+
+## 2026-07-28 D-056 overlay — gate matrix claim (superseded by D-057)
+
+**All eight F-10 gates are PASS** on catalogue bytes `760a7c04`
+(D-052--D-056: row-9 closure; metrology r2 after a preserved D-054 FAIL;
+independent trajectory endpoint `N_eff = 3.034054`, delta `+7.4e-4` vs
+the Rust N48 anchor). The F-10 independent-validation programme's gate
+matrix is complete.
+
+This was the D-056 recorded state; it is no longer controlling. The remaining
+text is retained as provenance. The recorded owner-level decisions were under
+`G-F10-SCOPE` and the standing hard stops:
+
+1. Whether to unblind / hand off F-10 (the original 2026-07-16 owner
+   instruction: the programme stops after F-10 closes a collision-coupled
+   isotropic FLRW endpoint — that condition is now met at the
+   matched-resolution class).
+2. Whether to open any public/production claim (currently FORBIDDEN).
+3. Whether to un-pause F-11 Bianchi/Type-I (owner-paused; requires a new
+   explicit instruction).
+4. QKE/coherence remains FORBIDDEN.
+
+Do not modify `_independent_noqke.py` or the Rust tree, re-run frozen
+historical scripts against new bytes, or re-dispatch any external prompt.
+Recorded limitations of the endpoint evidence: matched-resolution
+N48-class agreement, 4/4/24 trajectory angular order (bounded pre-freeze
+at `3.9e-5`), single execution/platform, `rtol 1e-6`, same-model reviews.
+
+## 2026-07-27 D-049/D-051 controlling overlay (superseded by D-056 above)
+
+D-049 fixed the `gk_recurse` lint and the full bundle passed:
+**`G-F10C1-REGRESSION` is PASS** (run
+`run-20260727-f10-d049-regression-fix`). D-050/D-051 implemented and
+accepted the row-6 orientation closure in the live comparator
+(`_independent_noqke.py` `29a652fd` at `d22d001`): all frozen static
+physics gates pass on the accepted bytes, GL48 `mu_tau_residual =
+2.6019033208963758e-11 <= 1e-10`. Terminal:
+`STATIC_GATES_PASS_ON_CLOSED_SOURCE`.
+
+Remaining FAIL gates: `G-F10-COVARIANCE-METROLOGY` (weak/mass-weighted
+identity + prospectively frozen `B_native` bound program unbuilt) and
+`G-F10-INDEPENDENT-FLRW` (no structurally independent full-spectral
+endpoint). The next session has exactly three possible owner decision
+points and otherwise preserves STOP/PRESERVE:
+
+1. Authorize the covariance-metrology program (design-first, own frozen
+   contract; do not reuse the D-028 `1/y^2` model or the `~1.2e-8` cap).
+2. Grant trajectory/endpoint eligibility on the accepted static bytes —
+   the newly live route toward `G-F10-INDEPENDENT-FLRW` (GL64/Radau and
+   any endpoint run still require this explicit grant first).
+3. Authorize row-9 orientation-closure validation (own discriminator or
+   acceptance contract; row 9 currently remains single-membered).
+
+Do not run W7/B3 output, T01--T12, GL64/Radau/trajectory/endpoint without
+grant 2, unblind RABBIT, restart Rust/JAX forward work, or open
+F-11/QKE/public claims. Do not re-dispatch any external prompt. The
+historical D-028 FAIL for bytes `535370c1` and the W5/D-047 hash-pinned
+records stand; do not re-run those scripts against the new bytes.
+
+## 2026-07-27 D-048 controlling overlay (superseded by D-049/D-051 above)
+
+D-047 granted OWNER-B and froze the target replay (commit `9c99ecf`);
+D-048 closed it as an adjudicated PASS on all nine gated checks. The
+D-028 native mu-tau covariance residual (`4.666064056497196e-10`,
+reproduced digit-for-digit) is now internally established as the row-6
+single-ordered-member orientation artifact amplified by the `1/y^2`
+native map; the D-046 derived-quotient closure removes it to
+`3.8807636157303184e-11`, under the `1e-10` cap.
+`D046-r6-orbit-chart-rabbit-applicability = VALIDATED` (bounded to the
+two frozen states). The D-028 recorded FAIL for its exact bytes stands
+unreopened; `G-F10-COVARIANCE-METROLOGY` does not move on this evidence.
+
+The next session has exactly two possible owner decision points and
+otherwise preserves STOP/PRESERVE:
+
+1. Owner may grant a validation-only lint-fix authority (`gk_recurse`,
+   `src/isotropic_boltzmann.rs:2513`) followed by a full regression bundle
+   re-run; only an all-command PASS may flip `G-F10C1-REGRESSION`.
+2. Owner may grant **OWNER-C**: modifying `_independent_noqke.py` (or an
+   equivalent implementation route) to carry the validated two-member
+   closure, followed by the weak/mass-weighted identity and prospectively
+   frozen `B_native` metrology work that `G-F10-COVARIANCE-METROLOGY`
+   requires. The D-048 terminal line requests this consideration; it
+   grants nothing.
+
+Do not modify `_independent_noqke.py` without OWNER-C, run W7/B3 output,
+T01--T12, GL64/Radau/trajectory/endpoint, unblind RABBIT, restart
+Rust/JAX forward work, or open F-11/QKE/public claims. Do not re-dispatch
+any external prompt.
+
+## 2026-07-27 D-046 controlling overlay (superseded by D-048 above)
+
+D-046 closed the OWNER-A discriminator as an adjudicated PASS:
+`C-R6-ORBIT-CHART-MICROCASE=VALIDATED` on manufactured nonphysical objects
+under the sealed lab `BD622_OWNERA_R6_ORBIT_CHART_LAB/` (seal `4c05ce2`,
+run `run-20260727-f10-ownera-r6-orbit-chart-lab`, adjudication `569f7d6e`).
+RABBIT row-6 applicability remains `PROPOSED`. The regression bundle ran in
+full and failed at clippy only (`gk_recurse`,
+`src/isotropic_boltzmann.rs:2513`); `G-F10C1-REGRESSION` stays FAIL on
+fresh current-tree evidence.
+
+The next session has exactly two possible owner decision points and
+otherwise preserves STOP/PRESERVE:
+
+1. Owner may grant a validation-only lint-fix authority (annotate or split
+   `gk_recurse`) followed by a full bundle re-run; only an all-command PASS
+   on the fixed tree may flip `G-F10C1-REGRESSION`.
+2. Owner may grant OWNER-B: a read-only target replay of the validated
+   two-member closure construction against the live `_independent_noqke.py`
+   row-6 evaluator on the D-028 asymmetric state. A structurally passing
+   replay still requires OWNER-C for any source modification.
+
+Do not modify `_independent_noqke.py`, run W7/B3 output, T01--T12,
+GL64/Radau/trajectory/endpoint, unblind RABBIT, restart Rust/JAX forward
+work, or open F-11/QKE/public claims. Do not re-dispatch any external
+prompt.
+
+## 2026-07-27 D-044/D-045 controlling overlay (superseded by D-046 above)
+
+D-044 closed the external open-breakthrough intake: the returned
+`F10_OPEN_BREAKTHROUGH_LAB_ab95ff52.zip` is `PROVENANCE_FAIL` at
+`XG-00-PROVENANCE` with `PR_DAG=UNREACHABLE` and `DO_NOT_REOPEN` for those
+exact bytes. The D-042/D-043 external prompt chain is consumed — **do not
+re-dispatch it**. Row-6 localization is bounded external evidence only,
+label-only OCAR is rejected, and `C-R6-ORBIT-CHART` is the sole live
+candidate claim.
+
+D-045 records the 2026-07-27 owner grants: handoff durability (executed as
+commit `5ae1a03` plus this overlay), one validation-only
+`G-F10C1-REGRESSION` bundle re-run under
+`run-20260727-f10-d045-regression-rerun`, and **OWNER-A** for exactly one
+prospectively sealed, repository-free, nonphysical `C-R6-ORBIT-CHART`
+discriminator with local sealed execution. OWNER-B (target replay against
+the live `_independent_noqke.py` row-6 evaluator) and OWNER-C
+(`_independent_noqke.py` modification) are defined in D-045 and are NOT
+granted.
+
+Controlling next steps, in order: (1) finish the regression bundle evidence
+and gate adjudication if unfinished; (2) design, seal, and execute the
+OWNER-A discriminator lab per the D-044 sign/chart/quotient/JVP/mutant/
+replay obligations and the applicable D-042R gates adapted for local sealed
+execution; (3) stop at the terminal owner line — a discriminator PASS may
+only request OWNER-B authorization. Do not touch `_independent_noqke.py`,
+W7/B3 output, T01--T12, Rust/JAX forward work, Radau, trajectory, endpoint,
+unblinding, F-11/Bianchi, QKE, or public work.
+
+## 2026-07-24 D-043 controlling overlay
+
+Historical record only: the corrected request below was dispatched and its
+response was consumed by D-044 as `PROVENANCE_FAIL` (`DO_NOT_REOPEN` for
+those exact bytes). Do not re-dispatch. The D-044/D-045 overlay above now
+controls.
+
+Use the corrected in-place request at
+`docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`.
+The first returned `PROVENANCE_FAIL` remains preserved, but its
+non-distributable prerequisites are superseded. At dispatch, give the external
+auditor a fixed GitHub commit containing the corrected prompt.
+
+The external auditor must bind code snapshot `bede5a9`, evidence floor
+`204d3fa`, and the prompt commit. Do not request or reconstruct the orphan-only
+`4f4da8f0` snapshot, historical `f7ab1890` context digest, missing
+`e3ea99a9` context pack, or old `/tmp` proof/stdout/stderr as Phase-0
+requirements. Their absence limits reuse of D-041 claims; any premise needed
+by a new finalist must be rederived after its prospective seal.
+
+This correction authorizes only the prompt's external 6--10-family screen and
+at most one repository-free nonphysical microprototype. New binding inputs and
+every new contract/code/test/raw/manifest byte remain strictly fail-closed.
+Preserve STOP/PRESERVE inside the repository, the dirty tree, and old failures.
+If `.singularhistory` (`5abbc842`) or the user-owned branch review
+(`a1742101`) is present, preserve it; if absent, do not reconstruct, add, or
+promote it. Do not start W7/B3 output, T01--T12, Rust/JAX work, Radau,
+trajectory, endpoint, unblinding, F-11/Bianchi, QKE, or public-runtime work.
+
+## 2026-07-23 D-042 controlling overlay
+
+Historical record only: the original owner-requested
+external executable-breakthrough prompt was issued as:
+`docs/audit/BD622_D042_external_executable_breakthrough_request_2026-07-23.md`,
+SHA-256 `6b5545bd5e4f0803a29aa4e2947be5aa28e1a4a37fcf1a34d26db050f2201873`.
+Its replacement adjudication is `9607e9cf`; 21 raw findings deduplicate to 20
+exact keys. The earlier cross-review FAILs apply to superseded draft
+`bab03230`, not the issued bytes.
+
+The first external execution returned `PROVENANCE_FAIL`; do not reissue hash
+`6b5545bd`. The D-043 overlay and the corrected bytes at the prompt commit now
+control.
+
+This prompt authorizes an external 6--10-family paper screen and at most one
+prospectively sealed, repository-free, nonphysical microprototype. It does not
+authorize a repository change or physical RABBIT output. The current repository
+PR queue is empty. Until a returned candidate independently passes every gate,
+`G-EXT-FEASIBILITY=FAIL` and its PR DAG is `UNREACHABLE`; even one PASS may
+only request a separate owner intake decision.
+
+Preserve STOP/PRESERVE, the dirty tree, `.singularhistory` (`5abbc842`), the
+user-owned branch review (`a1742101`), and all D-042 raw failures. Do not start
+W7/B3 output, T01--T12, Rust/JAX work, Radau, trajectory, endpoint, unblinding,
+F-11/Bianchi, QKE, or public-runtime work. The D-041 overlay below remains
+provenance.
+
+## 2026-07-23 D-041 controlling overlay
+
+The authorized EXT-01 pre-output feasibility tournament is closed as **FAIL**.
+Run `run-20260723-f10-ext01-feasibility-tournament` contains the shared contract
+`9a965f3b`, literature matrix `1780a7d4`, five blind formal/CAS results, two
+cross-steelman results, and adjudication `18d6449d`. Its 33 raw findings
+deduplicate to 30 exact keys.
+
+The same-space PCR-DG wording is `FAIL-AS-WRITTEN`. This is not a universal
+no-go for a distinct Petrov test space, analytic enrichment, or every
+moving-remap DVM. Those three current candidates nevertheless close zero
+complete gates, so `G-EXT-FEASIBILITY=FAIL`; archive them without ranking.
+OWNER-1 and PR-01 are not reached.
+
+Preserve STOP/PRESERVE, the dirty tree, all raw failures, `.singularhistory`
+(`5abbc842`), and the user-owned branch review (`a1742101`). Do not start PR-01,
+W7/B3 output, T01--T12, Rust/JAX development, Radau, trajectory, endpoint,
+unblinding, F-11/Bianchi, QKE, or public-runtime work. Reopen candidate review
+only for a materially new external construction and a new explicit owner
+decision. The D-040 overlay below remains provenance.
+
+## 2026-07-23 D-040 controlling overlay
+
+The read-only current/legacy JAX, Bianchi, DSMC, and primary-literature survey
+is complete. Its registered run is
+`run-20260723-f10-d040-legacy-jax-readonly-survey`; the final adjudication is
+`d7d34e412bd3b8d94f382748f58b53c6102a1f806aa64f443c656a29203d481c`.
+It normalized 37 raw findings to 34 exact keys. The durable report is
+`docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md`.
+
+The no-stress Type-I shear norm is `DERIVED` to damp monotonically on the
+physical branch. A coupled highly oscillatory shear/expansion mode is therefore
+`SPECULATIVE` until the future PSTF/stress response is frozen and linearized.
+Conventional DSMC is excluded from primary, precision, covariance/derivative,
+and endpoint-authority lanes. At most a separately authorized frozen-background
+or large-signal qualitative cross-check remains `PROPOSED`. Legacy JAX may
+inform only independent semantic rederivation of the characteristic map,
+angular-moment bookkeeping, selective AD, and exact block/factor patterns; do
+not restore its retired forward/runtime authority.
+
+D-039 **STOP/PRESERVE** remains binding. Do not execute or promote JAX, implement
+F-11/Bianchi, execute DSMC, run collision/W7/B3/Rust/Radau/trajectory/endpoint
+output, unblind RABBIT, or start QKE/public-runtime work. The ranked R1 premise
+discriminator, R2 exact physics contract, and R3 bounded deterministic
+Rust-target prototype remain `PROPOSED` until a later explicit owner decision
+and prospective validation contract. The D-039 overlay below remains
+controlling provenance.
+
+## 2026-07-23 D-039 controlling overlay
+
+The owner has selected **STOP/PRESERVE** after D-038. Preserve the dirty tree,
+all exact failures and bounded passes, unfinished D-037 axes, legacy evidence,
+user-owned `RABBIT_f10_independent_validation_branch_review.md` (`a1742101`),
+and raw `.singularhistory` (`5abbc842`).
+
+D-038's optional one-final-design-cycle path is frozen. Initial audit R2
+`898fcf02` rejected authority/provenance/completeness ambiguity; the corrected request in
+`docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md`
+passed targeted R3 `a424e9c9`. It may be handed to an auditor for at most three
+`PROPOSED`/`SPECULATIVE` remedies or a no-go. The request and response grant
+no repository edit, design-cycle, W7, B3, numerical,
+implementation, trajectory, endpoint, or public authority.
+
+Do not remediate or execute. Only a later explicit owner decision based on
+materially new evidence may reopen a fresh design-only review. The D-038
+overlay below remains provenance and is superseded where this overlay is
+stricter.
+
+## 2026-07-23 D-038 controlling overlay
+
+Repository/branch remains `RABBIT_v1.0.5_PRODUCTION` on
+`f10-independent-validation-b3v2`. Preserve the complete dirty tree, user-owned
+`RABBIT_f10_independent_validation_branch_review.md` (`a1742101`), and raw
+`.singularhistory` (`5abbc842`).
+
+D-038 run `run-20260723-f10-d038-historical-adversarial-audit` completed the
+legacy/current-Git map, two blind audits, mutual steelman, six-round debate,
+and adjudication `c145f298`. It found 32/32 exact-unique findings consolidated
+into seven causal families. Current D-035/W6 executable-contract debt is the
+sealed-candidate root cause; history-wide architecture-first is a recurrence
+amplifier, not a universal root over Fort/D-027/D-028/D-029. Harness and reroot
+defects affected trust/dating but did not cause the admitted scientific FAILs.
+
+Default to STOP/PRESERVE. Exact-byte remediation readiness, W7 execution, B3
+implementation, and independent-FLRW closure remain FAIL. Do not edit the
+failed bytes or run W7, B3, T01--T12, Rust collision work, Radau, trajectory,
+endpoint, unblinding, F-11, QKE, or public runtime work.
+
+Only a new explicit owner decision may authorize one final design-only cycle
+under D-038's finite obligation matrix, existing-surface-only, one-review,
+terminal-on-any-non-PASS rule. Even a unanimous design PASS would require a
+separate owner decision before W7. The D-037 overlay below remains provenance
+and is superseded where this overlay is stricter.
+
+## 2026-07-23 D-037 controlling overlay
+
+Current repository/branch is
+`/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION` on
+`f10-independent-validation-b3v2`, based on
+`main@ca3a0138d496732edfc13559fd8f7ceec7ef4d6e`. Preserve every dirty-tree
+change, the user-owned untracked
+`RABBIT_f10_independent_validation_branch_review.md` (`a1742101`), and raw
+`.singularhistory` (`5abbc842`). Do not stage, clean, reset, or overwrite them.
+
+D-036 validates only the schema-v2 parent/Start/Stop harness boundary. D-037
+then reviewed the sealed D-035 exact bytes under shared CAS contract
+`d2780e2c`. B3 result `bead9788` and W7 result `f785c2d2` are admitted FAIL
+envelopes with 11/11 unique findings. Nullspace, entropy, direct row-ii trace,
+and absolute normalization pass as bounded subclaims; per-leg shell checks,
+the single coefficient-Horner basis path, directed tail enclosures, canonical
+event/trace completeness, A0--A4 rigor, and the whole designs fail. The binding
+non-PASS stop interrupted Wolfram/Sage without results; Lean/SymPy were not
+spawned; merge/adjudication did not run. Do not describe D-037 as a completed
+four-axis adjudication.
+
+No W7 numerical execution/static implementation, B3 implementation/output,
+T01--T12, Rust collision edit, Radau, trajectory, endpoint, RABBIT unblinding,
+F-11, QKE, or public runtime work is authorized. Do not remediate the failed
+bytes or resume the unfinished CAS axes without a new explicit owner decision.
+The next session may perform read-only audit/packaging only, then report this
+decision boundary.
+
+The older material below is retained as provenance and is superseded wherever
+it conflicts with this overlay.
+
 Resume RABBIT only after reading this fail-closed handoff in
 `/home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION`, branch `main`.
 The repository was re-rooted as a curated public history on 2026-07-19.
@@ -99,6 +666,15 @@ implement or physically execute this design.
 
 ## Binding evidence
 
+- D-044 intake evidence map
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json`
+  SHA-256 `a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb`
+- D-044 final adjudication
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-ADJUDICATOR.json`
+  SHA-256 `7beccc8844265af1c91fb00c47c0f44516794c2c54e925dceaedabee8edbc5a4`
+- D-044 merged results
+  `.agent-harness/runs/run-20260724-f10-open-breakthrough-intake/MERGED_RESULTS.json`
+  SHA-256 `f69bbec38e3f5d5d13e62f0445783f1ae160c0edc9c2fc3cb06bc846722455d6`
 - `.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json`
   SHA-256 `4726c40e403aad42d15503b0ed11760558f98de06a8e6f54259ab219887c73db`
 - method adjudication
@@ -121,7 +697,7 @@ implement or physically execute this design.
 
 D-028 and D-029 forbid changing the norm/cap, post-hoc mu-tau averaging, swapped-event
 or orientation averaging, reduction retries, GL64, Radau, trajectory,
-endpoint, and RABBIT unblinding. `G-F10-INDEPENDENT-FLRW` remains **FAIL**.
+endpoint, and RABBIT unblinding. The independent-FLRW gate is still failing; see the generated board.
 
 Only an explicit owner instruction backed by materially new numerical evidence
 may open a fresh registered blind design. Such a design must be prospective:

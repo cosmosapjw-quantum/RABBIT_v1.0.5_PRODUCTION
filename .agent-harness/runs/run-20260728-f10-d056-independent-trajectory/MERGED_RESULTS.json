@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d056-independent-trajectory",
+  "generated_at": "2026-07-27T19:42:26+00:00",
+  "result_count": 4,
+  "unique_finding_count": 1,
+  "findings": [
+    {
+      "finding_id": "F-TRAJ-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS; GATE FLIP. All T1..T6 recomputed from the report; freeze chronology verified (+2:45:41); module 760a7c04 verified; the endpoint also sits within band of the Rust Rodas5P partner anchor, so the pass is not solver-selection. Structural independence satisfied (affine GL48 vs exponential N48 rule, cloglog vs logit, SciPy BDF vs Rust BDF/Rodas5P, NumPy/SciPy vs Rust, independent EOS and constants); the fail-condition's enumerated closed routes (D-027 pointwise, D-028 Galerkin for bytes 535370c1, D-029 three-node, D-037 B3-v2/W7) are correctly not implicated - this is a new route on the closed catalogue with metrology bounded at D-055. Limitations adjudicated: matched-resolution N48-class agreement only, 4/4/24 angular order bounded pre-freeze, single execution single platform, rtol 1e-6, same-model reviews, no continuum claim. G-F10-INDEPENDENT-FLRW flips fail -> pass citing run-20260728-f10-d056-independent-trajectory; all eight F-10 gates are then PASS. Nothing beyond the flip is authorized: unblinding, public/production, W7/B3, T01-T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "traj_report.json",
+        "freeze 5d9f521"
+      ],
+      "evidence_fingerprint": "sha256:8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-TRAJ-ADJUDICATION",
+        "A-TRAJ-BLIND-REVIEW",
+        "A-TRAJ-CONTRACT",
+        "A-TRAJ-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator",
+        "default",
+        "default",
+        "default"
+      ],
+      "supporting_agent_types": [
+        "adjudicator",
+        "default",
+        "default",
+        "default"
+      ],
+      "duplicate_count": 4
+    }
+  ],
+  "errors": []
+}

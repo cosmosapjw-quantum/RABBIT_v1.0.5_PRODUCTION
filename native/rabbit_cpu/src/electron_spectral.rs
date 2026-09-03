@@ -17,6 +17,10 @@ use crate::electron_phase_point::{
     PhysicalRadialCell, integrated_scalar_density_mev, physical_support_slice,
 };
 use crate::electron_supplied::{SuppliedElectronEvent, SuppliedElectronEvents};
+use crate::pauli_edge_step::{
+    PauliEdge, PauliEdgeApplicationKind, PauliEdgeFailure, PauliEdgeFailureKind, PauliEdgeStep,
+    PauliEdgeTopology,
+};
 use crate::quadrature::{gauss_laguerre_plain_rule, gauss_legendre_rule};
 
 const EXPLICIT_STATES: usize = 6;
@@ -30,6 +34,58 @@ pub(crate) struct IsotropicElectronSpectralAction {
     pub(crate) heavy_pair_mev: Vec<f64>,
     /// Row-major derivative of `[C_e, C_x]` with respect to `[f_e, f_x]`.
     pub(crate) jacobian_mev: Vec<f64>,
+}
+
+#[derive(Clone, Debug)]
+struct FoldedPauliEdge {
+    bank: usize,
+    edge: PauliEdge,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct IsotropicElectronPauliEdges {
+    nq: usize,
+    edges: Vec<FoldedPauliEdge>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct PauliSweepReport {
+    pub(crate) edge_applications: usize,
+    pub(crate) solved: usize,
+    pub(crate) exact_stationary: usize,
+    pub(crate) unresolved: usize,
+    pub(crate) nonlinear_iterations: usize,
+    pub(crate) maximum_edge_iterations: usize,
+    pub(crate) maximum_root_residual_ratio: f64,
+    pub(crate) maximum_occupation_bracket_width: f64,
+    pub(crate) maximum_flux_error_fraction: f64,
+    pub(crate) maximum_root_error_bound: f64,
+    pub(crate) maximum_occupation_error_bound: f64,
+}
+
+impl PauliSweepReport {
+    fn empty() -> Self {
+        Self {
+            edge_applications: 0,
+            solved: 0,
+            exact_stationary: 0,
+            unresolved: 0,
+            nonlinear_iterations: 0,
+            maximum_edge_iterations: 0,
+            maximum_root_residual_ratio: 0.0,
+            maximum_occupation_bracket_width: 0.0,
+            maximum_flux_error_fraction: 0.0,
+            maximum_root_error_bound: 0.0,
+            maximum_occupation_error_bound: 0.0,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct PauliSweepFailure {
+    pub(crate) kind: PauliEdgeFailureKind,
+    pub(crate) edge_index: Option<usize>,
+    pub(crate) partial_report: PauliSweepReport,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -114,7 +170,6 @@ fn build_event_stream(
         .and_then(|value| value.checked_mul(angular_rule.len()))
         .ok_or("electron spectral event dimension overflow")?;
     let mut events = Vec::with_capacity(capacity);
-
     for (process_slot, &process) in EXPLICIT_ELECTRON_PROCESSES
         .iter()
         .enumerate()
@@ -318,6 +373,353 @@ fn conservative_explicit_action(
     Ok((action, jacobian))
 }
 
+fn build_folded_pauli_edges(
+    stream: &SuppliedElectronEvents,
+    explicit_f: &[f64],
+    y_nodes: &[f64],
+    y_weights: &[f64],
+) -> Result<IsotropicElectronPauliEdges, &'static str> {
+    let nq = stream.nq();
+    let input = EXPLICIT_STATES
+        .checked_mul(nq)
+        .ok_or("electron Pauli edge dimension overflow")?;
+    let edge_count = input
+        .checked_mul(input)
+        .ok_or("electron Pauli edge dimension overflow")?;
+    let number_weights = y_nodes
+        .iter()
+        .zip(y_weights)
+        .map(|(node, weight)| weight * node.powi(2))
+        .collect::<Vec<_>>();
+    let mut directed_gain_coefficient = vec![0.0; edge_count];
+    let mut directed_loss_coefficient = vec![0.0; edge_count];
+    for item in stream.validated_contractions(explicit_f)? {
+        let item = item?;
+        let target = item.dynamic_legs.target.explicit_node.flat_index;
+        let coupled = item.dynamic_legs.coupled.explicit_node.flat_index;
+        let target_node = item.dynamic_legs.target.explicit_node.node;
+        let edge = target * input + coupled;
+        let measure = number_weights[target_node];
+        let coefficients = item.dynamic_coefficients()?;
+        directed_gain_coefficient[edge] += measure * coefficients.gain.value();
+        directed_loss_coefficient[edge] += measure * coefficients.loss.value();
+    }
+    if directed_gain_coefficient
+        .iter()
+        .chain(&directed_loss_coefficient)
+        .any(|value| !value.is_finite() || *value < 0.0)
+    {
+        return Err("electron Pauli directed coefficient is invalid");
+    }
+
+    let elastic_coefficients = |state: usize, first_node: usize, second_node: usize| {
+        let first = state * nq + first_node;
+        let second = state * nq + second_node;
+        let forward = first * input + second;
+        let reverse = second * input + first;
+        (
+            0.5 * (directed_gain_coefficient[forward] + directed_loss_coefficient[reverse]),
+            0.5 * (directed_loss_coefficient[forward] + directed_gain_coefficient[reverse]),
+        )
+    };
+    let pair_coefficients = |first_state: usize, first_node: usize, second_node: usize| {
+        let second_state = first_state + 1;
+        let first = first_state * nq + first_node;
+        let second = second_state * nq + second_node;
+        let forward = first * input + second;
+        let reverse = second * input + first;
+        (
+            0.5 * (directed_gain_coefficient[forward] + directed_gain_coefficient[reverse]),
+            0.5 * (directed_loss_coefficient[forward] + directed_loss_coefficient[reverse]),
+        )
+    };
+
+    let mut edges = Vec::with_capacity(2 * nq * nq);
+    for (bank, first_state) in [0, 2].into_iter().enumerate() {
+        for first_node in 0..nq {
+            for second_node in first_node + 1..nq {
+                let first = elastic_coefficients(first_state, first_node, second_node);
+                let conjugate = elastic_coefficients(first_state + 1, first_node, second_node);
+                let gain = 0.5 * (first.0 + conjugate.0);
+                let loss = 0.5 * (first.1 + conjugate.1);
+                if gain != 0.0 || loss != 0.0 {
+                    edges.push(FoldedPauliEdge {
+                        bank,
+                        edge: PauliEdge::new(
+                            PauliEdgeTopology::ElasticTransfer,
+                            first_node,
+                            second_node,
+                            number_weights[first_node],
+                            number_weights[second_node],
+                            gain,
+                            loss,
+                        )?,
+                    });
+                }
+            }
+        }
+        for first_node in 0..nq {
+            for second_node in first_node..nq {
+                let forward = pair_coefficients(first_state, first_node, second_node);
+                let (gain, loss) = if first_node == second_node {
+                    forward
+                } else {
+                    let transpose = pair_coefficients(first_state, second_node, first_node);
+                    (
+                        0.5 * (forward.0 + transpose.0),
+                        0.5 * (forward.1 + transpose.1),
+                    )
+                };
+                if gain != 0.0 || loss != 0.0 {
+                    edges.push(FoldedPauliEdge {
+                        bank,
+                        edge: PauliEdge::new(
+                            PauliEdgeTopology::PairSource,
+                            first_node,
+                            second_node,
+                            number_weights[first_node],
+                            number_weights[second_node],
+                            gain,
+                            loss,
+                        )?,
+                    });
+                }
+            }
+        }
+    }
+    (!edges.is_empty())
+        .then_some(IsotropicElectronPauliEdges { nq, edges })
+        .ok_or("electron Pauli edge reconstruction is empty")
+}
+
+impl IsotropicElectronPauliEdges {
+    fn record_edge_certificate(
+        report: &mut PauliSweepReport,
+        edge_report: PauliEdgeStep,
+    ) -> Result<(), PauliEdgeFailureKind> {
+        match edge_report.kind {
+            Some(PauliEdgeApplicationKind::Solved) => {
+                let finite_evidence = [
+                    edge_report.extent,
+                    edge_report.residual_abs,
+                    edge_report.residual_scale,
+                    edge_report.traffic_upper_bound_mev,
+                    edge_report.flux_abs_error_mev,
+                    edge_report.root_error_abs,
+                    edge_report.occupation_error_abs,
+                    edge_report.max_occupation_bracket_width,
+                    edge_report.conditioning_lower_bound,
+                ]
+                .into_iter()
+                .all(f64::is_finite);
+                let consistent_evidence = (1..=96).contains(&edge_report.nonlinear_iterations)
+                    && edge_report.residual_abs >= 0.0
+                    && edge_report.residual_scale > 0.0
+                    && edge_report.traffic_upper_bound_mev > 0.0
+                    && edge_report.flux_abs_error_mev >= 0.0
+                    && edge_report.flux_abs_error_mev <= edge_report.traffic_upper_bound_mev
+                    && edge_report.root_error_abs >= edge_report.residual_abs
+                    && edge_report.occupation_error_abs >= 0.0
+                    && edge_report.occupation_error_abs <= 128.0 * f64::EPSILON
+                    && edge_report.max_occupation_bracket_width >= 0.0
+                    && (0.0..=1.0).contains(&edge_report.conditioning_lower_bound)
+                    && edge_report.residual_abs
+                        <= 128.0 * f64::EPSILON * edge_report.residual_scale + f64::from_bits(1);
+                if !finite_evidence || !consistent_evidence {
+                    return Err(PauliEdgeFailureKind::InvalidResidual);
+                }
+                report.edge_applications += 1;
+                report.solved += 1;
+                report.nonlinear_iterations += edge_report.nonlinear_iterations;
+                report.maximum_edge_iterations = report
+                    .maximum_edge_iterations
+                    .max(edge_report.nonlinear_iterations);
+                if edge_report.residual_scale.is_finite() && edge_report.residual_scale > 0.0 {
+                    report.maximum_root_residual_ratio = report
+                        .maximum_root_residual_ratio
+                        .max(edge_report.residual_abs / edge_report.residual_scale);
+                }
+                report.maximum_occupation_bracket_width = report
+                    .maximum_occupation_bracket_width
+                    .max(edge_report.max_occupation_bracket_width);
+                report.maximum_root_error_bound = report
+                    .maximum_root_error_bound
+                    .max(edge_report.root_error_abs);
+                report.maximum_occupation_error_bound = report
+                    .maximum_occupation_error_bound
+                    .max(edge_report.occupation_error_abs);
+                report.maximum_flux_error_fraction = report.maximum_flux_error_fraction.max(
+                    edge_report.flux_abs_error_mev
+                        / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1)),
+                );
+            }
+            Some(PauliEdgeApplicationKind::ExactStationary) => {
+                report.edge_applications += 1;
+                report.exact_stationary += 1;
+            }
+            None => report.edge_applications += 1,
+        }
+        Ok(())
+    }
+
+    fn checked_banks(&self, electron_pair: &[f64], heavy_pair: &[f64]) -> Result<(), &'static str> {
+        if electron_pair.len() != self.nq
+            || heavy_pair.len() != self.nq
+            || electron_pair
+                .iter()
+                .chain(heavy_pair)
+                .any(|value| !value.is_finite() || !(0.0..=1.0).contains(value))
+        {
+            return Err("electron Pauli edge occupation bank is invalid");
+        }
+        Ok(())
+    }
+
+    pub(crate) fn action_values(
+        &self,
+        electron_pair: &[f64],
+        heavy_pair: &[f64],
+    ) -> Result<IsotropicElectronSpectralAction, &'static str> {
+        self.checked_banks(electron_pair, heavy_pair)?;
+        let mut action = vec![0.0; 2 * self.nq];
+        for item in &self.edges {
+            let bank_offset = item.bank * self.nq;
+            let first = item.edge.first_node;
+            let second = item.edge.second_node;
+            let occupations = if item.bank == 0 {
+                electron_pair
+            } else {
+                heavy_pair
+            };
+            let flux = item
+                .edge
+                .flux_mev(occupations[first], occupations[second])?;
+            action[bank_offset + first] += flux / item.edge.first_measure;
+            match item.edge.topology {
+                PauliEdgeTopology::ElasticTransfer => {
+                    action[bank_offset + second] -= flux / item.edge.second_measure;
+                }
+                PauliEdgeTopology::PairSource if first != second => {
+                    action[bank_offset + second] += flux / item.edge.second_measure;
+                }
+                PauliEdgeTopology::PairSource => {}
+            }
+        }
+        action
+            .iter()
+            .all(|value| value.is_finite())
+            .then(|| IsotropicElectronSpectralAction {
+                electron_pair_mev: action[..self.nq].to_vec(),
+                heavy_pair_mev: action[self.nq..].to_vec(),
+                jacobian_mev: Vec::new(),
+            })
+            .ok_or("electron Pauli edge action is non-finite")
+    }
+
+    pub(crate) fn transactional_step(
+        &self,
+        step_mev_inverse: f64,
+        electron_pair: &[f64],
+        heavy_pair: &[f64],
+    ) -> Result<(Vec<f64>, Vec<f64>, PauliSweepReport), PauliSweepFailure> {
+        self.checked_banks(electron_pair, heavy_pair)
+            .map_err(|_| PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidInput,
+                edge_index: None,
+                partial_report: PauliSweepReport::empty(),
+            })?;
+        if !step_mev_inverse.is_finite() || step_mev_inverse < 0.0 {
+            return Err(PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidInput,
+                edge_index: None,
+                partial_report: PauliSweepReport::empty(),
+            });
+        }
+        if step_mev_inverse == 0.0 {
+            return Ok((
+                electron_pair.to_vec(),
+                heavy_pair.to_vec(),
+                PauliSweepReport::empty(),
+            ));
+        }
+
+        let mut electron_candidate = electron_pair.to_vec();
+        let mut heavy_candidate = heavy_pair.to_vec();
+        let mut report = PauliSweepReport::empty();
+        let half_step = 0.5 * step_mev_inverse;
+        for reverse in [false, true] {
+            let apply = |item: &FoldedPauliEdge,
+                         electron: &mut [f64],
+                         heavy: &mut [f64]|
+             -> Result<PauliEdgeStep, PauliEdgeFailure> {
+                if item.bank == 0 {
+                    item.edge.apply_implicit(half_step, electron)
+                } else {
+                    item.edge.apply_implicit(half_step, heavy)
+                }
+            };
+            if reverse {
+                for (edge_index, item) in self.edges.iter().enumerate().rev() {
+                    match apply(item, &mut electron_candidate, &mut heavy_candidate) {
+                        Ok(edge_report) => {
+                            if let Err(kind) =
+                                Self::record_edge_certificate(&mut report, edge_report)
+                            {
+                                return Err(PauliSweepFailure {
+                                    kind,
+                                    edge_index: Some(edge_index),
+                                    partial_report: report,
+                                });
+                            }
+                        }
+                        Err(error) => {
+                            report.unresolved +=
+                                usize::from(error.kind == PauliEdgeFailureKind::UnresolvedFlux);
+                            return Err(PauliSweepFailure {
+                                kind: error.kind,
+                                edge_index: Some(edge_index),
+                                partial_report: report,
+                            });
+                        }
+                    }
+                }
+            } else {
+                for (edge_index, item) in self.edges.iter().enumerate() {
+                    match apply(item, &mut electron_candidate, &mut heavy_candidate) {
+                        Ok(edge_report) => {
+                            if let Err(kind) =
+                                Self::record_edge_certificate(&mut report, edge_report)
+                            {
+                                return Err(PauliSweepFailure {
+                                    kind,
+                                    edge_index: Some(edge_index),
+                                    partial_report: report,
+                                });
+                            }
+                        }
+                        Err(error) => {
+                            report.unresolved +=
+                                usize::from(error.kind == PauliEdgeFailureKind::UnresolvedFlux);
+                            return Err(PauliSweepFailure {
+                                kind: error.kind,
+                                edge_index: Some(edge_index),
+                                partial_report: report,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        self.checked_banks(&electron_candidate, &heavy_candidate)
+            .map_err(|_| PauliSweepFailure {
+                kind: PauliEdgeFailureKind::InvalidResidual,
+                edge_index: None,
+                partial_report: report,
+            })?;
+        Ok((electron_candidate, heavy_candidate, report))
+    }
+}
+
 fn fold_jacobian(explicit: &[RateMeV], nq: usize) -> Vec<f64> {
     let explicit_width = EXPLICIT_STATES * nq;
     let folded_width = FOLDED_PAIRS * nq;
@@ -354,14 +756,6 @@ fn matrix_cell(matrix: &[RateMeV], width: usize, row: usize, column: usize) -> f
     matrix[row * width + column].value()
 }
 
-fn exact_reference_state(t_gamma_mev: f64, t_cm_mev: f64, y_nodes: &[f64], f: &[f64]) -> bool {
-    t_gamma_mev.to_bits() == t_cm_mev.to_bits()
-        && y_nodes.iter().zip(f).all(|(y, value)| {
-            let exp_negative = (-y).exp();
-            value.to_bits() == (exp_negative / (1.0 + exp_negative)).to_bits()
-        })
-}
-
 fn evaluate_isotropic_electron_spectral_action_impl(
     input: ElectronSpectralInput<'_>,
     include_jacobian: bool,
@@ -389,18 +783,12 @@ fn evaluate_isotropic_electron_spectral_action_impl(
     )?;
     let (explicit_action, explicit_jacobian) =
         conservative_explicit_action(&stream, &explicit_f, y_nodes, y_weights, include_jacobian)?;
-    let mut electron_pair_mev = (0..nq)
+    let electron_pair_mev = (0..nq)
         .map(|node| folded_row(&explicit_action, nq, 0, node))
         .collect::<Vec<_>>();
-    let mut heavy_pair_mev = (0..nq)
+    let heavy_pair_mev = (0..nq)
         .map(|node| folded_row(&explicit_action, nq, 2, node))
         .collect::<Vec<_>>();
-    if exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, electron_pair)
-        && exact_reference_state(t_gamma_mev, t_cm_mev, y_nodes, heavy_pair)
-    {
-        electron_pair_mev.fill(0.0);
-        heavy_pair_mev.fill(0.0);
-    }
     let jacobian_mev = if include_jacobian {
         fold_jacobian(&explicit_jacobian, nq)
     } else {
@@ -429,6 +817,33 @@ pub(crate) fn evaluate_isotropic_electron_spectral_action_values(
     input: ElectronSpectralInput<'_>,
 ) -> Result<IsotropicElectronSpectralAction, &'static str> {
     evaluate_isotropic_electron_spectral_action_impl(input, false)
+}
+
+pub(crate) fn reconstruct_isotropic_electron_pauli_edges(
+    input: ElectronSpectralInput<'_>,
+) -> Result<IsotropicElectronPauliEdges, &'static str> {
+    let ElectronSpectralInput {
+        t_gamma_mev,
+        t_cm_mev,
+        y_nodes,
+        y_weights,
+        electron_pair,
+        heavy_pair,
+        electron_mass_mev,
+        rule,
+    } = input;
+    checked_grid(y_nodes, y_weights, electron_pair, heavy_pair)?;
+    let explicit_f = explicit_occupations(electron_pair, heavy_pair);
+    let stream = build_event_stream(
+        t_gamma_mev,
+        t_cm_mev,
+        y_nodes,
+        y_weights,
+        electron_mass_mev,
+        rule,
+        None,
+    )?;
+    build_folded_pauli_edges(&stream, &explicit_f, y_nodes, y_weights)
 }
 
 #[cfg(test)]
@@ -466,11 +881,10 @@ pub(crate) fn evaluate_filtered_isotropic_action(
 
 #[cfg(test)]
 mod tests {
-    use core::f64::consts::PI;
-
     use super::*;
     use crate::electron_hm::G_F_MEV_MINUS_2;
     use crate::flrw::ELECTRON_MASS_MEV;
+    use core::f64::consts::PI;
 
     fn grid(order: usize) -> (Vec<f64>, Vec<f64>) {
         gauss_laguerre_plain_rule(order)
@@ -519,10 +933,10 @@ mod tests {
     }
 
     #[test]
-    fn equilibrium_fd_state_is_an_exact_action_null() {
+    fn unforced_fd_equilibrium_is_an_event_and_edge_null() {
         let (y, w) = grid(4);
         let occupation = y.iter().copied().map(fd).collect::<Vec<_>>();
-        let action = evaluate_isotropic_electron_spectral_action(spectral_input(
+        let input = spectral_input(
             1.0,
             1.0,
             &y,
@@ -531,13 +945,82 @@ mod tests {
             &occupation,
             ElectronSpectralRule {
                 electron_radial_order: 4,
-                angular_order: 4,
+                angular_order: 3,
             },
-        ))
-        .unwrap();
-        assert!(action.electron_pair_mev.iter().all(|value| *value == 0.0));
-        assert!(action.heavy_pair_mev.iter().all(|value| *value == 0.0));
-        assert!(action.jacobian_mev.iter().any(|value| *value != 0.0));
+        );
+        let direct = evaluate_isotropic_electron_spectral_action(input).unwrap();
+        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
+        let (zero_electron, zero_heavy, zero_report) = edges
+            .transactional_step(0.0, &occupation, &occupation)
+            .unwrap();
+        assert_eq!(zero_electron, occupation);
+        assert_eq!(zero_heavy, occupation);
+        assert_eq!(zero_report, PauliSweepReport::empty());
+        let reconstructed = edges.action_values(&occupation, &occupation).unwrap();
+        let direct_l1 = direct
+            .electron_pair_mev
+            .iter()
+            .chain(&direct.heavy_pair_mev)
+            .map(|value| value.abs())
+            .sum::<f64>();
+        let reconstructed_l1 = reconstructed
+            .electron_pair_mev
+            .iter()
+            .chain(&reconstructed.heavy_pair_mev)
+            .map(|value| value.abs())
+            .sum::<f64>();
+        let mut net_l1 = 0.0;
+        let mut traffic_l1 = 0.0;
+        let mut maximum_normalized_flux: f64 = 0.0;
+        let mut offenders = Vec::new();
+        for item in &edges.edges {
+            let bank = &occupation;
+            let first = bank[item.edge.first_node];
+            let second = bank[item.edge.second_node];
+            let (gain_factor, loss_factor) = match item.edge.topology {
+                PauliEdgeTopology::ElasticTransfer => {
+                    ((1.0 - first) * second, first * (1.0 - second))
+                }
+                PauliEdgeTopology::PairSource => ((1.0 - first) * (1.0 - second), first * second),
+            };
+            let gain = item.edge.gain_coefficient_mev * gain_factor;
+            let loss = item.edge.loss_coefficient_mev * loss_factor;
+            let flux = item.edge.flux_mev(first, second).unwrap();
+            let traffic = gain + loss;
+            let normalized = flux.abs() / traffic.max(f64::MIN_POSITIVE);
+            net_l1 += flux.abs();
+            traffic_l1 += traffic;
+            maximum_normalized_flux = maximum_normalized_flux.max(normalized);
+            offenders.push((
+                normalized,
+                item.bank,
+                item.edge.topology,
+                item.edge.first_node,
+                item.edge.second_node,
+                flux,
+                traffic,
+            ));
+        }
+        offenders.sort_by(|left, right| right.0.total_cmp(&left.0));
+        for offender in offenders.iter().take(10) {
+            eprintln!(
+                "raw DB offender normalized={:.17e} bank={} topology={:?} nodes={}/{} flux={:.17e} traffic={:.17e}",
+                offender.0, offender.1, offender.2, offender.3, offender.4, offender.5, offender.6,
+            );
+        }
+        let normalized_db = net_l1 / traffic_l1.max(f64::MIN_POSITIVE);
+        eprintln!(
+            "raw FD balance direct_L1={direct_l1:.17e} reconstructed_L1={reconstructed_l1:.17e} net_L1={net_l1:.17e} traffic_L1={traffic_l1:.17e} normalized_DB={normalized_db:.17e} max_edge={maximum_normalized_flux:.17e}",
+        );
+        assert!(
+            normalized_db <= 1.0e-12,
+            "raw reconstructed detailed balance failed"
+        );
+        assert!(
+            maximum_normalized_flux <= 1.0e-12,
+            "raw reconstructed edge detailed balance failed"
+        );
+        assert!(direct.jacobian_mev.iter().any(|value| *value != 0.0));
     }
 
     #[test]
@@ -607,46 +1090,57 @@ mod tests {
     }
 
     #[test]
-    fn folded_action_jacobian_matches_five_point_occupation_stencils() {
-        let (y, w) = grid(3);
-        let electron = vec![0.31, 0.22, 0.08];
-        let heavy = vec![0.29, 0.18, 0.06];
+    fn unforced_equilibrium_jacobian_is_continuous() {
+        let (y, w) = grid(4);
+        let electron = y.iter().copied().map(fd).collect::<Vec<_>>();
+        let heavy = electron.clone();
         let rule = ElectronSpectralRule {
-            electron_radial_order: 3,
+            electron_radial_order: 4,
             angular_order: 3,
         };
         let base = evaluate_isotropic_electron_spectral_action(spectral_input(
-            1.1, 0.9, &y, &w, &electron, &heavy, rule,
+            1.0, 1.0, &y, &w, &electron, &heavy, rule,
         ))
         .unwrap();
         let dimension = 2 * y.len();
-        for column in 0..dimension {
-            let step = 2.0e-4;
-            let evaluate = |offset: f64| {
-                let mut shifted_e = electron.clone();
-                let mut shifted_x = heavy.clone();
-                if column < y.len() {
-                    shifted_e[column] += offset * step;
+        let step = 1.0e-6;
+        for column in [0, y.len() + 1] {
+            let evaluate = |direction: f64| {
+                let mut shifted_electron = electron.clone();
+                let mut shifted_heavy = heavy.clone();
+                let target = if column < y.len() {
+                    &mut shifted_electron[column]
                 } else {
-                    shifted_x[column - y.len()] += offset * step;
-                }
-                let value = evaluate_isotropic_electron_spectral_action(spectral_input(
-                    1.1, 0.9, &y, &w, &shifted_e, &shifted_x, rule,
+                    &mut shifted_heavy[column - y.len()]
+                };
+                let logit = target.ln() - (-*target).ln_1p();
+                *target = 1.0 / (1.0 + (-(logit + direction * step)).exp());
+                let action = evaluate_isotropic_electron_spectral_action(spectral_input(
+                    1.0,
+                    1.0,
+                    &y,
+                    &w,
+                    &shifted_electron,
+                    &shifted_heavy,
+                    rule,
                 ))
                 .unwrap();
-                [value.electron_pair_mev, value.heavy_pair_mev].concat()
+                [action.electron_pair_mev, action.heavy_pair_mev].concat()
             };
-            let p2 = evaluate(2.0);
-            let p1 = evaluate(1.0);
-            let m1 = evaluate(-1.0);
-            let m2 = evaluate(-2.0);
+            let plus = evaluate(1.0);
+            let minus = evaluate(-1.0);
             for row in 0..dimension {
-                let expected = (-p2[row] + 8.0 * p1[row] - 8.0 * m1[row] + m2[row]) / (12.0 * step);
-                let actual = base.jacobian_mev[row * dimension + column];
+                let centered_logit = (plus[row] - minus[row]) / (2.0 * step);
+                let expected = base.jacobian_mev[row * dimension + column]
+                    * if column < y.len() {
+                        electron[column] * (1.0 - electron[column])
+                    } else {
+                        heavy[column - y.len()] * (1.0 - heavy[column - y.len()])
+                    };
                 assert!(
-                    (actual - expected).abs() < 2.0e-34
-                        || relative_error(actual, expected) < 2.0e-8,
-                    "row={row} column={column} actual={actual:.17e} expected={expected:.17e}"
+                    (centered_logit - expected).abs() <= 2.0e-34
+                        || relative_error(centered_logit, expected) <= 2.0e-7,
+                    "row={row} column={column} centered={centered_logit:.17e} expected={expected:.17e}",
                 );
             }
         }
@@ -738,6 +1232,291 @@ mod tests {
                 "state={first_state} neutrino={neutrino:.17e} antineutrino={antineutrino:.17e} relative={:.17e}",
                 (neutrino - antineutrino).abs() / scale,
             );
+        }
+    }
+
+    fn assert_action_reconstruction(
+        reference: &IsotropicElectronSpectralAction,
+        reconstructed: &IsotropicElectronSpectralAction,
+    ) {
+        for (label, expected, actual) in [
+            (
+                "electron",
+                &reference.electron_pair_mev,
+                &reconstructed.electron_pair_mev,
+            ),
+            (
+                "heavy",
+                &reference.heavy_pair_mev,
+                &reconstructed.heavy_pair_mev,
+            ),
+        ] {
+            let difference = expected
+                .iter()
+                .zip(actual)
+                .map(|(left, right)| (left - right).abs())
+                .sum::<f64>();
+            let scale = expected
+                .iter()
+                .chain(actual)
+                .map(|value| value.abs())
+                .sum::<f64>()
+                .max(f64::MIN_POSITIVE);
+            assert!(
+                difference <= 2.0e-11 * scale,
+                "bank={label} difference={difference:.17e} scale={scale:.17e} relative={:.17e}",
+                difference / scale,
+            );
+        }
+    }
+
+    fn focused_states(y: &[f64]) -> Vec<(Vec<f64>, Vec<f64>)> {
+        let fd_state = y.iter().copied().map(fd).collect::<Vec<_>>();
+        let alternating = |low: f64, high: f64| {
+            y.iter()
+                .enumerate()
+                .map(|(node, value)| fd(*value) * if node.is_multiple_of(2) { low } else { high })
+                .collect::<Vec<_>>()
+        };
+        let mut tail_electron = fd_state.clone();
+        let mut tail_heavy = fd_state.clone();
+        let last = y.len() - 1;
+        tail_electron[last] = 1.0e-35;
+        tail_heavy[last] = 1.0e-40;
+        vec![
+            (fd_state.clone(), fd_state.clone()),
+            (alternating(0.91, 1.07), alternating(1.07, 0.91)),
+            (alternating(0.73, 1.11), alternating(1.11, 0.73)),
+            (tail_electron, tail_heavy),
+            (
+                vec![0.173, 0.631, 0.047, 0.812],
+                vec![0.284, 0.519, 0.093, 0.741],
+            ),
+        ]
+    }
+
+    #[test]
+    fn root_certificates_hold_across_legacy_small_step_scales() {
+        let (y, w) = grid(4);
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let states = focused_states(&y);
+        let (electron, heavy) = &states[1];
+        let input = spectral_input(1.15, 1.0, &y, &w, electron, heavy, rule);
+        let edges = reconstruct_isotropic_electron_pauli_edges(input).unwrap();
+        for exponent in [8_i32, 10, 12, 14, 16, 20, 24, 30] {
+            let step = 2.0_f64.powi(-exponent);
+            let (_, _, report) = edges
+                .transactional_step(step, electron, heavy)
+                .unwrap_or_else(|failure| panic!("h=2^-{exponent} failure={failure:?}"));
+            eprintln!(
+                "R3 tangent probe h={step:.17e} applications={} max_iterations={} max_residual_ratio={:.17e} max_occupation_width={:.17e}",
+                report.edge_applications,
+                report.maximum_edge_iterations,
+                report.maximum_root_residual_ratio,
+                report.maximum_occupation_bracket_width,
+            );
+            assert!(
+                report.maximum_edge_iterations <= 4,
+                "h=2^-{exponent} iterations={}",
+                report.maximum_edge_iterations
+            );
+            assert_eq!(report.unresolved, 0, "h=2^-{exponent}");
+            assert_eq!(report.exact_stationary, 0, "h=2^-{exponent}");
+            assert!(report.solved > 0, "h=2^-{exponent}");
+            assert_eq!(report.solved, report.edge_applications, "h=2^-{exponent}");
+            assert!(
+                report.maximum_occupation_error_bound <= 128.0 * f64::EPSILON,
+                "h=2^-{exponent} occupation_error={:.17e}",
+                report.maximum_occupation_error_bound,
+            );
+            assert!(
+                [
+                    report.maximum_root_residual_ratio,
+                    report.maximum_occupation_bracket_width,
+                    report.maximum_flux_error_fraction,
+                    report.maximum_root_error_bound,
+                    report.maximum_occupation_error_bound,
+                ]
+                .into_iter()
+                .all(f64::is_finite),
+                "h=2^-{exponent}"
+            );
+        }
+    }
+
+    #[test]
+    fn subnormal_traffic_does_not_dilute_error_fraction() {
+        let edge =
+            PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 1.0, 1.0, 1.0e-310, 0.0).unwrap();
+        let (_, edge_report) = edge.implicit_step(1.0, 0.5, 0.5).unwrap();
+        assert_eq!(edge_report.kind, Some(PauliEdgeApplicationKind::Solved));
+        assert!(edge_report.traffic_upper_bound_mev > 0.0);
+        assert!(edge_report.traffic_upper_bound_mev < f64::MIN_POSITIVE);
+
+        let expected_fraction = edge_report.flux_abs_error_mev
+            / edge_report.traffic_upper_bound_mev.max(f64::from_bits(1));
+        let mut sweep_report = PauliSweepReport::empty();
+        IsotropicElectronPauliEdges::record_edge_certificate(&mut sweep_report, edge_report)
+            .unwrap();
+
+        assert_eq!(sweep_report.maximum_flux_error_fraction, expected_fraction);
+    }
+
+    #[test]
+    fn malformed_solved_report_is_rejected_not_skipped() {
+        let malformed = PauliEdgeStep {
+            kind: Some(PauliEdgeApplicationKind::Solved),
+            extent: 0.0,
+            nonlinear_iterations: 1,
+            residual_abs: f64::NAN,
+            residual_scale: 1.0,
+            traffic_upper_bound_mev: 1.0,
+            flux_abs_error_mev: 0.0,
+            root_error_abs: 0.0,
+            occupation_error_abs: 0.0,
+            max_occupation_bracket_width: 0.0,
+            conditioning_lower_bound: 1.0,
+        };
+        let mut report = PauliSweepReport::empty();
+        let result = IsotropicElectronPauliEdges::record_edge_certificate(&mut report, malformed);
+        assert_eq!(result, Err(PauliEdgeFailureKind::InvalidResidual));
+        assert_eq!(report, PauliSweepReport::empty());
+    }
+
+    #[test]
+    fn sweep_report_counts_exact_stationary_without_nan_swallow() {
+        let edges = IsotropicElectronPauliEdges {
+            nq: 2,
+            edges: vec![FoldedPauliEdge {
+                bank: 0,
+                edge: PauliEdge::new(PauliEdgeTopology::PairSource, 0, 1, 1.0, 1.0, 0.0, 0.0)
+                    .unwrap(),
+            }],
+        };
+        let (_, _, report) = edges
+            .transactional_step(0.25, &[0.2, 0.7], &[0.3, 0.6])
+            .unwrap();
+        assert_eq!(report.exact_stationary, 2);
+        assert_eq!(report.solved, 0);
+        assert_eq!(report.maximum_root_residual_ratio, 0.0);
+        assert_eq!(report.maximum_occupation_bracket_width, 0.0);
+        assert_eq!(report.maximum_occupation_error_bound, 0.0);
+    }
+
+    #[test]
+    fn unresolved_edge_failure_is_transactional_and_observable() {
+        let edges = IsotropicElectronPauliEdges {
+            nq: 2,
+            edges: vec![FoldedPauliEdge {
+                bank: 0,
+                edge: PauliEdge::new(PauliEdgeTopology::ElasticTransfer, 0, 1, 1.0, 1.0, 1.0, 1.0)
+                    .unwrap(),
+            }],
+        };
+        let failure = edges
+            .transactional_step(0.25, &[0.5, 0.5], &[0.3, 0.6])
+            .unwrap_err();
+        assert_eq!(failure.kind, PauliEdgeFailureKind::UnresolvedFlux);
+        assert_eq!(failure.edge_index, Some(0));
+        assert_eq!(failure.partial_report.unresolved, 1);
+    }
+
+    #[test]
+    fn folded_edges_reconstruct_action_at_five_independent_states() {
+        let (y, w) = grid(4);
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let states = focused_states(&y);
+        let (anchor_electron, anchor_heavy) = &states[0];
+        let edges = reconstruct_isotropic_electron_pauli_edges(spectral_input(
+            1.15,
+            1.0,
+            &y,
+            &w,
+            anchor_electron,
+            anchor_heavy,
+            rule,
+        ))
+        .unwrap();
+        for (state, (electron, heavy)) in states.iter().enumerate() {
+            let reference = evaluate_isotropic_electron_spectral_action_values(spectral_input(
+                1.15, 1.0, &y, &w, electron, heavy, rule,
+            ))
+            .unwrap();
+            let reconstructed = edges.action_values(electron, heavy).unwrap();
+            assert_action_reconstruction(&reference, &reconstructed);
+            eprintln!(
+                "edge reconstruction state={state} action_L1={:.17e}",
+                reconstructed
+                    .electron_pair_mev
+                    .iter()
+                    .chain(&reconstructed.heavy_pair_mev)
+                    .map(|value| value.abs())
+                    .sum::<f64>()
+            );
+        }
+    }
+
+    #[test]
+    fn folded_edges_are_boundary_inward_at_five_independent_states() {
+        let (y, w) = grid(4);
+        let rule = ElectronSpectralRule {
+            electron_radial_order: 4,
+            angular_order: 3,
+        };
+        let states = focused_states(&y);
+        let (anchor_electron, anchor_heavy) = &states[0];
+        let edges = reconstruct_isotropic_electron_pauli_edges(spectral_input(
+            1.15,
+            1.0,
+            &y,
+            &w,
+            anchor_electron,
+            anchor_heavy,
+            rule,
+        ))
+        .unwrap();
+        for (state, (electron, heavy)) in states.iter().enumerate() {
+            for bank in 0..2 {
+                for node in 0..y.len() {
+                    let mut lower_electron = electron.clone();
+                    let mut lower_heavy = heavy.clone();
+                    let mut upper_electron = electron.clone();
+                    let mut upper_heavy = heavy.clone();
+                    if bank == 0 {
+                        lower_electron[node] = 0.0;
+                        upper_electron[node] = 1.0;
+                    } else {
+                        lower_heavy[node] = 0.0;
+                        upper_heavy[node] = 1.0;
+                    }
+                    let lower = edges.action_values(&lower_electron, &lower_heavy).unwrap();
+                    let upper = edges.action_values(&upper_electron, &upper_heavy).unwrap();
+                    let lower_value = if bank == 0 {
+                        lower.electron_pair_mev[node]
+                    } else {
+                        lower.heavy_pair_mev[node]
+                    };
+                    let upper_value = if bank == 0 {
+                        upper.electron_pair_mev[node]
+                    } else {
+                        upper.heavy_pair_mev[node]
+                    };
+                    assert!(
+                        lower_value >= 0.0,
+                        "state={state} bank={bank} node={node} lower={lower_value:.17e}"
+                    );
+                    assert!(
+                        upper_value <= 0.0,
+                        "state={state} bank={bank} node={node} upper={upper_value:.17e}"
+                    );
+                }
+            }
         }
     }
 

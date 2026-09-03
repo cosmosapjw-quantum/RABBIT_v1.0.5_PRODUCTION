@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r2",
+  "audit_head": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+  "comparison_base": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "scope": [
+    "D-045 through D-056 authority and chronology",
+    "row-6 and row-9 orientation closure",
+    "D-054 and D-055 covariance metrology",
+    "D-056 independent FLRW trajectory",
+    "current-tree regression and harness evidence",
+    "claim, gate, shared-context, and handoff consistency",
+    "anti-drift and anti-inflation accounting"
+  ],
+  "tree_delta": {
+    "files_changed": 209,
+    "added_lines": 18125,
+    "deleted_lines": 71,
+    "net_lines": 18054,
+    "source_module_sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+    "d055_oracle_sha256": "7a5c84f84666cfd068086f6878374e5800b1d7769d4044ba6876d756ca7a2a3b",
+    "d056_driver_sha256": "35c889e6fb9b28dbf7143665227e9daa223c4ba436cc5797b569c8324800e819"
+  },
+  "primary_claims_under_audit": [
+    {
+      "claim_id": "AUD-D056-PHYSICS",
+      "claimed_state": "row-6 and row-9 two-orientation half-weight closure is a physically valid final static catalogue"
+    },
+    {
+      "claim_id": "AUD-D056-METROLOGY",
+      "claimed_state": "G-F10-COVARIANCE-METROLOGY is pass"
+    },
+    {
+      "claim_id": "AUD-D056-ENDPOINT",
+      "claimed_state": "G-F10-INDEPENDENT-FLRW is pass"
+    },
+    {
+      "claim_id": "AUD-D056-PROVENANCE",
+      "claimed_state": "D-045 through D-056 form an admissible prospective authority and evidence chain"
+    },
+    {
+      "claim_id": "AUD-D056-SOFTWARE",
+      "claimed_state": "retained source, tests, scripts, and current-tree regression support the gate flips"
+    },
+    {
+      "claim_id": "AUD-D056-ANTI-INFLATION",
+      "claimed_state": "the retained 209-file, net +18054-line delta satisfies the controlling anti-inflation policy"
+    }
+  ],
+  "primary_inputs": {
+    "contracts": [
+      "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md",
+      "docs/audit/BD622_D053_row9_closure_contract_2026-07-28.md",
+      "docs/audit/BD622_D054_covariance_metrology_contract_2026-07-28.md",
+      "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+      "docs/audit/BD622_D056_independent_trajectory_contract_2026-07-28.md",
+      "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md"
+    ],
+    "code": [
+      "src/rabbit/decoupling/_independent_noqke.py",
+      "tests/test_independent_noqke_comparator.py",
+      "scripts/audit/d050_ownerc_closure_verification.py",
+      "scripts/audit/d053_row9_closure_verification.py",
+      "scripts/audit/d054_covariance_metrology_oracle.py",
+      "scripts/audit/d055_covariance_metrology_oracle.py",
+      "scripts/audit/d056_independent_trajectory.py"
+    ],
+    "runs": [
+      ".agent-harness/runs/run-20260727-f10-d049-regression-fix",
+      ".agent-harness/runs/run-20260727-f10-d050-ownerc-closure",
+      ".agent-harness/runs/run-20260728-f10-d053-row9-closure",
+      ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology",
+      ".agent-harness/runs/run-20260728-f10-d055-metrology-r2",
+      ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory"
+    ],
+    "ssot": [
+      ".agent-harness/context/GATE_REGISTRY.json",
+      ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+      ".agent-harness/context/SHARED_CONTEXT.md",
+      ".agent-harness/context/FROZEN_DECISIONS.md",
+      "docs/harness/CLAIM_LEDGER.md",
+      "docs/harness/PROJECT_STATE.md",
+      "docs/harness/VALIDATION_LEDGER.md",
+      "docs/harness/DECISION_LOG.md",
+      "docs/harness/NEXT_SESSION_PROMPT.md"
+    ]
+  },
+  "recorded_outputs": {
+    "d055_report": {
+      "path": ".agent-harness/runs/run-20260728-f10-d055-metrology-r2/raw_logs/m2_oracle_report.json",
+      "sha256": "4c6e3aba33774c93c6d99ea71802c8d0c9b275c97e02c9eced532c2a2fcdbbf8"
+    },
+    "d056_report": {
+      "path": ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json",
+      "sha256": "8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3"
+    }
+  },
+  "known_adversarial_leads": [
+    {
+      "id": "L-CLAIM-MISBIND",
+      "observation": "Every D-055 and D-056 assignment and result owns C-R6-ORBIT-CHART-RABBIT-APPLICABILITY, not a metrology or independent-endpoint claim."
+    },
+    {
+      "id": "L-SSOT-CONTRADICTION",
+      "observation": "GATE_REGISTRY and top handoff overlays say both gates pass, while SHARED_CONTEXT, CLAIM_REGISTRY, and an existing CLAIM_LEDGER row still say no independent endpoint exists and the gates remain fail."
+    },
+    {
+      "id": "L-BOUND-LOOSENESS",
+      "observation": "D-055 reports max B_native about 7.86e-2 while the actual native residual is about 2.45e-11; the separate 1e-10 cap is the binding criterion."
+    },
+    {
+      "id": "L-REISSUE",
+      "observation": "D-054 failed, then D-055 replaced a degenerate state and relaxed an exact bitwise lemma to a relative 1e-10 bound; determine whether this is a justified defect correction or prohibited post-output refitting."
+    },
+    {
+      "id": "L-ENDPOINT-REPLAY",
+      "observation": "D-056 is a single-platform, single-run, reduced-angular-order 4/4/24, rtol 1e-6 endpoint with no full rerun or refinement ladder recorded."
+    },
+    {
+      "id": "L-ARTIFACT-INFLATION",
+      "observation": "The delta is 209 files and net +18054 lines, largely harness/lab evidence, and includes tracked Python bytecode under BD622_OWNERA_R6_ORBIT_CHART_LAB/__pycache__."
+    },
+    {
+      "id": "L-AUDIT-R1-PRESERVED",
+      "observation": "The first audit run was preserved because its four registered assignments sealed a nonexistent evidence-map path from a different run."
+    }
+  ],
+  "fail_closed_rule": "Separate numerical reproducibility, scientific validity, evidence provenance, and SSOT consistency. A numerical pass does not repair a claim-binding or authority failure. Exact contradiction, missing required evidence, or an unbounded circular oracle yields fail or inconclusive rather than majority acceptance.",
+  "required_reasoning_loop": [
+    "self-discover",
+    "step-back",
+    "metacognitive self-ask",
+    "CoVe",
+    "adversarial self-ask",
+    "CCoT",
+    "PDR"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d057-adversarial-final-closeout",
+  "created_at": "2026-07-28T05:55:44+00:00",
+  "spec_ref": "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+  "base_ref": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+  "head_ref": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

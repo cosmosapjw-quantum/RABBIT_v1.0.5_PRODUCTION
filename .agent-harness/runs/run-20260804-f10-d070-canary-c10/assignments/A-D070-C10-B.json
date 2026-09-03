@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-canary-c10",
+  "assignment_id": "A-D070-C10-B",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_files": [
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396",
+  "independence_mode": "shared-core",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "C10 discriminating concurrency canary, slot B. The round-13 adjudicator showed C9 proved the least interesting thing: all 24 of its processes shared one agent_id AND one assignment, so the per-agent flock serialised them and the O_EXCL claim never ran concurrently. The configuration that historically ADMITTED BOTH STOPS, per acquire_agent_lock's own docstring, is ONE agent_id on TWO DIFFERENT assignments -- two assignments take two different claim files, so O_EXCL excluded nothing. This canary runs that configuration.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c10/assignments/A-D070-C10-B.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/independent_auditor.md"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-B.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-canary-c10/results/A-D070-C10-B.json",
+  "status": "registered"
+}

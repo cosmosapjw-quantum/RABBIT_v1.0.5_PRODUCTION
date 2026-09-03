@@ -1,0 +1,664 @@
+"""Regression cases for check_canary_freshness.py (D-070 Part B10, F-R9-004).
+
+Four canaries died of an attestation outliving the code it attested, and every
+remedy was a written rule that the next canary then broke. These fixtures exist
+so the rule is measured instead. Each one must die if its guard is removed.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+
+import check_canary_freshness as C  # noqa: E402
+
+START_HOOK = ".codex/hooks/subagent_start_context.py"
+STOP_HOOK = ".codex/hooks/subagent_stop_validate.py"
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def digest(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+@pytest.fixture()
+def repo(tmp_path: Path) -> Path:
+    write(tmp_path / START_HOOK, "# start hook v1\n")
+    write(tmp_path / STOP_HOOK, "# stop hook v1\n")
+    return tmp_path
+
+
+def attest(repo: Path, run: str, document: dict[str, object], *, backed: bool = True) -> Path:
+    """Write an attestation; by default also forge the receipt trail it needs.
+
+    Round 10 defeated the detector with a file nobody dispatched, so an
+    attestation now has to point at a consumed admission-ledger row and the
+    result that row pins. `backed=False` writes the bare file the attack used.
+    """
+    run_dir = repo / ".agent-harness/runs" / run
+    path = run_dir / "artifacts/ATTESTATION.json"
+    body = {"artifact_class": "CANARY_ATTESTATION", **document}
+    if backed:
+        assignment = str(body.setdefault("consumed_assignment_id", "A-CANARY"))
+        agent = str(body.setdefault("consumed_by_agent_id", "canary-agent"))
+        body.setdefault("canary_lease_run_id", run)
+        result = run_dir / "results" / f"{assignment}.json"
+        write(result, json.dumps({"status": "pass"}, indent=1))
+        digest = "sha256:" + hashlib.sha256(result.read_bytes()).hexdigest()
+        body.setdefault("result_sha256", digest)
+        write(
+            run_dir / "ADMISSIONS.jsonl",
+            json.dumps(
+                {
+                    "event": "consumed",
+                    "assignment_id": assignment,
+                    "agent_id": agent,
+                    "result_sha256": digest,
+                }
+            )
+            + "\n",
+        )
+    write(path, json.dumps(body, indent=1))
+    return path
+
+
+def fresh(repo: Path, canary: str = "C7", **extra: object) -> dict[str, object]:
+    return {
+        "canary": canary,
+        "start_hook_sha256": digest((repo / START_HOOK).read_text(encoding="utf-8")),
+        "stop_hook_sha256": digest((repo / STOP_HOOK).read_text(encoding="utf-8")),
+        **extra,
+    }
+
+
+def test_a_fresh_canary_passes(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo))
+    assert C.check(repo) == []
+
+
+def test_editing_an_attested_hook_makes_the_canary_stale(repo: Path) -> None:
+    """The exact class that killed C5 and C6, now measured rather than noticed."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    write(repo / START_HOOK, "# start hook v2 -- one line changed\n")
+    errors = C.check(repo)
+    assert any("C7 is STALE" in m and START_HOOK in m for m in errors), errors
+
+
+def test_a_stale_canary_superseded_by_a_fresh_one_is_retired(repo: Path) -> None:
+    """Retirement is by replacement; retained attestations are never rewritten."""
+    stale = fresh(repo, canary="C6")
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-canary-c6", stale)
+    attest(repo, "run-canary-c7", fresh(repo, supersedes_canary=["C6"]))
+    assert C.check(repo) == []
+
+
+def test_superseding_the_wrong_canary_does_not_retire_the_stale_one(repo: Path) -> None:
+    stale = fresh(repo, canary="C6")
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-canary-c6", stale)
+    attest(repo, "run-canary-c7", fresh(repo, supersedes_canary=["C4"]))
+    assert any("C6 is STALE" in m for m in C.check(repo))
+
+
+def test_id_is_inferred_from_the_run_directory_when_the_field_is_absent(repo: Path) -> None:
+    """C5 predates the `canary` field and its bytes are evidence, not editable."""
+    document = fresh(repo)
+    del document["canary"]
+    attest(repo, "run-20260729-f10-d070-canary-c5", document)
+    write(repo / STOP_HOOK, "# stop hook v2\n")
+    assert any("C5 is STALE" in m for m in C.check(repo))
+
+
+def test_an_attestation_with_no_resolvable_id_is_an_error_not_a_skip(repo: Path) -> None:
+    document = fresh(repo)
+    del document["canary"]
+    attest(repo, "run-something-else", document)
+    assert any("cannot be superseded by anything" in m for m in C.check(repo))
+
+
+def test_a_canary_attesting_no_hook_digest_is_an_error(repo: Path) -> None:
+    """A canary that cannot go stale cannot be evidence that anything holds."""
+    attest(repo, "run-canary-c7", {"canary": "C7", "method": "words only"})
+    assert any("attests no hook digest" in m for m in C.check(repo))
+
+
+def test_an_unmappable_digest_field_is_an_error_not_a_skip(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo, merge_hook_sha256="0" * 64))
+    assert any("cannot map to a file" in m for m in C.check(repo))
+
+
+def test_an_attested_file_that_does_not_exist_is_an_error(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo))
+    (repo / START_HOOK).unlink()
+    assert any("does not exist" in m for m in C.check(repo))
+
+
+def test_non_file_digest_fields_are_not_treated_as_attestations(repo: Path) -> None:
+    """`assignment_sha256` names an envelope, not a source file, and must not error.
+
+    `result_sha256` used to be the example here; it is now load-bearing, because
+    receipt backing re-derives it from the pinned result. The exclusion list
+    still has to keep genuinely non-file digests out of the attested set.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, assignment_sha256="sha256:" + "0" * 64))
+    assert C.check(repo) == []
+
+
+# --------------------------------------------------------------------------
+# Round 10 (D-070 Part B13). The detector was defeated by a text editor.
+# --------------------------------------------------------------------------
+
+
+def test_f_r10_a_file_nobody_dispatched_cannot_retire_a_real_canary(repo: Path) -> None:
+    """The decisive round-10 finding, as the attack was run.
+
+    One typed JSON file with its digests set to the current bytes retired the
+    real canary and returned ok:true while the attested hook carried a hostile
+    edit. Only a canary backed by a consumed receipt may retire another.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    write(repo / START_HOOK, "# hostile edit\n")
+    forged = fresh(repo, canary="C999", supersedes_canary=["C7"])
+    attest(repo, "run-forged", forged, backed=False)
+    errors = C.check(repo)
+    assert any("not itself backed by a consumed admission receipt" in m for m in errors), errors
+    assert any("C7 is STALE" in m for m in errors), errors
+
+
+def test_f_r10_a_canary_cannot_supersede_itself(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C7"]))
+    write(repo / START_HOOK, "# hostile edit\n")
+    errors = C.check(repo)
+    assert any("names ITSELF" in m for m in errors), errors
+    assert any("C7 is STALE" in m for m in errors), errors
+
+
+def test_f_r10_two_canaries_cannot_retire_each_other(repo: Path) -> None:
+    """A cycle would leave both unreachable by the freshness check."""
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6", supersedes_canary=["C7"]))
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    write(repo / START_HOOK, "# hostile edit\n")
+    errors = C.check(repo)
+    assert any("supersession cycle" in m for m in errors), errors
+
+
+def test_f_r10_an_attestation_must_name_a_real_consumed_row(repo: Path) -> None:
+    document = fresh(repo, canary="C7")
+    document["consumed_by_agent_id"] = "somebody-else"
+    attest(repo, "run-canary-c7", document, backed=False)
+    errors = C.check(repo)
+    assert any("names no receipt" in m or "no such consumed row exists" in m for m in errors), errors
+
+
+def test_f_r10_a_pinned_result_digest_is_re_derived_not_trusted(repo: Path) -> None:
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    result = repo / ".agent-harness/runs/run-canary-c7/results/A-CANARY.json"
+    write(result, json.dumps({"status": "tampered"}, indent=1))
+    errors = C.check(repo)
+    assert any("hashes to" in m and "disagree" in m for m in errors), errors
+
+
+def test_f_r10_an_attestation_hidden_deeper_is_still_found(repo: Path) -> None:
+    """The single-level glob was a hiding place, not a filter."""
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    deep = repo / ".agent-harness/runs/run-hidden/artifacts/sub/deep.json"
+    write(
+        deep,
+        json.dumps(
+            {"artifact_class": "CANARY_ATTESTATION", "canary": "C888",
+             "start_hook_sha256": "0" * 64, "stop_hook_sha256": "0" * 64},
+            indent=1,
+        ),
+    )
+    assert any("C888" in m for m in C.check(repo))
+
+
+def test_f_r10_zero_live_canaries_is_an_error_where_one_is_declared(repo: Path) -> None:
+    """runs/ is gitignored wholesale, so a missing attestation looked like a pass."""
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    assert any("live retained canary attestation" in m for m in C.check(repo))
+
+
+def test_f_r10_a_tree_declaring_no_canary_policy_needs_no_canary(repo: Path) -> None:
+    """A synthetic fixture holds no canary evidence and must not be forced to
+    invent some. Absence of the declaration is the permission, not a bypass."""
+    assert C.check(repo) == []
+
+
+def test_f_r10_deleting_the_policy_cannot_lower_the_floor(repo: Path) -> None:
+    """If git tracks the declaration and the tree has lost it, that is an error."""
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "policy"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+    (repo / C.POLICY_FILE).unlink()
+    assert any("cannot be lowered by deleting" in m for m in C.check(repo))
+
+
+# --------------------------------------------------------------------------
+# F-R11 -- the four canary defects an external audit reported and a local
+# reproduction confirmed (D-070 Part B16).
+#
+# Every one of them made the checker report `ok: true` on a tree whose canary
+# evidence was absent, duplicated, or mutually retired into invisibility. The
+# three-node cycle is the worst of them: the checker printed `live: [C4]` and
+# exited 0 while C1, C2 and C3 had retired each other out of the record.
+# --------------------------------------------------------------------------
+
+
+def git_repo(repo: Path) -> None:
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@t"], cwd=repo, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=repo, check=True)
+    write(repo / ".gitignore", "/.agent-harness/runs/\n")
+
+
+def commit_all(repo: Path, *force: Path) -> None:
+    import subprocess
+
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    for path in force:
+        subprocess.run(["git", "add", "-f", str(path.relative_to(repo))],
+                       cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "x"], cwd=repo, check=True, capture_output=True)
+
+
+def retained(repo: Path, run: str) -> list[Path]:
+    """Every file a canary needs force-added, since runs/ is gitignored."""
+    base = repo / ".agent-harness/runs" / run
+    return [base / "artifacts/ATTESTATION.json", base / "ADMISSIONS.jsonl",
+            base / "results/A-CANARY.json"]
+
+
+def test_f_r11_three_node_supersession_cycle_is_refused(repo: Path) -> None:
+    """C1 -> C2 -> C3 -> C1 passed, reporting all three as superseded.
+
+    The independent C4 matters: without it the floor would fail anyway and the
+    case would prove nothing about the graph. Round 9 lost three fixtures to
+    exactly that mistake, so the discriminator is built in.
+    """
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1", supersedes_canary=["C2"]))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C3"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C1"]))
+    attest(repo, "run-d-canary-c4", fresh(repo, canary="C4"))
+    errors = C.check(repo)
+    assert any("supersession cycle" in m for m in errors), errors
+    assert any("C1" in m and "C2" in m and "C3" in m for m in errors), errors
+
+
+def test_f_r11_each_distinct_cycle_is_reported_exactly_once(repo: Path) -> None:
+    """One error per cycle -- not one per rotation, and not one for two cycles.
+
+    Two INDEPENDENT cycles are used rather than one, because a single cycle
+    cannot distinguish "reported once" from "reported once per graph": the walk
+    visits each node at most once, so one cycle is structurally incapable of
+    being reported twice. A fixture built on one cycle passed with the
+    de-duplication removed, which is how the dead `seen` set was found.
+    """
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1", supersedes_canary=["C2"]))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C1"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C4"]))
+    attest(repo, "run-d-canary-c4", fresh(repo, canary="C4", supersedes_canary=["C3"]))
+    attest(repo, "run-e-canary-c9", fresh(repo, canary="C9"))
+    reported = [m for m in C.check(repo) if "supersession cycle" in m]
+    assert len(reported) == 2, reported
+    assert any("C1 -> C2 -> C1" in m for m in reported), reported
+    assert any("C3 -> C4 -> C3" in m for m in reported), reported
+
+
+def test_f_r11_an_acyclic_chain_is_still_legal(repo: Path) -> None:
+    """The control the cycle fix must not break: C3 -> C2 -> C1 is a normal
+    replacement history and retires two canaries without complaint."""
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    attest(repo, "run-b-canary-c2", fresh(repo, canary="C2", supersedes_canary=["C1"]))
+    attest(repo, "run-c-canary-c3", fresh(repo, canary="C3", supersedes_canary=["C2"]))
+    assert C.check(repo) == []
+
+
+def test_f_r11_two_files_claiming_one_canary_id_do_not_count_twice(repo: Path) -> None:
+    """`live: [C1, C1]` satisfied a declared floor of two and reported clean."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 2}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    attest(repo, "run-b-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo, *retained(repo, "run-a-canary-c1"), *retained(repo, "run-b-canary-c1"))
+    errors = C.check(repo)
+    assert any("is attested by 2 live files" in m for m in errors), errors
+    assert any("live retained canary attestation" in m for m in errors), errors
+
+
+def test_f_r11_untracked_canary_evidence_does_not_satisfy_the_floor(repo: Path) -> None:
+    """runs/ is gitignored, so an attestation nobody force-added exists on ONE
+    disk. Counting it reproduces the fail-open default the floor was written
+    to close, one level up."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo)  # deliberately NOT force-adding the run directory
+    errors = C.check(repo)
+    assert any("does not count toward the live floor" in m for m in errors), errors
+    assert any("live retained canary attestation" in m for m in errors), errors
+
+
+def test_f_r11_tracked_canary_evidence_does_satisfy_the_floor(repo: Path) -> None:
+    """The control: the same canary, force-added, is clean. Without this the
+    test above would pass even if the floor rejected everything."""
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    attest(repo, "run-a-canary-c1", fresh(repo, canary="C1"))
+    commit_all(repo, *retained(repo, "run-a-canary-c1"))
+    assert C.check(repo) == []
+
+
+def test_f_r11_an_untracked_policy_cannot_replace_the_tracked_one(repo: Path) -> None:
+    """The tracked-deletion guard ran only on the ABSENT branch, so removing the
+    declaration from the index and leaving an untracked `min_live: 0` in its
+    place lowered the floor to zero with no error at all."""
+    import subprocess
+
+    git_repo(repo)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 1}))
+    commit_all(repo)
+    subprocess.run(["git", "rm", "--cached", "-q", C.POLICY_FILE], cwd=repo,
+                   check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "untrack"], cwd=repo, check=True, capture_output=True)
+    write(repo / C.POLICY_FILE, json.dumps({"schema_version": 1, "min_live": 0}))
+    errors = C.check(repo)
+    assert any("git does not track it" in m for m in errors), errors
+
+
+def test_f_r12_an_ambiguous_attestation_is_refused_loudly_not_skipped(repo: Path) -> None:
+    """Round 12, against round 11's own fix.
+
+    Part B16 made every evidence parse reject a repeated object key. Applying
+    that here without care would have been FAIL-OPEN in a new way: the discovery
+    loop skips anything that will not parse, so a duplicate key would have made
+    an attestation invisible -- and an invisible attestation cannot be reported
+    stale, which turns ambiguous bytes into a way of retiring a canary from its
+    own freshness check. The stale C6 below is what makes this discriminating:
+    if the ambiguous file were merely skipped, C6 would go unreported.
+    """
+    write(repo / START_HOOK, "# start hook v2 -- C6 no longer describes this\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    path = attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    body = path.read_text(encoding="utf-8")
+    assert body.count('"canary"') == 1, body
+    path.write_text(body.replace('"canary": "C7"', '"canary": "C-DECOY", "canary": "C7"', 1),
+                    encoding="utf-8")
+    errors = C.check(repo)
+    assert any("repeated object key" in m for m in errors), errors
+
+
+def test_f_r12_a_single_keyed_attestation_still_parses(repo: Path) -> None:
+    """The control: strict parsing must not reject ordinary attestations."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    assert C.check(repo) == []
+
+
+def test_f_r12_a_duplicate_key_in_the_admissions_ledger_is_refused(repo: Path) -> None:
+    """The ledger backs every canary's authority, so it is parsed strictly too."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    ledger = repo / ".agent-harness/runs/run-canary-c7/ADMISSIONS.jsonl"
+    row = ledger.read_text(encoding="utf-8").strip()
+    ledger.write_text(row.replace('{"event": "consumed"',
+                                  '{"event": "minted", "event": "consumed"', 1) + "\n",
+                      encoding="utf-8")
+    errors = C.check(repo)
+    assert any("C7" in m for m in errors), errors
+
+
+def test_f_r13_a_duplicated_artifact_class_cannot_hide_a_stale_canary(repo: Path) -> None:
+    """Round 13, registered reviewer, CRITICAL -- against round 12's own fix.
+
+    Part B18 reported an ambiguous attestation only when a PERMISSIVE re-read
+    still said ``artifact_class == CANARY_ATTESTATION``. That check was
+    worthless: a loose parse is last-value-wins and ``artifact_class`` is a key
+    like any other, so duplicating it with a decoy as the final value made the
+    document classify as "not ours" and vanish entirely -- not counted, not
+    live, not superseded, no error -- while carrying a hostile hook digest.
+
+    The stale hook below is what makes this discriminating: without it the file
+    could vanish and the run would still be clean, and the test would pass
+    against the broken code too. That mistake has been made five times in this
+    chain, so the discriminator is built in rather than assumed.
+    """
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    write(repo / START_HOOK, "# start hook v2 -- C7 no longer describes this\n")
+    assert any("C7 is STALE" in m for m in C.check(repo)), "control: staleness must be caught"
+    body = path.read_text(encoding="utf-8")
+    doctored = body.replace(
+        '"artifact_class": "CANARY_ATTESTATION"',
+        '"artifact_class": "CANARY_ATTESTATION", "artifact_class": "NOT_A_CANARY_DECOY"',
+        1,
+    )
+    assert doctored.count('"artifact_class"') == 2, doctored[:200]
+    path.write_text(doctored, encoding="utf-8")
+    errors = C.check(repo)
+    assert any("repeated object key" in m for m in errors), errors
+
+
+def test_f_r13_an_unrelated_unparseable_file_is_still_ignored(repo: Path) -> None:
+    """The control on the widened rule: refusing everything ambiguous must not
+    mean refusing everything. A file that no parser accepts is not ours."""
+    attest(repo, "run-canary-c7", fresh(repo))
+    write(repo / ".agent-harness/runs/run-canary-c7/artifacts/notes.json", "this is not json at all")
+    assert C.check(repo) == []
+
+
+def test_f_r13_authority_to_retire_belongs_to_the_document_not_the_id(repo: Path) -> None:
+    """Round 13, F-R13-003. A file that merely REUSES a backed id had authority.
+
+    `authorised` used to be a set of canary ids, so a sacrificial document with
+    no receipt of its own could borrow a genuine canary's id and retire another
+    canary with it. The reviewer's own attack was caught -- but only by the
+    DUPLICATE-ID rule, an unrelated check that happened to overlap. Coupling a
+    security property to another rule's coverage is how a guard silently stops
+    guarding when that other rule moves.
+
+    Building a case that actually discriminates takes care, and the first attempt
+    did not: a sacrificial document with a UNIQUE id is unauthorised under the
+    old rule as well, so it fails either way and proves nothing. The mutation
+    battery caught that. This version makes the clone escape the duplicate-id
+    rule by being RETIRED itself -- retired canaries are skipped before duplicate
+    detection -- so the only thing that can refuse it is per-document authority:
+
+      C6   backed, and made STALE, so failing to report it is observable
+      C7   backed, live
+      C7'  a CLONE of C7's id carrying no receipt, declaring it retires C6
+      C8   backed, retires C7 -- which retires the clone too, by id
+
+    Old rule: id C7 is authorised, so the clone's retirement of C6 takes effect
+    and C6's staleness is never reported. New rule: the clone's own path is not
+    authorised, so it is refused and C6 is still measured.
+    """
+    write(repo / START_HOOK, "# start hook v2 -- C6 no longer describes this\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    stale_c6 = repo / ".agent-harness/runs/run-canary-c6/artifacts/ATTESTATION.json"
+    body = json.loads(stale_c6.read_text(encoding="utf-8"))
+    body["start_hook_sha256"] = digest("# start hook v1\n")   # pins the OLD bytes
+    write(stale_c6, json.dumps(body, indent=1))
+
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7"))
+    attest(repo, "run-canary-c8", fresh(repo, canary="C8", supersedes_canary=["C7"]))
+    clone = repo / ".agent-harness/runs/run-canary-c7-clone/artifacts/ATTESTATION.json"
+    write(clone, json.dumps({
+        "artifact_class": "CANARY_ATTESTATION",
+        "canary": "C7",                       # reuses an AUTHORISED id
+        "supersedes_canary": ["C6"],
+        "start_hook_sha256": digest((repo / START_HOOK).read_text(encoding="utf-8")),
+        "stop_hook_sha256": digest((repo / STOP_HOOK).read_text(encoding="utf-8")),
+    }, indent=1))
+
+    errors = C.check(repo)
+    assert any("THIS attestation is not itself backed" in m for m in errors), errors
+    assert any("C6 is STALE" in m for m in errors), (
+        "C6 must still be measured; if the clone retired it, the guard did nothing", errors)
+    assert not any("is attested by 2 live files" in m for m in errors), (
+        "the duplicate-id rule must NOT be what fails this, or it proves nothing", errors)
+
+
+def test_f_r13_a_backed_document_may_still_retire(repo: Path) -> None:
+    """The control: per-document authority must not break ordinary supersession."""
+    write(repo / START_HOOK, "# start hook v2\n")
+    attest(repo, "run-canary-c6", fresh(repo, canary="C6"))
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", supersedes_canary=["C6"]))
+    assert C.check(repo) == []
+
+
+def test_f_r13_a_canary_naming_a_commit_that_lacks_its_bytes_is_refused(repo: Path) -> None:
+    """Round 13, F-R13-05. C8 declared a commit that did not contain what it attested.
+
+    The checker compared attested digests against the WORKING TREE and never
+    against the declared commit, so a provenance field could name any commit at
+    all. C8 named one where the stop hook still held the value C8 itself said had
+    gone stale.
+
+    The staleness control matters here: the attestation below is FRESH against
+    the working tree, so the only thing that can refuse it is provenance. Without
+    that the test would pass under the broken code too.
+    """
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="HEAD"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    first = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                           text=True, check=True).stdout.strip()
+    # Move the attested file, so `first` no longer contains the attested bytes,
+    # and re-point the attestation at that earlier commit.
+    write(repo / START_HOOK, "# start hook v2\n")
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = first
+    body["start_hook_sha256"] = digest("# start hook v2\n")   # FRESH vs working tree
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert not any("is STALE" in m for m in errors), ("control: it must be fresh", errors)
+    assert any("but at that commit the file hashes to" in m for m in errors), errors
+
+
+def test_f_r13_pending_commit_is_legal_in_the_commit_that_seals_it(repo: Path) -> None:
+    """The convention must be satisfiable, or nobody can ever seal a canary.
+
+    Requiring a real hash in the sealing commit is impossible: the pin names that
+    commit, which does not exist while it is being written. PENDING_COMMIT is
+    therefore legal exactly there, and the obligation lands on the NEXT commit.
+    """
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    assert C.check(repo) == []
+
+
+def test_f_r13_pending_commit_must_be_pinned_once_head_moves_on(repo: Path) -> None:
+    """...and it may not stay pending forever, or the field verifies nothing."""
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    write(repo / "unrelated.txt", "a later commit that does not touch the canary\n")
+    commit_all(repo)
+    assert any("still declares head_commit 'PENDING_COMMIT'" in m for m in C.check(repo)), C.check(repo)
+
+
+# --------------------------------------------------------------------------
+# F10-DESIGN-001 (third-party design re-audit, HIGH). Verifying blobs at a named
+# commit proves only that SOME commit once held those bytes. `git show` reads
+# unreachable objects, so an amended-away or rebased-away commit passed; and
+# nothing tied the named commit to the attestation, so a commit that predated it
+# passed too. The auditor demonstrated all three across 13 synthetic repos.
+# --------------------------------------------------------------------------
+
+
+def test_f10_design_001_a_commit_outside_accepted_history_is_refused(repo: Path) -> None:
+    """An amended-away commit stays readable and must still be refused.
+
+    The discriminator is that the attested digests DO match at the named commit:
+    only the ancestry check can fail this, so it cannot pass for the wrong reason.
+    """
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    orphaned = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                              text=True, check=True).stdout.strip()
+    # Amend: `orphaned` is now unreachable but `git show` still reads it.
+    subprocess.run(["git", "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "--amend", "-m", "amended"], cwd=repo,
+                   check=True, capture_output=True)
+    assert subprocess.run(["git", "cat-file", "-e", orphaned], cwd=repo).returncode == 0, (
+        "precondition: the amended-away commit must still be readable, or this proves nothing")
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = orphaned
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert any("not an ancestor of HEAD" in m for m in errors), errors
+    assert not any("is STALE" in m for m in errors), ("control: digests still match", errors)
+
+
+def test_f10_design_001_a_commit_predating_the_attestation_is_refused(repo: Path) -> None:
+    """C8's actual defect: a commit that could not have carried the attestation.
+
+    The named commit is a genuine ancestor of HEAD and holds matching blobs, so
+    neither the ancestry check nor the digest check can fail it. Only the
+    introducing-commit relation can, which is what makes this discriminating.
+    """
+    import subprocess
+
+    git_repo(repo)
+    write(repo / "unrelated.txt", "a commit that predates the attestation\n")
+    commit_all(repo)
+    earlier = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                             text=True, check=True).stdout.strip()
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit=earlier))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    errors = C.check(repo)
+    assert any("was introduced at" in m for m in errors), errors
+    assert not any("not an ancestor" in m for m in errors), (
+        "the earlier commit IS an ancestor; if that fired, the case proves nothing", errors)
+    assert not any("is STALE" in m for m in errors), ("control: digests still match", errors)
+
+
+def test_f10_design_001_the_introducing_commit_is_accepted(repo: Path) -> None:
+    """The control. Pinning the commit that introduced the attestation is legal,
+    and must stay legal, or the convention is unsatisfiable."""
+    import subprocess
+
+    git_repo(repo)
+    attest(repo, "run-canary-c7", fresh(repo, canary="C7", head_commit="PENDING_COMMIT"))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    introduced = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                                text=True, check=True).stdout.strip()
+    path = repo / ".agent-harness/runs/run-canary-c7/artifacts/ATTESTATION.json"
+    body = json.loads(path.read_text(encoding="utf-8"))
+    body["head_commit"] = introduced
+    write(path, json.dumps(body, indent=1))
+    commit_all(repo, *retained(repo, "run-canary-c7"))
+    assert C.check(repo) == []

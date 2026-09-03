@@ -1,0 +1,176 @@
+{
+ "artifact_class": "OPERATOR_OBSERVATION_NOT_EVIDENCE",
+ "recorded_at": "2026-07-29T10:08:06+00:00",
+ "subject": "D-069 r4 PHASE 4 domain holdout (order 60, y_max 30) appears stalled",
+ "observation": "The domain-holdout integration has not advanced in N since eval 351. Max N reached is 0.1813; the terminal condition requires N ~ 7.94. Between eval 351 and eval 1501 the reported N oscillates among 0.1628 / 0.1813 / 0.1629, which is the signature of repeated BDF step rejection rather than slow progress. The 48/24 base run passed N=0.163 at eval 451 and reached N=1.90 by eval 1501.",
+ "no_intervention": "The contract and driver are frozen and the process has NOT been touched: not killed, not restarted, not reconfigured. Per contract section 7 a wall-budget breach is a mechanical exit 20 with verdict ERROR and no checks block; phase front-loading preserves the already-flushed base, recompute and mutant evidence. That outcome, if it occurs, is mechanical and is not a scientific verdict.",
+ "why_this_may_be_real_information": "T13 was pre-registered as genuinely unknown: the contract states that whether the N48 representation is converged tightly enough for the order-60 companion to land inside 2e-4 could not be known before the run. A stall is a different outcome from a band miss, and is information about the density-matched order-60 / y_max-30 configuration itself, not about the base result.",
+ "measured_cost_note": "60/30 ran at 4.275 s/eval, against the contract's unbacked assertion of 4.754 s/eval.",
+ "budget": {
+  "frozen_wall_budget_s": 64800.0,
+  "consumed_at_observation_s": 22542.2
+ },
+ "phases_already_flushed": [
+  "base",
+  "recompute",
+  "mutants"
+ ],
+ "head_commit": "d94270fecedb3b6dca7276f27bae91da348cdf16",
+ "domain_holdout_trace": [
+  {
+   "t_s": 15865.2,
+   "eval": 1,
+   "N": 0.0
+  },
+  {
+   "t_s": 16079.3,
+   "eval": 51,
+   "N": 0.0
+  },
+  {
+   "t_s": 16291.7,
+   "eval": 101,
+   "N": 0.0
+  },
+  {
+   "t_s": 16506.5,
+   "eval": 151,
+   "N": 0.0
+  },
+  {
+   "t_s": 16722.3,
+   "eval": 201,
+   "N": 0.0
+  },
+  {
+   "t_s": 16939.4,
+   "eval": 251,
+   "N": 0.0
+  },
+  {
+   "t_s": 17167.4,
+   "eval": 301,
+   "N": 0.0007
+  },
+  {
+   "t_s": 17397.2,
+   "eval": 351,
+   "N": 0.1628
+  },
+  {
+   "t_s": 17622.4,
+   "eval": 401,
+   "N": 0.1628
+  },
+  {
+   "t_s": 17851.1,
+   "eval": 451,
+   "N": 0.1628
+  },
+  {
+   "t_s": 18074.7,
+   "eval": 501,
+   "N": 0.1628
+  },
+  {
+   "t_s": 18302.3,
+   "eval": 551,
+   "N": 0.1628
+  },
+  {
+   "t_s": 18523.2,
+   "eval": 601,
+   "N": 0.1628
+  },
+  {
+   "t_s": 18738.0,
+   "eval": 651,
+   "N": 0.1628
+  },
+  {
+   "t_s": 18952.8,
+   "eval": 701,
+   "N": 0.1628
+  },
+  {
+   "t_s": 19173.7,
+   "eval": 751,
+   "N": 0.1813
+  },
+  {
+   "t_s": 19394.9,
+   "eval": 801,
+   "N": 0.1813
+  },
+  {
+   "t_s": 19621.3,
+   "eval": 851,
+   "N": 0.1813
+  },
+  {
+   "t_s": 19846.2,
+   "eval": 901,
+   "N": 0.1813
+  },
+  {
+   "t_s": 20070.6,
+   "eval": 951,
+   "N": 0.1629
+  },
+  {
+   "t_s": 20296.3,
+   "eval": 1001,
+   "N": 0.1629
+  },
+  {
+   "t_s": 20523.5,
+   "eval": 1051,
+   "N": 0.1629
+  },
+  {
+   "t_s": 20755.4,
+   "eval": 1101,
+   "N": 0.1629
+  },
+  {
+   "t_s": 20982.2,
+   "eval": 1151,
+   "N": 0.1629
+  },
+  {
+   "t_s": 21202.5,
+   "eval": 1201,
+   "N": 0.1629
+  },
+  {
+   "t_s": 21425.0,
+   "eval": 1251,
+   "N": 0.1629
+  },
+  {
+   "t_s": 21647.2,
+   "eval": 1301,
+   "N": 0.1629
+  },
+  {
+   "t_s": 21873.9,
+   "eval": 1351,
+   "N": 0.1629
+  },
+  {
+   "t_s": 22095.6,
+   "eval": 1401,
+   "N": 0.1629
+  },
+  {
+   "t_s": 22318.1,
+   "eval": 1451,
+   "N": 0.1629
+  },
+  {
+   "t_s": 22542.2,
+   "eval": 1501,
+   "N": 0.1629
+  }
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+ "assignment_id": "A-REPLAY-CONTRACT",
+ "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+ "agent_id": "fable-main-contract",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-d047-ownerb-target-replay",
+  "assignment_id": "A-REPLAY-CONTRACT",
+  "context_version": "c5fed0457a006ec11cce708bd84539a79fb0a68fed2d2de6a72560d53192243e",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:d9ce622bdb572fb86922cae6e1718660f41cc181559f79cc9370dfaf8b6f54a9",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-CONTRACT.json",
+ "started_at": "2026-07-27T13:20:00+00:00",
+ "completed_at": "2026-07-27T13:35:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0"
+ },
+ "commands": [
+  "author contract + replay script",
+  "py_compile + helper-availability scan",
+  "freeze commit 9c99ecf before first output"
+ ],
+ "artifacts": [
+  "docs/audit/BD622_D047_ownerb_target_replay_contract_2026-07-27.md",
+  "scripts/audit/d047_ownerb_r6_target_replay.py"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-REPLAY-CONTRACT-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "The OWNER-B replay contract was prospectively frozen at commit 9c99ecf before any replay output: frozen cell (GL48-Y24, default config, T=10 MeV, D-028 e-split state plus W6 S-split identity state), external mirror construction with caller-built reverse member, derived one-half closure, nine gated checks T-A..T-H with thresholds, decision rule, and explicit D-028 non-reopen scoping (the recorded D-028 FAIL and bytes stand; the owner grant authorizes a new experiment, answering the D-044 constructional-covariance objection via derived quotient, bitwise live-code identity, localization, and negative control). Contract sha256 8f29a2b0..., script sha256 c90a7e4d....",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "freeze commit 9c99ecf"
+   ],
+   "evidence_fingerprint": "sha256:8f29a2b09c96f307e4f01ae130bfca1120730c4532e9c2b0540573bfd433ad1c",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "git show 9c99ecf --stat"
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-d047-ownerb-target-replay/results/A-REPLAY-CONTRACT.json"
+ ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "rabbit-d080a-wolfram-symbolic/v1",
+  "date": "2026-09-02",
+  "execution": "stateless Wolfram Language evaluator",
+  "native_repository_ci_execution": false,
+  "source_script": "scripts/audit/d080a_symbolic_checks.wl",
+  "assumptions": {
+    "temperature": "T > 0",
+    "electron_mass": "m >= 0",
+    "incoming_neutrino_momentum": "p1 > 0",
+    "incoming_angle": "-1 <= mu <= 1",
+    "smooth_kinematic_branch": "s > 0 and lambda > 0",
+    "electromagnetic_thermodynamics": "rho'(T)=chi(T), pressure'(T)=(rho(T)+pressure(T))/T"
+  },
+  "residuals": {
+    "dp2": 0,
+    "de2": 0,
+    "ds": 0,
+    "dlambda": 0,
+    "dk": 0,
+    "quadrature_weight": 0,
+    "fermi_dirac_temperature": 0,
+    "second_rho_integrand": 0,
+    "temperature_row_quotient_rule": 0
+  },
+  "claim_ceiling": "symbolic formula closure only; no native Wolfram CI replay and no collision, RHS, solver, trajectory, endpoint, or gate result"
+}

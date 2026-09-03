@@ -1,0 +1,12 @@
+{
+ "id": "2026-07-29-COORDINATOR-DIRECTED-AN-INDEPENDENCE-BREACH",
+ "artifact_class": "PROCESS_FINDING",
+ "what": "The round-7 obligations assignment is `independence_mode: blind-results` with `allowed_sibling_results: []`. The coordinator's spawn prompt nonetheless instructed the reviewer to model its envelope on the admitted round-6 sibling result file.",
+ "who": "the coordinator (main writer), not the reviewer",
+ "what_saved_it": "The reviewer refused, modelled on RESULT_ENVELOPE.json and validate_result_contract instead, and DECLARED the deviation in its own `unresolved` block rather than silently complying or silently disobeying.",
+ "why_it_matters": "Every prior round's spawn prompt carried the same instruction. Independence is a property of the assignment contract, and the coordinator is not entitled to widen it in prose. Had the reviewer complied, its verdict would have been contaminated by the sibling it was supposed to be blind to -- and nothing in the harness would have caught it, because the contract is enforced on the RESULT, not on the spawn prompt.",
+ "rule": "Spawn prompts must cite only `RESULT_ENVELOPE.json` and the assignment's own declared `required_inputs`. Never name a sibling result as a model unless `allowed_sibling_results` lists it.",
+ "status": "OPEN -- prompt pattern to be corrected for round 8 onward",
+ "recorded_at": "2026-07-29T12:19:42+00:00",
+ "head_commit": "cef6f00581a10ca5b6dd521ad064e2344cc54b81"
+}

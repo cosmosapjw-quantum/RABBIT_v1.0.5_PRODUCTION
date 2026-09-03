@@ -1,0 +1,368 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260730-f10-d070-r4-adjudication",
+ "assignment_id": "A-D070-R4-ADJUDICATION",
+ "context_version": "fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c",
+ "agent_id": "r4-adjudicator",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260730-f10-d070-r4-adjudication",
+  "assignment_id": "A-D070-R4-ADJUDICATION",
+  "context_version": "fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:f79ae03e65fa7ecc1c5552c85bb409983cea0e865e7612a8a1a46dd138c8ba9b",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "fail",
+ "result_path": ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json",
+ "started_at": "2026-07-30T07:27:20Z",
+ "completed_at": "2026-07-30T07:43:26Z",
+ "tool_versions": {
+  "python": "3.12.3 (venv/bin/python)",
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "git_head_at_adjudication": "ce737a732656ee285fa7b0e6cd00048dea4491e0",
+  "note": "read-only analysis; no integration was run; exact token-use counter UNAVAILABLE"
+ },
+ "commands": [
+  "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260730-f10-d070-r4-adjudication/assignments/A-D070-R4-ADJUDICATION.json  -> VERIFY: PASS",
+  "sha256sum src/rabbit/decoupling/_independent_noqke.py -> 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a (unchanged)",
+  "sha256 of r4_trajectory_report.json -> fbadb3e3dbf44509694d8b482915a98d78857d1090420181191ee191350044f2 (matches ledger pin)",
+  "sha256 of r4_trajectory_stdout.log -> 28c541b35f68469cdda7f981c9949e8d4631fbc692b003a3c4bdce0d3462d93c (matches ledger pin)",
+  "bitwise field comparison r4 vs r3 vs r2 vs D-056 base blocks (python ==)",
+  "independent T14 re-derivation of W_nu and W_tot from stored cloglog + T_gamma at N=1,4,7",
+  "cloglog -> occupation exactness sweep over all 31 checkpoints (4464 values)",
+  "reproduction of T2-T11 and T14 predicate values against the frozen bands",
+  "domain-phase eval/N/wall extraction from r4_trajectory_stdout.log and rate extrapolation",
+  "git log -1 --format='%cI' 0fb94f2 -> 2026-07-29T12:49:12+09:00"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-D070-01",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "QUESTION 1 -- the ERROR is genuinely MECHANICAL, and I uphold the coordinator on this point. The exit path is uniquely identified from the bytes. `Deadline.check` (_trajectory_core.py:71-73) is the only `raise TimeoutError` in the driver tree, its message is exactly 'frozen wall budget exceeded', and d069_independent_trajectory_r4.py:586-589 is the only handler that formats `f\"wall budget: {exc}\"`. The report's `error` field is character-for-character 'wall budget: frozen wall budget exceeded', so the process left through that handler and returned 20. `evaluate()` (:609) and the verdict expression `all(c['ok'] for c in checks.values())` (:614) sit BELOW the try/except and are unreachable on that path: ZERO of the fourteen T-predicates was constructed, let alone evaluated. The report has no top-level `checks` key (top-level keys are exactly anchor_log_sha256, base, claim_id, completed_at, config, contract, error, module_sha256, mutants, recompute, rust_spectrum_sha256, setups, started_at, verdict, versions, wall_seconds). NOTE for readers: the report DOES contain `recompute.checks`, which is the T14 sub-block and NOT the contract's checks block. No physics predicate contributed to the VERDICT. The distinction that matters and that the ledger states correctly: the exit is mechanical, but the CAUSE of the budget consumption is numerical -- BDF step-size collapse in the order-60/y_max-30 companion (F-D070-09). The alternative failure channel is excluded by the same evidence: an occupation excursion would have raised IndependentNoQkeError and been caught at :590-593, writing `error: \"IndependentNoQkeError: occupation left (0, 1)\"`, which is not what the report says.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:552-593,609,614",
+    "scripts/audit/_trajectory_core.py:61-73,181-188",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json (error, verdict, absent `checks`)"
+   ],
+   "evidence_fingerprint": "sha256:8026fb1135ee6fe2b2a97bed8b08f5093a78388300c89beb70bdf336ace50494",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "grep -n 'raise TimeoutError' scripts/audit/_trajectory_core.py scripts/audit/d069_independent_trajectory_r4.py",
+    "python -c \"import json;d=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json'));print(sorted(d));print(d['error'],d['verdict'])\""
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-02",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "medium",
+   "statement": "QUESTION 2 (a) -- base endpoint verified bitwise, but the coordinator's scope label is wrong. I compared the r4 base against the preserved r3, r2 and D-056 reports field by field with `==` on the decoded doubles. All four agree bitwise on the endpoint: N_eff 3.034054308076679, N_end 7.936698865363719, t_end_s 52678.731916604454, T_gamma_end 0.004999999999999998, T_cm_end 0.003573843068659525, gamma_heating_ratio 1.3990541565316676 (evals 3694 in r2/r3/r4; D-056 records no eval count). r4 and r3 agree bitwise ADDITIONALLY on: all six `blocks`, all four `enhancements`, all 31 `residual_rows` (whole list equality), `endpoint_spectrum.f_e/f_mu/f_tau/grid_nodes`, `mapped_at_rust_nodes` for all three flavours (which also equals r2), `rejections` {min 919848, max 972552, final 919848, count 3694}, `window` {total 11, active 4, clean 4}, max_R_total 6.965641112523105e-05, max_R_transfer_window 0.08357468524280595, max_roundoff 0.0, tail_last_node_fraction 1.2430778875527049e-08, solution_t_end 7.936698865363719, and both mutant blocks in full. DISAGREEMENT with the 2026-07-30 ledger row, which calls this 'a fourth independent execution'. It is not four independent measurements. It is one deterministic computation -- the same frozen module 760a7c04, the same rtol/atol, single-threaded BLAS, the same host -- re-executed four times through four different driver files. What bitwise identity establishes is (i) determinism and (ii) that the d056/d062/d063/d069+_trajectory_core driver stacks are numerically equivalent on this path. It adds ZERO new independent-validation weight to C-F10-INDEPENDENT beyond what D-056 already carried; a repeated deterministic computation cannot corroborate its own physics. Admissible scope: reproducibility and driver equivalence. Not admissible as corroboration of correctness.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#base.endpoint",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json#base",
+    ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json#base",
+    ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/raw_logs/traj_report.json#endpoint"
+   ],
+   "evidence_fingerprint": "sha256:235950ea0f4898f33485e4b2f0ff1f5a3eb4053887151e8a3f6ccae2030eba8c",
+   "counterevidence_refs": [
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 D-069 EXECUTION row: 'a fourth independent execution'"
+   ],
+   "reproduction": [
+    "python -c \"import json;a=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json'))['base']['endpoint'];b=json.load(open('.agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json'))['base']['endpoint'];print(a==b)\""
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-03",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "QUESTION 2 (b) -- T14 recomputed by me from the retained bytes, and it holds at a STRICTLY STRONGER scope than the driver ran it. I did not trust the reported W_nu_rel. Working only from the JSON, I rebuilt rho_nu = 2 T_cm^4 / (2 pi^2) * sum_f sum_i w_i y_i^3 f_{f,i} and W_nu = e^{4N} rho_nu at N = 1, 4, 7 using `base.endpoint_spectrum.grid_weights` / `grid_nodes` and the stored checkpoint states, and compared against `base.residual_rows[*].W_nu`. Relative deviation is EXACTLY 0.0 at all three points (W_nu = 17283.218948121572, 17367.712360818492, 17370.05000869033). Three strengthenings the driver did not perform: (1) I re-derived the occupations from the stored `cloglog` via -expm1(-exp(c)) rather than reading the stored `occupation` field -- all 4464 stored occupation values (31 checkpoints x 3 x 48) reproduce EXACTLY, 0 mismatches; (2) I reconstructed T_cm from N alone (10 exp(-N)) instead of reading the stored field; (3) I also re-derived W_tot = e^{4N}(rho_nu + rho_EM) using the stored `T_gamma_mev` through the frozen module's `electromagnetic_eos_adaptive`, and it too reproduces `residual_rows[*].W_tot` bitwise at all three checkpoints. CONCLUSION: F-D065-04 item 3 (recomputable full checkpoints) is genuinely and fully discharged by the retained r4 bytes. This is the one D-065 obligation that this run does close on the evidence, and it closes cleanly.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#base.checkpoint_states",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#base.residual_rows",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#recompute",
+    "src/rabbit/decoupling/_independent_noqke.py:149-160,263-331"
+   ],
+   "evidence_fingerprint": "sha256:e2b23b7cac69ff8850cbdbff2de7b076712e85f69d8c2ceb67a89602a0784582",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "PYTHONPATH=src venv/bin/python - <<'P'\nimport json,math,numpy as np\nfrom rabbit.decoupling import _independent_noqke as ind\nd=json.load(open('.agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json'))['base']\nw=np.array(d['endpoint_spectrum']['grid_weights']);y=np.array(d['endpoint_spectrum']['grid_nodes']);w3=w*y**3\ns={round(r['N'],6):r for r in d['residual_rows']}\nfor nk in (1.,4.,7.):\n st=[x for x in d['checkpoint_states'] if round(x['N'],6)==nk][0]\n occ=-np.expm1(-np.exp(np.array(st['cloglog'])));tcm=10*math.exp(-nk)\n rho=2*tcm**4/(2*math.pi**2)*float(np.sum(w3[None,:]*occ));sc=math.exp(4*nk)\n eos=ind.electromagnetic_eos_adaptive(float(st['T_gamma_mev']))\n print(nk,abs(sc*rho/s[nk]['W_nu']-1),abs(sc*(rho+eos.rho)/s[nk]['W_tot']-1))\nP"
+   ],
+   "confidence": 0.95,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-04",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "medium",
+   "statement": "DEFECT IN THE FROZEN ARTIFACT PAIR -- the driver does not implement the T14 its own frozen contract specifies, and the reported `worst_relative_deviation` is partly vacuous. Contract section 6 (T14) reads: 're-derives `W_nu` and `W_tot` from the stored state alone and requires agreement to `1e-12` relative'. `recompute_from_stored` (d069:297-349) re-derives W_nu ONLY; W_tot appears nowhere in the function or in the report's `recompute.checks` rows (keys are exactly N, T_cm_rel, W_nu_recomputed, W_nu_rel, W_nu_streamed, available). The second clause it does carry is a tautology: `t_cm_rel = abs(t_cm/(setup.t_start*exp(-n_k)) - 1)` (d069:332) compares the stored field against the very expression that WROTE it (_trajectory_core.py:333, `'T_cm_mev': float(setup.t_start*np.exp(-n_k))`), so it is 0 by construction and tests nothing -- yet it is folded into `worst_relative_deviation`, the statistic the ledger quotes. Separately, the driver's module docstring (d069:26-28) claims T14 proves sufficiency 'by re-deriving W_nu, W_tot, and R_total from the stored state alone'. R_total is NOT re-derivable from the retained checkpoints at all and never could be: `coupled_residuals` needs dense-output states at N +/- h_fd = N +/- 0.02, and checkpoints are stored only on the 0.25 grid. SUBSTANTIVELY HARMLESS -- I executed the missing W_tot half myself in F-D070-03 and it holds bitwise -- but it is a frozen-contract-versus-frozen-driver divergence, the failure class this chain has now produced repeatedly, and it was not caught by the pre-freeze review. RELATED DISAGREEMENT with the ledger: it says T14 was established 'from the stored 146-component state alone'. The driver used the DERIVED 144-value `occupation` field and the DERIVED `T_cm_mev`, not the 146-component integrator state (144 cloglog + T_gamma + t). The stronger statement the ledger makes is true only because I performed it here, not because the driver did.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "scripts/audit/d069_independent_trajectory_r4.py:26-28,297-349",
+    "scripts/audit/_trajectory_core.py:314-338,280-311",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 6 (T14)",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#recompute.checks"
+   ],
+   "evidence_fingerprint": "sha256:a0541456029d335b573f93b12a40469a08294ea5daa0f6133597d5878ad5186b",
+   "counterevidence_refs": [
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 row: 'from the stored 146-component state alone'"
+   ],
+   "reproduction": [],
+   "confidence": 0.97,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-05",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "medium",
+   "statement": "QUESTION 2 (c) -- both mutant kill modes confirmed from the bytes, bitwise identical to the preserved r3, but the two kills are NOT of equal evidential quality and that asymmetry should travel with the numbers. M2_qem_sign: PHYSICS kill. R_transfer = 2.007633454833685 / 2.0009215998173002 / 2.011284806535093 at N = 2.05 / 2.10 / 2.15, all three `active`, max 2.011284806535093 against KILL_R_TRANSFER = 1.0 -- killed by a factor of two with R_total ~1.8e-3 at the same points, on 373 evaluations. This is the coupled-energy residual doing the discriminating work it was designed for. M1_pair_sign: SOLVER-FAILURE kill. mode = 'solver failure: Required step size is less than spacing between numbers.', 1853 evaluations, and the `max_R_transfer` field is ABSENT from the M1 block because no residual was ever computed. The sign flip destabilised BDF before any physics predicate saw it. Contract section 6 (T10 caveat) pre-authorises this and the driver surfaces the mode exactly so an adjudicator can see it, so this is not a contract violation -- but the honest reading is that the mutant pair kills one sign channel by measured physics and the other by numerical breakdown, and only the former is evidence about the collision operator's sign structure. The ledger states both modes correctly and I uphold it here.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#mutants",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json#mutants",
+    "scripts/audit/d069_independent_trajectory_r4.py:352-391",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 6 (T10 caveat)"
+   ],
+   "evidence_fingerprint": "sha256:350ecd872128b605678f18129dd1e0d60aa64fca71a9cefc7c40efb491bf506e",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-06",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "critical",
+   "statement": "QUESTION 2 (d) -- ANSWER: NO. An admissible measurement recorded outside a `checks` block CANNOT support any gate movement under the frozen contract, and this is settled by the contract's own prospective text, not by my judgement. Contract section 7: 'a breach yields no `checks` block at all -- phase front-loading preserves the evidence, not the verdict.' The driver's verdict is the conjunction `all(c['ok'] for c in checks.values())` over all fourteen checks (d069:614); a partial conjunction is not a verdict, and two of the fourteen are STRUCTURALLY unevaluable here because their input phases produced no report block at all (no `rtol_holdout` key: T12; no `domain_holdout` key: T13). For completeness and to show the surviving evidence is not being hidden, I reproduced every predicate the retained bytes CAN carry, against the frozen bands: T2 +1.8324492279564453e-05/3e-4; T3 +5.5258786355594225e-06/1e-4; T4 +1.0974295249034185 s/5 s; T5 +1.499291558939575e-04/3.5e-4, -7.17489314006059e-06/1e-4, +0.6331635515525704 s/5 s; T6 e 9.367803021176346e-3 > mu 3.8482788386520195e-3 > 0 with heavy gap 4.694449080781416e-10/1e-6; T7 rel 6.04e-6/1.59e-5/1.80e-5/2.02e-7/4.44e-8 all /1e-3 and split 1.8018574409417454e-05/2e-4; T8a max|rel| 6.12405701359009e-05/1e-3 and split 1.8018574409861543e-05/2e-4; T8b 2.0857882477340022e-04/1e-3; T8c 1.5881626368027338e-03/2e-3; T9 max_R_total 6.965641112523105e-05/5e-4 with 4/4 clean window checkpoints; T10 both killed; T11 tail 1.2430778875527049e-08/5e-7, rejections [919848, 972552] inside [8.5e5, 1.05e6], roundoff 0.0/1e-10; T14 0.0/1e-12. Every one lands inside its band. THAT CHANGES NOTHING. It is post-output evaluation performed by an adjudicator on data already seen -- the precise practice F-D065-04 item 1 punished when D-063 did it to T8 -- and I record it as REPRODUCTION, explicitly not as a verdict and explicitly not as grounds for movement. A further gap: T1 cannot even be reproduced, because `base_reached` and `stats.occ_ok` are never serialised; they survive only as the stdout line 'base: status=1 evals=3694' and as an inference from the absence of an IndependentNoQkeError. A gate that turns on an unserialised in-memory boolean is a retention defect in its own right and should be closed in any reissue.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md sections 6-7",
+    "scripts/audit/d069_independent_trajectory_r4.py:394-497,609-620",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#base",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#mutants",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#recompute",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log:76"
+   ],
+   "evidence_fingerprint": "sha256:76a5db895b9a920c8cd1a9e7c313dbcdbb414efd192448e135b12e4bfa460a38",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.97,
+   "unresolved": [
+    "T1_solver is not reproducible from the report alone: base_reached / occ_ok are unserialised."
+   ]
+  },
+  {
+   "finding_id": "F-D070-07",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "critical",
+   "statement": "QUESTION 3 -- NO MOVEMENT, IN EITHER DIRECTION, FOR EITHER OBJECT. Answered separately per direction as asked. G-F10-INDEPENDENT-FLRW upward (FAIL -> PASS): NO. There is no verdict; T12 and T13 were never evaluated; F-D065-04 items 4 (evolved beyond-domain enclosure) and 5 (holdout axes) are entirely undischarged. G-F10-INDEPENDENT-FLRW downward (a NEW or worsened FAIL): NO. The gate is already FAIL on D-065 F-D065-04 and r4 supplies no new grounds for that FAIL; nothing in r4 contradicts anything in the preserved D-063 payload -- it reproduces it bitwise. The gate stays FAIL on its EXISTING basis, and any record that implies r4 re-established the FAIL would be wrong. C-F10-INDEPENDENT upward: NO, for the same reasons plus F-D070-02 (a repeated deterministic computation adds no corroborative weight). C-F10-INDEPENDENT downward: NO -- no retraction of previously admitted evidence is warranted. THE ONE THING THAT DOES MOVE is neither the gate nor the claim: r4 FALSIFIES a feasibility assumption written into the D-069 contract itself. Sections 2, 4 and 6 treat the density-matched `build_independent_grid(60, 30.0)` companion as a measurable instrument ('the density-matched companion run at order 60 / y_max 30 still has its first node at 0.0118482'; T13 'Gates: the companion reaches the terminal condition'). It does not reach it and, on measurement, cannot (F-D070-09). That is a correction to the remedy path, not to the claim, the gate, or any band. SECOND-ORDER NOTE that an adjudicator should not leave silent: r4's answer to F-D065-04 item 1 is a REFRAMING, not a resolution. The disputed full-domain sup 2.0800641747316935e-3 is still above the 2e-3 band D-062 gated it against; r4 de-gates it prospectively and gates T8a/T8b/T8c instead -- quantities the contract itself admits are provably insensitive to the disputed nodes (section 6: 'T8b is not a strong test of those nodes'). The pre-freeze review flagged exactly this as the single largest residual adversarial risk. Because no verdict issued, that exposure remains untested and travels forward to any reissue.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md sections 2,4,6,8",
+    "docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md#F-D065-04",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#base.spectral.sup_rel_full_domain",
+    ".agent-harness/runs/run-20260729-f10-d069-freeze-review/results/A-D069-FREEZE-REVIEW.json"
+   ],
+   "evidence_fingerprint": "sha256:09657ec3568d80abcc2c3ffb893a3220547ad1246108497444f4ad81335ab2f0",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.96,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-08",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "high",
+   "statement": "DISAGREEMENT with the ledger's headline framing of T13. The 2026-07-30 row states '**T13 is a negative result about the companion configuration, and it is preserved as one.**' There IS no T13 result, negative or otherwise. The report contains no `domain_holdout` key; `domain_reached` was never computed, because the TimeoutError propagated out of `core.run_integration` (d069:570-573) before it could return; `evaluate()` was never called; the `enclosure` dict (d069:595-608) was never built. Contract section 6's clause 'A miss is real information about the representation and stands as a preserved FAIL' refers to a run that REACHES the terminal condition and lands outside the 2e-4 band. A non-completion under the wall budget is contract section 7's mechanical class, which the same ledger row correctly invokes two sentences earlier. Calling the same event both 'mechanical, NOT a scientific verdict' and 'a T13 negative result ... preserved as one' is internally inconsistent, and the second half is the half that could later be mistaken for a scientific verdict on a gated predicate. The SUBSTANCE of the stall claim is nevertheless fully supported by admissible retained bytes -- I re-derived every number from `r4_trajectory_stdout.log`, whose sha256 I recomputed as 28c541b35f68469cdda7f981c9949e8d4631fbc692b003a3c4bdce0d3462d93c, matching the ledger's pin (report sha256 likewise recomputed and matched: fbadb3e3dbf44509694d8b482915a98d78857d1090420181191ee191350044f2). So the FINDING stands; the LABEL does not. Correct label: the domain-holdout PHASE produced an operational non-completion observation; T13 is UNEVALUATED. Minor related point: the row also cites `artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json` in support, an artifact whose own first field is `\"artifact_class\": \"OPERATOR_OBSERVATION_NOT_EVIDENCE\"`. Citing a self-declared non-evidence artifact in a Result column is unnecessary here, since stdout carries the whole of it.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 D-069 EXECUTION row",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md sections 6-7",
+    "scripts/audit/d069_independent_trajectory_r4.py:570-576,595-613",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json"
+   ],
+   "evidence_fingerprint": "sha256:fabe19064b05c745bcf39ee4ac086d93ec50f0cd8a0eebec63f7b78dc21980bc",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.96,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-09",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "critical",
+   "statement": "QUESTION 4 (a) -- the T13 companion configuration is MEASURED non-viable, by three to four orders of magnitude, not by a budget margin. All numbers re-derived by me from `r4_trajectory_stdout.log`. Domain phase: starts t = 15860.7 s, killed at t = 64801.9 s, so 48941.2 s = 13.5948 h, 11051 evaluations, 4.4287 s/eval on the phase-wall denominator (4.4211 s/eval eval-to-eval). N first reaches 0.1628 at eval 351 (t = 17397.2 s) and stands at 0.1653 at eval 11051 (t = 64718.9 s): dN = 0.0025 over 10700 evaluations and 47321.7 s = 13.145 h, a rate of 2.34e-7 N/eval. The terminal condition is N = 7.9367. Extrapolating at the observed rate, the remaining 7.7714 requires ~3.33e7 further evaluations = ~1.47e8 s = ~4.7 YEARS of wall time on this host: ~2270x the entire 18 h budget, ~3010x the evaluations this run already spent, and ~8450x (3.93 orders of magnitude) the contract's 3938-evaluation projection -- which is the reading under which the ledger's 'four orders of magnitude away' is derivable, though the row does not say from what. I UPHOLD the ledger's central diagnosis: the cost model is not what failed. Per-eval cost was CONSERVATIVE in the safe direction on every phase (base measured 2.6579 s/eval vs 2.807 asserted, 2.727 h vs 2.9 h projected; mutants 1.678 h vs 1.6 h projected; domain 4.4287 vs 4.754 asserted). What failed is the unstated step-COUNT assumption that an order-60 companion would need an evaluation count comparable to the order-48 base. MINOR DISAGREEMENT: the row's headline '`N` reached 0.1653 ... **2.08 %**' understates the run. The MAXIMUM N observed in the domain phase is 0.1813 (evals 751-901, t = 19173.7-19846.2 s), i.e. 2.28 %; 0.1653 is merely the LAST logged value, and the same row quotes 0.1813 three clauses later as part of the oscillation signature. The row is internally inconsistent about which number was 'reached'. This does not change the conclusion by any margin that matters, and I flag it only because the percentage is the row's headline quantity.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#setups.domain",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 7",
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 row"
+   ],
+   "evidence_fingerprint": "sha256:a2902372e6cf1cdde88120817ff7136689b1b903e00c4f1445ffd3bb1378516d",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "grep -c 'eval ' .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    "awk '/domain-holdout: BDF/,0' .agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log | tail -3"
+   ],
+   "confidence": 0.94,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-10",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "medium",
+   "statement": "SSOT INCONSISTENCY inside `docs/harness/VALIDATION_LEDGER.md`: three different values for one quantity, two of them live in the same file. The measured 60/30 per-evaluation cost from the frozen r4 domain phase is asserted as (i) 4.275 s/eval, '~11% conservative', in the 2026-07-29 'D-070 Part B1' row AND in `OPERATOR_OBSERVATION_domain_holdout_stall.json` (`measured_cost_note`); (ii) 4.4287 s/eval, 'conservative by 7 %', in the 2026-07-30 D-069 EXECUTION row. The 4.275 figure is a MID-RUN partial, taken at t = 22542.2 s / eval 1501 when only 34.7 % of the phase had elapsed, and per-eval cost drifted upward thereafter; the final value on the same denominator is 4.4287 (4.4211 eval-to-eval, which is a third number nobody has written down). The Part B1 row presents its partial as 'the measured 60/30 cost from the frozen r4 domain phase' with no as-of qualifier, so a reader taking the ledger as SSOT gets a number that the later row silently contradicts. This is the F-D065-05 class -- surfaces contradicting one another -- recurring in the ledger itself, and it is exactly what `check_ssot_consistency.py` was built for; the D-069 cost figures are evidently not among the facts it executes.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-29 'D-070 Part B1' row",
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 D-069 EXECUTION row",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json#measured_cost_note",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log"
+   ],
+   "evidence_fingerprint": "sha256:0311711b5e61cc3d69c2de49cc36b02b322faefd4225b71f8744ea62d35b1096",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.93,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-11",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "high",
+   "statement": "THE RETAINED BYTES DO NOT DIAGNOSE THE STALL, and this is the fact that governs what a reissue may honestly do. The domain phase emitted only `eval / N / T_cm / T_gamma / ratio` progress lines every 50 evaluations (_trajectory_core.py:216-220). There is NO BDF step-size trace, no rejected-step counter, no error-norm or per-component error data, no Jacobian/LU statistics, and no state dump of any kind for the 60/30 run -- the report carries no `domain_holdout` block, so not one occupation value from that integration survives. The oscillation 0.1628 / 0.1813 / 0.1629 is consistent with repeated step rejection, which is what the operator observation says, but WHICH state components drive the rejection is unknown and unrecoverable from what was kept. Candidate mechanisms -- the twelve additional far-tail nodes in y in (24, 30] where the cloglog coordinate runs to about -30 and the absolute tolerance 1e-9 is applied to the cloglog components rather than to occupations, versus a genuine stiffness change from the refined collocation spacing -- are NOT distinguishable from the retained evidence, and I decline to assert either. CONSEQUENCE: any replacement companion configuration selected now would be a guess, and selecting one because it fits an 18 h budget would be post-hoc configuration fitting of precisely the class the frozen contract forbids ('No band, node mask, or tail proxy may be fitted after output'). The assignment's instruction not to propose a configuration that merely fits the budget is correct and I follow it.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    "scripts/audit/_trajectory_core.py:216-220,237-257",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json (no domain_holdout key)",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md freeze paragraph"
+   ],
+   "evidence_fingerprint": "sha256:0c44402dc81e52bca0cc387d106f779a12dd54949e9ce35e416cadae7373e175",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.9,
+   "unresolved": [
+    "Root cause of the 60/30 BDF step-size collapse is undetermined and not recoverable from the retained bytes."
+   ]
+  },
+  {
+   "finding_id": "F-D070-12",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "fail",
+   "severity": "critical",
+   "statement": "QUESTION 4 (b) -- WHAT THE MEASURED INTRACTABILITY MEANS FOR F-D065-04 ITEM 5. Stating it plainly rather than routing around it. Item 5 reads: 'The holdout varies `rtol` only; it supplies no radial, angular, domain, or tail uncertainty.' The D-069 contract's answer to it was T13, and T13 was already only a PARTIAL answer by the project's own record -- FROZEN_DECISIONS and both ledger rows state that 'T13 supplies domain and tail uncertainty only -- the angular and collision-radial parts of F-D065-04 item 5 remain undischarged'. r4 now removes the part that was on offer: the single instrument designed to supply the domain and tail axes does not integrate in this cost class, by three to four orders of magnitude (F-D070-09). So item 5 is undischarged IN FULL -- radial, angular, domain and tail -- and item 4 (evolved beyond-domain enclosure), which shared the same instrument, is undischarged with it. THE HONEST CONSEQUENCE, which I state rather than soften: on current measurement `G-F10-INDEPENDENT-FLRW` has NO available route to PASS. The density-matched-companion route is measured closed; no other instrument for these axes has been designed, frozen, or costed; and the cheap substitutions that would fit the budget (a smaller companion, a y_max-only companion at different node density, an analytic-only enclosure standing in for the measured one) are each either post-hoc configuration fitting or the tail-proxy substitution D-065 item 4 already rejected. I refuse all of them. The correct disposition is that the gate REMAINS FAIL and that this is a stable, defensible state, not a problem to be engineered away. Anything else requires a genuinely new instrument, designed and frozen prospectively, whose validity is an open question this adjudication does not prejudge and has no authority to open.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/audit/BD622_D065_remediation_adversarial_audit_2026-07-29.md#F-D065-04 items 4-5",
+    ".agent-harness/context/FROZEN_DECISIONS.md D-069 row",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md sections 1,6",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log"
+   ],
+   "evidence_fingerprint": "sha256:618838553d69576ca94a3b0272e33c8b97efa208f754788ae32344f01a8df218",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.93,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-13",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "inconclusive",
+   "severity": "high",
+   "statement": "QUESTION 4 (c) -- SUPERSESSION. A reissue is NOT warranted as an instrument of gate movement, and this adjudication does not recommend one and grants no execution authority; the owner disposition is STOP/PRESERVE and any trajectory slice requires an explicit owner decision. The reason is arithmetic, not caution: an r5 restricted to what is measurable would gate T1-T12 and T14, i.e. r3's battery plus T8a/T8b/T8c plus T14. That discharges F-D065-04 items 1 (by REFRAMING, per F-D070-07), 3 and 6, and leaves items 4 and 5 open -- so even a clean r5 PASS leaves `G-F10-INDEPENDENT-FLRW` at FAIL. It would cost roughly 7.6 h (base 2.727 h + mutants 1.678 h measured, plus an rtol holdout at r3's measured 4331 evaluations x 2.6579 s/eval = 3.2 h) to convert numbers I have already reproduced in F-D070-06 into a contract-produced verdict that still moves nothing. IF the owner nevertheless elects a reissue, it may change EXACTLY TWO items and no others, in the D-054/D-060/D-062 form: (1) REMOVE T13 from the gated battery and from the execution plan. The r5 battery is T1-T12 and T14. T13's bands (2e-4 measured, 3e-4 total, 1e-6 analytic), its companion configuration `build_independent_grid(60, 30.0)`, and the `tail_last_node_fraction` gate inside T11 are all left EXACTLY as frozen -- nothing is retuned, relaxed, substituted or proxied. The beyond-domain enclosure and the domain/spatial holdout are carried forward as EXPLICITLY UNDISCHARGED with the r4 stall as their retained provenance, and the r5 contract must state on its face that a full PASS does not close F-D065-04 items 4-5 and therefore cannot move `G-F10-INDEPENDENT-FLRW`. (2) IMPLEMENT the T14 that the D-069 contract section 6 already specifies and the driver omitted (F-D070-04): re-derive W_tot as well as W_nu, take the occupations from the stored `cloglog` rather than from the stored derived `occupation` field, reconstruct T_cm from N alone, drop or separately report the tautological `T_cm_rel` so that `worst_relative_deviation` means what it says, correct the module docstring's unachievable R_total claim, and serialise `base_reached` / `occ_ok` so T1 is reproducible from the report (F-D070-06). This introduces no new predicate and no new band: it is the frozen contract's own text, and I have already verified here that it holds bitwise, so it cannot manufacture a pass. EXPLICITLY REFUSED, each of which would be a refit: substituting a smaller or differently-shaped companion; a y_max-only companion at a different node density; raising the 18 h budget (which stays UNCHANGED at 64800 s, precisely so no one can say the budget was tuned to the answer); reinstating any node mask; widening T8c's 2e-3 or any T8a/T8b band toward the recorded 2.0800641747316935e-3; and promoting `tail_last_node_fraction` or any other in-domain quantity into a stand-in for the beyond-domain enclosure. Verdict recorded `inconclusive` for this finding alone, because whether to spend 7.6 h on a verdict that moves nothing is an owner decision and not an adjudicable fact.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md",
+    "scripts/audit/d069_independent_trajectory_r4.py",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    ".agent-harness/context/FROZEN_DECISIONS.md D-060 and D-062 rows",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json#holdout"
+   ],
+   "evidence_fingerprint": "sha256:3905fddcd8bdf57249c43e7effeab207498554ceadd45f2d72a7682fa796e252",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.85,
+   "unresolved": [
+    "Whether to execute an r5 at all is an owner decision; this adjudication grants no execution authority."
+   ]
+  },
+  {
+   "finding_id": "F-D070-14",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "low",
+   "statement": "CHRONOLOGY VERIFIED against contract section 7, which requires `freeze commit < report.started_at < report.completed_at < adjudication.started_at < adjudication.completed_at < containing commit`. Freeze `0fb94f2` committed 2026-07-29T12:49:12+09:00 = 2026-07-29T03:49:12Z; report.started_at 2026-07-29T03:49:26+00:00; report.completed_at 2026-07-29T21:49:28+00:00; this adjudication started 2026-07-30T07:27:20Z, captured with `date -u`. The chain holds with room. Internal consistency also holds: completed_at - started_at = 18 h 0 m 2 s = 64802 s against the reported `wall_seconds` 64801.9, and the file mtime Jul 30 06:49 local (+09:00) is 21:49Z, matching. None of the four stamps is a round minute. ONE ADVISORY, raised only because this project has been bitten by chronology sloppiness before: the 2026-07-29 freeze ledger row and the DECISION_LOG both say 'first output byte 13 s later'. The retained stamps give 14 s (03:49:12Z -> 03:49:26Z); 13 s is not derivable from any retained byte. Both stamps are second-truncated so the true interval is bounded but not pinned, and nothing turns on it.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md section 7",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json#started_at,completed_at,wall_seconds",
+    "git show -s 0fb94f2",
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-29 freeze row"
+   ],
+   "evidence_fingerprint": "sha256:f088f9caff393a7e25de3f7055b2dd092220327449a441fd8ebf4409a01bbefb",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.92,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-D070-15",
+   "claim_id": "C-F10-INDEPENDENT",
+   "verdict": "pass",
+   "severity": "medium",
+   "statement": "WHAT I UPHELD IN THE COORDINATOR'S RECORD, stated explicitly so the disagreements above are not read as a blanket rejection. Independently re-derived and confirmed against the 2026-07-30 ledger row and the `ce737a7` commit message: `wall_seconds` 64801.9 against the frozen 64800.0 s, over by 1.9 s (the breach granularity is one RHS evaluation, since `deadline.check()` runs at the top of `rhs`); the exact `error` string; NO `checks` block and therefore no T-predicate evaluated; `G-F10-INDEPENDENT-FLRW` cannot move on this run; phase front-loading worked as pre-declared, with base, T14 recompute and the mutant battery flushed and the rtol holdout never started; the base endpoint triple and 3694 evals, bitwise against r3/r2/D-056; T14 worst deviation 0.0 against 1e-12; both mutants killed with the modes as described and max_R_transfer 2.011284806535093 against kill level 1.0; T8c 1.5881626368027338e-3; the non-gating full-domain sup 2.0800641747316935e-3 landing exactly on the ~2.080e-3 the contract pre-committed in section 6 BEFORE any output byte -- I confirm it equals the preserved D-062 value bitwise, so the pre-commitment is real and was honoured; base 2.727 h and mutants 1.678 h inside their 2.9 h and 1.6 h projections; the 3938-evaluation implication of the 5.2 h domain projection and the 2.81x overrun; domain phase 13.595 h; and both pinned artifact hashes, which I recomputed and matched. I also confirm the process discipline the row claims: the driver at `0fb94f2` is what ran, no band, mask or proxy was refitted anywhere in the report, and the frozen module hash recorded in the report equals the on-disk 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a, which I recomputed. The row's controlling conclusions are correct; my findings are against its scope labels, its T13 framing, and one internal inconsistency.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "docs/harness/VALIDATION_LEDGER.md 2026-07-30 D-069 EXECUTION row",
+    "git log ce737a7",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    "src/rabbit/decoupling/_independent_noqke.py"
+   ],
+   "evidence_fingerprint": "sha256:62d6da620ab9dbda3db4e35558da43b0422f27b8f9170f56d63ba8d534d1f548",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json"
+ ]
+}

@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-CAS-SAGE",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json",
+  "agent_id": "019f893b-5462-72c2-bb2d-42a5e44df649",
+  "agent_type": "default",
+  "role": "cas_sage_singular platform fallback",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "independence_mode": "blind-results",
+  "status": "inconclusive",
+  "verdict": "inconclusive",
+  "started_at": "2026-07-22T10:01:40Z",
+  "completed_at": "2026-07-22T10:02:38Z",
+  "permit_output": false,
+  "summary": "Exact SageMath/Singular review passes four assigned algebraic claims and leaves C-W7-ABSOLUTE-NORMALIZATION inconclusive because the supplied design does not state the finite-electron weak-current normalization, chiral couplings, or electron bath spin/degeneracy accounting required by the contract. The massless self-channel invariant measure, trace-to-tagged map conditional on the standard Fermi neutral-current convention, and Maxwell-Boltzmann prefactors are derived exactly. No numerical oracle or physical collision output was produced.",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-CAS-SAGE",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3cfb3e6bf88c876113f2c9b2baec336435f64372ea349033d354bd0eb6b7deb6"
+  },
+  "contract_statement_reproduced_before_calculation": "Independently determine whether the exact B3-v2/W7 design is algebraically coherent under the frozen conventions. A candidate target below is a falsifiable claim, not an allowed intermediate assumption. Any normalization, branch, graph, or convention mismatch is a fail or inconclusive result, never silently repaired.",
+  "toolchain": {
+    "sage": "SageMath 10.9, Release Date 2026-05-04",
+    "singular": "Singular 4.3.2 (4330, 64 bit), Apr 1 2024",
+    "sage_executable": "/usr/local/bin/sage",
+    "singular_executable": "/usr/bin/Singular",
+    "coefficient_domains": [
+      "QQ(i) for gamma-matrix polynomial identities",
+      "QQ for reaction stoichiometry, phase-space constants, test vectors, and shell ideals"
+    ],
+    "polynomial_rings": [
+      "QQ(i)[e1,x1,y1,z1,e2,x2,y2,z2,e3,x3,y3,z3], degree-reverse-lexicographic; p4=p1+p2-p3",
+      "QQ[e1,x1,y1,z1,e2,x2,y2,z2,e3,x3,y3,z3,e4,x4,y4,z4,M1,M2,M3,M4], dp",
+      "QQ[E,k,P0,B,c,A,m], dp"
+    ],
+    "extension_fields": "Gaussian rational field QQ(i) only for the Dirac representation; all final invariants lie in QQ-polynomial rings.",
+    "resource_limits": "Serial exact algebra only; each command was capped at 30 seconds; no numerical high-precision substitution was needed. Sage cache was redirected to /tmp because the sandboxed home cache is read-only."
+  },
+  "tool_versions": {
+    "SageMath": "10.9",
+    "Singular": "4.3.2",
+    "Python": "3.12.3"
+  },
+  "assumptions_and_conventions": {
+    "metric": "eta_D=diag(+1,-1,-1,-1)=-g_phys; dot_D=chi=-dot_phys.",
+    "gamma": "Dirac gamma matrices with {gamma^mu,gamma^nu}=2 eta_D^{mu nu}, gamma5=i gamma0 gamma1 gamma2 gamma3, P_L=(1-gamma5)/2, V^mu=gamma^mu P_L.",
+    "spin_sums": "Massless u and v completeness were both represented by slash(p); chiral projectors select the occupied helicity. The tagged incoming neutrino is not averaged.",
+    "orientation": "1+2<->3+4, nu=(-1,-1,+1,+1), F=f1 f2 (1-f3)(1-f4), R=f3 f4 (1-f1)(1-f2), J=F-R.",
+    "domains": "Future-directed real on-shell momenta; m_e>0; 0<f_i<1; physical square-root and logarithm branches only.",
+    "normalization_input_used_conditionally": "For the massless self trace-to-tagged map only, the standard low-energy neutrino neutral-current input g_V^nu=g_A^nu=1/2 gives amplitude coefficient sqrt(2) G_F on two V=gamma P_L currents, hence a squared multiplier 2 G_F^2. This input is stated rather than hidden and is not sufficient to infer the omitted electron-channel normalization."
+  },
+  "algebra_scope": {
+    "denominator_clearing": "None for the row-ii trace, reaction matrix, entropy identity, or Mandelstam ideal identity. The finite-mass support root is localized at D=P0^2-B^2 c^2 != 0; the massless-outgoing linear form is localized at P0-B c != 0.",
+    "saturation_and_localization": "No saturation is needed for the polynomial identities. The squared support equation must be saturated away from D=0 and filtered through the original unsquared equation, k>=0, E>0; squaring alone retains a spurious branch. For physical timelike P, D=s+B^2(1-c^2)>0.",
+    "branch_decomposition": "The support discriminant is 4 P0^2(A^2-m3^2 D). Its zero component is the multiple-root/threshold branch and admits only the contract's one-sided derivative. Negative discriminant has no real support. The positive and negative quadratic roots are separately checked against the unsquared equation and positivity.",
+    "singular_loci": "D=0; P0-B c=0 in the m3=0 linear reduction; the threshold A^2-m3^2 D=0; and s=0 for the massless two-body center-of-momentum chart. The last is a measure-zero collinear boundary of the MB integral and is interpreted by a one-sided limit, not as an interior chart.",
+    "order_of_limits": "No threshold derivative was inferred from the smooth branch. No exact equality was inferred from floating output."
+  },
+  "findings": [
+    {
+      "finding_id": "A-CAS-SAGE-F1",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "pass",
+      "claim_status": "DERIVED",
+      "severity": "none",
+      "statement": "The direct row-ii u/v spin-sum trace equals four times the distinguishable K_t base and maps to tagged coefficient 128 under the stated neutral-current convention.",
+      "assumptions_used": [
+        "eta_D=diag(+1,-1,-1,-1), V^mu=gamma^mu P_L, and massless u/v completeness slash(p)",
+        "p4=p1+p2-p3 and the physical relative Wick minus between the t- and s-chain contractions",
+        "standard neutrino neutral-current amplitude coefficient sqrt(2) G_F on two V currents"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+        "embedded source evidence.embedded_sources.sage_trace",
+        "exact replay output rowii_exact True True True True"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.evidence.embedded_sources.sage_trace | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage"
+      ],
+      "unresolved": [],
+      "confidence": 0.99,
+      "summary": "A direct massless u/v spin-sum calculation gives the coherent same-flavour nu+antinu row-ii coefficient without using crossing.",
+      "exact_evidence": "Define T=[ubar3 V^mu u1][vbar2 V_mu v4] and S=[vbar2 V^mu u1][ubar3 V_mu v4]. The physical Wick-ordered amplitude is sqrt(2) G_F (T-S). Exact polynomial traces give sum|T|^2=16 K_t, sum|S|^2=16 K_t, Re sum(T S*)=-16 K_t, hence sum|T-S|^2=64 K_t. The relative Wick minus therefore produces constructive interference. Multiplication by 2 G_F^2 gives 128 G_F^2 K_t. There is no initial spin average and no final identical-particle factor because nu and antinu are distinct.",
+      "canonical_map": "Raw distinguishable single-channel base=16 K_t; direct row ii=4 times that base=64 K_t; standard neutral-current squared multiplier 2 G_F^2 maps it to tagged c=128.",
+      "test_vector": "V-NULL-COM-345 gives K_t=81/25, each diagonal trace=1296/25, cross trace=-1296/25, and physical total=5184/25=64 K_t.",
+      "proof_class": "Polynomial identity in QQ(i)[12 variables] after only the exact conservation substitution p4=p1+p2-p3; no on-shell ideal, denominator, localization, or numerical substitution is needed.",
+      "evidence_fingerprint": "sha256:b74e665da2a6567ec4b78f6841ef3db2eb85cabb62c86ea8a8e09e60fd8e995f"
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F2",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "claim_status": "INCONCLUSIVE",
+      "severity": "blocking",
+      "statement": "The massless self-channel absolute phase-space prefactor is derived exactly, but the full W7 absolute-normalization claim is underdetermined by the supplied electron-channel conventions.",
+      "assumptions_used": [
+        "the invariant collision measure and one occupied helicity per neutrino species from CAS_CONTRACT.json",
+        "massless two-body final phase space dPhi2=dOmega*/(32 pi^2) away from the s=0 chart boundary",
+        "standard neutrino neutral-current convention only for the conditional massless trace-to-tagged map"
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md sections 8.1 and 11 T01",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md sections 2-5 and 7",
+        "embedded source evidence.embedded_sources.sage_normalization_and_vectors",
+        "exact replay output normalization_and_vectors_exact"
+      ],
+      "counterevidence_refs": [
+        "The supplied W6/CAS inputs do not state electron g_L/g_R or g_V/g_A normalization, per-spin versus spin-summed bath distributions, or the exact electron degeneracy insertion point."
+      ],
+      "reproduction": [
+        "jq -r '.evidence.embedded_sources.sage_normalization_and_vectors | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage"
+      ],
+      "unresolved": [
+        "finite-electron weak-current normalization and chiral couplings",
+        "electron/positron spin-sum and bath degeneracy accounting",
+        "finite-m_e elastic and pair absolute interference coefficients"
+      ],
+      "confidence": 0.98,
+      "summary": "The massless self-channel absolute invariant-measure reduction closes exactly, but the broader W7 normalization obligation cannot close from the supplied design because the finite-electron interaction normalization and spin/degeneracy convention are absent.",
+      "exact_evidence": "For fixed p1, integration over the p2 azimuth gives dPi2= p2 dp2 dmu/[8 pi^2]. The massless two-body final phase space is dPhi2=dOmega*/[32 pi^2], and azimuth averaging gives dz*/[16 pi]. Including 1/(2E1) yields p2 dp2 dmu dz*/[256 pi^3 E1]. Exact MB integrations give int dmu(1-mu)^2=8/3, int_0^infinity y2^3 exp(-y2)dy2=6, and int dz*=2, so the K_s factor is 32 and C_loss^Ks(c)/(G_F^2 T^5 y exp(-y))=c/(8 pi^3); K_t is one third, c/(24 pi^3). Conditional on the explicitly stated standard neutrino neutral-current convention, the row values are {8/pi^3,16/(3pi^3),4/pi^3,4/(3pi^3),4/(3pi^3)}.",
+      "factor_ledger": "No tagged-initial spin average; one occupied neutrino helicity selected by P_L; final 1/2! only for row-i identical final neutrinos; no electron degeneracy enters the massless self rows; the 24-event graph multiplicities are explicit rather than absorbed. The design does not state the electron g_L/g_R or g_V/g_A interaction, whether the bath distribution is per spin state, or where the electron/positron spin sum and bath degeneracy enter.",
+      "limitation": "Because the exact test obligation explicitly requires electron degeneracy and all spin/average factors, a massless-only derivation cannot pass the full claim. No contradictory factor was found, so the verdict is inconclusive rather than fail.",
+      "reopen_condition": "Freeze the electron weak-current Lagrangian/couplings and one unambiguous per-spin versus spin-summed bath convention, then derive the elastic and pair spin sums, interference, and phase-space multiplicities in the same normalization.",
+      "evidence_fingerprint": "sha256:84dd06a4fc42e9787f627b80c99ccb13f8962099f9dce66e42667db1d6c62c4b"
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F3",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "claim_status": "DERIVED",
+      "severity": "none",
+      "statement": "The independently enumerated 24-self/15-electron reaction graph has exactly the three flavour lepton charges as its full species-count left nullspace.",
+      "assumptions_used": [
+        "six ordered species (nu_e, antinu_e, nu_mu, antinu_mu, nu_tau, antinu_tau)",
+        "one reversible record per explicit microscopic flavour orbit",
+        "species-by-event stoichiometric orientation with forward changes as columns"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json reaction_nullspace target",
+        "embedded source evidence.embedded_sources.sage_graph",
+        "exact replay output graph_exact 24 15 3 3 36"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.evidence.embedded_sources.sage_graph | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage"
+      ],
+      "unresolved": [],
+      "confidence": 0.99,
+      "summary": "Independent flavour-orbit enumeration gives exactly 24 self events and 15 electron events; the full species-count left nullspace is exactly the three flavour lepton charges.",
+      "exact_evidence": "Self counts are 6 identical same-sign + 3 same-flavour nu-antinu elastic + 6 distinct-flavour same-sign elastic + 6 ordered distinct-flavour opposite-sign elastic + 3 unordered pair conversions =24. Electron counts are 12 species-by-(electron,positron) elastic +3 flavour pair annihilations=15. With S oriented species-by-event, S has shape 6x39, rank 3, 33 zero columns, left-nullity 3, and right-nullity 36 over QQ.",
+      "left_nullspace": "Basis rows are L_e=(1,-1,0,0,0,0), L_mu=(0,0,1,-1,0,0), L_tau=(0,0,0,0,1,-1); exact Sage row-space membership and dimension prove equality of spans, not merely containment.",
+      "right_nullspace": "Thirty-three standard unit vectors correspond to the 33 zero-stoichiometry elastic columns. For nonzero columns ordered (C_e_mu,C_e_tau,C_mu_tau,A_e,A_mu,A_tau), a remaining basis is (1,0,0,-1,1,0), (0,1,0,-1,0,1), (0,0,1,0,-1,1). Here C_ab=-P_a+P_b and A_a=-P_a.",
+      "limitation": "Energy conservation is eventwise kinematics and is intentionally not represented as a species-count left-null vector.",
+      "evidence_fingerprint": "sha256:af74b39dd009864ec04e56d8c533899b6387ce4b5ca357af57d9ec4e0d28a248"
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F4",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "pass",
+      "claim_status": "DERIVED",
+      "severity": "none",
+      "statement": "On strict-open occupations the event affinity is A=log(F/R), A J is nonnegative with equality exactly at detailed balance, and the electron-bath term has the specified Q_EM=-Q_nu sign.",
+      "assumptions_used": [
+        "0<f_i<1 so F,R>0 and the real logarithm is defined",
+        "nu=(-1,-1,+1,+1), J=F-R, and Q_nu>0 denotes energy gained by neutrinos",
+        "thermal electron logits eta_e=-E_e/T_gamma with zero chemical potential"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json entropy_affinity target",
+        "embedded source evidence.embedded_sources.sage_normalization_and_vectors",
+        "exact rational vector F=4/625, R=144/625, J=-28/125, F/R=1/36"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.evidence.embedded_sources.sage_normalization_and_vectors | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage"
+      ],
+      "unresolved": [],
+      "confidence": 0.99,
+      "summary": "The affinity, entropy-production sign, equality case, and neutrino/bath energy-sign map follow exactly on the strict-open occupation domain.",
+      "exact_evidence": "Using eta_i=log(f_i/(1-f_i)), direct cancellation gives log(F/R)=eta1+eta2-eta3-eta4=A. Since log is strictly increasing on positive reals, (F-R)(log F-log R)>=0 with equality iff F=R. With nu=(-1,-1,+1,+1), dS_fermion/dt=-sum_i eta_i nu_i J=A J. For thermal electrons eta_e=-E_e/T_gamma, the eliminated electron contribution is -sum_e eta_e nu_e J=Q_EM/T_gamma. Eventwise four-momentum conservation gives Q_EM=-Q_nu, matching the stated sign convention.",
+      "test_vector": "V-ENTROPY-RATIONAL gives F=4/625, R=144/625, J=-28/125, F/R=1/36, so A=log(1/36)<0 and A J>0.",
+      "domain_and_branch": "Requires exactly 0<f_i<1, hence F,R>0 and the real natural logarithm. Boundary occupations are outside this proof and must not be reached by clipping.",
+      "evidence_fingerprint": "sha256:afdd15159e73a58994646efbf2739e76c5d18c166959c6fd48c90520cf926c98"
+    },
+    {
+      "finding_id": "A-CAS-SAGE-F5",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "pass",
+      "claim_status": "DERIVED",
+      "severity": "none",
+      "statement": "The finite-mass Mandelstam identity and invariant support-root reduction hold exactly with all localization, discriminant, threshold, and spurious-squared branches explicit.",
+      "assumptions_used": [
+        "real future-directed on-shell momenta with p1+p2=p3+p4",
+        "positive-energy square-root branch and m_e>0",
+        "physical timelike total momentum P on electron elastic and supported pair channels"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json mandelstam_shell target and branch choices",
+        "embedded source evidence.embedded_sources.singular_shell",
+        "exact Singular outputs 0,0,0",
+        "exact rational elastic and pair vector shell checks"
+      ],
+      "counterevidence_refs": [],
+      "reproduction": [
+        "jq -r '.evidence.embedded_sources.singular_shell | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | Singular -q",
+        "jq -r '.evidence.embedded_sources.sage_normalization_and_vectors | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage"
+      ],
+      "unresolved": [],
+      "confidence": 0.98,
+      "summary": "The finite-mass Mandelstam shell and a complete invariant-coordinate support-root reduction are exact, with all denominator and threshold branches exposed.",
+      "exact_evidence": "Singular reduces s+t+u-(M1+M2+M3+M4) to zero modulo the four on-shell equations p_i^2+M_i=0 and four conservation equations. Let P=p1+p2, s=P0^2-|P|^2, B=|P|, c=cos(angle(P,p3)), A=(s+m3^2-m4^2)/2, and k=|p3|. The unsquared shell is P0 sqrt(k^2+m3^2)-B c k=A. Eliminating E3 yields D k^2-2 A B c k+P0^2 m3^2-A^2=0 with D=P0^2-B^2 c^2 and discriminant 4 P0^2(A^2-m3^2 D). Thus k_pm=[A B c +/- P0 sqrt(A^2-m3^2 D)]/D, followed by exact checks of the unsquared equation, k>=0, E3>0, p4 shell, and conservation. For m3=0, the physical root is k=A/(P0-B c); the second quadratic root is the squaring artifact.",
+      "branch_and_exclusions": "Localize at D!=0; for physical timelike P, D=s+B^2(1-c^2)>0. Exclude P0-B c=0 in the massless-outgoing linear chart. Negative discriminant rejects the event. Zero discriminant is the branch-collision threshold and supports only a one-sided derivative. No outgoing leg is clipped; a finite-domain miss rejects the whole event.",
+      "test_vectors": "V-ELASTIC-ME-345 has dot_D shells (0,1,0,1), exact conservation, (s,t,u)=(4,-9/40,-71/40), sum=2. V-PAIR-ME-345 has shells (0,0,1,1), exact conservation, (s,t,u)=(25/4,-5/8,-29/8), sum=2.",
+      "scope_limit": "This is an exact design-level shell/support derivation, not an audit of an implementation and not authority for W7 numerical output or a collision evaluation.",
+      "evidence_fingerprint": "sha256:ea1d4655080d2dd01cde65acf71a92c6a8f0778ff18775f699039a4771875aaf"
+    }
+  ],
+  "evidence": {
+    "overall_fingerprint": "f35277d29aa9cc2f747eaaa7ea23874f956d56ed2c7ac529346b9686ef5fd9f0",
+    "fingerprint_definition": "SHA-256 of the ordered concatenation of the five per-claim canonical evidence fingerprints separated by vertical bars.",
+    "exact_test_vector_results": {
+      "V-NULL-COM-345": "shells all zero; conservation exact; (K_s,K_t,K_u)=(4,81/25,1/25)",
+      "V-ELASTIC-ME-345": "dot_D shells=(0,1,0,1); conservation exact; s+t+u=2",
+      "V-PAIR-ME-345": "dot_D shells=(0,0,1,1); conservation exact; s+t+u=2",
+      "V-ENTROPY-RATIONAL": "F=4/625; R=144/625; J=-28/125; F/R=1/36; A J>0",
+      "V-NULLSPACE-SPECIES": "all three supplied charge vectors annihilate S and span its full three-dimensional left nullspace"
+    },
+    "embedded_sources": {
+      "sage_trace": [
+        "K.<ii>=QuadraticField(-1)",
+        "R=PolynomialRing(K,names=(\"e1\",\"x1\",\"y1\",\"z1\",\"e2\",\"x2\",\"y2\",\"z2\",\"e3\",\"x3\",\"y3\",\"z3\"),order=\"degrevlex\")",
+        "v=R.gens(); p1=list(v[0:4]); p2=list(v[4:8]); p3=list(v[8:12]); p4=[p1[k]+p2[k]-p3[k] for k in range(4)]",
+        "g0=matrix(K,[[1,0,0,0],[0,1,0,0],[0,0,-1,0],[0,0,0,-1]]); s1=matrix(K,[[0,1],[1,0]]); s2=matrix(K,[[0,-ii],[ii,0]]); s3=matrix(K,[[1,0],[0,-1]]); Z=zero_matrix(K,2)",
+        "def blk(a,b,c,d): return block_matrix([[a,b],[c,d]])",
+        "g=[g0,blk(Z,s1,-s1,Z),blk(Z,s2,-s2,Z),blk(Z,s3,-s3,Z)]; PL=(identity_matrix(K,4)-ii*g[0]*g[1]*g[2]*g[3])/2",
+        "Gu=[matrix(R,g[m]*PL) for m in range(4)]; Gl=[Gu[0],-Gu[1],-Gu[2],-Gu[3]]",
+        "def sl(p): return matrix(R,g[0])*p[0]-matrix(R,g[1])*p[1]-matrix(R,g[2])*p[2]-matrix(R,g[3])*p[3]",
+        "def dot(a,b): return a[0]*b[0]-sum(a[k]*b[k] for k in range(1,4))",
+        "S=[sl(p) for p in (p1,p2,p3,p4)]; T=R(0); U=R(0); X=R(0)",
+        "for mu in range(4):",
+        "    for nu in range(4):",
+        "        T+=(S[2]*Gu[mu]*S[0]*Gu[nu]).trace()*(S[1]*Gl[mu]*S[3]*Gl[nu]).trace()",
+        "        U+=(S[1]*Gu[mu]*S[0]*Gu[nu]).trace()*(S[2]*Gl[mu]*S[3]*Gl[nu]).trace()",
+        "        X+=(S[2]*Gu[mu]*S[0]*Gu[nu]*S[1]*Gl[mu]*S[3]*Gl[nu]).trace()",
+        "Kt=dot(p1,p4)*dot(p2,p3)",
+        "assert T==16*Kt and U==16*Kt and X==-16*Kt and T+U-2*X==64*Kt",
+        "print(\"rowii_exact\",T==16*Kt,U==16*Kt,X==-16*Kt,T+U-2*X==64*Kt)"
+      ],
+      "sage_graph": [
+        "from itertools import combinations",
+        "flavours=(\"e\",\"mu\",\"tau\"); species=(\"nu_e\",\"antinu_e\",\"nu_mu\",\"antinu_mu\",\"nu_tau\",\"antinu_tau\")",
+        "def nu(a): return 2*flavours.index(a)",
+        "def an(a): return 2*flavours.index(a)+1",
+        "cols=[]; labels=[]",
+        "for a in flavours:",
+        "    for sign in (0,1): cols.append(vector(QQ,6)); labels.append(\"self_identical_\"+species[2*flavours.index(a)+sign])",
+        "for a in flavours: cols.append(vector(QQ,6)); labels.append(\"sameflavour_elastic_\"+a)",
+        "for a,b in combinations(flavours,2):",
+        "    for sign in (0,1): cols.append(vector(QQ,6)); labels.append(\"cross_same_sign_\"+a+\"_\"+b+\"_\"+str(sign))",
+        "for a in flavours:",
+        "    for b in flavours:",
+        "        if a!=b: cols.append(vector(QQ,6)); labels.append(\"cross_opposite_\"+a+\"_\"+b)",
+        "for a,b in combinations(flavours,2):",
+        "    c=vector(QQ,6); c[nu(a)]=-1; c[an(a)]=-1; c[nu(b)]=1; c[an(b)]=1; cols.append(c); labels.append(\"pair_conversion_\"+a+\"_to_\"+b)",
+        "assert len(cols)==24",
+        "for si,s in enumerate(species):",
+        "    for charge in (\"electron\",\"positron\"): cols.append(vector(QQ,6)); labels.append(\"elastic_\"+s+\"_\"+charge)",
+        "for a in flavours:",
+        "    c=vector(QQ,6); c[nu(a)]=-1; c[an(a)]=-1; cols.append(c); labels.append(\"pair_annihilation_\"+a)",
+        "S=matrix(QQ,6,len(cols),lambda i,j: cols[j][i]); L=matrix(QQ,[[1,-1,0,0,0,0],[0,0,1,-1,0,0],[0,0,0,0,1,-1]])",
+        "assert len(cols)==39 and S.rank()==3 and S.left_kernel().dimension()==3 and S.right_kernel().dimension()==36 and L*S==0",
+        "assert all(vector(QQ,row) in S.left_kernel() for row in L.rows())",
+        "print(\"graph_exact\",24,15,S.rank(),S.left_kernel().dimension(),S.right_kernel().dimension())"
+      ],
+      "sage_normalization_and_vectors": [
+        "initial_angular=2*pi/(2*(2*pi)^3); final_after_phi=2*pi/(32*pi^2); pref=(initial_angular*final_after_phi/2).simplify_full()",
+        "assert pref==1/(256*pi^3)",
+        "mu=var(\"mu\"); I=integral((1-mu)^2,mu,-1,1)*factorial(3)*2; assert I==32",
+        "c=var(\"c\"); assert (c*I/(256*pi^3)).simplify_full()==c/(8*pi^3)",
+        "Q=QQ",
+        "def dotD(a,b): return a[0]*b[0]-sum(a[k]*b[k] for k in range(1,4))",
+        "def stu(ps):",
+        "    p1,p2,p3,p4=ps; add=lambda a,b:[a[k]+b[k] for k in range(4)]; sub=lambda a,b:[a[k]-b[k] for k in range(4)]",
+        "    return dotD(add(p1,p2),add(p1,p2)),dotD(sub(p1,p3),sub(p1,p3)),dotD(sub(p1,p4),sub(p1,p4))",
+        "V0=[[1,0,0,1],[1,0,0,-1],[1,Q(3)/5,0,Q(4)/5],[1,-Q(3)/5,0,-Q(4)/5]]",
+        "Ve=[[Q(3)/4,0,0,Q(3)/4],[Q(5)/4,0,0,-Q(3)/4],[Q(3)/4,Q(9)/20,0,Q(3)/5],[Q(5)/4,-Q(9)/20,0,-Q(3)/5]]",
+        "Vp=[[Q(5)/4,0,0,Q(5)/4],[Q(5)/4,0,0,-Q(5)/4],[Q(5)/4,Q(9)/20,0,Q(3)/5],[Q(5)/4,-Q(9)/20,0,-Q(3)/5]]",
+        "assert [dotD(p,p) for p in V0]==[0,0,0,0] and [dotD(p,p) for p in Ve]==[0,1,0,1] and [dotD(p,p) for p in Vp]==[0,0,1,1]",
+        "assert sum(stu(Ve))==2 and sum(stu(Vp))==2",
+        "f=[Q(1)/5,Q(2)/5,Q(3)/5,Q(4)/5]; F=f[0]*f[1]*(1-f[2])*(1-f[3]); R=f[2]*f[3]*(1-f[0])*(1-f[1])",
+        "assert (F,R,F-R,F/R)==(Q(4)/625,Q(144)/625,-Q(28)/125,Q(1)/36)",
+        "print(\"normalization_and_vectors_exact\",pref,I,stu(Ve),stu(Vp),F,R,F-R,F/R)"
+      ],
+      "singular_shell": [
+        "ring r1=0,(e1,x1,y1,z1,e2,x2,y2,z2,e3,x3,y3,z3,e4,x4,y4,z4,M1,M2,M3,M4),dp;",
+        "poly sh1=-e1^2+x1^2+y1^2+z1^2+M1; poly sh2=-e2^2+x2^2+y2^2+z2^2+M2; poly sh3=-e3^2+x3^2+y3^2+z3^2+M3; poly sh4=-e4^2+x4^2+y4^2+z4^2+M4;",
+        "poly c0=e1+e2-e3-e4; poly cx=x1+x2-x3-x4; poly cy=y1+y2-y3-y4; poly cz=z1+z2-z3-z4; ideal G=std(ideal(sh1,sh2,sh3,sh4,c0,cx,cy,cz));",
+        "poly s=(e1+e2)^2-(x1+x2)^2-(y1+y2)^2-(z1+z2)^2; poly t=(e1-e3)^2-(x1-x3)^2-(y1-y3)^2-(z1-z3)^2; poly u=(e1-e4)^2-(x1-x4)^2-(y1-y4)^2-(z1-z4)^2;",
+        "reduce(s+t+u-M1-M2-M3-M4,G);",
+        "ring r2=0,(E,k,P0,B,c,A,m),dp; poly shell=E^2-k^2-m^2; poly linear=P0*E-B*c*k-A; poly rr=resultant(shell,linear,E); poly D=P0^2-B^2*c^2; poly target=D*k^2-2*A*B*c*k+P0^2*m^2-A^2; rr+target;",
+        "poly discr=4*A^2*B^2*c^2-4*D*(P0^2*m^2-A^2); poly discrtarget=4*P0^2*(A^2-m^2*D); discr-discrtarget;"
+      ]
+    },
+    "reproduction_commands": [
+      "jq -r '.evidence.embedded_sources.sage_trace | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage",
+      "jq -r '.evidence.embedded_sources.sage_graph | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage",
+      "jq -r '.evidence.embedded_sources.sage_normalization_and_vectors | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | DOT_SAGE=/tmp/rabbit_a_cas_sage TMPDIR=/tmp sage",
+      "jq -r '.evidence.embedded_sources.singular_shell | join(\"\\n\")' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json | Singular -q"
+    ]
+  },
+  "commands": [
+    "sha256sum assignment; read only the registered context, contract, role, W6, and W3 inputs",
+    "sage --version; Singular --version",
+    "exact Sage QQ(i) generic row-ii direct u/v spin-sum trace",
+    "exact Sage QQ(i) identical-row cross-check and final-state 1/2 factor",
+    "exact Sage QQ 24+15 reaction enumeration and nullspaces",
+    "exact Sage symbolic phase-space/MB normalization and rational contract vectors",
+    "exact Singular Groebner reduction of the Mandelstam identity",
+    "exact Singular resultant and discriminant calculation for the massive support root"
+  ],
+  "errors": [
+    "Initial Sage invocation attempted to write its cache under the read-only home directory and exited before algebra; all exact reruns passed after DOT_SAGE and TMPDIR were redirected to /tmp.",
+    "The first Singular print-only command used an invalid print(string,poly) form; the corrected exact command exited zero."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json"
+  ],
+  "limitations": [
+    "C-W7-ABSOLUTE-NORMALIZATION remains inconclusive until the finite-electron weak-current and bath spin/degeneracy convention are supplied and audited.",
+    "No finite-m_e electron trace or interference coefficient was inferred from the shell proof.",
+    "No implementation, numerical oracle, collision, static falsifier T01-T12, Radau, trajectory, endpoint, or production authority follows from these exact design-level results.",
+    "No sibling result, production collision implementation, Rust/JAX/Fort evaluator, or frozen D-028 comparator was read or executed."
+  ],
+  "write_set": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-CAS-SAGE.json"
+  ],
+  "forbidden_actions_observed": {
+    "sibling_results_read": false,
+    "production_files_edited": false,
+    "w7_numerical_oracle_output": false,
+    "b3_collision_output": false,
+    "t01_t12_executed": false,
+    "radau_or_trajectory_or_endpoint": false,
+    "rabbit_unblinded": false
+  }
+}

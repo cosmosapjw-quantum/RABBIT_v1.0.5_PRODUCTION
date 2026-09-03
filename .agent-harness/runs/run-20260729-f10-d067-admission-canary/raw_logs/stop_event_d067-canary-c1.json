@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d067-canary-c1",
+  "agent_type": "default",
+  "last_assistant_message": "Canary complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-CANARY-C1\", \"context_version\": \"daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b\", \"status\": \"pass\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-CANARY-C1.json\", \"admission_proof\": \"sha256:bc9d048962339d5d29f00461b1bf7fee6a8538008f9c3f3d2c36af40c4f72feb\"}"
+}

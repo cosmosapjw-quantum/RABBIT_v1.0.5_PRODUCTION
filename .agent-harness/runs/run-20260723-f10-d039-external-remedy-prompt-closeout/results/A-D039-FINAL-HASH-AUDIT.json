@@ -1,0 +1,275 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d039-external-remedy-prompt-closeout",
+  "assignment_id": "A-D039-FINAL-HASH-AUDIT",
+  "context_version": "1b1a42fbfb3007fe85bb33f058a20797f535d62fc59c442153a1830c0f700258",
+  "agent_id": "019f8d9e-ecdc-7852-9810-92f916f0df2e",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d039-external-remedy-prompt-closeout",
+    "assignment_id": "A-D039-FINAL-HASH-AUDIT",
+    "context_version": "1b1a42fbfb3007fe85bb33f058a20797f535d62fc59c442153a1830c0f700258",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:3405f5080cc5923bd168c1fedd814ff78638341114a7b22cef56c7b5329c475d",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-closeout/results/A-D039-FINAL-HASH-AUDIT.json",
+  "started_at": "2026-07-23T06:13:22Z",
+  "completed_at": "2026-07-23T06:22:48Z",
+  "tool_versions": {
+    "bash": "GNU bash 5.2.21",
+    "git": "2.43.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "review_method": "targeted exact-byte and authority-language audit; no scientific execution"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-closeout/assignments/A-D039-FINAL-HASH-AUDIT.json",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json",
+    "{ printf '%s\\0' '.agent-harness/context/roles/independent_auditor.md'; sed -n '1,$p' .agent-harness/context/roles/independent_auditor.md; printf '\\0'; } | sha256sum",
+    "sha256sum docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/results/A-D039-PROMPT-AUDIT-R3.json",
+    "sha256sum of the exact 32 prompt-declared paths: 10 current immutable-evidence entries, 12 historical novelty entries, 8 current control-surface entries, and W3/W5",
+    "git branch --show-current",
+    "git rev-parse main",
+    "sed replacement of only the five refreshed control-surface hash literals in the current prompt, streamed to sha256sum, reconstructing the R3-audited prompt digest",
+    "targeted rg checks for STOP/PRESERVE, the two owner choices, the separate W7/B3 ladder, D-037 incompleteness, the closed zero-unmapped matrix, operation-level novelty, and achieved blocker-movement ratio 0.00",
+    "no collision, W7, B3, CAS, MPFR, Rust, GL48/64, Jacobian, Radau, trajectory, endpoint, or RABBIT execution"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+      "sha256": "2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/results/A-D039-PROMPT-AUDIT-R3.json",
+      "sha256": "a424e9c90658db072cb89163ee1e89f0b5a02d64fd544c93fb799c6480f18bfe"
+    },
+    {
+      "path": "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md",
+      "sha256": "860f9121bcd555fad95233959fc7b9e003caedd70fbad303ebb85f20564cec65"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json",
+      "sha256": "c145f298ac65dbcf76676542ff4ebcbb85f14a157dd956a6e0b2f71d2c0a3e6f"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": "RABBIT_f10_independent_validation_branch_review.md",
+      "sha256": "a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575"
+    },
+    {
+      "path": ".singularhistory",
+      "sha256": "5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1"
+    },
+    {
+      "path": "src/rabbit/decoupling/_independent_noqke.py",
+      "sha256": "535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R3.json",
+      "sha256": "7e0dc3a7aeb067178ac9a17d9db86f81da4aa65b134237e5f1217ac2afb14e02"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "sha256": "9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/artifacts/M1_POINTWISE_STATIC_RESULT.json",
+      "sha256": "cab73790f74d0ebe36ceb956adb26076949e896d496122ddc04d521c3ebe91c4"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/ADJUDICATION.md",
+      "sha256": "7e9b16d10436bb0d348524563c8acd475cfe8df951b15a0a51c1586d3a8adc7c"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json",
+      "sha256": "4726c40e403aad42d15503b0ed11760558f98de06a8e6f54259ab219887c73db"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/ADJUDICATION.md",
+      "sha256": "e4fd24e22ca619e3af8052b35562cf33ed56e0a651101276f6fe4323cfe08048"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/results/A-CONSERVATIVE-METHOD-ADJUDICATION.json",
+      "sha256": "ab8b2bc73d005ced403a686b2cc0f53b05785dee968c58e1af6b8af495017b81"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/results/A-GL48-COVARIANCE-ADJUDICATION.json",
+      "sha256": "3002ad870c60cefcf0bdd3c20f990f025a2aa7fee64f7ae979ca95678b37acbd"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-MAXENT-DERIVATION.json",
+      "sha256": "c336130ba4ba1e34bbc9b7b46e7c91f0b4a3817bd0a0d2cad43d0d9dbf61fd6b"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-BINARY64-AUDIT.json",
+      "sha256": "6f7744569e8b7c9347ae7c2f21e490c5748373c3ea4e99b87ef1f82cb4899f7d"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-DESIGN-ADJUDICATION.json",
+      "sha256": "614999cdf68a1f3492eb543a1a297454fa6c5f529463156ce7fd23e4ff94c159"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-F10-METHOD-REOPEN-AUDIT.json",
+      "sha256": "bf8ea677f31d3f8673bab46e348b77e942c7cbcb38a1b47cc150292c2310fba4"
+    },
+    {
+      "path": ".agent-harness/context/FROZEN_DECISIONS.md",
+      "sha256": "6723d1093c9679ffce058e044a3288b80507afbe64fdec6decad11909498b0ee"
+    },
+    {
+      "path": ".agent-harness/context/GATE_REGISTRY.json",
+      "sha256": "ed10fd9cb00efb4b48a709ef7a9f3e0188e2a397b65b3c717a7791c1c3eda3b1"
+    },
+    {
+      "path": ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+      "sha256": "53b445c6bc7eae8ee5dea3f3037c4dbd4b96d2243329bf1c15ed79d6e9ea49ee"
+    },
+    {
+      "path": "docs/harness/PROJECT_STATE.md",
+      "sha256": "e63e5a998875873182439b0e7586eb7cf1fba4040ee84c3122898950fedcff21"
+    },
+    {
+      "path": "docs/harness/CLAIM_LEDGER.md",
+      "sha256": "9658f5297a64411365bbf0c624a78a0c6e9ac819f2dbd552557053a67a2cffce"
+    },
+    {
+      "path": "docs/harness/VALIDATION_LEDGER.md",
+      "sha256": "4c9a325a7fa8280c6164238a3636ee2075f6479bfaa82cdf6ff1bdef69615850"
+    },
+    {
+      "path": "docs/harness/DECISION_LOG.md",
+      "sha256": "290e16d1ab65b9756df32fe37c7d5242c428a0bd00ba01706acd254b69aeaedc"
+    },
+    {
+      "path": "docs/harness/NEXT_SESSION_PROMPT.md",
+      "sha256": "57bd562afad21f82e493386e9041c5f6dfaf7765c424bc20bca102bb205c9da8"
+    },
+    {
+      "path": "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+      "sha256": "a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a"
+    },
+    {
+      "path": "docs/audit/BD622_W5_d028_discriminator_result.md",
+      "sha256": "83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D039-FINAL-HASH-001",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The current prompt SHA-256 is 2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a. All 32 prompt-declared hashes match the live bytes: 10 current immutable-evidence entries, 12 historical novelty entries, 8 current control-surface entries, and the separately declared W3/W5 inputs. The active branch is f10-independent-validation-b3v2 and main resolves to ca3a0138d496732edfc13559fd8f7ceec7ef4d6e.",
+      "assumptions_used": [
+        "A historical manifest path introduced as a sibling resolves to the explicitly named file in the same fully specified directory.",
+        "Hash equality establishes exact byte identity and provenance only, not scientific validity."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:55-141",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:132-136",
+        "artifacts in this result envelope",
+        "recorded 32-path sha256sum command",
+        "git branch --show-current",
+        "git rev-parse main"
+      ],
+      "evidence_fingerprint": "sha256:2bc4064c848cc94bce58d77a6bbfb403b424411c9985d4a4e0fa0394a778e52a",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run sha256sum over the 32 artifact paths recorded after the prompt and R3 artifacts; each digest equals the prompt-declared value.",
+        "Run git branch --show-current and git rev-parse main."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D039-FINAL-AUTHORITY-002",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The exact current bytes preserve the bounded authority contract. STOP/PRESERVE remains binding; the report may inform exactly DO_NOT_REOPEN or AUTHORIZE_ONE_FRESH_DESIGN_ONLY_REVIEW and grants no repository, design-cycle, numerical, implementation, trajectory, or endpoint authority. W7 requires unanimous whole-design PASS followed by a separate owner decision; B3 then requires executed W7 evidence, fresh adjudication PASS, and another separate decision. D-037 is correctly described as stopped before four CAS axes, merge, or adjudicator. The candidate matrix requires all four bounded passes, all seven failures, every current gate and consumer, stable IDs and row counts, bidirectional coverage, and zero unmapped binding items; novelty must be operation-level with a pre-output discriminator; achieved scientific blocker movement is fixed at 0.00.",
+      "assumptions_used": [
+        "An editorial/report-contract PASS is distinct from a scientific whole-design gate PASS.",
+        "Each owner decision is necessary but cannot substitute for its preceding scientific evidence."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:8-34",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:137-141",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:224-233",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:253-282",
+        ".agent-harness/context/FROZEN_DECISIONS.md:D-037-D-039",
+        ".agent-harness/context/GATE_REGISTRY.json:G-F10-INDEPENDENT-FLRW,G-F10-COVARIANCE-METROLOGY,G-F10C1-REGRESSION,G-HARNESS-INTEGRITY"
+      ],
+      "evidence_fingerprint": "sha256:6723d1093c9679ffce058e044a3288b80507afbe64fdec6decad11909498b0ee",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run the recorded targeted rg checks over the exact prompt and inspect the cited line ranges together."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D039-FINAL-R3-DELTA-003",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Changes after the R3 prompt audit are exactly five current control-surface digest refreshes and introduce no semantic authority drift. Streaming the current prompt while replacing only the live FROZEN_DECISIONS, PROJECT_STATE, VALIDATION_LEDGER, DECISION_LOG, and NEXT_SESSION_PROMPT digests with the values recorded by R3 reproduces the prior audited prompt SHA-256 a0b2b2a0537905e1b18e19cc3d40c04b80c5f3d5ded766dc12e96aa0ff8ed8e7 exactly. The five new digests all match their current files; the other 27 declared digests are unchanged and match.",
+      "assumptions_used": [
+        "SHA-256 collision resistance is sufficient for this exact-byte provenance audit.",
+        "The R3 result truthfully records the prior prompt digest and prior control-surface digests."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/results/A-D039-PROMPT-AUDIT-R3.json",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+        ".agent-harness/context/FROZEN_DECISIONS.md",
+        "docs/harness/PROJECT_STATE.md",
+        "docs/harness/VALIDATION_LEDGER.md",
+        "docs/harness/DECISION_LOG.md",
+        "docs/harness/NEXT_SESSION_PROMPT.md"
+      ],
+      "evidence_fingerprint": "sha256:a424e9c90658db072cb89163ee1e89f0b5a02d64fd544c93fb799c6480f18bfe",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Apply the five old-for-new digest substitutions recorded in the normalization command to the current prompt as a stream and hash stdout; the result is a0b2b2a0537905e1b18e19cc3d40c04b80c5f3d5ded766dc12e96aa0ff8ed8e7.",
+        "Hash the five current control files and compare them with the current prompt."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-closeout/results/A-D039-FINAL-HASH-AUDIT.json"
+  ]
+}

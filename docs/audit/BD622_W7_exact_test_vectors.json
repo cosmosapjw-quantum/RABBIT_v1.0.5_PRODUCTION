@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "status": "SPECIFIED_NOT_EXECUTED",
+  "authority": "D-035 exact-byte design review only; not W7 output or B3 authority",
+  "source": "scripts/audit/w7_b3v2_contract_source.py#EXACT_TEST_VECTORS",
+  "vectors": {
+    "V-CONSTANTS-D035": {
+      "G_F_MeV^-2": "1.1663788e-11",
+      "m_e_MeV": "0.5109989500",
+      "sin2_theta_W": "0.23122",
+      "expected": "exact decimal strings match Tier-0; no fitted or alternate literal"
+    },
+    "V-ORIENTATION-LEDGER": {
+      "elastic_distinct": {
+        "orientation": "1/2",
+        "symmetry": "1",
+        "global_leg_factor": "2",
+        "effective_tagged_factor": "1",
+        "global_amplitude_coefficient": "32",
+        "effective_tagged_coefficient": "32"
+      },
+      "elastic_identical": {
+        "orientation": "1/2",
+        "symmetry": "1/4",
+        "global_leg_factor": "4",
+        "effective_tagged_factor": "1/2",
+        "global_amplitude_coefficient": "128",
+        "effective_tagged_coefficient": "64"
+      },
+      "conversion_or_pair": {
+        "orientation": "1",
+        "reason": "initial and final unordered species multisets differ"
+      }
+    },
+    "V-ELASTIC-THRESHOLD": {
+      "process": "elastic",
+      "m_e": "1",
+      "s_binary64_hex": [
+        "0x1.fffffffffffffp-1",
+        "0x1.0000000000000p+0",
+        "0x1.0000000000001p+0"
+      ],
+      "expected": [
+        "raw subthreshold failure",
+        "support-only k*=0",
+        "interior k*>0"
+      ]
+    },
+    "V-PAIR-THRESHOLD": {
+      "process": "pair",
+      "m_e": "1",
+      "s_binary64_hex": [
+        "0x1.fffffffffffffp+1",
+        "0x1.0000000000000p+2",
+        "0x1.0000000000001p+2"
+      ],
+      "expected": [
+        "raw subthreshold failure",
+        "support-only k*=0",
+        "interior k*>0"
+      ]
+    },
+    "V-ZSTAR-DOMAIN": {
+      "accepted": [
+        "-1",
+        "1"
+      ],
+      "rejected_binary64_hex": [
+        "-0x1.0000000000001p+0",
+        "0x1.0000000000001p+0"
+      ],
+      "expected": "no clipping and no max(0,1-z*^2)"
+    },
+    "V-NULL-COM-345": {
+      "masses": ["0", "0", "0", "0"],
+      "momenta": [["1", "0", "0", "1"], ["1", "0", "0", "-1"], ["1", "3/5", "0", "4/5"], ["1", "-3/5", "0", "-4/5"]],
+      "expected": {"K_s": "4", "K_t": "81/25", "K_u": "1/25"}
+    },
+    "V-ELASTIC-ME-345": {
+      "m_e": "1",
+      "masses": ["0", "1", "0", "1"],
+      "momenta": [["3/4", "0", "0", "3/4"], ["5/4", "0", "0", "-3/4"], ["3/4", "9/20", "0", "3/5"], ["5/4", "-9/20", "0", "-3/5"]],
+      "expected": "positive shells; conserved; s+t+u=2"
+    },
+    "V-PAIR-ME-345": {
+      "m_e": "1",
+      "masses": ["0", "0", "1", "1"],
+      "momenta": [["5/4", "0", "0", "5/4"], ["5/4", "0", "0", "-5/4"], ["5/4", "9/20", "0", "3/5"], ["5/4", "-9/20", "0", "-3/5"]],
+      "expected": "positive shells; conserved; s+t+u=2"
+    },
+    "V-ENTROPY-RATIONAL": {
+      "occupations": ["1/5", "2/5", "3/5", "4/5"],
+      "expected": {"F": "4/625", "R": "144/625", "J": "-28/125", "A": "log(1/36)", "A_times_J": ">0"}
+    },
+    "V-NULLSPACE-SPECIES": {
+      "basis": [["1", "-1", "0", "0", "0", "0"], ["0", "0", "1", "-1", "0", "0"], ["0", "0", "0", "0", "1", "-1"]],
+      "expected": "full-graph left nullspace over Q equals the displayed span"
+    }
+  }
+}

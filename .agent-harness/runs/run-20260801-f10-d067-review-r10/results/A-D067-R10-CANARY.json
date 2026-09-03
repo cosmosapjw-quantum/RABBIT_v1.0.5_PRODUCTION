@@ -1,0 +1,319 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260801-f10-d067-review-r10",
+  "assignment_id": "A-D067-R10-CANARY",
+  "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+  "agent_id": "r10-canary",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260801-f10-d067-review-r10",
+    "assignment_id": "A-D067-R10-CANARY",
+    "context_version": "1afc093861d4b3c6b2c740cdc936c314511967b134633aa101edcc3e7b626e35",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:9e4af9803ab28ef5638d635d68bfc584bbfe46137ba923c4fc63eb94826403de",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-CANARY.json",
+  "started_at": "2026-08-01T13:59:40Z",
+  "completed_at": "2026-08-01T14:12:29Z",
+  "tool_versions": {
+    "python": "Python 3.12.3 (venv/bin/python, repo venv)",
+    "git": "git version 2.43.0",
+    "rustc": "not invoked; out of scope for this assignment"
+  },
+  "commands": [
+    "SCRATCH=$(mktemp -d -p <scratchpad>); git archive HEAD | tar -x -C \"$SCRATCH\" (repeated per isolated experiment, HEAD == 32ba566)",
+    "venv/bin/python .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260801-f10-d067-review-r10/assignments/A-D067-R10-CANARY.json",
+    "git show 32ba566 -- .agent-harness/scripts/check_canary_freshness.py",
+    "git show 32ba566 -- .agent-harness/scripts/validate_harness.py",
+    "(cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json)  [baseline and 9 mutated scratch trees, see per-finding reproduction]",
+    "(cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/validate_harness.py)  [confirmed git-dependence; cannot exercise end-to-end without .git]",
+    "python3 - <<'EOF' ... sha256sum of retained runs/run-20260801-f10-d070-canary-c7/results/A-D070-CANARY-C7.json, cross-checked against ADMISSIONS.jsonl and the attestation's result_sha256",
+    "grep -n active_run .codex/hooks/subagent_stop_validate.py  [static trace of every use of the ACTIVE_RUN pointer value]",
+    "grep -n 'agent-harness' .gitignore",
+    "grep -n '^def test_' .agent-harness/tests/test_canary_freshness.py"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-C7CHK-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "A canary attestation that names ITSELF in `supersedes_canary` is treated as retired and is never checked, no matter how stale (or absent) its digest fields are. `check()` computes `retired = superseded_ids(attestations)` from every attestation's own `supersedes_canary`, then for each attestation does `if canary in retired: continue` BEFORE looking at any digest field. Nothing stops an attestation's `canary` id from appearing in its own `supersedes_canary`. Executed against an unmodified copy of check_canary_freshness.py at HEAD 32ba566 (git-archive scratch tree, no source edits): an attestation with `canary=\"C99\"`, `supersedes_canary=[\"C99\"]`, and `start_hook_sha256` set to 68 zero characters (never a valid hash of anything, let alone the real start hook) produced `ok: true`, exit 0, with C99 silently added to `superseded` and never appearing as an error.",
+      "assumptions_used": [
+        "canary_id() and superseded_ids() were exercised exactly as shipped at HEAD 32ba566; no source file was modified",
+        "The scratch tree was produced by `git archive HEAD | tar -x`, tracked files only, per the run's operational rules"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:7c12ae2b63cdef9920a90d82b7cfb9dcc4197fd0b62fc1df8ecfbb673a4a1ad4",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-forged-canary-c99/artifacts\"",
+        "cat > \"$SCRATCH/.agent-harness/runs/run-99999999-forged-canary-c99/artifacts/FORGED.json\" <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C99\",\"supersedes_canary\":[\"C99\"],\"start_hook_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": true, \"attestations\": 4, \"live\": [\"C7\"], \"superseded\": [\"C5\", \"C6\", \"C99\"], \"errors\": []}, exit 0"
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-002",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Two canaries that name EACH OTHER in `supersedes_canary` form a two-cycle: both ids land in `retired`, so both are skipped, neither is ever `live`, and neither is checked for staleness -- regardless of how stale either one is. This is the same root cause as F-C7CHK-001 (retirement membership is computed from self-asserted claims with no acyclicity or liveness check) but does not require an attestation to name itself; two independently-authored artifacts suffice, which is a more plausible accidental or split-authorship failure mode. Reproduced against unmodified check_canary_freshness.py: CX declares `supersedes_canary=[\"CY\"]` with `stop_hook_sha256` of 68 repeated '1' characters; CY declares `supersedes_canary=[\"CX\"]` with `stop_hook_sha256` of 68 repeated '2' characters. Neither digest matches the real stop hook. Result: `ok: true`, both CX and CY reported under `superseded`, zero errors.",
+      "assumptions_used": [
+        "Same as F-C7CHK-001"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:2ecefa0b652dc49bb3b4636dd640aee488b43909f931f1d1b7c2468806b221f5",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-cycle-canary-cx/artifacts\" \"$SCRATCH/.agent-harness/runs/run-99999999-cycle-canary-cy/artifacts\"",
+        "write X.json: {\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"CX\",\"supersedes_canary\":[\"CY\"],\"stop_hook_sha256\":\"1111111111111111111111111111111111111111111111111111111111111111\"}",
+        "write Y.json: {\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"CY\",\"supersedes_canary\":[\"CX\"],\"stop_hook_sha256\":\"2222222222222222222222222222222222222222222222222222222222222222\"}",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": true, \"attestations\": 5, \"live\": [\"C7\"], \"superseded\": [\"C5\",\"C6\",\"CX\",\"CY\"], \"errors\": []}, exit 0"
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-003",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "A single fabricated JSON file -- no real canary dispatch, no lease, no admission receipt, nothing except a hand-written file matching `runs/*/artifacts/*.json` with `artifact_class: CANARY_ATTESTATION` -- retires the ONLY currently-live canary (C7) and reopens exactly the failure class this commit exists to close. Document: `canary=\"C100\"`, `supersedes_canary=[\"C7\",\"C100\"]`, no digest fields at all (the self-reference means it is skipped before the 'attests no hook digest' error is ever reached). Result: `live: []`. To prove this is not cosmetic, I then appended one comment line to the REAL attested file `.codex/hooks/subagent_start_context.py` in the same scratch tree (the identical edit the commit's own end-to-end verification describes making to prove the detector goes red) and re-ran the checker: still `ok: true`, `live: []`, `errors: []`, exit 0. The detector that was built specifically to catch a stale attestation of this exact file caught nothing, because the one canary that attested it had been silently retired by a forgery.",
+      "assumptions_used": [
+        "The forged document requires only filesystem write access under .agent-harness/runs/, which any agent operating in the repo (or any process able to write there) already has",
+        "No cryptographic signature, admission-token binding, or hook-authored provenance is required by find_attestations()/check() for a document to count as a CANARY_ATTESTATION"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py",
+        ".codex/hooks/subagent_start_context.py"
+      ],
+      "evidence_fingerprint": "sha256:399871a099d75ada91bb534374cc07854c174040fd8f029d854ce64c192d3a6c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-fake-canary-c100/artifacts\"",
+        "cat > \"$SCRATCH/.agent-harness/runs/run-99999999-fake-canary-c100/artifacts/FAKE.json\" <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C100\",\"supersedes_canary\":[\"C7\",\"C100\"]}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # -> ok:true, live: []",
+        "echo '# forged-edit-to-prove-staleness-goes-undetected' >> \"$SCRATCH/.codex/hooks/subagent_start_context.py\"",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # -> STILL ok:true, live: [], errors: [] after editing the exact attested file"
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-004",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "`canary_id()`'s directory-name fallback lets an attacker collide with a real canary's inferred id WITHOUT ever writing a `canary` field, by naming a new run directory to end in the same `-canary-c<N>` suffix. A forged document placed at `runs/run-99999999-decoy-canary-c7/artifacts/COLLIDE.json` with NO `canary` field and `supersedes_canary=[\"C7\"]` has its own id inferred as `\"C7\"` from the directory name -- identical to the real C7 run's inferred id -- so `supersedes_canary=[\"C7\"]` simultaneously retires the real C7 attestation and itself (both share the literal string \"C7\"). Result: `live: []`. This is the lowest-effort variant of F-C7CHK-003: the attacker does not even need to know the `canary`/`supersedes_canary` field convention beyond one field; matching the id-inference naming pattern is enough.",
+      "assumptions_used": [
+        "canary_id()'s fallback rule (last path component starting with 'run-' and containing '-canary-', tail 'c<digits>') was read directly from source and exercised unmodified"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:7b6315588129ea1be1be1f4e76c3ea8ba31792072cc99758e32545fa88eb4eaf",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-decoy-canary-c7/artifacts\"",
+        "cat > \"$SCRATCH/.agent-harness/runs/run-99999999-decoy-canary-c7/artifacts/COLLIDE.json\" <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"supersedes_canary\":[\"C7\"]}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": true, \"attestations\": 4, \"live\": [], \"superseded\": [\"C5\",\"C6\",\"C7\"], \"errors\": []}"
+      ],
+      "confidence": 0.97,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-005",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "`find_attestations()` globs exactly `runs/*/artifacts/*.json` -- one directory level, no more, no less. Retained-looking evidence placed one level deeper (`runs/<run>/artifacts/nested/DEEP.json`) or shallower (`runs/<run>/SHALLOW.json`, not under `artifacts/`) is 100% invisible: not counted in `attestations`, not reported as an error, no signal at all that anything was skipped. Reproduced with two attestations, each carrying an obviously-fabricated `start_hook_sha256` of 68 zero characters that would have failed loudly as STALE had they been in-glob. After adding both files the checker's output was byte-identical to the 3-attestation baseline: `attestations: 3`, `errors: []`. A canary evidence file that is nested one level differently than the convention -- whether by attacker action, historical layout drift, or an honest mistake -- is silently exempted from ever being checked, which is exactly the fail-open shape the assignment asked to press ('a closed decision that can be wrong in the fail-open direction').",
+      "assumptions_used": [
+        "find_attestations()'s glob pattern `runs/*/artifacts/*.json` was read directly from source and exercised unmodified"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:097deeb33a70d33cd4107eceb2292df82649c34d1e65a5fa50c9044c130cae68",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-nested-canary-c102/artifacts/nested\"",
+        "cat > .../nested/DEEP.json <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C102\",\"start_hook_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\nEOF",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-shallow-canary-c103\"",
+        "cat > .../run-99999999-shallow-canary-c103/SHALLOW.json <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C103\",\"start_hook_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": true, \"attestations\": 3, \"live\": [\"C7\"], \"superseded\": [\"C5\",\"C6\"], \"errors\": []} -- identical to baseline, both forged files never seen"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-006",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "medium",
+      "statement": "When `.agent-harness/runs/` does not exist at all, `find_attestations()` returns `[]` and `check()` reports `ok: true, attestations: 0, errors: []`, exit 0 -- an output indistinguishable from 'examined every canary and all are fresh.' validate_harness.py folds this straight into `canary_freshness: \"ok\"` with no indicator that zero evidence was examined. This is not a hypothetical tree shape: the repo's own `.gitignore` line 62 reads `/.agent-harness/runs/`, i.e. the entire runs directory is ignored by default, and the only reason any canary evidence exists in tracked history at all is that specific run directories (C4, C5, C6, C7, the D-058 lease canaries) were individually force-added past that rule. Any checkout, sparse-clone, or tooling path that honors `.gitignore` for otherwise-tracked paths, or any future round whose canary evidence is not force-added (the same discipline failure already responsible for four prior stale-canary incidents per this commit's own message), silently deactivates the entire freshness gate rather than erroring.",
+      "assumptions_used": [
+        "`.gitignore` line 62 (`/.agent-harness/runs/`) governs the same repository this checker validates",
+        "'safe direction' is read as: a check with nothing to examine should not be indistinguishable from a check that examined everything and found it clean"
+      ],
+      "evidence_refs": [
+        ".gitignore",
+        ".agent-harness/scripts/check_canary_freshness.py",
+        ".agent-harness/scripts/validate_harness.py"
+      ],
+      "evidence_fingerprint": "sha256:9d5019445507e160b0b1fac8f30334f31422541a349ee26f5a97b7f959b05a65",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"; rm -rf \"$SCRATCH/.agent-harness/runs\"",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": true, \"attestations\": 0, \"live\": [], \"superseded\": [], \"errors\": []}, exit 0",
+        "grep -n 'agent-harness' .gitignore  # -> /.agent-harness/ACTIVE_RUN, /.agent-harness/ACTIVE_RUN.tmp.*, /.agent-harness/runs/, /.agent-harness/leases/, /.agent-harness/admissions/"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether validate_harness.py is ever actually invoked in production against a tree where .agent-harness/runs/ is absent was not directly observed; the finding is that the checker's own behavior in that state is a silent pass rather than an error, which is the fail-open direction regardless of how often the state occurs."
+      ]
+    },
+    {
+      "finding_id": "F-C7CHK-007",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "C7's own retained bytes contradict the story told about its first BLOCKED attempt. `raw_logs/start_out_c7_attempt1.json` (real SubagentStart hook output, not canary prose) states verbatim: 'Run lease: recorded for run run-20260801-f10-d070-canary-c7' and 'Hook preflight: PASS -- canonical context and runtime identity verified; assignment role verification required', with no start_errors. `write_json_atomic()` either fully succeeds or raises OSError (which would have flipped lease_note to 'NOT RECORDED (...)' and added a start_errors entry, changing the preflight line) -- so this retained output proves `.agent-harness/leases/d070-canary-c7.json` genuinely existed when Start-attempt-1 finished. Yet `raw_logs/stop_out_c7_attempt1.json` (real SubagentStop hook output, moments later, same agent_id) blocks with: 'No Start-time run lease exists for this agent, so its run identity cannot be established.' -- the exact message `subagent_stop_validate.py` emits only when `lease_file.exists()` is False. `lease_path()` is a pure function of `agent_id` alone (`.agent-harness/leases/{agent_id}.json`), used identically by both hooks, and both events carry the identical `agent_id: \"d070-canary-c7\"`. So the lease that Start's own retained output says it wrote was gone by the time of the first Stop attempt, and nothing retained explains why. No second SubagentStart event/output is retained for 'attempt 2' either, so the retained bytes give no account of how a valid lease came to exist again for the successful second Stop attempt. `.agent-harness/leases/` is itself gitignored and not retained anywhere in the repo, so this entire gap is unverifiable from retained bytes -- the C7 attestation's own 'method' and 'first_attempt_blocked' fields narrate a clean 'no lease ever existed, then a re-run succeeded' story that the two independently hook-generated artifacts do not actually support.",
+      "assumptions_used": [
+        "write_json_atomic()'s only failure mode visible to the caller is OSError, which the Start hook's own code turns into a distinct lease_note and a start_errors entry that would have appeared in the retained additionalContext text",
+        "lease_path(harness, agent_id) in .codex/hooks/_common.py -- `harness/'leases'/f'{agent_id}.json'` -- is the function both hooks call, confirmed by direct source read"
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/raw_logs/start_out_c7_attempt1.json",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/raw_logs/stop_out_c7_attempt1.json",
+        ".codex/hooks/_common.py",
+        ".codex/hooks/subagent_start_context.py",
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json"
+      ],
+      "evidence_fingerprint": "sha256:368f9e3dfb2084baaf39df32a3a1c56c901590f62d16a8861cee6a28a800a306",
+      "counterevidence_refs": [
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/ADMISSIONS.jsonl"
+      ],
+      "reproduction": [
+        "python3 -c \"import json; d=json.load(open('.agent-harness/runs/run-20260801-f10-d070-canary-c7/raw_logs/start_out_c7_attempt1.json')); ac=d['hookSpecificOutput']['additionalContext']; print([l for l in ac.split(chr(10)) if 'Run lease' in l or 'Hook preflight' in l])\"",
+        "cat .agent-harness/runs/run-20260801-f10-d070-canary-c7/raw_logs/stop_out_c7_attempt1.json",
+        "grep -n 'def lease_path' -A5 .codex/hooks/_common.py",
+        "grep -n 'active_run\\b\\|lease is None\\|No Start-time run lease' .codex/hooks/subagent_stop_validate.py"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Whether the lease's disappearance between Start-attempt-1 and Stop-attempt-1 was a deliberate negative-control step (manually removing the lease to exercise the BLOCKED path) or a genuine unexplained fault cannot be determined from retained bytes; either way the retained record does not say so, and the attestation's prose reads as though no lease ever existed, which the retained Start output contradicts."
+      ]
+    },
+    {
+      "finding_id": "F-C7CHK-008",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The closed `ATTESTED_FILES` map fails in the correct direction. An attestation naming a `*_sha256` field not present in `ATTESTED_FILES` (e.g. `session_start_hook_sha256`) is treated as an ERROR, not a skip: `ok: false`, exit 1, with the message 'which this checker cannot map to a file. Add it to ATTESTED_FILES; an unmappable digest is an error, never a skip.' This attack, as posed, does not yield a bypass; the code matches its own documented FAIL-CLOSED intent here.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "evidence_fingerprint": "sha256:d3b46b4c00e2c38cd090bd913e998e34244e0f1bd413ed46a8181d96c2bc1829",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-unmapped-canary-c104/artifacts\"",
+        "cat > .../UNMAPPED.json <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C104\",\"session_start_hook_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json",
+        "observed: {\"ok\": false, \"errors\": [\".../UNMAPPED.json: canary C104 attests 'session_start_hook_sha256', which this checker cannot map to a file...\"]}, exit 1"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-009",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Attack examined and FAILED to demonstrate a bypass beyond what plain field omission already provides: hiding a genuinely-relevant digest under a `NON_FILE_DIGESTS` name (`token_digest`, `assignment_sha256`, `result_sha256`) alongside one legitimate fresh field does cause the checker to ignore that hidden value -- reproduced with `stop_hook_sha256` fresh plus a bogus value under `token_digest`, giving `ok: true` -- but partial-coverage attestation (naming only a subset of ATTESTED_FILES) is already native and error-free by design: the real, retained C5 attestation (`.agent-harness/runs/run-20260729-f10-d070-canary-c6/../c5/artifacts/...`) attests only `stop_hook_sha256` and never mentions `start_hook_sha256` at all, with zero error, exactly as the commit message itself documents ('C5 attested only the stop hook'). Since every field in these self-asserted documents is optional and free-form, an author who wants to avoid attesting a given hook can simply omit the field; renaming it into an excluded key adds no capability a plain omission did not already have. Reported per the assignment's request to record attacks that failed, with exact inputs.",
+      "assumptions_used": [
+        "The 'material bypass' bar is: does this technique let an attacker achieve something plain field omission (already unrestricted) could not"
+      ],
+      "evidence_refs": [
+        ".agent-harness/scripts/check_canary_freshness.py",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".agent-harness/runs/run-20260729-f10-d070-canary-c6/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json"
+      ],
+      "evidence_fingerprint": "sha256:aa9cbf70fae73d5705a36d33322c4599d0b9b1a30b3ca04460f42c8c75a87376",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"",
+        "mkdir -p \"$SCRATCH/.agent-harness/runs/run-99999999-smuggle-canary-c101/artifacts\"",
+        "cat > .../SMUGGLE.json <<'EOF'\n{\"artifact_class\":\"CANARY_ATTESTATION\",\"canary\":\"C101\",\"stop_hook_sha256\":\"0533da884250e03e91670aa458e3915859d91b31fc856fa72537dae65a966625\",\"token_digest\":\"deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef\"}\nEOF",
+        "cd \"$SCRATCH\" && venv/bin/python .agent-harness/scripts/check_canary_freshness.py --json  # -> ok:true, C101 live",
+        "cat .agent-harness/runs/run-20260729-f10-d070-canary-c5/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json  # confirms real C5 already omits start_hook_sha256 with no error, precedent for native partial coverage"
+      ],
+      "confidence": 0.8,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-C7CHK-010",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "C7's central structural claim -- that the ACTIVE_RUN pointer did not decide which run absorbed the consume -- holds up on independent, code-level and byte-level grounds, not merely on the attestation's own prose. `subagent_stop_validate.py` reads `active_run` from the ACTIVE_RUN pointer at line 224-229 but references that variable exactly once more, at line 235, inside `if not active_run and lease is None:` -- a branch that requires the absence of a lease. Since C7 held a lease (per F-C7CHK-007's caveat about how it came to exist, the lease WAS present at the successful Stop), this branch is structurally unreachable and `bound_run` (line 302, `str(lease['run_id'])`) is derived solely from the lease, never from `active_run`. This is independently corroborated by retained directory contents: `runs/run-20260801-f10-d070-canary-c7-decoy/` contains only its `RUN_PLAN.json` -- no ADMISSIONS.jsonl, no results -- while every consumption artifact (the ADMISSIONS.jsonl 'consumed' row, `results/A-D070-CANARY-C7.json`) landed under the real `run-20260801-f10-d070-canary-c7` directory. A fresh sha256 of the retained results file recomputes to `2210a68c019d65373b3449ce48689c177a446158659b85e324e6cbb897cc4393`, matching `result_sha256` in both ADMISSIONS.jsonl and the attestation exactly. The claimed bracket arithmetic also checks out exactly: `captured_after`(...514070565Z) minus `captured_before`(...469291912Z) = 44,778,653 ns = 0.044778653 s, matching the claimed `bracket_width_seconds: 0.044779`, and the `consumed` ADMISSIONS.jsonl timestamp (13:39:47) falls inside the claimed bracket's wall second.",
+      "assumptions_used": [
+        "The lease that subagent_stop_validate.py consumed at the successful Stop attempt was intact and correctly formed at that time, independent of the unresolved gap documented in F-C7CHK-007 about how it came to exist"
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/artifacts/ACTIVE_RUN_BRACKET_AROUND_CONSUME.json",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/ADMISSIONS.jsonl",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7/results/A-D070-CANARY-C7.json",
+        ".agent-harness/runs/run-20260801-f10-d070-canary-c7-decoy/RUN_PLAN.json"
+      ],
+      "evidence_fingerprint": "sha256:5c978e21169447d3b9781d9dc4348321a432fa79dd6091e579deebb2390a3e87",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "grep -n active_run .codex/hooks/subagent_stop_validate.py  # -> only lines 224,227,229,235",
+        "find .agent-harness/runs/run-20260801-f10-d070-canary-c7-decoy -type f  # -> only RUN_PLAN.json",
+        "sha256sum .agent-harness/runs/run-20260801-f10-d070-canary-c7/results/A-D070-CANARY-C7.json  # -> 2210a68c019d65373b3449ce48689c177a446158659b85e324e6cbb897cc4393",
+        "python3 -c \"print((514070565-469291912)/1e9)\"  # -> 0.044778653, matches claimed bracket_width_seconds 0.044779"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Depends on the lease integrity assumption above, which F-C7CHK-007 shows is not itself fully accounted for in retained bytes"
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260801-f10-d067-review-r10/results/A-D067-R10-CANARY.json"
+  ]
+}

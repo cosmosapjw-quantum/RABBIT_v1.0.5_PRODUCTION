@@ -1,0 +1,264 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r3",
+  "assignment_id": "A-D039-PROMPT-AUDIT-R3",
+  "context_version": "afd4024b39dbe1745eeb8da3a0a541bdb58751638310741dc40f1f739e7eafdb",
+  "agent_id": "019f8d8f-e253-7d91-b451-85f37b1016e2",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r3",
+    "assignment_id": "A-D039-PROMPT-AUDIT-R3",
+    "context_version": "afd4024b39dbe1745eeb8da3a0a541bdb58751638310741dc40f1f739e7eafdb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:6897f55dbeb42178038e9199c6ddca09463c8b79b9dbb0e650163f50e88efa68",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/results/A-D039-PROMPT-AUDIT-R3.json",
+  "started_at": "2026-07-23T06:00:36Z",
+  "completed_at": "2026-07-23T06:05:50Z",
+  "tool_versions": {
+    "bash": "GNU bash 5.2.21",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "git": "read-only branch and revision inspection",
+    "review_method": "targeted R2 correction-closure audit; no scientific execution"
+  },
+  "commands": [
+    "bounded sed reads of CONTEXT_PACK.md, the registered assignment, RESULT_ENVELOPE.json, independent_auditor.md, the revised D-039 prompt, the R2 result, current control records, and the two D-037 envelopes",
+    "python3 using _harness.hash_files for the path-aware independent_auditor role digest",
+    "sha256sum of all 10 current immutable-evidence entries, all 12 exact historical novelty entries, and all 8 current control-surface entries printed by the prompt",
+    "sha256sum of the registered assignment, canonical template, revised D-039 prompt, and R2 result",
+    "git branch --show-current",
+    "git rev-parse main",
+    "targeted rg line-location checks for the revised authority ladder, D-037 ceiling, closed-world matrix, novelty discriminator, route label, and achieved blocker-movement rule",
+    "no collision, W7, B3, CAS, MPFR, Rust, GL48/64, Jacobian, Radau, trajectory, endpoint, or RABBIT execution"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+      "sha256": "a0b2b2a0537905e1b18e19cc3d40c04b80c5f3d5ded766dc12e96aa0ff8ed8e7"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r2/results/A-D039-PROMPT-AUDIT-R2.json",
+      "sha256": "898fcf024505e495c265823da1fab012e1c55363ab726ff44b0bf3c5b2f40f0e"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/assignments/A-D039-PROMPT-AUDIT-R3.json",
+      "sha256": "6897f55dbeb42178038e9199c6ddca09463c8b79b9dbb0e650163f50e88efa68"
+    },
+    {
+      "path": "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md",
+      "sha256": "860f9121bcd555fad95233959fc7b9e003caedd70fbad303ebb85f20564cec65"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json",
+      "sha256": "c145f298ac65dbcf76676542ff4ebcbb85f14a157dd956a6e0b2f71d2c0a3e6f"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "scripts/audit/w7_b3v2_contract_source.py",
+      "sha256": "60fc9668a72bba0ef576138c17b1bfe4f435bc215b8850dde4ac424cdb66dfbe"
+    },
+    {
+      "path": "docs/audit/BD622_W7_exact_test_vectors.json",
+      "sha256": "e991d415284da9f6d552e6d011739b0948aef03a3a47051e425602fcd3c6e3cd"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": "RABBIT_f10_independent_validation_branch_review.md",
+      "sha256": "a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575"
+    },
+    {
+      "path": ".singularhistory",
+      "sha256": "5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1"
+    },
+    {
+      "path": "src/rabbit/decoupling/_independent_noqke.py",
+      "sha256": "535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-HISTORY-MAPPER-R3.json",
+      "sha256": "7e0dc3a7aeb067178ac9a17d9db86f81da4aa65b134237e5f1217ac2afb14e02"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/history/rabbit-legacy-all-refs.bundle",
+      "sha256": "9f22f318f50a994a0a17c11ec831c5beaeeb42b67fbcae8111f9fee41af21920"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/artifacts/M1_POINTWISE_STATIC_RESULT.json",
+      "sha256": "cab73790f74d0ebe36ceb956adb26076949e896d496122ddc04d521c3ebe91c4"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-minimal-independent-noqke-r2-implementation/ADJUDICATION.md",
+      "sha256": "7e9b16d10436bb0d348524563c8acd475cfe8df951b15a0a51c1586d3a8adc7c"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/artifacts/GL48_STATIC_R1.json",
+      "sha256": "4726c40e403aad42d15503b0ed11760558f98de06a8e6f54259ab219887c73db"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/ADJUDICATION.md",
+      "sha256": "e4fd24e22ca619e3af8052b35562cf33ed56e0a651101276f6fe4323cfe08048"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/results/A-CONSERVATIVE-METHOD-ADJUDICATION.json",
+      "sha256": "ab8b2bc73d005ced403a686b2cc0f53b05785dee968c58e1af6b8af495017b81"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718T095658Z/results/A-GL48-COVARIANCE-ADJUDICATION.json",
+      "sha256": "3002ad870c60cefcf0bdd3c20f990f025a2aa7fee64f7ae979ca95678b37acbd"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-MAXENT-DERIVATION.json",
+      "sha256": "c336130ba4ba1e34bbc9b7b46e7c91f0b4a3817bd0a0d2cad43d0d9dbf61fd6b"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-BINARY64-AUDIT.json",
+      "sha256": "6f7744569e8b7c9347ae7c2f21e490c5748373c3ea4e99b87ef1f82cb4899f7d"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-THREE-NODE-DESIGN-ADJUDICATION.json",
+      "sha256": "614999cdf68a1f3492eb543a1a297454fa6c5f529463156ce7fd23e4ff94c159"
+    },
+    {
+      "path": ".publish-local/20260719T052443Z/quarantine/.agent-harness/runs/run-20260718-f10-static-fail-closeout/results/A-F10-METHOD-REOPEN-AUDIT.json",
+      "sha256": "bf8ea677f31d3f8673bab46e348b77e942c7cbcb38a1b47cc150292c2310fba4"
+    },
+    {
+      "path": ".agent-harness/context/FROZEN_DECISIONS.md",
+      "sha256": "32184d27b13e33a18464693120ba99f41d7c224839afdbe825906958263eaa79"
+    },
+    {
+      "path": ".agent-harness/context/GATE_REGISTRY.json",
+      "sha256": "ed10fd9cb00efb4b48a709ef7a9f3e0188e2a397b65b3c717a7791c1c3eda3b1"
+    },
+    {
+      "path": ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+      "sha256": "53b445c6bc7eae8ee5dea3f3037c4dbd4b96d2243329bf1c15ed79d6e9ea49ee"
+    },
+    {
+      "path": "docs/harness/PROJECT_STATE.md",
+      "sha256": "95647322b048a6a8ac291069d4e7f316361603939c5644fc8f695bdb314319b7"
+    },
+    {
+      "path": "docs/harness/CLAIM_LEDGER.md",
+      "sha256": "9658f5297a64411365bbf0c624a78a0c6e9ac819f2dbd552557053a67a2cffce"
+    },
+    {
+      "path": "docs/harness/VALIDATION_LEDGER.md",
+      "sha256": "5be2e6c790c49ecc1e6d828826ba59f27983a5bf6bf8239798e8cf92cd9f7364"
+    },
+    {
+      "path": "docs/harness/DECISION_LOG.md",
+      "sha256": "4bd22676b1b1a3a71beb40e58aae9efa134ce54ad17d011d392513f08956c1eb"
+    },
+    {
+      "path": "docs/harness/NEXT_SESSION_PROMPT.md",
+      "sha256": "7d88ad4cdb7a361a4ad28d8b7588ed54f75b09e4fe551ed79a9c51004ebc6e33"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D039-PROMPT-R3-001",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The revised prompt closes the R2 authority ambiguity. It limits this report to informing exactly DO_NOT_REOPEN or AUTHORIZE_ONE_FRESH_DESIGN_ONLY_REVIEW, denies W7/B3/numerical/implementation authority, freezes the noncompressible sequence of unanimous whole-design PASS then a separate owner W7 decision, followed by executed W7 evidence plus fresh adjudication PASS then another owner B3 decision, and labels the auditor's verdict as report-contract/editorial quality only. The proposing auditor cannot self-certify design readiness.",
+      "assumptions_used": [
+        "A report-contract editorial verdict is distinct from a whole-design blind gate verdict.",
+        "Each stated owner decision is necessary but cannot replace its preceding scientific evidence."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:8-34",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:267-273",
+        ".agent-harness/context/FROZEN_DECISIONS.md:D-037-D-039",
+        ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r2/results/A-D039-PROMPT-AUDIT-R2.json:F-D039-PROMPT-R2-002"
+      ],
+      "evidence_fingerprint": "sha256:a0b2b2a0537905e1b18e19cc3d40c04b80c5f3d5ded766dc12e96aa0ff8ed8e7",
+      "counterevidence_refs": [
+        "The R2 grouped-authority sentence and unconstrained self-certification path are absent from the revised bytes."
+      ],
+      "reproduction": [
+        "Read prompt lines 24-34 together with output items 8 and 10; no unstated authority transition is required."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D039-PROMPT-R3-002",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The revised evidence packet closes the R2 provenance and status ambiguity. All 10 explicit current immutable-evidence paths/hashes, all 12 exact historical novelty paths/hashes, and all 8 current control-surface paths/hashes exist and match byte-for-byte; the active branch and main base also match. The prompt explicitly states that D-037 stopped at the first admitted non-PASS without four-axis completion, merge, or adjudicator, preserves four bounded passes and seven binding failures, and reports the independent-FLRW, covariance-metrology, and current-tree regression gates as FAIL while limiting harness PASS to the validated schema-v2 process boundary.",
+      "assumptions_used": [
+        "A sibling path in the historical manifest means the explicitly named file in the same fully specified directory.",
+        "Hash equality establishes byte identity and provenance only, not scientific validity."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:8-20",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:55-126",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:137-141",
+        ".agent-harness/context/GATE_REGISTRY.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json"
+      ],
+      "evidence_fingerprint": "sha256:32184d27b13e33a18464693120ba99f41d7c224839afdbe825906958263eaa79",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run sha256sum on the 30 exact manifest paths printed in prompt sections 3, Exact historical novelty manifest, and Current control-surface manifest; every digest equals the printed value.",
+        "Run git branch --show-current and git rev-parse main; results are f10-independent-validation-b3v2 and ca3a0138d496732edfc13559fd8f7ceec7ef4d6e."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D039-PROMPT-R3-003",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The revised candidate/output contract closes the R2 completeness, novelty, cost, and wording ambiguities. Its closed universe names all four D-037 passes, all seven failures, every current gate, every declared consumer, and every candidate operation/evidence/falsifier; it requires stable IDs, row counts, bidirectional coverage, and zero unmapped binding items with INCONCLUSIVE/no-go on omission. Every novelty claim must identify an operation-level mechanism and a pre-output discriminator against each prior route. The route label is the non-hype MATERIALLY_NEW_CANDIDATE_PROPOSED, achieved scientific blocker movement is fixed at 0.00, and future movement is separately labelled as an assumption-bearing estimate. No binding R2 ambiguity remains, so the revised prompt is safe to copy verbatim within its declared read-only authority.",
+      "assumptions_used": [
+        "Completeness is evaluated against the explicitly frozen finite universe, not an open-ended literature universe.",
+        "A read-only proposal produces no achieved scientific gate movement."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:201-233",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:253-278",
+        ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r2/results/A-D039-PROMPT-AUDIT-R2.json:F-D039-PROMPT-R2-004"
+      ],
+      "evidence_fingerprint": "sha256:a0b2b2a0537905e1b18e19cc3d40c04b80c5f3d5ded766dc12e96aa0ff8ed8e7",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Attempt to omit one binding item or substitute narrative novelty: prompt lines 224-233 require INCONCLUSIVE/no-go.",
+        "Inspect output items 2 and 11 for the material-novelty route label, fixed achieved ratio 0.00, and separate future estimate."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r3/results/A-D039-PROMPT-AUDIT-R3.json"
+  ]
+}

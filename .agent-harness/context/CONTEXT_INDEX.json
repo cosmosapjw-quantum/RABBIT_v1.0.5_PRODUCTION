@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "context_version": "d9515008ac63edd39547b354b2a80f5f56df244e840c179b81e75fd1655a46a8",
+  "context_version": "add6e933233e59116df6ac3516ec7d16e12ed190e323f847e0231bf7d1eb9c81",
   "max_injected_chars": 24000,
   "shared_files": [
     ".agent-harness/context/SHARED_CONTEXT.md",
@@ -9,9 +9,17 @@
     ".agent-harness/context/GATE_REGISTRY.json"
   ],
   "reference_only_files": [
-    ".agent-harness/context/CLAIM_REGISTRY.jsonl"
+    ".agent-harness/context/CLAIM_REGISTRY.jsonl",
+    "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+    "docs/audit/BD622_W5_d028_discriminator_result.md",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "scripts/audit/w7_b3v2_contract_source.py",
+    "docs/audit/BD622_W7_exact_test_vectors.json"
   ],
   "role_files": {
+    "default": [
+      ".agent-harness/context/roles/independent_auditor.md"
+    ],
     "context_mapper": [
       ".agent-harness/context/roles/context_mapper.md"
     ],
@@ -39,11 +47,11 @@
     ".agent-harness/runs/*/results/*",
     ".agent-harness/runs/*/raw_logs/*"
   ],
-  "built_at": "2026-07-19T06:47:47+00:00",
+  "built_at": "2026-09-01T16:30:09+00:00",
   "file_hashes": {
-    ".agent-harness/context/SHARED_CONTEXT.md": "3b212ee8cf5dcd5c9530d6da457743a552384d49a116b42b06a461349163d2b4",
+    ".agent-harness/context/SHARED_CONTEXT.md": "781bd7efdb815f67e1444af08ed54f49219447671b33ef9cf6f2a3cc38828fb0",
     ".agent-harness/context/SYMBOLS.md": "6d5fbe058c2750ed680ce835e6e03438200b36b16743bf6c1be99649030e096b",
-    ".agent-harness/context/FROZEN_DECISIONS.md": "3c78c051001c465a5d6b90493a35b1007436f1ef4ff203e2849958d923720ac8",
-    ".agent-harness/context/GATE_REGISTRY.json": "6895b6d0b4e0ca7eb8fe86dcc1bf86a75aa2fd0252176c619d0d21e9d3b07248"
+    ".agent-harness/context/FROZEN_DECISIONS.md": "92a8244ed8c96aaac746ddaabb4c8b02538daa0c0d97b961977156dd5db6007e",
+    ".agent-harness/context/GATE_REGISTRY.json": "4ec125dc1f02349822d2bc5050fb9d0782cea21c6cac2d9c67faf5c5605a3106"
   }
 }

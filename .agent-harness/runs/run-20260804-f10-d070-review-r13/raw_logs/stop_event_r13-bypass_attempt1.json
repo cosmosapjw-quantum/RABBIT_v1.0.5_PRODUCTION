@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r13-bypass",
+  "agent_type": "default",
+  "last_assistant_message": "HARNESS_RESULT: {\"assignment_id\": \"A-R13-BYPASS\", \"context_version\": \"8e078342ba32b74b8dcede962311bc5028dd9f84b5e576a3b935fc0f791ba396\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260804-f10-d070-review-r13/results/A-R13-BYPASS.json\", \"admission_proof\": \"sha256:9ebd1d6f206081a732b070fc0e797ccb9d8456dc9d9722ecaf19653ff8930eb3\"}"
+}

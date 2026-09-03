@@ -1,0 +1,560 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+  "assignment_id": "A-D042-CANDIDATE-SEARCH",
+  "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+  "agent_id": "019f8f6c-5a9c-7283-ba3b-6075021c4af9",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d042-breakthrough-prompt",
+    "assignment_id": "A-D042-CANDIDATE-SEARCH",
+    "context_version": "f7ab1890ae530c6ba638d7356c1232585ef6c12fbf1d8839d403e374f3423ae3",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:5cc0c35ee2df86bc022abd6dd44a658aee262d006dede5c04b201b5b4f5e86f0",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json",
+  "started_at": "2026-07-23T14:39:08Z",
+  "completed_at": "2026-07-23T14:55:38Z",
+  "tool_versions": {
+    "python": "3.12.3",
+    "sed": "GNU sed 4.9",
+    "sha256sum": "GNU coreutils 9.4",
+    "ripgrep": "14.1.0",
+    "scientific_or_cas_execution": "none",
+    "token_use": "UNAVAILABLE - no reliable stage-scoped counter is exposed"
+  },
+  "commands": [
+    "sed -n in bounded chunks over .agent-harness/generated/CONTEXT_PACK.md and every assignment-named input",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-CANDIDATE-SEARCH.json",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json .agent-harness/context/roles/independent_auditor.md",
+    "python3 -c using .agent-harness/scripts/_harness.py::hash_files to verify the ordered review-role bundle digest",
+    "sha256sum over the seven assignment-named domain-evidence files",
+    "python3 -c using .agent-harness/scripts/_harness.py::hash_files to compute the ordered complete required-input bundle digest",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json",
+    "python3 .agent-harness/scripts/validate_harness.py",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/assignments/A-D042-CANDIDATE-SEARCH.json",
+      "sha256": "5cc0c35ee2df86bc022abd6dd44a658aee262d006dede5c04b201b5b4f5e86f0"
+    },
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "raw_file_sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "ordered_role_bundle_sha256": "9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1"
+    },
+    {
+      "path": ".agent-harness/templates/RESULT_ENVELOPE.json",
+      "sha256": "936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+    },
+    {
+      "path": "BD622_D039_second_external_audit_report.md",
+      "sha256": "1362c9321dd738dd1a8f7c66072d598fea1cecf02cd03f0c15a863571f3659c7"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+      "sha256": "9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json",
+      "sha256": "18d6449d975f809ab1a3427f497b95711d777648750568ff7d92b6dd96d33df6"
+    },
+    {
+      "path": "docs/audit/BD622_W6_comparator_design_proof_pack.md",
+      "sha256": "9caaa445f1606d893c5a9a7f226358b17f8a3cedd26664228cd4db0668e0ea94"
+    },
+    {
+      "path": "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md",
+      "sha256": "a8b76b17540011fca0d3a487132b8809c57c927a7ffdb0b5409b11d246c87b3a"
+    },
+    {
+      "path": "docs/audit/BD622_W5_d028_discriminator_result.md",
+      "sha256": "83a37543ecbd2dc837f9089d5531d406d836c2b364b46d904cdcfb935b1a0eb0"
+    },
+    {
+      "path": "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md",
+      "sha256": "509c6ead5042ee5af761ad9ecdfd540f20a9bc0414e1defa137249738dd0975e"
+    },
+    {
+      "purpose": "Ordered complete assignment-required input bundle",
+      "sha256": "4ba0e32e6f4671932bdb28688bed130bff2857a240dd782ba2280d98c3e02a8e"
+    }
+  ],
+  "candidate_search_contract": {
+    "contract_status": "SPECIFIED_SEARCH_ONLY",
+    "candidate_feasibility": "NOT_EVALUATED",
+    "gate_effect": "NONE",
+    "owner_effect": "NONE",
+    "controlling_disposition": "STOP/PRESERVE",
+    "purpose": "Run a code-bearing external mechanism search that can kill or retain materially new operation families before any RABBIT collision observable exists.",
+    "explicit_exclusions": [
+      "Fort or a Fort-derived slice, wrapper, cache, controller, or source translation",
+      "target-leg pointwise deposition or collocation with off-grid scatter",
+      "GL48/global weak B3 or any exact change-of-basis/domain restatement of it",
+      "maximum-entropy support selection or a selector-equivalent reconstruction",
+      "same-space PCR-DG or a distinct-Petrov restatement",
+      "a separate analytic-tail split, lost-event ledger, or zero-extension oracle",
+      "fixed- or moving-energy DVM, including a finite reversible edge lattice under a renamed coordinate",
+      "conventional DSMC or stochastic trajectory sampling",
+      "higher precision without a new proof-producing operation graph",
+      "a compiler, language, AD, accelerator, or packaging wrapper without a new collision/state mechanism"
+    ],
+    "authority_firewall": {
+      "allowed": [
+        "Read-only external design and mechanism code",
+        "Manufactured reversible-event algebra",
+        "Exact rational, symbolic, interval, or deterministic-cubature negative controls",
+        "Operation graphs, branch tables, conditioning bounds, derivative checks, entropy signs, invariant residuals, cost counts, and hashes",
+        "A conclusion that no family survives"
+      ],
+      "forbidden": [
+        "Importing or executing any RABBIT, Rust, JAX, Fort, D-028, B3, or W7 collision implementation",
+        "A physical collision rate, spectrum, action, T01-T12 value, Radau segment, trajectory, endpoint, or RABBIT unblinding",
+        "A repository patch, PR, design-cycle activation, W7/B3 implementation, norm/cap/grid/formula/tolerance change, F-11/Bianchi work, QKE, or public runtime claim",
+        "Using a passing mechanism experiment as scientific validation or implementation authority"
+      ],
+      "pass_ceiling": "At most PROPOSED_SEARCH_SURVIVOR. A survivor may inform only a later owner choice to request one fresh blind design-only review."
+    },
+    "mandatory_seven_stage_loop": [
+      {
+        "stage": "self-discover",
+        "checkable_output": "An exclusion ledger and a list of eight operation families with no repository-wide rediscovery.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "step-back",
+        "checkable_output": "Every family must change at least two structural axes, including state coordinates or collision-measure reduction; an integrator, language, basis, compiler, or precision change alone is rejected.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "metacognitive self-ask",
+        "checkable_output": "For every family, write the strongest disguised-old-method explanation before looking at its kill-test result.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "CoVe",
+        "checkable_output": "Verify physics, entropy, half-line, derivative, conditioning, independence, and cost obligations against the frozen evidence hashes; bounded historical passes are not promoted.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "adversarial self-ask",
+        "checkable_output": "Run the cheapest hostile falsifier before any larger code; first binding non-PASS archives that family.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "CCoT",
+        "checkable_output": "Emit a machine-readable obligation-to-operation-to-falsifier-to-consumer graph and reject every unmapped, multiply authoritative, or bypassable node.",
+        "completion": "PASS"
+      },
+      {
+        "stage": "PDR",
+        "checkable_output": "State what was learned, what would reverse the verdict, and whether the family is ARCHIVE or PROPOSED_SEARCH_SURVIVOR; zero survivors preserves DO_NOT_REOPEN.",
+        "completion": "PASS"
+      }
+    ],
+    "mandatory_code_package": {
+      "execution_location": "A fresh assignment-specific external temporary directory; no repository writes.",
+      "files": [
+        "candidate.yaml with equations, conventions, domains, branches, exact operation order, and family ID",
+        "src/ containing executable source; prose, pseudocode, or a notebook alone is non-admissible",
+        "tests/ containing at least one positive control and one deliberately failing negative control",
+        "run_manifest.json with source hashes, dependency versions, deterministic seeds if any, commands, exit codes, and output hashes",
+        "operation_dag.json generated from the executed mechanism, not hand-copied from prose",
+        "novelty.json with strongest novelty and strongest disguised-old-method cases plus a discriminating witness",
+        "risk_ledger.json covering physics, entropy, tail, Jacobian, conditioning, covariance, and cost",
+        "results.json containing only approved mechanism-level outputs"
+      ],
+      "approved_outputs": [
+        "Exact identities and branch/support classifications",
+        "Entropy-production signs on manufactured occupations",
+        "Invariant-nullspace and permutation certificates",
+        "Directed enclosure widths and radii-polynomial inequalities",
+        "Jacobian/JVP consistency, one-sided threshold labels, and condition estimates",
+        "Deterministic cubature discrepancies, tensor ranks, interval widths, operation counts, memory estimates, and hashes"
+      ],
+      "banned_outputs": [
+        "Any value interpretable as a RABBIT or physical neutrino collision observable",
+        "A physical full-catalogue rate or finite-temperature trajectory datum",
+        "Any comparison against an unblinded RABBIT output"
+      ],
+      "experiment_budget": {
+        "source_loc_max": 500,
+        "wall_seconds_max": 300,
+        "memory_gib_max": 4,
+        "network": "off during execution",
+        "exception_rule": "A budget exception is a pre-output non-PASS and requires a new owner decision; it may not be silently enlarged."
+      }
+    },
+    "common_admission_gates": [
+      {
+        "gate": "N0_STRUCTURAL_NOVELTY",
+        "pass": "The executed operation DAG differs on at least two structural axes, one being state coordinates or collision-measure reduction, and supplies a concrete witness that no operation-preserving bijection reduces it to an excluded route.",
+        "fail": "The difference is only basis, grid, language, precision, compiler, wrapper, time integrator, or a renamed finite edge/deposition graph."
+      },
+      {
+        "gate": "N1_SINGLE_PHYSICS_GRAPH",
+        "pass": "One typed source owns species, spin, symmetry/orientation, finite-m_e support, event reversal, normalization, units, and every consumer; no caller selects a convention.",
+        "fail": "A physical factor, branch, or consumer is omitted, duplicated, fitted, or deferred."
+      },
+      {
+        "gate": "N2_INVARIANTS_ENTROPY",
+        "pass": "Forward/reverse detailed balance, exact allowed species invariants, four-momentum/first-law accounting, CP/mu-tau covariance, strict-open Pauli bounds, and nonnegative fermionic entropy production follow from the mechanism before physical quadrature.",
+        "fail": "Any identity is repaired after output, averaged, projected, symmetrized, clipped, or asserted from the scalar event sign alone."
+      },
+      {
+        "gate": "N3_FULL_HALF_LINE",
+        "pass": "One non-bypassable full-half-line representation has a directed finite bound on every finite-m_e branch and its derivative semantics.",
+        "fail": "Finite Y_max plus a second tail/lost-event oracle, zero extension, an unbounded endpoint term, or an uncovered support branch appears."
+      },
+      {
+        "gate": "N4_JACOBIAN_AND_BRANCHES",
+        "pass": "The actual executed graph produces a deterministic derivative or certified generalized derivative, with physical-right threshold semantics and no hidden state-dependent topology.",
+        "fail": "Finite differences substitute for the binding derivative, an active set/selector changes silently, or a threshold box cannot be classified."
+      },
+      {
+        "gate": "N5_NUMERICAL_CERTIFICATE",
+        "pass": "Operation order, reductions, denominators, state envelope, conditioning, directed intervals, and a prospective binary64 path are frozen before any physical output.",
+        "fail": "Higher precision, favorable samples, or post-output tuning substitutes for a bound."
+      },
+      {
+        "gate": "N6_COST_AND_DEFLATION",
+        "pass": "The mechanism experiment fits its fixed budget and gives a file-specific permanent LOC/operation/memory estimate plus a same-change deletion plan; no new policy/readiness/telemetry surface is proposed.",
+        "fail": "Cost is omitted, depends on dense scaling without a bound, or adds a parallel authority surface."
+      }
+    ],
+    "steelman_protocol": {
+      "novelty_case": "State the strongest case that the family changes the mathematical operator or state evolution, identify the exact old failure class it removes, and name the experiment that would distinguish the graphs.",
+      "disguised_old_case": "Construct the strongest basis/domain/graph isomorphism, finite-edge interpretation, projection interpretation, or wrapper interpretation that would collapse the family to an excluded route.",
+      "decision_rule": "A family survives only if executable evidence defeats the disguised-old case. Rhetorical novelty, citations, and vote counts do not count.",
+      "blindness": "The novelty and disguised-old writeups are sealed before the kill-test result; reviewers do not read one another before submitting."
+    },
+    "candidate_families": [
+      {
+        "rank": 1,
+        "candidate_id": "C-D042-SCKR",
+        "name": "Semialgebraic coarea-kernel reduction",
+        "search_status": "PROPOSED_SEARCH_ONLY",
+        "operation_mechanism": "Eliminate the four-momentum delta function and angular shell analytically into a branch-complete piecewise Fredholm kernel on the continuous half-line. Apply the reduced kernel directly to a continuous strict-open spectrum; there is no event-to-grid scatter, finite reaction lattice, global entropy-mass solve, or separate tail oracle.",
+        "structural_novelty_test": {
+          "novelty_steelman": "The collision geometry is replaced by an independently derived piecewise integral kernel, so support, reversal, normalization, and differentiation are operations in the kernel rather than depositions into a selected basis.",
+          "disguised_old_steelman": "A precomputed event-weight table followed by collocation or modal projection is only pointwise deposition or B3 with cached coefficients.",
+          "pass_witness": "The executed DAG must contain exact shell elimination and branch integrals, must lack target-leg scatter and M^-1 q, and must produce the same continuum kernel under two independent coordinate eliminations."
+        },
+        "cheapest_pre_output_falsifier": "Run symbolic resultant/CAD branch enumeration for manufactured elastic 0+m<->0+m and pair 0+0<->m+m shells. Any overlapping, missing, reversal-unpaired, negative-measure, or derivative-unclassified branch kills the family.",
+        "risks": {
+          "physics": "Spin, symmetry/orientation, 2*pi factors, finite-m_e interference, and process-specific support may be lost during analytic elimination.",
+          "entropy": "Analytic reduction can separate forward and reverse pieces and thereby destroy the common nonnegative event measure needed for J log(F/R)>=0.",
+          "tail": "Piecewise kernel asymptotics must be integrable on one rationally compactified half-line without an added analytic tail consumer.",
+          "jacobian": "Kernel endpoints move with state-independent temperatures and finite-m_e thresholds; derivatives are piecewise and physical-right at branch creation."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone symbolic-plus-interval program deriving the complete branch table for two manufactured positive amplitudes, integrating one angular variable exactly, and emitting forward/reverse kernel, support, derivative, and operation-DAG records.",
+          "inputs": "Exact rational four-momenta, m=1, manufactured M2=1+s^2+t^2, exact threshold neighbours, and strict-open rational occupations.",
+          "positive_controls": "Shells and conservation close exactly; branch weights are nonnegative; forward/reverse records are involutive; the entropy integrand sign is preserved.",
+          "negative_controls": "Delete one threshold branch, flip one Jacobian sign, and split forward/reverse weights; each mutation must fail.",
+          "allowed_outputs": "Branch coverage, exact identities, interval widths, derivative labels, DAG hash, LOC, operation count, and no rate.",
+          "kill_rule": "Any unresolved branch, negative weight, reversal mismatch, nonintegrable endpoint, or old-route DAG match is terminal."
+        }
+      },
+      {
+        "rank": 2,
+        "candidate_id": "C-D042-VCNK",
+        "name": "Validated continuum Newton-Kantorovich trajectory",
+        "search_status": "PROPOSED_SEARCH_ONLY",
+        "operation_mechanism": "Represent the complete spectrum and time history in a weighted Chebyshev tensor on a single compactified half-line and solve the continuum integral equation with interval Newton or radii polynomials, proving an existence/uniqueness ball around an independently constructed center.",
+        "structural_novelty_test": {
+          "novelty_steelman": "The primary object is a proof of a continuum trajectory residual and inverse bound, not a quadrature-level collision vector or ordinary ODE trajectory.",
+          "disguised_old_steelman": "Running B3 or another excluded evaluator at high precision and wrapping its samples in intervals is higher precision plus a validator wrapper.",
+          "pass_witness": "The center, residual, Fréchet derivative, approximate inverse, and tail norm are independently generated; the proof graph contains a radii inequality and no imported collision or trajectory bytes."
+        },
+        "cheapest_pre_output_falsifier": "Attempt Y+Z(r)<r on a manufactured two-channel fermionic continuum problem with one support threshold. If interval dependency, inverse norm, or threshold ambiguity prevents any positive radius inside the fixed budget, kill the family.",
+        "risks": {
+          "physics": "A rigorous proof can certify the wrong residual if the independent phase-space normalization or finite-m_e map is wrong.",
+          "entropy": "Existence and uniqueness do not imply positivity or a discrete H-theorem; the validated ball must remain strict-open and enclose nonnegative total entropy production.",
+          "tail": "Weighted Chebyshev regularity can fail at the compactified endpoint or where threshold branches meet it.",
+          "jacobian": "The Fréchet derivative must be invertible on the declared Banach space; threshold crossings require one-sided domains and can invalidate a global smooth inverse."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone interval Chebyshev solver for a manufactured reversible two-species collision integral with exact equilibrium and a finite-mass support switch; emit Y, Z0, Z1, Z2, radius, and proof status.",
+          "inputs": "Analytic strict-open spectra, exact manufactured kernel, one compactification, fixed polynomial orders, and directed interval arithmetic.",
+          "positive_controls": "Exact equilibrium residual is enclosed at zero; a small non-equilibrium case closes a positive radii polynomial; interval JVP encloses a high-accuracy independent derivative.",
+          "negative_controls": "Corrupt a symmetry factor and force a threshold-straddling box; the first must fail the null and the second must fail branch admission.",
+          "allowed_outputs": "Proof bounds, condition estimates, branch labels, hashes, and no collision observable.",
+          "kill_rule": "No positive radii certificate, imported old evaluator bytes, an unclassified branch, or a second tail authority is terminal."
+        }
+      },
+      {
+        "rank": 3,
+        "candidate_id": "C-D042-FRMP",
+        "name": "Fermionic reaction-metric proximal flow",
+        "search_status": "PROPOSED_SEARCH_ONLY",
+        "operation_mechanism": "Advance the continuum collision dynamics by a variational proximal step in the logarithmic-mean reaction metric. Exact stoichiometric null directions live in the mobility, and the update minimizes movement plus entropy dissipation rather than reconstructing a spectrum from moments.",
+        "structural_novelty_test": {
+          "novelty_steelman": "A convex reaction-metric step can make Pauli bounds, invariants, reversibility, and entropy decay properties of the update rather than repairs to a computed collision vector.",
+          "disguised_old_steelman": "If the KKT equations reduce to M beta_dot=q, a maximum-entropy selector, or a finite energy-edge network, the family is B3, D-029, or DVM under new optimization language.",
+          "pass_witness": "Derive the continuum reaction metric and show an operation-level discriminant: its KKT map, nullspace, and timestep map cannot be transformed into an excluded mass solve, selector, or energy lattice."
+        },
+        "cheapest_pre_output_falsifier": "For two coupled manufactured 2<->2 reactions, test convexity and first-order consistency throughout the strict-open cube. One indefinite Hessian, spurious stationary point, active boundary, or O(dt) mismatch kills the family.",
+        "risks": {
+          "physics": "The logarithmic-mean mobility must carry the exact invariant measure, amplitudes, orientation, and finite-m_e support without fitted conductances.",
+          "entropy": "The scalar event metric is promising, but global convexity and the correct neutrino-plus-bath entropy must be proved for the coupled continuum step.",
+          "tail": "An infinite-dimensional metric may be noncoercive at small occupations; truncation or a finite edge lattice would violate novelty.",
+          "jacobian": "The implicit KKT derivative may be ill-conditioned or semismooth near Pauli boundaries and threshold changes."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone convex-solver implementation of two coupled reversible manufactured reaction flows with analytic gradient, Hessian, KKT JVP, and exact stoichiometric constraints.",
+          "inputs": "Exact rational stoichiometry, positive manufactured conductances, rational strict-open occupations, and a fixed dt ladder.",
+          "positive_controls": "Conservation is exact, occupations stay interior, entropy is monotone, detailed balance is stationary, and the dt->0 derivative matches the manufactured vector field.",
+          "negative_controls": "Insert a negative conductance and remove one null vector; convexity and invariant tests must fail.",
+          "allowed_outputs": "KKT residuals, eigenvalue enclosures, invariant and entropy signs, convergence orders, graph hashes, and no physical rate.",
+          "kill_rule": "Loss of convexity, strict interior, exact invariants, first-order consistency, or continuum non-DVM novelty is terminal."
+        }
+      },
+      {
+        "rank": 4,
+        "candidate_id": "C-D042-NTSF",
+        "name": "Nonnegative tensorized stoichiometric factorization",
+        "search_status": "PROPOSED_SEARCH_ONLY",
+        "operation_mechanism": "Factor the continuous reaction measure into a bounded sum of nonnegative separable tensors, each multiplied by an exact stoichiometric rank-one bracket and logarithmic-mean affinity. Signed low-rank cancellation and post-hoc conservation are forbidden.",
+        "structural_novelty_test": {
+          "novelty_steelman": "A positive separable reaction operator changes the event integration and derivative graph while preserving entropy and invariants factor-by-factor.",
+          "disguised_old_steelman": "Compressing B3 event weights or the same finite event table is an accelerator wrapper; a signed tensor train is only a different reduction order.",
+          "pass_witness": "Generate factors directly from independent shell/amplitude definitions, prove every factor nonnegative and reversal-paired, and show the executed operator has no old event table, target deposition, or global mass solve."
+        },
+        "cheapest_pre_output_falsifier": "On a manufactured threshold-straddling positive kernel, compute a certified nonnegative-rank/residual lower bound at the fixed rank budget. If the required enclosure needs a negative factor or exceeds the predeclared residual bound, kill the family.",
+        "risks": {
+          "physics": "Finite-m_e interference terms may be sign-indefinite termwise even when the full amplitude is nonnegative; factorization can corrupt normalization or support.",
+          "entropy": "Only nonnegative forward/reverse paired factors preserve the eventwise entropy sign; signed compression invalidates it.",
+          "tail": "Separated half-line factors need a single directed residual bound and may have rank explosion near thresholds.",
+          "jacobian": "Differentiating adaptive ranks or recompression is discontinuous; rank and factor order must be frozen."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone nonnegative tensor factorizer for a synthetic positive shell kernel with a hard threshold and exact forward/reverse symmetry; include directed residual and analytic JVP.",
+          "inputs": "A fixed rational tensor grid used only as a manufactured witness, rank cap 16, positive kernel formula, and strict-open rational occupations.",
+          "positive_controls": "All factors and weights are nonnegative, reversal factors pair exactly, invariant incidence annihilates the prescribed nullspace, entropy sign holds, and JVP agrees.",
+          "negative_controls": "Inject a signed factor and permute one reversal index; both must fail before residual reporting.",
+          "allowed_outputs": "Rank, residual enclosure, sign certificates, nullspace, JVP error, DAG hash, and no rate.",
+          "kill_rule": "Negative factors, rank-budget failure, adaptive-rank topology, unbounded tail rank, or old-table compression is terminal."
+        }
+      },
+      {
+        "rank": 5,
+        "candidate_id": "C-D042-CVRS",
+        "name": "Certified Volterra response series",
+        "search_status": "PROPOSED_SEARCH_ONLY",
+        "operation_mechanism": "Solve the collision-coupled history as a rigorously bounded functional Volterra series about the exact FD equilibrium manifold, with independently derived multilinear collision kernels and an interval remainder. This is a trajectory expansion, not an analytic tail split.",
+        "structural_novelty_test": {
+          "novelty_steelman": "The evolving object is a convergent hierarchy of continuum response kernels, so the full trajectory can be certified without stepping an excluded semidiscrete collision operator.",
+          "disguised_old_steelman": "Automatic differentiation of B3/W7 followed by a Taylor expansion is the same operator plus a wrapper; a separate analytic tail term is the archived analytic candidate.",
+          "pass_witness": "Derive the first three kernels from independent continuum equations, give a nonzero convergence radius and a single full-half-line norm, and show no excluded evaluator or tail consumer occurs in the graph."
+        },
+        "cheapest_pre_output_falsifier": "Bound the majorant contraction and remainder on a manufactured finite-mass support-switch problem. A majorant >=1, a branch singularity inside the declared domain, or failure to enclose a named perturbation kills the family.",
+        "risks": {
+          "physics": "Every multilinear kernel must retain the complete catalogue, finite-m_e branches, Pauli factors, and expansion/first-law coupling.",
+          "entropy": "Finite truncation of an entropy-producing nonlinear operator need not preserve the entropy sign.",
+          "tail": "Uniform analytic norms on the full half-line may fail for threshold motion or slowly decaying perturbations.",
+          "jacobian": "The response hierarchy supplies derivatives only inside its convergence radius; branch crossings can destroy analyticity."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone symbolic/interval generator through cubic order for a manufactured reversible fermionic integral equation, including a computable majorant and remainder.",
+          "inputs": "Exact equilibrium, two analytic perturbations, one smooth and one threshold-touching manufactured kernel, and a fixed amplitude ladder.",
+          "positive_controls": "Coefficients reproduce direct manufactured solutions inside the certified radius; detailed balance and invariant kernels vanish order by order.",
+          "negative_controls": "Move the support threshold into the expansion ball and enlarge the perturbation past the radius; both must produce non-PASS rather than a wider fit.",
+          "allowed_outputs": "Kernel hashes, coefficient identities, convergence radius, remainder bound, and no physical trajectory.",
+          "kill_rule": "No positive radius, orderwise invariant/entropy contradiction, threshold nonanalyticity, imported old derivatives, or split tail is terminal."
+        }
+      },
+      {
+        "rank": 6,
+        "candidate_id": "C-D042-DHQMC",
+        "name": "Deterministic higher-order QMC reaction-manifold oracle",
+        "search_status": "PROPOSED_SEARCH_ONLY_LOW_PRIOR",
+        "operation_mechanism": "Map the continuous on-shell event manifold to a fixed unit cube and integrate all-leg weak reaction residuals with a deterministic higher-order digital net, exact equilibrium control variates, and a computable discrepancy-times-variation error bound. No particles or stochastic trajectory exist.",
+        "structural_novelty_test": {
+          "novelty_steelman": "Deterministic digital-net integration is independent of DSMC and can probe the continuum event measure without an energy lattice or target deposition.",
+          "disguised_old_steelman": "Random scrambles, particle histories, or applying QMC to B3's existing event integrand is DSMC-like sampling or an integration wrapper, not a comparator mechanism.",
+          "pass_witness": "The candidate independently derives the cube map and continuous state adapter, uses a fixed deterministic net, and provides a rigorous error certificate for both residual and JVP."
+        },
+        "cheapest_pre_output_falsifier": "Evaluate Hardy-Krause or weighted Sobolev variation for a manufactured finite-mass threshold integrand. Infinite/unbounded variation, a nonrigorous convergence estimate, or sample cost beyond budget kills the family.",
+        "risks": {
+          "physics": "The cube map can omit shell branches or misweight spin/orientation and is vulnerable to threshold surfaces.",
+          "entropy": "Positive equal weights help, but a control variate or signed high-order rule can break the common forward/reverse event measure.",
+          "tail": "The half-line map may create endpoint singularities with unbounded variation.",
+          "jacobian": "A fixed net can differentiate smooth integrands, but branch motion and adaptive dimension reordering make the JVP discontinuous."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone deterministic digital-net integrator for a manufactured reversible shell integral with a known exact value, exact null control variate, fixed point order, and analytic JVP.",
+          "inputs": "Two smooth cube maps and one threshold-cut map, exact rational occupations, nested deterministic net sizes, and no random seed.",
+          "positive_controls": "Bitwise reproducibility, exact equilibrium cancellation, forward/reverse pairing, and certified error decrease for the smooth map.",
+          "negative_controls": "Use a threshold map with unbounded declared variation and a signed control variate; both must be rejected.",
+          "allowed_outputs": "Discrepancy, variation bound, error certificate, JVP consistency, point count, hashes, and no physical integral.",
+          "kill_rule": "No rigorous bound, stochastic rescue, signed entropy-breaking weights, threshold variation blowup, or integration-only wrapper status is terminal."
+        }
+      },
+      {
+        "rank": 7,
+        "candidate_id": "C-D042-HME",
+        "name": "Hierarchical moment-set enclosure",
+        "search_status": "PROPOSED_KILL_CONTROL",
+        "operation_mechanism": "Evolve a nested set of exact moments and enclose, rather than select, every collision action compatible with strict-open occupations, invariants, and tail constraints. No maximum-entropy or other single-spectrum selector is permitted.",
+        "structural_novelty_test": {
+          "novelty_steelman": "A set-valued certified enclosure is epistemically different from choosing a reconstructed spectrum and could prove an endpoint interval without a pointwise comparator.",
+          "disguised_old_steelman": "Choosing a representative spectrum is D-029/max-entropy; discretizing the feasible set on energy nodes is DVM; reporting a wide interval is not full-spectral validation.",
+          "pass_witness": "The actual solver must propagate convex function-space bounds directly, with a convergence theorem and no selector or finite energy-edge dynamics."
+        },
+        "cheapest_pre_output_falsifier": "Construct two strict-open analytic spectra with identical first K moments but different manufactured four-leg collision functionals. If the certified width at K<=64 cannot meet the preregistered normalized 1e-10 screen or lacks a proved contraction with K, archive the family.",
+        "risks": {
+          "physics": "Moment constraints may omit reaction-specific shell information and cannot share a normalization error between bounds.",
+          "entropy": "Bounding entropy production over a moment set is a nonlinear global optimization and may include negative values even when each exact spectrum is physical.",
+          "tail": "Finite moments do not determine the tail; a second tail ansatz would violate the contract.",
+          "jacobian": "Set-valued maps are generally nonsmooth; a usable deterministic derivative requires strong regularity and unique active certificates."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone exact-rational/SOS or interval LP program constructing same-moment strict-open spectrum pairs and bounding a manufactured quartic collision functional as K doubles.",
+          "inputs": "Analytic positive basis functions on one compactified half-line, K in {8,16,32,64}, exact moment rows, and a normalized manufactured reversible functional.",
+          "positive_controls": "Known identical spectra give zero width; nested feasible sets shrink monotonically; invariant moments are exact.",
+          "negative_controls": "A hidden nullspace perturbation with unchanged moments must widen the collision interval and be detected.",
+          "allowed_outputs": "Moment ranks, exact witnesses, interval widths, contraction ratios, operation counts, and no physical moment or rate.",
+          "kill_rule": "A same-moment separation above the fixed screen without a proved contraction, any selector, a tail ansatz, or a finite energy-node evolution is terminal."
+        }
+      },
+      {
+        "rank": 8,
+        "candidate_id": "C-D042-MLGF",
+        "name": "Mellin-Laplace generating-function closure",
+        "search_status": "DELIBERATE_KILL_AT_ENTRY",
+        "operation_mechanism": "Represent each strict-open spectrum by a generating function and attempt to turn the collision operator into a closed algebra of products, convolutions, and transform derivatives on the full half-line.",
+        "structural_novelty_test": {
+          "novelty_steelman": "A genuinely closed transform algebra would eliminate momentum grids, deposition, modal mass solves, and a separate tail because moments and asymptotics are encoded in one analytic object.",
+          "disguised_old_steelman": "Using finitely sampled transforms plus inverse reconstruction is a moment selector or global spectral basis; numerical convolution of old collision samples is a wrapper.",
+          "pass_witness": "An exact finite closed algebra must contain Pauli products, finite-m_e support, all species channels, and the derivative without inverse reconstruction."
+        },
+        "cheapest_pre_output_falsifier": "Use exact symbolic code to show whether the finite-m_e square-root threshold and four-factor Pauli term remain in a finite transform algebra. Independently construct same-transform-sample spectra with different manufactured collision transforms. A positive nonclosure witness deliberately kills the route.",
+        "risks": {
+          "physics": "Finite-m_e shells and interference destroy simple convolution, while finite transform samples lose species- and branch-resolved information.",
+          "entropy": "Transform truncation does not preserve pointwise 0<f<1 or J log(F/R)>=0.",
+          "tail": "Analyticity strips and inversion contours require stronger tail assumptions than the frozen target supplies.",
+          "jacobian": "The transform Jacobian is closed only if the nonlinear operator is; inverse transforms amplify truncation and branch errors."
+        },
+        "minimal_executable_mechanism_experiment": {
+          "code": "Standalone exact symbolic program testing closure of a manufactured massless channel, then adding finite-mass support and Pauli products; construct a nullspace perturbation for K transform samples.",
+          "inputs": "Rational mixtures of exponentials, m=1 threshold, exact transform parameters, K in {4,8,16}, and a manufactured reversible kernel.",
+          "positive_controls": "The linear massless convolution toy closes exactly and inverse transforms reproduce its inputs.",
+          "negative_controls": "Finite-mass support and a same-sample nullspace perturbation must expose nonclosure and nonuniqueness.",
+          "allowed_outputs": "Symbolic closure identities, counterexample hashes, transform condition estimates, and no physical transform.",
+          "kill_rule": "The expected finite-mass or finite-sample nonclosure is a PASS of the negative control and an immediate ARCHIVE verdict for the family."
+        }
+      }
+    ],
+    "ranking_and_stop_rule": {
+      "individual_rule": "A family is evaluated in rank order but independently. Run N0 and its cheapest code falsifier first. First binding non-PASS archives the family; no repair, budget increase, hybridization, or candidate substitution occurs in this audit.",
+      "survivor_rule": "A survivor must pass N0-N6 and every family-specific kill test. Surviving a toy experiment does not establish scientific feasibility.",
+      "selection_rule": "If more than one survives, rank lexicographically by complete hard-gate closure, stronger non-isomorphism witness, smaller trusted code base, smaller certified error/conditioning bound, smaller deterministic operation and memory count, and greater same-change deletion. An exact tie is INCONCLUSIVE.",
+      "hybrid_rule": "No hybrid is considered in the same audit. A later hybrid is a new family with a new novelty and kill-test contract.",
+      "all_fail": "Archive all families, preserve STOP/PRESERVE and DO_NOT_REOPEN, and request a materially new external operation mechanism rather than another internal remediation.",
+      "one_survives": "Record only PROPOSED_SEARCH_SURVIVOR and ask the owner whether to authorize one fresh blind design-only review. No numerical, W7, B3, PR, trajectory, or endpoint authority follows.",
+      "cost_accounting": "Report added/deleted/net lines for the external package, exact token use as UNAVAILABLE when unavailable, blocker movement as zero until a complete design obligation class closes, and a cost-effectiveness verdict."
+    },
+    "pdr": {
+      "decision": "ISSUE_THE_SEARCH_CONTRACT_WITH_STOP_PRESERVE_IN_FORCE",
+      "why": "D-041 rejects the current Petrov/analytic/MEDVM set but does not prove a universal impossibility. The eight families above probe different operator-level escape routes while putting executable falsifiers ahead of physical output.",
+      "strongest_novelty_case": "SCKR and VCNK could replace event deposition and ordinary trajectory execution with an independently reduced continuum kernel or a proof-producing continuum residual; FRMP could make entropy and invariants properties of the update.",
+      "strongest_disguised_old_case": "Most families can collapse into an old route: SCKR into cached deposition, VCNK into interval-wrapped B3, FRMP into a mass solve or DVM, NTSF into compression, DHQMC into an integration wrapper, HME/MLGF into selectors or finite moment bases.",
+      "falsifiable_reversal": "Only actual code that passes the graph non-isomorphism test, its first hostile falsifier, and N0-N6 may change a family from search-only to PROPOSED_SEARCH_SURVIVOR.",
+      "claim_ceiling": "The contract is complete enough to solicit safe code-bearing external proposals. It validates no candidate and changes no scientific gate."
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "F-D042-CANDIDATE-SEARCH-001",
+      "claim_id": "C-D042-CANDIDATE-SEARCH",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "A bounded candidate-search contract is specified for eight operation-level families outside the named Fort, deposition, B3/Petrov, selector, tail-split, DVM, DSMC, precision-only, and wrapper-only routes. Every family has a graph-level novelty discriminator, its strongest novelty and disguised-old-method cases, a cheapest pre-output falsifier, explicit physics/entropy/tail/Jacobian risks, and a minimal executable code experiment.",
+      "assumptions_used": [
+        "D-039 STOP/PRESERVE and D-041 G-EXT-FEASIBILITY FAIL remain controlling.",
+        "Current non-admission is not a universal impossibility theorem for every materially new operation mechanism.",
+        "A safe search contract may require manufactured mechanism code while forbidding physical collision output.",
+        "A basis, language, compiler, precision, or integrator change alone is not structural novelty."
+      ],
+      "evidence_refs": [
+        "BD622_D039_second_external_audit_report.md#sections-5-13",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#gate_decision",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#sections-2-13",
+        "docs/audit/BD622_W3_per_row_mb_closed_form_oracles.md#status-and-scope",
+        "docs/audit/BD622_W5_d028_discriminator_result.md#interpretation",
+        "docs/audit/BD622_D040_legacy_jax_bianchi_dsmc_mitigation_survey_2026-07-23.md#why-dsmc-is-not-the-primary-bianchi-route"
+      ],
+      "evidence_fingerprint": "sha256:4ba0e32e6f4671932bdb28688bed130bff2857a240dd782ba2280d98c3e02a8e",
+      "counterevidence_refs": [
+        "EXT-01 proved only a bounded same-space no-go and left distinct-space, analytic, and moving-remap universal feasibility unresolved.",
+        "The D-039 report identified PCR-DG as a possible lead, but D-041 later rejected that candidate set as written.",
+        "D-040 leaves deterministic static QMC spot checks as a possible future integration method, not endpoint authority."
+      ],
+      "reproduction": [
+        "Verify that candidate_families has eight distinct IDs.",
+        "For each family verify the presence of operation_mechanism, structural_novelty_test, cheapest_pre_output_falsifier, four risk fields, and minimal_executable_mechanism_experiment.",
+        "Cross-check explicit_exclusions against the assignment task and N0_STRUCTURAL_NOVELTY.",
+        "Apply ranking_and_stop_rule without promoting a toy PASS to candidate or scientific PASS."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "No family has supplied or executed its mandatory external code package.",
+        "Scientific feasibility, permanent implementation cost, and eventual full-spectral endpoint suitability remain NOT_EVALUATED.",
+        "The search may validly conclude that all eight families fail."
+      ]
+    },
+    {
+      "finding_id": "F-D042-CANDIDATE-SEARCH-002",
+      "claim_id": "C-D042-CANDIDATE-SEARCH",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "The contract requires actual executable mechanism code while preserving the no-output and no-authority boundary. It permits only manufactured algebra, geometry, interval, deterministic-cubature, derivative, conditioning, operation-count, and hash evidence; a first binding non-PASS archives the family, and even a complete search survivor can trigger only a separate owner choice for a blind design-only review.",
+      "assumptions_used": [
+        "The current assignment authorizes contract design but no candidate execution.",
+        "RABBIT collision output includes any physical rate, spectrum, action, T01-T12 datum, segment, trajectory, endpoint, or unblinded comparison.",
+        "External temporary-directory code and result hashes do not modify repository science or authority."
+      ],
+      "evidence_refs": [
+        ".agent-harness/generated/CONTEXT_PACK.md#frozen-scope",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#tool_boundary",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#forbidden_shortcuts",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ADJUDICATOR.json#authority_statement",
+        "BD622_D039_second_external_audit_report.md#single-bounded-owner-choice"
+      ],
+      "evidence_fingerprint": "sha256:4ba0e32e6f4671932bdb28688bed130bff2857a240dd782ba2280d98c3e02a8e",
+      "counterevidence_refs": [
+        "Manufactured mechanism tests cannot validate absolute microphysics or a trajectory.",
+        "A code-bearing experiment can still be an excluded method under a disguised graph; N0 therefore remains binding."
+      ],
+      "reproduction": [
+        "Inspect authority_firewall, mandatory_code_package, common_admission_gates, and ranking_and_stop_rule.",
+        "Confirm that every candidate experiment's allowed_outputs excludes a physical collision observable.",
+        "Confirm that one_survives names only PROPOSED_SEARCH_SURVIVOR and requires a separate owner choice."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A future owner must decide whether any surviving external package deserves a blind design-only review.",
+        "No W7, B3, numerical, implementation, trajectory, endpoint, F-11, QKE, or public authority is created."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d042-breakthrough-prompt/results/A-D042-CANDIDATE-SEARCH.json"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d056-independent-trajectory",
+ "assignment_id": "A-TRAJ-ADJUDICATION",
+ "context_version": "7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3",
+ "agent_id": "a411fecdfbd829616",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d056-independent-trajectory",
+  "assignment_id": "A-TRAJ-ADJUDICATION",
+  "context_version": "7f6f1d9775a7a2da403c11ab8643e95cb454dd5a0c6b89fd1d185dfd02bcdbd3",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:90bbd169e2d8e25e16812e517c3454e60600d7bcc5f5c971a598fa4f961cad8d",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-ADJUDICATION.json",
+ "started_at": "2026-07-28T04:52:00+00:00",
+ "completed_at": "2026-07-28T04:56:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2",
+  "scipy": "1.17.0"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-TRAJ-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "VERDICT PASS; GATE FLIP. All T1..T6 recomputed from the report; freeze chronology verified (+2:45:41); module 760a7c04 verified; the endpoint also sits within band of the Rust Rodas5P partner anchor, so the pass is not solver-selection. Structural independence satisfied (affine GL48 vs exponential N48 rule, cloglog vs logit, SciPy BDF vs Rust BDF/Rodas5P, NumPy/SciPy vs Rust, independent EOS and constants); the fail-condition's enumerated closed routes (D-027 pointwise, D-028 Galerkin for bytes 535370c1, D-029 three-node, D-037 B3-v2/W7) are correctly not implicated - this is a new route on the closed catalogue with metrology bounded at D-055. Limitations adjudicated: matched-resolution N48-class agreement only, 4/4/24 angular order bounded pre-freeze, single execution single platform, rtol 1e-6, same-model reviews, no continuum claim. G-F10-INDEPENDENT-FLRW flips fail -> pass citing run-20260728-f10-d056-independent-trajectory; all eight F-10 gates are then PASS. Nothing beyond the flip is authorized: unblinding, public/production, W7/B3, T01-T12, GL64/Radau, Rust/JAX forward work, F-11/Bianchi, and QKE remain closed.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "traj_report.json",
+    "freeze 5d9f521"
+   ],
+   "evidence_fingerprint": "sha256:8ea58a3a42f0d129f1597297ba3e3c66bf45f16d2acc735932c856e0fe34e4d3",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.95,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d056-independent-trajectory/results/A-TRAJ-ADJUDICATION.json"
+ ]
+}

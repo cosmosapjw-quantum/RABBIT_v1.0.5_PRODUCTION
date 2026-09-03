@@ -1,0 +1,221 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260724-f10-open-breakthrough-intake",
+  "assignment_id": "A-OPEN-CROSS-REJECT",
+  "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+  "agent_id": "019f9357-868d-7c82-bef6-c14c0b26a726",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260724-f10-open-breakthrough-intake",
+    "assignment_id": "A-OPEN-CROSS-REJECT",
+    "context_version": "ce8d4edf75d8e7e80f628d856f9fcb1265838cf8357cc2830c76916399412e53",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:51e80b90ec1431ee36930292d6aea62cdac0ab024568d19ca47274ec2887177d",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-REJECT.json",
+  "started_at": "2026-07-24T09:09:47Z",
+  "completed_at": "2026-07-24T09:16:10Z",
+  "tool_versions": {
+    "python3": "3.12.3",
+    "jq": "1.7",
+    "sha256sum": "GNU coreutils 9.4",
+    "scientific_or_collision_execution": "NOT_RUN"
+  },
+  "commands": [
+    "sha256sum .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,110p;111,220p;221,340p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-CROSS-REJECT.json",
+    "sed -n '1,300p' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/assignments/A-OPEN-CROSS-REJECT.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "python3 -c \"import hashlib,pathlib; p='.agent-harness/context/roles/independent_auditor.md'; b=pathlib.Path(p).read_bytes(); print(hashlib.sha256(p.encode()+b'\\\\0'+b+b'\\\\0').hexdigest())\"",
+    "sed -n '1,200p' .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,240p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sha256sum .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json",
+    "sed -n in bounded complete chunks over INTAKE_EVIDENCE_MAP.json and the four allowed Wave-1 result envelopes",
+    "jq -r '.assignment_id as $a | .findings[] | [$a,.finding_id,.claim_id,.verdict,.evidence_fingerprint] | @tsv' over the four allowed Wave-1 result envelopes",
+    "jq -s '[.[].findings[]] | {finding_count:length,claim_ids:(map(.claim_id)|unique),unique_fingerprint_count:(map(.evidence_fingerprint)|unique|length),duplicate_fingerprints:(group_by(.evidence_fingerprint)|map(select(length>1)))}' over the four allowed Wave-1 result envelopes",
+    "python3 -c \"from fractions import Fraction as F; G=lambda x1,x2,x3,x4:(1-x1)*(1-x2)*x3*x4-x1*x2*(1-x3)*(1-x4); d=G(F(1,2),F(1,2),F(2,3),F(2,3)); dp=G(F(1,4),F(1,4),F(1,3),F(1,3)); dr=G(F(1,3),F(1,3),F(1,4),F(1,4)); print('D(f;z)=',d,'D(Pf;z)=',dp,'-D(f;z)=',-d,'-D(f;Rz)=',-dr)\""
+  ],
+  "artifacts": [
+    "sha256:a560178bb1efa895d9ba1df8c80d4e78c18f7c410fdf18166db9afef4cc03bfb .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+    "sha256:8108f3372545400860c80bb6bbaf46b428cf7a6204b17e91cdc2867d8dd55732 .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json",
+    "sha256:35bd47044c9ae2bb77fd399731101710ddd57d7edfdfe382bff2d7533ee2ce98 .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json",
+    "sha256:3197ee7afe29e2c97b7a762a6d8daaf0fb60eae5266995799fff473dbb1241e5 .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json",
+    "sha256:7de7f8c9213feb1985dda64a4f7af2eaa2009ee2611aa2984459f59611c73040 .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-OPEN-CROSS-REJECT-001",
+      "claim_id": "C-OPEN-CROSS-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Label-only OCAR is structurally insufficient for general momentum-dependent spectra. Wave-1 physics correctly establishes the bounded lane identity P*s=-s and the fixed-chart Pauli sign algebra, but its subsequent assertion D(Pf;z)=-D(f;z) silently identifies different momentum slots. With P acting only on mu/tau labels at the same ordered chart z=(1,2;3,4), the correct identity is D(Pf;z)=-D(f;Rz), where R exchanges incoming and outgoing slots (1,2)<->(3,4). An exact strict-open counterexample gives D(f;z)=1/12 and D(Pf;z)=5/144, not -1/12, while -D(f;Rz)=5/144. Therefore P*s=-s does not by itself prove C(Pf)=P*C(f); the quadrature, support, weight, kernel, basis evaluation, and deposition multiset must also be closed under R. This resolves the only substantive Wave-1 row-6 conflict in favour of the numerical chart-level finding without invalidating the narrower event sign/null/entropy algebra.",
+      "assumptions_used": [
+        "P swaps mu/tau particle and antiparticle labels but does not move momentum arguments.",
+        "R is the ordered-leg involution taking incoming slots 1,2 to outgoing slots 3,4 and conversely.",
+        "Occupations are strict-open and may vary with momentum.",
+        "The Pauli drive convention is the gain-minus-loss convention reconstructed in F-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-002."
+      ],
+      "evidence_refs": [
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-002 sha256:4123c36751c76b767b988df2635258aa551dee3d212dbc599ae5fe402386580e",
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-004 sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-002 sha256:ce5c17d723b4603dee773f2aabb75aebd30738d7e307c2856e0bd97ac1a734f8"
+      ],
+      "evidence_fingerprint": "sha256:184b2aea723a960a4f4f26a71dcd02b06c23fa5ff5e5c5a22f9ec2d091fb48cf",
+      "counterevidence_refs": [
+        "STRONGEST_LABEL-ORBIT_STEELMAN: one reversible event with all four leg depositions is sufficient in the continuum, because a change of variables by R makes the integrated collision operator equivariant; an exactly R-closed discrete cubature could inherit the same result without evaluating two unrelated shell geometries.",
+        "The bounded fixed-stratum or momentum-constant case can satisfy D(Pf;z)=-D(f;z), but that special case does not cover the asymmetric momentum-dependent discriminator."
+      ],
+      "reproduction": [
+        "jq '.findings[] | select(.finding_id==\"F-OPEN-ROW6-002\" or .finding_id==\"F-OPEN-ROW6-004\")' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-PHYSICS.json",
+        "jq '.findings[] | select(.finding_id==\"F-OPEN-ROW6-002\")' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json",
+        "python3 -c \"from fractions import Fraction as F; G=lambda x1,x2,x3,x4:(1-x1)*(1-x2)*x3*x4-x1*x2*(1-x3)*(1-x4); print(G(F(1,2),F(1,2),F(2,3),F(2,3)),G(F(1,4),F(1,4),F(1,3),F(1,3)), -G(F(1,3),F(1,3),F(1,4),F(1,4)))\""
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "A future exact sample-level R-bijection could implement chart closure implicitly; it would not establish that labels alone were sufficient."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-REJECT-002",
+      "claim_id": "C-OPEN-CROSS-REJECT",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The narrower future candidate C-R6-ORBIT-CHART is not rejected, but remains PROPOSED. Mandatory chart closure may be realized either by two explicitly paired ordered orientation members with a prospectively derived quotient equivalent to the Reynolds one-half average, or by a proved exact R-bijection of one discrete sample set. Both forms must preserve identical support, weights, matrix/kernel factors, basis/deposition transforms, sign convention, and normalization; retain both orientation addends rather than deduplicating them by label key; accumulate only after the correct addend multiset exists; and differentiate both contributions in the JVP. Shared massless shell geometry may reduce cost, so mandatory closure does not imply two complete base evaluations. None of these exact bytes, mutants, derivative checks, or costs exists in the returned package.",
+      "assumptions_used": [
+        "C-R6-ORBIT-CHART is a new repository-free nonphysical discriminator, not a repair or implementation authorization.",
+        "The row-6 mass/coupling degeneracy permits geometry reuse but does not equate the two Pauli drives.",
+        "A state-dependent canonical representative is excluded because it would create tie/branch derivative semantics."
+      ],
+      "evidence_refs": [
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-001 sha256:e0d0be1c9c850a56bd2df79f45140c42894349e859348fc084876d58ff18845f",
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-004 sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-002 sha256:ce5c17d723b4603dee773f2aabb75aebd30738d7e307c2856e0bd97ac1a734f8",
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-004 sha256:1bc9bb9dcd8ec45730e1eacaae0ee19362b704f07196904532f7ab1256b59d61"
+      ],
+      "evidence_fingerprint": "sha256:e56006837e5f12493e9536537936469200fb709a03ad8126bf20f0135e06eadf",
+      "counterevidence_refs": [
+        "Full Reynolds is reported to provide an exactly equivariant same-evaluator reference with nonzero antisymmetric response at approximately two base calls.",
+        "The current evidence does not prove that an explicit paired-chart assembly can meet absolute normalization, native arithmetic, JVP, entropy, cost, or structural-independence gates."
+      ],
+      "reproduction": [
+        "DECISIVE_FALSIFIER: prospectively enumerate the pre-native row-6 sample/addend multiset and require an involution z->Rz with equal weight, support, kernel, and transformed modal deposition; a label-only implementation without that bijection must fail C(Pf)=P*C(f) on strict-open asymmetric rational spectra.",
+        "Require drop-R-member, wrong-quotient, lane-sign, reduction-order, and consumer-bypass mutants to fail before any numerical promotion."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "STANCE-CHANGE CONDITION FOR LABEL-ONLY: a prospective proof that the one-chart discrete operation graph already contains an exact R involution plus passing asymmetric modal/JVP mutants would remove the explicit-pair requirement, while preserving the chart-closure requirement.",
+        "STANCE-CHANGE CONDITION FOR C-R6-ORBIT-CHART: only a fresh owner-authorized, sealed, repository-free microprototype passing the full applicable D-042R gate set could justify an intake-review request."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-REJECT-003",
+      "claim_id": "C-OPEN-CROSS-REJECT",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The strongest bounded empirical steelman is retained without promotion. Wave-1 numerical evidence reports that row 6 dominates the asymmetric same-code covariance defect across GL8-Y8, GL12-Y12, and GL48-Y24, while the electron component is exactly covariant and other GL48 self rows are zero or tiny; physics separately identifies the same heavy-heavy event and validates its narrow sign/null/entropy algebra. This supports selecting row 6 for a future discriminator. It does not prove chart incompleteness is the unique root, because order and y_max co-vary, native reconstruction amplifies the modal defect, absolute numerators are absent, and no independent collision value was produced. The claim ceiling remains EXTERNAL EVIDENCE ONLY for localization.",
+      "assumptions_used": [
+        "The Wave-1 envelopes accurately quote the returned final raw members, but those numerical values were not rerun in this assignment.",
+        "A sharply localized same-code failure may select a falsifier without validating the proposed remedy."
+      ],
+      "evidence_refs": [
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-001 sha256:f8a73c5667eeb1a188625e1f8f1a53d5d407238e32cc479973cd87a493409510",
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-003 sha256:71bf7f37d98b5604e9b42013d3605f28af67300447699797e8d6efe2ae8ef05a",
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-004 sha256:717d4a1dc50182fb868e3e23d83fe79fc7fd9088278065083226b94d97d1a8d0",
+        "INTAKE_EVIDENCE_MAP.json claim_ceiling.row6_localization"
+      ],
+      "evidence_fingerprint": "sha256:2ab29dc6e8959a190e4dddedecf9b75b7c3dbebc9c31243264579e7ea79d4bc1",
+      "counterevidence_refs": [
+        "The order-unity low-order row-6 residual and nonzero modal residual make pure final-summation roundoff an inadequate explanation.",
+        "The evidence still does not isolate chart closure from all other row-6 source, basis, support, or reduction defects."
+      ],
+      "reproduction": [
+        "jq '.findings[] | select(.finding_id==\"F-OPEN-ROW6-001\" or .finding_id==\"F-OPEN-ROW6-003\")' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-ROW6-NUMERICS.json",
+        "jq '.claim_ceiling.row6_localization' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A same-y_max refinement ladder and absolute pre-native modal numerator remain required to quantify the defect."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-REJECT-004",
+      "claim_id": "C-OPEN-CROSS-REJECT",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Failure of the returned package is terminal for those bytes and is logically separate from future C-R6-ORBIT-CHART viability. The provenance, contract, physics, and numerics envelopes independently converge on PROVENANCE_FAIL / DO_NOT_REOPEN: no prospective contract or single authority runner, multiple evaluated mechanisms, live RABBIT import and physical collision output, incomplete manifest/raw logs, no semantic mutants or two clean replays, no JVP/native bound/cost accounting, and OCAR only PROPOSED. Archive integrity and repository byte identity are bounded PASS subclaims, not admission. These semantic duplicates have different claim IDs and evidence fingerprints because they audit distinct evidence slices; they are mutually reinforcing, not contradictory. Current global gates remain unchanged and any candidate-specific PR DAG is UNREACHABLE.",
+      "assumptions_used": [
+        "D-042R gates are conjunctive and prospective chronology cannot be repaired after output.",
+        "DO_NOT_REOPEN applies to this returned package, not to a universal impossibility theorem.",
+        "A future discriminator requires a new owner-authorized screen and cannot inherit authority from these outputs."
+      ],
+      "evidence_refs": [
+        "A-OPEN-INTAKE-PROVENANCE.json F-OPEN-INTAKE-PROVENANCE-004 sha256:af3bf6e1522a3f5504dc7523aebe7814d26cceee04fe68c92c388fc86c58a777",
+        "A-OPEN-INTAKE-CONTRACT.json F-OPEN-INTAKE-XG00 sha256:ad8bfa893aa685b0259973e9272a87a4dca3c232a75b7c393c63300af642702b",
+        "A-OPEN-INTAKE-CONTRACT.json F-OPEN-INTAKE-ROUTE sha256:5c799f8ed7a811a86992da9c2b40ba16c72064e32128f7bb6595a99212e6625d",
+        "A-OPEN-ROW6-PHYSICS.json F-OPEN-ROW6-006 sha256:81f461f8f68b0a018041e56d8362a147e76749cb6a372a4b0bc29d6982aa1dd8",
+        "A-OPEN-ROW6-NUMERICS.json F-OPEN-ROW6-005 sha256:6101ede0ec8876e3226449191c4f3001427b04a11055bf72366baab297443495",
+        "INTAKE_EVIDENCE_MAP.json observed_contract_gaps and claim_ceiling"
+      ],
+      "evidence_fingerprint": "sha256:fd385626966aff3131056dcde1376bedee51b9f0007172e0e51e2a01f7a133e8",
+      "counterevidence_refs": [
+        "STRONGEST_PACKAGE STEELMAN: the ZIP is readable and hash-stable, listed lab-manifest hashes reproduce, repository bytes match, group averaging is a useful exact equivariance oracle, row-6 localization is sharp, and the report keeps global gates FAIL.",
+        "That evidence justifies preservation as a retrospective exploratory archive; it cannot supply prospective chronology, repository-free independence, one-finalist selection, or executable gate closure."
+      ],
+      "reproduction": [
+        "jq '.observed_contract_gaps,.claim_ceiling' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/artifacts/INTAKE_EVIDENCE_MAP.json",
+        "jq '.findings[] | select(.finding_id==\"F-OPEN-INTAKE-PROVENANCE-004\")' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-PROVENANCE.json",
+        "jq '.findings[] | select(.finding_id==\"F-OPEN-INTAKE-XG00\" or .finding_id==\"F-OPEN-INTAKE-ROUTE\")' .agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-INTAKE-CONTRACT.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "A fresh package may be judged independently; no repackaging or retrospective contract can change this package verdict."
+      ]
+    },
+    {
+      "finding_id": "F-OPEN-CROSS-REJECT-005",
+      "claim_id": "C-OPEN-CROSS-REJECT",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "Wave-1 claim/fingerprint reconciliation is complete. The four admitted envelopes share the current context and PASS SubagentStart preflight, contain 31 findings under four distinct claim IDs, and have 31 unique evidence fingerprints with no exact collision. Exact dedup therefore remains 31/31. Semantic normalization yields three relevant families: bounded archive/byte/localization PASS, terminal package-admission FAIL, and row-6 chart-design conflict. The only genuine conflict is F-OPEN-ROW6-PHYSICS/F-OPEN-ROW6-004 versus F-OPEN-ROW6-NUMERICS/F-OPEN-ROW6-002; F-OPEN-CROSS-REJECT-001 resolves it by exposing the missing leg-slot involution. The required self-discovery, authority step-back, metacognitive challenge, independent claim verification, opposing steelman, consistency check, and prospective decision review were applied internally; this envelope reports only reproducible evidence and conclusions, not hidden chain-of-thought.",
+      "assumptions_used": [
+        "Exact finding identity is keyed by claim_id, evidence_fingerprint, and verdict.",
+        "Semantic normalization may group distinct fingerprints only when their statements and authority boundaries agree.",
+        "No sibling evidence outside the four allowed result paths was read."
+      ],
+      "evidence_refs": [
+        "A-OPEN-INTAKE-PROVENANCE.json sha256:8108f3372545400860c80bb6bbaf46b428cf7a6204b17e91cdc2867d8dd55732",
+        "A-OPEN-INTAKE-CONTRACT.json sha256:35bd47044c9ae2bb77fd399731101710ddd57d7edfdfe382bff2d7533ee2ce98",
+        "A-OPEN-ROW6-PHYSICS.json sha256:3197ee7afe29e2c97b7a762a6d8daaf0fb60eae5266995799fff473dbb1241e5",
+        "A-OPEN-ROW6-NUMERICS.json sha256:7de7f8c9213feb1985dda64a4f7af2eaa2009ee2611aa2984459f59611c73040"
+      ],
+      "evidence_fingerprint": "sha256:1397c01986da16a28160fdb868ec4025f71dd610511fb954eb65725ccf1569ac",
+      "counterevidence_refs": [
+        "Distinct evidence fingerprints do not imply distinct semantic findings; package rejection appears in several evidence slices.",
+        "Semantic grouping does not erase the exact 31 finding records or their claim-specific scopes."
+      ],
+      "reproduction": [
+        "jq -r '.assignment_id as $a | .findings[] | [$a,.finding_id,.claim_id,.verdict,.evidence_fingerprint] | @tsv' <four-allowed-result-paths>",
+        "jq -s '[.[].findings[]] | {finding_count:length,claim_ids:(map(.claim_id)|unique),unique_fingerprint_count:(map(.evidence_fingerprint)|unique|length),duplicate_fingerprints:(group_by(.evidence_fingerprint)|map(select(length>1)))}' <four-allowed-result-paths>"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260724-f10-open-breakthrough-intake/results/A-OPEN-CROSS-REJECT.json"
+  ]
+}

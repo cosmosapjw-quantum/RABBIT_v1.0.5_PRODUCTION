@@ -1,0 +1,980 @@
+{
+  "catalogs": {
+    "electron_events": {
+      "canonical_json_sha256": "a5dfc88a0a062cb230e4f254037e7dfbb7b59e1ab9ac82bd7b938f32d4eafb95",
+      "count": 15,
+      "records": [
+        {
+          "category": "elastic_minus",
+          "target": "nu_e"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_e"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_e"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_e"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "nu_mu"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_mu"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_mu"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_mu"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "nu_tau"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_tau"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_tau"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_tau"
+        },
+        {
+          "category": "pair",
+          "target": "nu_e"
+        },
+        {
+          "category": "pair",
+          "target": "nu_mu"
+        },
+        {
+          "category": "pair",
+          "target": "nu_tau"
+        }
+      ]
+    },
+    "electron_reactions": {
+      "canonical_json_sha256": "683c051e29b1d052ca1a665d512899f9315f1d7823f20f0b0f25e02dae5f48f7",
+      "count": 18,
+      "records": [
+        {
+          "category": "elastic_minus",
+          "target": "nu_e"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_e"
+        },
+        {
+          "category": "pair",
+          "target": "nu_e"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_e"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_e"
+        },
+        {
+          "category": "pair",
+          "target": "antinu_e"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "nu_mu"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_mu"
+        },
+        {
+          "category": "pair",
+          "target": "nu_mu"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_mu"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_mu"
+        },
+        {
+          "category": "pair",
+          "target": "antinu_mu"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "nu_tau"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "nu_tau"
+        },
+        {
+          "category": "pair",
+          "target": "nu_tau"
+        },
+        {
+          "category": "elastic_minus",
+          "target": "antinu_tau"
+        },
+        {
+          "category": "elastic_plus",
+          "target": "antinu_tau"
+        },
+        {
+          "category": "pair",
+          "target": "antinu_tau"
+        }
+      ]
+    },
+    "self_events": {
+      "canonical_json_sha256": "018b7caca39e9ef7972170dacb32f1da5ad254a9d6618ea65eada3759abed3ce",
+      "count": 27,
+      "records": [
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_e",
+            "nu_e",
+            "nu_e",
+            "nu_e"
+          ]
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_e",
+            "antinu_e",
+            "antinu_e",
+            "antinu_e"
+          ]
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_mu",
+            "nu_mu",
+            "nu_mu",
+            "nu_mu"
+          ]
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_mu",
+            "antinu_mu",
+            "antinu_mu",
+            "antinu_mu"
+          ]
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_tau",
+            "nu_tau",
+            "nu_tau",
+            "nu_tau"
+          ]
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_tau",
+            "antinu_tau",
+            "antinu_tau",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 64.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_e",
+            "antinu_e",
+            "nu_e",
+            "antinu_e"
+          ]
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 64.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_mu",
+            "antinu_mu",
+            "nu_mu",
+            "antinu_mu"
+          ]
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 64.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_tau",
+            "antinu_tau",
+            "nu_tau",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_e",
+            "nu_mu",
+            "nu_e",
+            "nu_mu"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_e",
+            "antinu_mu",
+            "antinu_e",
+            "antinu_mu"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_e",
+            "antinu_mu",
+            "nu_e",
+            "antinu_mu"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "antinu_e",
+            "nu_mu",
+            "antinu_e",
+            "nu_mu"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_e",
+            "antinu_e",
+            "nu_mu",
+            "antinu_mu"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_mu",
+            "antinu_mu",
+            "nu_e",
+            "antinu_e"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_e",
+            "nu_tau",
+            "nu_e",
+            "nu_tau"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_e",
+            "antinu_tau",
+            "antinu_e",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_e",
+            "antinu_tau",
+            "nu_e",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "antinu_e",
+            "nu_tau",
+            "antinu_e",
+            "nu_tau"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_e",
+            "antinu_e",
+            "nu_tau",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_tau",
+            "antinu_tau",
+            "nu_e",
+            "antinu_e"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "nu_mu",
+            "nu_tau",
+            "nu_mu",
+            "nu_tau"
+          ]
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_s",
+          "legs": [
+            "antinu_mu",
+            "antinu_tau",
+            "antinu_mu",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_mu",
+            "antinu_tau",
+            "nu_mu",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "antinu_mu",
+            "nu_tau",
+            "antinu_mu",
+            "nu_tau"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_mu",
+            "antinu_mu",
+            "nu_tau",
+            "antinu_tau"
+          ]
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 16.0,
+          "kernel": "K_t",
+          "legs": [
+            "nu_tau",
+            "antinu_tau",
+            "nu_mu",
+            "antinu_mu"
+          ]
+        }
+      ]
+    },
+    "self_reactions": {
+      "canonical_json_sha256": "e577499df2fdd87374a06c7455c3710699458f7eb3810b7c83914635fd029e81",
+      "count": 48,
+      "records": [
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 1,
+          "target": "nu_e"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 2,
+          "target": "nu_e"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 7,
+          "target": "nu_e"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 8,
+          "target": "nu_e"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_e",
+          "row": 9,
+          "target": "nu_e"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 7,
+          "target": "nu_e"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 8,
+          "target": "nu_e"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_e",
+          "row": 9,
+          "target": "nu_e"
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 1,
+          "target": "antinu_e"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 2,
+          "target": "antinu_e"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 7,
+          "target": "antinu_e"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 8,
+          "target": "antinu_e"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_e",
+          "row": 9,
+          "target": "antinu_e"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 7,
+          "target": "antinu_e"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 8,
+          "target": "antinu_e"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_e",
+          "row": 9,
+          "target": "antinu_e"
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 3,
+          "target": "nu_mu"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 4,
+          "target": "nu_mu"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 7,
+          "target": "nu_mu"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 8,
+          "target": "nu_mu"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_mu",
+          "row": 9,
+          "target": "nu_mu"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 3,
+          "target": "nu_mu"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 5,
+          "target": "nu_mu"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_mu",
+          "row": 6,
+          "target": "nu_mu"
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 3,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 4,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 7,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 8,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "nu_e",
+          "partner": "nu_mu",
+          "row": 9,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 3,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 5,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_mu",
+          "row": 6,
+          "target": "antinu_mu"
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 3,
+          "target": "nu_tau"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 4,
+          "target": "nu_tau"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 7,
+          "target": "nu_tau"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 8,
+          "target": "nu_tau"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_e",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_tau",
+          "row": 9,
+          "target": "nu_tau"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 3,
+          "target": "nu_tau"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_tau",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 5,
+          "target": "nu_tau"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "nu_mu",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_tau",
+          "row": 6,
+          "target": "nu_tau"
+        },
+        {
+          "category": "same_sign_identical",
+          "coefficient": 64.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "antinu_tau",
+          "partner": "antinu_tau",
+          "row": 3,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "same_pair_opposite_sign_elastic",
+          "coefficient": 128.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "nu_tau",
+          "partner": "nu_tau",
+          "row": 4,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "antinu_e",
+          "partner": "antinu_e",
+          "row": 7,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "nu_e",
+          "partner": "nu_e",
+          "row": 8,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_e",
+          "outgoing_4": "nu_e",
+          "partner": "nu_tau",
+          "row": 9,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "distinct_same_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_s",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "antinu_mu",
+          "partner": "antinu_mu",
+          "row": 3,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "distinct_opposite_sign_elastic",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_tau",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_mu",
+          "row": 5,
+          "target": "antinu_tau"
+        },
+        {
+          "category": "pair_conversion",
+          "coefficient": 32.0,
+          "kernel": "K_t",
+          "outgoing_3": "antinu_mu",
+          "outgoing_4": "nu_mu",
+          "partner": "nu_tau",
+          "row": 6,
+          "target": "antinu_tau"
+        }
+      ]
+    }
+  },
+  "collision_config": {
+    "electron_radial_order": 24,
+    "final_azimuth_order": 4,
+    "final_polar_order": 4,
+    "incoming_polar_order": 4,
+    "matrix_roundoff_ulps": 1024.0
+  },
+  "generator": {
+    "catalogs": [
+      "independent_self_reactions",
+      "independent_electron_reactions",
+      "independent_self_events",
+      "independent_electron_events"
+    ],
+    "grid": "rabbit.decoupling._independent_noqke.build_independent_grid"
+  },
+  "grid": {
+    "nodes": {
+      "canonical_byte_order": "little-endian",
+      "count": 60,
+      "dtype": "float64",
+      "first": 0.011848151588460532,
+      "last": 29.98815184841154,
+      "shape": [
+        60
+      ],
+      "values_sha256": "5429623566911d43c71625eb7e14722bd6108d07894800e0a0ca06cc99558c1f"
+    },
+    "order": 60,
+    "weights": {
+      "canonical_byte_order": "little-endian",
+      "count": 60,
+      "dtype": "float64",
+      "first": 0.030402179533160635,
+      "last": 0.030402179533160635,
+      "shape": [
+        60
+      ],
+      "values_sha256": "dd8480b3591b9bf84e85936fbed411529e3dd4676bc856ba341f2c07c276bf06"
+    },
+    "y_max": 30.0
+  },
+  "schema": "rabbit.f10.quadrature_catalog_manifest.v1"
+}

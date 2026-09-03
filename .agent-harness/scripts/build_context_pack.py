@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from _harness import dump_json, hash_files, load_json, root, utc_now
+from _harness import (
+    dump_json,
+    hash_files,
+    load_json,
+    render_context_pack,
+    root,
+    utc_now,
+    write_text_atomic,
+)
 
 
 def main() -> None:
@@ -24,19 +32,10 @@ def main() -> None:
     dump_json(index_path, index)
 
     out = harness / "generated" / "CONTEXT_PACK.md"
-    chunks = [
-        "# Canonical Shared Context Pack",
-        "",
-        f"Context version: `{version}`",
-        f"Built at: `{index['built_at']}`",
-        "",
-        "This pack contains only the shared Tier-0 context. Assignment-specific context and sibling results are intentionally excluded.",
-    ]
-    for rel, sha in entries:
-        text = (repo / rel).read_text(encoding="utf-8")
-        chunks.extend(["", f"---\n\n## Source: `{rel}`\n\nSHA-256: `{sha}`\n", text.rstrip()])
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text("\n".join(chunks).rstrip() + "\n", encoding="utf-8")
+    # Atomic, because a partially written pack used to validate: both checks
+    # only looked at the first six lines, so a crash or a full disk mid-write
+    # left a file that passed (BD623 R1).
+    write_text_atomic(out, render_context_pack(repo, version, index["built_at"], entries))
     print(f"Built {out.relative_to(repo)}")
     print(f"context_version={version}")
 

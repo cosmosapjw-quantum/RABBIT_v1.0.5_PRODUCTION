@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d053-row9-closure",
+  "generated_at": "2026-07-27T15:43:04+00:00",
+  "result_count": 5,
+  "unique_finding_count": 5,
+  "findings": [
+    {
+      "finding_id": "F-ROW9-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS, BYTES ACCEPTED as the FINAL static catalogue for D-052 stages 2-3: _independent_noqke.py sha256 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a at commit 94d0f00 (27 events, fingerprint (2,1,6,2,2,2,4,4,4)). All E1..E5 recomputed PASS: e/mu self residual 3.525406360939371e-11 closed with order-one single-member control; mu_tau regression 2.447560236182917e-11; CP improved 4.59e-11 -> 3.138183248343415e-11; conservation/first-law/entropy/equilibrium null in class. Freeze chronology and hash provenance intact; blind-review tightening present in sealed bytes. No gate movement. Limitations: same-model reviews, single execution, liveness-only negative control, undecomposed sub-cap floors (deferred to stage 2 by design).",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "report 8cfaeb0c",
+        "pytest a2781fcf",
+        "freeze 94d0f00"
+      ],
+      "evidence_fingerprint": "sha256:8cfaeb0c00000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Recompute E1..E5 from the report."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Stage 2 metrology program binds these bytes next."
+      ],
+      "supporting_assignments": [
+        "A-ROW9-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ROW9-REVIEW-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Blind pre-freeze review: no blockers, no majors. Confirmed diff minimality, row-9 mapping for both new members, two-sided 64-per-species aggregate identity, bitwise e/mu logit equality on the E3 cell, full e<->mu closure of the 27-event self sector (elastic cross terms close under the label swap; intra-pair events symmetric under the (1<->2)(3<->4) discrete symmetry), and E4/E5 plausibility (first law bitwise-invariant; entropy can only increase; CP tightest margin). One MINOR fixed pre-freeze: closure assertion tightened to the explicit six-tuple expected set (unreachable-counterexample hardening, D-050 precedent). INFO recorded: negative control measures the member's inherent order-one transfer asymmetry (pipeline-liveness role); d050 script is a frozen record that fails by design on new bytes.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "review transcript",
+        "freeze commit 94d0f00"
+      ],
+      "evidence_fingerprint": "sha256:94d0f00000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [
+        "CP margin watch item (~2.2x at D-051) resolved favorably by execution: 3.14e-11."
+      ],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ROW9-BLIND-REVIEW"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ROW9-CONTRACT-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The D-053 row-9 closure contract with acceptance checks E1..E5 was prospectively frozen at commit 94d0f00 before any validation output, including the pre-freeze assertion tightening (explicit six-member expected leg set) from blind review.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "freeze commit 94d0f00"
+      ],
+      "evidence_fingerprint": "sha256:94d0f00000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ROW9-CONTRACT"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ROW9-EXEC-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "All frozen checks PASS on the sealed bytes: E1 exact (27 events, six members matching the explicit expected set, aggregates equal); E2 3/3 focused tests (venv); E3 self-sector e/mu residual 3.525406360939371e-11 <= 1e-10 with single-member control 1.0000171560718123 > 1e-10; E4 mu_tau_residual 2.447560236182917e-11 in [1e-12, 1e-10]; E5 number 6.56e-17 / energy 2.33e-15, first law 0.0, CP 3.138183248343415e-11 (improved from 4.59e-11), entropy 9.69e-18 >= 0, equilibrium null 5.90e-12 / 1.48e-11. Report sha256 8-prefix recorded in ledger.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "e_verification_report.json",
+        "e2_pytest.log"
+      ],
+      "evidence_fingerprint": "sha256:e0000000000000000000000000000000000000000000000000000000000000e3",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ROW9-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-ROW9-IMPL-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Three-hunk module edit: uniform two-member pair-conversion loop (all six members K_t/16.0), fingerprint (2,1,6,2,2,2,4,4,4), count 27; special case removed; evaluator/kinematics/electron/authority ceiling untouched. New module sha256 760a7c04.... Test file updated to explicit expected-set closure assertions.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "git diff d22d001..94d0f00 -- src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "evidence_fingerprint": "sha256:760a7c0400000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [],
+      "confidence": 0.93,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-ROW9-IMPLEMENTATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

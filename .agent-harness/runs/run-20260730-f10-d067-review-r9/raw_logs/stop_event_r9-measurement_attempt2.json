@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r9-measurement",
+  "agent_type": "default",
+  "last_assistant_message": "Round-9 measurement attack complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R9-MEASUREMENT\", \"context_version\": \"b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-MEASUREMENT.json\", \"admission_proof\": \"sha256:dee99bf65dc0eede89c87ae15acc97b5367ed408d8f7fbe957b968181a691780\"}"
+}

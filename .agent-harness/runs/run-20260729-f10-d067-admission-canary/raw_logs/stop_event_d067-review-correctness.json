@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "d067-review-correctness",
+  "agent_type": "default",
+  "last_assistant_message": "Review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-REVIEW-CORRECTNESS\", \"context_version\": \"daaeb9feac29cd889a9aaa9a0fb72efb0503e0fc7a2065e004465dac892a046b\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260729-f10-d067-admission-canary/results/A-D067-REVIEW-CORRECTNESS.json\", \"admission_proof\": \"sha256:694a010f4ac4ed58ecc08f617411bb55935d756187fb1e8c04063892e8f82660\"}"
+}

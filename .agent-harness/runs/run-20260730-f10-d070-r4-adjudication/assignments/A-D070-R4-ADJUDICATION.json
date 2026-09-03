@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d070-r4-adjudication",
+  "assignment_id": "A-D070-R4-ADJUDICATION",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "fe9ebe467be6483485d512d9fd6f1809520ab7464de2db11ba2420ad39a34c6c",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-F10-INDEPENDENT"
+  ],
+  "task": "Adjudicate the D-069 r4 execution outcome (report verdict ERROR, exit 20, error 'wall budget: frozen wall budget exceeded', wall_seconds 64801.9 against the frozen 64800 s budget, NO top-level checks block). Four questions, each answered from the retained bytes and not from the coordinator's summary. (1) Is the ERROR genuinely MECHANICAL rather than scientific? Read scripts/audit/d069_independent_trajectory_r4.py and establish from the code and the report which exit path was taken, whether any check was evaluated, and whether any physics predicate could have contributed to the outcome. (2) Which surviving measurements are admissible evidence and at what scope, given that no checks block exists? Verify the base endpoint bitwise against the preserved r3 report (.agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json) and the preserved D-056 report, recompute the T14 identity yourself from the stored checkpoint states rather than trusting the reported W_nu_rel, and confirm both mutant kill modes. State explicitly whether an admissible measurement recorded outside a checks block can support any gate movement under the frozen contract. (3) Does anything in this outcome permit G-F10-INDEPENDENT-FLRW or C-F10-INDEPENDENT to move in any direction? Answer independently for each direction. (4) If a reissue is warranted, name the EXACTLY-N supersession changes it may make and no others, in the D-054/D-062/D-063 exactly-N-change form; if the T13 domain-holdout configuration is not tractable in this cost class, say what that means for the F-D065-04 item-5 obligation rather than proposing a configuration that merely fits the budget. Refuse any change that would refit a band, node mask or tail proxy. Report every disagreement with the coordinator's ledger row (docs/harness/VALIDATION_LEDGER.md, the 2026-07-30 D-069 EXECUTION row) as a finding.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/assignments/A-D070-R4-ADJUDICATION.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    "docs/audit/BD622_D069_independent_trajectory_r4_contract_2026-07-29.md",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+    ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/artifacts/OPERATOR_OBSERVATION_domain_holdout_stall.json",
+    "scripts/audit/d069_independent_trajectory_r4.py"
+  ],
+  "allowed_sibling_results": [],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-ADJUDICATION.json",
+  "status": "registered"
+}

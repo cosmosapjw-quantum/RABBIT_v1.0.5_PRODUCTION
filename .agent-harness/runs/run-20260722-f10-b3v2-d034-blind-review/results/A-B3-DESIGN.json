@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+  "assignment_id": "A-B3-DESIGN",
+  "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+  "agent_id": "019f8a1f-67af-7d53-a04c-5e192985373a",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-d034-blind-review",
+    "assignment_id": "A-B3-DESIGN",
+    "context_version": "27649ae6b7ce703aef8d73d583b5a1c5502146af2531c092aadcafb79ea63112",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d54b50c8cb20779bb852db6e6a80e9c73642bd622c39dc1c61c93977e55f5aca"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-B3-DESIGN.json",
+  "started_at": "2026-07-22T14:02:50Z",
+  "completed_at": "2026-07-22T14:05:19Z",
+  "tool_versions": {
+    "review_mode": "static exact-byte inspection; no W7/B3 numerical execution",
+    "bash": "GNU bash 5.2.21(1)-release",
+    "sha256sum": "GNU coreutils 9.4",
+    "ripgrep": "14.1.0",
+    "sed": "GNU sed 4.9"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/assignments/A-B3-DESIGN.json .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json docs/audit/BD622_W6_comparator_design_proof_pack.md scripts/audit/w7_b3v2_contract_source.py docs/audit/BD622_W7_exact_test_vectors.json",
+    "sed -n '1,304p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,139p' .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json",
+    "sed -n '1,470p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "sed -n '1,467p' scripts/audit/w7_b3v2_contract_source.py",
+    "sed -n '1,33p' docs/audit/BD622_W7_exact_test_vectors.json",
+    "sed -n '1,8p' .agent-harness/context/roles/independent_auditor.md",
+    "jq empty .agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-B3-DESIGN.json",
+    "No Python import, W7 oracle, B3 collision, T01-T12, Rust, Radau, trajectory, endpoint, or unblinding command was run."
+  ],
+  "artifacts": [
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:e0103e29966aebb47a1a36837aebca9fa84a036dfc899d5b58d3a561f82bf302",
+    "scripts/audit/w7_b3v2_contract_source.py#sha256:5e8842d9729b122a99c9da88c208379f4753c01cba0c4e882956940399c07292",
+    "docs/audit/BD622_W7_exact_test_vectors.json#sha256:5a16c9033f3f46e30c4b607dede70a0445c260af52ffb2382234481d626f1d44",
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json#sha256:04e0960b9319a71ff1c857ba9ff4f32ab7e3fe6a79e8e3a2df233951ce25098a"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-B3-DESIGN-001",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The finite-m_e source does not implement the binding COM and threshold operation graph. The contract fixes gamma=P0/sqrt(s), separate elastic and pair roots, k*=0 threshold support values, no clipping, and post-boost shell/conservation/Mandelstam checks. The source instead recomputes gamma as 1/sqrt(1-beta^2), uses a generic Kallen product, rejects lambda<=0 including exact threshold, clips 1-z_star^2 with max(0,...), and returns without the required postconditions. These expressions are algebraically related away from thresholds but are not one exact binary64 graph, so A0, T08, T09, and T11 are not implementable from the locked bytes without making new choices.",
+      "assumptions_used": [
+        "The W6 prose and CAS_CONTRACT are jointly binding exact-byte authority.",
+        "A0 requires a unique binary64 operation graph; real-arithmetic equivalence does not establish bitwise identity.",
+        "Exact-threshold support and one-sided derivative behavior are within the design-review scope even though collision output is forbidden."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:69-75",
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:118-125",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:150-194",
+        "scripts/audit/w7_b3v2_contract_source.py:192-272"
+      ],
+      "evidence_fingerprint": "sha256:850294afc11e6eff7379a36184b28f5ebeaac4faabe57fb91f9c4a590cd9ca6f",
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:243-272 defines a principal-branch helper for strictly interior events, but it does not close the locked threshold or postcondition contract."
+      ],
+      "reproduction": [
+        "Compare docs/audit/BD622_W6_comparator_design_proof_pack.md lines 152-194 with scripts/audit/w7_b3v2_contract_source.py lines 192-272.",
+        "Observe that source line 198 computes gamma from beta rather than P0/sqrt(s), lines 253-256 use the generic Kallen path and reject equality, line 262 clips the angular radicand, and lines 269-272 return without the line-180 shell/conservation checks."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze one operation-identical gamma and elastic/pair root implementation.",
+        "Encode the exact-threshold support branch and physical-side derivative contract.",
+        "Replace angular clipping by a frozen domain check and encode all required postconditions."
+      ]
+    },
+    {
+      "finding_id": "F-B3-BASIS-002",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The basis is defined and returned only as values at design GL nodes, while the same locked design requires eta and psi evaluation at outgoing off-grid event momenta, 4097 reference points, node neighbours, and Y_max neighbours. The source retains no polynomial transformation coefficients and defines no off-grid recurrence or evaluator. It also returns GL nodes and weights on [-1,1] but provides no operation-ordered affine map to [0,Y_max]. Consequently independent implementations can produce different node bits and different off-grid basis values, state acceptance, event actions, and ladder eligibility.",
+      "assumptions_used": [
+        "No unlisted implementation outside the exact reviewed source may silently supply the missing evaluator.",
+        "Outgoing neutrino momenta are generally not design-node values.",
+        "The A0/A2 metrology split requires exact affine-map and reconstruction interfaces."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:198-232",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:250-314",
+        "scripts/audit/w7_b3v2_contract_source.py:291-382",
+        "scripts/audit/w7_b3v2_contract_source.py:419-429"
+      ],
+      "evidence_fingerprint": "sha256:677a8a4b9e8ba2b9d218858e991f728c50a5af6594f9c1b8d6a2b50b6a4cb6eb",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:211 identifies the monomial family abstractly, but does not specify how the nodewise MGS transformations are retained and replayed off-grid."
+      ],
+      "reproduction": [
+        "Inspect gauss_legendre_mpfr and deterministic_weighted_basis at source lines 291-382: the former returns the unscaled rule and the latter returns only tuples of node values.",
+        "Compare with W6 lines 268-271 and 293-313, which require 4097-point and neighbour evaluations not supplied by either function."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Freeze the exact binary64 affine node and weight mapping with operation order.",
+        "Retain a deterministic polynomial transformation or define an operation-ordered recurrence for psi_m(y) at arbitrary in-domain y.",
+        "Use that same evaluator for state screening, event occupations, test-mode deposition, and support vectors."
+      ]
+    },
+    {
+      "finding_id": "F-B3-BASIS-003",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The nodewise source and prose disagree on the binding binary64 QR graph. W6 requires the normalized rho inner product and left-associated products; the source _inner omits division by rho_sum, divides each projection by a recomputed prior norm, and constructs squares and higher monomials with Python exponentiation. These are mathematically compatible formulations in exact arithmetic but not the single operation graph required for A0/A1/A2 attribution, bitwise mu-tau equality, or a reproducible B_basis term.",
+      "assumptions_used": [
+        "The phrases normalized inner product and all products left-associated are operational requirements, not merely real-arithmetic descriptions.",
+        "Python value**degree is not specified by these bytes to be repeated left-associated binary64 multiplication."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:209-218",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:345-365",
+        "scripts/audit/w7_b3v2_contract_source.py:347-382"
+      ],
+      "evidence_fingerprint": "sha256:932e442b16046d17e1a54bfc459ffae64d04650ca2408a74f476d540fdb735f4",
+      "counterevidence_refs": [
+        "scripts/audit/w7_b3v2_contract_source.py:278-288 correctly fixes the balanced summation tree, but that does not resolve the inner-product normalization and product-order differences."
+      ],
+      "reproduction": [
+        "Compare the normalized-inner-product and left-associated requirements at W6 lines 209-218 with _inner and deterministic_weighted_basis at source lines 347-382.",
+        "Source lines 356, 359, and 366 use exponentiation; lines 347-348 omit rho_sum; line 369 divides by the computed prior norm."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Choose one exact projection/normalization graph and make prose and source byte-level consistent.",
+        "Replace exponentiation by a frozen multiplication recurrence or explicitly authorize and meter the exponentiation implementation."
+      ]
+    },
+    {
+      "finding_id": "F-B3-LADDER-004",
+      "claim_id": "C-B3V2-BASIS-LADDER",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The ladder order is fixed, but its acceptance predicates are not executable definitions. Weighted spectral L1 has no numerator, weight, or normalization formula; resolved pointwise error is not declared absolute or relative; cond_2(M) has no frozen MPFR algorithm/precision-to-decision rule; and the Stage-B collision and lost/tail budgets have no observable, aggregation, or denominator equations. Since these predicates determine the eligible set and first passing row, the selection can differ without violating the present text.",
+      "assumptions_used": [
+        "A cap without a uniquely defined observable and denominator is not an executable gate.",
+        "The reviewer may not import metric definitions from unlisted historical implementations."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:228-232",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:250-276",
+        "scripts/audit/w7_b3v2_contract_source.py:432-438"
+      ],
+      "evidence_fingerprint": "sha256:6381be009af43e197a33d95fe423d16addc6a4f767b5b19e9826345792726b1d",
+      "counterevidence_refs": [
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:252-276 fixes the candidate set, trial order, quadrature orders, and numeric caps; those are useful but insufficient to define the measured quantities."
+      ],
+      "reproduction": [
+        "Read W6 lines 268-276 and identify the absence of equations for all four named acceptance quantities.",
+        "Inspect the complete source through line 467; METROLOGY_STAGES at lines 432-438 names A0-A4 but supplies none of the ladder predicate formulas."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Define weighted L1 and pointwise errors, including weights, domains, absolute/relative convention, normalization, and tail treatment.",
+        "Freeze the MPFR cond_2 algorithm, precision, interval decision, and raw-failure behavior.",
+        "Define Stage-B collision and lost/tail budget observables and denominators before any output."
+      ]
+    },
+    {
+      "finding_id": "F-B3-GRAPH-005",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "Bounded subclaim only: the exact reaction-record structure is reconstructible as 24 self plus 15 electron rows in the stated order with unit orbit multiplicity and the displayed symmetry/amplitude tags. Its six-species stoichiometric left nullspace is exactly the three flavourwise neutrino-minus-antineutrino vectors: E12-E14 independently impose l_nu_f+l_antinu_f=0, all elastic columns vanish, and S21-S23 are then redundant. This does not validate row-ii traces, absolute normalization, finite-mass execution, or the whole B3 design.",
+      "assumptions_used": [
+        "Electron legs are omitted from the six-row species stoichiometric matrix as specified.",
+        "Stoichiometric columns use nu_leg=(-1,-1,+1,+1)."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/CAS_CONTRACT.json:39-60",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md:82-117",
+        "scripts/audit/w7_b3v2_contract_source.py:40-115"
+      ],
+      "evidence_fingerprint": "sha256:e58812d96950a5d58fd02cb681be0ab34ab89a1ed5a9ec9888307774ee0de988",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Form one species-count column per source row using nu_leg. Elastic self/electron rows are zero; S21-S23 are pair-sum differences; E12-E14 are the three independent negative pair-sum columns.",
+        "Solving l^T S=0 gives l_nu_f+l_antinu_f=0 independently for f=e,mu,tau, hence the displayed three-dimensional difference basis."
+      ],
+      "confidence": 0.98,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-d034-blind-review/results/A-B3-DESIGN.json"
+  ]
+}

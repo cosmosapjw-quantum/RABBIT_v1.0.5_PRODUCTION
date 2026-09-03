@@ -1,0 +1,213 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r2",
+  "assignment_id": "A-D039-PROMPT-AUDIT-R2",
+  "context_version": "afd4024b39dbe1745eeb8da3a0a541bdb58751638310741dc40f1f739e7eafdb",
+  "agent_id": "019f8d85-55d2-7782-bd99-3929edf911e2",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d039-external-remedy-prompt-review-r2",
+    "assignment_id": "A-D039-PROMPT-AUDIT-R2",
+    "context_version": "afd4024b39dbe1745eeb8da3a0a541bdb58751638310741dc40f1f739e7eafdb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:6323770352c1b1b93629f59984f8090bec9f6a6719798467e6ddf0c3ce765936",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r2/results/A-D039-PROMPT-AUDIT-R2.json",
+  "started_at": "2026-07-23T05:49:30Z",
+  "completed_at": "2026-07-23T05:53:58Z",
+  "tool_versions": {
+    "bash": "GNU bash 5.2.21",
+    "python": "CPython 3.12.3",
+    "sha256sum": "GNU coreutils 9.4",
+    "git": "read-only branch and revision inspection",
+    "review_method": "targeted static prompt/evidence audit; no scientific execution"
+  },
+  "commands": [
+    "complete bounded sed reads of CONTEXT_PACK.md, the registered assignment, RESULT_ENVELOPE.json, independent_auditor.md, the D-039 prompt, D-038 report/adjudication, D-037 B3/W7 envelopes, FROZEN_DECISIONS.md, PROJECT_STATE.md, and NEXT_SESSION_PROMPT.md",
+    "sha256sum of the assignment, template, role file, D-039 prompt, D-038 report/adjudication, D-037 B3/W7 envelopes, FROZEN_DECISIONS.md, PROJECT_STATE.md, NEXT_SESSION_PROMPT.md, W6, W7 source/vectors, preserved branch review, .singularhistory, and _independent_noqke.py",
+    "python3 using _harness.hash_files for the path-aware independent_auditor role digest",
+    "git branch --show-current and git rev-parse main",
+    "targeted rg line-location checks over the named inputs",
+    "no collision, W7, B3, CAS, MPFR, Rust, GL48/64, Jacobian, Radau, trajectory, endpoint, or RABBIT execution"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md",
+      "sha256": "67487d8a938741931bf1a8042a4783f76d2dae55a231369d1711ee7e5c8620fd"
+    },
+    {
+      "path": "docs/audit/BD622_D038_historical_adversarial_root_cause_audit_2026-07-23.md",
+      "sha256": "860f9121bcd555fad95233959fc7b9e003caedd70fbad303ebb85f20564cec65"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json",
+      "sha256": "c145f298ac65dbcf76676542ff4ebcbb85f14a157dd956a6e0b2f71d2c0a3e6f"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json",
+      "sha256": "bead9788997a73e7d3a64b1527f11b3450be2c8c3a553bd757a20a73085854f4"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json",
+      "sha256": "f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a"
+    },
+    {
+      "path": ".agent-harness/context/FROZEN_DECISIONS.md",
+      "sha256": "32184d27b13e33a18464693120ba99f41d7c224839afdbe825906958263eaa79"
+    },
+    {
+      "path": "docs/harness/PROJECT_STATE.md",
+      "sha256": "95647322b048a6a8ac291069d4e7f316361603939c5644fc8f695bdb314319b7"
+    },
+    {
+      "path": "docs/harness/NEXT_SESSION_PROMPT.md",
+      "sha256": "7d88ad4cdb7a361a4ad28d8b7588ed54f75b09e4fe551ed79a9c51004ebc6e33"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D039-PROMPT-R2-001",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "pass",
+      "severity": "low",
+      "statement": "The prompt prominently and repeatedly binds STOP/PRESERVE, makes the optional D-038 cycle inactive, limits route claims to PROPOSED/SPECULATIVE/no-go, prohibits repository and scientific execution, and preserves the current failed bytes. The active branch, main base revision, and every explicitly supplied full SHA-256 match the current named bytes.",
+      "assumptions_used": [
+        "Read-only means no repository creation, edit, staging, commit, reset, cleanup, or scientific execution.",
+        "A proposal is advice only and is not design, numerical, implementation, or endpoint authority."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:8-23",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:94-118",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:205-207",
+        ".agent-harness/context/FROZEN_DECISIONS.md:43",
+        "git branch --show-current -> f10-independent-validation-b3v2; git rev-parse main -> ca3a0138d496732edfc13559fd8f7ceec7ef4d6e"
+      ],
+      "evidence_fingerprint": "sha256:67487d8a938741931bf1a8042a4783f76d2dae55a231369d1711ee7e5c8620fd",
+      "counterevidence_refs": [
+        "F-D039-PROMPT-R2-002 through F-D039-PROMPT-R2-004 identify remaining copy-verbatim ambiguities."
+      ],
+      "reproduction": [
+        "Recompute the prompt-listed full hashes and inspect the active branch/main revision with the recorded read-only commands."
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D039-PROMPT-R2-002",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The authority ceiling is not fail-closed enough for a copy-verbatim external request. The sentence that a proposal requires one new owner decision before repository edit, W7 computation, or scientific execution groups distinct authority layers and can be read as making one decision sufficient for W7. The unconstrained requested next-owner decision and an undefined reviewer PASS also permit the proposing auditor to appear to self-certify design readiness. D-039 instead permits this report to inform at most a later fresh design-only-review choice; W7 still requires an intervening unanimous whole-design PASS and a separate later owner decision, and B3 requires executed W7 evidence, fresh adjudication PASS, and another decision.",
+      "assumptions_used": [
+        "Safety-critical authority text must state both necessary and insufficient conditions explicitly.",
+        "The external auditor may not grade its own candidate as a design-gate PASS."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:20-23",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:158",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:196-207",
+        ".agent-harness/context/FROZEN_DECISIONS.md:41-43",
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json:401-428",
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json:514-541"
+      ],
+      "evidence_fingerprint": "sha256:32184d27b13e33a18464693120ba99f41d7c224839afdbe825906958263eaa79",
+      "counterevidence_refs": [
+        "The prompt repeatedly says STOP/PRESERVE remains binding and that the audit grants no authority."
+      ],
+      "reproduction": [
+        "Read prompt lines 20-23 and 196-207 without importing unstated intent, then compare their possible authority ladder with D-037 through D-039."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Replace the grouped sentence with: This report can at most inform a later owner choice between DO_NOT_REOPEN and AUTHORIZE_ONE_FRESH_DESIGN_ONLY_REVIEW; it cannot support W7, B3, numerical, implementation, trajectory, or endpoint authority.",
+        "State the frozen downstream ladder verbatim: fresh unanimous whole-design PASS, then separate owner W7 decision; executed W7 evidence plus fresh adjudication PASS, then separate owner B3 decision.",
+        "Define the requested reviewer verdict as report-contract/editorial quality only, never candidate readiness or a design-gate verdict, and restrict the proposed next-owner choice to the two design-boundary options above."
+      ]
+    },
+    {
+      "finding_id": "F-D039-PROMPT-R2-003",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The evidence packet is not fully reproducible or bounded as written. Three preserved objects use abbreviated hashes, the D-027/D-028/D-029 corpus and several registries/ledgers are named generically rather than by exact path and hash, and the prompt does not state that D-037 ended at the first-non-PASS stop with no four-axis completion, merge, or adjudicator. Its binding verdict list also omits the current covariance-metrology and full-current-tree regression FAIL gates and the harness PASS-with-limits ceiling.",
+      "assumptions_used": [
+        "A copy-verbatim external request must not require broad discovery to resolve its immutable evidence set.",
+        "Current gate status and incomplete-adjudication ceilings are part of provenance, not optional background."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:13-18",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:61-90",
+        ".agent-harness/generated/CONTEXT_PACK.md:19-20",
+        ".agent-harness/generated/CONTEXT_PACK.md:55",
+        ".agent-harness/generated/CONTEXT_PACK.md:61-62",
+        ".agent-harness/generated/CONTEXT_PACK.md:77-78",
+        "docs/harness/NEXT_SESSION_PROMPT.md:59-73"
+      ],
+      "evidence_fingerprint": "sha256:860f9121bcd555fad95233959fc7b9e003caedd70fbad303ebb85f20564cec65",
+      "counterevidence_refs": [
+        "Every full hash actually printed in the prompt matched.",
+        "The D-038 report and current context explain the missing D-037 and gate qualifications after the reader finds and reads them."
+      ],
+      "reproduction": [
+        "Compare the prompt evidence inventory with the exact named-input hashes and current context gate table.",
+        "The abbreviated hashes resolve currently to RABBIT review a1742101b68649cb42f48ec98a069ea720721dea1a47affbcd1bf1b08c420575, .singularhistory 5abbc84202f8e5354776242626083a79d84e668f9cab6b87030765e6c5f94ae1, and _independent_noqke.py 535370c1f7e2b10c2cd1c812a0bd83e2519606f1e526a146735348d41d723ac3."
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Replace all abbreviated hashes with the three full values in the reproduction record.",
+        "Replace every generic registry, ledger, Fort, and D-027/D-028/D-029 reference with an exact path/hash manifest; no broad discovery fallback.",
+        "Add the D-037 first-non-PASS/no-adjudicator qualification and list G-F10-COVARIANCE-METROLOGY=FAIL, G-F10C1-REGRESSION=FAIL, and G-HARNESS-INTEGRITY=PASS only within the schema-v2 process boundary."
+      ]
+    },
+    {
+      "finding_id": "F-D039-PROMPT-R2-004",
+      "claim_id": "C-D039-PROMPT-QUALITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The candidate/output contract asks for a finite obligation matrix, structural novelty, falsifiers, cost, and stop-loss, but does not make completeness or novelty mechanically falsifiable. It requires no closed-world coverage count or zero-unmapped predicate over the seven D-037 failures, four retained passes, binding gates, consumers, operations, and evidence; narrative comparison can therefore claim completeness. It also leaves the read-only audit blocker-movement ratio open and uses the hype-prone route label BREAKTHROUGH_CANDIDATE_PROPOSED, allowing forecast evidence gain to be reported as achieved gate movement.",
+      "assumptions_used": [
+        "Complete means complete relative to an explicitly frozen finite universe with no unmapped binding item.",
+        "A read-only proposal changes no scientific gate, so achieved blocker movement is 0.00 even if future movement is forecast."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:31-38",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:138-160",
+        "docs/audit/BD622_D039_external_breakthrough_remedy_design_audit_prompt_2026-07-23.md:184-203",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-B3-DESIGN.json:74-251",
+        ".agent-harness/runs/run-20260723-f10-b3v2-d037-blind-review/results/A-W7-METROLOGY.json:69-228",
+        ".agent-harness/runs/run-20260723-f10-d038-historical-adversarial-audit/results/A-ADJUDICATOR.json:650-663"
+      ],
+      "evidence_fingerprint": "sha256:f785c2d21641a9ce40454986a514d0b7e8f90ab848d300650874ab8a70fafb9a",
+      "counterevidence_refs": [
+        "The prompt already requires no more than three candidates, explicit hostile mutations, no-go conditions, terminal stop-loss, comparison with all prior routes, and a finite matrix."
+      ],
+      "reproduction": [
+        "Attempt to satisfy prompt item 7.5 with a matrix that omits one consumer or one retained-pass preservation row; no stated coverage or rejection rule catches the omission.",
+        "Observe that output item 11 requests a blocker-movement ratio without fixing achieved movement to zero for this read-only audit."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Freeze the matrix universe and require explicit IDs, row counts, bidirectional coverage, and zero unmapped binding clauses/symbols/operations/evidence/falsifiers; any omission yields INCONCLUSIVE or no-go.",
+        "Require each novelty claim to name an operation-level mechanism and one pre-output discriminator that differs from each prior route; renaming or a governance-only wrapper fails.",
+        "Set achieved scientific blocker-movement ratio to 0.00; report future candidate movement only as a labeled estimate with assumptions.",
+        "Rename BREAKTHROUGH_CANDIDATE_PROPOSED to MATERIALLY_NEW_CANDIDATE_PROPOSED or CANDIDATE_PROPOSED until independent evidence exists."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d039-external-remedy-prompt-review-r2/results/A-D039-PROMPT-AUDIT-R2.json"
+  ]
+}

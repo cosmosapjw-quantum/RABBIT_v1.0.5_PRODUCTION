@@ -1,0 +1,242 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260730-f10-d067-review-r9",
+  "assignment_id": "A-D067-R9-BYPASS",
+  "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+  "agent_id": "r9-bypass",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260730-f10-d067-review-r9",
+    "assignment_id": "A-D067-R9-BYPASS",
+    "context_version": "b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5",
+    "independence_mode": "blind-results",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e98aa9dfc2104e461682d548b6a5c8a091e7aa6bf57fa87cbb822c4beb05e6ca",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-BYPASS.json",
+  "started_at": "2026-08-01T12:41:35Z",
+  "completed_at": "2026-08-01T13:00:24Z",
+  "tool_versions": {
+    "python": "3.12.3 (venv/bin/python)",
+    "pytest": "9.0.3 (venv/bin/python -m pytest)",
+    "git": "2.43.0"
+  },
+  "commands": [
+    "python3 .agent-harness/scripts/verify_assignment.py .agent-harness/runs/run-20260730-f10-d067-review-r9/assignments/A-D067-R9-BYPASS.json   # VERIFY: PASS, assignment_sha256=sha256:e98aa9d...",
+    "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py   # 108 passed, unmodified, at HEAD 4ec13b5 -- baseline",
+    "SCRATCH=$(mktemp -d); git archive HEAD | tar -x -C \"$SCRATCH\"   # tracked-files-only scratch tree, per the disk rule; unused for the final attack scripts, removed after use",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_00_sanity.py   # fixture-harness sanity: real admit_agent.py mint -> real Start -> real Stop accepts cleanly",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_01_retry_after_blocked_stop.py   # F-R9BYPASS-01",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_02_toctou_symlink_races.py   # F-R9BYPASS-02, 460 real concurrent race trials",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_03_truncated_ledger_line.py   # F-R9BYPASS-03",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_04_two_open_receipts_and_path_collision.py   # F-R9BYPASS-04",
+    "venv/bin/python /tmp/.../scratchpad/r9bypass/attack_05_stale_token_after_reopen.py   # F-R9BYPASS-05",
+    "git -C /home/cosmosapjw/Dropbox/rabbit/RABBIT_v1.0.5_PRODUCTION status --porcelain   # clean before and after every attack run; nothing mutated outside this result file and the disposable /tmp fixture trees",
+    "rm -rf /tmp/r9atk-* scratchpad/r9bypass/repo   # scratch cleanup"
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/fixtures.py",
+      "sha256": "sha256:4d526ad2e93f4f3727f2f135a37551e42afa5f780f5b82257eb31abe6fc3912a",
+      "kind": "shared fixture helpers (mirrors .agent-harness/tests/test_hooks.py's own make_harness/write_admission/stop_event/run_stop_hook patterns); dispatches only the real, unmodified .codex/hooks/*.py and .agent-harness/scripts/*.py as subprocesses"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_00_sanity.py",
+      "sha256": "sha256:5e765d3434cb4b239afd92381311928de4d80305e20651c5e5ec1ef48d327b2d",
+      "kind": "fixture-harness sanity control; scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_01_retry_after_blocked_stop.py",
+      "sha256": "sha256:bb79b10ef3ca0f93b3e9cf717d73f8792e4d450083551123166837c1ea56124f",
+      "kind": "refuted-attack repro (F-R9BYPASS-01); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_02_toctou_symlink_races.py",
+      "sha256": "sha256:79e8f6ed4d2defed5a5843bef6ffbbabc39eb8a58c3402f7f33d4dab566c0849",
+      "kind": "refuted-attack repro, empirical concurrency test (F-R9BYPASS-02); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_03_truncated_ledger_line.py",
+      "sha256": "sha256:e0e826d4cfe24e97361d690549694d8a0076f78d6d6e447cb6401f40c6b51f77",
+      "kind": "refuted-attack repro (F-R9BYPASS-03); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_04_two_open_receipts_and_path_collision.py",
+      "sha256": "sha256:63b35db204069b5350d4fd1c28b87417cc627418bf4f695790984f3ff7f23ef9",
+      "kind": "refuted-attack repro (F-R9BYPASS-04, two sub-attacks); scratchpad only, no repo mutation"
+    },
+    {
+      "path": "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_05_stale_token_after_reopen.py",
+      "sha256": "sha256:2aeaa56a1e15917c54d0c9dc761fca847cfa1a55a294dbbdbd540e5fa98f5b03",
+      "kind": "refuted-attack repro (F-R9BYPASS-05); scratchpad only, no repo mutation"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-R9BYPASS-01",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "critical",
+      "statement": "REFUTED. The assignment names this path as 'live right now' since this very agent's own receipt (A-D067-R9-BYPASS, expected_agent_id=r9-bypass) survived an aborted attempt 1 with the receipt still 'open' and the same admission token reissued to attempt 2. Reproduced the exact shape end to end against the real, unmodified hooks in a fresh fixture repo: (1) admit_agent.py mints token T for agent G/assignment A; (2) 'attempt 1' dispatches a real SubagentStop with a schema-defective result (empty findings list) -> BLOCKED, receipt stays 'open', T is now sitting in a captured (blocked) stop-event transcript exactly as the module docstring for admit_agent.py warns; (3) sub-attack 1a: 'attempt 2' (same agent_id G, fresh Start-time lease) retries with valid bytes using the SAME token T -> ACCEPTED (this is the intended, documented recovery path, not itself a bypass); (4) sub-attack 1b, the dangerous half: the STALE attempt-1 process, unaware it lost the race, resumes and re-POSTs DIFFERENT result bytes under the same agent_id and the same (now-spent) token T -> BLOCKED ('Result artifact changed after this agent's result was admitted; refusing to re-admit different bytes under the same receipt'), and the ledger-recorded result_sha256 is confirmed unchanged from attempt 2's admission; (5) sub-attack 1c: a DIFFERENT agent_id H, simulating an operator or process that captured the leaked token T from the blocked-stop transcript of step 2, attempts to consume assignment A as itself -> BLOCKED ('Admission receipt for A-R9ATK-ONE was minted for agent agent-g, not agent-h'), because admit_agent.py's --expect-agent-id binding (the required default; --agent-id-unknown is the only mode that would drop this) pins the receipt to the agent_id, not merely to the token. No combination of retry, stale re-post, or token capture from the blocked-stop transcript produced a wrong or duplicate attribution.",
+      "assumptions_used": [
+        "This does not model the case where the parent explicitly mints with --agent-id-unknown (token-only); that mode is covered separately by F-R9BYPASS-04 and is already a stated, disclosed residual in admit_agent.py's own docstring, not a hidden confusion.",
+        "The real repo's own run/assignment for r9-bypass (checked read-only, never mutated) matches this reproduction's shape: state=open, expected_agent_id=r9-bypass, no reopen row in ADMISSIONS.jsonl -- i.e. attempt 2 (this agent) is expected to consume it via the same token from attempt 1's mint, exactly as sub-attack 1a demonstrates is safe."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L611-L637 (result-artifact-changed re-admission guard)",
+        ".codex/hooks/subagent_stop_validate.py#L490-L509 (admission_proof / expected_agent_id checks)",
+        ".agent-harness/scripts/admit_agent.py#L19-L31 (module docstring: captured blocked-stop token leak, --expect-agent-id mitigation)",
+        ".agent-harness/admissions/run-20260730-f10-d067-review-r9/A-D067-R9-BYPASS.json (read-only: this agent's own live receipt, state=open, matching the reproduced shape)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_01_retry_after_blocked_stop.py"
+      ],
+      "evidence_fingerprint": "sha256:bb79b10ef3ca0f93b3e9cf717d73f8792e4d450083551123166837c1ea56124f",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_01_retry_after_blocked_stop.py",
+        "Output: '[3] sub-attack 1a (legit retry, same token): ACCEPTED'; '[4] sub-attack 1b ... BLOCKED (safe)'; '[5] sub-attack 1c ... BLOCKED (safe)'; 'VERDICT: REFUTED'"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R9BYPASS-02",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED, WITH A STATED EPISTEMIC LIMIT (empirical, not a proof of impossibility). subagent_stop_validate.py checks `admission_file.is_symlink()` and, separately, `(root/result_path).is_symlink()`, each followed a few lines later by an UNPROTECTED read (load_json / read_bytes -- no O_NOFOLLOW), unlike the per-(run,agent_id) lock file, which IS opened with os.O_NOFOLLOW specifically to turn a planted symlink into ELOOP (and already has a dedicated regression test, test_planted_symlink_at_the_agent_lock_path_blocks). The existing 108-test suite has a test for a PRE-EXISTING symlink at result_path (test_symlinked_result_path_is_rejected) but none for a symlink RACED onto the admission receipt path, and none for a genuine concurrency race on either path (as opposed to a static pre-existing symlink). Built two real concurrent-thread races against the unmodified hook: (a) a background thread hammering unlink+symlink+restore on the admission receipt path, pointed at an attacker-forged receipt (state=consumed, consumed_by_agent_id=attacker-ghost) while 400 real Stop dispatches ran concurrently with it -- 162 clean accepts, 238 blocks (a genuinely contested race, not a race the guard trivially always wins by starving the racer), 0 hits where the forged content was ever what got read or written back; (b) the same technique against the declared result_path across 60 trials with attacker-forged result bytes -- 0 hits. Neither race was won across 460 real concurrent trials. This is NOT a proof that the underlying check-then-read window is structurally unwinnable -- a sufficiently sophisticated scheduler-aware racer (e.g. ptrace-based single-stepping of the target process) might do better than a plain Python thread loop, and the code-level gap (is_symlink() not fused atomically with the subsequent read, the way the O_NOFOLLOW-protected lock file is) is real and unmitigated. The reason this is still assessed 'pass' rather than 'inconclusive' is a distinct, code-independent argument: winning this race requires an attacker who ALREADY has concurrent filesystem write access to the exact repo-local receipt/result path at the moment Stop reads it -- and an attacker with that capability can, with certainty and no race at all, simply overwrite the file directly with forged content before Stop ever runs. The symlink race grants no capability beyond what direct overwrite already grants; it only makes the SAME capability harder to exercise (needs precise timing) while achieving an identical effect. Direct-overwrite forgery is exactly the assignment's stated, accepted same-OS-user residual ('deliberate forgery of repo-local artifacts is a STATED residual and is not a novel finding on its own'), so the raced variant does not exceed that residual's capability class regardless of whether the race itself is winnable.",
+      "assumptions_used": [
+        "The residual-equivalence argument (raced symlink swap grants no more power than a direct overwrite of the same path) is treated as decisive for classifying this 'pass' rather than 'inconclusive', even though the race's own winnability was tested empirically rather than proven impossible; this judgement call is named explicitly rather than silently assumed."
+      ],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L459-L462 (admission_file.is_symlink() then load_json)",
+        ".codex/hooks/subagent_stop_validate.py#L579-L613 (result_path.is_symlink() then resolved.read_bytes())",
+        ".codex/hooks/subagent_stop_validate.py#L114-L119 (contrast: agent-lock path IS opened with os.O_NOFOLLOW)",
+        ".agent-harness/tests/test_hooks.py#L1720 (test_symlinked_result_path_is_rejected -- pre-existing symlink only, not a race) and #L3648 (test_planted_symlink_at_the_agent_lock_path_blocks -- the lock path's own dedicated race-class test)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_02_toctou_symlink_races.py"
+      ],
+      "evidence_fingerprint": "sha256:79e8f6ed4d2defed5a5843bef6ffbbabc39eb8a58c3402f7f33d4dab566c0849",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_02_toctou_symlink_races.py",
+        "Output: 'receipt-symlink race: 400 trials, 162 clean accepts, 238 blocks, ... HITS = 0'; 'result_path-symlink race: 60 trials, HITS = 0'"
+      ],
+      "confidence": 0.75,
+      "unresolved": [
+        "Whether a scheduler-aware (e.g. ptrace-based) racer could win this window was not tested; the residual-equivalence argument is offered as the reason this does not matter for the binding claim, but a reviewer who disagrees with that argument should treat this specific point as open rather than settled by the trial count alone.",
+        "Fixing the O_NOFOLLOW gap on these two paths (matching the lock file's own pattern) would close the code-level gap outright and is a minimal, well-precedented remedy if a future round wants zero residual doubt here."
+      ]
+    },
+    {
+      "finding_id": "F-R9BYPASS-03",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED. Simulated a crash mid-append to ADMISSIONS.jsonl (a syntactically complete first row, then a SECOND row cut in half with no trailing newline -- exactly the shape `f.write(json.dumps(row)+chr(10))` leaves if the process dies mid-write, e.g. from the disk-full condition that aborted this very run's attempt 1) and exercised all five scripts that read the ledger against the SAME torn bytes, on a receipt-holding agent so the healthy-path behaviour was also exercised, not just the malformed line in isolation: admit_agent.py (minting an unrelated third assignment) refused with 'admission ledger line 2 is malformed'; subagent_start_context.py reported 'Hook preflight: FAIL' with the same malformed-line complaint AND separately preserved the fact that the agent does hold a genuine open receipt (round-8's ordering fix, verified still in effect); subagent_stop_validate.py blocked the receipt-holding agent's otherwise-valid stop with 'Admission ledger for run ... line 2 is malformed; refusing to accept a result whose agent-to-assignment binding cannot be verified' -- i.e. the torn line does NOT let an otherwise-legitimate consume slip through; validate_harness.py reported ok=false with an error naming the malformed line. scrub_admission_proof.py's --sweep-run correctly completed (0 matches, since it never had cause to read the ledger given no receipt-file digest matched anything in this fixture) rather than silently treating the run as clean by omission -- its ledger-dependent code path (ledger_pin_for) is only invoked per-match, and no match existed to invoke it on. All five surfaces that make a security-relevant decision from the ledger agree: fail closed, never silently drop or disagree about a torn trailing line.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py#L143-L174 (_read_ledger_rows, fail-closed on any unparseable line)",
+        ".codex/hooks/subagent_start_context.py#L370-L399 (read_admission_ledger, same fail-closed rule)",
+        ".codex/hooks/subagent_stop_validate.py#L141-L191 (conflicting_agent_assignment, same rule)",
+        ".agent-harness/scripts/validate_harness.py#L141-L169 (read_ledger, same rule)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_03_truncated_ledger_line.py"
+      ],
+      "evidence_fingerprint": "sha256:e0e826d4cfe24e97361d690549694d8a0076f78d6d6e447cb6401f40c6b51f77",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_03_truncated_ledger_line.py",
+        "Output: 'stop failed closed: True', 'start failed closed ...: True', 'mint failed closed: True', 'validate_harness flagged the malformed line: True', 'VERDICT: REFUTED'"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R9BYPASS-04",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED, two sub-attacks. (a) Two open receipts in one run under maximum ambiguity (--agent-id-unknown for BOTH, so neither the mint-time nor the Stop-time agent-binding guard applies -- the weakest documented configuration): an agent presenting token-TWO's proof while declaring assignment_id=ONE in its HARNESS_RESULT envelope was BLOCKED ('admission_proof does not match the receipt for A-R9ATK-ONE'), because admission lookup is keyed strictly on the envelope's OWN declared assignment_id (admission_path(harness, bound_run, assignment_id) in subagent_stop_validate.py), so it loads assignment ONE's receipt and compares against ONE's digest regardless of which token the agent actually holds; the same agent then legitimately consumed assignment TWO with token-TWO's own proof, confirming the fixture and token were both valid (not merely refused because something else was broken). (b) A second assignment (TWO) registered in the same run with its `result_path` field deliberately set equal to assignment ONE's result path (a plausible generator/operator error, not attacker forgery of the Stop-time envelope) was refused at the assignment-contract level before Stop ever reached the token check: 'Registered assignment contract is invalid: result_path is not the assignment's unique result path' -- validate_assignment_contract in _harness.py independently derives the expected path as f'.../results/{assignment_id}.json' and rejects any assignment whose declared result_path disagrees, so a colliding declaration can never even be admitted, let alone confused with a sibling's result file at Stop time.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".codex/hooks/subagent_stop_validate.py#L455-L502 (admission lookup keyed on envelope's own assignment_id; admission_proof digest compare)",
+        ".agent-harness/scripts/_harness.py#L231-L236 (validate_assignment_contract: result_path must equal the assignment's own derived unique path)",
+        ".agent-harness/scripts/admit_agent.py#L399-L444 (--agent-id-unknown mode and its documented residual)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_04_two_open_receipts_and_path_collision.py"
+      ],
+      "evidence_fingerprint": "sha256:63b35db204069b5350d4fd1c28b87417cc627418bf4f695790984f3ff7f23ef9",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_04_two_open_receipts_and_path_collision.py",
+        "Output: 'submit assignment=ONE with TWO's token: BLOCKED (safe)'; 'assignment TWO declares ONE's result_path: BLOCKED (safe)'; 'VERDICT: REFUTED (both refused)'"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R9BYPASS-05",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "REFUTED. Two of the assignment's named attack ideas -- 'reuse of a consumed receipt' and 'a receipt reopened under --reopen' -- were checked two ways: (1) the existing, UNMODIFIED 108-test suite (.agent-harness/tests/test_hooks.py) passes in full at HEAD 4ec13b5, including test_subagentstop_blocks_replayed_consumed_admission, test_admission_ledger_garbage_is_an_error_not_a_skip, test_reopen_cannot_clear_the_tamper_detector, test_restop_with_changed_bytes_is_refused, test_declared_reopen_licenses_a_second_consume, and test_reopen_row_must_match_the_digest_it_claims_to_supersede -- run fresh this round rather than merely cited from the record; (2) a fresh, independently-written reproduction (not copied from the suite) specifically for the shape named in the assignment: mint token T1, reopen the SAME never-consumed receipt with --reopen --reason to get token T2 (a fresh, genuinely different token, confirmed T1 != T2), then present the STALE pre-reopen token T1 at Stop -> BLOCKED ('admission_proof does not match the receipt'), because --reopen rewrites token_digest in place on the receipt so T1's digest no longer matches; the current token T2 was then confirmed to work normally. Additionally, attack_02's 460-trial race exercised --reopen 162 times in immediate succession (recovering the receipt after each of its own clean accepts) with no anomaly, and attack_01's sub-attack 1b independently exercises 'reuse of a consumed receipt with different bytes' (refused). No combination tested let a spent, superseded, or replayed credential re-admit.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/scripts/admit_agent.py#L560-L632 (token regenerated and token_digest overwritten unconditionally on every mint, including --reopen)",
+        ".codex/hooks/subagent_stop_validate.py#L490-L502, #L662-L676 (token_digest compare; single-use / already-consumed refusal)",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_05_stale_token_after_reopen.py"
+      ],
+      "evidence_fingerprint": "sha256:2aeaa56a1e15917c54d0c9dc761fca847cfa1a55a294dbbdbd540e5fa98f5b03",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py   # 108 passed",
+        "venv/bin/python /tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/attack_05_stale_token_after_reopen.py",
+        "Output: 'stale pre-reopen token T1 at Stop: BLOCKED (safe)'; 'current (post-reopen) token T2 at Stop: ACCEPTED (expected)'; 'VERDICT: REFUTED'"
+      ],
+      "confidence": 0.9,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-R9BYPASS-06",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "ADJUDICATION-FACING SUMMARY. Round 9 hunted for a WORKING bypass of the admission-binding mechanism at HEAD 4ec13b5 and found none, extending the clean result at rounds 7 and 8 (which discharged all four D-065/D-067 obligations and closed the last known documentation-staleness finding). This round targeted the full named attack surface with fresh, independently-executed reproductions against the real, unmodified hooks/scripts (never against a description of them), plus a rerun of the existing 108-test suite as a baseline (all pass, unmodified). Mapping the assignment's named attack ideas to what was actually built and run: 'confusion between two open receipts in one run' -> F-R9BYPASS-04a (built and run, refuted); 'reuse of a consumed receipt' -> F-R9BYPASS-05 (built and run, refuted, plus existing suite); 'a receipt reopened under --reopen' -> F-R9BYPASS-05 (built and run, refuted) plus 162 incidental reopens inside F-R9BYPASS-02's race loop with no anomaly; 'the --agent-id-unknown mode where no mint-time agent guard is constructible' -> F-R9BYPASS-04a (built and run under that exact mode, refuted; this mode's residual ambiguity -- interchangeable token-holders within the mode -- is itself a DISCLOSED, documented scope limit in admit_agent.py's own docstring and the D-067 write-up's threat-model table, not a hidden confusion, so it is not re-reported here as novel); 'symlink and TOCTOU races on the lock path and the receipt path' -> F-R9BYPASS-02 (built and run: 460 real concurrent-thread race trials against the admission-receipt path and the declared result-path, both genuinely contested, zero hits; the lock path itself already has a dedicated O_NOFOLLOW protection and its own regression test and was not re-attacked); 'a malformed or truncated ADMISSIONS.jsonl line' -> F-R9BYPASS-03 (built and run against all five ledger-reading surfaces, refuted, consistently fail-closed); 'an assignment whose result_path collides with another's' -> F-R9BYPASS-04b (built and run, refuted at the assignment-contract level before Stop is even reached); 'a result written before Stop and swapped after' -> exercised inside F-R9BYPASS-01 sub-attack 1b (built and run, refuted) and independently covered by the existing suite's test_restop_with_changed_bytes_is_refused and test_reopen_cannot_clear_the_tamper_detector; 'the retry path where a BLOCKED stop leaves a receipt open while a live token sits in a captured event' -> F-R9BYPASS-01 (the PRIMARY attack this round, built and run against exactly this agent's own live circumstance -- receipt open since 2026-07-31T11:41:57Z, ~25h before this agent's own admission and Stop, well past the unrelated 24h PENDING_ADMISSION_MAX_AGE_HOURS ceiling that governs validate_harness.py's read-time trust of an UNCONSUMED result sitting next to an open receipt -- note that ceiling does not and structurally cannot gate Stop's own consumption of an old-but-still-open receipt, by design: a receipt has no reason to expire for consumption purposes, only for how long an unconsumed artifact next to it may be silently trusted -- refuted). ONE ITEM WAS NOT INDEPENDENTLY RE-EXECUTED THIS ROUND, stated rather than silently omitted: 'confusion ... across runs' (cross-run receipt/lease mix-up) requires a genuine overlapping-run live dispatch (two concurrent agent processes, a moving ACTIVE_RUN pointer) that a single reviewing agent building subprocess fixtures cannot faithfully reconstruct in isolation; this is covered instead by (i) the existing suite's test_subagentstop_accepts_leased_run_after_pointer_moves / test_subagentstop_without_lease_blocks_on_moved_pointer / test_subagentstop_blocks_leaseless_agent_even_with_matching_pointer, rerun clean this round, (ii) code reading of the Start-time lease mechanism (run identity is sealed into a per-agent lease file at Start and Stop resolves the bound run from THAT lease, never from the mutable ACTIVE_RUN pointer), and (iii) three previously-reproduced live overlapping-run canaries (C1, C5-superseded-by-C6, C6) recorded in docs/audit/BD622_D067_admission_binding_2026-07-29.md and reconfirmed not-stale as of round 8. This is named as a scope limit rather than claimed as freshly demonstrated. Separately and per the assignment's own stated framing, deliberate forgery of repo-local artifacts by a process that already shares the harness's OS user and write access remains a named, accepted residual, not something this round's findings claim to have closed; F-R9BYPASS-02 discusses explicitly why its TOCTOU variant does not exceed that residual's capability class even in the case the race were winnable. No finding in this round moves G-HARNESS-INTEGRITY (that verdict belongs to D-070 adjudication, not to a single reviewer's round), and this report does not claim the mechanism is unconditionally unbreakable -- only that the specific attack surface named in this assignment, built and run against HEAD 4ec13b5, produced no working bypass.",
+      "assumptions_used": [
+        "Cross-run confusion was assessed via existing test coverage, code reading, and prior recorded live canaries rather than a fresh live canary built this round; this is stated as a scope limit in the body of this finding, not hidden.",
+        "The disclosed --agent-id-unknown token-interchangeability residual and the same-OS-user forgery residual are both treated as OUT of scope for a 'novel finding' verdict here, per the assignment's own explicit instruction that they are stated residuals rather than open questions."
+      ],
+      "evidence_refs": [
+        "docs/audit/BD622_D067_admission_binding_2026-07-29.md (rounds 1-8 review record; sections 2-4)",
+        ".agent-harness/admissions/run-20260730-f10-d067-review-r9/A-D067-R9-BYPASS.json (this agent's own live receipt, read-only)",
+        ".agent-harness/runs/run-20260730-f10-d067-review-r9/ADMISSIONS.jsonl (this run's live ledger, read-only)",
+        "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py   # 108 passed at HEAD 4ec13b5",
+        "/tmp/claude-1000/-home-cosmosapjw-Dropbox-rabbit-RABBIT-v1-0-5-PRODUCTION/60cdc9a2-b20d-457b-8913-101046790f45/scratchpad/r9bypass/ (all six attack scripts and shared fixtures.py)"
+      ],
+      "evidence_fingerprint": "sha256:6c0328079faeec5ac5fa4cce306e06d717bc6ea7607c94f732636ae79504a22c",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python -m pytest -q .agent-harness/tests/test_hooks.py",
+        "for f in attack_0{0,1,2,3,4,5}*.py; do venv/bin/python $f; done   # (run from the scratchpad r9bypass directory)",
+        "git status --porcelain   # clean before and after, in the real repo"
+      ],
+      "confidence": 0.85,
+      "unresolved": [
+        "Cross-run confusion (see statement) rests on prior evidence and code reading rather than a fresh live canary built this round.",
+        "The TOCTOU race's true winnability against a scheduler-aware attacker (see F-R9BYPASS-02) was not tested, only argued to not matter for this claim."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-BYPASS.json"
+  ]
+}

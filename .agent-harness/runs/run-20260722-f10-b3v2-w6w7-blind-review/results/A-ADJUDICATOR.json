@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+  "assignment_id": "A-ADJUDICATOR",
+  "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+  "agent_id": "019f894d-7cfc-7032-a3f9-eccd6fd03cc0",
+  "agent_type": "default",
+  "spawn_contract": {
+    "run_id": "run-20260722-f10-b3v2-w6w7-blind-review",
+    "assignment_id": "A-ADJUDICATOR",
+    "context_version": "b9cdbd74b0c0a80e3a24016ec9dfa6d1d006eb76d9205c9b2ca8e02adf64e389",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b5b2fb9e297a0102d7a1faf9dfecf8b68b06fff20c7c599c3c225532a19adef0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-ADJUDICATOR.json",
+  "started_at": "2026-07-22T10:05:00Z",
+  "completed_at": "2026-07-22T10:11:45Z",
+  "tool_versions": {
+    "adjudication_method": "normalized-envelope adjudication with targeted review of the six assignment-authorized sibling envelopes; no physics, CAS, W7, T01-T12, collision, Radau, trajectory, endpoint, or RABBIT execution",
+    "shell_sha256sum": "GNU coreutils 9.4",
+    "token_use_exact": "UNAVAILABLE: no reliable assignment-scoped token counter is exposed",
+    "platform_fallback": "The dedicated adjudicator agent failed before SubagentStart because its forced model was unsupported. This registered fallback used the supported default agent with the assignment-authorized adjudicator role file."
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "wc -l .agent-harness/generated/CONTEXT_PACK.md && sed -n '261,620p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '1,320p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-ADJUDICATOR.json && sha256sum .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/assignments/A-ADJUDICATOR.json",
+    "sed -n '1,360p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/MERGED_RESULTS.json",
+    "sed -n '1,260p' .agent-harness/context/roles/adjudicator.md",
+    "sed -n '1,360p' .agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json",
+    "sed -n '1,340p' docs/audit/BD622_W6_comparator_design_proof_pack.md",
+    "targeted jq/sed review of the six assignment-authorized sibling result envelopes",
+    "sha256sum MERGED_RESULTS.json BD622_W6_comparator_design_proof_pack.md CAS_CONTRACT.json adjudicator.md"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/MERGED_RESULTS.json#sha256:1c28dcfb1a716ab24f548c215122b9ffa790b8bd0e0bd5ffb30bb6bc00c98d97",
+    "docs/audit/BD622_W6_comparator_design_proof_pack.md#sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/CAS_CONTRACT.json#sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240",
+    ".agent-harness/context/roles/adjudicator.md#sha256:267fd3ac8b462eb9b13f2722f6c53ff5813351593c4d45a8ae8e75295b039305",
+    "A-B3-DESIGN.json#sha256:fc283d4f41d01bd1002fcd3094cf2390771e594630590736e623daa56631962e",
+    "A-W7-METROLOGY.json#sha256:8d490da0488d9412f89509d36286e7d6538928ebde75e4d11364e8c4e80b4ddb",
+    "A-CAS-WOLFRAM.json#sha256:4d81d99c21be66357c67c44eb5c688bb36c39580e43a5d6f93139889d5d6faf6",
+    "A-CAS-SAGE.json#sha256:722dfa8a83a9f757640eff8eebb5302f6ffac156a043f89a7e4fc28c0d31fe92",
+    "A-CAS-LEAN.json#sha256:b5c61f027e0f193d9a13b10e33d04ba565aa261f1e31a71d6572f1078e7092a5",
+    "A-CAS-SYMPY.json#sha256:21abb162c14eb07f9dc3207567905fd56296323e62ced1bcef95ac485da26faf"
+  ],
+  "adjudication": {
+    "overall_verdict": "FAIL",
+    "input_finding_count": 28,
+    "deduplicated_finding_count": 28,
+    "duplicates_removed": 0,
+    "deduplication_key": [
+      "claim_id",
+      "evidence_fingerprint",
+      "verdict"
+    ],
+    "substantive_conflicts": [],
+    "scope_or_tool_differences": [
+      "C-W7-FINITE-ME-SHELL pass/inconclusive differences are claim-scope differences, not contradictory algebra: Sage and SymPy close a generic kinematic shell/root construction, while Wolfram and Lean correctly decline to certify the absent exact B3 invariant-coordinate elimination, denominator list, threshold branches, and one-sided derivative rules.",
+      "Lean's inconclusive row-ii and entropy verdicts are caused by unavailable mathlib matrix/complex/Clifford and real-log support; they are not counter-derivations against the exact Wolfram, Sage, or SymPy results.",
+      "Wolfram xPerm connection failure does not contradict its exact explicit gamma-matrix and scalar-shell results because those calculations did not use xPerm or ToCanonical.",
+      "The unsupported dedicated CAS/adjudicator agent models are platform/process limitations. The four mathematical engines did run under registered fallback assignments, so exact subclaim evidence is retained, but the unavailable dedicated-agent family keeps the run-level four-axis execution ceiling INCONCLUSIVE and cannot be reported as canonical dedicated-agent completion."
+    ],
+    "authority": {
+      "current": "Design review and unexecuted W7 source/test-vector drafting only.",
+      "w7_numerical_execution": "FORBIDDEN",
+      "b3_static_or_t01_t12_implementation_execution": "FORBIDDEN",
+      "owner_authority_required": true,
+      "owner_authority_sufficient_now": false,
+      "reopen_condition": "First freeze the missing exact design, microphysics, finite-mass, ladder, arithmetic, metrology, state-vector, and environment bytes and obtain a fresh registered blind PASS on those exact bytes. Only then can an explicit owner decision authorize the bounded W7/B3 static implementation and T01-T12 execution."
+    },
+    "gate_verdicts": {
+      "G-F10-COVARIANCE-METROLOGY": "FAIL",
+      "G-F10-INDEPENDENT-FLRW": "FAIL",
+      "G-F10-SCOPE": "PASS for this adjudication; no forbidden execution or implementation occurred",
+      "G-HARNESS-INTEGRITY": "Not promoted by this result; parent-side post-run write attribution and Stop validation remain required"
+    },
+    "decision_basis": "Exact reaction-nullspace evidence and partial algebraic passes do not overcome the critical implementation-sufficiency and arithmetic-metrology failures. The reviewed W6 bytes admit inequivalent collision operators and cannot prospectively reproduce B_native or the T08-T12 ladder. The broader absolute normalization is also missing the finite-electron weak-current, interference, spin, degeneracy, symmetry, and catalogue factor ledger."
+  },
+  "findings": [
+    {
+      "finding_id": "F-ADJ-B3V2-DESIGN",
+      "claim_id": "C-B3V2-DESIGN",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "FAIL. The algebraic six-species entropy-variable core is coherent, but W6 is not implementation-sufficient: it omits exact reaction records/signs/multiplicities, finite-m_e support equations and Jacobians, deterministic basis/QR conventions, and an executable preregistered ladder. Independent conforming implementations can differ physically and numerically.",
+      "assumptions_used": [
+        "Implementation authority requires a unique operation graph reconstructible without forbidden production-code reuse or discretionary post-review choices.",
+        "An exact subclaim pass cannot compensate for a missing binding reaction, normalization, branch, basis, or selection definition."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-B3V2-DESIGN",
+        "A-B3-DESIGN.json findings F-B3D-SPEC-002 and F-B3D-LADDER-003",
+        "BD622_W6_comparator_design_proof_pack.md sections 3-7 and 10-12"
+      ],
+      "evidence_fingerprint": "sha256:1c28dcfb1a716ab24f548c215122b9ffa790b8bd0e0bd5ffb30bb6bc00c98d97",
+      "counterevidence_refs": [
+        "A-B3-DESIGN.json F-B3D-CORE-001 passes only the bounded algebraic core."
+      ],
+      "reproduction": [
+        "Compare W6 sections 3-7 and 10-12 against CAS_CONTRACT exact_test_obligations and identify each implementation-time free choice listed above."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact reaction and multiplicity table, sign map, electron bath convention, finite-m_e reduction, basis/QR contract, and ladder operation graph."
+      ]
+    },
+    {
+      "finding_id": "F-ADJ-W7-METROLOGY",
+      "claim_id": "C-W7-METROLOGY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "FAIL. The same-node/continuum split is conceptually sound, but the exact binary64-to-MPFR operation graph, rounding and interval composition, common normalization and numeric values for B_sum/B_basis/B_solve/B_interval, component floors, state envelope, frozen support vectors, and environment pins are absent. B_native is not reproducible or prospectively auditable.",
+      "assumptions_used": [
+        "Every additive B_native term must bound the same normalized observable or carry an explicit conversion.",
+        "A pre-output cap must be fixed from exact input bytes, operation order, denominators, and states before any candidate output."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-W7-METROLOGY",
+        "A-W7-METROLOGY.json findings F-W7M-002 through F-W7M-004",
+        "BD622_W6_comparator_design_proof_pack.md sections 8-11"
+      ],
+      "evidence_fingerprint": "sha256:6c34f3844d6b1d2f04c077c54c86e91609c4f1b9261d815d58cecf98370befd8",
+      "counterevidence_refs": [
+        "W6 correctly separates structural covariance from native conditioning and refuses to reuse D-028's cap, but this is scaffolding rather than an executable bound."
+      ],
+      "reproduction": [
+        "Attempt to compute B_native from W6 sections 8.2 and 9 using only reviewed bytes; each term lacks at least one binding formula, normalization, numeric value, or input envelope."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact arithmetic replay contract, common term normalization, numeric cap ledger, all test-vector bytes, and isolated environment lock."
+      ]
+    },
+    {
+      "finding_id": "F-ADJ-W7-ROWII",
+      "claim_id": "C-W7-ROWII-TRACE",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "INCONCLUSIVE on the required four-axis closure. Wolfram, Sage, and SymPy independently derive the direct coherent t+s v-spinor result as four times the distinguishable K_t base. Lean supplies no trace theorem because the required library support is unavailable. There is no substantive algebraic contradiction.",
+      "assumptions_used": [
+        "The contract requires four-axis evidence and does not permit silence to count as pass.",
+        "The absolute raw-to-tagged normalization remains a separate claim."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-W7-ROWII-TRACE",
+        "A-CAS-WOLFRAM.json F-CAS-WL-ROWII",
+        "A-CAS-SAGE.json A-CAS-SAGE-F1",
+        "A-CAS-LEAN.json F-LEAN-ROWII-TRACE-INCONCLUSIVE",
+        "A-CAS-SYMPY.json F-SYMPY-ROWII"
+      ],
+      "evidence_fingerprint": "sha256:660ff419d8441eeda57a0963f7e5edd163bac7c7f1a229b78a846d693f2e8c0d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Use the embedded exact scripts in the three passing envelopes and the Lean limitation record; do not infer a fourth proof from three-axis agreement."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A formal Lean direct u/v trace or an explicitly owner-approved revision of the four-axis proof requirement."
+      ]
+    },
+    {
+      "finding_id": "F-ADJ-W7-ABS-NORM",
+      "claim_id": "C-W7-ABSOLUTE-NORMALIZATION",
+      "verdict": "inconclusive",
+      "severity": "critical",
+      "statement": "INCONCLUSIVE. Multiple axes reproduce the massless invariant-measure and Maxwell-Boltzmann reduction, but no axis can close the convention-locked all-channel normalization because the finite-m_e electron weak couplings, interference, spin/degeneracy convention, symmetry factors, and complete catalogue factor ledger are not supplied.",
+      "assumptions_used": [
+        "The claim covers massless self and finite-m_e electron channels, not only the massless prefactor.",
+        "No normalization factor may be supplied by an unnamed conventional assumption."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-W7-ABSOLUTE-NORMALIZATION",
+        "A-W7-METROLOGY.json F-W7M-001",
+        "all four CAS absolute-normalization findings"
+      ],
+      "evidence_fingerprint": "sha256:00460d92a948c5ebc4f0118850224013a895b69db746d125a5a30ef4b04c5240",
+      "counterevidence_refs": [
+        "Wolfram, Sage, and SymPy derive the massless self-channel phase-space reduction exactly; that bounded result is retained."
+      ],
+      "reproduction": [
+        "Trace every 2*pi, weak-vertex, spin, degeneracy, final-state, target/global-leg, and flavour-orbit factor from CAS_CONTRACT phase_space_measure; the finite-electron ledger cannot be completed from the reviewed inputs."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Convention-locked finite-electron interaction and all-channel factor ledger."
+      ]
+    },
+    {
+      "finding_id": "F-ADJ-REACTION-NULLSPACE",
+      "claim_id": "C-B3V2-REACTION-NULLSPACE",
+      "verdict": "pass",
+      "severity": "info",
+      "statement": "DERIVED / PASS for this exact subclaim. All four axes independently obtain rank three for the six-species count stoichiometry, left nullspace span_Q{L_e,L_mu,L_tau}, and right nullity 36 for the enumerated 24-self/15-electron graph.",
+      "assumptions_used": [
+        "Every enumerated event orbit has nonzero rational multiplicity.",
+        "This is species-count stoichiometry only; it does not validate matrix elements, rates, energy conservation, binary64 assembly, or implementation."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-B3V2-REACTION-NULLSPACE",
+        "the nullspace finding in each of A-CAS-WOLFRAM, A-CAS-SAGE, A-CAS-LEAN, and A-CAS-SYMPY"
+      ],
+      "evidence_fingerprint": "sha256:660ff419d8441eeda57a0963f7e5edd163bac7c7f1a229b78a846d693f2e8c0d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Run each envelope's embedded exact graph/nullspace artifact under its recorded engine and verify rank 3, left nullity 3, and right nullity 36."
+      ],
+      "confidence": 0.99,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-ADJ-ENTROPY",
+      "claim_id": "C-B3V2-ENTROPY-AFFINITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "INCONCLUSIVE on four-axis closure. Wolfram, Sage, and SymPy derive A=log(F/R), (F-R)log(F/R)>=0, the equality condition, and the electron-bath sign. Lean compiles only rational test-vector arithmetic because real-log proof support is unavailable. No counterexample or sign conflict exists.",
+      "assumptions_used": [
+        "Strict-open occupations give F,R>0.",
+        "The four-axis contract requires a proof rather than agreement of three tools plus one arithmetic vector."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-B3V2-ENTROPY-AFFINITY",
+        "the entropy finding in each CAS envelope"
+      ],
+      "evidence_fingerprint": "sha256:660ff419d8441eeda57a0963f7e5edd163bac7c7f1a229b78a846d693f2e8c0d",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Use the three exact derivations and Lean's compiled rational-vector record; do not promote the missing real-log theorem to pass."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "A Lean real-log affinity and bath-sign theorem, or an explicitly owner-approved change to the four-axis proof obligation."
+      ]
+    },
+    {
+      "finding_id": "F-ADJ-FINITE-ME",
+      "claim_id": "C-W7-FINITE-ME-SHELL",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "INCONCLUSIVE for the full B3 design-specific claim. The shell/Mandelstam identities and generic physical-root formulas are mutually consistent and exact where proved. The pass/inconclusive split is scope-level: W6 does not name the actual invariant-coordinate elimination, cleared denominators, deterministic root enumeration, threshold tie branches, or one-sided derivative rules that a B3 implementation must use.",
+      "assumptions_used": [
+        "A generic valid root construction does not uniquely certify a different, unspecified implementation reduction.",
+        "Kinematic shell closure is separate from finite-m_e weak-amplitude normalization."
+      ],
+      "evidence_refs": [
+        "MERGED_RESULTS.json normalized claim C-W7-FINITE-ME-SHELL",
+        "the finite-m_e finding in each CAS envelope",
+        "A-W7-METROLOGY.json F-W7M-003"
+      ],
+      "evidence_fingerprint": "sha256:660ff419d8441eeda57a0963f7e5edd163bac7c7f1a229b78a846d693f2e8c0d",
+      "counterevidence_refs": [
+        "Sage and SymPy pass the generic kinematic shell/root obligation; Wolfram and Lean do not dispute those identities."
+      ],
+      "reproduction": [
+        "Compare the generic Sage/SymPy root proofs with W6 section 4; the latter supplies no exact implementation coordinate map against which completeness and branch behavior can be checked."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact B3 elastic and pair reduction, denominator/exclusion ledger, threshold behavior, and one-sided derivative formulas."
+      ]
+    }
+  ],
+  "errors": [
+    "Dedicated adjudicator launch failed before SubagentStart because its forced model was unsupported for this account; the registered default-agent fallback completed the same assignment with the adjudicator role file."
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260722-f10-b3v2-w6w7-blind-review/results/A-ADJUDICATOR.json"
+  ]
+}

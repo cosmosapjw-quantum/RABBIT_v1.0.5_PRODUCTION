@@ -14,6 +14,7 @@ mod isotropic_boltzmann;
 mod minimal_bbn;
 mod minimal_network;
 mod ode;
+mod pauli_edge_step;
 mod qed_eos;
 mod quadrature;
 mod thermal_bbn;

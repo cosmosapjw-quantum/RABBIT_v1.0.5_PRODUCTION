@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+  "assignment_id": "A-D057R5-ADJUDICATOR",
+  "parent_assignment_id": null,
+  "depth": 1,
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_files": [
+    ".agent-harness/context/roles/adjudicator.md"
+  ],
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template": ".agent-harness/templates/RESULT_ENVELOPE.json",
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "independence_mode": "adjudication",
+  "discovery_mode": "targeted",
+  "may_spawn": false,
+  "delegable_claim_ids": [],
+  "claim_ids": [
+    "C-F10-INDEPENDENT",
+    "C-F10-COVARIANCE-METROLOGY",
+    "C-HARNESS-INTEGRITY"
+  ],
+  "task": "Final evidence-weighted adjudication of the claimed D053-D056 blocker resolution. Require D057 report sha256 d3ecd54d2a2c7cb6b012f43e64bdf9b52fc5ca32101a6858bbfbcb6dbeb4574a before and after. Consume the four R4 axes, valid R5 cross-accept R3, cross-reject, and the R2 drift error. Deduplicate by claim_id, evidence_fingerprint, verdict; resolve only genuine conflicts against gate/spec authority, never by vote. Preserve bounded implementation/numerical successes, distinguish trusted vs contextual envelopes, give terminal PASS/FAIL/INCONCLUSIVE per gate, exact hashes, decisive falsifiers and minimal next gates. No broad discovery or shared edits; write only registered result.",
+  "required_inputs": [
+    ".agent-harness/generated/CONTEXT_PACK.md",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-ADJUDICATOR.json",
+    ".agent-harness/templates/RESULT_ENVELOPE.json",
+    ".agent-harness/context/roles/adjudicator.md",
+    "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PROVENANCE.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-REJECT.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R2.json"
+  ],
+  "allowed_sibling_results": [
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PROVENANCE.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-PHYSICS.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-METROLOGY.json",
+    ".agent-harness/runs/run-20260728-f10-blocker-resolution-adversarial-audit-r4/results/A-D057R4-TRAJECTORY.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R3.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-REJECT.json",
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT-R2.json"
+  ],
+  "allowed_tools": [
+    "exec_command",
+    "apply_patch"
+  ],
+  "required_outputs": [
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-ADJUDICATOR.json"
+  ],
+  "result_path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-ADJUDICATOR.json",
+  "status": "registered"
+}

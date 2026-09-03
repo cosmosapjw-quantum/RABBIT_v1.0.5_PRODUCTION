@@ -1,0 +1,35 @@
+{
+ "artifact_class": "CANARY_ATTESTATION",
+ "supersedes": "C4 ACTIVE_RUN_ATTESTATION_AT_STOP.json, which round 5 rejected: it was captured 286 s BEFORE the consume, so it never proved the overlap held at the decisive instant.",
+ "method": "ACTIVE_RUN read immediately before and immediately after the Stop dispatch, in a single shell command with no intervening work, so the consume instant is bracketed rather than merely preceded.",
+ "pointer_before_dispatch": "run-20260729-f10-d070-canary-c5-decoy",
+ "captured_before": "2026-07-29T10:16:00.525507907Z",
+ "pointer_after_dispatch": "run-20260729-f10-d070-canary-c5-decoy",
+ "captured_after": "2026-07-29T10:16:00.564664166Z",
+ "ledger_consumed_at": "2026-07-29T10:16:00+00:00",
+ "consume_instant_inside_bracket": null,
+ "bracket_width_seconds": 0.039,
+ "canary_lease_run_id": "run-20260729-f10-d070-canary-c5",
+ "overlap_held_across_the_whole_bracket": true,
+ "stop_hook_sha256": "dc19da4d43b84e459c3b5a5a4ee5abbc94726ca83b7246f85364c29b820fda93",
+ "head_commit": "d94270fecedb3b6dca7276f27bae91da348cdf16",
+ "consumed_by_agent_id": "d070-canary-c5",
+ "expected_agent_id": "d070-canary-c5",
+ "result_sha256": "sha256:44d93b8926ac680ddd82c063b207813fa6e4a661b3870290595770fd6e8858fc",
+ "receipt_state": "consumed",
+ "containment_analysis": {
+  "why_the_naive_test_failed": "consumed_at is written with isoformat(timespec='seconds'), so it is TRUNCATED and denotes the interval [10:16:00, 10:16:01). Comparing a truncated second against nanosecond bracket bounds is not a valid containment test and gave a spurious False.",
+  "consumed_at_denotes_interval": [
+   "2026-07-29T10:16:00+00:00",
+   "2026-07-29T10:16:01+00:00"
+  ],
+  "bracket": [
+   "2026-07-29T10:16:00.525507907Z",
+   "2026-07-29T10:16:00.564664166Z"
+  ],
+  "consume_interval_overlaps_bracket": true,
+  "bracket_and_consume_in_the_same_wall_second": true,
+  "what_is_actually_established": "ACTIVE_RUN named the decoy immediately before the Stop dispatch and still named the decoy immediately after it, with 39 ms between the two reads and the consume occurring inside that dispatch. The pointer therefore could not have been restored to the canary run around the consume, which is the property C4 failed to establish.",
+  "residual_limit": "Second-resolution stamps cannot prove sub-second ordering. The bracket proves the pointer state across the dispatch; it does not timestamp the consume to better than one second, and this attestation does not claim otherwise."
+ }
+}

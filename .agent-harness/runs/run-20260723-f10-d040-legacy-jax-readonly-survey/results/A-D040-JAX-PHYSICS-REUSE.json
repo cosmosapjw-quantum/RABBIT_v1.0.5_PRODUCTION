@@ -1,0 +1,407 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+  "assignment_id": "A-D040-JAX-PHYSICS-REUSE",
+  "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+  "agent_id": "019f8e78-6ed5-77a1-a20d-d74ac7e510a3",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+    "assignment_id": "A-D040-JAX-PHYSICS-REUSE",
+    "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:e4805ac0c6f46756580e0c366f761e95ba93559d6c51cb59321f3d1ac3296b43",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-PHYSICS-REUSE.json",
+  "started_at": "2026-07-23T10:16:16Z",
+  "completed_at": "2026-07-23T10:22:35Z",
+  "tool_versions": {
+    "rg": "ripgrep 14.1.0",
+    "sed": "GNU sed 4.9",
+    "sha256sum": "GNU coreutils 9.4",
+    "token_use": "UNAVAILABLE: the harness exposes no exact token counter"
+  },
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/assignments/A-D040-JAX-PHYSICS-REUSE.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n over the complete canonical context pack, assignment, role file, and result template",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+    "wc -l and sha256sum over the six assigned target files",
+    "sed -n over complete geometry_bianchi_base.py, characteristic_rays_nonlrs_jax.py, collisions_jax.py, collision_operator_jax.py, driver_typeI_full_boltzmann.py, and B6_nonlrs_flrw_parity_2026-06-30.md",
+    "rg -n targeted convention, unit, sign, limit, conservation, positivity, calibration, Jacobian, and scope terms within the assigned target files"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+      "kind": "allowed mapper result",
+      "sha256": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7"
+    },
+    {
+      "path": "src/rabbit/jax/geometry_bianchi_base.py",
+      "kind": "assigned geometry and shear source",
+      "sha256": "sha256:228eeb6e650c661591210d811257b51f31a522547692b6b244d3f99b5a32fe08"
+    },
+    {
+      "path": "src/rabbit/jax/characteristic_rays_nonlrs_jax.py",
+      "kind": "assigned characteristic and S2 moment source",
+      "sha256": "sha256:b5989c2661e850d7a93d8c0595aace1ce133c3d347fcf46f8b4ae5dc46f965a8"
+    },
+    {
+      "path": "src/rabbit/jax/collisions_jax.py",
+      "kind": "assigned reduced direct-collision source",
+      "sha256": "sha256:7e94aaf01e6ab73ad684edbda28f976856b1e7aa012b7356d9e20ba10eb56604"
+    },
+    {
+      "path": "src/rabbit/jax/collision_operator_jax.py",
+      "kind": "assigned calibrated RTA collision source",
+      "sha256": "sha256:700074bdcc0974d2fdba5662401b567955633d3156c83bb318ba8d0df1be4e1d"
+    },
+    {
+      "path": "src/rabbit/jax/driver_typeI_full_boltzmann.py",
+      "kind": "assigned coupled driver, moment, thermo, and stiffness source",
+      "sha256": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e"
+    },
+    {
+      "path": "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md",
+      "kind": "assigned bounded parity record",
+      "sha256": "sha256:0dd11045ac884f47621a809a3bef4b030fc4f4dba5b3fb54a0e8b0fd2fcc5519"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D040-PR-001",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The static classification is complete and fail-closed. PROPOSED reusable clues are limited to the orthogonal diagonal Type-I log-stretch characteristic map, explicit S2 quadrature and degeneracy-aware moment bookkeeping, and exact block/low-rank deterministic Jacobian organization. The reduced direct collision kernels are diagnostic only and unsafe to translate; the calibrated RTA and AP closures are DEPRECATED as physics; general Class-B geometry, coupled non-LRS shear backreaction, and imported thermo closures are unknown or unsafe outside their narrow historical limits. No assigned evidence reopens JAX or supplies F-11, DSMC, W7/B3, endpoint, or public-runtime authority.",
+      "assumptions_used": [
+        "D-039 STOP/PRESERVE remains controlling.",
+        "D-040 permits static clues only and does not convert internal parity into physics authority.",
+        "A reusable mechanism is not reusable physics unless conventions and invariants are independently reconstructible."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-001--F-D040-006",
+        "src/rabbit/jax/geometry_bianchi_base.py:43-274",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:31-246",
+        "src/rabbit/jax/collisions_jax.py:1-456",
+        "src/rabbit/jax/collision_operator_jax.py:1-140",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1-3321",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:29-62"
+      ],
+      "evidence_fingerprint": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7",
+      "counterevidence_refs": [
+        "Historical internal parity and bounded reductions exist, but none is a structurally independent finite non-LRS collision-coupled validation."
+      ],
+      "reproduction": [
+        "sha256sum the six assigned targets and inspect only the line ranges cited by the findings below"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Any future Bianchi design requires a new owner decision and a prospective conventions, collision, thermo, positivity, conservation, stiffness, and independence contract."
+      ]
+    },
+    {
+      "finding_id": "F-D040-PR-002",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The non-LRS characteristic primitive is a coherent PROPOSED clue only for orthogonal diagonal Type I. Its diagonal stretches have unit determinant, so the stated J=norm^-3 follows; I=0.5 log(norm) gives the expected norm^-4 energy-moment factor exp(-8I); and S_plus=S_minus=0 reduces to identity direction, J=1, and the 0.5-weighted S2 monopole because the weights sum to 2. This closed-form map can remove direction-ODE drift even for sign-changing integrated diagonal shear, but it does not cover rotating principal axes, off-diagonal shear, curvature, tilt, or collisions.",
+      "assumptions_used": [
+        "S_plus and S_minus are integrated Hubble-normalized diagonal shear components in the fixed Wainwright-Hsu frame.",
+        "q_nodes are nonnegative and the massless distribution is evaluated in the project energy-shift convention."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:31-61",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:78-190",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:196-246",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:29-62"
+      ],
+      "evidence_fingerprint": "sha256:b5989c2661e850d7a93d8c0595aace1ce133c3d347fcf46f8b4ae5dc46f965a8",
+      "counterevidence_refs": [
+        "B6 exercises zero shear and finite-shear Sigma_minus=0 reduction only; it explicitly says finite Sigma_minus lacks an external cross-code anchor."
+      ],
+      "reproduction": [
+        "sed -n '78,246p' src/rabbit/jax/characteristic_rays_nonlrs_jax.py",
+        "sed -n '29,62p' docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "The Pi_minus sign/normalization and finite-Sigma_minus observable response remain internally defined rather than externally validated."
+      ]
+    },
+    {
+      "finding_id": "F-D040-CH-001",
+      "claim_id": "C-D040-CONVENTION-HAZARDS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The common geometry module is unsafe as a general Bianchi/BBN physics source. Its q relation is explicitly radiation-only; Pi_plus/Pi_minus are added to dimensionless dSigma/dN without defining their Hubble-normalized stress convention; physical Omega>0 is documented but not enforced; Class-B curvature-source and cA claims are unvalidated in the assigned evidence; has_curvature incorrectly returns false for Type V even though its A term represents nonzero spatial curvature; and binary activity masks cannot encode the sign/equality/algebraic constraints distinguishing VI0 from VII0 or the Class-B families. The K, S_plus, S_minus, and structure-eigenvalue formulas remain diagnostic algebra for a prospectively fixed convention, not reusable general geometry.",
+      "assumptions_used": [
+        "The variables are Wainwright-Hsu Hubble-normalized and N=ln(a).",
+        "A future BBN evolution crosses a finite-electron-mass, non-pure-radiation thermo regime."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/geometry_bianchi_base.py:43-83",
+        "src/rabbit/jax/geometry_bianchi_base.py:87-117",
+        "src/rabbit/jax/geometry_bianchi_base.py:123-170",
+        "src/rabbit/jax/geometry_bianchi_base.py:181-207",
+        "src/rabbit/jax/geometry_bianchi_base.py:229-274"
+      ],
+      "evidence_fingerprint": "sha256:228eeb6e650c661591210d811257b51f31a522547692b6b244d3f99b5a32fe08",
+      "counterevidence_refs": [
+        "At exact Type I with N1=N2=N3=A=0, the curvature terms reduce safely to zero and the dimensionless formulas have the expected FLRW radiation limit q=1 when Sigma=0."
+      ],
+      "reproduction": [
+        "rg -n 'radiation domination|Must be > 0|Class B: same formula|has_curvature|TYPE_V|TYPE_VI0|TYPE_VII0' src/rabbit/jax/geometry_bianchi_base.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "A source-backed Class-B constraint and curvature derivation is absent.",
+        "The exact Pi_ab to Pi_plus/Pi_minus normalization is absent."
+      ]
+    },
+    {
+      "finding_id": "F-D040-CH-002",
+      "claim_id": "C-D040-CONVENTION-HAZARDS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "collisions_jax is unsafe to reuse as collision physics. Its prefactor has the expected MeV dimension G_F^2 T^5 and the six-monomial statistical factor algebraically equals gain-minus-loss with Pauli blocking when every occupation lies in [0,1]. However the electron energy is treated as y=p/T rather than sqrt(p^2+m_e^2)/T, so finite-m_e shells and interference are absent; nu-nu reactions and the complete six-species catalogue are absent; only interpolated legs are clipped while outer state values may be nonphysical; target-leg quadrature has no discrete number/energy conservation or entropy proof; and the module contains stale contradictory interpolation claims (PCHIP at lines 21-24 versus the implemented not-a-knot cubic at lines 274-300). Common-FD detailed balance is therefore a bounded diagnostic, not first-principles or conservative authority.",
+      "assumptions_used": [
+        "Natural units with G_F in MeV^-2 and T in MeV.",
+        "Finite electron mass and Fermi blocking must be explicit for the target no-QKE BBN physics."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/collisions_jax.py:1-38",
+        "src/rabbit/jax/collisions_jax.py:101-143",
+        "src/rabbit/jax/collisions_jax.py:154-240",
+        "src/rabbit/jax/collisions_jax.py:246-335"
+      ],
+      "evidence_fingerprint": "sha256:7e94aaf01e6ab73ad684edbda28f976856b1e7aa012b7356d9e20ba10eb56604",
+      "counterevidence_refs": [
+        "The gain-loss polynomial and common-temperature FD null are useful formula-level checks within the massless reduced model."
+      ],
+      "reproduction": [
+        "rg -n 'currently uses|not-a-knot|collision_statistical_factor|T_MeV\\*\\*5|jnp.clip|Detailed balance' src/rabbit/jax/collisions_jax.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Absolute normalization and the reduced Hannestad-Madsen angular formula are imported rather than derived in the assignment slice.",
+        "No positivity, conservation, first-law, or H-theorem certificate is present."
+      ]
+    },
+    {
+      "finding_id": "F-D040-PR-003",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "collision_operator_jax is correctly classified DEPRECATED for physics reuse and diagnostic only for engineering parity. The source itself states that _C_RATE=210 is calibrated to N_eff about 3.044, the thermal source is linearized, Gamma is momentum-independent, nu-nu scattering is absent, and parity is not physical validation. Its G_F^2 T_gamma^4 T_nu rate has MeV units and division by H_MeV produces a dimensionless per-e-fold rate, but its electron suppression sigmoid, partial (1-f0) blocking, and unnormalized energy_transfer readout are RTA conventions rather than a collision integral.",
+      "assumptions_used": [
+        "The module's explicit scope disclaimer is controlling.",
+        "Engineering parity with an imported calibrated model cannot establish first-principles validity."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/collision_operator_jax.py:1-27",
+        "src/rabbit/jax/collision_operator_jax.py:55-92",
+        "src/rabbit/jax/collision_operator_jax.py:95-140"
+      ],
+      "evidence_fingerprint": "sha256:700074bdcc0974d2fdba5662401b567955633d3156c83bb318ba8d0df1be4e1d",
+      "counterevidence_refs": [
+        "Exact numpy/JAX parity remains useful for regression and differentiability checks only."
+      ],
+      "reproduction": [
+        "rg -n 'PARITY IS NOT|CALIBRATED|_C_RATE = 210|linearized|momentum-independent|no nu-nu' src/rabbit/jax/collision_operator_jax.py"
+      ],
+      "confidence": 1.0,
+      "unresolved": []
+    },
+    {
+      "finding_id": "F-D040-CH-003",
+      "claim_id": "C-D040-CONVENTION-HAZARDS",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The PSTF/moment surface is diagnostic only. S2 weights, explicit plus/minus quadrupole kernels, species degeneracies, and gather/scatter maps are useful bookkeeping clues. But the running full-Boltzmann driver is LRS-only, fixes Pi_minus=0, evolves only dS=Sigma_plus, and uses a fixed f_nu=0.40520 normalization for stress. Its P2_perp construction enforces ell2-to-ell0 neutrality by a resolution-dependent discrete Gram-Schmidt projection and floors its norm; this is a numerical anti-aliasing device, not a continuum PSTF derivation or physical conservation proof. The exact stress normalization, off-diagonal PSTF completeness, and coupling to evolving total energy density are not reconstructible from the assigned slice.",
+      "assumptions_used": [
+        "A coupled non-LRS Bianchi model requires both diagonal shear/stress components and a prospectively defined Hubble-normalized Pi_ab.",
+        "Discrete orthogonality is distinct from continuum covariance and collision conservation."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:196-246",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:298-347",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:476-565",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2098-2113",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2411-2459"
+      ],
+      "evidence_fingerprint": "sha256:653cbf0384e9da19c23e0298c6e8ef7c47ea1a950fb32b9675044f6b7aaf6bd4",
+      "counterevidence_refs": [
+        "The discrete P2_perp identity is mechanically useful for preventing finite-grid ell0 leakage within its declared quadrature."
+      ],
+      "reproduction": [
+        "rg -n 'P2_perp|by construction|_F_NU|Pi_minus =|dS = Sigma_plus|LRS-only' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No external finite-Sigma_minus stress or observable anchor exists.",
+        "No tensor-complete tilted/off-diagonal PSTF representation is present."
+      ]
+    },
+    {
+      "finding_id": "F-D040-CH-004",
+      "claim_id": "C-D040-CONVENTION-HAZARDS",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "Thermo, positivity, and conservation semantics are unsafe for reuse. The driver imports tier-1/tier-2 thermo formulas rather than defining them in the auditable slice, uses a truncated 1 MeV-to-s conversion (1.519267447e21 versus the Tier-0 literal 1.519267447878626e21), fixes the stress energy fraction, and contains calibrated Mangano rate enforcement including an AP candidate C_RATE=280. Collision and weak inputs are repeatedly clipped to [0,1], while the evolved transport state itself is an unconstrained raw f; final transport minima/maxima are merely metadata and do not gate success. Energy exchange signs pass through nested negative moment conventions and imported 3T functions without a local first-law derivation. Network mass conservation is recorded, but neutrino number/energy, plasma-neutrino first law, positivity, and entropy are not acceptance gates here.",
+      "assumptions_used": [
+        "The Tier-0 conversion literal is the current convention authority.",
+        "Raw occupation clipping cannot substitute for a positivity-preserving state coordinate.",
+        "Imported call signatures alone cannot validate thermo signs or first-law closure."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:107-117",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:298-347",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:617-716",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:721-890",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1050-1208",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2161-2220",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3219-3220",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3292-3307"
+      ],
+      "evidence_fingerprint": "sha256:8c2df8da07af17b1a4eca9978708d4518d57fa5ca67077a1a8c8e597af09f88f",
+      "counterevidence_refs": [
+        "The q^3 Laguerre moment and T^4/(2 pi^2) dimensional factor are locally coherent, and heavy-sector factors are explicitly represented.",
+        "Some spectral damping branches project selected discrete number/energy moments."
+      ],
+      "reproduction": [
+        "rg -n '_MEV_TO_S|_F_NU|_AP_ACCURACY_C_RATE|jnp.clip\\(f_mono|transport_min_final|transport_max_final|mass_conservation|Mangano' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The imported 3T EOS/derivative and weak-rate formulas were outside the assignment allowlist, so their detailed signs, finite-mass content, and limits remain unknown."
+      ]
+    },
+    {
+      "finding_id": "F-D040-PR-004",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "The driver retains one useful deterministic stiffness clue: split the true Jacobian into an analytic transport block plus low-rank moment gather/core/scatter updates, use AD only for the bounded active response, and retain exact linear ell2 relaxation blocks. This is a PROPOSED solver architecture pattern, not JAX or physics reuse. It could reduce the cost of a future deterministic coupled shear-collision solve if every factor is derived from the new RHS and the preconditioner is kept solver-side.",
+      "assumptions_used": [
+        "A future exact RHS has low-dimensional global moment couplings on top of local transport blocks.",
+        "The production target remains deterministic Rust AOT rather than JAX promotion."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:369-456",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:476-615",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1645-1902",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1921-2050"
+      ],
+      "evidence_fingerprint": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e",
+      "counterevidence_refs": [
+        "No D-040 execution or endpoint performance evidence was authorized; applicability to a new Bianchi state is unmeasured."
+      ],
+      "reproduction": [
+        "sed -n '1645,2050p' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.94,
+      "unresolved": [
+        "The rank, conditioning, and exact sparsity of any future Bianchi collision/PSTF coupling are not specified."
+      ]
+    },
+    {
+      "finding_id": "F-D040-CH-005",
+      "claim_id": "C-D040-CONVENTION-HAZARDS",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The historical Jacobian-preconditioner branches are unsafe design precedents. They add artificial negative diagonals directly to the Jacobian supplied to Rodas5P while leaving the RHS unchanged, explicitly call this a modified-equation form, and claim the Jacobian-only change closes a Mangano N_eff gap. That is not an exact derivative of the stated RHS and is not equivalent to a solver-side linear preconditioner; it can change Rosenbrock stage equations, order/error behavior, and accepted trajectories. A future design may reuse only the separation concept, never these calibrated diagonals or the claim that forward physics is identical.",
+      "assumptions_used": [
+        "Rodas5P's supplied Jacobian participates in the numerical method, not merely in an algebraically exact preconditioned solve.",
+        "Scientific output must not be calibrated by changing an inexact Jacobian."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1605-1643",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1939-1998",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3177-3185"
+      ],
+      "evidence_fingerprint": "sha256:d532e4374088e778bfd12e19d4939e80452b50e8ff8f45035f87692dfb97ea4d",
+      "counterevidence_refs": [
+        "Exact Jacobian blocks derived by AD or analytic differentiation remain legitimate; this finding concerns the additional non-derivative diagonals."
+      ],
+      "reproduction": [
+        "rg -n 'modified-equation|RHS remains unchanged|forward physics is identical|closes the Mangano' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No assigned evidence proves retained order or tolerance convergence under the modified Jacobian."
+      ]
+    },
+    {
+      "finding_id": "F-D040-PR-005",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Independence is strictly absent. collisions_jax mirrors the SciPy operator, collision_operator_jax imports and parity-locks the same calibrated constants/model, and B6 is a cross-backend/internal-reduction gate. B6 honestly limits finite-shear evidence to Sigma_minus=0 and labels the remaining finite non-LRS gold as self-consistency only. These artifacts can supply regression vectors and failure discriminators, but cannot validate a future Bianchi closure, DSMC convergence, or the F-10 independent-FLRW gate.",
+      "assumptions_used": [
+        "Structural independence requires a separately derived formulation, not a second implementation of the same formulas/constants.",
+        "Internal transitive parity cannot expose shared physics bias."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/collisions_jax.py:1-38",
+        "src/rabbit/jax/collision_operator_jax.py:1-27",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:29-62",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-001--F-D040-004"
+      ],
+      "evidence_fingerprint": "sha256:0ea505551ac8e3db98af5229c0acd59fc1cf83791ce16a0f7b490d20f9f5f360",
+      "counterevidence_refs": [
+        "The FLRW and axisymmetric reductions are still useful bounded regression evidence."
+      ],
+      "reproduction": [
+        "sed -n '29,62p' docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No assigned evidence addresses stochastic convergence, variance, positivity, detailed balance, or conservation for DSMC."
+      ]
+    },
+    {
+      "finding_id": "F-D040-PR-006",
+      "claim_id": "C-D040-PHYSICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The smallest future-facing design residue is three obligations, all PROPOSED and non-executing: (1) rederive the diagonal Type-I characteristic log-stretch, S2 Jacobian, and Pi_plus/Pi_minus normalization from one frozen frame/sign convention, with FLRW, axisymmetric, finite-Sigma_minus, small-shear, and oscillatory-sign limits; (2) specify an explicit species/degeneracy and moment ledger on a strict-open occupation coordinate, with finite-m_e shells, full blocking, eventwise or weak-form conservation, first law, positivity, entropy, and tail bounds before any collision code; (3) derive the exact deterministic block Jacobian and keep any stiffness preconditioner algebraically separate from the RHS/Jacobian. Nothing in the assigned legacy code justifies translating a collision closure, reopening JAX, or choosing DSMC as the primary solver.",
+      "assumptions_used": [
+        "Only design clues, not implementation, are authorized.",
+        "A later owner decision would prospectively freeze validation rather than inherit historical gates."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/geometry_bianchi_base.py:87-170",
+        "src/rabbit/jax/characteristic_rays_nonlrs_jax.py:78-246",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:298-615",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1645-2050",
+        "docs/audit/B6_nonlrs_flrw_parity_2026-06-30.md:29-62"
+      ],
+      "evidence_fingerprint": "sha256:a53a7a69a2462d8d6956075f20b322695ab5fff51c373f8833f36c2b69611109",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Review the three source groups and hazards cited above; no numerical reproduction is authorized or required for this design-only conclusion."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Owner authority and a new prospective contract are required before any F-11/Bianchi design review or implementation."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-PHYSICS-REUSE.json"
+  ]
+}

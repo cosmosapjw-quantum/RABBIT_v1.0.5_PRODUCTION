@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-d055-metrology-r2",
+  "created_at": "2026-07-27T16:29:43+00:00",
+  "spec_ref": "docs/audit/BD622_D055_covariance_metrology_contract_r2_2026-07-28.md",
+  "base_ref": "main",
+  "head_ref": "f10-independent-validation-b3v2",
+  "context_version": "d10c5a1968cca62ad185510d2bb7dc44081c7fbda5d2683ba6d751bc3ecb607f",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "completed"
+}

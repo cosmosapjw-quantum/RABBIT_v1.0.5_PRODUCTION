@@ -1,0 +1,3 @@
+returncode=0
+stdout={"decision": "block", "reason": "Assignment file changed after SubagentStart: the Start-time sealed digest does not match the current bytes."}
+stderr=''

@@ -1,0 +1,569 @@
+{
+ "claim_id": "C-F10-METROLOGY-R3",
+ "contract": "BD622_D060_covariance_metrology_contract_r3_2026-07-28",
+ "dev_state": false,
+ "int2_cap": null,
+ "longdouble_eps": "1.084202172485504434e-19",
+ "m_int2": {
+  "containment_checks": 1522656,
+  "containment_failures": 0,
+  "contraction_ok": true,
+  "identity_failures": 0,
+  "max_dev_rel": 2881.932429722078,
+  "ok": true,
+  "samples_checked": 22392
+ },
+ "module_sha256": "760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a",
+ "mpmath": "1.3.0",
+ "mutants": {
+  "MUT-24": {
+   "N1": 1.1782854570395487e-06,
+   "N3": 0.006848801556281069,
+   "killed": true,
+   "reason": "one-orientation catalogue breaks N1/N3 equivariance"
+  },
+  "MUT-GML": {
+   "entropy_production": -1.005029118631258e-17,
+   "killed": true,
+   "reason": "gain/loss flip makes entropy production nonpositive"
+  },
+  "MUT-HALF": {
+   "killed": true,
+   "pair_total_deviation": 0.5815420232412373,
+   "reason": "doubled pair-conversion weight shifts the SA-1 action anchor"
+  },
+  "MUT-LANE": {
+   "N1": 1.1782854570420273e-06,
+   "N3": 0.006848801541323067,
+   "killed": true,
+   "reason": "label-only lane swap reproduces the one-orientation defect"
+  },
+  "MUT-SIGN": {
+   "entropy_production": -2.796013392192113e-18,
+   "killed": true,
+   "pair_total_deviation": 1.116408050314782,
+   "reason": "negated self kernel shifts the SA-1 action anchor"
+  },
+  "canary": {
+   "bitwise_equal": true
+  }
+ },
+ "numpy": "2.4.4",
+ "states": {
+  "SA-1": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.15590351214683837,
+   "D_cov": 1.9280447144245648e-20,
+   "E_split": 6.734007931016838e-29,
+   "G_elec": 1.925929944387236e-34,
+   "G_self": 6.933347799794049e-33,
+   "N1": 5.672053355693139e-16,
+   "N2": 1.2462194909139059e-15,
+   "N3": 1.3781507821288934e-11,
+   "N4": 2.266580287925975e-16,
+   "N4_abs": 1.925929944387236e-34,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 7.678242886036379e-13
+   },
+   "R_native_module": 0.5613508184679745,
+   "W_int": {
+    "elec_f": 1.6780385915879785e-12,
+    "elec_p": 1.6780385915879785e-12,
+    "self_f": 3.3588853000420975e-12,
+    "self_p": 2.1892507997084167e-12
+   },
+   "addends_elec": 18234384,
+   "addends_self": 27746139,
+   "certified_residual": {
+    "hi": 1.3826116467036009e-11,
+    "lo": 1.3826116467036009e-11,
+    "slack": 3.5620405845384683e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": true,
+    "N7_bitwise": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    1.005029118631258e-17,
+    1.005029118631258e-17
+   ],
+   "envelope_elec": 8.856357949792608e-26,
+   "envelope_self": 1.624229677096488e-25,
+   "max_leg_diff": 0.0,
+   "modal_norm": 1.3581888770169248e-17,
+   "native_cap": 1e-10,
+   "ok": true,
+   "p_fixed": false,
+   "scales": [
+    1.01,
+    0.997,
+    0.993
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 10.0
+  },
+  "SA-2": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.10131244649788422,
+   "D_cov": 2.068863755608056e-19,
+   "E_split": 4.875511015472738e-28,
+   "G_elec": 1.5407439555097887e-33,
+   "G_self": 6.162975822039155e-32,
+   "N1": 7.342514480624245e-16,
+   "N2": 4.967339948700333e-16,
+   "N3": 1.3097930805774173e-12,
+   "N4": 2.0504602108235254e-16,
+   "N4_abs": 1.5407439555097887e-33,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 3.600593957787226e-14
+   },
+   "R_native_module": 1.4483572413218022,
+   "W_int": {
+    "elec_f": 5.537053659027762e-13,
+    "elec_p": 5.537053659027762e-13,
+    "self_f": 1.4806257088561931e-12,
+    "self_p": 1.0408688936069553e-12
+   },
+   "addends_elec": 18255552,
+   "addends_self": 27746139,
+   "certified_residual": {
+    "hi": 1.8868203004633916e-12,
+    "lo": 1.8868203004633916e-12,
+    "slack": 1.4519174050753604e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": true,
+    "N7_bitwise": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    5.147117570770022e-16,
+    5.147117570770026e-16
+   ],
+   "envelope_elec": 7.344029661508747e-25,
+   "envelope_self": 1.0157343952310985e-24,
+   "max_leg_diff": 0.0,
+   "modal_norm": 8.393549428199686e-17,
+   "native_cap": 1e-10,
+   "ok": true,
+   "p_fixed": false,
+   "scales": [
+    1.05,
+    0.94,
+    1.03
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 9.7
+  },
+  "SA-3": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.16812064247058797,
+   "D_cov": 6.243609754857231e-20,
+   "E_split": 2.1401132532225144e-28,
+   "G_elec": 1.5407439555097887e-33,
+   "G_self": 3.389636702121535e-32,
+   "N1": 8.391056018242204e-16,
+   "N2": 5.650041156174324e-16,
+   "N3": 5.091972401420414e-11,
+   "N4": 1.6932576134870517e-16,
+   "N4_abs": 1.5407439555097887e-33,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 6.272379297997975e-14
+   },
+   "R_native_module": 1.161775083015143,
+   "W_int": {
+    "elec_f": 1.1772276277613727e-12,
+    "elec_p": 5.90582321120776e-13,
+    "self_f": 4.003551832063776e-12,
+    "self_p": 2.091901800694998e-12
+   },
+   "addends_elec": 18255552,
+   "addends_self": 27746139,
+   "certified_residual": {
+    "hi": 5.4113926252781774e-11,
+    "lo": 5.4113926252781774e-11,
+    "slack": 3.145660704024249e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": true,
+    "N7_bitwise": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    1.7600843216553973e-16,
+    1.7600843216553968e-16
+   ],
+   "envelope_elec": 1.3282844194680055e-25,
+   "envelope_self": 7.436358726569237e-25,
+   "max_leg_diff": 0.0,
+   "modal_norm": 4.4068177893038565e-17,
+   "native_cap": 1e-10,
+   "ok": true,
+   "p_fixed": false,
+   "scales": [
+    0.96,
+    1.04,
+    0.985
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 9.7
+  },
+  "SB-1": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.19558218963685603,
+   "D_cov": 1.61312864777968e-19,
+   "E_split": 6.860760985580604e-28,
+   "G_elec": 3.0814879110195774e-33,
+   "G_self": 9.860761315262648e-32,
+   "N1": 8.429409402024382e-16,
+   "N2": 4.3738840157747705e-16,
+   "N3": 3.52956271621045e-11,
+   "N4": 1.7308421872584025e-16,
+   "N4_abs": 3.0814879110195774e-33,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 2.2580861263338797e-14
+   },
+   "R_native_module": 1.3458728281308652,
+   "W_int": {
+    "elec_f": 2.543574026421901e-12,
+    "elec_p": 2.543574026421901e-12,
+    "self_f": 5.63795940597781e-12,
+    "self_p": 2.9816929067618207e-12
+   },
+   "addends_elec": 18234384,
+   "addends_self": 27746139,
+   "certified_residual": {
+    "hi": 3.096735742325147e-11,
+    "lo": 3.096735742325147e-11,
+    "slack": 5.4830754176012533e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": true,
+    "N7_bitwise": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    1.3131350573097569e-15,
+    1.3131350573097557e-15
+   ],
+   "envelope_elec": 6.171547505239326e-25,
+   "envelope_self": 2.017209065294125e-24,
+   "max_leg_diff": 0.0,
+   "modal_norm": 1.169804531370195e-16,
+   "native_cap": 2.5e-10,
+   "ok": true,
+   "p_fixed": false,
+   "scales": [
+    0.9,
+    1.1,
+    0.95
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 10.0
+  },
+  "SB-2": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.20358145029004282,
+   "D_cov": 1.1658267482699508e-19,
+   "E_split": 5.668956420769785e-28,
+   "G_elec": 3.0814879110195774e-33,
+   "G_self": 4.930380657631324e-32,
+   "N1": 6.055951843122118e-16,
+   "N2": 3.7262836001973533e-16,
+   "N3": 3.530808622384139e-11,
+   "N4": 1.6977362221729662e-16,
+   "N4_abs": 3.0814879110195774e-33,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 2.7340996874867274e-14
+   },
+   "R_native_module": 1.8191377100242114,
+   "W_int": {
+    "elec_f": 3.1338309597910206e-12,
+    "elec_p": 3.1338309597910206e-12,
+    "self_f": 1.6387565107745287e-12,
+    "self_p": 1.9709894626416393e-12
+   },
+   "addends_elec": 18312480,
+   "addends_self": 27746139,
+   "certified_residual": {
+    "hi": 3.533584174852644e-11,
+    "lo": 3.533584174852644e-11,
+    "slack": 3.9513184285671636e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": true,
+    "N7_bitwise": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    9.30099377820778e-16,
+    9.300993778207796e-16
+   ],
+   "envelope_elec": 8.921926874076693e-25,
+   "envelope_self": 1.0895609325146458e-24,
+   "max_leg_diff": 0.0,
+   "modal_norm": 7.123707696465602e-17,
+   "native_cap": 2.5e-10,
+   "ok": true,
+   "p_fixed": false,
+   "scales": [
+    1.03,
+    0.94,
+    1.06
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 9.0
+  },
+  "SS-A": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.15594791866554417,
+   "D_anchor": 6.261815481020115e-21,
+   "D_cov": 1.9285456096733198e-20,
+   "E_split": 6.737107682752664e-29,
+   "G_elec": 2.8888949165808538e-34,
+   "G_self": 5.039417750372073e-33,
+   "N1": 3.7047799655961235e-16,
+   "N2": 9.625103455101771e-16,
+   "N3": 7.947009653692125e-12,
+   "N4": 4.726728446494015e-16,
+   "N4_abs": 2.8888949165808538e-34,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 0.049065143536731214
+   },
+   "R_native_module": 2.447560236182917e-11,
+   "W_int": {
+    "elec_f": 1.677602759760337e-12,
+    "elec_p": 1.677602759760337e-12,
+    "self_f": 2.540826670122708e-12,
+    "self_p": 2.540826670122708e-12
+   },
+   "addends_elec": 18234384,
+   "addends_self": 27746139,
+   "anchor_numerator": 1.5326170577659437e-31,
+   "certified_residual": {
+    "hi": 8.080886254379865e-12,
+    "lo": 8.080886254379865e-12,
+    "slack": 3.375098815274316e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": false,
+    "N7_bitwise": true,
+    "N8_anchor": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    9.691739087718254e-18,
+    9.691739087718254e-18
+   ],
+   "envelope_elec": 8.856357949792608e-26,
+   "envelope_self": 1.6255968052483172e-25,
+   "max_leg_diff": 0.0,
+   "modal_norm": 1.3588601612169035e-17,
+   "native_cap": 1e-10,
+   "ok": false,
+   "p_fixed": true,
+   "scales": [
+    1.01,
+    0.995,
+    0.995
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 10.0
+  },
+  "SS-C": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.15694834676764857,
+   "D_anchor": 1.261753327326722e-20,
+   "D_cov": 3.915670652010247e-20,
+   "E_split": 1.3720130590117064e-28,
+   "G_elec": 1.925929944387236e-34,
+   "G_self": 6.933347799794049e-33,
+   "N1": 2.48546179948006e-16,
+   "N2": 4.981806014271554e-16,
+   "N3": 1.9127562166458856e-12,
+   "N4": 1.6032711530343405e-16,
+   "N4_abs": 1.925929944387236e-34,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 0.05032193268845985
+   },
+   "R_native_module": 5.935964835407989e-12,
+   "W_int": {
+    "elec_f": 1.8049817389984117e-12,
+    "elec_p": 1.8049817389984117e-12,
+    "self_f": 1.295539050497452e-12,
+    "self_p": 1.295539050497452e-12
+   },
+   "addends_elec": 18234384,
+   "addends_self": 27746139,
+   "anchor_numerator": 7.489723381970448e-32,
+   "certified_residual": {
+    "hi": 1.1186193053468829e-12,
+    "lo": 1.1186193053468829e-12,
+    "slack": 2.480771902964571e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": false,
+    "N7_bitwise": true,
+    "N8_anchor": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    3.9552377323007014e-17,
+    3.9552377323007014e-17
+   ],
+   "envelope_elec": 1.8298537350278121e-25,
+   "envelope_self": 3.301599141458933e-25,
+   "max_leg_diff": 0.0,
+   "modal_norm": 2.789561199952642e-17,
+   "native_cap": 1e-10,
+   "ok": false,
+   "p_fixed": true,
+   "scales": [
+    1.02,
+    0.99,
+    0.99
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 10.0
+  },
+  "SS-D": {
+   "A_cond": 2994.073974912171,
+   "B_cov": 0.2049107908542916,
+   "D_anchor": 1.0279153398476508e-20,
+   "D_cov": 1.3695531980482692e-20,
+   "E_split": 5.813176016937591e-29,
+   "G_elec": 7.703719777548943e-34,
+   "G_self": 3.851859888774472e-33,
+   "N1": 4.1713605339072926e-16,
+   "N2": 9.967210106588317e-16,
+   "N3": 1.1817747418069846e-11,
+   "N4": 3.319730709059528e-16,
+   "N4_abs": 7.703719777548943e-34,
+   "N7X": {
+    "compared": 53600,
+    "mask_mismatches": 0,
+    "sup_rel": 0.05361976822733783
+   },
+   "R_native_module": 1.5745492982469787e-11,
+   "W_int": {
+    "elec_f": 1.172010363368721e-12,
+    "elec_p": 1.172010363368721e-12,
+    "self_f": 3.812644865691381e-12,
+    "self_p": 3.812644865691381e-12
+   },
+   "addends_elec": 18234384,
+   "addends_self": 27746139,
+   "anchor_numerator": 1.6185033770144233e-31,
+   "certified_residual": {
+    "hi": 1.2125767509419261e-11,
+    "lo": 1.2125767509419261e-11,
+    "slack": 3.9880794546159624e-11
+   },
+   "checks": {
+    "M_INT1": true,
+    "N1_weak": true,
+    "N2_mass": true,
+    "N3_native": true,
+    "N4_electron": true,
+    "N5_entropy": true,
+    "N6_higham": true,
+    "N7X_exchange": false,
+    "N7_bitwise": true,
+    "N8_anchor": true,
+    "N8_shadow_match": true,
+    "N9_bound": true
+   },
+   "entropy_production": [
+    1.5159588991869495e-17,
+    1.5159588991869495e-17
+   ],
+   "envelope_elec": 3.431857691717332e-26,
+   "envelope_self": 2.000078024808368e-25,
+   "max_leg_diff": 0.0,
+   "modal_norm": 9.234061303174995e-18,
+   "native_cap": 1e-10,
+   "ok": false,
+   "p_fixed": true,
+   "scales": [
+    1.0,
+    0.98,
+    0.98
+   ],
+   "shadow_match": 0.0,
+   "temperature_gamma": 10.0
+  }
+ },
+ "verdict": "FAIL",
+ "wall_seconds": 867.4
+}

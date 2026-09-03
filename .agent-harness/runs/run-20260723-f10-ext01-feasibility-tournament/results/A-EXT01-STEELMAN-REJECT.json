@@ -1,0 +1,196 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+  "assignment_id": "A-EXT01-STEELMAN-REJECT",
+  "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+  "agent_id": "019f8f21-b79d-7e91-a852-16067f7100f0",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-ext01-feasibility-tournament",
+    "assignment_id": "A-EXT01-STEELMAN-REJECT",
+    "context_version": "77572ec55262e0c89283634b538f62d044cc133a603c15ec271bcd9bcccbd48d",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:d92bd99ba13511f675304c8d719dc821922bf6c33eb49e93781972ce005aa1b9",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-REJECT.json",
+  "started_at": "2026-07-23T13:20:24Z",
+  "completed_at": "2026-07-23T13:24:18Z",
+  "tool_versions": {
+    "exec_command": "Codex workspace shell; utility versions not queried",
+    "apply_patch": "Codex workspace patch tool",
+    "scientific_or_cas_execution": "none"
+  },
+  "commands": [
+    "sed -n '1,260p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sed -n '261,520p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-STEELMAN-REJECT.json",
+    "sed -n '1,320p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/assignments/A-EXT01-STEELMAN-REJECT.json",
+    "sha256sum .agent-harness/templates/RESULT_ENVELOPE.json .agent-harness/context/roles/independent_auditor.md",
+    "sed -n '1,320p' .agent-harness/templates/RESULT_ENVELOPE.json",
+    "sed -n '1,320p' .agent-harness/context/roles/independent_auditor.md",
+    "rg -n \"review_role_sha256|review_role_files\" .agent-harness/scripts .codex",
+    "sed -n '1,125p' .agent-harness/scripts/_harness.py",
+    "sed -n '90,145p' .agent-harness/scripts/new_assignment.py",
+    "sed -n '150,205p' .agent-harness/scripts/_harness.py",
+    "python3 -c 'compute hash_files-compatible SHA-256 over role path, NUL, bytes, NUL'",
+    "wc -l .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json",
+    "sed -n '1,260p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json",
+    "sed -n '1,280p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json",
+    "sed -n '1,320p' .agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json",
+    "date -u +%Y-%m-%dT%H:%M:%SZ"
+  ],
+  "artifacts": [],
+  "findings": [
+    {
+      "finding_id": "F-EXT01-STEELMAN-REJECT-001",
+      "claim_id": "C-EXT01-MEDVM-FEASIBILITY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "The fixed dimensionless-lattice ME-DVM subroute is rejected, but no universal moving-lattice/remap no-go is proved. The strongest fair response is the exact witness delta_y(T)=m_e/(64T), which keeps the mass index equal to 64 and evades the fixed-spacing integrality obstruction; conditionally, an exactly on-shell reversible edge network with nonnegative symmetric conductances could provide invariants, detailed balance, Pauli-compatible positivity, and an eventwise fermionic H-theorem. The response remains non-admitted because no registered theorem transports occupations while preserving exact invariants, reversibility, positivity, entropy, differentiability, permutation covariance, full-half-line tail closure, and deterministic finite edge structure across continuous temperature. This is an evidence-bounded INCONCLUSIVE candidate verdict, not an impossibility theorem.",
+      "assumptions_used": [
+        "Temperature varies on a nondegenerate continuous interval.",
+        "Fixed-lattice exact closure requires the registered mass-index integrality condition.",
+        "A moving spacing is only a scope witness until a structure-preserving remap theorem and complete edge graph exist.",
+        "All candidate and common G-EXT-FEASIBILITY obligations remain binding."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#candidate-C-MEDVM",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#F-EXT01-SAGE-002",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#F-EXT01-SAGE-003",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json#F-ROCQ-004"
+      ],
+      "evidence_fingerprint": "sha256:14587e8fe215c53a855b76594b544ff8a9bf4601a2b32cc7a2976ec1e1d4039d",
+      "counterevidence_refs": [
+        "The exact moving-spacing witness defeats any inference from the two-temperature fixed-lattice test to all moving-remap designs.",
+        "A future sparse deterministic edge construction and structure-preserving remap theorem could reverse the current non-admission."
+      ],
+      "reproduction": [
+        "Read A-EXT01-SAGE findings F-EXT01-SAGE-002 and F-EXT01-SAGE-003 together; their scopes are fixed lattice and moving remap respectively.",
+        "Read A-EXT01-ROCQ finding F-ROCQ-004 and compare its missing dependencies with CAS_CONTRACT candidate C-MEDVM."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "Exact continuous-temperature on-shell forward/reverse edge construction.",
+        "Structure-preserving differentiable remap theorem.",
+        "Pre-output tail enclosure and deterministic angular/edge-count bound.",
+        "Prospective conditioning, binary64, LOC, and net-deletion certificates."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-REJECT-002",
+      "claim_id": "C-EXT01-NOVELTY",
+      "verdict": "inconclusive",
+      "severity": "high",
+      "statement": "No candidate establishes exact non-isomorphism to sealed B3-v2. The compactified candidates plausibly change three mechanisms: full-half-line compactification instead of finite Y_max plus a tail ledger, local trial/test or analytic-direct-sum ownership instead of the global B3 polynomial basis, and one generated operation graph instead of split source/vector/oracle authority. MEDVM would be structurally distinct if its full moving edge/remap graph existed. These are fair novelty hypotheses, but no complete candidate operator and no bidirectional operation-DAG comparison exist, so neither isomorphism nor non-isomorphism is proved. A coordinate, basis, language, or compiler change alone is insufficient.",
+      "assumptions_used": [
+        "Novelty is assessed against B3-v2 basis, finite-domain/tail ledger, mass solve, event trace, and A0-A4 graph as a whole.",
+        "A complete operator and consumer graph is necessary for an exact non-isomorphism certificate.",
+        "Missing novelty proof is INCONCLUSIVE, not evidence of sameness."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#common_conventions-b3_comparison",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#F-EXT01-SAGE-004",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json#F-ROCQ-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-003"
+      ],
+      "evidence_fingerprint": "sha256:483f94a75728be187872e4d82e85e418736b574a00b2007e306807ab0e69c2a3",
+      "counterevidence_refs": [
+        "A unified analytic full-half-line representation or a complete moving finite-state edge graph could be genuinely non-isomorphic once fully specified."
+      ],
+      "reproduction": [
+        "Compare the three named sibling findings against the CAS_CONTRACT novelty obligation without inspecting any unregistered result."
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Complete candidate operator and consumer graph.",
+        "Exact bidirectional operation-DAG isomorphism or non-isomorphism certificate."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-REJECT-003",
+      "claim_id": "C-EXT01-COST",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "The registered cost screen is not passed by any candidate. SAGE reports ME-DVM dense-proxy counts of 34,504,704 edges for R=39,N_E=96,N_angle=1 and 621,084,672 for R=39,N_E=48,N_angle=12, an estimated 500-1000 design lines before evaluator code, and no credible same-change deletion plan. The compactified PCR-DG estimate of 800-1500 lines and possible net deletion of 600-1700 lines straddles both hard thresholds rather than proving permanent LOC<=800 and net deletion>=1000. These figures reject the registered cost claims as presented; they are not universal lower bounds, and a prospectively sealed sparse/factorized ME-DVM or exact compactified replacement diff could change the result.",
+      "assumptions_used": [
+        "Permanent implementation estimate must be no greater than 800 LOC.",
+        "The same change must delete enough obsolete surface to yield at least net -1000 LOC.",
+        "Only registered estimates and deletion plans count; favorable ends of ranges are not silently selected.",
+        "Dense-proxy counts are candidate screens, not complexity lower bounds for every future factorization."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#F-EXT01-SAGE-005",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#F-EXT01-SYMPY-006"
+      ],
+      "evidence_fingerprint": "sha256:7ce5398ab514e90c3bf1aa972ff826c6bc6e4778deb4feb5c83028173f7bbde0",
+      "counterevidence_refs": [
+        "The favorable endpoint of the compactified ranges could satisfy both thresholds, but no exact plan selects and proves it.",
+        "A sparse deterministic ME-DVM factorization could invalidate the dense proxy as an implementation estimate."
+      ],
+      "reproduction": [
+        "Read A-EXT01-SAGE finding F-EXT01-SAGE-005 and apply the two literal CAS_CONTRACT cost thresholds."
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "Exact permanent-LOC estimate.",
+        "File-specific same-change deletion plan and net diff.",
+        "Deterministic sparse ME-DVM edge-count and operation-count theorem."
+      ]
+    },
+    {
+      "finding_id": "F-EXT01-STEELMAN-REJECT-004",
+      "claim_id": "G-EXT-FEASIBILITY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "MANDATORY SEVEN-STAGE LOOP. (1) SELF-DISCOVER: the controlling question is candidate admission under all eleven binding obligations, not whether isolated endpoint, determinant, entropy, or fixed-lattice statements can be proved. (2) STEP-BACK: the same-space no-go and fixed-lattice obstruction are genuine bounded failures; the exact local determinant and eventwise entropy sign are genuine bounded passes; moving-remap, Petrov, and analytic-direct-sum feasibility remain candidate-level theorem gaps. (3) METACOGNITIVE SELF-ASK: theorem absence must not become a universal impossibility theorem, dense-edge proxies must not become complexity lower bounds, and axis vote counts must not replace the gate rule. (4) CoVe: SAGE, Rocq, and SymPy agree that the same-space wording fails, the fixed lattice does not generalize to a moving-remap no-go, complete novelty is unproved, and no candidate closes its full obligation set. Their top-level FAIL versus INCONCLUSIVE labels are not a substantive conflict: candidate feasibility is inconclusive while the binding gate fails because no candidate passes. Likewise, SAGE's fixed-lattice PASS obstruction and moving-remap INCONCLUSIVE finding address different scopes. (5) ADVERSARIAL SELF-ASK / STRONGEST OPPOSING STEELMAN: the strongest countercase is a compactified analytic direct sum with eta_0=-p/T plus terminal-vanishing perturbations, one non-bypassable full-half-line representation, and one generated DAG; it evades NC-SAME-SPACE and could in principle consolidate B3 surfaces. The moving-remap countercase is also live because delta_y(T)=m_e/(64T) defeats the fixed-spacing test and a nonnegative symmetric reversible edge network could inherit eventwise structure. (6) CCoT: either countercase reaches admission only through a complete operator, process-total finite-m_e shell, exact conservation and semidiscrete entropy, deterministic Jacobian/permutation semantics, uniform conditioning, prospective binary64 bound, exact non-isomorphism, and exact cost/deflation plan. The registered chain breaks at several independent links for every candidate. (7) PDR / STRONGEST STOP CASE: retain STOP/PRESERVE, archive all three candidates, and do not create PR-01. This conclusion is controlled by multiple missing binding obligations plus the actual same-space and fixed-lattice subroute failures, not by an overbroad impossibility claim. DECISIVE FALSIFIERS: a moving remap is terminally falsified by any demonstrated loss of exact reversibility, invariants, Pauli bounds, entropy, differentiability, tail closure, or cost closure; a compactified analytic candidate is terminally falsified by a singular coefficient map, bypassable/second tail consumer, or exact reduction to B3-v2. Conversely, the decisive falsifier of STOP/PRESERVE would be one prospectively sealed candidate artifact satisfying every candidate-specific and common obligation with no deferred branch or implementation choice. CONDITIONS THAT CHANGE THE VERDICT: such an artifact must include the complete operator/consumer graph, exact shell and entropy proofs, uniform <=1e6 condition or inf-sup certificate, prospective <=2.5e-11 binary64 certificate, exact non-isomorphism proof, <=800 permanent LOC estimate, and a same-change net deletion of at least 1000 LOC. Even then, implementation remains unauthorized until a separate explicit OWNER-1 decision.",
+      "assumptions_used": [
+        "The CAS_CONTRACT gate and failure rule are authoritative.",
+        "Missing binding evidence is non-PASS; it does not imply universal mathematical impossibility.",
+        "Subclaim PASS does not promote a candidate or the gate.",
+        "Evidence and exact contradictions control; vote counts do not.",
+        "No implementation authority follows from this adjudication."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#binding_gate",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/CAS_CONTRACT.json#debate_protocol",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SAGE.json#findings",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-ROCQ.json#findings",
+        ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-SYMPY.json#findings"
+      ],
+      "evidence_fingerprint": "sha256:9a965f3b5687eb2f326437273667e0f0171172ce04d95db3f53b229b8f2425c2",
+      "counterevidence_refs": [
+        "The same-space theorem does not cover a distinct Petrov test space or analytic invariant component.",
+        "The fixed-lattice theorem does not cover all moving-remap constructions.",
+        "Local SPD and eventwise entropy passes show that carefully constrained future constructions are not ruled out."
+      ],
+      "reproduction": [
+        "Read the CAS_CONTRACT debate protocol and gate rule.",
+        "Cross-check SAGE findings 001-005, Rocq findings 001-005, and SymPy findings 001-006.",
+        "Verify that no sibling result claims a complete candidate-wide pass or supplies every gate obligation."
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "No universal no-go theorem exists for every moving-remap, Petrov, or analytic-direct-sum method.",
+        "A future candidate may change the verdict only through a fresh, prospectively sealed, complete obligation artifact and separate owner authority."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-ext01-feasibility-tournament/results/A-EXT01-STEELMAN-REJECT.json"
+  ]
+}

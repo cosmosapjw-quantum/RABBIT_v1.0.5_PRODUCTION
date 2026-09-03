@@ -19,13 +19,26 @@ def test_modal_basis_and_unique_catalogues_reconstruct_target_views():
     np.testing.assert_allclose(basis @ grid.modal_coefficients(linear), linear, atol=2e-13)
 
     events = ind.independent_self_events()
-    reconstructed = []
+    reconstructed: dict[tuple[str, str], float] = {}
     for event in events:
         for species in set(event.legs):
-            reconstructed.append((event.category, species, event.coefficient * event.legs.count(species)))
-    target = [(row.category, row.target, row.coefficient) for row in ind.independent_self_reactions()]
-    assert len(events) == 24
-    assert sorted(reconstructed) == sorted(target)
+            key = (event.category, species)
+            reconstructed[key] = reconstructed.get(key, 0.0) + event.coefficient * event.legs.count(species)
+    target: dict[tuple[str, str], float] = {}
+    for row in ind.independent_self_reactions():
+        key = (row.category, row.target)
+        target[key] = target.get(key, 0.0) + row.coefficient
+    assert len(events) == 27
+    assert reconstructed == target
+    assert ind.independent_pair_row_fingerprint() == (2, 1, 6, 2, 2, 2, 4, 4, 4)
+    closure = [event for event in events if event.category == "pair_conversion"]
+    expected = set()
+    for x, y in (("e", "mu"), ("e", "tau"), ("mu", "tau")):
+        expected.add((f"nu_{x}", f"antinu_{x}", f"nu_{y}", f"antinu_{y}"))
+        expected.add((f"nu_{y}", f"antinu_{y}", f"nu_{x}", f"antinu_{x}"))
+    assert len(closure) == 6
+    assert {event.legs for event in closure} == expected
+    assert all(event.kernel == "K_t" and event.coefficient == 16.0 for event in closure)
 
     electron = []
     for event in ind.independent_electron_events():

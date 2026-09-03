@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260727-f10-d050-ownerc-closure",
+  "generated_at": "2026-07-27T15:05:51+00:00",
+  "result_count": 5,
+  "unique_finding_count": 5,
+  "findings": [
+    {
+      "finding_id": "F-CLOSURE-ADJ-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "VERDICT PASS, BYTES ACCEPTED. All frozen checks recompute as PASS: C1 exact catalogue structure; C2 3/3 focused tests including the frozen D-028 executing-gate assertion; C3 GL48 mu_tau_residual 2.6019033208963758e-11 within [1e-12, 1e-10] and same-noise-class agreement 0.330 <= 5e-1; C4 conservation 1.97e-16/4.76e-17, first law 0.0, CP 4.587059566179814e-11 <= 1e-10, entropy 9.69e-18 >= 0; C5 equilibrium null 6.49e-12/1.54e-11 in the recorded S0 class. Freeze chronology held at second resolution; module sha256 29a652fd... equals the committed d22d001 bytes; three-hunk diff only. Established: the live comparator carries the validated row-6 closure and the D-028 native covariance criterion is met by the current source with the frozen executing gate passing. Not established: the historical D-028 FAIL for bytes 535370c1 stands; G-F10-COVARIANCE-METROLOGY does not flip (weak/mass-weighted identity + B_native program unbuilt); G-F10-INDEPENDENT-FLRW unchanged; no trajectory/endpoint/GL64/Radau authority (eligibility for that separate owner decision is newly live since the static gates now pass); row 9 remains single-membered. Terminal: STATIC_GATES_PASS_ON_CLOSED_SOURCE.",
+      "assumptions_used": [
+        "Adjudication limited to hashing, git inspection, and JSON parsing."
+      ],
+      "evidence_refs": [
+        "c_verification_report.json 810fec58...",
+        "c2_pytest.log 4aa58ced...",
+        "freeze commit d22d001",
+        "module sha256 29a652fd316ab937f9aba8850f35dbf6c86de26c8a39df27111b26c37a1a199f"
+      ],
+      "evidence_fingerprint": "sha256:810fec5800000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [
+        "Limitations: same-model reviews; single execution per check; CP margin halved on this draw (2.18x under cap); agreement same-noise-class not digit-level; W5/D-047 scripts non-rerunnable on new bytes; row-9 artifact inside the undecomposed sub-cap floor."
+      ],
+      "reproduction": [
+        "Recompute the C1..C5 comparisons from the report."
+      ],
+      "confidence": 0.95,
+      "unresolved": [
+        "Trajectory/endpoint eligibility and the covariance-metrology program are the owner's next checkpoints."
+      ],
+      "supporting_assignments": [
+        "A-CLOSURE-ADJUDICATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "adjudicator"
+      ],
+      "supporting_agent_types": [
+        "adjudicator"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-CLOSURE-REVIEW-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Blind pre-freeze review: module edit confirmed minimal, semantically correct, and conservation-safe (both members map to row 6 via the flavour-set row rule; the shared (K_t,16.0) matrix-cache key is exactly linear-in-coefficient so halving is bitwise-exact; per-member (+,+,-,-) structure preserves number/energy nulls and nonnegative entropy). BLOCKER FOUND AND FIXED PRE-FREEZE: the aggregate reconstruction compared a 30-entry event aggregate against the raw 48-row list in both the test and check_c1 - deterministic failure; fixed by aggregating both sides per (category, target). MAJOR FIXED PRE-FREEZE: the C3 1e-2 agreement band was mechanically unmeetable (recorded T-B parity 1.01e-14 bitwise-false; recorded 7.7 percent shift from a single external reassociation); re-cut to hard bounds 1e-12 <= residual <= 1e-10 with a 5e-1 same-noise-class band. Minors: BLAS pins added to the script; historical D-047/W5 scripts recorded as non-rerunnable against the new bytes (hash-pinned records stand); static invariants test assessed low-risk at GL8 including the CP margin.",
+      "assumptions_used": [
+        "No lab or module execution before the freeze commit."
+      ],
+      "evidence_refs": [
+        "working-tree diff pre-freeze",
+        "docs/audit/BD622_D050_ownerc_row6_closure_contract_2026-07-27.md"
+      ],
+      "evidence_fingerprint": "sha256:d22d001000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [
+        "CP residual re-draw risk noted (~3x margin under 1e-10)."
+      ],
+      "reproduction": [
+        "Re-walk the diff against _assemble_self and _self_row."
+      ],
+      "confidence": 0.9,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-CLOSURE-BLIND-REVIEW"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-CLOSURE-CONTRACT-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The OWNER-C implementation contract was prospectively frozen at commit d22d001: planned two-member row-6 edit (16.0 each from the derived one-half quotient on the frozen 32.0), catalogue 24->25, fingerprint row 6 1->2, row 9 explicitly not closed, evaluator untouched, acceptance checks C1..C5 with a same-noise-class 5e-1 prediction band justified from the recorded 7.7 percent single-reassociation shift.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        "freeze commit d22d001"
+      ],
+      "evidence_fingerprint": "sha256:d22d001000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git show d22d001 --stat"
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-CLOSURE-CONTRACT"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-CLOSURE-EXEC-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "All frozen acceptance checks PASS on the sealed bytes (freeze d22d001, module 29a652fd). C1: 25 events, fingerprint (2,1,6,2,2,2,4,4,2), exactly the two mutually-reverse mu/tau members at K_t/16.0, two-sided aggregate reconstruction exact. C2: 3/3 focused tests pass under the venv environment, including the frozen D-028 executing-gate assertion mu_tau_residual <= 1e-10 now passing on the closed catalogue at low order. C3: GL48 D-028 cell mu_tau_residual = 2.6019033208963758e-11 - under the 1e-10 cap by 18x and within the same-noise-class band of the D-048 external prediction (agreement 0.330 <= 5e-1). C4: number ratio 1.97e-16, energy ratio 4.76e-17, first_law_residual 0.0, charge_conjugation_residual 4.587059566179814e-11 <= 1e-10 (re-drawn from 3.49e-11 as predicted), entropy_production 9.69e-18 >= 0. C5: H-normalized number 6.488e-12 and energy 1.542e-11, matching the recorded S0 anchors 6.59e-12/1.56e-11 class. Verification wall ~40 s.",
+      "assumptions_used": [
+        "Frozen bytes unchanged through execution; BLAS single-thread pins active."
+      ],
+      "evidence_refs": [
+        "c_verification_report.json sha256 810fec58...",
+        "c2_pytest.log sha256 4aa58ced..."
+      ],
+      "evidence_fingerprint": "sha256:810fec5800000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "Re-run the two frozen commands."
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-CLOSURE-EXECUTION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "finding_id": "F-CLOSURE-IMPL-001",
+      "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "Three-hunk module diff only: fingerprint (docstring + tuple), independent_self_events (docstring + mu/tau two-member branch at K_t/16.0 each + count 25). New module sha256 29a652fd...; evaluator, kinematics, kernels, electron sector, transforms, and the M0/M1 authority ceiling byte-identical. Test file: two-sided per-(category,target) aggregate reconstruction, count 25, fingerprint assertion, ordered two-member closure assertion (mu-first then tau-first pinned).",
+      "assumptions_used": [
+        "Static checks only before the freeze commit."
+      ],
+      "evidence_refs": [
+        "git diff 1697e76..d22d001 -- src/rabbit/decoupling/_independent_noqke.py"
+      ],
+      "evidence_fingerprint": "sha256:29a652fd00000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "git show d22d001"
+      ],
+      "confidence": 0.95,
+      "unresolved": [],
+      "supporting_assignments": [
+        "A-CLOSURE-IMPLEMENTATION"
+      ],
+      "supporting_runtime_agent_types": [
+        "default"
+      ],
+      "supporting_review_roles": [
+        "default"
+      ],
+      "supporting_agent_types": [
+        "default"
+      ],
+      "duplicate_count": 1
+    }
+  ],
+  "errors": []
+}

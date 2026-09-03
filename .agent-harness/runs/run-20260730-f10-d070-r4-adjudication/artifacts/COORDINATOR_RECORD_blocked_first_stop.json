@@ -1,0 +1,21 @@
+{
+ "artifact_class": "COORDINATOR_RECORD_NOT_A_HOOK_CAPTURE",
+ "recorded_at": "2026-07-30T07:58:11+00:00",
+ "subject": "The first SubagentStop for agent r4-refit-hunter was BLOCKED, and the retry overwrote its capture",
+ "why_this_file_exists": "This is a retention defect in the COORDINATOR'S procedure, not in the hook. The retry wrote to the same two paths as the first attempt (raw_logs/stop_event_r4-refit-hunter.json and raw_logs/stop_out_r4-refit-hunter.json), so the retained bytes of the BLOCKED attempt no longer exist. The block itself is not in dispute -- it is why the receipt stayed open, why the agent was sent back, and why ADMISSIONS.jsonl carries the consume row only after the second attempt -- but the primary artifact is gone and this record is a coordinator transcription, which is weaker evidence than a hook capture and is labelled as such. It is NOT presented as the hook's output.",
+ "verbatim_text_read_from_stop_out_before_it_was_overwritten": "{\"decision\": \"block\", \"reason\": \"Result artifact violates RESULT_ENVELOPE: status=pass requires every finding verdict to be pass\"}",
+ "what_the_agent_had_declared": {
+  "top_level_status": "pass",
+  "finding_verdicts": ["pass", "pass", "fail", "pass", "fail", "inconclusive", "pass"],
+  "contract_violated": "RESULT_ENVELOPE: status=pass requires every finding verdict to be pass"
+ },
+ "receipt_state_while_blocked": "OPEN and unconsumed. This is the state scrub_admission_proof.py's docstring names as the dangerous one, because a captured blocked stop contains a live token. The retained stop event was scrubbed and the anywhere-sweep re-run: 0 live, 0 spent matches against 24 known tokens.",
+ "what_the_coordinator_did_next": "Sent the agent back to correct its own envelope. It was explicitly NOT told which status to choose, and was explicitly forbidden from deleting or softening a finding to make `pass` legal. It chose `fail` and changed exactly three things: `status`, `completed_at`, and a new errors[] entry (E-001) recording the blocked attempt. All seven findings -- statements, evidence, verdicts, severities -- are byte-identical to the first submission.",
+ "independent_corroboration_that_survives": [
+  ".agent-harness/runs/run-20260730-f10-d070-r4-adjudication/results/A-D070-R4-REFIT-HUNTER.json errors[0] (E-001), written by the AGENT, independently records the block and quotes the same reason string",
+  "ADMISSIONS.jsonl: the A-D070-R4-REFIT-HUNTER consume row is stamped 2026-07-30T07:56:xx, after the corrected completed_at 2026-07-30T07:55:10Z, and pins result_sha256 of the corrected bytes only",
+  "the mint row and the consume row for that assignment are separated by ~30 minutes, against ~19 minutes for the adjudicator whose first stop succeeded"
+ ],
+ "rule_this_establishes": "A retried hook dispatch must write to a NEW filename (stop_event_<agent>_attempt<N>.json / stop_out_<agent>_attempt<N>.json). Overwriting is how a fail-closed refusal disappears from the record while the record still says the refusal happened. Applies to Start as well as Stop.",
+ "not_claimed": "This file is not evidence that the hook behaved correctly. It is evidence of what the coordinator read and what it then did. The hook's correct behaviour is attested by the receipt state and the ledger timestamps above, not by this transcription."
+}

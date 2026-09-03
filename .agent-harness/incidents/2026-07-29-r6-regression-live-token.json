@@ -1,0 +1,15 @@
+{
+ "artifact_class": "OPERATIONAL_INCIDENT",
+ "id": "2026-07-29-R6-REGRESSION-LIVE-TOKEN-IN-RESULT",
+ "recorded_at": "2026-07-29T11:22:03+00:00",
+ "what_happened": "The round-6 regression reviewer, while documenting that its own stop had been BLOCKED, embedded its raw ADMISSION_TOKEN literally (twice) in a persistent field of its result envelope. Its receipt was still `open` at that moment, so the token was LIVE, not spent.",
+ "why_this_is_the_predicted_case": "admit_agent.py's docstring states it: the token does not stay secret by itself, and 'a captured *blocked* stop is the dangerous case, because the receipt is still open'. This is that case, arising from an agent's own honest write-up rather than from a captured hook event.",
+ "why_it_was_survivable": [
+  "the result file was still UNTRACKED, so the leak never reached git history",
+  "scrubbing happened BEFORE admission, so the ledger pinned already-clean bytes and no supersession was needed",
+  "expected_agent_id was bound, so a leaked token is useless to any other agent id"
+ ],
+ "action_taken": "Both raw occurrences replaced with sha256:fedd3c082476cbe220bc0d81a2971f8d8bfb88fa29cb3072d8c459aa49f06dc7 prior to the Stop dispatch; envelope re-verified contract-valid (0 errors); receipt then consumed, pinning the scrubbed digest. Repo-wide sweep confirms no live token remains.",
+ "residual": "scrub_admission_proof.py rewrites `admission_proof` fields; it did not and would not have caught a token pasted into an arbitrary prose or reproduction field. The operator sweep that caught this was manual. A pre-admission token sweep over the result artifact would close that gap and is NOT yet implemented.",
+ "head_commit": "91ee741a31552443b87e70a9fd2e7074e3fe761f"
+}

@@ -1,0 +1,91 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+ "assignment_id": "A-ORBIT-BLIND-NUMERICS",
+ "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+ "agent_id": "a97d044797ae634b9",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260727-f10-ownera-r6-orbit-chart-lab",
+  "assignment_id": "A-ORBIT-BLIND-NUMERICS",
+  "context_version": "400b0dc937f1dcec6c7a54ec38441cffb15f83346bf29fc06336df3a491e9af8",
+  "independence_mode": "blind-results",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:9c588dd9a8e8220885104755f0efcc4324751cd8ec97d6db369357182e9fb1e3",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-BLIND-NUMERICS.json",
+ "started_at": "2026-07-27T12:41:00+00:00",
+ "completed_at": "2026-07-27T12:57:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3",
+  "numpy": "2.4.2"
+ },
+ "commands": [
+  "read-only file review; stdlib-semantics probes only; no lab code executed"
+ ],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-ORBIT-NUM-001",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "PRE-SEAL BLOCKERS FOUND AND VERIFIED RESOLVED BEFORE SEAL: (1) MUT-6 double substitution site guaranteeing mechanical exit 20 (independently confirmed); (2) missing MANIFEST_AUTHORED.sha256 and uncommitted lab directory guaranteeing SEAL_MISMATCH exit 30; (3) run_lab.sh not executable (exit 126). All fixed at seal: docstring reworded, manifest generated and force-added past the *.sha256 gitignore rule, chmod +x, lab committed as 4c05ce2 before first execution.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "run_lab.sh seal check",
+    "seal commit 4c05ce2"
+   ],
+   "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "git show 4c05ce2 --stat lists 7 lab files including MANIFEST_AUTHORED.sha256 and mode 100755 run_lab.sh"
+   ],
+   "confidence": 0.98,
+   "unresolved": []
+  },
+  {
+   "finding_id": "F-ORBIT-NUM-002",
+   "claim_id": "C-R6-ORBIT-CHART",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "Numerics and protocol verified statically: type genericity closed for all three engine value types (Fraction, float, Dual) including every mixed operator combination; IEEE bitwise arguments hold (negation exactness, two-term commutativity, exact 0.5 scaling, loss-gain as exact negation) so A3/A9/A10 bitwise checks and the A5/A6 exact-zero float checks are sound; RESULTS.json and MUTANTS.json contain only deterministic content so three fresh-process replays must be byte-identical; mutant subprocess mechanics import the mutated copies (cwd-resolved sys.path[0]); shell protocol (set -euo pipefail, timeout propagation, manifest self-exclusion, fail-closed isolation probes) is correct; runtime estimate ~15-25 min total with the 4096-case GL8 sweep dominating (~4-6x margin under the 1800 s per-phase cap); leggauss is deterministic on one machine/version. Residual accepted risks: A2 agreement margin (~10x expected), MUT-5 probabilistic kill, Dropbox sync interference during the run.",
+   "assumptions_used": [
+    "Stdlib semantic probes (Fraction/float interop) executed; no lab file imported or run."
+   ],
+   "evidence_refs": [
+    "mechanism.py",
+    "test_mechanism.py",
+    "mutants.py",
+    "run_lab.sh",
+    "EXPERIMENT_CONTRACT.json"
+   ],
+   "evidence_fingerprint": "sha256:1af1ef46ea1833855dad2a7b91468c57db2d814b94ebf75dd5ee4e90e60fb0b1",
+   "counterevidence_refs": [
+    "Minor pre-seal gaps fixed: scipy pin unasserted, non-contract exit codes (124/126) unmapped, locale-dependent manifest sort, uncaught mutant TimeoutExpired."
+   ],
+   "reproduction": [
+    "Static reasoning recorded in the review transcript."
+   ],
+   "confidence": 0.85,
+   "unresolved": [
+    "Scientific verdict awaits the sealed execution."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260727-f10-ownera-r6-orbit-chart-lab/results/A-ORBIT-BLIND-NUMERICS.json"
+ ]
+}

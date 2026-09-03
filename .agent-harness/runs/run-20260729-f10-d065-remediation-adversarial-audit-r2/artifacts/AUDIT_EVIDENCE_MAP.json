@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260729-f10-d065-remediation-adversarial-audit-r2",
+  "audit_base": "287588389f1058ba550b41c3c8d616a04a558273",
+  "audit_head": "a0d63a8d0662d03722567bb5bd54d7f1b235e512",
+  "context_version": "208c9c60f631907b9f85881e94ae8ed785febf703641579d36cb3a9003f37a8b",
+  "pre_audit_status_sha256": "064de4505a2d79915850a2c69f6e5c65a8530797f8c421b8dd01db6fbc209309",
+  "pre_audit_non_run_diff_sha256": "e3e53262b79f67a7c3b62eb8747c14946b7042ef4614168672fc37f040f565f0",
+  "setup_note": "The first D-065 run used an invalid base_ref string and is preserved. This r2 run uses the exact D-057 commit.",
+  "baseline": {
+    "docs/audit/BD622_D057_blocker_resolution_adversarial_audit_2026-07-28.md": "0061a0f5b1d0e58397a64158fca187c8fd65f53fe0db1ca82667e339c26e20eb"
+  },
+  "harness_bundle": {
+    ".agent-harness/scripts/init_run.py": "b06d167d43a004adb4ee8bf50fd8b9250d39db1300460869783d8eeb89b1ec7b",
+    ".agent-harness/scripts/verify_assignment.py": "c194509df9325fcf879a5c8ca52b8729027f14143ce21eb01e4b486b40085a1f",
+    ".agent-harness/tests/test_hooks.py": "555be7835b503b19afc54604666dc066de065c73116a28136dc55b35aabb632f",
+    ".codex/hooks/_common.py": "aac4f6d785ced6072b976730ca89386f421e3d48fa9f0f23f18af0193bbee06b",
+    ".codex/hooks/subagent_start_context.py": "6454d105d4f7df96762bc4a7901643f56570b08c501ce93d075a9806ff244f13",
+    ".codex/hooks/subagent_stop_validate.py": "46866499c7aee3f0db4204c361c8cfee3fe37ce11290c7d9bb9e85befc11fdfd"
+  },
+  "metrology_bundle": {
+    "docs/audit/BD622_D060_covariance_metrology_contract_r3_2026-07-28.md": "2c075be13f7b6ea9b91eb22663d3faac90a63bfadb21e3317da4ad544ca3629d",
+    "scripts/audit/d060_covariance_metrology_r3_oracle.py": "0a9c10ddcdbbcc0c9fd215256427c13a32fe4a13a055d2a3029ec9a118ed3808",
+    ".agent-harness/runs/run-20260728-f10-d060-metrology-r3/raw_logs/r3_oracle_report.json": "e40d80a747bfc907c67537b5f6898ac952976809cfec8d780a09fb1c8ea629e2",
+    "docs/audit/BD622_D061_covariance_metrology_contract_r4_2026-07-28.md": "9d07f15680c04d17fd0bf392273eeea097823d784d3446f06db6b56a498a7749",
+    "scripts/audit/d061_covariance_metrology_r4_oracle.py": "1c1df189b297b98b20f1eac46ecbb0e119cbc309d95ac9d50bab8a4da7406187",
+    ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/raw_logs/r4_oracle_report.json": "56529e65b59726610e5d484fb37d1460d60153e6af9feba95254c8d21686fad0",
+    ".agent-harness/runs/run-20260728-f10-d061-metrology-r4/results/A-D061-ADJUDICATION.json": "25216232ce11a508396f90ba482d4d1963ef95df3694ff5c7c07c5a2521fccba"
+  },
+  "trajectory_bundle": {
+    "docs/audit/BD622_D062_independent_trajectory_r2_contract_2026-07-28.md": "40c5b54744b38c5941cbb28aee60347ddb41fd5f7ae05061a43fbbb36a6318ea",
+    "scripts/audit/d062_independent_trajectory_r2.py": "5ec384374c8e089c697ec3224528b16a41ca4e437c2c9c3b5e6877790318a112",
+    ".agent-harness/runs/run-20260728-f10-d062-trajectory-r2/raw_logs/r2_trajectory_report.json": "fc6f98bdabd19f8afe6e23f1d4a81161fb4d80ea7dcdf4d9691ac91a8736a70f",
+    "docs/audit/BD622_D063_independent_trajectory_r3_contract_2026-07-28.md": "9197ec4989d53a09e83508ed006e3b6ec5b85cff3a36db3002b3d490a1ee284b",
+    "scripts/audit/d063_independent_trajectory_r3.py": "00dbde9732364d87a813423353c7270c3d0c0dfa43eaad4cd915f4739a077c44",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/raw_logs/r3_trajectory_report.json": "daf4fc06b8cc3bb5b07a92e436fd95f78cb208a10becaac22c7013e7f2fba9d4",
+    ".agent-harness/runs/run-20260729-f10-d063-trajectory-r3/results/A-D063-ADJUDICATION.json": "96f5fcea9207b6c4b98c447d3edd0fab76630d6299f6b50f77928eb537fdd582"
+  },
+  "closeout_bundle": {
+    "docs/audit/BD622_D064_remedy_dag_completion_2026-07-29.md": "f702135b567b612183dac6042164bd0859c0cc3f7f6cedce9766a6c13f44d4dc",
+    ".agent-harness/context/GATE_REGISTRY.json": "93991ccd967a26af30faed3bca0911a368b239552501c91d08baaf5c767b434b",
+    ".agent-harness/context/CLAIM_REGISTRY.jsonl": "6ebcbbe1956b12dd3cce0636167e9362e7fadb9afe7d6cf5077e25e9959d0ecc",
+    ".agent-harness/context/FROZEN_DECISIONS.md": "b5116e9f1afa75c55c38e18a9623ae37dbe95af2d65638a4cdb267a172f8b9b9",
+    ".agent-harness/context/SHARED_CONTEXT.md": "dbe0ae35957f051a44693d23981fc3014973292da8118fb6a323f72a34962841",
+    "docs/harness/PROJECT_STATE.md": "02aeb08a2b9e67cb31b2c227bc1f332b148ff81365e23d307119a684930d7ad6",
+    "docs/harness/CLAIM_LEDGER.md": "2dd6771ddbdc5e7b05e8e17763bff282210aca32fee980b3a6519a32b168cd58",
+    "docs/harness/VALIDATION_LEDGER.md": "171e87afaecc46427f3dd51b34214709393c062c36176c6e777a2d7b5a248c1b",
+    "docs/harness/DECISION_LOG.md": "91f1175321c7dc082c06216ae40f4fea411f90575f386b49097980afbdf4c495",
+    "docs/harness/NEXT_SESSION_PROMPT.md": "26a40aea671b42f713febd4f2689316aef943dd43fe4c987d1270eb5046e5d43"
+  }
+}

@@ -3,73 +3,190 @@
   "gates": [
     {
       "gate_id": "G-F10C1-RADIAL",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"
+      ],
       "statement": "The selected N48 representation must pass the frozen direct ladder, five-profile two-auxiliary envelope, FD moment, anchor, conservation, entropy, and constructor checks without tolerance widening.",
-      "required_evidence": ["E-F10C1-VALIDATION", "E-F10C1-AUX", "E-F10C1-GRID"],
+      "required_evidence": [
+        "E-F10C1-VALIDATION",
+        "E-F10C1-AUX",
+        "E-F10C1-GRID"
+      ],
       "pass_condition": "Worst declared profile residual < 2.1%, auxiliary references agree < 3e-8, conservation <= 1.79e-14, domain loss <= 7.61e-5, and focused current-tree tests pass.",
       "fail_condition": "Any threshold is missed, the selected rule changes, or a required focused test fails.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "D-004/D-014: frozen direct and five-profile envelope"
     },
     {
       "gate_id": "G-F10C1-REGRESSION",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"
+      ],
       "statement": "The retained no-cache tree must pass formatting, release check, strict all-target Clippy, the full release Rust suite, and report build/inspection.",
-      "required_evidence": ["E-F10C1-VALIDATION", "E-F10C1-REPORT"],
+      "required_evidence": [
+        "E-F10C1-VALIDATION",
+        "E-F10C1-REPORT"
+      ],
       "pass_condition": "All listed commands execute successfully on the retained tree; no undefined report references/citations or fatal LaTeX errors; edited pages visually clean.",
       "fail_condition": "Any required command fails or is skipped at final F-10C1 closeout.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "retained tree passes its frozen regression set"
     },
     {
       "gate_id": "G-F10-PERFORMANCE",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md", "bbn_codex_anti_drift_cost_effective_policy.md"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_CODEX_ANTI_DRIFT_GUARDRAILS.md",
+        "bbn_codex_anti_drift_cost_effective_policy.md"
+      ],
       "statement": "Repeated-run Rust design requires a material whole-endpoint reduction at the measured N48 cold wall without unacceptable RSS, solver-envelope, or correctness regression.",
-      "required_evidence": ["E-F10C1-VALIDATION", "E-F10-PERF-PROFILE"],
+      "required_evidence": [
+        "E-F10C1-VALIDATION",
+        "E-F10-PERF-PROFILE"
+      ],
       "pass_condition": "A retained change meets the controlling whole-endpoint threshold and preserves the frozen physics/solver gates.",
       "fail_condition": "Only segment speedup is shown, whole-endpoint movement is sub-threshold, or correctness/memory regressions make the candidate unacceptable.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "measured whole-endpoint reduction, closed with its profile"
     },
     {
       "gate_id": "G-F10-CATALOGUE",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"
+      ],
       "statement": "All frozen zero-lepton massless diagonal nine-row classical collision families must execute with checked multiplicities, kernels, coefficients, and rowwise physical invariants.",
-      "required_evidence": ["E-F10C1-SPEC", "E-F10-CATALOGUE-TESTS"],
+      "required_evidence": [
+        "E-F10C1-SPEC",
+        "E-F10-CATALOGUE-TESTS"
+      ],
       "pass_condition": "Rows 1-9 and every folded subfamily execute and pass normalization, equilibrium/null, conservation, entropy, scaling, response, and coupled first-law tests.",
       "fail_condition": "Any row or folded subfamily is absent or any required rowwise test fails.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "nine rows execute with rowwise invariants at module bytes 760a7c04"
     },
     {
       "gate_id": "G-F10-INDEPENDENT-FLRW",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#14-f-10---classical-neutrino-boltzmann-still-no-qke",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md"
+      ],
       "statement": "The completed full-spectral collision-coupled FLRW endpoint must be checked by a structurally independent formulation/integrator under frozen inputs.",
-      "required_evidence": ["E-F10-INDEPENDENT-ENDPOINT"],
+      "required_evidence": [
+        "E-F10-INDEPENDENT-ENDPOINT",
+        "E-F10-B3V2-D037-BLIND-FAIL",
+        "E-F10-D056-INDEPENDENT-TRAJECTORY",
+        "E-F10-D061-TRAJECTORY-R2",
+        "E-F10-D065-ADVERSARIAL-AUDIT"
+      ],
       "pass_condition": "Independent full-spectral endpoint and discriminating blockwise observables agree within predeclared tolerances and limitations are adjudicated.",
-      "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, and the three-node maximum-relative-entropy route is rejected before implementation because its derivation and executable selector do not define one coherent continuous/covariant collision method.",
+      "fail_condition": "Only same-code/partial evidence exists, or a structurally independent candidate fails any frozen static, trajectory, endpoint, covariance, conservation, exchange, or uncertainty gate. The pointwise and Galerkin candidates fail before trajectory authority, the three-node maximum-relative-entropy route is rejected before implementation, and D-037 rejects the sealed B3-v2/W7 candidate before four-axis completion because its executable shell, basis, tail, event-trace, and A0-A4 contracts are incomplete.",
       "owner": "main",
-      "status": "fail"
+      "status": "fail",
+      "fail_disposition": {
+        "decision": "D-071/D-077",
+        "state": "CLOSED_ON_CURRENT_MEASUREMENT",
+        "why": "The D-069 r4 instrument exhausted its 64,800 s frozen wall budget with verdict ERROR and no top-level checks block, so no scientific predicate was evaluated. Re-derived from the retained stdout 28c541b3: the domain holdout set its last new maximum at evaluation 751 and then spent 10,300 evaluations and 45,545 s -- 70% of the whole budget -- without setting another. In the post-drop creep regime it advances at 2.376238e-07 N/eval at 4.42062 s/eval, leaving 7.771399 in N: about 3.27e7 further evaluations and 4.58 years of wall on this host, an ~8,305x miss against the frozen 3,938-evaluation projection. Log rounding alone spans 4.40-4.78 years; model uncertainty is unquantified because no step-size trace, rejection counter or error norm survives; and an unexplained -0.0184 drop in N at evaluation 951 is not modelled at all. The defensible claim is order-of-magnitude impracticality, not a completion date.",
+        "what_is_not_concluded": "Nothing about the underlying physical proposition. r4 evaluated no predicate: evaluate() sits after the wall-budget error handler and is unreachable on the retained path. This closes an INSTRUMENT, not a question. Byte agreement across r4/r3/r2/D-056 is deterministic same-host reproducibility, not independent corroboration.",
+        "reopen_requires_all_of": [
+          "the private-comparator physical RHS, collision catalogue, constants, units, state layout, grids, domain, tolerances, event, endpoint, observables, accepted-state and failure semantics, and wall budget remain identical",
+          "one admissible numerical-equivalence method is selected: an independently derived analytic Jacobian, an AD Jacobian of the private comparator RHS with derivative provenance, a matrix-free JVP/Newton-Krylov path using the identical RHS, or a prospectively bounded analytic/AD block hybrid",
+          "a source, tree, environment, dependency, command and equation-to-derivative contract is prospectively sealed before any qualifying output byte",
+          "preregistered directional-derivative, Jacobian or JVP, local-Newton, linear-residual, conservation, exchange and symmetry tests pass at equilibrium, asymmetric, stalled collision-epoch, transition and late-time states",
+          "a bounded discriminator covers the stalled collision-dominated phase and projects end-to-end completion inside the existing wall budget with a prospectively declared margin",
+          "the frozen trajectory-prefix, checkpoint, spectral-moment, tail, conservation, exchange, event, endpoint and holdout predicates pass with no output-led refitting",
+          "designated collision-sign, normalization, multiplicity, state-index, omitted-block, stale-Jacobian, derivative-scaling and event mutations are killed",
+          "a complete evidence package and adjudication are authored only after the complete report exists; authorization alone does not move the gate"
+        ],
+        "explicitly_not_reopen_conditions": [
+          "a finite-difference factor reset or cap by itself; it is a diagnostic causal control only",
+          "generic optimization or output-led threshold selection",
+          "tolerance widening, clipping, projection, state repair, hidden floors or failed-state suppression",
+          "changes to grids, domain, collision catalogue, physical coefficients, state meaning, event, endpoint, observables or failure semantics",
+          "reuse of production Rust or frozen JAX derivative code inside the independent comparator",
+          "faster hardware or more cores",
+          "a larger wall budget",
+          "F-11 or Type-I, QKE, inference, public-runtime, production or publication claims"
+        ],
+        "withdrawn_by_this_decision": "The D-071 nine-axis robustness envelope (R1-R9), which earlier surfaces forward-reference. Its premise was that an order-60 integration is tractable inside the frozen budget; R5 was order 60 and R6/R7 were 72 and 96. The measurement above disproves the premise, so the plan is retired inside the decision its forward reference pointed at rather than left dangling.",
+        "evidence": [
+          ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_report.json",
+          ".agent-harness/runs/run-20260729-f10-d069-trajectory-r4/raw_logs/r4_trajectory_stdout.log",
+          "docs/audit/BD622_D071_trajectory_closure_2026-08-04.md"
+        ]
+      },
+      "status_package": null,
+      "status_basis_legacy": "D-071 closes the old instrument on its current measurement; D-077 authorizes only a prospectively sealed numerical-equivalence lane; no grade movement"
+    },
+    {
+      "gate_id": "G-F10-COVARIANCE-METROLOGY",
+      "spec_refs": [
+        "BD622_external_f10_independent_validation_blocker_audit_report_20260720.md",
+        "docs/audit/BD622_W5_d028_discriminator_result.md",
+        "docs/audit/BD622_W6_comparator_design_proof_pack.md#10-w7-oracle-and-d-030-arithmeticmetrology-graph"
+      ],
+      "statement": "A structurally conservative comparator must satisfy the weak and mass-weighted covariance identity and must separately report a prospectively frozen, method-specific native conditioning bound.",
+      "required_evidence": [
+        "E-F10-B3V2-STATIC",
+        "E-F10-W7-ARITHMETIC",
+        "E-F10-B3V2-D037-BLIND-FAIL",
+        "E-F10-D055-METROLOGY-R2",
+        "E-F10-D060-METROLOGY-R3",
+        "E-F10-D065-ADVERSARIAL-AUDIT"
+      ],
+      "pass_condition": "The weak and mass-weighted identity is <= 1e-10, every required native diagnostic is within the pre-output B_native bound, and the bound includes measured summation, basis, mass-solve, conditioning, interval, denominator, and state-envelope terms.",
+      "fail_condition": "The structural identity fails, a native diagnostic exceeds its frozen bound, any bound term is absent or fitted after output, the canonical A0-A4 trace/domain/denominator cannot produce a rigorous bound, or the D-028 1/y^2 model or approximately 1.2e-8 cap is reused for B3-v2. D-037 fails this gate before numerical output.",
+      "owner": "main",
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "D-065 upholds it only on the frozen matched family and module bytes"
     },
     {
       "gate_id": "G-F10-SCOPE",
-      "spec_refs": ["docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#15-f-11---lrs-then-non-lrs-type-i"],
+      "spec_refs": [
+        "docs/TYPEI_AUGMENTED_NOQKE_UNIFIED_FUTURE_PLAN.md#15-f-11---lrs-then-non-lrs-type-i"
+      ],
       "statement": "Current work must stop at F-10 and must not implement, validate, or schedule F-11 Type-I, QKE, or public production.",
-      "required_evidence": ["E-F10C1-SPEC", "E-F10C1-CLAIMS"],
+      "required_evidence": [
+        "E-F10C1-SPEC",
+        "E-F10C1-CLAIMS"
+      ],
       "pass_condition": "Assignments and retained changes remain within F-10; F-11 stays OWNER-PAUSED and forbidden claims remain explicit.",
       "fail_condition": "Any current assignment or retained change opens F-11/QKE/public-production work without new owner authority.",
       "owner": "main",
-      "status": "pass"
+      "status": "pass",
+      "status_package": null,
+      "status_basis_legacy": "the F-10 fence holds and downstream authority is closed"
     },
     {
       "gate_id": "G-HARNESS-INTEGRITY",
-      "spec_refs": ["AGENTS.md#mandatory-shared-context-protocol-for-subagent-workflows"],
+      "spec_refs": [
+        "AGENTS.md#mandatory-shared-context-protocol-for-subagent-workflows"
+      ],
       "statement": "The context index/pack, active run, assignments, unique result paths, hashes, trusted-session hook activation, and single-writer enforcement must satisfy the uploaded harness contract.",
-      "required_evidence": ["E-HARNESS-VALIDATE", "E-HARNESS-AUDIT"],
-      "pass_condition": "The explicit validator exits zero, trusted-session SubagentStart/SubagentStop activation is evidenced, registered result handoffs are automatically enforced, and no unauthorized shared or production write is attributable to a subagent.",
-      "fail_condition": "The validator reports a stale/invalid contract, hook activation is unproved, automatic result enforcement is bypassed, or exclusive write ownership cannot be evidenced.",
+      "required_evidence": [
+        "E-HARNESS-WORKAROUND-STATIC",
+        "E-HARNESS-CANARY-R4",
+        "E-HARNESS-D034-UNAUTHORIZED-WRITE",
+        "E-HARNESS-D035-RUNTIME-ROLE-FAILURE",
+        "E-HARNESS-D036-CANARY",
+        "E-HARNESS-D037-RESULT-ONLY",
+        "E-HARNESS-D058-LEASE-CANARY",
+        "E-F10-D065-ADVERSARIAL-AUDIT"
+      ],
+      "pass_condition": "The explicit validator and v2 fixtures exit zero; main records a current registered assignment, the exact FIVE-field spawn header (RUN_ID, ASSIGNMENT_ID, CONTEXT_VERSION, INDEPENDENCE_MODE, ADMISSION_TOKEN), and pre-spawn non-run hashes; trusted-session SubagentStart injects current context/runtime identity; assignment agent_type and runtime_agent_type match the live event while review_role, role-file hash, and result-template hash are separately verified; the invalid first SubagentStop is blocked; the corrected assignment-hash-bound v2 result is automatically accepted; every external tool is confined outside the repository; and post-run hashes prove result-only subagent writes.",
+      "fail_condition": "The validator reports a stale/invalid contract, Start or Stop activation is unproved, runtime identity is relabelled as a logical review role, role/template bytes are stale or unverified, the structured spawn/result contract is bypassed, an external tool leaves a repository-side artifact, or main-side launch and exclusive write attribution cannot be evidenced. VS Code PreToolUse interception is unavailable and cannot be required or claimed.",
       "owner": "main",
-      "status": "fail"
+      "status": "fail",
+      "status_package": null,
+      "status_basis_legacy": "D-065 restored FAIL. All four obligations are now discharged -- 1, 3 and 4 by the round-13 registered panel, 2 under the wording revised at D-075 -- and the gate still fails: the pass condition has eight conjuncts the obligations do not touch, operator and decision independence is absent, and no evidence package backs a move.",
+      "pass_condition_correction": "D-075, owner decision. This condition previously required an 'exact four-line prompt', which predates D-067's admission receipt and is one field short of the contract AGENTS.md mandates. The correction RAISES the bar rather than lowering it: the fifth field is the admission token, the entire D-067 binding mechanism, so a four-line condition could have been satisfied by a spawn header carrying no token at all -- the pre-D-067 state D-065 rejected."
     }
   ]
 }

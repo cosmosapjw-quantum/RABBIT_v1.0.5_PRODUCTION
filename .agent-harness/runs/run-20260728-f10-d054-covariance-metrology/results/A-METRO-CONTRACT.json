@@ -1,0 +1,57 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d054-covariance-metrology",
+ "assignment_id": "A-METRO-CONTRACT",
+ "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+ "agent_id": "fable-main-contract",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "default",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d054-covariance-metrology",
+  "assignment_id": "A-METRO-CONTRACT",
+  "context_version": "ca94be1ffefe90a0f3e41baf6419e84a5be57470f57437a540c4aaf869f68516",
+  "independence_mode": "shared-core",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:9965b17a7de06aef53c050f5241126c4b035eb1cc7b03004c57083f03109c2df",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-CONTRACT.json",
+ "started_at": "2026-07-28T01:20:00+00:00",
+ "completed_at": "2026-07-28T01:40:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [],
+ "artifacts": [],
+ "findings": [
+  {
+   "finding_id": "F-METRO-CONTRACT-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "The D-054 metrology contract, bound formula, and oracle were prospectively frozen at commit 46ef477 before any output, with five review hardenings applied pre-freeze.",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "freeze commit 46ef477"
+   ],
+   "evidence_fingerprint": "sha256:46ef477000000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [],
+   "confidence": 0.93,
+   "unresolved": []
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d054-covariance-metrology/results/A-METRO-CONTRACT.json"
+ ]
+}

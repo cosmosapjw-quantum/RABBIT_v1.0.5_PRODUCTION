@@ -1,0 +1,319 @@
+{
+ "schema_version": 1,
+ "purpose": "Declarations checked by .agent-harness/scripts/check_ssot_consistency.py. 'facts' are numbers that appear in prose and must agree across every surface: a fact is a value plus the commit it holds at, not a bare number, so a superseded value is legal exactly where it is dated. Every entry is re-verified on every run, so a declaration that no longer describes the repository is an error rather than a silent pass. WHAT IS NO LONGER HERE, and why: 'coverage_policy' listed fourteen claims excused from having to be stated in a live region, because restating a sealed claim by hand produced ceremonial prose rather than checkable prose. D-073 made restating free by GENERATING the board from the registries, so every gate and every claim is stated always and the exemption list has nothing to excuse. 'assertion_exemptions' excused a narrative line whose registry disagreement was corrected later in the same section; prose can no longer assert a status at all, so there is nothing to exempt. Both are removed from DOCUMENT_KEYS as well as from this file -- a key left in the whitelist would be accepted and unread.",
+ "facts": [
+  {
+   "fact_id": "legacy_results_manifest_entry_count",
+   "description": "Result artifacts pinned by digest in .agent-harness/context/LEGACY_RESULTS_MANIFEST.json. The pre-admission boundary is a CLOSED set, so this number must not move without a decision; validate_harness.py reads this value and refuses a manifest whose entries do not match it, and separately refuses one whose canonical entry digest is not LEGACY_MANIFEST_PINNED_SHA256. Growing the set therefore takes coordinated edits to the manifest, this declaration, the pinned digest in the checker, and the prose below -- rather than one commit, which is all it took before (D-070 round-5 review, finding 1).",
+   "measurement": {
+    "kind": "json_array_length",
+    "path": ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json",
+    "json_path": [
+     "entries"
+    ]
+   },
+   "value": 136,
+   "as_of_commit": "a1cdd8a",
+   "assertions": [
+    {
+     "file": ".agent-harness/context/LEGACY_RESULTS_MANIFEST.json",
+     "line_contains": "entry_count",
+     "value_regex": "\"entry_count\": (\\d+)",
+     "role": "current",
+     "note": "The manifest's own count of itself; validate_harness.py separately proves it equals the number of entries."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-070 Part B1",
+     "value_regex": "\\((\\d+) pinned\\)",
+     "role": "current",
+     "note": "Live ledger row for the validation that introduced the manifest."
+    },
+    {
+     "file": ".agent-harness/context/FROZEN_DECISIONS.md",
+     "line_contains": "| D-070-B1 |",
+     "value_regex": "(\\d+) pre-admission results pinned",
+     "role": "frozen",
+     "pinned_to_commit": "a1cdd8a",
+     "note": "Frozen row: pinned to the count the manifest was generated with, never refreshed."
+    }
+   ]
+  },
+  {
+   "fact_id": "hook_fixture_count",
+   "description": "Focused hook-lifecycle fixtures in .agent-harness/tests/test_hooks.py. The measurement is run against the working tree on every check, so this number cannot drift from the file again: it sat at 106 while the file held 108 precisely because the declared measurement was prose that nothing executed. 'as_of_commit' is PENDING_COMMIT while the fixtures that produced the value are still uncommitted, and is pinned to the real hash by a follow-up commit -- the same convention the 58/74/102/106 rounds used.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_hooks.py",
+    "pattern": "^def test_"
+   },
+   "value": 132,
+   "as_of_commit": "be0c2a0",
+   "prior": [
+    {
+     "value": 127,
+     "as_of_commit": "39e4560",
+     "note": "BD623 R6 reopen-lock fixtures. Superseded by R5's five strict-parser fixtures."
+    },
+    {
+     "value": 123,
+     "as_of_commit": "1389914",
+     "note": "BD623 R7 merge-corroboration fixtures. Superseded by R6's four reopen-lock fixtures."
+    },
+    {
+     "value": 119,
+     "as_of_commit": "76dfe04",
+     "note": "BD623 R1 pack-integrity fixtures. Superseded by R7's four merge-corroboration fixtures."
+    },
+    {
+     "value": 114,
+     "as_of_commit": "1ddb122",
+     "note": "BD623 R3/R4/R4b fixtures. Superseded by R1's five pack-integrity fixtures, which check the pack's body rather than its header."
+    },
+    {
+     "value": 111,
+     "as_of_commit": "9760a8c",
+     "note": "Superseded by BD623's three path-key fixtures: two for the init_run.py run-id escape (R4) and one for the unchecked --parent-assignment-id (R4b)."
+    },
+    {
+     "value": 108,
+     "as_of_commit": "7157bbe",
+     "note": "D-070 Part B6. Superseded by B16's three duplicate-key fixtures."
+    },
+    {
+     "value": 106,
+     "as_of_commit": "5c474d0",
+     "note": "D-070 Part B4 round-7 obligation-2 gating. This is the value that silently drifted: two fixtures were added afterwards and the declaration was not moved, because nothing ran the measurement."
+    },
+    {
+     "value": 102,
+     "as_of_commit": "a9db6b2",
+     "note": "D-070 Part B3 round-6 fixes."
+    },
+    {
+     "value": 74,
+     "as_of_commit": "d94270f",
+     "note": "D-070 Part B2 round-5 fixes (manifest pin, carve-out, obligation-1 guards)."
+    },
+    {
+     "value": 58,
+     "as_of_commit": "6318a79",
+     "note": "D-070 Part B1 round-4 fixes (Start receipt check, forward sweep, supersession)."
+    },
+    {
+     "value": 39,
+     "as_of_commit": "07e3507",
+     "note": "D-067 round-3 regression fixtures."
+    },
+    {
+     "value": 35,
+     "as_of_commit": "ed7bc49",
+     "note": "D-067 seal. The frozen D-067 row records 35 because that was the true count at sealing; it must not be refreshed."
+    },
+    {
+     "value": 12,
+     "as_of_commit": "b28ea0b",
+     "note": "D-058 run-identity lease repair."
+    }
+   ],
+   "assertions": [
+    {
+     "file": ".agent-harness/context/SHARED_CONTEXT.md",
+     "line_contains": "Q-HOOK-01 remediation",
+     "value_regex": "(\\d+) hook tests",
+     "role": "current",
+     "note": "Controlling Q-table row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "BD623",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "current",
+     "note": "Live ledger row for the BD623 audit triage and its path-key and board-escaping fixtures."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "BD623",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "current",
+     "note": "Result cell of the live BD623 ledger row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "historical",
+     "note": "The D-067 row's own count, now dated: it describes that validation, not the working tree, and cites the commit it held at."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "historical",
+     "note": "Result cell of the same dated row."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-067 admission binding",
+     "value_regex": "(\\d+) at the D-067 seal",
+     "role": "historical",
+     "note": "Dated back-reference; must cite its commit."
+    },
+    {
+     "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+     "line_contains": "Tests:",
+     "value_regex": "\\*\\*(\\d+) pass\\*\\*",
+     "role": "historical",
+     "note": "Sealed report prose. It describes the D-067 seal, not the working tree; it was 'current' only while the count happened not to have moved."
+    },
+    {
+     "file": "docs/audit/BD622_D067_admission_binding_2026-07-29.md",
+     "line_contains": "tests: 12 ->",
+     "value_regex": "tests: 12 -> (\\d+)",
+     "role": "historical",
+     "note": "Cost block of the same report; must carry its as-of commit."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "(\\d+) hook fixtures",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "Hooks `(\\d+)/\\d+`",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
+    }
+   ]
+  },
+  {
+   "fact_id": "ssot_regression_case_count",
+   "description": "Regression cases in .agent-harness/tests/test_ssot_consistency.py. Round 9's F-R9-007 found the record asserting a suite total that no fact measured, so nothing could catch it drifting; this fact exists so that number is measured rather than remembered. The count is `def test_` lines, so a parametrised case counts once however many inputs it carries -- the B15 bypass family is seven inputs across two definitions. The count RETURNED to 108 at D-073 commit 2, having previously held 108 at `0aa33cf`: nine coverage-floor fixtures were retired when the generated board made their premise unreachable, and five board fixtures were added. The earlier 108 is not carried as a prior because a prior equal to the current value is ambiguous about which commit a reader should trust -- the checker refuses that pair, correctly, and the history is recorded here instead.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_ssot_consistency.py",
+    "pattern": "^def test_"
+   },
+   "value": 64,
+   "as_of_commit": "1ddb122",
+   "prior": [
+    {
+     "value": 61,
+     "as_of_commit": "5c761a9",
+     "note": "D-075. Superseded by BD623 R3's three board-escaping fixtures: a pipe and a newline in status_basis_legacy, plus the no-op check on every basis the registry holds today."
+    },
+    {
+     "value": 56,
+     "as_of_commit": "736e862",
+     "note": "D-073 commit 6, before the evidence-package fixtures."
+    },
+    {
+     "value": 108,
+     "as_of_commit": "9ce5f73",
+     "note": "D-073 commit 3, before the parser and its 51 fixtures were deleted."
+    },
+    {
+     "value": 116,
+     "as_of_commit": "6ae898a",
+     "note": "D-073 commit 1, before nine coverage-floor fixtures were retired."
+    },
+    {
+     "value": 111,
+     "as_of_commit": "9f217f2",
+     "note": "D-072, before the D-073 generated-board fixtures."
+    },
+    {
+     "value": 101,
+     "as_of_commit": "9df6cd4",
+     "note": "D-070 Part B15/B16, before the round-12 self-attack."
+    },
+    {
+     "value": 92,
+     "as_of_commit": "1d62b31",
+     "note": "D-070 Part B14. This is the value the B14 row was committed with; it is cited there with its commit, not refreshed."
+    },
+    {
+     "value": 91,
+     "as_of_commit": "a6965dd",
+     "note": "D-070 Part B12."
+    },
+    {
+     "value": 82,
+     "as_of_commit": "915e2e4",
+     "note": "D-070 Part B9."
+    }
+   ],
+   "assertions": [
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "BD623",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "current",
+     "note": "Live ledger row for the BD623 audit triage and its path-key and board-escaping fixtures."
+    },
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-075",
+     "value_regex": "(\\d+) SSOT regression cases",
+     "role": "historical",
+     "note": "Superseded live row: it records the D-075 seal, and sat in the ledger's live top row until BD623 added a newer one above it. It cites its own commit."
+    }
+   ]
+  },
+  {
+   "fact_id": "canary_regression_case_count",
+   "description": "Regression cases in .agent-harness/tests/test_canary_freshness.py, the detector that closes F-R9-004. Declared so the number is measured rather than remembered -- the same reason the SSOT suite total is declared.",
+   "measurement": {
+    "kind": "count_lines_matching",
+    "path": ".agent-harness/tests/test_canary_freshness.py",
+    "pattern": "^def test_"
+   },
+   "value": 39,
+   "as_of_commit": "9760a8c",
+   "assertions": [
+    {
+     "file": "docs/harness/VALIDATION_LEDGER.md",
+     "line_contains": "D-074",
+     "value_regex": "(\\d+) canary regression cases",
+     "role": "current",
+     "note": "Live ledger row for the round-12 self-attack repairs."
+    }
+   ],
+   "prior": [
+    {
+     "value": 36,
+     "as_of_commit": "6e7fc1e",
+     "note": "D-071, before the D-072 provenance fixtures."
+    },
+    {
+     "value": 33,
+     "as_of_commit": "17d0a06",
+     "note": "D-070 Part B20."
+    },
+    {
+     "value": 29,
+     "as_of_commit": "0aa33cf",
+     "note": "D-070 Part B18, before the round-13 reviewer findings."
+    },
+    {
+     "value": 26,
+     "as_of_commit": "9df6cd4",
+     "note": "D-070 Part B16, before the round-12 strict-parse fixtures."
+    },
+    {
+     "value": 19,
+     "as_of_commit": "3b2dcc6",
+     "note": "D-070 Part B13, before the round-11 retention and cycle repair."
+    },
+    {
+     "value": 10,
+     "as_of_commit": "32ba566",
+     "note": "D-070 Part B10, before the round-10 repair."
+    }
+   ]
+  }
+ ]
+}

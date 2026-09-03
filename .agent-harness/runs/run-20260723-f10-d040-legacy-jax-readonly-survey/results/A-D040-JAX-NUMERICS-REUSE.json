@@ -1,0 +1,319 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+  "assignment_id": "A-D040-JAX-NUMERICS-REUSE",
+  "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+  "agent_id": "019f8e78-9e9d-7212-ad0b-bf04ae7f4434",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260723-f10-d040-legacy-jax-readonly-survey",
+    "assignment_id": "A-D040-JAX-NUMERICS-REUSE",
+    "context_version": "29bf22b3aef7ce7ff2cbd5a718a9bd9e036065ac5dea0ae3fd73820060baeff2",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:b482c04a4a219fdeff6d3e88cb73f7f77521485e6916b1f659f8ae43904fab2c",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "fail",
+  "result_path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json",
+  "started_at": "2026-07-23T10:11:45Z",
+  "completed_at": "2026-07-23T10:23:34Z",
+  "tool_versions": {
+    "git": "2.43.0",
+    "rg": "14.1.0",
+    "sha256sum": "GNU coreutils 9.4",
+    "analysis_mode": "static read-only; no Python/JAX/scientific execution"
+  },
+  "commands": [
+    "sed -n '1,140p' .agent-harness/generated/CONTEXT_PACK.md; sed -n '141,260p' .agent-harness/generated/CONTEXT_PACK.md; sed -n '261,340p' .agent-harness/generated/CONTEXT_PACK.md",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/assignments/A-D040-JAX-NUMERICS-REUSE.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json",
+    "{ printf '%s\\0' '.agent-harness/context/roles/independent_auditor.md'; sed -n '1,$p' .agent-harness/context/roles/independent_auditor.md; printf '\\0'; } | sha256sum",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+    "sha256sum src/rabbit/config/jax_config.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/driver_typeI_full_boltzmann.py src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md",
+    "sed -n '1,380p' src/rabbit/config/jax_config.py; sed -n '1,460p' src/rabbit/jax/solver_jax_rodas5p_adjoint.py; sed -n '1,180p' src/rabbit/jax/kernel_backend.py; sed -n '1,120p' docs/JAX_CANONICAL_ARCHITECTURE.md",
+    "sed -n '1,420p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '421,840p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '841,1260p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '1261,1680p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '1681,2100p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '2101,2520p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '2521,2940p' src/rabbit/jax/driver_typeI_full_boltzmann.py; sed -n '2941,3360p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+    "rg -n 'lax\\.scan|jacfwd|lu_factor|lu_solve|h_tape|adaptive|step-doubling|does not reproduce|discrete adjoint|dfdt' src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+    "rg -n '_FULL_RHS_CACHE|lru_cache|UnexpectedTracerError|jax\\.linearize|jax\\.vmap|jax\\.jacfwd|LowRankJacobianFactors|pure_callback|Sigma_H_minus|Pi_minus|max_steps|event_refine_steps|modified-equation|preconditioner|clip\\(' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+    "rg -n 'available=True|jit_safe=True|grad_safe=True|gpu_resident=False|host_mediated=False|precision|require_available|JAX repeated-run|frozen|promotion|reuse' src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md",
+    "git log --all --oneline --decorate -- src/rabbit/config/jax_config.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/driver_typeI_full_boltzmann.py src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md",
+    "git diff --stat 183ecd55971f4c60f9b383a1427f0fdc802c33a2..HEAD -- src/rabbit/config/jax_config.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/driver_typeI_full_boltzmann.py src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md",
+    "python3 -m json.tool .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json",
+    "git diff --check -- .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json",
+    "sha256sum .agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json",
+      "kind": "allowed shared mapper result",
+      "sha256": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7"
+    },
+    {
+      "path": "assigned D-040 JAX numerical audit slice",
+      "kind": "path-and-byte aggregate fingerprint",
+      "sha256": "sha256:ef1080939a0b4b311d761734d47008137bd9decd94e72740e15e160cbf713181",
+      "detail": "Aggregate covers the allowed mapper result plus exactly the five assigned current target files."
+    },
+    {
+      "path": "src/rabbit/jax/driver_typeI_full_boltzmann.py",
+      "kind": "current static target",
+      "sha256": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e"
+    },
+    {
+      "path": "src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+      "kind": "current static target",
+      "sha256": "sha256:4565e179c9e3c3d8a722fe625311d38bc42a2bcf6b8aabf538f6f8b13df5abda"
+    },
+    {
+      "path": "D-040 validation boundary",
+      "kind": "explicit skip record",
+      "detail": "No code, test, benchmark, JAX import, solver, collision, trajectory, endpoint, or scientific-output command ran. No validation ledger or shared file was changed."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D040-NR-001",
+      "claim_id": "C-D040-NUMERICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PROPOSED rank 1 mitigation clue: retain only the algebraic decomposition into an analytic transport/base Jacobian plus bounded gather-core-scatter updates, then use the factors in an exact linear solve or a separately validated linear preconditioner. The driver constructs an upwind transport block, differentiates a small moment/collision core, and returns LowRankJacobianFactors to a custom solve hook. This structure could isolate fast dissipative collision modes from a large angular-transport state, but the current bytes materialize the base as a dense state-by-state matrix and inject clipped approximate diagonals into the method Jacobian. Reuse therefore means re-deriving the block/operator structure, not translating the implementation. Prerequisites are an exact future Bianchi residual/JVP, prospectively bounded factor rank and conditioning, sparse or matrix-free storage of the base block, and dense-versus-factorized small-case identity checks. Falsifiers are rank growth comparable to the full state, failed linear residuals, changed convergence order or phase under the approximate Jacobian, or any failed conservation/covariance invariant.",
+      "assumptions_used": [
+        "A future anisotropic kinetic discretization has a large transport block coupled through a comparatively small set of moments.",
+        "D-039 STOP/PRESERVE and the JAX no-promotion boundary remain controlling.",
+        "No current collision or preconditioner coefficient is accepted as physics authority."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:366-454",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1652-2036",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3063-3074",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3121-3132",
+        "docs/JAX_CANONICAL_ARCHITECTURE.md:24-38"
+      ],
+      "evidence_fingerprint": "sha256:c39def9c381c2efb54a01f0e4d6ff70515704b64734a53aad22fb080104e281e",
+      "counterevidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:371-378 materializes a dense base Jacobian.",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1619-1649 and 1941-2003 use clipped modified-Jacobian additions whose order and phase effects are not established in the assigned evidence.",
+        "No D-040 numerical execution was authorized or performed."
+      ],
+      "reproduction": [
+        "sed -n '366,454p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "sed -n '1652,2036p' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.97,
+      "unresolved": [
+        "The imported prepare/solve implementation is outside this assignment slice, so no Woodbury, pivot, residual, or conditioning claim is made.",
+        "A future Bianchi state layout and prospective factor-rank envelope do not exist."
+      ]
+    },
+    {
+      "finding_id": "F-D040-NR-002",
+      "claim_id": "C-D040-NUMERICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PROPOSED rank 2 mitigation clue: use matrix-free AD selectively. The strongest static pattern is jax.linearize plus vmap for the few active scalar columns and jacfwd only on the reduced moment/collision core; a future high-dimensional angular system should expose exact JVP/VJP operators and avoid a full dense jacfwd. Prerequisites are smooth state coordinates without clipping branches in the differentiated contract, an analytic nonautonomous time partial, direction-by-direction AD checks, and a deterministic reduction order. Falsifiers are JVP/VJP disagreement with independent directional differences, loss of invariant nullspaces, or device/compiler variation above a prospectively frozen arithmetic bound.",
+      "assumptions_used": [
+        "The active-scalar count and reduced moment dimension remain much smaller than the transport state.",
+        "AD is used as a local derivative oracle, not as solver or physics validation."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1668-1689",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1882-1896",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1923-1939",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:105-121",
+        "docs/JAX_CANONICAL_ARCHITECTURE.md:30-35"
+      ],
+      "evidence_fingerprint": "sha256:ef1080939a0b4b311d761734d47008137bd9decd94e72740e15e160cbf713181",
+      "counterevidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:707-739,1068-1069,1268-1270,1371 contains clipping and threshold branches with kinked or zeroed derivatives.",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2910 and 2952 use pure_callback in the direct-kernel route.",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:157-170 requires an end-to-end traceable RHS and explicitly excludes pure_callback."
+      ],
+      "reproduction": [
+        "rg -n 'jax\\.linearize|jax\\.vmap|jax\\.jacfwd|pure_callback|jnp\\.clip' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "sed -n '94,136p' src/rabbit/jax/solver_jax_rodas5p_adjoint.py"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "No prospective differentiability domain, pivot policy, or arithmetic-error budget exists for a future anisotropic system."
+      ]
+    },
+    {
+      "finding_id": "F-D040-NR-003",
+      "claim_id": "C-D040-NUMERICS-REUSE",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "PROPOSED rank 3 mitigation clue: fixed-shape lax.scan replay can provide deterministic discrete-adjoint plumbing only after recording the actual accepted forward schedule and event semantics. The current routine differentiates the Rosenbrock map for a caller-supplied schedule; it does not differentiate adaptive accept/reject decisions, and its bundled extractor explicitly builds a different step-doubling schedule that is not bitwise the primary solve. Uniform/log schedules have no local error controller. Prerequisites are an exact accepted-step tape with source hash and event trace, a declared frozen-schedule versus adaptive-solver derivative target, analytic df/dt for oscillatory forcing, phase-aware step caps, and checkpointed factor storage/recomputation. Falsifiers are forward-versus-replay disagreement, gradient disagreement under tangent/finite-difference and tolerance refinement, an incomplete tape, or phase/amplitude drift under step halving.",
+      "assumptions_used": [
+        "The desired gradient is first specified as a discrete-map gradient or an ODE-solution sensitivity.",
+        "Schedule provenance is part of the numerical contract."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:1-46",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:88-136",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:143-202",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:205-282",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:287-373"
+      ],
+      "evidence_fingerprint": "sha256:4565e179c9e3c3d8a722fe625311d38bc42a2bcf6b8aabf538f6f8b13df5abda",
+      "counterevidence_refs": [
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:302-318 says the extractor does not reproduce primary decisions bitwise.",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:329-369 counts accepted steps rather than total attempts and has no explicit NaN, minimum-step, or terminal-time failure envelope.",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:34-48 documents per-step Jacobian recomputation and only proposes future LU reuse."
+      ],
+      "reproduction": [
+        "sed -n '1,202p' src/rabbit/jax/solver_jax_rodas5p_adjoint.py",
+        "sed -n '205,373p' src/rabbit/jax/solver_jax_rodas5p_adjoint.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The assigned evidence contains no actual accepted-step tape, replay parity artifact, event-adjoint contract, or memory model for cached LU factors."
+      ]
+    },
+    {
+      "finding_id": "F-D040-NR-004",
+      "claim_id": "C-D040-NUMERICS-REUSE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "PROPOSED rank 4 hygiene clue: pre-import f64/CPU policy, static shapes, host-concrete quadrature caches, bounded closure caches, and persistent compilation caching can reduce trace churn and tracer leakage. These mechanisms do not mitigate physical stiffness or establish determinism by themselves. Prerequisites are runtime dtype/device assertions, content-addressing by every table/constant/compiler/backend input, reporting the actual resolved cache directory and cache failures, and memory accounting for compiled closures. Falsifiers are a metadata/runtime mismatch, stale table reuse, cross-platform output drift above a frozen bound, or unbounded device/compilation-cache residency.",
+      "assumptions_used": [
+        "Static shapes are feasible for the chosen angular and momentum discretization.",
+        "Compilation caches contain no scientific state and may be invalidated without changing results."
+      ],
+      "evidence_refs": [
+        "src/rabbit/config/jax_config.py:25-88",
+        "src/rabbit/config/jax_config.py:99-165",
+        "src/rabbit/config/jax_config.py:231-267",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:18-34",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:119-174",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:178-239",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2262-2395"
+      ],
+      "evidence_fingerprint": "sha256:ca1af392e47725872af23ce2b9b8f00fcdce3614923579dc978c1c902afef4d1",
+      "counterevidence_refs": [
+        "src/rabbit/config/jax_config.py:164 catches every Exception and silently returns False.",
+        "src/rabbit/config/jax_config.py:256 stores enable_x64 in configuration but the assigned dispatch code does not apply or assert that field.",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:155-176 reports the requested cache directory even though the helper may select a fallback directory.",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2242-2260 keys the closure cache by scalar configuration but not by loaded table bytes, compiler, backend, or device."
+      ],
+      "reproduction": [
+        "sed -n '25,174p' src/rabbit/config/jax_config.py",
+        "sed -n '119,239p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "sed -n '2242,2395p' src/rabbit/jax/driver_typeI_full_boltzmann.py"
+      ],
+      "confidence": 0.96,
+      "unresolved": [
+        "No D-040 runtime inspection was permitted, so actual dtype, device, compiler, cache hits, and byte determinism are unknown."
+      ]
+    },
+    {
+      "finding_id": "F-D040-SO-001",
+      "claim_id": "C-D040-STIFF-OSCILLATORY",
+      "verdict": "fail",
+      "severity": "critical",
+      "statement": "The current JAX bytes have no authority for coupled stiff, highly oscillatory Bianchi shear. The full driver rejects every nonzero Sigma_minus initial condition and hard-codes Pi_minus=0, so it cannot exercise the hypothesized coupled two-shear dynamics. Its adaptive calls expose rtol, atol, max_steps, and event refinement but no explicit maximum-step, local-frequency, zero-crossing, phase-lag, or oscillation-count constraint; the adjoint helpers default to predetermined uniform or log schedules whose error control is only an assumed step count. A linearly implicit W=I/(gamma h)-J solve is a stiffness mechanism clue, not evidence of phase fidelity. Reopen prerequisites are a prospective two-shear equation/observable contract, manufactured stiff-oscillatory tests, local-frequency and resonance sweeps, phase and amplitude convergence under step refinement, long-time numerical-damping bounds, invariant/positivity checks, and comparison to an independently implemented reference. Any local-error pass accompanied by nonconvergent phase, overdamping, missed zero crossings, or event-time drift is a falsifier.",
+      "assumptions_used": [
+        "The owner's oscillatory-shear/stiffness concern remains an audit hypothesis rather than validated project evidence.",
+        "Stiff stability and oscillatory phase resolution are separate numerical obligations.",
+        "D-040 grants no F-11 implementation or numerical execution."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2101-2112",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2411-2459",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3063-3074",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:3121-3132",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:118-133",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:205-282",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-003"
+      ],
+      "evidence_fingerprint": "sha256:ef1080939a0b4b311d761734d47008137bd9decd94e72740e15e160cbf713181",
+      "counterevidence_refs": [
+        "The assigned source includes an implicit Rosenbrock stage matrix and adaptive forward driver, but no allowed artifact validates their stability function, order, phase lag, or the coupled non-LRS regime.",
+        "The mapper reports only FLRW and bounded axisymmetric finite-shear evidence, not a non-axisymmetric external gold anchor."
+      ],
+      "reproduction": [
+        "rg -n 'Sigma_H_minus|Pi_minus|max_steps|event_refine_steps' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "rg -n 'solve_uniform_steps|solve_log_steps|error control is implicit|lu_factor' src/rabbit/jax/solver_jax_rodas5p_adjoint.py"
+      ],
+      "confidence": 0.995,
+      "unresolved": [
+        "No current equation supplies a defensible local oscillation frequency or separates physical damping from numerical damping.",
+        "No evidence establishes whether future Bianchi stiffness is collision-dominated, geometry-dominated, or a multiscale coupling effect."
+      ]
+    },
+    {
+      "finding_id": "F-D040-SO-002",
+      "claim_id": "C-D040-STIFF-OSCILLATORY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Current runtime and derivative metadata cannot be reused as an authority envelope. inspect_kernel_backend ignores require_available and unconditionally reports available, jit_safe, grad_safe, f64, non-host-mediated JAX. Yet the allowed direct-kernel full-driver mode inserts jax.pure_callback in both RHS and Jacobian-factor paths, while the adjoint contract explicitly requires no pure_callback. Several collision paths clip occupations, rates, and approximate Jacobian diagonals; one named preconditioner is a modified-Jacobian addition rather than a demonstrably solution-neutral linear-solver preconditioner. For any future stiff-oscillatory method, host callbacks, clipping, controller branches, pivot choices, and approximate Jacobians require separate differentiability, order, phase, and determinism contracts. Falsifiers are metadata/runtime disagreement, missing JVP rules, gradient failure, solution movement when only a purported preconditioner changes, or a hidden clipped state/rate affecting the accepted trajectory.",
+      "assumptions_used": [
+        "Metadata is evidence only when tied to the exact executable path.",
+        "A solver preconditioner and a modified method Jacobian are not silently interchangeable."
+      ],
+      "evidence_refs": [
+        "src/rabbit/jax/kernel_backend.py:99-121",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:687-741",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1062-1071",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1619-1649",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:1941-2003",
+        "src/rabbit/jax/driver_typeI_full_boltzmann.py:2889-2963",
+        "src/rabbit/jax/solver_jax_rodas5p_adjoint.py:153-170"
+      ],
+      "evidence_fingerprint": "sha256:ef1080939a0b4b311d761734d47008137bd9decd94e72740e15e160cbf713181",
+      "counterevidence_refs": [
+        "Pure-JAX bank-core modes may be traceable, but the unconditional backend report does not distinguish them from the host-callback direct mode.",
+        "Approximate Rosenbrock Jacobians can be valid under a prospectively proved method contract; no such proof or executed evidence is in this assignment slice."
+      ],
+      "reproduction": [
+        "sed -n '99,121p' src/rabbit/jax/kernel_backend.py",
+        "sed -n '2889,2963p' src/rabbit/jax/driver_typeI_full_boltzmann.py",
+        "sed -n '153,170p' src/rabbit/jax/solver_jax_rodas5p_adjoint.py"
+      ],
+      "confidence": 0.99,
+      "unresolved": [
+        "The exact primary solver's custom linear-solver semantics are outside the assigned files and were not inferred."
+      ]
+    },
+    {
+      "finding_id": "F-D040-NR-005",
+      "claim_id": "C-D040-NUMERICS-REUSE",
+      "verdict": "pass",
+      "severity": "medium",
+      "statement": "Legacy/current comparison yields provenance but no incremental validation chain: the four assigned Python targets entered reachable history as a mature snapshot at 183ecd5 and are unchanged relative to HEAD; only the architecture document was added later at 36196c6. The mapper separately reports that earlier local history is another mature import with no recoverable authoritative parent chain. Therefore the ranked mechanisms above are static clues from current bytes, not lessons validated by a traceable sequence of numerical changes.",
+      "assumptions_used": [
+        "Reachable Git refs and the allowed mapper result delimit the attributable history for this assignment."
+      ],
+      "evidence_refs": [
+        "git log --all --oneline --decorate -- the five assigned target paths",
+        "git diff --stat 183ecd55971f4c60f9b383a1427f0fdc802c33a2..HEAD -- the five assigned target paths",
+        ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-HISTORY-MAP.json:F-D040-005",
+        "docs/JAX_CANONICAL_ARCHITECTURE.md:1-19"
+      ],
+      "evidence_fingerprint": "sha256:ef5df977295e98decb78326bd6516ffed3984785c342e69296236c6231053be7",
+      "counterevidence_refs": [
+        "Preserved audit documents may record bounded historical tests, but they were not assigned as primary evidence for this numerical audit and do not grant current solver authority."
+      ],
+      "reproduction": [
+        "git log --all --oneline --decorate -- src/rabbit/config/jax_config.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/driver_typeI_full_boltzmann.py src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md",
+        "git diff --stat 183ecd55971f4c60f9b383a1427f0fdc802c33a2..HEAD -- src/rabbit/config/jax_config.py src/rabbit/jax/solver_jax_rodas5p_adjoint.py src/rabbit/jax/driver_typeI_full_boltzmann.py src/rabbit/jax/kernel_backend.py docs/JAX_CANONICAL_ARCHITECTURE.md"
+      ],
+      "confidence": 0.98,
+      "unresolved": [
+        "Unreachable objects remain outside this assignment and cannot raise any claim ceiling."
+      ]
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260723-f10-d040-legacy-jax-readonly-survey/results/A-D040-JAX-NUMERICS-REUSE.json"
+  ]
+}

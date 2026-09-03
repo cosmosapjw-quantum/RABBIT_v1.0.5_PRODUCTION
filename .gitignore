@@ -58,7 +58,10 @@ Thumbs.db
 **/.claude/first-run
 **/.claude/assistant-daemon-state.json
 /.agent-harness/ACTIVE_RUN
+/.agent-harness/ACTIVE_RUN.tmp.*
 /.agent-harness/runs/
+/.agent-harness/leases/
+/.agent-harness/admissions/
 /.superpowers/
 /.benchmarks/
 
@@ -126,3 +129,36 @@ logs/
 /neutrino_solver_methods_evaluation_*.md
 /boltzmann_solver.md
 /scratchpad_*.py
+
+# diagnosis_report: exact F-10 physical-prefix fixture and canonical evidence.
+# Keep the broad rules above; open only the named branch-local publication slice.
+!/RABBIT_F10_SolverAlgorithm_Blocker_Research_Loop_2026-08-06.zip
+!/RABBIT_F10_MathPhysics_Blocker_Research_Loop_2026-08-06.zip
+!/00_F10_PHYSICAL_PREFIX_DIAGNOSIS/
+!/00_F10_PHYSICAL_PREFIX_DIAGNOSIS/**
+
+!/.agent-harness/runs/
+/.agent-harness/runs/*
+!/.agent-harness/runs/run-20260804-f10-v1-diagnostic/
+/.agent-harness/runs/run-20260804-f10-v1-diagnostic/*
+!/.agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/
+/.agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/*
+!/.agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/instrumented_rhs.py
+!/.agent-harness/runs/run-20260804-f10-v1-diagnostic/instrument/instrumented_bdf.py
+
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/
+/.agent-harness/runs/run-20260805-f10-v3-campaign/*
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/run_v3.py
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/analyse_v3.py
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/render_v3.py
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/ANALYSIS_V3.json
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/report_verification_output.json
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/r4_reference.json
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/
+/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/*
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/pins_verified.json
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/selftest_result.json
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/driver.log
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/nohup.log
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/
+!/.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/**

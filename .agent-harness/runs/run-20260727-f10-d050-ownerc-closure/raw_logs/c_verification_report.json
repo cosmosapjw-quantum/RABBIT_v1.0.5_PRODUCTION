@@ -1,0 +1,40 @@
+{
+ "checks": {
+  "C1_catalogue": {
+   "events": 25,
+   "fingerprint": [
+    2,
+    1,
+    6,
+    2,
+    2,
+    2,
+    4,
+    4,
+    2
+   ],
+   "member_count": 2,
+   "ok": true
+  },
+  "C3_covariance": {
+   "mu_tau_residual": 2.6019033208963758e-11,
+   "ok": true,
+   "prediction_agreement": 0.32953831293671176
+  },
+  "C4_diagnostics": {
+   "charge_conjugation_residual": 4.587059566179814e-11,
+   "energy_ratio": 4.7595458972530534e-17,
+   "entropy_production": 9.691739087805374e-18,
+   "first_law_residual": 0.0,
+   "number_ratio": 1.9682158660092625e-16,
+   "ok": true
+  },
+  "C5_equilibrium_null": {
+   "h_normalized_energy": 1.5424454788282838e-11,
+   "h_normalized_number": 6.488351776420913e-12,
+   "ok": true
+  }
+ },
+ "contract": "BD622_D050_ownerc_row6_closure_contract_2026-07-27",
+ "verdict": "PASS"
+}

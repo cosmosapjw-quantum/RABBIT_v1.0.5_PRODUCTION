@@ -1,3 +1,11 @@
+> [!IMPORTANT]
+> This is the standalone `diagnosis_report` branch: a non-production,
+> provenance-preserving F-10 physical-prefix fixture and diagnosis surface.
+> **Open [00_F10_PHYSICAL_PREFIX_DIAGNOSIS](00_F10_PHYSICAL_PREFIX_DIAGNOSIS/README.md) first.**
+> This branch is not a completed physical-prefix run, not a gate pass, and not
+> a merge into `main`; its retained direct-JVP result includes an explicit
+> strict-domain failure at `creep_1200`.
+
 <!-- BEGIN:README_HEADER -->
 # RABBIT v1.0.0
 

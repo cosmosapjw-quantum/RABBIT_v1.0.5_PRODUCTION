@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "r9-obligations",
+  "agent_type": "default",
+  "last_assistant_message": "Round-9 obligations review complete.\nHARNESS_RESULT: {\"assignment_id\": \"A-D067-R9-OBLIGATIONS\", \"context_version\": \"b7b2671d83860af18883b6c98985c74dce76db66b34af1f57613716d03ac8fa5\", \"status\": \"fail\", \"result_path\": \".agent-harness/runs/run-20260730-f10-d067-review-r9/results/A-D067-R9-OBLIGATIONS.json\", \"admission_proof\": \"sha256:ba1aa1c8516361743b5f5d0577c33ebe4feadcc164fc0c56ff42e2dacfa7a028\"}"
+}

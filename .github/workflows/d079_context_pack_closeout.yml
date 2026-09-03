@@ -1,0 +1,57 @@
+name: d079-context-pack-closeout
+
+on:
+  push:
+    branches:
+      - research/d079-cloglog-event-jvp-static-suite-20260901
+    paths:
+      - .github/workflows/d079_context_pack_closeout.yml
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: research/d079-cloglog-event-jvp-static-suite-20260901
+
+      - name: Install harness dependency
+        run: python3 -m pip install --disable-pip-version-check "pytest>=7.0"
+
+      - name: Rebuild context index and pack together
+        run: python3 .agent-harness/scripts/build_context_pack.py
+
+      - name: Verify final harness state
+        run: |
+          python3 .agent-harness/scripts/validate_harness.py
+          python3 -m pytest -q .agent-harness/tests
+          python3 .agent-harness/scripts/check_ssot_consistency.py
+          git diff --check
+
+      - name: Commit the atomic context pair
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .agent-harness/context/CONTEXT_INDEX.json \
+            .agent-harness/generated/CONTEXT_PACK.md
+          changed="$(git diff --cached --name-only | sort)"
+          expected="$(cat <<'EOF'
+          .agent-harness/context/CONTEXT_INDEX.json
+          .agent-harness/generated/CONTEXT_PACK.md
+          EOF
+          )"
+          if [[ "$changed" != "$expected" ]]; then
+            printf 'Unexpected atomic context paths.\nExpected:\n%s\nActual:\n%s\n' "$expected" "$changed" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "records(d079): atomically refresh context index and pack"
+          git push origin HEAD:research/d079-cloglog-event-jvp-static-suite-20260901

@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+  "assignment_id": "A-D057R5-CROSS-ACCEPT",
+  "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+  "agent_id": "019fa739-70e6-7fe3-a549-ccbaea9b544e",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260728-f10-d057-adversarial-adjudication-r5",
+    "assignment_id": "A-D057R5-CROSS-ACCEPT",
+    "context_version": "ead0407d12da8db3183b7ff3474b5469351b1eb3544523f66dbeda574a36a5eb",
+    "independence_mode": "adjudication",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:2c33da6b41b50ff71eb50f7c3aade1243f1f6dc1b3f1da42d14e4022fd5b2a8a",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": false,
+    "review_role_sha256": "sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "error",
+  "result_path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT.json",
+  "started_at": "2026-07-28T14:35:41+09:00",
+  "completed_at": "2026-07-28T14:37:04+09:00",
+  "tool_versions": {},
+  "commands": [
+    "sha256sum .agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-CROSS-ACCEPT.json .agent-harness/generated/CONTEXT_PACK.md .agent-harness/context/CONTEXT_INDEX.json",
+    "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json"
+  ],
+  "artifacts": [
+    {
+      "path": ".agent-harness/context/roles/independent_auditor.md",
+      "sha256": "e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "purpose": "Observed review-role bytes at mandatory preflight"
+    },
+    {
+      "path": ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-CROSS-ACCEPT.json",
+      "sha256": "2c33da6b41b50ff71eb50f7c3aade1243f1f6dc1b3f1da42d14e4022fd5b2a8a",
+      "purpose": "Registered assignment bytes"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-D057R5-CROSS-ACCEPT-PREFLIGHT-001",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "fail",
+      "severity": "high",
+      "statement": "Mandatory assignment preflight fails because the registered review_role_sha256 is sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1, while the named independent_auditor.md bytes hash to sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836. No D-057 evidence review or adversarial loop was performed.",
+      "assumptions_used": [
+        "The assignment's exact role-file seal is mandatory and a mismatch requires fail-closed termination before substantive analysis."
+      ],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/assignments/A-D057R5-CROSS-ACCEPT.json",
+        ".agent-harness/context/roles/independent_auditor.md"
+      ],
+      "evidence_fingerprint": "sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "sha256sum .agent-harness/context/roles/independent_auditor.md .agent-harness/templates/RESULT_ENVELOPE.json"
+      ],
+      "confidence": 1.0,
+      "unresolved": [
+        "Restore the role file to the registered bytes or issue a new assignment sealed to the intended current role bytes, then launch a fresh registered cross-steelman."
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": "REVIEW_ROLE_SHA256_MISMATCH",
+      "message": "Expected sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1; observed sha256:e4bded48b3f3396b6cbf1178d67b6881d5e0070e5a45b94a7ac0739e92eb0836.",
+      "fatal": true
+    }
+  ],
+  "files_written": [
+    ".agent-harness/runs/run-20260728-f10-d057-adversarial-adjudication-r5/results/A-D057R5-CROSS-ACCEPT.json"
+  ]
+}

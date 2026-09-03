@@ -1,0 +1,35 @@
+{
+ "artifact_class": "CANARY_ATTESTATION",
+ "canary": "C7",
+ "supersedes_canary": [
+  "C5",
+  "C6"
+ ],
+ "why_a_structured_supersedes_field": "C5 and C6 recorded what they replaced in free prose, which no checker could resolve, so a stale canary could not be retired except by a human noticing. 'supersedes_canary' is the machine-readable form check_canary_freshness.py reads; a canary nothing supersedes must still describe the working tree.",
+ "supersedes_reason": "check_canary_freshness.py, added in this same decision, reports both stale against current bytes: C5 pins stop_hook_sha256 dc19da4d against 0533da88, and C6 pins start_hook_sha256 af8f7016 against 8b283512. Neither was edited to hide that -- retained attestations are evidence and are not rewritten to satisfy a checker. They are retired by replacement, which is what a superseding canary is for.",
+ "method": "SubagentStart dispatched with ACTIVE_RUN naming the canary run, so a real Start-time lease exists. ACTIVE_RUN then repointed to the DECOY run. ACTIVE_RUN read, SubagentStop dispatched, ACTIVE_RUN read again -- one shell command, no intervening work -- so the consume instant is bracketed rather than merely preceded.",
+ "first_attempt_blocked": "The first dispatch was BLOCKED, correctly: no Start-time lease existed and the hook refused to fall back to the mutable ACTIVE_RUN pointer. That refusal is the property this canary exists to demonstrate, so it is recorded rather than discarded. The retry was written to stop_event_c7_attempt2.json, never over attempt 1, under the retry-safe naming rule established at D-070 Part B7.",
+ "head_commit": "915e2e487d8ecf757230435ec7740400d6b57d12",
+ "start_hook_sha256": "8b28351235d32bb74c7bb84ee32acf910f2bccb4eef993bfbf86baecc6522d17",
+ "stop_hook_sha256": "0533da884250e03e91670aa458e3915859d91b31fc856fa72537dae65a966625",
+ "pointer_before_dispatch": "run-20260801-f10-d070-canary-c7-decoy",
+ "captured_before": "2026-08-01T13:39:47.469291912Z",
+ "pointer_after_dispatch": "run-20260801-f10-d070-canary-c7-decoy",
+ "captured_after": "2026-08-01T13:39:47.514070565Z",
+ "bracket_width_seconds": 0.044779,
+ "canary_lease_run_id": "run-20260801-f10-d070-canary-c7",
+ "overlap_held_across_the_whole_bracket": true,
+ "ledger_consumed_at": "2026-08-01T13:39:47+00:00",
+ "consume_second_interval": [
+  "2026-08-01T13:39:47+00:00",
+  "2026-08-01T13:39:48+00:00"
+ ],
+ "bracket_inside_the_consume_second": true,
+ "resolution_limit": "consumed_at is written with timespec='seconds', so sub-second ordering is unprovable and is NOT claimed. What is established is the pointer state across the dispatch, which is what obligation 4 asks.",
+ "receipt_state": "consumed",
+ "consumed_by_agent_id": "d070-canary-c7",
+ "consumed_assignment_id": "A-D070-CANARY-C7",
+ "result_sha256": "sha256:2210a68c019d65373b3449ce48689c177a446158659b85e324e6cbb897cc4393",
+ "stop_exit_code": 0,
+ "what_this_does_not_claim": "This canary shows the pointer did not decide the consume. It does not address the stated residual that harness and subagents share one OS user, so a deliberately misbehaving agent can still forge repo-local artifacts."
+}

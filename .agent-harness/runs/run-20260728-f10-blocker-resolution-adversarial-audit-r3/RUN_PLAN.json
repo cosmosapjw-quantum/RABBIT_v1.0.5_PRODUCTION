@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20260728-f10-blocker-resolution-adversarial-audit-r3",
+  "created_at": "2026-07-28T05:13:25+00:00",
+  "spec_ref": "docs/audit/BD622_D056_gate_matrix_completion_2026-07-28.md",
+  "base_ref": "ab95ff52ebee55a90634ae62e6ad97e975e5af26",
+  "head_ref": "5f327804e6b1d3dae341b8c6eadf41dad5c638f1",
+  "context_version": "92bec485e4f78c8ec38814636d86135675baa4826e20344e7ebbd730d90b5ae6",
+  "budget": {
+    "max_concurrent": 4,
+    "max_total": 8,
+    "max_depth": 2
+  },
+  "stages": [
+    "context-build",
+    "independent-analysis",
+    "deduplication",
+    "targeted-adjudication",
+    "gate-evaluation",
+    "single-writer-update"
+  ],
+  "status": "initialized"
+}

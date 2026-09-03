@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "artifact_id": "BD622-EXT01-PRIMARY-LITERATURE-MATRIX",
+  "retrieved_at": "2026-07-23",
+  "method": "Bounded CRAG over primary research sources. Literature supports or limits transfer claims; it cannot replace the exact candidate theorems in CAS_CONTRACT.json.",
+  "rows": [
+    {
+      "source_id": "L-TSFC",
+      "title": "TSFC: a structure-preserving form compiler",
+      "url": "https://arxiv.org/abs/1705.03667",
+      "supported_claim": "A high-level weak form can be lowered to scheduled tensor operations while preserving structure long enough for compiler analysis.",
+      "uncovered_assumption": "It does not validate a relativistic fermionic collision form, finite-m_e shells, entropy, tail semantics, binary64 bounds, or generated consumer coverage.",
+      "nearest_counterexample": "A compiler can faithfully lower an incomplete or physically incorrect form.",
+      "transfer_risk": "HIGH if compiler correctness is treated as physics correctness."
+    },
+    {
+      "source_id": "L-ENTROPY-DG",
+      "title": "An Entropy Stable Discontinuous Galerkin Finite-Element Moment Method for the Boltzmann Equation",
+      "url": "https://arxiv.org/abs/1602.01312",
+      "supported_claim": "Renormalized moment closures and suitable DG fluxes can preserve an entropy structure in a classical Boltzmann setting.",
+      "uncovered_assumption": "The method uses a moment approximation in velocity and DG in physical space; it does not prove the proposed compactified local momentum-cell fermionic reaction operator or a Petrov inf-sup theorem.",
+      "nearest_counterexample": "Entropy stability of a related closure does not imply entropy stability of a nonsymmetric trial/test mass map.",
+      "transfer_risk": "HIGH."
+    },
+    {
+      "source_id": "L-VELOCITY-DG",
+      "title": "Deterministic Solution of the Boltzmann Equation Using Discontinuous Galerkin Discretizations in the Velocity Space",
+      "url": "https://arxiv.org/abs/1301.1099",
+      "supported_claim": "Velocity-space DG is an executable deterministic family for classical collision operators.",
+      "uncovered_assumption": "It does not cover the six-species relativistic Fermi-blocked finite-electron-mass weak catalogue or the proposed compactified endpoint theorem.",
+      "nearest_counterexample": "Its reported high-dimensional collision cost shows that local discretization alone does not satisfy the frozen operation/LOC budget.",
+      "transfer_risk": "MEDIUM to HIGH."
+    },
+    {
+      "source_id": "L-UU-SPECTRAL",
+      "title": "A fast spectral method for the Uehling-Uhlenbeck equation for quantum gas mixtures",
+      "url": "https://arxiv.org/abs/1810.03090",
+      "supported_claim": "Deterministic methods can preserve conservation to high accuracy for quantum gas-mixture collision operators in their stated setting.",
+      "uncovered_assumption": "It is not a proof of exact local reaction-DG entropy, compactified tail authority, finite-m_e weak shells, or the B3 non-isomorphism requirement.",
+      "nearest_counterexample": "A viable quantum spectral method may use a materially different global representation and conservation treatment.",
+      "transfer_risk": "MEDIUM."
+    },
+    {
+      "source_id": "L-BIANCHI",
+      "title": "The spatially homogeneous Boltzmann equation coupled to the Bianchi I Einstein equations",
+      "url": "https://arxiv.org/abs/2305.15902",
+      "supported_claim": "Anisotropic homogeneous Einstein-Boltzmann systems require careful momentum weights and admit a rigorous continuum analysis under stated assumptions.",
+      "uncovered_assumption": "Well-posedness is not a numerical convergence, stiffness-spectrum, DG, or DSMC precision theorem for the future RABBIT model.",
+      "nearest_counterexample": "Continuum existence does not select the discretization or time integrator.",
+      "transfer_risk": "HIGH if used for solver admission."
+    },
+    {
+      "source_id": "L-NEUTRINO-DSMC",
+      "title": "Neutrino decoupling with a direct simulation Monte Carlo method",
+      "url": "https://arxiv.org/abs/2508.08379",
+      "supported_claim": "DSMC can produce useful homogeneous isotropic neutrino-decoupling estimates with statistical uncertainty.",
+      "uncovered_assumption": "The isotropic calculation omits the directional stress moments, deterministic covariance, exact Jacobian, and coupled Bianchi feedback required here.",
+      "nearest_counterexample": "It prevents the false universal claim that neutrino DSMC cannot converge.",
+      "transfer_risk": "HIGH for endpoint authority; potentially LOW for a separately authorized qualitative cross-check."
+    },
+    {
+      "source_id": "L-NANBU",
+      "title": "Propagation of chaos for the Nanbu particle system",
+      "url": "https://arxiv.org/abs/1302.5810",
+      "supported_claim": "Classical homogeneous particle approximations have rigorous convergence results under restricted kernels and time statements.",
+      "uncovered_assumption": "It does not cover the relativistic, Fermi-blocked, multi-species, anisotropic, dynamically coupled system or a deterministic 1e-10 certificate.",
+      "nearest_counterexample": "It prevents a blanket claim that all DSMC-family methods lack convergence.",
+      "transfer_risk": "HIGH for this gate."
+    }
+  ],
+  "search_conclusion": {
+    "direct_pcr_dg_support_found": false,
+    "direct_petrov_uniform_stability_support_found": false,
+    "direct_moving_lattice_remap_theorem_found": false,
+    "inference": "The retrieved literature supplies adjacent algorithms and cautionary transfer bounds, not the missing candidate-specific admission theorems."
+  }
+}

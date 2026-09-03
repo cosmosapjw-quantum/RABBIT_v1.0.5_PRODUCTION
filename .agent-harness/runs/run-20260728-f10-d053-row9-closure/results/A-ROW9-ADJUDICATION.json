@@ -1,0 +1,67 @@
+{
+ "schema_version": 2,
+ "run_id": "run-20260728-f10-d053-row9-closure",
+ "assignment_id": "A-ROW9-ADJUDICATION",
+ "context_version": "85a18806fc65337021d66903cac662973ee4fea1434bdf15b78bf9c0bc260ad8",
+ "agent_id": "a830f842f0a9482cb",
+ "agent_type": "default",
+ "runtime_agent_type": "default",
+ "review_role": "adjudicator",
+ "spawn_contract": {
+  "run_id": "run-20260728-f10-d053-row9-closure",
+  "assignment_id": "A-ROW9-ADJUDICATION",
+  "context_version": "85a18806fc65337021d66903cac662973ee4fea1434bdf15b78bf9c0bc260ad8",
+  "independence_mode": "adjudication",
+  "prompt_header_verified": true,
+  "subagent_start_injected": true,
+  "subagent_start_preflight": "PASS",
+  "assignment_sha256": "sha256:3fee480844ffc8f44b933ce24b83f19cfa2fbfc2397675a9fc9ca4231b97dbec",
+  "runtime_agent_type": "default",
+  "review_role": "adjudicator",
+  "review_role_verified": true,
+  "review_role_sha256": "sha256:bd1c050109c104f9348eea8a6c0ec55c088c746a276f8072fc52d3a49bdffcbc",
+  "result_template_verified": true,
+  "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+ },
+ "status": "pass",
+ "result_path": ".agent-harness/runs/run-20260728-f10-d053-row9-closure/results/A-ROW9-ADJUDICATION.json",
+ "started_at": "2026-07-28T00:50:00+00:00",
+ "completed_at": "2026-07-28T00:53:00+00:00",
+ "tool_versions": {
+  "python": "3.12.3"
+ },
+ "commands": [
+  "recompute E1..E5; verify chronology (94d0f00 00:39:19 vs outputs +18 s/+66 s); byte identity 760a7c04...b558a"
+ ],
+ "artifacts": [
+  ".agent-harness/runs/run-20260728-f10-d053-row9-closure/MERGED_RESULTS.json"
+ ],
+ "findings": [
+  {
+   "finding_id": "F-ROW9-ADJ-001",
+   "claim_id": "C-R6-ORBIT-CHART-RABBIT-APPLICABILITY",
+   "verdict": "pass",
+   "severity": "high",
+   "statement": "VERDICT PASS, BYTES ACCEPTED as the FINAL static catalogue for D-052 stages 2-3: _independent_noqke.py sha256 760a7c044081e507fae9d5695b301bd44f6466d96322c46f53b77161e32b558a at commit 94d0f00 (27 events, fingerprint (2,1,6,2,2,2,4,4,4)). All E1..E5 recomputed PASS: e/mu self residual 3.525406360939371e-11 closed with order-one single-member control; mu_tau regression 2.447560236182917e-11; CP improved 4.59e-11 -> 3.138183248343415e-11; conservation/first-law/entropy/equilibrium null in class. Freeze chronology and hash provenance intact; blind-review tightening present in sealed bytes. No gate movement. Limitations: same-model reviews, single execution, liveness-only negative control, undecomposed sub-cap floors (deferred to stage 2 by design).",
+   "assumptions_used": [],
+   "evidence_refs": [
+    "report 8cfaeb0c",
+    "pytest a2781fcf",
+    "freeze 94d0f00"
+   ],
+   "evidence_fingerprint": "sha256:8cfaeb0c00000000000000000000000000000000000000000000000000000000",
+   "counterevidence_refs": [],
+   "reproduction": [
+    "Recompute E1..E5 from the report."
+   ],
+   "confidence": 0.95,
+   "unresolved": [
+    "Stage 2 metrology program binds these bytes next."
+   ]
+  }
+ ],
+ "errors": [],
+ "files_written": [
+  ".agent-harness/runs/run-20260728-f10-d053-row9-closure/results/A-ROW9-ADJUDICATION.json"
+ ]
+}

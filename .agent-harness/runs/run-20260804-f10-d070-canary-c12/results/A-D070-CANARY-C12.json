@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "run_id": "run-20260804-f10-d070-canary-c12",
+  "assignment_id": "A-D070-CANARY-C12",
+  "context_version": "1e4b41fe3f7d5c8171f0305f0715eb022e92231d1d70c168ce2e89a51d7831bb",
+  "agent_id": "d070-canary-c12",
+  "agent_type": "default",
+  "runtime_agent_type": "default",
+  "review_role": "default",
+  "spawn_contract": {
+    "run_id": "run-20260804-f10-d070-canary-c12",
+    "assignment_id": "A-D070-CANARY-C12",
+    "context_version": "1e4b41fe3f7d5c8171f0305f0715eb022e92231d1d70c168ce2e89a51d7831bb",
+    "independence_mode": "shared-core",
+    "prompt_header_verified": true,
+    "subagent_start_injected": true,
+    "subagent_start_preflight": "PASS",
+    "assignment_sha256": "sha256:1d063258f9c09c90919aa3b3ac9ee3337d7a56ecbb16d6e681872e526433791f",
+    "runtime_agent_type": "default",
+    "review_role": "default",
+    "review_role_verified": true,
+    "review_role_sha256": "sha256:9675bef90b109fc1ce0214509c8c27b08526bdb0e68dac2dcbb99221b96eb5e1",
+    "result_template_verified": true,
+    "result_template_sha256": "sha256:936c043e8b3d7dd37516b04a470e39c08f9a36409619e8b859f8c1ede65ad1b0"
+  },
+  "status": "pass",
+  "result_path": ".agent-harness/runs/run-20260804-f10-d070-canary-c12/results/A-D070-CANARY-C12.json",
+  "started_at": "2026-08-04T02:10:00Z",
+  "completed_at": "2026-08-04T02:10:00Z",
+  "tool_versions": {
+    "python": "venv/bin/python (repo venv)"
+  },
+  "commands": [
+    "concurrent SubagentStop dispatches released together from one FIFO"
+  ],
+  "artifacts": [
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c12/artifacts/RACE.json"
+  ],
+  "findings": [
+    {
+      "finding_id": "F-A-D070-CANARY-C12",
+      "claim_id": "C-HARNESS-INTEGRITY",
+      "verdict": "pass",
+      "severity": "high",
+      "statement": "The measured outcome lives in the artifact, not here: a result envelope must exist BEFORE the dispatch that consumes it, and Stop pins its digest at consume time, so a canary cannot describe its own outcome in its own envelope.",
+      "assumptions_used": [],
+      "evidence_refs": [
+        ".agent-harness/runs/run-20260804-f10-d070-canary-c12/artifacts/RACE.json",
+        ".agent-harness/runs/run-20260804-f10-d070-canary-c12/ADMISSIONS.jsonl"
+      ],
+      "evidence_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "counterevidence_refs": [],
+      "reproduction": [
+        "venv/bin/python .agent-harness/scripts/check_canary_freshness.py"
+      ],
+      "confidence": 0.95,
+      "unresolved": []
+    }
+  ],
+  "errors": [],
+  "files_written": [
+    ".agent-harness/runs/run-20260804-f10-d070-canary-c12/results/A-D070-CANARY-C12.json"
+  ]
+}
