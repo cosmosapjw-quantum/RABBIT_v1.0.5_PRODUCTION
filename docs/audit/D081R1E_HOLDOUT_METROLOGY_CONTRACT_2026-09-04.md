@@ -10,8 +10,8 @@ catalogue, quadrature, grid, state, support policy, matrix-roundoff policy,
 thermodynamic formula, chart, or solver tolerance.
 
 The calibration state was `state_1200.npz`. The holdout state is
-`state_2000.npz`, whose Rust/Python collision and RHS outputs MUST NOT be
-inspected before this contract and its thresholds are committed.
+`state_2000.npz`. Its Rust/Python collision and RHS outputs were not evaluated
+before the thresholds below and the exact holdout byte identity were committed.
 
 ## Authorities
 
@@ -32,8 +32,11 @@ v3a_r2/domain/state_2000.npz
 holdout Git blob:
 cfb17344ae166c01c2e5bcb14acae0d968e49477
 
+holdout bytes:
+2103
+
 holdout SHA-256:
-AUTHORITY_FREEZE_PENDING
+780ad7c1388caec23f02012781717d43ffb85d96d4d501c40c504939e7c9a44d
 
 Python comparator blob:
 de44feee0aa484abe26976c7dc34c579643005b5
@@ -43,11 +46,20 @@ trajectory-core blob:
 
 Cargo.lock blob:
 a1b5035da5c20712d1a2a4ab077da255ff94a014
+
+authority-only workflow:
+33804815829
+
+authority-only job:
+100812636614
 ```
 
-The SHA-256 will be filled from an authority-only workflow which does not
-evaluate a collision action or packed RHS. No holdout physics output may be
-computed until a second commit freezes that digest.
+The authority-only run verified the historical commit, path, Git blob, byte
+count and SHA-256 before any collision or RHS evaluation. Its optional archive
+structure step failed because bare runner Python lacked NumPy; this is a CI
+orchestration failure after the byte authority was printed, not a physics or
+identity failure. The holdout evaluation workflow must install exact NumPy
+2.4.4 and recheck archive structure before opening the holdout output.
 
 ## Calibration evidence
 
