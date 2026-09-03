@@ -17,6 +17,15 @@ jobs:
           ref: research/d081r1d1-foundations-20260903
           fetch-depth: 1
 
+      - name: Recreate the deterministic Python fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check \
+            "numpy==2.4.4" "scipy==1.17.1"
+          python3 native/rabbit_cpu/tests/fixtures/d081r1/generate_action_foundations_case.py
+          test -s native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json
+
       - name: Localize spectral discrepancy without changing acceptance
         shell: bash
         run: |
@@ -73,7 +82,6 @@ jobs:
           basis=rust_basis(query)
           report("basis-row-major",basis,expected_basis)
 
-          # Compare the same values against a transposed flattening hypothesis.
           transposed=[]
           for mode in range(order):
               for point in range(len(query)):
@@ -103,7 +111,6 @@ jobs:
                   modal_product.append(sum(rates[row*len(query)+point]*basis[point*order+mode] for point in range(len(query))))
           report("modal-product",modal_product,decode(data["spectral"]["modal_product"]))
 
-          # Hybrid error summaries that distinguish roundoff at exact/near zeros.
           for name, actual, expected in [
               ("basis",basis,expected_basis),
               ("coefficients",coefficients,expected_coefficients),
