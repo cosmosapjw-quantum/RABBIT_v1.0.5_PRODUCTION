@@ -1,0 +1,89 @@
+name: d081r1e0-numpy-baseline-probe
+
+on:
+  push:
+    branches:
+      - research/d081r1e0-retained-packed-rhs-oracle-20260903
+    paths:
+      - .github/workflows/d081r1e0_numpy_baseline_probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: baseline-probe-${{ matrix.replica }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        replica: [0, 1, 2, 3]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NPY_DISABLE_CPU_FEATURES: "X86_V3,X86_V4"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e0-retained-packed-rhs-oracle-20260903
+          fetch-depth: 0
+
+      - name: Recover exact retained state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show '78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz' > /tmp/state_1200.npz
+          echo 'c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/state_1200.npz' | sha256sum -c -
+
+      - name: Install exact Python oracle environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1e0-baseline-venv
+          /tmp/d081r1e0-baseline-venv/bin/python -m pip install --disable-pip-version-check --only-binary=:all: numpy==2.4.4 scipy==1.17.1
+
+      - name: Report CPU and active NumPy targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          lscpu | grep -E 'Architecture|Model name|Vendor ID|CPU family|Model:|Flags:' || true
+          /tmp/d081r1e0-baseline-venv/bin/python - <<'PY'
+          import json
+          import numpy as np
+          import platform
+          from numpy.lib.introspect import opt_func_info
+          print('PLATFORM=', platform.platform())
+          print('NUMPY_VERSION=', np.__version__)
+          print('NPY_DISABLE_CPU_FEATURES=', __import__('os').environ['NPY_DISABLE_CPU_FEATURES'])
+          print('NUMPY_RUNTIME=', json.dumps(np.show_runtime(), default=str, sort_keys=True))
+          print('EXP_TARGETS=', json.dumps(opt_func_info(func_name='exp|expm1', signature='float64'), sort_keys=True))
+          PY
+
+      - name: Generate deterministic baseline fixtures twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1e0-baseline-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_packed_rhs_case.py
+          CHECK=native/rabbit_cpu/tests/fixtures/d081r1/validate_retained_packed_rhs_case.py
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/baseline_a.json
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/baseline_b.json
+          cmp /tmp/baseline_a.json /tmp/baseline_b.json
+          "$PY" "$CHECK" --fixture /tmp/baseline_a.json
+          echo "BASELINE_REPLICA=${{ matrix.replica }}"
+          sha256sum /tmp/baseline_a.json /tmp/baseline_b.json
+          "$PY" - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p = Path('/tmp/baseline_a.json')
+          data = json.loads(p.read_text())
+          print('BASELINE_FIXTURE_SHA256=' + hashlib.sha256(p.read_bytes()).hexdigest())
+          for key in ('packed_state','grid_nodes','grid_weights','occupation','cloglog_chain','total_native','packed_rhs_trajectory_core'):
+              print(f'ARRAY_SHA256[{key}]={data["arrays"][key]["sha256"]}')
+          PY
