@@ -36,14 +36,29 @@ fn scaled_residual(actual: f64, expected: f64) -> f64 {
 
 fn assert_slice_close(actual: &[f64], expected: &[f64], tolerance: f64) {
     assert_eq!(actual.len(), expected.len());
+    let block_scale = actual
+        .iter()
+        .chain(expected)
+        .map(|value| value.abs())
+        .fold(f64::MIN_POSITIVE, f64::max);
+    // Keep the relative gate away from zero, while admitting only the
+    // measured order-eight dot-product association floor near exact zero.
+    let absolute_floor = 32.0 * f64::EPSILON * block_scale;
     let maximum = actual
         .iter()
         .zip(expected)
-        .map(|(&left, &right)| scaled_residual(left, right))
+        .map(|(&left, &right)| {
+            let absolute = (left - right).abs();
+            if absolute <= absolute_floor {
+                0.0
+            } else {
+                scaled_residual(left, right)
+            }
+        })
         .fold(0.0_f64, f64::max);
     assert!(
         maximum <= tolerance,
-        "maximum scaled residual {maximum:.17e} exceeds {tolerance:.17e}"
+        "maximum scaled residual {maximum:.17e} exceeds {tolerance:.17e};          near-zero absolute floor is {absolute_floor:.17e}"
     );
 }
 
@@ -309,6 +324,15 @@ mod tests {
 
     #[test]
     fn foundations_fail_closed_and_mutations_are_detected() {
+        let roundoff_actual = [-8.899_131_431_761_020e-16, 11.313_708_498_984_761];
+        let roundoff_expected = [8.881_784_197_001_252e-16, 11.313_708_498_984_763];
+        assert_slice_close(&roundoff_actual, &roundoff_expected, 2.0e-12);
+
+        let material_mutation = std::panic::catch_unwind(|| {
+            assert_slice_close(&[0.0, 1.0], &[0.0, 1.0 + 1.0e-8], 2.0e-12);
+        });
+        assert!(material_mutation.is_err());
+
         assert!(F10ActionGrid::affine_legendre(7, 8.0).is_err());
         assert!(F10ActionGrid::affine_legendre(8, -1.0).is_err());
         assert!(decode_cloglog_to_logit(f64::NAN).is_err());
