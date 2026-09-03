@@ -19,9 +19,9 @@ use crate::f10_action_kinematics::{
 };
 use crate::f10_action_spectral::{modal_basis, modal_coefficients, native_action};
 use crate::f10_kernel_primitives::{
-    F10ElectronCategory, F10ElectronEvent, F10EventMeasureInput, F10Flavour,
-    F10InvariantProducts, F10KernelError, F10Species, f10_electron_events,
-    f10_electron_matrix, f10_event_measure, stable_pauli_gain_minus_loss,
+    F10ElectronCategory, F10ElectronEvent, F10EventMeasureInput, F10Flavour, F10InvariantProducts,
+    F10KernelError, F10Species, f10_electron_events, f10_electron_matrix, f10_event_measure,
+    stable_pauli_gain_minus_loss,
 };
 
 pub(crate) const F10_ELECTRON_MASS_MEV: f64 = 0.510_998_95;
@@ -170,8 +170,7 @@ fn decode_pair_logits(
     pair_cloglog
         .iter()
         .map(|coordinate| {
-            decode_cloglog_to_logit(*coordinate)
-                .map_err(|_| F10ElectronActionError::Foundation)
+            decode_cloglog_to_logit(*coordinate).map_err(|_| F10ElectronActionError::Foundation)
         })
         .collect()
 }
@@ -183,11 +182,8 @@ fn spectral_coefficients(
     let mut coefficients = Vec::with_capacity(PAIR_COUNT * grid.order);
     for pair in 0..PAIR_COUNT {
         coefficients.extend(
-            modal_coefficients(
-                grid,
-                &logits[pair * grid.order..(pair + 1) * grid.order],
-            )
-            .map_err(|_| F10ElectronActionError::Foundation)?,
+            modal_coefficients(grid, &logits[pair * grid.order..(pair + 1) * grid.order])
+                .map_err(|_| F10ElectronActionError::Foundation)?,
         );
     }
     Ok(coefficients)
@@ -209,10 +205,7 @@ fn interpolated_pair_logits(
     for pair in 0..PAIR_COUNT {
         for point in 0..point_count {
             let value = (0..order)
-                .map(|mode| {
-                    coefficients[pair * order + mode]
-                        * basis[point * order + mode]
-                })
+                .map(|mode| coefficients[pair * order + mode] * basis[point * order + mode])
                 .sum::<f64>();
             if !strict_open_logit(value) {
                 return Err(F10ElectronActionError::Foundation);
@@ -223,10 +216,7 @@ fn interpolated_pair_logits(
     Ok(values)
 }
 
-fn invariant_products(
-    batch: &F10KinematicBatch,
-    index: usize,
-) -> F10InvariantProducts {
+fn invariant_products(batch: &F10KinematicBatch, index: usize) -> F10InvariantProducts {
     F10InvariantProducts {
         d12: batch.d12[index],
         d13: batch.d13[index],
@@ -259,8 +249,7 @@ fn matrix_values(
             corrections = corrections
                 .checked_add(1)
                 .ok_or(F10ElectronActionError::DimensionOverflow)?;
-            largest_correction =
-                largest_correction.max(matrix.correction);
+            largest_correction = largest_correction.max(matrix.correction);
         }
         values.push(matrix.value);
     }
@@ -282,8 +271,7 @@ fn action_moments(
     for species in 0..SPECIES_COUNT {
         for node in 0..grid.order {
             let value = native[species * grid.order + node];
-            let number_weight =
-                grid.weights[node] * grid.nodes[node].powi(2);
+            let number_weight = grid.weights[node] * grid.nodes[node].powi(2);
             let energy_weight = number_weight * grid.nodes[node];
             signed_number += value * number_weight;
             absolute_number += value.abs() * number_weight;
@@ -292,14 +280,10 @@ fn action_moments(
         }
     }
     let moments = F10ElectronActionMoments {
-        signed_number_rate:
-            temperature_cm.powi(3) * signed_number / TWO_PI_SQUARED,
-        absolute_number_rate:
-            temperature_cm.powi(3) * absolute_number / TWO_PI_SQUARED,
-        signed_energy_rate:
-            temperature_cm.powi(4) * signed_energy / TWO_PI_SQUARED,
-        absolute_energy_rate:
-            temperature_cm.powi(4) * absolute_energy / TWO_PI_SQUARED,
+        signed_number_rate: temperature_cm.powi(3) * signed_number / TWO_PI_SQUARED,
+        absolute_number_rate: temperature_cm.powi(3) * absolute_number / TWO_PI_SQUARED,
+        signed_energy_rate: temperature_cm.powi(4) * signed_energy / TWO_PI_SQUARED,
+        absolute_energy_rate: temperature_cm.powi(4) * absolute_energy / TWO_PI_SQUARED,
     };
     if [
         moments.signed_number_rate,
@@ -321,9 +305,7 @@ fn node_neutrino_h_rate(
     coefficients: &[f64],
     order: usize,
 ) -> Result<f64, F10ElectronActionError> {
-    if modal.len() != SPECIES_COUNT * order
-        || coefficients.len() != PAIR_COUNT * order
-    {
+    if modal.len() != SPECIES_COUNT * order || coefficients.len() != PAIR_COUNT * order {
         return Err(F10ElectronActionError::InvalidInput);
     }
     let mut result = 0.0_f64;
@@ -331,10 +313,7 @@ fn node_neutrino_h_rate(
         let species_offset = species_index(species) * order;
         let pair_offset = pair_index(species) * order;
         result += (0..order)
-            .map(|mode| {
-                modal[species_offset + mode]
-                    * coefficients[pair_offset + mode]
-            })
+            .map(|mode| modal[species_offset + mode] * coefficients[pair_offset + mode])
             .sum::<f64>();
     }
     if result.is_finite() {
@@ -387,19 +366,17 @@ pub(crate) fn assemble_electron_action(
         return Err(F10ElectronActionError::InvalidConfiguration);
     }
 
-    let rule = angular_rule(config.collision)
-        .map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
+    let rule =
+        angular_rule(config.collision).map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
     let angular_size = rule
         .incoming_mu
         .len()
         .checked_mul(rule.final_mu.len())
         .and_then(|value| value.checked_mul(rule.azimuth.len()))
         .ok_or(F10ElectronActionError::DimensionOverflow)?;
-    let (electron_p2, electron_weights) = electron_half_line_rule(
-        config.collision.electron_radial_order,
-        temperature_gamma,
-    )
-    .map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
+    let (electron_p2, electron_weights) =
+        electron_half_line_rule(config.collision.electron_radial_order, temperature_gamma)
+            .map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
     let neutrino_p2: Vec<f64> = grid
         .nodes
         .iter()
@@ -420,20 +397,18 @@ pub(crate) fn assemble_electron_action(
 
     let logits = decode_pair_logits(grid, pair_cloglog)?;
     let coefficients = spectral_coefficients(grid, &logits)?;
-    let native_basis = modal_basis(grid, &grid.nodes)
-        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let native_basis =
+        modal_basis(grid, &grid.nodes).map_err(|_| F10ElectronActionError::Foundation)?;
 
     let events = f10_electron_events();
     if events.len() != ELECTRON_EVENT_COUNT {
         return Err(F10ElectronActionError::InvalidInput);
     }
-    let (elastic_events, pair_events) =
-        events.split_at(ELASTIC_EVENT_COUNT);
+    let (elastic_events, pair_events) = events.split_at(ELASTIC_EVENT_COUNT);
     if pair_events.len() != PAIR_EVENT_COUNT {
         return Err(F10ElectronActionError::InvalidInput);
     }
-    let family_names: Vec<String> =
-        events.iter().copied().map(family_name).collect();
+    let family_names: Vec<String> = events.iter().copied().map(family_name).collect();
 
     let species_modal_size = SPECIES_COUNT
         .checked_mul(grid.order)
@@ -460,15 +435,8 @@ pub(crate) fn assemble_electron_action(
         let y1 = grid.nodes[node_index];
         let p1 = temperature_cm * y1;
         let outer_weight =
-            temperature_cm.powi(3)
-                * grid.weights[node_index]
-                * y1.powi(2)
-                / TWO_PI_SQUARED;
-        if !p1.is_finite()
-            || p1 <= 0.0
-            || !outer_weight.is_finite()
-            || outer_weight <= 0.0
-        {
+            temperature_cm.powi(3) * grid.weights[node_index] * y1.powi(2) / TWO_PI_SQUARED;
+        if !p1.is_finite() || p1 <= 0.0 || !outer_weight.is_finite() || outer_weight <= 0.0 {
             return Err(F10ElectronActionError::InvalidInput);
         }
 
@@ -495,19 +463,15 @@ pub(crate) fn assemble_electron_action(
         let mut elastic_y3 = Vec::new();
         let mut rejected_supported_samples = 0_usize;
         for sample in 0..elastic_sample_count {
-            let y3 =
-                elastic_batch.p3_magnitude[sample] / temperature_cm;
-            let in_domain = elastic_batch.support[sample]
-                && y3 > 0.0
-                && y3 < grid.y_max;
+            let y3 = elastic_batch.p3_magnitude[sample] / temperature_cm;
+            let in_domain = elastic_batch.support[sample] && y3 > 0.0 && y3 < grid.y_max;
             if in_domain {
                 elastic_valid_positions.push(sample);
                 elastic_y3.push(y3);
             } else if elastic_batch.support[sample] {
-                rejected_supported_samples =
-                    rejected_supported_samples.checked_add(1).ok_or(
-                        F10ElectronActionError::DimensionOverflow,
-                    )?;
+                rejected_supported_samples = rejected_supported_samples
+                    .checked_add(1)
+                    .ok_or(F10ElectronActionError::DimensionOverflow)?;
             }
         }
         elastic_domain_rejections = elastic_domain_rejections
@@ -519,28 +483,24 @@ pub(crate) fn assemble_electron_action(
             .ok_or(F10ElectronActionError::DimensionOverflow)?;
 
         let elastic_valid_count = elastic_valid_positions.len();
-        let elastic_basis3 = modal_basis(grid, &elastic_y3)
-            .map_err(|_| F10ElectronActionError::Foundation)?;
+        let elastic_basis3 =
+            modal_basis(grid, &elastic_y3).map_err(|_| F10ElectronActionError::Foundation)?;
         let elastic_outgoing = interpolated_pair_logits(
             &coefficients,
             &elastic_basis3,
             elastic_valid_count,
             grid.order,
         )?;
-        let mut elastic_measures =
-            Vec::with_capacity(elastic_valid_count);
+        let mut elastic_measures = Vec::with_capacity(elastic_valid_count);
         for &sample in &elastic_valid_positions {
-            elastic_measures.push(f10_event_measure(
-                F10EventMeasureInput {
-                    p1,
-                    p2: elastic_batch.p2[sample],
-                    e2: elastic_batch.e2[sample],
-                    phase_space: elastic_batch.phase_space[sample],
-                    quadrature_weight:
-                        elastic_batch.quadrature_weight[sample],
-                    outer_weight,
-                },
-            )?);
+            elastic_measures.push(f10_event_measure(F10EventMeasureInput {
+                p1,
+                p2: elastic_batch.p2[sample],
+                e2: elastic_batch.e2[sample],
+                phase_space: elastic_batch.phase_space[sample],
+                quadrature_weight: elastic_batch.quadrature_weight[sample],
+                outer_weight,
+            })?);
         }
 
         let elastic_rate_count = elastic_events
@@ -549,63 +509,42 @@ pub(crate) fn assemble_electron_action(
             .ok_or(F10ElectronActionError::DimensionOverflow)?;
         let mut elastic_rates = vec![0.0; elastic_rate_count];
         for (event_index, &event) in elastic_events.iter().enumerate() {
-            let (matrix, corrections, largest_correction) =
-                matrix_values(
-                    event,
-                    &elastic_batch,
-                    config.electron_mass_mev,
-                    config.matrix_roundoff_ulps,
-                )?;
-            matrix_roundoff_corrections =
-                matrix_roundoff_corrections
-                    .checked_add(corrections)
-                    .ok_or(
-                        F10ElectronActionError::DimensionOverflow,
-                    )?;
+            let (matrix, corrections, largest_correction) = matrix_values(
+                event,
+                &elastic_batch,
+                config.electron_mass_mev,
+                config.matrix_roundoff_ulps,
+            )?;
+            matrix_roundoff_corrections = matrix_roundoff_corrections
+                .checked_add(corrections)
+                .ok_or(F10ElectronActionError::DimensionOverflow)?;
             largest_matrix_roundoff_correction =
-                largest_matrix_roundoff_correction
-                    .max(largest_correction);
+                largest_matrix_roundoff_correction.max(largest_correction);
 
             let species = event.target;
             let pair = pair_index(species);
             let u1 = logits[pair * grid.order + node_index];
             let rate_offset = event_index * elastic_sample_count;
-            for (valid_index, &sample) in
-                elastic_valid_positions.iter().enumerate()
-            {
-                let u2 =
-                    -elastic_batch.e2[sample] / temperature_gamma;
-                let u3 = elastic_outgoing[
-                    pair * elastic_valid_count + valid_index
-                ];
-                let u4 =
-                    -elastic_batch.e4[sample] / temperature_gamma;
-                let pauli =
-                    stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
-                let rate = elastic_measures[valid_index]
-                    * matrix[sample]
-                    * pauli;
+            for (valid_index, &sample) in elastic_valid_positions.iter().enumerate() {
+                let u2 = -elastic_batch.e2[sample] / temperature_gamma;
+                let u3 = elastic_outgoing[pair * elastic_valid_count + valid_index];
+                let u4 = -elastic_batch.e4[sample] / temperature_gamma;
+                let pauli = stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
+                let rate = elastic_measures[valid_index] * matrix[sample] * pauli;
                 if !rate.is_finite() {
-                    return Err(
-                        F10ElectronActionError::NonFiniteOutput,
-                    );
+                    return Err(F10ElectronActionError::NonFiniteOutput);
                 }
                 elastic_rates[rate_offset + sample] = rate;
 
-                let dqnu =
-                    rate * (p1 - elastic_batch.e3[sample]);
-                let dqem = rate
-                    * (elastic_batch.e2[sample]
-                        - elastic_batch.e4[sample]);
+                let dqnu = rate * (p1 - elastic_batch.e3[sample]);
+                let dqem = rate * (elastic_batch.e2[sample] - elastic_batch.e4[sample]);
                 let dhnu = rate * (u1 - u3);
                 let dhem = rate * (u2 - u4);
                 if [dqnu, dqem, dhnu, dhem]
                     .into_iter()
                     .any(|value| !value.is_finite())
                 {
-                    return Err(
-                        F10ElectronActionError::NonFiniteOutput,
-                    );
+                    return Err(F10ElectronActionError::NonFiniteOutput);
                 }
                 neutrino_energy_transfer += dqnu;
                 electromagnetic_energy_transfer += dqem;
@@ -616,25 +555,18 @@ pub(crate) fn assemble_electron_action(
         }
 
         for (event_index, &event) in elastic_events.iter().enumerate() {
-            let rate_row = &elastic_rates[
-                event_index * elastic_sample_count
-                    ..(event_index + 1) * elastic_sample_count
-            ];
+            let rate_row = &elastic_rates
+                [event_index * elastic_sample_count..(event_index + 1) * elastic_sample_count];
             let incoming_sum = rate_row.iter().sum::<f64>();
             let target = species_index(event.target);
-            let family_offset =
-                (event_index * SPECIES_COUNT + target) * grid.order;
+            let family_offset = (event_index * SPECIES_COUNT + target) * grid.order;
             for mode in 0..grid.order {
-                let incoming = incoming_sum
-                    * native_basis[node_index * grid.order + mode];
+                let incoming = incoming_sum * native_basis[node_index * grid.order + mode];
                 let outgoing = elastic_valid_positions
                     .iter()
                     .enumerate()
                     .map(|(valid_index, &sample)| {
-                        rate_row[sample]
-                            * elastic_basis3[
-                                valid_index * grid.order + mode
-                            ]
+                        rate_row[sample] * elastic_basis3[valid_index * grid.order + mode]
                     })
                     .sum::<f64>();
                 let contribution = incoming - outgoing;
@@ -670,20 +602,16 @@ pub(crate) fn assemble_electron_action(
             .enumerate()
             .filter_map(|(index, support)| support.then_some(index))
             .collect();
-        let mut pair_measures =
-            Vec::with_capacity(pair_valid_positions.len());
+        let mut pair_measures = Vec::with_capacity(pair_valid_positions.len());
         for &sample in &pair_valid_positions {
-            pair_measures.push(f10_event_measure(
-                F10EventMeasureInput {
-                    p1,
-                    p2: pair_batch.p2[sample],
-                    e2: pair_batch.e2[sample],
-                    phase_space: pair_batch.phase_space[sample],
-                    quadrature_weight:
-                        pair_batch.quadrature_weight[sample],
-                    outer_weight,
-                },
-            )?);
+            pair_measures.push(f10_event_measure(F10EventMeasureInput {
+                p1,
+                p2: pair_batch.p2[sample],
+                e2: pair_batch.e2[sample],
+                phase_space: pair_batch.phase_space[sample],
+                quadrature_weight: pair_batch.quadrature_weight[sample],
+                outer_weight,
+            })?);
         }
 
         let pair_rate_count = pair_events
@@ -691,71 +619,47 @@ pub(crate) fn assemble_electron_action(
             .checked_mul(pair_sample_count)
             .ok_or(F10ElectronActionError::DimensionOverflow)?;
         let mut pair_rates = vec![0.0; pair_rate_count];
-        for (pair_event_index, &event) in
-            pair_events.iter().enumerate()
-        {
-            let (matrix, corrections, largest_correction) =
-                matrix_values(
-                    event,
-                    &pair_batch,
-                    config.electron_mass_mev,
-                    config.matrix_roundoff_ulps,
-                )?;
-            matrix_roundoff_corrections =
-                matrix_roundoff_corrections
-                    .checked_add(corrections)
-                    .ok_or(
-                        F10ElectronActionError::DimensionOverflow,
-                    )?;
+        for (pair_event_index, &event) in pair_events.iter().enumerate() {
+            let (matrix, corrections, largest_correction) = matrix_values(
+                event,
+                &pair_batch,
+                config.electron_mass_mev,
+                config.matrix_roundoff_ulps,
+            )?;
+            matrix_roundoff_corrections = matrix_roundoff_corrections
+                .checked_add(corrections)
+                .ok_or(F10ElectronActionError::DimensionOverflow)?;
             largest_matrix_roundoff_correction =
-                largest_matrix_roundoff_correction
-                    .max(largest_correction);
+                largest_matrix_roundoff_correction.max(largest_correction);
 
             let target = event.target;
             let partner = target.cp_partner();
             let target_pair = pair_index(target);
             let partner_pair = pair_index(partner);
-            let u1 =
-                logits[target_pair * grid.order + node_index];
+            let u1 = logits[target_pair * grid.order + node_index];
             let rate_offset = pair_event_index * pair_sample_count;
-            let family_index =
-                ELASTIC_EVENT_COUNT + pair_event_index;
-            for (valid_index, &sample) in
-                pair_valid_positions.iter().enumerate()
-            {
+            let family_index = ELASTIC_EVENT_COUNT + pair_event_index;
+            for (valid_index, &sample) in pair_valid_positions.iter().enumerate() {
                 let p2_index = sample / angular_size;
-                let u2 =
-                    logits[partner_pair * grid.order + p2_index];
-                let u3 =
-                    -pair_batch.e3[sample] / temperature_gamma;
-                let u4 =
-                    -pair_batch.e4[sample] / temperature_gamma;
-                let pauli =
-                    stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
-                let rate = pair_measures[valid_index]
-                    * matrix[sample]
-                    * pauli;
+                let u2 = logits[partner_pair * grid.order + p2_index];
+                let u3 = -pair_batch.e3[sample] / temperature_gamma;
+                let u4 = -pair_batch.e4[sample] / temperature_gamma;
+                let pauli = stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
+                let rate = pair_measures[valid_index] * matrix[sample] * pauli;
                 if !rate.is_finite() {
-                    return Err(
-                        F10ElectronActionError::NonFiniteOutput,
-                    );
+                    return Err(F10ElectronActionError::NonFiniteOutput);
                 }
                 pair_rates[rate_offset + sample] = rate;
 
-                let dqnu =
-                    rate * (p1 + pair_batch.p2[sample]);
-                let dqem = rate
-                    * (-pair_batch.e3[sample]
-                        - pair_batch.e4[sample]);
+                let dqnu = rate * (p1 + pair_batch.p2[sample]);
+                let dqem = rate * (-pair_batch.e3[sample] - pair_batch.e4[sample]);
                 let dhnu = rate * (u1 + u2);
                 let dhem = rate * (-u3 - u4);
                 if [dqnu, dqem, dhnu, dhem]
                     .into_iter()
                     .any(|value| !value.is_finite())
                 {
-                    return Err(
-                        F10ElectronActionError::NonFiniteOutput,
-                    );
+                    return Err(F10ElectronActionError::NonFiniteOutput);
                 }
                 neutrino_energy_transfer += dqnu;
                 electromagnetic_energy_transfer += dqem;
@@ -765,76 +669,43 @@ pub(crate) fn assemble_electron_action(
             }
         }
 
-        for (pair_event_index, &event) in
-            pair_events.iter().enumerate()
-        {
-            let rate_row = &pair_rates[
-                pair_event_index * pair_sample_count
-                    ..(pair_event_index + 1) * pair_sample_count
-            ];
+        for (pair_event_index, &event) in pair_events.iter().enumerate() {
+            let rate_row = &pair_rates
+                [pair_event_index * pair_sample_count..(pair_event_index + 1) * pair_sample_count];
             let incoming1_sum = rate_row.iter().sum::<f64>();
             let mut p2_sums = vec![0.0; grid.order];
             for (sample, &rate) in rate_row.iter().enumerate() {
                 p2_sums[sample / angular_size] += rate;
             }
-            let family_index =
-                ELASTIC_EVENT_COUNT + pair_event_index;
-            for (species, incoming1) in [
-                (event.target, true),
-                (event.target.cp_partner(), false),
-            ] {
+            let family_index = ELASTIC_EVENT_COUNT + pair_event_index;
+            for (species, incoming1) in [(event.target, true), (event.target.cp_partner(), false)] {
                 let target = species_index(species);
-                let family_offset =
-                    (family_index * SPECIES_COUNT + target)
-                        * grid.order;
+                let family_offset = (family_index * SPECIES_COUNT + target) * grid.order;
                 for mode in 0..grid.order {
                     let contribution = if incoming1 {
-                        incoming1_sum
-                            * native_basis[
-                                node_index * grid.order + mode
-                            ]
+                        incoming1_sum * native_basis[node_index * grid.order + mode]
                     } else {
                         (0..grid.order)
                             .map(|p2_index| {
-                                p2_sums[p2_index]
-                                    * native_basis[
-                                        p2_index * grid.order + mode
-                                    ]
+                                p2_sums[p2_index] * native_basis[p2_index * grid.order + mode]
                             })
                             .sum::<f64>()
                     };
-                    let target_index =
-                        target * grid.order + mode;
+                    let target_index = target * grid.order + mode;
                     modal[target_index] += contribution;
                     pair_modal[target_index] += contribution;
-                    family_modal[family_offset + mode] +=
-                        contribution;
+                    family_modal[family_offset + mode] += contribution;
                 }
             }
         }
     }
 
-    let native = native_action(
-        grid,
-        &modal,
-        SPECIES_COUNT,
-        temperature_cm,
-    )
-    .map_err(|_| F10ElectronActionError::Foundation)?;
-    let elastic_native = native_action(
-        grid,
-        &elastic_modal,
-        SPECIES_COUNT,
-        temperature_cm,
-    )
-    .map_err(|_| F10ElectronActionError::Foundation)?;
-    let pair_native = native_action(
-        grid,
-        &pair_modal,
-        SPECIES_COUNT,
-        temperature_cm,
-    )
-    .map_err(|_| F10ElectronActionError::Foundation)?;
+    let native = native_action(grid, &modal, SPECIES_COUNT, temperature_cm)
+        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let elastic_native = native_action(grid, &elastic_modal, SPECIES_COUNT, temperature_cm)
+        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let pair_native = native_action(grid, &pair_modal, SPECIES_COUNT, temperature_cm)
+        .map_err(|_| F10ElectronActionError::Foundation)?;
     let mut family_native = vec![0.0; family_modal_size];
     for family in 0..ELECTRON_EVENT_COUNT {
         let start = family * species_modal_size;
@@ -845,34 +716,20 @@ pub(crate) fn assemble_electron_action(
             temperature_cm,
         )
         .map_err(|_| F10ElectronActionError::Foundation)?;
-        family_native[start..start + species_modal_size]
-            .copy_from_slice(&converted);
+        family_native[start..start + species_modal_size].copy_from_slice(&converted);
     }
 
     let moments = action_moments(grid, &native, temperature_cm)?;
-    let node_neutrino_h_rate = node_neutrino_h_rate(
-        &modal,
-        &coefficients,
-        grid.order,
-    )?;
-    let first_law_residual =
-        (neutrino_energy_transfer
-            + electromagnetic_energy_transfer)
-            .abs()
-            / (neutrino_energy_transfer.abs()
-                + electromagnetic_energy_transfer.abs())
+    let node_neutrino_h_rate = node_neutrino_h_rate(&modal, &coefficients, grid.order)?;
+    let first_law_residual = (neutrino_energy_transfer + electromagnetic_energy_transfer).abs()
+        / (neutrino_energy_transfer.abs() + electromagnetic_energy_transfer.abs())
             .max(f64::MIN_POSITIVE);
-    let entropy_production =
-        -(neutrino_h_rate + electromagnetic_h_rate);
-    let entropy_duality_residual =
-        (node_neutrino_h_rate - neutrino_h_rate).abs()
-            / (node_neutrino_h_rate.abs()
-                + neutrino_h_rate.abs())
-            .max(f64::MIN_POSITIVE);
-    let whole_reaction_domain_rejections =
-        elastic_domain_rejections
-            .checked_add(pair_domain_rejections)
-            .ok_or(F10ElectronActionError::DimensionOverflow)?;
+    let entropy_production = -(neutrino_h_rate + electromagnetic_h_rate);
+    let entropy_duality_residual = (node_neutrino_h_rate - neutrino_h_rate).abs()
+        / (node_neutrino_h_rate.abs() + neutrino_h_rate.abs()).max(f64::MIN_POSITIVE);
+    let whole_reaction_domain_rejections = elastic_domain_rejections
+        .checked_add(pair_domain_rejections)
+        .ok_or(F10ElectronActionError::DimensionOverflow)?;
 
     let scalars = [
         largest_matrix_roundoff_correction,
