@@ -1,2 +1,2 @@
-D-081R1D4 exact formatted-source admission retrigger.
-No physics, fixture, tolerance, or acceptance change.
+D-081R1D4 exact-source diagnostic retrigger after adding #[track_caller].
+No physics, fixture, tolerance, or acceptance threshold changed.
