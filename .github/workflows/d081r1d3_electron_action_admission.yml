@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = de698b912ed9739c6a0b699aaceacab96a7b8e6e
+          test "$(git rev-parse HEAD^)" = 45aed761065959485c2cab543c01b9a0f71bfc1b
           test "$(git diff --name-only HEAD^ HEAD)" = .github/workflows/d081r1d3_electron_action_admission.yml
           git merge-base --is-ancestor 59e21cdf18e34cb5cbcc5ccf08f155f5975f29fb HEAD
           test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
