@@ -1,0 +1,94 @@
+name: d081r1e0-cross-host-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1e0-retained-packed-rhs-oracle-20260903
+    paths:
+      - native/rabbit_cpu/tests/fixtures/d081r1/diagnose_retained_packed_rhs_cross_host.py
+      - .github/workflows/d081r1e0_cross_host_diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: d081r1e0-cross-host-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e0-retained-packed-rhs-oracle-20260903
+          fetch-depth: 0
+
+      - name: Materialize both historical fixtures and exact retained state
+        shell: bash
+        run: |
+          set -euo pipefail
+          FIXTURE=native/rabbit_cpu/tests/fixtures/d081r1/retained_packed_rhs_case.json
+          git show "0abcb656b95eb02a4877f1d587262328de31c0be:${FIXTURE}" > /tmp/first.json
+          git show "d93862f7b2e77cb1bacd0c6af9b8b445c191348e:${FIXTURE}" > /tmp/second.json
+          echo '521815baf5dada08aab1b51f49ffc9f4f6244bd09c91ed048e24323c36ee062d  /tmp/first.json' | sha256sum -c -
+          echo 'ce2a64114d85c490f4cd1ba055a7a5331e85dc224a956c15a897621a0476330a  /tmp/second.json' | sha256sum -c -
+          git show '78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b:.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz' > /tmp/state_1200.npz
+          echo 'c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/state_1200.npz' | sha256sum -c -
+
+      - name: Install exact Python oracle environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1e0-diagnostic-venv
+          /tmp/d081r1e0-diagnostic-venv/bin/python -m pip install --disable-pip-version-check --only-binary=:all: numpy==2.4.4 scipy==1.17.1
+
+      - name: Generate independent current-host fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1e0-diagnostic-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_retained_packed_rhs_case.py
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/current_a.json
+          "$PY" "$GEN" --retained-state /tmp/state_1200.npz --output /tmp/current_b.json
+          cmp /tmp/current_a.json /tmp/current_b.json
+          sha256sum /tmp/current_a.json /tmp/current_b.json
+
+      - name: Compare all computational layers
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1e0-diagnostic-venv/bin/python
+          DIAG=native/rabbit_cpu/tests/fixtures/d081r1/diagnose_retained_packed_rhs_cross_host.py
+          "$PY" "$DIAG" \
+            --first /tmp/first.json \
+            --second /tmp/second.json \
+            --current /tmp/current_a.json \
+            --output /tmp/cross_host_diagnostic.json \
+            | tee /tmp/cross_host_diagnostic.log
+
+      - name: Commit durable diagnostic report
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=docs/audit/artifacts/d081r1e0/cross_host_diagnostic.json
+          mkdir -p "$(dirname "$OUT")"
+          cp /tmp/cross_host_diagnostic.json "$OUT"
+          git diff --check
+          git add "$OUT"
+          if git diff --cached --quiet; then
+            echo 'diagnostic report already matches'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(d081r1e0): preserve cross-host drift diagnostic'
+          git push origin HEAD:research/d081r1e0-retained-packed-rhs-oracle-20260903
