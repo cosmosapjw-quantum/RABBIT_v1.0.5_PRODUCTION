@@ -1,0 +1,157 @@
+name: d081r1d3-cross-runner-semantic-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1d3-electron-action-20260903
+    paths:
+      - .github/workflows/d081r1d3_cross_runner_semantic_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d3-electron-action-20260903
+          fetch-depth: 0
+
+      - name: Measure full-fixture and component-fixture semantic envelopes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "numpy==2.4.4" "scipy==1.17.1"
+          cat >/tmp/d081r1d3_semantic_diag.py <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          import platform
+          import sys
+          from pathlib import Path
+
+          import numpy as np
+
+          root = Path.cwd()
+          sys.path.insert(0, str(root / "src"))
+          from rabbit.decoupling import _independent_noqke as oracle
+
+          def bits_float(bits: str) -> float:
+              digits = bits.removeprefix("0x")
+              return float(np.asarray([int(digits, 16)], dtype=np.uint64).view(np.float64)[0])
+
+          def decode_array(encoded: dict[str, object]) -> np.ndarray:
+              shape = tuple(int(value) for value in encoded["shape"])
+              raw = np.asarray(
+                  [int(str(value).removeprefix("0x"), 16) for value in encoded["bits"]],
+                  dtype=np.uint64,
+              )
+              return np.ascontiguousarray(raw.view(np.float64).reshape(shape))
+
+          def compare(actual: np.ndarray, expected: np.ndarray, scale: float) -> dict[str, object]:
+              delta = np.asarray(actual, dtype=np.float64) - np.asarray(expected, dtype=np.float64)
+              abs_delta = np.abs(delta)
+              return {
+                  "max_abs": float(np.max(abs_delta, initial=0.0)),
+                  "over_scale": float(np.max(abs_delta, initial=0.0) / max(scale, np.finfo(np.float64).tiny)),
+                  "mismatch_count": int(np.count_nonzero(
+                      np.asarray(actual, dtype=np.float64).view(np.uint64)
+                      != np.asarray(expected, dtype=np.float64).view(np.uint64)
+                  )),
+              }
+
+          full = json.loads((root / "native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json").read_text())
+          component = json.loads((root / "native/rabbit_cpu/tests/fixtures/d081r1/electron_collision_action_metrology.json").read_text())
+          component_by_name = {case["name"]: case for case in component["cases"]}
+          full_by_name = {case["name"]: case for case in full["cases"]}
+          thermal = full_by_name["thermal_split"]
+          modal_scale = float(np.max(np.abs(decode_array(thermal["arrays"]["electron_modal"]))))
+          native_scale = float(np.max(np.abs(decode_array(thermal["arrays"]["electron_native"]))))
+          family_scale = max(
+              float(np.max(np.abs(decode_array(value))))
+              for value in thermal["electron_families"].values()
+          )
+          bath_scale = max(
+              abs(bits_float(value)) for value in thermal["electron_bath_energy_by_family"].values()
+          )
+          grid = oracle.build_independent_grid(order=8, y_max=8.0)
+          report = {
+              "environment": {
+                  "mode": os.environ.get("DIAG_MODE", "unknown"),
+                  "machine": platform.machine(),
+                  "processor": platform.processor(),
+                  "openblas_threads": os.environ.get("OPENBLAS_NUM_THREADS"),
+                  "omp_threads": os.environ.get("OMP_NUM_THREADS"),
+                  "numpy": np.__version__,
+              },
+              "scales": {
+                  "thermal_modal": modal_scale,
+                  "thermal_native": native_scale,
+                  "thermal_family": family_scale,
+                  "thermal_bath_family": bath_scale,
+              },
+              "cases": [],
+          }
+          for case in full["cases"]:
+              name = case["name"]
+              pair_cloglog = decode_array(case["pair_cloglog"])
+              tcm = bits_float(case["temperature_cm_bits"])
+              tgamma = bits_float(case["temperature_gamma_bits"])
+              spectra = oracle._SpectralLogits(grid, oracle._native_pair_logits(pair_cloglog))
+              modal, family_modal, bath_by_family, meta = oracle._assemble_electron(
+                  grid, spectra, tcm, tgamma, oracle.M_ELECTRON_MEV,
+                  oracle.IndependentCollisionConfig(),
+              )
+              native = oracle._native_action(grid, modal, tcm)
+              family_native = {
+                  key: oracle._native_action(grid, value, tcm)
+                  for key, value in family_modal.items()
+              }
+              expected_modal = decode_array(case["arrays"]["electron_modal"])
+              expected_native = decode_array(case["arrays"]["electron_native"])
+              family_reports = {}
+              for key, actual in family_native.items():
+                  family_reports[key] = compare(
+                      actual, decode_array(case["electron_families"][key]), family_scale
+                  )
+              bath_differences = {
+                  key: abs(float(bath_by_family[key]) - bits_float(case["electron_bath_energy_by_family"][key]))
+                  for key in family_modal
+              }
+              component_case = component_by_name[name]
+              qnu = float(meta["neutrino_energy_transfer"])
+              qem = float(meta["electromagnetic_energy_transfer"])
+              report["cases"].append({
+                  "name": name,
+                  "modal": compare(modal, expected_modal, modal_scale),
+                  "native": compare(native, expected_native, native_scale),
+                  "family_max_abs": max(item["max_abs"] for item in family_reports.values()),
+                  "family_max_over_scale": max(item["over_scale"] for item in family_reports.values()),
+                  "family_total_bit_mismatches": sum(item["mismatch_count"] for item in family_reports.values()),
+                  "bath_max_abs": max(bath_differences.values(), default=0.0),
+                  "bath_max_over_scale": max(bath_differences.values(), default=0.0) / max(bath_scale, np.finfo(np.float64).tiny),
+                  "component_counter_exact": int(meta["whole_reaction_domain_rejections"]) == int(component_case["whole_reaction_domain_rejections"]),
+                  "qnu": qnu,
+                  "qem": qem,
+                  "first_law_relative": abs(qnu + qem) / max(abs(qnu) + abs(qem), np.finfo(np.float64).tiny),
+              })
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+          env DIAG_MODE=default python3 /tmp/d081r1d3_semantic_diag.py | tee /tmp/default.json
+          env DIAG_MODE=single_thread OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 python3 /tmp/d081r1d3_semantic_diag.py | tee /tmp/single.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          a = json.loads(Path('/tmp/default.json').read_text())
+          b = json.loads(Path('/tmp/single.json').read_text())
+          print(json.dumps({
+              'default_vs_single_identical_reports': a['cases'] == b['cases'],
+              'default_cases': a['cases'],
+              'single_cases': b['cases'],
+          }, indent=2, sort_keys=True))
+          PY
