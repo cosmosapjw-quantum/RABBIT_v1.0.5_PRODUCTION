@@ -3,9 +3,7 @@
 use crate::f10_action_grid::F10ActionGrid;
 use serde_json::Value;
 
-const FIXTURE: &str = include_str!(
-    "../tests/fixtures/d081r1/retained_packed_rhs_case.json"
-);
+const FIXTURE: &str = include_str!("../tests/fixtures/d081r1/retained_packed_rhs_case.json");
 
 fn fixture() -> Value {
     serde_json::from_str(FIXTURE).expect("valid frozen D-081R1E retained fixture")
@@ -33,18 +31,9 @@ mod tests {
     #[test]
     fn retained_packed_rhs_authority_is_exact() {
         let value = fixture();
-        assert_eq!(
-            value["schema"],
-            "rabbit.d081r1e.retained_packed_rhs.v1"
-        );
-        assert_eq!(
-            value["d4_head"],
-            "002086662bf2e553c78f4b247868cb1fd9e43f21"
-        );
-        assert_eq!(
-            value["d4_tree"],
-            "d01ae7c0d3d9fbe8ce9513d054b835d3596f1de2"
-        );
+        assert_eq!(value["schema"], "rabbit.d081r1e.retained_packed_rhs.v1");
+        assert_eq!(value["d4_head"], "002086662bf2e553c78f4b247868cb1fd9e43f21");
+        assert_eq!(value["d4_tree"], "d01ae7c0d3d9fbe8ce9513d054b835d3596f1de2");
         assert_eq!(
             value["python_comparator_git_blob"],
             "de44feee0aa484abe26976c7dc34c579643005b5"
@@ -81,11 +70,13 @@ mod tests {
         assert_eq!(expected_weights.len(), 60);
 
         let actual_node_bits: Vec<_> = grid.nodes.iter().map(|value| value.to_bits()).collect();
-        let expected_node_bits: Vec<_> = expected_nodes.iter().map(|value| value.to_bits()).collect();
-        let actual_weight_bits: Vec<_> =
-            grid.weights.iter().map(|value| value.to_bits()).collect();
-        let expected_weight_bits: Vec<_> =
-            expected_weights.iter().map(|value| value.to_bits()).collect();
+        let expected_node_bits: Vec<_> =
+            expected_nodes.iter().map(|value| value.to_bits()).collect();
+        let actual_weight_bits: Vec<_> = grid.weights.iter().map(|value| value.to_bits()).collect();
+        let expected_weight_bits: Vec<_> = expected_weights
+            .iter()
+            .map(|value| value.to_bits())
+            .collect();
 
         assert_eq!(
             actual_node_bits, expected_node_bits,
