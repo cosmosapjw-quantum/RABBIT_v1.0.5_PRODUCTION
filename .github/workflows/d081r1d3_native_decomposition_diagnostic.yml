@@ -1,0 +1,117 @@
+name: d081r1d3-native-decomposition-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1d3-electron-action-20260903
+    paths:
+      - .github/workflows/d081r1d3_native_decomposition_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d3-electron-action-20260903
+          fetch-depth: 0
+
+      - name: Measure category reconstruction summation error
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "numpy==2.4.4" "scipy==1.17.1"
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import sys
+          from pathlib import Path
+
+          import numpy as np
+
+          root = Path.cwd()
+          sys.path.insert(0, str(root / "src"))
+          from rabbit.decoupling import _independent_noqke as oracle
+
+          def bits_float(bits: str) -> float:
+              digits = bits.removeprefix("0x")
+              return float(np.asarray([int(digits, 16)], dtype=np.uint64).view(np.float64)[0])
+
+          def decode_array(encoded: dict[str, object]) -> np.ndarray:
+              shape = tuple(int(value) for value in encoded["shape"])
+              raw = np.asarray(
+                  [int(str(value).removeprefix("0x"), 16) for value in encoded["bits"]],
+                  dtype=np.uint64,
+              )
+              return np.ascontiguousarray(raw.view(np.float64).reshape(shape))
+
+          fixture = json.loads(
+              (root / "native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json")
+              .read_text(encoding="utf-8")
+          )
+          grid = oracle.build_independent_grid(order=8, y_max=8.0)
+          for case in fixture["cases"]:
+              pair_cloglog = decode_array(case["pair_cloglog"])
+              tcm = bits_float(case["temperature_cm_bits"])
+              tgamma = bits_float(case["temperature_gamma_bits"])
+              spectra = oracle._SpectralLogits(
+                  grid, oracle._native_pair_logits(pair_cloglog)
+              )
+              modal, family_modal, _, _ = oracle._assemble_electron(
+                  grid,
+                  spectra,
+                  tcm,
+                  tgamma,
+                  oracle.M_ELECTRON_MEV,
+                  oracle.IndependentCollisionConfig(),
+              )
+              elastic = np.sum(
+                  np.stack([value for key, value in family_modal.items() if not key.endswith(":pair")]),
+                  axis=0,
+                  dtype=np.float64,
+              )
+              pair = np.sum(
+                  np.stack([value for key, value in family_modal.items() if key.endswith(":pair")]),
+                  axis=0,
+                  dtype=np.float64,
+              )
+              native = oracle._native_action(grid, modal, tcm)
+              elastic_native = oracle._native_action(grid, elastic, tcm)
+              pair_native = oracle._native_action(grid, pair, tcm)
+              reconstructed = elastic_native + pair_native
+              residual = reconstructed - native
+              flat = int(np.argmax(np.abs(residual)))
+              index = np.unravel_index(flat, residual.shape)
+              maximum = float(np.max(np.abs(residual)))
+              scale = float(
+                  max(
+                      np.max(np.abs(native)),
+                      np.max(np.abs(elastic_native)),
+                      np.max(np.abs(pair_native)),
+                      np.finfo(np.float64).tiny,
+                  )
+              )
+              modal_residual = float(np.max(np.abs(elastic + pair - modal)))
+              print(
+                  json.dumps(
+                      {
+                          "name": case["name"],
+                          "max_native_abs": maximum,
+                          "native_scale": scale,
+                          "max_native_over_scale": maximum / scale,
+                          "max_native_over_eps_scale": maximum / (np.finfo(np.float64).eps * scale),
+                          "worst_index": list(index),
+                          "reconstructed": float(reconstructed[index]),
+                          "native": float(native[index]),
+                          "elastic_native": float(elastic_native[index]),
+                          "pair_native": float(pair_native[index]),
+                          "max_modal_abs": modal_residual,
+                      },
+                      sort_keys=True,
+                  )
+              )
+          PY
