@@ -25,10 +25,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git merge-base --is-ancestor d8614c652db8f46aceef533402c6a3a70d6d322d HEAD
+          git merge-base --is-ancestor 3c84da625cf6829637045bcec61bacd5227a535a HEAD
           test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
           test "$(git hash-object native/rabbit_cpu/tests/fixtures/d081r1/full_collision_action_case.json)" = c94d2e72a1f8300b7c20c9c793417a5c4a5fa302
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+
+      - name: Recreate component-specific Python metrology twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "numpy==2.4.4" "scipy==1.17.1"
+          generator=native/rabbit_cpu/tests/fixtures/d081r1/generate_self_collision_action_metrology.py
+          fixture=native/rabbit_cpu/tests/fixtures/d081r1/self_collision_action_metrology.json
+          python3 "${generator}"
+          cp "${fixture}" /tmp/self-metrology.first.json
+          python3 "${generator}"
+          cmp /tmp/self-metrology.first.json "${fixture}"
+          git diff --exit-code -- "${fixture}"
+          python3 -m json.tool "${fixture}" >/dev/null
 
       - name: Install exact Rust toolchain
         run: rustup toolchain install 1.94.1 --profile minimal --component rustfmt,clippy
