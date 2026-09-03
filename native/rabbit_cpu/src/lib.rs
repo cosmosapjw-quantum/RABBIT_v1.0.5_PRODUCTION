@@ -13,6 +13,7 @@ mod f10_action_grid;
 mod f10_action_kinematics;
 mod f10_action_spectral;
 mod f10_kernel_primitives;
+mod f10_self_action;
 mod flrw;
 mod isotropic_boltzmann;
 mod minimal_bbn;
