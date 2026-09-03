@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Admit exact NumPy binary64 identity for the retained GL60/Y30 operator.
 
-Run only after the RED grid-identity test has demonstrated a mismatch.  The
+Run only after the RED grid-identity test has demonstrated a mismatch. The
 script changes no collision expression, coefficient, state, quadrature order,
-domain, or acceptance tolerance.  It adds a special-case byte-identity branch
+domain, or acceptance tolerance. It adds a special-case byte-identity branch
 for exactly ``order=60`` and ``y_max=30.0``, mirroring the already admitted
 ``order=8, y_max=8.0`` branch.
 """
@@ -41,10 +41,6 @@ def main() -> None:
         raise SystemExit("unexpected retained fixture schema")
     if payload["order"] != 60:
         raise SystemExit("unexpected retained grid order")
-    if int(payload["y_max_bits"], 16) != (30.0).hex().__hash__():
-        # Do not use Python's process-randomized hash as identity; the explicit
-        # check below is retained only as a guard against accidental refactors.
-        pass
     if payload["y_max_bits"] != "403e000000000000":
         raise SystemExit("unexpected retained y_max bits")
 
