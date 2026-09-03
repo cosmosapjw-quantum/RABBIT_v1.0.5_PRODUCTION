@@ -60,10 +60,7 @@ fn difference_stats(actual: &[f64], expected: &[f64]) -> DifferenceStats {
     for (index, (&observed, &reference)) in actual.iter().zip(expected).enumerate() {
         assert!(observed.is_finite() && reference.is_finite());
         let absolute = (observed - reference).abs();
-        let local_scale = observed
-            .abs()
-            .max(reference.abs())
-            .max(f64::MIN_POSITIVE);
+        let local_scale = observed.abs().max(reference.abs()).max(f64::MIN_POSITIVE);
         let local_relative = absolute / local_scale;
         let ulp = ordered_bits(observed).abs_diff(ordered_bits(reference));
         if absolute > max_absolute {
@@ -137,8 +134,7 @@ fn pair_rate(native: &[f64], order: usize) -> Vec<f64> {
     for flavour in 0..3 {
         for node in 0..order {
             result[flavour * order + node] = 0.5
-                * (native[(2 * flavour) * order + node]
-                    + native[(2 * flavour + 1) * order + node]);
+                * (native[(2 * flavour) * order + node] + native[(2 * flavour + 1) * order + node]);
         }
     }
     result
@@ -182,8 +178,8 @@ fn retained_step_impact(
         actual.iter().zip(expected).zip(state).enumerate()
     {
         let local_scale = absolute_tolerance + relative_tolerance * coordinate.abs();
-        let impact = retained_step * (observed - reference).abs()
-            / local_scale.max(f64::MIN_POSITIVE);
+        let impact =
+            retained_step * (observed - reference).abs() / local_scale.max(f64::MIN_POSITIVE);
         if impact > maximum {
             maximum = impact;
             maximum_index = index;
@@ -219,8 +215,7 @@ fn spectral_decomposition_ratio(
         let expected_denominator = expected_hubble * expected_chain[index];
         let direct = actual_rhs[index] - expected_rhs[index];
         let collision = (actual_pair[index] - expected_pair[index]) / actual_denominator;
-        let denominator = expected_pair[index]
-            * (expected_denominator - actual_denominator)
+        let denominator = expected_pair[index] * (expected_denominator - actual_denominator)
             / (actual_denominator * expected_denominator);
         maximum = maximum.max((direct - collision - denominator).abs() / discrepancy_scale);
     }
@@ -320,13 +315,8 @@ mod tests {
         let state = bit_array(&value["arrays"]["packed_state"]);
         assert_eq!(state.len(), 182);
         let ln_a = bits(&value["ln_a_bits"]);
-        let result = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &state,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let result =
+            evaluate_f10_packed_rhs(&grid, ln_a, &state, F10PackedRhsConfig::default()).unwrap();
         assert_eq!(result.values.len(), 182);
         assert!(
             result.diagnostics.temperature_cm_mev.is_finite()
@@ -386,10 +376,8 @@ mod tests {
             &result.combined_action.electron_action.modal,
             &expected_electron_modal,
         );
-        let total_modal_stats = difference_stats(
-            &result.combined_action.modal_total,
-            &expected_total_modal,
-        );
+        let total_modal_stats =
+            difference_stats(&result.combined_action.modal_total, &expected_total_modal);
         let self_native_stats = difference_stats(
             &result.combined_action.self_action.native,
             &expected_self_native,
@@ -398,10 +386,8 @@ mod tests {
             &result.combined_action.electron_action.native,
             &expected_electron_native,
         );
-        let total_native_stats = difference_stats(
-            &result.combined_action.native_total,
-            &expected_total_native,
-        );
+        let total_native_stats =
+            difference_stats(&result.combined_action.native_total, &expected_total_native);
         let actual_pair = pair_rate(&result.combined_action.native_total, 60);
         let pair_stats = difference_stats(&actual_pair, &expected_pair);
         let spectral_stats = difference_stats(&result.values[..180], &expected_spectral);
@@ -488,10 +474,8 @@ mod tests {
                 .diagnostics
                 .largest_matrix_roundoff_correction
                 .to_bits(),
-            bits(
-                &value["support_and_roundoff"]["largest_matrix_roundoff_correction_bits"]
-            )
-            .to_bits()
+            bits(&value["support_and_roundoff"]["largest_matrix_roundoff_correction_bits"])
+                .to_bits()
         );
 
         assert_scalar_hybrid(
@@ -509,13 +493,9 @@ mod tests {
 
         let mut changed_elapsed = state.clone();
         changed_elapsed[181] = 9.876_543_21e18;
-        let passive = evaluate_f10_packed_rhs(
-            &grid,
-            ln_a,
-            &changed_elapsed,
-            F10PackedRhsConfig::default(),
-        )
-        .unwrap();
+        let passive =
+            evaluate_f10_packed_rhs(&grid, ln_a, &changed_elapsed, F10PackedRhsConfig::default())
+                .unwrap();
         assert_exact_slice(&passive.values, &result.values, "passive elapsed-time RHS");
 
         let mut spectral_mutant = result.values[..180].to_vec();
