@@ -1,0 +1,54 @@
+name: d081r1e-format-repair
+
+on:
+  push:
+    branches:
+      - research/d081r1e-retained-packed-rhs-20260903
+    paths:
+      - .github/workflows/d081r1e_format_repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1e-retained-packed-rhs-20260903
+          fetch-depth: 0
+
+      - name: Install exact formatter
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt
+          test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
+
+      - name: Format exactly the packed-RHS source and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd native/rabbit_cpu
+          cargo +1.94.1 fmt --all
+          cd ../..
+          mapfile -t changed < <(git diff --name-only)
+          printf 'changed=%s\n' "${changed[*]-}"
+          test "${#changed[@]}" -eq 2
+          test "${changed[0]}" = "native/rabbit_cpu/src/f10_packed_rhs.rs"
+          test "${changed[1]}" = "native/rabbit_cpu/src/f10_packed_rhs_tests.rs"
+
+      - name: Commit bounded formatting repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            native/rabbit_cpu/src/f10_packed_rhs.rs \
+            native/rabbit_cpu/src/f10_packed_rhs_tests.rs
+          git diff --cached --check
+          git commit -m 'style(d081r1e): format packed-RHS source and tests'
+          git push origin HEAD:research/d081r1e-retained-packed-rhs-20260903
