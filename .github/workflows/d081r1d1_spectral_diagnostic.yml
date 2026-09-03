@@ -1,0 +1,116 @@
+name: d081r1d1-spectral-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1d1-foundations-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: research/d081r1d1-foundations-20260903
+          fetch-depth: 1
+
+      - name: Localize spectral discrepancy without changing acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import math
+          import struct
+          from pathlib import Path
+
+          path = Path("native/rabbit_cpu/tests/fixtures/d081r1/action_foundations_case.json")
+          data = json.loads(path.read_text())
+          order = int(data["order"])
+          ymax = struct.unpack(">d", bytes.fromhex(data["y_max_bits"]))[0]
+
+          def decode(obj):
+              return [struct.unpack(">d", bytes.fromhex(item))[0] for item in obj["bits"]]
+
+          def residual(a, b):
+              return abs(a-b) / max(abs(a), abs(b), float.fromhex("0x1.0p-1022"))
+
+          def report(name, actual, expected):
+              assert len(actual) == len(expected), (name, len(actual), len(expected))
+              scaled = [residual(a,b) for a,b in zip(actual, expected)]
+              absolute = [abs(a-b) for a,b in zip(actual, expected)]
+              irel = max(range(len(scaled)), key=scaled.__getitem__)
+              iabs = max(range(len(absolute)), key=absolute.__getitem__)
+              print(f"{name}: len={len(actual)}")
+              print(f"  max_scaled={scaled[irel]:.17e} index={irel} actual={actual[irel]:.17e} expected={expected[irel]:.17e} abs={absolute[irel]:.17e}")
+              print(f"  max_abs={absolute[iabs]:.17e} index={iabs} actual={actual[iabs]:.17e} expected={expected[iabs]:.17e} scaled={scaled[iabs]:.17e}")
+              print(f"  max_magnitude={max(max(map(abs,actual)),max(map(abs,expected))):.17e}")
+
+          def rust_basis(query):
+              out=[]
+              for coordinate in query:
+                  mapped=2.0*coordinate/ymax-1.0
+                  previous=1.0
+                  out.append(math.sqrt(1.0/ymax)*previous)
+                  if order == 1:
+                      continue
+                  current=mapped
+                  out.append(math.sqrt(3.0/ymax)*current)
+                  for degree in range(2,order):
+                      nxt=((2*degree-1)*mapped*current-(degree-1)*previous)/degree
+                      out.append(math.sqrt((2*degree+1)/ymax)*nxt)
+                      previous,current=current,nxt
+              return out
+
+          query=decode(data["spectral"]["query"])
+          nodes=decode(data["grid"]["nodes"])
+          weights=decode(data["grid"]["weights"])
+          logits=decode(data["chart"]["pair_logits"])
+          expected_basis=decode(data["spectral"]["modal_basis"])
+          basis=rust_basis(query)
+          report("basis-row-major",basis,expected_basis)
+
+          # Compare the same values against a transposed flattening hypothesis.
+          transposed=[]
+          for mode in range(order):
+              for point in range(len(query)):
+                  transposed.append(basis[point*order+mode])
+          report("basis-transposed-hypothesis",transposed,expected_basis)
+
+          node_basis=rust_basis(nodes)
+          coefficients=[]
+          for row in range(3):
+              vals=logits[row*order:(row+1)*order]
+              for mode in range(order):
+                  coefficients.append(sum(weights[i]*node_basis[i*order+mode]*vals[i] for i in range(order)))
+          expected_coefficients=decode(data["spectral"]["modal_coefficients"])
+          report("modal-coefficients",coefficients,expected_coefficients)
+
+          interpolation=[]
+          for row in range(3):
+              coeff=coefficients[row*order:(row+1)*order]
+              for point in range(len(query)):
+                  interpolation.append(sum(coeff[m]*basis[point*order+m] for m in range(order)))
+          report("interpolation",interpolation,decode(data["spectral"]["interpolation"]))
+
+          rates=decode(data["spectral"]["rates"])
+          modal_product=[]
+          for row in range(2):
+              for mode in range(order):
+                  modal_product.append(sum(rates[row*len(query)+point]*basis[point*order+mode] for point in range(len(query))))
+          report("modal-product",modal_product,decode(data["spectral"]["modal_product"]))
+
+          # Hybrid error summaries that distinguish roundoff at exact/near zeros.
+          for name, actual, expected in [
+              ("basis",basis,expected_basis),
+              ("coefficients",coefficients,expected_coefficients),
+              ("interpolation",interpolation,decode(data["spectral"]["interpolation"])),
+              ("modal_product",modal_product,decode(data["spectral"]["modal_product"])),
+          ]:
+              scale=max(max(map(abs,actual)),max(map(abs,expected)),1.0)
+              hybrid=max(abs(a-b)/(abs(a)+abs(b)+64.0*2.220446049250313e-16*scale) for a,b in zip(actual,expected))
+              print(f"{name}: 64eps-hybrid={hybrid:.17e}")
+          PY
