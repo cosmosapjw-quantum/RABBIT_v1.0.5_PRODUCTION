@@ -20,6 +20,7 @@ mod f10_kernel_primitives;
 mod f10_packed_rhs;
 mod f10_packed_rhs_jvp;
 mod f10_self_action;
+mod f10_tgamma_kinematics;
 mod f10_tgamma_tangent;
 mod flrw;
 mod isotropic_boltzmann;
@@ -68,6 +69,9 @@ mod f10_self_action_tests;
 
 #[cfg(test)]
 mod f10_tgamma_tangent_tests;
+
+#[cfg(test)]
+mod f10_tgamma_kinematic_tests;
 
 #[cfg(test)]
 mod electron_event_falsifiers;

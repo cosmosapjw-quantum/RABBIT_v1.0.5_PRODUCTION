@@ -1,0 +1,29 @@
+{
+  "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "claim_ceiling": "P0B primitive-level RED only; no mapped-basis or finite-mass kinematic tangent implementation, collision JVP, packed-RHS T_gamma column, retained state, solver, trajectory, or G-F10 movement",
+  "classification": "PASS_EXPECTED_ABSENT_TGAMMA_KINEMATIC_PRIMITIVES_RED",
+  "compiler_log_sha256": "8f5517ad8c0aab828e3f89e879f067d4cc4252d04c58d864520fa03f4aec221b",
+  "contract_blob": "58eeaf38b9f4edd4c60a01d22d2e101a33b71812",
+  "missing_items": [
+    "F10ElasticTgammaInput",
+    "evaluate_elastic_tgamma_kinematic_tangent",
+    "mapped_modal_basis_derivative"
+  ],
+  "p0a_integration_receipt_blob": "4b1d490084a3150107cc9b451110098a58ae0513",
+  "p0a_parent": "f090e71afeaeac9a40174f302feaaea909baaa3b",
+  "p0a_source_blob": "0217768ba62b02d14a3c52ae68208fafc8c8d46c",
+  "production_kinematic_source_committed": false,
+  "retained_or_holdout_state_accessed": false,
+  "rust": "1.94.1",
+  "schema": "rabbit.d081r1f1.p0b_kinematics_red.v1",
+  "temporary_module_registration_restored": true,
+  "test_blob": "e9c8b6dc2edb2dcdae0f895020b043620849561a",
+  "trigger_head": "e84919cf7f0181f9a4abbbd0723f3dab2794261c",
+  "trigger_tree": "3cbd53de3d17cb5408441421c3892e2fc26bd9e3",
+  "vendor_archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "vendor_artifact_id": 9932329475,
+  "vendor_packages": 174,
+  "vendor_zip_sha256": "2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640",
+  "workflow_blob": "e9db11f82a8f274b5d42e7471a6decdf97a991e9",
+  "workflow_run_id": "33865634643"
+}
