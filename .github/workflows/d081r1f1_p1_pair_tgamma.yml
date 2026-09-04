@@ -1,0 +1,128 @@
+name: d081r1f1-p1-pair-tgamma
+on:
+  push:
+    branches: [research/d081r1f1-p1-collision-tgamma-jvp-green-20260905-r1]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  pair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      PYTHONPATH: src:.
+      PYTHONDONTWRITEBYTECODE: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Verify historical authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor b362a249f2bf781baa874f9cc5b76517e6478ebb HEAD
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+      - name: Exact Rust and lock-derived offline vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt clippy
+          test "$(rustc +1.94.1 --version)" = 'rustc 1.94.1 (e408947bf 2026-03-25)'
+          mkdir -p /tmp/pair-vendor-outer /tmp/pair-vendor
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9932329475/zip > /tmp/pair-vendor.zip
+          echo '2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640  /tmp/pair-vendor.zip' | sha256sum -c -
+          unzip -q /tmp/pair-vendor.zip -d /tmp/pair-vendor-outer
+          echo '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f  /tmp/pair-vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/pair-vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz -C /tmp/pair-vendor
+          test "$(find /tmp/pair-vendor/vendor -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="pinned"\n[source.pinned]\ndirectory="/tmp/pair-vendor/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
+      - name: Decide RED or implemented pair slice
+        id: mode
+        shell: bash
+        run: |
+          if test -f native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs; then
+            echo 'green=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'green=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify expected behavioral-test RED
+        if: steps.mode.outputs.green == 'false'
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          set +e
+          cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture > /tmp/pair-red.log 2>&1
+          code=$?
+          set -e
+          cat /tmp/pair-red.log
+          test "$code" -ne 0
+          grep -F 'error[E0432]' /tmp/pair-red.log
+          grep -F 'tgamma_jvp' /tmp/pair-red.log
+          echo 'P1_PAIR_BEHAVIORAL_TESTS_RED_PRODUCTION_ABSENT'
+      - name: Deterministic D080B pair oracle and high-precision Pauli references
+        if: steps.mode.outputs.green == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/pair-python
+          /tmp/pair-python/bin/pip install --only-binary=:all: numpy==2.4.4 scipy==1.17.1 mpmath==1.3.0
+          for suffix in a b; do
+            /tmp/pair-python/bin/python scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py --output /tmp/pair-${suffix}.json
+          done
+          cmp /tmp/pair-a.json /tmp/pair-b.json
+          sha256sum /tmp/pair-a.json
+      - name: Pair GREEN and inherited gates
+        if: steps.mode.outputs.green == 'true'
+        shell: bash
+        working-directory: native/rabbit_cpu
+        env:
+          D081R1F1_P1_PAIR_ORACLE: /tmp/pair-a.json
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 fmt --all
+          git -C ../.. diff --name-only > /tmp/pair-format-paths
+          while IFS= read -r path; do
+            case "$path" in
+              native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs|native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs|native/rabbit_cpu/src/f10_electron_action.rs) ;;
+              *) echo "unexpected format change: $path"; exit 1;;
+            esac
+          done < /tmp/pair-format-paths
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture 2>&1 | tee /tmp/pair-green.log
+          grep -F 'test result: ok. 3 passed; 0 failed' /tmp/pair-green.log
+          cargo +1.94.1 test --locked --offline f10_electron_action_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          echo 'PASS_PAIR_ONLY_ORDER8_THERMAL_JVP_FULL_ELECTRON_JVP_OPEN'
+      - name: Preserve verified formatting then require clean replay
+        if: steps.mode.outputs.green == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet; then
+            echo 'CLEAN_TRIGGER_SHA_PAIR_GREEN'
+            exit 0
+          fi
+          git add native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs native/rabbit_cpu/src/f10_electron_action.rs
+          echo "TESTED_TREE=$(git write-tree)"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'style(d081r1f1): preserve verified pair-JVP formatting'
+          git fetch origin "$GITHUB_REF_NAME"
+          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
+          git push origin "HEAD:$GITHUB_REF_NAME"
