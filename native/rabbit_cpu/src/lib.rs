@@ -54,6 +54,9 @@ mod f10_packed_rhs_jvp_order8_tests;
 mod f10_packed_rhs_jvp_retained_calibration_tests;
 
 #[cfg(test)]
+mod f10_packed_rhs_jvp_retained_holdout_tests;
+
+#[cfg(test)]
 mod f10_packed_rhs_jvp_tests;
 
 #[cfg(test)]
