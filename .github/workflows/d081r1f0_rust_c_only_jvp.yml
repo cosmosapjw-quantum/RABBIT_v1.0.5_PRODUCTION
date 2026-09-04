@@ -4,15 +4,23 @@ on:
   push:
     branches:
       - research/d081r1f0-rust-c-only-jvp-20260904
+    paths:
+      - docs/audit/D081R1F0_EXECUTE_2026-09-04
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
-  red-first:
+  verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 120
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -30,22 +38,33 @@ jobs:
           test "$(git hash-object scripts/audit/_d079_collision_jvp.py)" = 591a64702c58a2de265fb88636f186e2d1b7e019
           test "$(git hash-object scripts/audit/_d079_rhs_jvp.py)" = 6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          echo "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380  /tmp/d081r1f0_state_1200.npz" > /tmp/d081r1f0_expected_state.sha256
 
-      - name: Install exact Rust toolchain
+      - name: Install exact Python and Rust tools
         shell: bash
         run: |
           set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1f0-venv
+          /tmp/d081r1f0-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
           rustup toolchain install 1.94.1 --profile minimal
           rustup component add --toolchain 1.94.1 rustfmt clippy
           test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
           test "$(cargo +1.94.1 --version)" = "cargo 1.94.1 (29ea6fb6a 2026-03-24)"
 
-      - name: Recover exact offline vendor
+      - name: Recover exact retained state and offline Rust vendor
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          HISTORICAL='78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b'
+          STATE_PATH='.agent-harness/runs/run-20260805-f10-v3-campaign/v3a_r2/domain/state_1200.npz'
+          git show "${HISTORICAL}:${STATE_PATH}" > /tmp/d081r1f0_state_1200.npz
+          sha256sum -c /tmp/d081r1f0_expected_state.sha256
+
           mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
           gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip > /tmp/vendor.zip
           echo "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/vendor.zip" | sha256sum -c -
@@ -67,11 +86,80 @@ jobs:
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
 
-      - name: Execute RED-first absent-API test
+      - name: Generate Python analytic-JVP fixtures twice
         shell: bash
-        working-directory: native/rabbit_cpu
         run: |
           set -euo pipefail
+          PY=/tmp/d081r1f0-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_rust_c_only_jvp_oracle.py
+          for case in order8 retained-calibration retained-holdout; do
+            "$PY" "$GEN" --case "$case" \
+              --retained /tmp/d081r1f0_state_1200.npz \
+              --output "/tmp/${case}-a.json"
+            "$PY" "$GEN" --case "$case" \
+              --retained /tmp/d081r1f0_state_1200.npz \
+              --output "/tmp/${case}-b.json"
+            cmp "/tmp/${case}-a.json" "/tmp/${case}-b.json"
+          done
+
+      - name: Format and verify Rust analytic JVP
+        shell: bash
+        working-directory: native/rabbit_cpu
+        env:
+          D081R1F0_ORDER8_FIXTURE: /tmp/order8-a.json
+          D081R1F0_RETAINED_CALIBRATION_FIXTURE: /tmp/retained-calibration-a.json
+          D081R1F0_RETAINED_HOLDOUT_FIXTURE: /tmp/retained-holdout-a.json
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 fmt --all
+          cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1f0-metadata.json
+          cargo +1.94.1 check --release --locked --offline
           cargo +1.94.1 test --locked --offline \
-            f10_packed_rhs_jvp_tests::zero_c_direction_is_bitwise_zero_without_changing_the_base_rhs \
-            -- --exact --nocapture
+            f10_packed_rhs_jvp_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_preflight_tests::tests -- --nocapture
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_tests::tests -- --nocapture
+          cargo +1.94.1 clippy --all-targets --all-features \
+            --locked --offline -- -D warnings
+
+      - name: Commit verified formatting and durable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECEIPT=docs/audit/artifacts/d081r1f0/verification_receipt.json
+          mkdir -p "$(dirname "${RECEIPT}")"
+          /tmp/d081r1f0-venv/bin/python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          fixture_names = ("order8", "retained-calibration", "retained-holdout")
+          payload = {
+              "schema": "rabbit.d081r1f0.rust_c_only_jvp_verification.v1",
+              "classification": "CI_VERIFIED_RUST_C_ONLY_PACKED_RHS_JVP",
+              "source_head": os.environ["GITHUB_SHA"],
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "contract_blob": "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221",
+              "fixtures": {
+                  name: hashlib.sha256(Path(f"/tmp/{name}-a.json").read_bytes()).hexdigest()
+                  for name in fixture_names
+              },
+              "claim_ceiling": "static spectral-c input JVP only; no thermal or expansion input columns, full Jacobian, diffsol, trajectory, endpoint, N_eff, or F10 gate movement",
+          }
+          Path("docs/audit/artifacts/d081r1f0/verification_receipt.json").write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native/rabbit_cpu/src "${RECEIPT}"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No formatting or receipt change to publish.'
+            exit 0
+          fi
+          git commit -m 'test(d081r1f0): publish verified Rust c-only JVP receipt'
+          git push origin HEAD:research/d081r1f0-rust-c-only-jvp-20260904
