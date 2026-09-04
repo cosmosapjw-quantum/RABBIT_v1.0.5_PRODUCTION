@@ -1,0 +1,89 @@
+{
+  "schema": "rabbit.d081r1f1.p0a_integration_receipt.v1",
+  "classification": "PASS_WITH_INTEGRATED_MOVING_HALF_LINE_AND_QED_OFF_EOS_TGAMMA_PRIMITIVES_SCOPE",
+  "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+  "branch": "research/d081r1f1-rust-tgamma-jvp-20260904",
+  "lineage": {
+    "contract_head": "a9bc5b244ab7f2b120af43a9849fdfac6283c496",
+    "failed_expired_vendor_red_head": "3106c59aab2f4847b0d0971452a896bdd75079b0",
+    "verified_p0a_head": "d720f88773ed407393af8c241ee7ebb64ca67b93",
+    "verified_p0a_tree": "bda1814e8be921468c5556e0d50c4b867b52b926",
+    "integration_merge_head": "2f7a555a0f75b92b464d64c02b2ebcff72d37e87",
+    "integration_merge_parents": [
+      "3106c59aab2f4847b0d0971452a896bdd75079b0",
+      "d720f88773ed407393af8c241ee7ebb64ca67b93"
+    ],
+    "integration_replay_head": "c02ae992b9d99f74273cddc8544ea39e42132a93",
+    "integration_replay_tree": "a154cb30ce94c6b298162620fd31470401e470ea"
+  },
+  "preserved_failed_attempt": {
+    "workflow_run_id": 33863057086,
+    "classification": "BLOCKED_BY_EXPIRED_OFFLINE_VENDOR_ARTIFACT",
+    "http_status": 410,
+    "expired_artifact_id": 9838506413,
+    "compiler_red_reached": false,
+    "scientific_evidence": false
+  },
+  "refreshed_offline_vendor": {
+    "refresh_workflow_run_id": 33861520393,
+    "artifact_id": 9932329475,
+    "outer_zip_sha256": "2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640",
+    "archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+    "package_count": 174,
+    "rust_version": "1.94.1"
+  },
+  "tdd": {
+    "primitive_red_workflow_run_id": 33861819055,
+    "primitive_red_classification": "PASS_EXPECTED_ABSENT_TGAMMA_PRIMITIVES_MODULE_RED",
+    "primitive_green_workflow_run_id": 33863304470,
+    "primitive_green_classification": "PASS_WITH_MOVING_HALF_LINE_AND_QED_OFF_EOS_TGAMMA_PRIMITIVES_SCOPE"
+  },
+  "frozen_identities": {
+    "contract_blob": "58eeaf38b9f4edd4c60a01d22d2e101a33b71812",
+    "comparator_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+    "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+    "vendor_refresh_receipt_blob": "c023e9d0ae84651cdcc9b458f6ac8a02219a29b0",
+    "primitive_red_receipt_blob": "5c5745c840b39a39b06221ec59906a2e50cd136f",
+    "primitive_green_receipt_blob": "1e56ef1f69ffff2158a1859edec56218840f2d40",
+    "source_blob": "0217768ba62b02d14a3c52ae68208fafc8c8d46c",
+    "test_blob": "f2642cf9a699290e2c97a7d6e8a12b980e5f8919",
+    "module_registry_blob": "31901ae934375fb22a7c9a4e7b4b23ef0c366f32",
+    "oracle_generator_blob": "3a90ae484a20fd8601c9db307ce5d5202343acca",
+    "oracle_sha256": "3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7"
+  },
+  "verification": {
+    "focused_integration_replay": {
+      "workflow_run_id": 33864436389,
+      "conclusion": "SUCCESS",
+      "authority_identity": "PASS",
+      "deterministic_python_oracle": "PASS",
+      "release_check": "PASS",
+      "focused_tests": {
+        "passed": 3,
+        "failed": 0
+      },
+      "inherited_r1f0_zero_jvp_regression": "PASS",
+      "inherited_packed_rhs_preflight": "PASS",
+      "strict_clippy": "PASS",
+      "worktree_clean_after_replay": true
+    },
+    "pr_harness": {
+      "workflow_run_id": 33864440122,
+      "validate": "SUCCESS",
+      "native_r1c": "SUCCESS",
+      "pauli_edge": "SUCCESS",
+      "pauli_sweep": "SUCCESS"
+    }
+  },
+  "admitted_primitives": {
+    "moving_electron_half_line_nodes": "d_p/dT = p/T",
+    "moving_electron_half_line_weights": "d_w/dT = w/T",
+    "qed_off_electromagnetic_eos": [
+      "d_rho = primal drho/dT",
+      "d_pressure = (rho + pressure)/T",
+      "positive analytic d2_rho"
+    ]
+  },
+  "semantic_scope_note": "The d2_rho primitive is evaluated by an independently refined 4096-panel analytic quadrature and is numerically cross-checked against centered differences of the admitted 256-panel primal EOS. It is not claimed to be a bitwise tangent of every floating-point operation in the 256-panel primal sum.",
+  "claim_ceiling": "moving electron half-line quadrature and QED-off electromagnetic EOS T_gamma tangents only; no finite-mass elastic kinematic tangent, mapped-basis tangent, collision-action JVP, packed-RHS T_gamma column, retained calibration, unseen holdout, solver, trajectory, endpoint, N_eff, performance, publication, merge, or G-F10-INDEPENDENT-FLRW movement"
+}
