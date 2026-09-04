@@ -2,9 +2,9 @@
 """Apply the bounded D-081R1F1 P0B module wiring.
 
 The P0B production implementation lives in a focused sibling module. This
-script registers that module, re-exports the frozen public-in-crate API through
-`f10_tgamma_tangent`, and registers the RED-first test module. It performs no
-formula, tolerance, quadrature, support, or physics mutation.
+script registers that module and its RED-first test module, then applies two
+lexical fixes to otherwise-unused primal shadow values. It performs no formula,
+tolerance, quadrature, support, or physics mutation.
 """
 
 from __future__ import annotations
@@ -13,7 +13,6 @@ from pathlib import Path
 
 
 LIB = Path("native/rabbit_cpu/src/lib.rs")
-TANGENT = Path("native/rabbit_cpu/src/f10_tgamma_tangent.rs")
 KINEMATICS = Path("native/rabbit_cpu/src/f10_tgamma_kinematics.rs")
 
 
@@ -52,22 +51,6 @@ def patch_lib() -> bool:
     return changed
 
 
-def patch_reexport() -> bool:
-    text = TANGENT.read_text(encoding="utf-8")
-    marker = "pub(crate) use crate::f10_tgamma_kinematics::{"
-    if marker in text:
-        return False
-    addition = """
-
-pub(crate) use crate::f10_tgamma_kinematics::{
-    F10ElasticTgammaInput, F10KinematicTgammaTangent,
-    evaluate_elastic_tgamma_kinematic_tangent, mapped_modal_basis_derivative,
-};
-"""
-    TANGENT.write_text(text.rstrip() + addition, encoding="utf-8")
-    return True
-
-
 def patch_staged_source() -> bool:
     text = KINEMATICS.read_text(encoding="utf-8")
     changed = False
@@ -92,5 +75,5 @@ def patch_staged_source() -> bool:
 
 
 if __name__ == "__main__":
-    changed = patch_lib() | patch_reexport() | patch_staged_source()
+    changed = patch_lib() | patch_staged_source()
     print("D-081R1F1 P0B wiring:", "CHANGED" if changed else "NOOP")
