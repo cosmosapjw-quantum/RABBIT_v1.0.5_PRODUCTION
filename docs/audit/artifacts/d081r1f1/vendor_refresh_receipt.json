@@ -1,0 +1,18 @@
+{
+  "archive_bytes": 27983435,
+  "archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "artifact_digest": "2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640",
+  "artifact_id": 9932329475,
+  "artifact_url": "https://github.com/cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION/actions/runs/33861520393/artifacts/9932329475",
+  "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "claim_ceiling": "Cargo.lock-derived source vendor and offline Rust closure only; no scientific or numerical result",
+  "classification": "LOCK_DERIVED_VENDOR_OFFLINE_CLOSURE_PASS",
+  "derivation": "cargo vendor --locked --versioned-dirs",
+  "offline_metadata": "PASS",
+  "offline_release_check": "PASS",
+  "package_count": 174,
+  "rust_version": "1.94.1",
+  "schema": "rabbit.d081r1f1.vendor_refresh.v1",
+  "trigger_head": "6cc5f226c5e452e35c16ebeb28bc6e0b3d3a9bc4",
+  "workflow_run_id": "33861520393"
+}
