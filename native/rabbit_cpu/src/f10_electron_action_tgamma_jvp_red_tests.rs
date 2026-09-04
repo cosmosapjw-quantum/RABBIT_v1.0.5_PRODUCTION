@@ -45,12 +45,18 @@ fn pair_channel_matches_d080b_and_preserves_energy_and_exact_zero_structure() {
         let reference = array(&case["pair_native"]);
         let residual = relative(&result.native, &reference);
         assert!(residual <= 1.0e-7, "pair native parity: {residual:.17e}");
-        assert!(relative(&result.base_native, &array(&case["base_pair_native"])) <= 1.0e-7);
+        // At equilibrium the primal is a numerical null, not a relative-shape observable.
+        // T*dC/dT has the primal units and is a non-null, reference-only physical scale.
+        let base_reference = array(&case["base_pair_native"]);
+        let base_scale = reference.iter().map(|x| tg * x.abs()).fold(f64::MIN_POSITIVE, f64::max);
+        let base_error = result.base_native.iter().zip(&base_reference)
+            .map(|(a, b): (&f64, &f64)| (a - b).abs()).fold(0.0_f64, f64::max);
+        assert!(base_error / base_scale <= 1.0e-7);
         assert_eq!(result.modal.len(), 48);
         assert_eq!(result.base_modal.len(), 48);
         assert_eq!(result.family_names, vec!["e:pair", "mu:pair", "tau:pair"]);
         assert!(result.measure_modal.iter().chain(&result.matrix_modal)
-            .chain(&result.projection_modal).all(|x| x.to_bits() == 0));
+            .chain(&result.projection_modal).all(|x: &f64| x.to_bits() == 0));
         assert_eq!(result.measure_modal.len(), 48);
         assert_eq!(result.matrix_modal.len(), 48);
         assert_eq!(result.projection_modal.len(), 48);
@@ -75,7 +81,7 @@ fn pair_channel_matches_d080b_and_preserves_energy_and_exact_zero_structure() {
             assert!((qnu + qem).abs() / (qnu.abs() + qem.abs()).max(f64::MIN_POSITIVE) <= 2.0e-9);
         }
         assert!(relative(&reconstructed, &result.modal) <= 2.0e-12);
-        let mutant: Vec<f64> = result.native.iter().map(|x| 1.01 * x).collect();
+        let mutant: Vec<f64> = result.native.iter().map(|x: &f64| 1.01 * x).collect();
         assert!(relative(&mutant, &reference) > 1.0e-4);
         eprintln!("P1_PAIR case={} native_relative={residual:.17e} first_law={:.17e} qnu={:.17e} qem={:.17e}",
             case["name"], result.first_law_residual, result.neutrino_energy_transfer, result.electromagnetic_energy_transfer);
