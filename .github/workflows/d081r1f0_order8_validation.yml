@@ -95,13 +95,21 @@ jobs:
           cmp /tmp/order8-a.json /tmp/order8-b.json
           sha256sum /tmp/order8-a.json /tmp/order8-b.json
 
-      - name: Verify nonzero order-eight analytic JVP
+      - name: Format and verify nonzero order-eight analytic JVP
         shell: bash
         working-directory: native/rabbit_cpu
         env:
           D081R1F0_ORDER8_FIXTURE: /tmp/order8-a.json
         run: |
           set -euo pipefail
+          target='native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs'
+          cargo +1.94.1 fmt --all
+          mapfile -t format_changed < <(git -C ../.. diff --name-only)
+          printf 'format_changed=%s\n' "${format_changed[*]-}"
+          test "${#format_changed[@]}" -le 1
+          if [[ "${#format_changed[@]}" -eq 1 ]]; then
+            test "${format_changed[0]}" = "${target}"
+          fi
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1f0-order8-metadata.json
           cargo +1.94.1 check --release --locked --offline
@@ -117,25 +125,31 @@ jobs:
           cargo +1.94.1 clippy --all-targets --all-features \
             --locked --offline -- -D warnings
 
-      - name: Publish durable order-eight receipt
+      - name: Publish durable order-eight receipt and verified formatting
         shell: bash
+        env:
+          RECEIPT: docs/audit/artifacts/d081r1f0/order8_verification_receipt.json
+          FORMATTED_SOURCE: native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs
         run: |
           set -euo pipefail
-          RECEIPT=docs/audit/artifacts/d081r1f0/order8_verification_receipt.json
           mkdir -p "$(dirname "${RECEIPT}")"
           /tmp/d081r1f0-order8-venv/bin/python - <<'PY'
           import hashlib
           import json
           import os
+          import subprocess
           from pathlib import Path
 
           fixture = Path('/tmp/order8-a.json')
           log = Path('/tmp/d081r1f0-order8.log')
+          tested_tree = subprocess.check_output(
+              ['git', 'write-tree'], text=True
+          ).strip()
           payload = {
               'schema': 'rabbit.d081r1f0.order8_jvp_verification.v1',
               'classification': 'ORDER8_NONZERO_C_ONLY_JVP_GREEN_RETAINED_UNTESTED',
               'trigger_head': os.environ['GITHUB_SHA'],
-              'tested_tree': os.popen('git rev-parse HEAD^{tree}').read().strip(),
+              'tested_tree': tested_tree,
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'contract_blob': 'ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221',
               'fixture_sha256': hashlib.sha256(fixture.read_bytes()).hexdigest(),
@@ -149,15 +163,23 @@ jobs:
               },
               'claim_ceiling': 'order-eight nonzero static spectral-c JVP only; retained calibration and holdout, thermal input columns, full Jacobian, solver, trajectory, endpoint, N_eff, performance, publication, and F10 gate movement remain untested',
           }
-          Path('docs/audit/artifacts/d081r1f0/order8_verification_receipt.json').write_text(
+          Path(os.environ['RECEIPT']).write_text(
               json.dumps(payload, indent=2, sort_keys=True) + '\n',
               encoding='utf-8',
           )
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "${RECEIPT}"
+          git add "${RECEIPT}" "${FORMATTED_SOURCE}"
           git diff --cached --check
-          test "$(git diff --cached --name-only)" = "${RECEIPT}"
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -ge 1
+          test "${#staged[@]}" -le 2
+          for path in "${staged[@]}"; do
+            case "${path}" in
+              "${RECEIPT}"|"${FORMATTED_SOURCE}") ;;
+              *) echo "unexpected staged path: ${path}" >&2; exit 1 ;;
+            esac
+          done
           git commit -m 'test(d081r1f0): publish order-eight JVP verification receipt'
           git push origin HEAD:research/d081r1f0-rust-c-only-jvp-20260904
