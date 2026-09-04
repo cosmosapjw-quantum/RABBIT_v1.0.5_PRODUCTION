@@ -1,0 +1,90 @@
+name: d081r1f1-p0ab-python-mass-shell-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-p0ab-adversarial-audit-repair-20260904-r1
+    paths:
+      - .github/workflows/d081r1f1_p0ab_python_mass_shell_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact diagnostic authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 9929596e1cf0351aba6e8e2b501ced89d1c80fb1 HEAD
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py)" = 1eb3669a69b14400f1db49a7fcf8ece18dfebb36
+
+      - name: Generate deterministic Python oracle and report sample 2564
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/d081r1f1-p0ab-python-shell-venv
+          /tmp/d081r1f1-p0ab-python-shell-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
+          PY=/tmp/d081r1f1-p0ab-python-shell-venv/bin/python
+          "$PY" scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-a.json
+          "$PY" scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-b.json
+          cmp /tmp/p0b-a.json /tmp/p0b-b.json
+          "$PY" - <<'PY'
+          import json
+          import math
+          import struct
+
+          payload = json.load(open('/tmp/p0b-a.json', encoding='utf-8'))
+          data = payload['kinematics']
+          index = 2564
+
+          def decode(field):
+              encoded = data[field]['bits'][index]
+              return struct.unpack('>d', struct.pack('>Q', int(encoded, 16)))[0]
+
+          e4 = decode('base_e4')
+          p4 = decode('base_p4_magnitude')
+          de4 = decode('d_e4')
+          dp4 = decode('d_p4_magnitude')
+          mass = struct.unpack('>d', struct.pack('>Q', int(data['electron_mass_bits'], 16)))[0]
+          left = e4 * de4
+          right = p4 * dp4
+          tangent_residual = left - right
+          tangent_ratio = abs(tangent_residual) / max(abs(left) + abs(right), float.fromhex('0x1.0p-1022'))
+          primal_residual = e4 * e4 - p4 * p4 - mass * mass
+          primal_scale = abs(e4 * e4) + abs(p4 * p4) + abs(mass * mass)
+          primal_ratio = abs(primal_residual) / max(primal_scale, float.fromhex('0x1.0p-1022'))
+          print(
+              'P0AB_PYTHON_MASS_SHELL_DIAGNOSTIC '
+              f'index={index} e4={e4:.17e} p4={p4:.17e} '
+              f'de4={de4:.17e} dp4={dp4:.17e} '
+              f'left={left:.17e} right={right:.17e} '
+              f'tangent_residual={tangent_residual:.17e} '
+              f'tangent_ratio={tangent_ratio:.17e} '
+              f'primal_residual={primal_residual:.17e} '
+              f'primal_ratio={primal_ratio:.17e}'
+          )
+          assert all(math.isfinite(value) for value in (
+              e4, p4, de4, dp4, tangent_residual, tangent_ratio,
+              primal_residual, primal_ratio,
+          ))
+          PY
