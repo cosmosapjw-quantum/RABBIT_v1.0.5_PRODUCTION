@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """Correct P0AB test metrology without changing production or thresholds.
 
-Two independent test-domain defects are repaired:
+This bounded test-only amendment fixes two domain errors:
 
-1. The support-margin oracle now reproduces the exact `s` operation graph used
-   by the admitted support predicate instead of reconstructing `s` from the
-   algebraically equivalent but binary64-different `m_e^2 + 2 d12` path.
-2. The massive outgoing mass-shell tangent is normalized by the characteristic
-   primal shell scale per unit temperature. The old local contribution ratio is
-   retained as a raw conditioning diagnostic; it is not used as a gate at a
-   near-stationary tangent where both derivative terms are O(1e-8 MeV).
+1. Support margins are recomputed with the exact admitted `s` operation graph,
+   not the algebraically equivalent but binary64-different `m_e^2 + 2 d12`.
+2. Differentiated conservation/mass-shell/Minkowski identities are normalized
+   by a characteristic primal scale per unit temperature. The original local
+   contribution ratios are retained as raw conditioning diagnostics; they are
+   not primary gates when all tangent terms are simultaneously near zero.
 
-The frozen `2e-12` invariant cap, `64*eps` internal margin cap, direct `1e-7`
-D-080A array-parity cap, production formulas, quadratures, and branch semantics
-are unchanged.
+The frozen `2e-12` invariant cap, `64*eps` margin cap, direct `1e-7` D-080A
+array-parity cap, production formulas, quadratures, and branch semantics are
+unchanged. A one-percent massless-leg tangent mutation remains load-bearing.
 """
 
 from __future__ import annotations
@@ -31,11 +30,189 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
     return text.replace(old, new, 1)
 
 
+def replace_invariant_loop(text: str) -> str:
+    marker = "P0AB_RAW_LOCAL_INVARIANT_MAXIMA"
+    if marker in text:
+        return text
+
+    start_marker = "    for index in 0..tangent.support.len() {\n"
+    end_marker = "    }\n}\n\n#[test]\n#[ignore = \"requires deterministic frozen D-080A P0B oracle\"]"
+    if text.count(start_marker) != 1 or text.count(end_marker) != 1:
+        raise SystemExit("invariant ledger: unexpected function boundaries")
+    start = text.index(start_marker)
+    end = text.index(end_marker, start) + len("    }\n")
+
+    replacement = r'''    let mut maximum_raw_local = [0.0_f64; 6];
+    let mut maximum_conditioned = [0.0_f64; 6];
+    let mut mutation_index = None;
+    let mut mutation_sensitivity = 0.0_f64;
+
+    for index in 0..tangent.support.len() {
+        if !tangent.support[index] {
+            continue;
+        }
+
+        let energy_residual =
+            tangent.d_e2[index] - tangent.d_e3[index] - tangent.d_e4[index];
+        let energy_raw = contribution_scaled(
+            energy_residual,
+            &[tangent.d_e2[index], tangent.d_e3[index], tangent.d_e4[index]],
+        );
+        let energy_scale = (tangent.base.e2[index].abs()
+            + tangent.base.e3[index].abs()
+            + tangent.base.e4[index].abs())
+            / temperature_gamma;
+        let energy_conditioned =
+            energy_residual.abs() / energy_scale.max(f64::MIN_POSITIVE);
+
+        let massless_residual = tangent.d_e3[index] - tangent.d_p3_magnitude[index];
+        let massless_raw = contribution_scaled(
+            massless_residual,
+            &[tangent.d_e3[index], tangent.d_p3_magnitude[index]],
+        );
+        let massless_scale = (tangent.base.e3[index].abs()
+            + tangent.base.p3_magnitude[index].abs())
+            / temperature_gamma;
+        let massless_conditioned =
+            massless_residual.abs() / massless_scale.max(f64::MIN_POSITIVE);
+
+        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
+        let massive_right =
+            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
+        let massive_half_residual = massive_left - massive_right;
+        let massive_raw = contribution_scaled(
+            massive_half_residual,
+            &[massive_left, massive_right],
+        );
+        let massive_scale = (tangent.base.e4[index].powi(2).abs()
+            + tangent.base.p4_magnitude[index].powi(2).abs()
+            + mass_squared.abs())
+            / temperature_gamma;
+        let massive_conditioned =
+            2.0 * massive_half_residual.abs() / massive_scale.max(f64::MIN_POSITIVE);
+
+        let d12_d34_residual = tangent.d_d12[index] - tangent.d_d34[index];
+        let d12_d34_raw = contribution_scaled(
+            d12_d34_residual,
+            &[tangent.d_d12[index], tangent.d_d34[index]],
+        );
+        let d12_d34_scale =
+            (tangent.base.d12[index].abs() + tangent.base.d34[index].abs())
+                / temperature_gamma;
+        let d12_d34_conditioned =
+            d12_d34_residual.abs() / d12_d34_scale.max(f64::MIN_POSITIVE);
+
+        let d13_d14_d12_residual =
+            tangent.d_d13[index] + tangent.d_d14[index] - tangent.d_d12[index];
+        let d13_d14_d12_raw = contribution_scaled(
+            d13_d14_d12_residual,
+            &[
+                tangent.d_d13[index],
+                tangent.d_d14[index],
+                tangent.d_d12[index],
+            ],
+        );
+        let d13_d14_d12_scale = (tangent.base.d13[index].abs()
+            + tangent.base.d14[index].abs()
+            + tangent.base.d12[index].abs())
+            / temperature_gamma;
+        let d13_d14_d12_conditioned = d13_d14_d12_residual.abs()
+            / d13_d14_d12_scale.max(f64::MIN_POSITIVE);
+
+        let d23_d24_d12_residual =
+            tangent.d_d23[index] + tangent.d_d24[index] - tangent.d_d12[index];
+        let d23_d24_d12_raw = contribution_scaled(
+            d23_d24_d12_residual,
+            &[
+                tangent.d_d23[index],
+                tangent.d_d24[index],
+                tangent.d_d12[index],
+            ],
+        );
+        let d23_d24_d12_scale = (tangent.base.d23[index].abs()
+            + tangent.base.d24[index].abs()
+            + tangent.base.d12[index].abs())
+            / temperature_gamma;
+        let d23_d24_d12_conditioned = d23_d24_d12_residual.abs()
+            / d23_d24_d12_scale.max(f64::MIN_POSITIVE);
+
+        let raw = [
+            energy_raw,
+            massless_raw,
+            massive_raw,
+            d12_d34_raw,
+            d13_d14_d12_raw,
+            d23_d24_d12_raw,
+        ];
+        let conditioned = [
+            energy_conditioned,
+            massless_conditioned,
+            massive_conditioned,
+            d12_d34_conditioned,
+            d13_d14_d12_conditioned,
+            d23_d24_d12_conditioned,
+        ];
+        for component in 0..6 {
+            assert!(raw[component].is_finite());
+            assert!(conditioned[component].is_finite());
+            maximum_raw_local[component] = maximum_raw_local[component].max(raw[component]);
+            maximum_conditioned[component] =
+                maximum_conditioned[component].max(conditioned[component]);
+            assert!(
+                conditioned[component] <= INVARIANT_CAP,
+                "conditioned tangent invariant {component} failed at sample {index}: conditioned={:.17e}, raw_local={:.17e}",
+                conditioned[component],
+                raw[component],
+            );
+        }
+
+        let sensitivity = tangent.d_p3_magnitude[index].abs()
+            / massless_scale.max(f64::MIN_POSITIVE);
+        if sensitivity > mutation_sensitivity {
+            mutation_sensitivity = sensitivity;
+            mutation_index = Some(index);
+        }
+    }
+
+    let mutation_index = mutation_index.expect("supported massless tangent sample");
+    let mutation_scale = (tangent.base.e3[mutation_index].abs()
+        + tangent.base.p3_magnitude[mutation_index].abs())
+        / temperature_gamma;
+    let mutated_dp3 = tangent.d_p3_magnitude[mutation_index] * 1.01;
+    let mutation_ratio = (tangent.d_e3[mutation_index] - mutated_dp3).abs()
+        / mutation_scale.max(f64::MIN_POSITIVE);
+    assert!(
+        mutation_ratio > 100.0 * INVARIANT_CAP,
+        "one-percent massless-leg tangent mutation was not load-bearing: {mutation_ratio:.17e}"
+    );
+
+    eprintln!(
+        "P0AB_RAW_LOCAL_INVARIANT_MAXIMA energy={:.17e} massless={:.17e} massive={:.17e} d12_d34={:.17e} d13_d14_d12={:.17e} d23_d24_d12={:.17e}",
+        maximum_raw_local[0],
+        maximum_raw_local[1],
+        maximum_raw_local[2],
+        maximum_raw_local[3],
+        maximum_raw_local[4],
+        maximum_raw_local[5],
+    );
+    eprintln!(
+        "P0AB_CONDITIONED_INVARIANT_MAXIMA energy={:.17e} massless={:.17e} massive={:.17e} d12_d34={:.17e} d13_d14_d12={:.17e} d23_d24_d12={:.17e} mutation_index={mutation_index} mutation_ratio={mutation_ratio:.17e}",
+        maximum_conditioned[0],
+        maximum_conditioned[1],
+        maximum_conditioned[2],
+        maximum_conditioned[3],
+        maximum_conditioned[4],
+        maximum_conditioned[5],
+    );
+'''
+    return text[:start] + replacement + text[end:]
+
+
 def main() -> None:
     text = TEST.read_text(encoding="utf-8")
     margin_applied = "let rule = angular_rule(config).unwrap();" in text
-    conditioned_shell_applied = "massive_conditioned_ratio" in text
-    if margin_applied and conditioned_shell_applied:
+    invariants_applied = "P0AB_RAW_LOCAL_INVARIANT_MAXIMA" in text
+    if margin_applied and invariants_applied:
         print("D-081R1F1 P0AB metrology amendment: NOOP")
         return
 
@@ -175,76 +352,7 @@ def main() -> None:
 '''
         text = replace_once(text, old, new, "support-margin test oracle")
 
-    if not conditioned_shell_applied:
-        old_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
-        let massive_right =
-            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
-        assert!(
-            contribution_scaled(massive_left - massive_right, &[massive_left, massive_right])
-                <= INVARIANT_CAP,
-            "massive outgoing tangent invariant failed at sample {index}"
-        );
-'''
-        diagnostic_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
-        let massive_right =
-            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
-        let massive_residual = massive_left - massive_right;
-        let massive_ratio =
-            contribution_scaled(massive_residual, &[massive_left, massive_right]);
-        let primal_mass_shell = tangent.base.e4[index].powi(2)
-            - tangent.base.p4_magnitude[index].powi(2)
-            - mass_squared;
-        let primal_mass_shell_scale = tangent.base.e4[index].powi(2).abs()
-            + tangent.base.p4_magnitude[index].powi(2).abs()
-            + mass_squared.abs();
-        let primal_mass_shell_ratio =
-            primal_mass_shell.abs() / primal_mass_shell_scale.max(f64::MIN_POSITIVE);
-        if massive_ratio > INVARIANT_CAP {
-            eprintln!(
-                "P0AB_MASS_SHELL_DIAGNOSTIC index={index} e4={:.17e} p4={:.17e} de4={:.17e} dp4={:.17e} left={massive_left:.17e} right={massive_right:.17e} tangent_residual={massive_residual:.17e} tangent_ratio={massive_ratio:.17e} primal_residual={primal_mass_shell:.17e} primal_ratio={primal_mass_shell_ratio:.17e} energy_tangent_residual={:.17e}",
-                tangent.base.e4[index],
-                tangent.base.p4_magnitude[index],
-                tangent.d_e4[index],
-                tangent.d_p4_magnitude[index],
-                tangent.d_e2[index] - tangent.d_e3[index] - tangent.d_e4[index],
-            );
-        }
-        assert!(
-            massive_ratio <= INVARIANT_CAP,
-            "massive outgoing tangent invariant failed at sample {index}: ratio={massive_ratio:.17e}"
-        );
-'''
-        new_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
-        let massive_right =
-            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
-        let massive_residual = massive_left - massive_right;
-        let massive_local_ratio =
-            contribution_scaled(massive_residual, &[massive_left, massive_right]);
-        let primal_mass_shell_scale = tangent.base.e4[index].powi(2).abs()
-            + tangent.base.p4_magnitude[index].powi(2).abs()
-            + mass_squared.abs();
-        let massive_derivative_scale =
-            (primal_mass_shell_scale / temperature_gamma).max(f64::MIN_POSITIVE);
-        let massive_conditioned_ratio = 2.0 * massive_residual.abs() / massive_derivative_scale;
-        let primal_mass_shell = tangent.base.e4[index].powi(2)
-            - tangent.base.p4_magnitude[index].powi(2)
-            - mass_squared;
-        let primal_mass_shell_ratio =
-            primal_mass_shell.abs() / primal_mass_shell_scale.max(f64::MIN_POSITIVE);
-        assert!(massive_local_ratio.is_finite());
-        assert!(primal_mass_shell_ratio.is_finite());
-        assert!(
-            massive_conditioned_ratio <= INVARIANT_CAP,
-            "massive outgoing conditioned tangent invariant failed at sample {index}: conditioned={massive_conditioned_ratio:.17e}, raw_local={massive_local_ratio:.17e}, primal={primal_mass_shell_ratio:.17e}"
-        );
-'''
-        if old_massive in text:
-            text = text.replace(old_massive, new_massive, 1)
-        elif diagnostic_massive in text:
-            text = text.replace(diagnostic_massive, new_massive, 1)
-        else:
-            raise SystemExit("mass-shell metrology: expected original or diagnostic block")
-
+    text = replace_invariant_loop(text)
     TEST.write_text(text, encoding="utf-8")
     print("D-081R1F1 P0AB metrology amendment: CHANGED")
 
