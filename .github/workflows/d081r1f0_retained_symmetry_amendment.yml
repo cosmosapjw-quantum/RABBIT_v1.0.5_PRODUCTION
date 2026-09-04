@@ -92,7 +92,7 @@ jobs:
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
 
-      - name: Generate calibration oracle twice
+      - name: Generate calibration and order-eight oracles twice
         shell: bash
         run: |
           set -euo pipefail
@@ -106,6 +106,14 @@ jobs:
             --output /tmp/retained-calibration-b.json
           cmp /tmp/retained-calibration-a.json /tmp/retained-calibration-b.json
           sha256sum /tmp/retained-calibration-a.json /tmp/retained-calibration-b.json
+          "$PY" "$GEN" --case order8 \
+            --retained /tmp/d081r1f0_state_1200.npz \
+            --output /tmp/order8-a.json
+          "$PY" "$GEN" --case order8 \
+            --retained /tmp/d081r1f0_state_1200.npz \
+            --output /tmp/order8-b.json
+          cmp /tmp/order8-a.json /tmp/order8-b.json
+          sha256sum /tmp/order8-a.json /tmp/order8-b.json
 
       - name: Apply amendment and format
         shell: bash
@@ -125,6 +133,7 @@ jobs:
         working-directory: native/rabbit_cpu
         env:
           D081R1F0_RETAINED_CALIBRATION_FIXTURE: /tmp/retained-calibration-a.json
+          D081R1F0_ORDER8_FIXTURE: /tmp/order8-a.json
         run: |
           set -euo pipefail
           cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1f0-amendment-metadata.json
