@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
+      DEBIAN_FRONTEND: noninteractive
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONPATH: src:.
       OPENBLAS_NUM_THREADS: "1"
@@ -37,7 +38,7 @@ jobs:
           test "$(git hash-object docs/audit/artifacts/d081r1f1/absent_api_red_receipt.json)" = 5ac1aced2f7417bb317ebb1267dcce8d014172c7
           test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5f744347368020d57d67cc4e22dd01cbc02
           test "$(git hash-object scripts/audit/_d080_tgamma_collision.py)" = 78489c53dc49132152df25b00cf3bdb96e22769f
-          test "$(git hash-object docs/audit/artifacts/d080c/full_static_tgamma_rhs_column_receipt.json)" = 1ebb9ae25553417c55802c4c9edc336ae08f91d3
+          test "$(git hash-object docs/audit/artifacts/d080c/research_receipt.json)" = 1ebb9a854f1db42d76ae36cfbe0926b016b67b7e
           test "$(git hash-object docs/audit/artifacts/d081r1f0/retained_holdout_verification_receipt.json)" = 01a87b4227fbe11e83412a5899a1eead69fbda3c
           test ! -e native/rabbit_cpu/src/f10_tgamma_tangent.rs
           test ! -e docs/audit/artifacts/d081r1f1/retained_calibration_verification_receipt.json
@@ -154,7 +155,9 @@ jobs:
           import Lake
           open Lake DSL
           package «d081r1f1» where
+            version := v!"0.1.0"
           require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.19.0"
+          @[default_target]
           lean_lib D081R1F1
           EOF
             cat >/tmp/d081r1f1-lean/D081R1F1/Basic.lean <<'EOF'
@@ -164,8 +167,7 @@ jobs:
               (H Ht P Pt q : ℝ) (hH : H ≠ 0) (hq : q ≠ 0) :
               (Pt * H - P * Ht) / (H^2 * q) =
                 Pt / (H * q) - (P / (H * q)) * (Ht / H) := by
-            field_simp
-            ring
+            field_simp [hH, hq] <;> ring
           EOF
             (
               cd /tmp/d081r1f1-lean
@@ -175,7 +177,7 @@ jobs:
             ) >/tmp/d081r1f1-lean-mathlib.log 2>&1
             status=$?
             if [[ $status -eq 0 ]]; then
-              record lean-mathlib PASS "lean-4.19.0_mathlib-v4.19.0"
+              record lean-mathlib PASS lean-4.19.0_mathlib-v4.19.0
             else
               record lean-mathlib EXECUTION_OR_PROVISION_FAILED "exit-${status}"
             fi
@@ -230,7 +232,7 @@ jobs:
               'absent_api_red_receipt_blob': '5ac1aced2f7417bb317ebb1267dcce8d014172c7',
               'd080a_tgamma_primitives_blob': 'c585d5f744347368020d57d67cc4e22dd01cbc02',
               'd080b_tgamma_collision_blob': '78489c53dc49132152df25b00cf3bdb96e22769f',
-              'd080c_receipt_blob': '1ebb9ae25553417c55802c4c9edc336ae08f91d3',
+              'd080c_receipt_blob': '1ebb9a854f1db42d76ae36cfbe0926b016b67b7e',
               'oracle_script_blob': os.environ['SCRIPT_BLOB'],
               'workflow_blob': os.environ['WORKFLOW_BLOB'],
               'oracle_sha256': hashlib.sha256(oracle_path.read_bytes()).hexdigest(),
