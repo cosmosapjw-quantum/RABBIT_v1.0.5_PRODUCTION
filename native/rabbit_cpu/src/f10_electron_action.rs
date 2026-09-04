@@ -11,6 +11,7 @@
 #![cfg_attr(not(test), allow(dead_code))]
 
 pub(crate) mod c_jvp;
+pub(crate) mod tgamma_jvp;
 
 use core::f64::consts::PI;
 

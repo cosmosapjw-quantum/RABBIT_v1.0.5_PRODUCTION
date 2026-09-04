@@ -1,0 +1,69 @@
+{
+  "schema": "rabbit.d081r1f1.p1_pair_green_receipt.v1",
+  "classification": "PASS_PAIR_ONLY_ORDER8_THERMAL_JVP_FULL_ELECTRON_JVP_OPEN",
+  "evidence_status": "FIRST_GREEN_EXECUTED_COMMITTED_SOURCE_PRESERVED_CLEAN_REPLAY_PENDING",
+  "historical_full_p1_red_commit": "b362a249f2bf781baa874f9cc5b76517e6478ebb",
+  "behavioral_red_commit": "d39bc2311ca0fb07f36eb73c7c3e6c772cf64ea6",
+  "behavioral_red_run": 33914682424,
+  "first_green_run": 33915511250,
+  "first_green_job": 101161636223,
+  "first_green_trigger": "a7ad5c888f489f95104ae4e4592920c4950b1ece",
+  "tested_source_tree": "6a38a1ec08bcc50b247dba01a95a9f1b9480bf2d",
+  "committed_tested_source": "47a8a23fffaa216ed810f4908ea29a53aba11de1",
+  "source_blob": "6a6348d69db951650b3dafd92a651dab4801d578",
+  "test_blob": "aa1628dfb38d0d26bea699e971271083c907337e",
+  "parent_registry_blob": "45ce4f38d6db0bbf2620da493015fdc3e381e263",
+  "oracle_generator_blob": "249a536f851beca59cde492277a8baf6ecc63760",
+  "oracle_sha256_first_execution_capsule": "375e7dc92b5662a054766de74bca94547d6c3d9e34ec05db3c6d690ca9e2aae1",
+  "same_capsule_double_generation_byte_identity": true,
+  "runtime": {
+    "rust": "1.94.1", "python": "3.12.3", "numpy": "2.4.4", "scipy": "1.17.1",
+    "mpmath": "1.3.0", "mpmath_decimal_digits": 100,
+    "offline_vendor_artifact": 9932329475, "offline_vendor_packages": 174,
+    "vendor_tar_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f"
+  },
+  "native_relative_cap": 1e-7,
+  "first_law_cap": 2e-9,
+  "centered_best_relative_cap": 2e-6,
+  "cases": [
+    {"name": "equilibrium", "native_relative": 3.68695071228694709e-14, "qnu_t": 7.54391600033323206e-20, "qem_t": -7.54391600033323206e-20, "first_law": 0.0},
+    {"name": "thermal_split", "native_relative": 2.22156163506850193e-14, "qnu_t": 8.92258233166987511e-20, "qem_t": -8.92258233166987511e-20, "first_law": 0.0},
+    {"name": "mu_tau_split", "native_relative": 2.22156163506850193e-14, "qnu_t": 8.92258029499108187e-20, "qem_t": -8.92258029499108187e-20, "first_law": 0.0}
+  ],
+  "centered_ladder": [
+    {"epsilon_mev": 1e-3, "relative": 4.25380301879657581e-7},
+    {"epsilon_mev": 3e-4, "relative": 3.82847252722045164e-8},
+    {"epsilon_mev": 1e-4, "relative": 4.25497027703902826e-9}
+  ],
+  "executed_tests": {
+    "pair_focused": {"passed": 3, "failed": 0, "ignored": 0},
+    "inherited_electron_action": {"passed": 4, "failed": 0},
+    "inherited_r1f0_zero_c_jvp": {"passed": 1, "failed": 0},
+    "inherited_packed_rhs_preflight": {"passed": 3, "failed": 0},
+    "release_check": "PASS", "strict_clippy": "PASS"
+  },
+  "structural_gates": {
+    "pair_measure_matrix_projection_exact_zero": "PASS",
+    "three_family_native_direct_d080b_parity": "PASS",
+    "family_modal_reconstruction": "PASS",
+    "species_routing": "PASS",
+    "support_and_matrix_correction_masks_python_identity": "PASS",
+    "pair_temperature_independent_branch": "PASS",
+    "energy_transfer_signs": "PASS",
+    "family_first_law": "PASS",
+    "one_percent_scale_mutation": "KILLED",
+    "five_100_digit_pauli_reference_probes": "PASS",
+    "invalid_input_refusal": "PASS"
+  },
+  "qualifications": [
+    "Direct cross-language checks cover pair total and family native arrays, energy transfer, and masks. No independent pair-modal oracle is claimed.",
+    "This first GREEN registered the child module and formatted source in its worktree before testing. The exact tested tree was subsequently committed unchanged.",
+    "No new retained-state computation or holdout oracle was run. Inherited preflight reads pre-existing retained fixture metadata.",
+    "Finite differences occur only in validation; production differentiation is analytic.",
+    "Wolfram context and evaluator returned external HTTP 502; the fresh numeric fallback was mpmath at 100 decimal digits.",
+    "Independent external review and clean committed-head replay remain pending in this receipt version."
+  ],
+  "untested": ["elastic_Tgamma_derivative", "full_electron_Tgamma_JVP", "packed_RHS_Tgamma_column", "retained_thermal_calibration", "thermal_holdout", "solver", "trajectory", "endpoint", "Neff", "performance"],
+  "token_metrics": "UNAVAILABLE",
+  "claim_ceiling": "order-eight pair-channel thermal collision tangent at three manufactured states only; no full P1, full JVP, solver, trajectory, merge or G-F10 movement"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "rabbit.d081r1f1.p1_pair_behavioral_red.v1",
+  "classification": "PASS_EXPECTED_ABSENT_PAIR_THERMAL_JVP_CHILD_MODULE_RED",
+  "scope": "pair-only behavioral tests, not full P1 admission",
+  "head": "d39bc2311ca0fb07f36eb73c7c3e6c772cf64ea6",
+  "tree": "ee42283cfcd37fbdfb69fa758340a807e366dc43",
+  "test_blob": "4cba3226be62c91dd7429097138b6b71863be42d",
+  "workflow_run": 33914682424,
+  "job": 101158995531,
+  "unique_compiler_error": "E0432 unresolved import crate::f10_electron_action::tgamma_jvp",
+  "prior_run": 33914377141,
+  "prior_run_classification": "MISSING_MODULE_PLUS_CASCADING_E0282_NOT_ISOLATED_RED",
+  "rust": "1.94.1",
+  "vendor_artifact": 9932329475,
+  "vendor_packages": 174,
+  "preoutput_test_correction": "explicit closure type; equilibrium primal comparison uses T*dC/dT reference scale with unchanged 1e-7 cap",
+  "numerical_oracle_executed": false,
+  "production_present": false,
+  "retained_accessed": false,
+  "claim_ceiling": "RED evidence only; no nonzero derivative, collision, RHS, solver or science claim"
+}
