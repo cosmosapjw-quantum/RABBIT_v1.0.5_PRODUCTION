@@ -1,0 +1,136 @@
+name: d081r1f1-vendor-refresh
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-p0a-tgamma-primitives-20260904
+    paths:
+      - .github/workflows/d081r1f1_vendor_refresh.yml
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact trigger and lock authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor c984f871da4fa5ae20d88a04e6a2180f3e1c4c35 HEAD
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          test ! -e docs/audit/artifacts/d081r1f1/vendor_refresh_receipt.json
+
+      - name: Install exact Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt clippy
+          test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
+          test "$(cargo +1.94.1 --version)" = "cargo 1.94.1 (29ea6fb6a 2026-03-24)"
+
+      - name: Rebuild deterministic locked vendor and verify offline closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/d081r1-vendor
+          cd native/rabbit_cpu
+          cargo +1.94.1 vendor --locked --versioned-dirs \
+            /tmp/d081r1-vendor/vendor > /tmp/d081r1-vendor-config.toml
+          test "$(find /tmp/d081r1-vendor/vendor -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p .cargo
+          cat /tmp/d081r1-vendor-config.toml > .cargo/config.toml
+          printf '\n[net]\noffline = true\n' >> .cargo/config.toml
+          cargo +1.94.1 metadata --locked --offline --format-version 1 \
+            > /tmp/d081r1-vendor-metadata.json
+          cargo +1.94.1 check --release --locked --offline
+          cd ../..
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 \
+            --numeric-owner -C /tmp/d081r1-vendor -cf - vendor \
+            | gzip -n -9 > /tmp/d081r1-cargo-vendor-a1b5035.tar.gz
+          sha256sum /tmp/d081r1-cargo-vendor-a1b5035.tar.gz \
+            | tee /tmp/d081r1-cargo-vendor-a1b5035.sha256
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          archive = Path('/tmp/d081r1-cargo-vendor-a1b5035.tar.gz')
+          payload = {
+              'schema': 'rabbit.d081r1f1.vendor_refresh.v1',
+              'classification': 'LOCK_DERIVED_VENDOR_OFFLINE_CLOSURE_PASS',
+              'trigger_head': os.environ['GITHUB_SHA'],
+              'cargo_lock_blob': 'a1b5035da5c20712d1a2a4ab077da255ff94a014',
+              'rust_version': '1.94.1',
+              'package_count': 174,
+              'archive_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+              'archive_bytes': archive.stat().st_size,
+              'derivation': 'cargo vendor --locked --versioned-dirs',
+              'offline_metadata': 'PASS',
+              'offline_release_check': 'PASS',
+              'claim_ceiling': 'Cargo.lock-derived source vendor and offline Rust closure only; no scientific or numerical result',
+          }
+          Path('/tmp/d081r1-vendor-receipt.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Upload refreshed locked vendor
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: d081r1-cargo-vendor-a1b5035-20260904
+          path: |
+            /tmp/d081r1-cargo-vendor-a1b5035.tar.gz
+            /tmp/d081r1-cargo-vendor-a1b5035.sha256
+            /tmp/d081r1-vendor-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+
+      - name: Publish durable vendor authority receipt
+        shell: bash
+        env:
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          set -euo pipefail
+          receipt=docs/audit/artifacts/d081r1f1/vendor_refresh_receipt.json
+          mkdir -p "$(dirname "${receipt}")"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          source = Path('/tmp/d081r1-vendor-receipt.json')
+          payload = json.loads(source.read_text(encoding='utf-8'))
+          payload['artifact_id'] = int(os.environ['ARTIFACT_ID'])
+          payload['artifact_digest'] = os.environ['ARTIFACT_DIGEST']
+          payload['artifact_url'] = os.environ['ARTIFACT_URL']
+          payload['workflow_run_id'] = os.environ['GITHUB_RUN_ID']
+          Path('docs/audit/artifacts/d081r1f1/vendor_refresh_receipt.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${receipt}"
+          test "$(git diff --cached --name-only)" = "${receipt}"
+          git commit -m 'ci(d081r1f1): publish refreshed vendor receipt'
+          git fetch origin research/d081r1f1-p0a-tgamma-primitives-20260904
+          test "$(git rev-parse FETCH_HEAD)" = "${GITHUB_SHA}"
+          git push origin HEAD:research/d081r1f1-p0a-tgamma-primitives-20260904
