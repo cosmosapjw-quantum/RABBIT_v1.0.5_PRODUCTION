@@ -1,0 +1,3 @@
+D-081R1F1 P0 symbolic fallback execution trigger.
+
+This trigger authorizes only the independent SymPy/mpmath identity and dimensional checks plus bounded auxiliary Octave, Singular, SageMath, and Lean/mathlib availability/execution attempts defined by the committed workflow. It does not authorize production Rust mutation or access to retained state_1200, unseen state_2000, or reserved state_3000.
