@@ -18,6 +18,7 @@ jobs:
     env:
       EXPECTED_BRANCH: research/d081r1f1-rust-tgamma-jvp-20260904
       CONTRACT: docs/audit/D081R1F1_RUST_TGAMMA_PACKED_RHS_JVP_CONTRACT_2026-09-04.md
+      EXPECTED_CONTRACT_BLOB: 58eeaf38b9f4edd4c60a01d22d2e101a33b71812
       RECEIPT: docs/audit/artifacts/d081r1f1/absent_api_red_receipt.json
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -32,7 +33,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
           test "${GITHUB_REF_NAME}" = "${EXPECTED_BRANCH}"
           git merge-base --is-ancestor c29b6d26599da0bead66482373d8ec2cdc8f06c4 HEAD
-          test "$(git hash-object "${CONTRACT}")" = "$(git hash-object "${CONTRACT}")"
+          test "$(git hash-object "${CONTRACT}")" = "${EXPECTED_CONTRACT_BLOB}"
           test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
           test ! -e native/rabbit_cpu/src/f10_packed_rhs_tgamma_jvp.rs
