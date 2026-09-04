@@ -50,6 +50,8 @@ pub(crate) struct F10KinematicTgammaTangent {
     pub(crate) d_d34: Vec<f64>,
     pub(crate) minimum_support_margin: f64,
     pub(crate) minimum_lambda_margin: f64,
+    pub(crate) minimum_support_margin_relative: f64,
+    pub(crate) minimum_supported_lambda_margin_relative: f64,
 }
 
 fn square(value: f64) -> f64 {
@@ -223,6 +225,8 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
     let mut d_d34 = Vec::with_capacity(expected_size);
     let mut minimum_support_margin = f64::INFINITY;
     let mut minimum_lambda_margin = f64::INFINITY;
+    let mut maximum_invariant_s_absolute = 0.0_f64;
+    let mut minimum_supported_lambda_margin_relative = f64::INFINITY;
     let mut output_index = 0_usize;
 
     let energy1 = input.p1;
@@ -254,6 +258,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
             let d_invariant_s_raw =
                 2.0 * total_energy * d_total_energy - 2.0 * total_magnitude * d_total_magnitude;
             let invariant_s = invariant_s_raw.max(0.0);
+            maximum_invariant_s_absolute = maximum_invariant_s_absolute.max(invariant_s.abs());
             let d_invariant_s = if invariant_s_raw > 0.0 {
                 d_invariant_s_raw
             } else {
@@ -277,6 +282,10 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
             }
             if support && lambda <= 0.0 {
                 return Err(F10TgammaKinematicError::NondifferentiableDiscreteEvent);
+            }
+            if support {
+                minimum_supported_lambda_margin_relative = minimum_supported_lambda_margin_relative
+                    .min(lambda / square(invariant_s).max(f64::MIN_POSITIVE));
             }
             let d_lambda = 2.0 * (invariant_s - mass3_squared - mass4_squared) * d_invariant_s;
             let sqrt_lambda = if support { lambda.sqrt() } else { 0.0 };
@@ -467,11 +476,19 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
         }
     }
 
+    let minimum_support_margin_relative = minimum_support_margin
+        / maximum_invariant_s_absolute
+            .max(threshold_squared)
+            .max(f64::MIN_POSITIVE);
     if output_index != expected_size
         || !minimum_support_margin.is_finite()
         || minimum_support_margin <= 0.0
         || !minimum_lambda_margin.is_finite()
         || minimum_lambda_margin <= 0.0
+        || !minimum_support_margin_relative.is_finite()
+        || minimum_support_margin_relative <= 0.0
+        || !minimum_supported_lambda_margin_relative.is_finite()
+        || minimum_supported_lambda_margin_relative <= 0.0
     {
         return Err(F10TgammaKinematicError::NonFiniteOutput);
     }
@@ -496,5 +513,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
         d_d34,
         minimum_support_margin,
         minimum_lambda_margin,
+        minimum_support_margin_relative,
+        minimum_supported_lambda_margin_relative,
     })
 }
