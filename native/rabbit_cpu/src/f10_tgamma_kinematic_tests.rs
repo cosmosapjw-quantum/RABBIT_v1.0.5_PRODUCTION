@@ -1,8 +1,8 @@
 //! RED-first tests for mapped-basis and finite-mass elastic `T_gamma` tangents.
 //!
-//! The production APIs imported below are intentionally absent at this commit.
-//! A dedicated workflow temporarily registers this module and must observe the
-//! contracted unresolved-import RED before any implementation is added.
+//! The production APIs imported below were absent in the preserved P0B RED.
+//! This committed suite now exercises the focused sibling implementation
+//! directly, without a facade re-export that would create unused-import noise.
 
 use crate::f10_action_grid::F10ActionGrid;
 use crate::f10_action_kinematics::{
@@ -10,7 +10,7 @@ use crate::f10_action_kinematics::{
     two_body_kinematics,
 };
 use crate::f10_action_spectral::modal_basis;
-use crate::f10_tgamma_tangent::{
+use crate::f10_tgamma_kinematics::{
     F10ElasticTgammaInput, evaluate_elastic_tgamma_kinematic_tangent,
     mapped_modal_basis_derivative,
 };
