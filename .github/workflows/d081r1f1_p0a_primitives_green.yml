@@ -83,13 +83,25 @@ jobs:
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="d081r1"\n[source.d081r1]\ndirectory="/tmp/vendor-expanded/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
 
-      - name: Execute P0A GREEN and inherited regressions
+      - name: Format, execute P0A GREEN, and run inherited regressions
         shell: bash
         working-directory: native/rabbit_cpu
         env:
           D081R1F1_P0A_ORACLE: /tmp/p0a-green-a.json
         run: |
           set -euo pipefail
+          source_path='native/rabbit_cpu/src/f10_tgamma_tangent.rs'
+          test_path='native/rabbit_cpu/src/f10_tgamma_tangent_tests.rs'
+          cargo +1.94.1 fmt --all
+          mapfile -t format_changed < <(git -C ../.. diff --name-only)
+          printf 'format_changed=%s\n' "${format_changed[*]-}"
+          test "${#format_changed[@]}" -le 2
+          for path in "${format_changed[@]}"; do
+            case "${path}" in
+              "${source_path}"|"${test_path}") ;;
+              *) echo "unexpected rustfmt path: ${path}" >&2; exit 1 ;;
+            esac
+          done
           cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/p0a-green-metadata.json
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 check --release --locked --offline
@@ -99,12 +111,17 @@ jobs:
           cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture
           cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
 
-      - name: Publish durable P0A GREEN receipt
+      - name: Publish formatted source and durable P0A GREEN receipt
         shell: bash
         run: |
           set -euo pipefail
-          receipt=docs/audit/artifacts/d081r1f1/p0a_primitives_green_receipt.json
+          source_path='native/rabbit_cpu/src/f10_tgamma_tangent.rs'
+          test_path='native/rabbit_cpu/src/f10_tgamma_tangent_tests.rs'
+          receipt='docs/audit/artifacts/d081r1f1/p0a_primitives_green_receipt.json'
           mkdir -p "$(dirname "${receipt}")"
+          git add "${source_path}" "${test_path}"
+          tested_tree="$(git write-tree)"
+          export TESTED_TREE="${tested_tree}"
           python3 - <<'PY'
           import hashlib, json, os, subprocess
           from pathlib import Path
@@ -117,7 +134,7 @@ jobs:
               'schema': 'rabbit.d081r1f1.p0a_primitives_green_receipt.v1',
               'classification': 'PASS_WITH_MOVING_HALF_LINE_AND_QED_OFF_EOS_TGAMMA_PRIMITIVES_SCOPE',
               'trigger_head': os.environ['GITHUB_SHA'],
-              'tested_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              'tested_source_tree': os.environ['TESTED_TREE'],
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
               'source_blob': blob('native/rabbit_cpu/src/f10_tgamma_tangent.rs'),
               'test_blob': blob('native/rabbit_cpu/src/f10_tgamma_tangent_tests.rs'),
@@ -140,10 +157,19 @@ jobs:
               encoding='utf-8',
           )
           PY
+          git add "${receipt}"
+          git diff --cached --check
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -ge 1
+          test "${#staged[@]}" -le 3
+          for path in "${staged[@]}"; do
+            case "${path}" in
+              "${source_path}"|"${test_path}"|"${receipt}") ;;
+              *) echo "unexpected staged path: ${path}" >&2; exit 1 ;;
+            esac
+          done
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "${receipt}"
-          test "$(git diff --cached --name-only)" = "${receipt}"
           git commit -m 'test(d081r1f1): publish P0A thermal-primitives GREEN receipt'
           git fetch origin research/d081r1f1-p0a-tgamma-primitives-20260904
           test "$(git rev-parse FETCH_HEAD)" = "${GITHUB_SHA}"
