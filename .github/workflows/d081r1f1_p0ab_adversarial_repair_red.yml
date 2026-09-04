@@ -71,6 +71,7 @@ jobs:
           test "${status}" -ne 0
           grep -F 'electromagnetic_eos_tgamma_discrete_d2rho_dt2' /tmp/p0ab-red.log
           grep -F 'electromagnetic_eos_tgamma_continuum_d2rho_dt2_reference' /tmp/p0ab-red.log
+          rm -rf .cargo
           test -z "$(git -C ../.. status --short)"
 
       - name: Publish durable expected-RED receipt
