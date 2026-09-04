@@ -11,8 +11,7 @@ use crate::f10_action_kinematics::{
 };
 use crate::f10_action_spectral::modal_basis;
 use crate::f10_tgamma_kinematics::{
-    F10ElasticTgammaInput, evaluate_elastic_tgamma_kinematic_tangent,
-    mapped_modal_basis_derivative,
+    F10ElasticTgammaInput, evaluate_elastic_tgamma_kinematic_tangent, mapped_modal_basis_derivative,
 };
 
 const ELECTRON_MASS_MEV: f64 = 0.510_998_95;
@@ -56,11 +55,7 @@ fn exact_bits(actual: &[f64], expected: &[f64], label: &str) {
     }
 }
 
-fn elastic_batch(
-    p1: f64,
-    temperature_gamma: f64,
-    config: F10CollisionConfig,
-) -> F10KinematicBatch {
+fn elastic_batch(p1: f64, temperature_gamma: f64, config: F10CollisionConfig) -> F10KinematicBatch {
     let (p2_nodes, p2_weights) =
         electron_half_line_rule(config.electron_radial_order, temperature_gamma).unwrap();
     two_body_kinematics(F10KinematicInput {
@@ -123,7 +118,11 @@ fn elastic_kinematic_tangent_preserves_branch_and_matches_centered_witness() {
     exact_bits(&tangent.base.e2, &base.e2, "base e2");
     exact_bits(&tangent.base.e3, &base.e3, "base e3");
     exact_bits(&tangent.base.e4, &base.e4, "base e4");
-    exact_bits(&tangent.base.phase_space, &base.phase_space, "base phase space");
+    exact_bits(
+        &tangent.base.phase_space,
+        &base.phase_space,
+        "base phase space",
+    );
     exact_bits(
         &tangent.base.quadrature_weight,
         &base.quadrature_weight,
@@ -166,12 +165,36 @@ fn elastic_kinematic_tangent_preserves_branch_and_matches_centered_witness() {
             &tangent.d_quadrature_weight,
             centered(&plus.quadrature_weight, &minus.quadrature_weight, epsilon),
         ),
-        ("d12", &tangent.d_d12, centered(&plus.d12, &minus.d12, epsilon)),
-        ("d13", &tangent.d_d13, centered(&plus.d13, &minus.d13, epsilon)),
-        ("d14", &tangent.d_d14, centered(&plus.d14, &minus.d14, epsilon)),
-        ("d23", &tangent.d_d23, centered(&plus.d23, &minus.d23, epsilon)),
-        ("d24", &tangent.d_d24, centered(&plus.d24, &minus.d24, epsilon)),
-        ("d34", &tangent.d_d34, centered(&plus.d34, &minus.d34, epsilon)),
+        (
+            "d12",
+            &tangent.d_d12,
+            centered(&plus.d12, &minus.d12, epsilon),
+        ),
+        (
+            "d13",
+            &tangent.d_d13,
+            centered(&plus.d13, &minus.d13, epsilon),
+        ),
+        (
+            "d14",
+            &tangent.d_d14,
+            centered(&plus.d14, &minus.d14, epsilon),
+        ),
+        (
+            "d23",
+            &tangent.d_d23,
+            centered(&plus.d23, &minus.d23, epsilon),
+        ),
+        (
+            "d24",
+            &tangent.d_d24,
+            centered(&plus.d24, &minus.d24, epsilon),
+        ),
+        (
+            "d34",
+            &tangent.d_d34,
+            centered(&plus.d34, &minus.d34, epsilon),
+        ),
         (
             "support indicator tangent",
             &tangent.d_support_indicator,

@@ -1,0 +1,44 @@
+{
+  "branch_semantics": {
+    "minimum_lambda_margin_positive": true,
+    "minimum_support_margin_positive": true,
+    "support_indicator_tangent": "EXACT_ZERO_ON_FIXED_BRANCH",
+    "support_mismatch": "NONDIFFERENTIABLE_DISCRETE_EVENT"
+  },
+  "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "claim_ceiling": "mapped-Legendre basis derivative and fixed-support finite-electron-mass elastic kinematic T_gamma tangent only; no matrix-element, Pauli, projection, collision-action or packed-RHS thermal JVP, retained state, solver, trajectory, endpoint, N_eff, performance, publication, merge, or G-F10 movement",
+  "classification": "PASS_WITH_MAPPED_BASIS_AND_FIXED_BRANCH_ELASTIC_TGAMMA_KINEMATICS_SCOPE",
+  "compiler_test_log_sha256": "8b12181a05a3b077ef3065fb04909882397e020f4bec69e25ff45ae6f511d80a",
+  "contract_blob": "58eeaf38b9f4edd4c60a01d22d2e101a33b71812",
+  "focused_tests": {
+    "failed": 0,
+    "passed": 2
+  },
+  "inherited_p0a_tests": {
+    "failed": 0,
+    "passed": 3
+  },
+  "inherited_packed_rhs_preflight": "PASS",
+  "inherited_r1f0_zero_jvp_regression": "PASS",
+  "module_registry_blob": "36e336ffa95059c510ec9853dd37a9962c274871",
+  "numpy": "2.4.4",
+  "p0a_facade_blob": "0217768ba62b02d14a3c52ae68208fafc8c8d46c",
+  "p0a_integration_receipt_blob": "4b1d490084a3150107cc9b451110098a58ae0513",
+  "p0a_oracle_sha256": "3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7",
+  "p0b_red_receipt_blob": "5c186c8df84ed5718e287f4ac5ea0bd2137debe6",
+  "release_check": "PASS",
+  "retained_or_holdout_state_accessed": false,
+  "rust": "1.94.1",
+  "schema": "rabbit.d081r1f1.p0b_kinematics_green.v1",
+  "scipy": "1.17.1",
+  "source_blob": "aa5092ad4d1a37365a8a1354a6cce0f81c3c4412",
+  "strict_clippy": "PASS",
+  "test_blob": "14db5662106ad432d8236a97beccace85c2f6075",
+  "tested_source_tree": "9c9293edf328f4e855813c0cefdd61b8fd97fec6",
+  "trigger_head": "b2fae452e540609561502bc8cf6960cf2cbc38ab",
+  "vendor_archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "vendor_artifact_id": 9932329475,
+  "vendor_packages": 174,
+  "vendor_zip_sha256": "2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640",
+  "workflow_run_id": "33868916764"
+}

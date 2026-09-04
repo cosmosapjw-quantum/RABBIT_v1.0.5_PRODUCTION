@@ -61,19 +61,11 @@ fn dot(left: [f64; 3], right: [f64; 3]) -> f64 {
 }
 
 fn add(left: [f64; 3], right: [f64; 3]) -> [f64; 3] {
-    [
-        left[0] + right[0],
-        left[1] + right[1],
-        left[2] + right[2],
-    ]
+    [left[0] + right[0], left[1] + right[1], left[2] + right[2]]
 }
 
 fn subtract(left: [f64; 3], right: [f64; 3]) -> [f64; 3] {
-    [
-        left[0] - right[0],
-        left[1] - right[1],
-        left[2] - right[2],
-    ]
+    [left[0] - right[0], left[1] - right[1], left[2] - right[2]]
 }
 
 fn scale(vector: [f64; 3], factor: f64) -> [f64; 3] {
@@ -154,15 +146,13 @@ pub(crate) fn mapped_modal_basis_derivative(
         let mut dp_previous = 0.0_f64;
         let mut p_current = x;
         let mut dp_current = 1.0_f64;
-        result[point * grid.order + 1] =
-            (3.0 / grid.y_max).sqrt() * dp_current * dx_dy;
+        result[point * grid.order + 1] = (3.0 / grid.y_max).sqrt() * dp_current * dx_dy;
 
         for degree in 1..grid.order - 1 {
             let n = degree as f64;
             let p_next = ((2.0 * n + 1.0) * x * p_current - n * p_previous) / (n + 1.0);
-            let dp_next = ((2.0 * n + 1.0) * (p_current + x * dp_current)
-                - n * dp_previous)
-                / (n + 1.0);
+            let dp_next =
+                ((2.0 * n + 1.0) * (p_current + x * dp_current) - n * dp_previous) / (n + 1.0);
             let output_degree = degree + 1;
             result[point * grid.order + output_degree] =
                 ((2 * output_degree + 1) as f64 / grid.y_max).sqrt() * dp_next * dx_dy;
@@ -288,8 +278,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
             if support && lambda <= 0.0 {
                 return Err(F10TgammaKinematicError::NondifferentiableDiscreteEvent);
             }
-            let d_lambda =
-                2.0 * (invariant_s - mass3_squared - mass4_squared) * d_invariant_s;
+            let d_lambda = 2.0 * (invariant_s - mass3_squared - mass4_squared) * d_invariant_s;
             let sqrt_lambda = if support { lambda.sqrt() } else { 0.0 };
             let d_sqrt_lambda = if support {
                 d_lambda / (2.0 * sqrt_lambda)
@@ -302,8 +291,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
                 0.0
             };
             let d_k_star = if support {
-                d_sqrt_lambda / (2.0 * sqrt_s)
-                    - sqrt_lambda * d_sqrt_s / (2.0 * square(sqrt_s))
+                d_sqrt_lambda / (2.0 * sqrt_s) - sqrt_lambda * d_sqrt_s / (2.0 * square(sqrt_s))
             } else {
                 0.0
             };
@@ -330,11 +318,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
             } else {
                 0.0
             };
-            let gamma = if support {
-                total_energy / sqrt_s
-            } else {
-                1.0
-            };
+            let gamma = if support { total_energy / sqrt_s } else { 1.0 };
             let d_gamma = if support {
                 d_total_energy / sqrt_s - total_energy * d_sqrt_s / square(sqrt_s)
             } else {
@@ -380,8 +364,7 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
                     let d_parallel_argument =
                         d_k_star * mu_star + d_beta * energy3_star + beta * d_energy3_star;
                     let p3_parallel = gamma * parallel_argument;
-                    let d_p3_parallel =
-                        d_gamma * parallel_argument + gamma * d_parallel_argument;
+                    let d_p3_parallel = d_gamma * parallel_argument + gamma * d_parallel_argument;
                     let vector3 = add(transverse, scale(parallel, p3_parallel));
                     let d_vector3 = add(
                         d_transverse,
@@ -391,9 +374,8 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
                         ),
                     );
                     let energy3_argument = energy3_star + beta * k_star * mu_star;
-                    let d_energy3_argument = d_energy3_star
-                        + d_beta * k_star * mu_star
-                        + beta * d_k_star * mu_star;
+                    let d_energy3_argument =
+                        d_energy3_star + d_beta * k_star * mu_star + beta * d_k_star * mu_star;
                     let energy3 = gamma * energy3_argument;
                     let denergy3 = d_gamma * energy3_argument + gamma * d_energy3_argument;
                     let vector4 = subtract(total_vector, vector3);
@@ -402,15 +384,14 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
                     let denergy4 = d_total_energy - denergy3;
                     let (_, dp3_magnitude) = norm_and_tangent(vector3, d_vector3)?;
                     let (_, dp4_magnitude) = norm_and_tangent(vector4, d_vector4)?;
-                    let phase_space = if support { k_star / sqrt_s } else { 0.0 };
+                    let _phase_space = if support { k_star / sqrt_s } else { 0.0 };
                     let dphase_space = if support {
                         d_k_star / sqrt_s - k_star * d_sqrt_s / square(sqrt_s)
                     } else {
                         0.0
                     };
-                    let quadrature_weight = weight2 * weight12 * weight_star * weight_phi;
-                    let dquadrature_weight =
-                        dweight2 * weight12 * weight_star * weight_phi;
+                    let _quadrature_weight = weight2 * weight12 * weight_star * weight_phi;
+                    let dquadrature_weight = dweight2 * weight12 * weight_star * weight_phi;
                     let values = [
                         dp2,
                         denergy2,
@@ -451,33 +432,15 @@ pub(crate) fn evaluate_elastic_tgamma_kinematic_tangent(
                             d_vector4,
                         ),
                         minkowski_dot_tangent(
-                            energy2,
-                            denergy2,
-                            vector2,
-                            dvector2,
-                            energy3,
-                            denergy3,
-                            vector3,
+                            energy2, denergy2, vector2, dvector2, energy3, denergy3, vector3,
                             d_vector3,
                         ),
                         minkowski_dot_tangent(
-                            energy2,
-                            denergy2,
-                            vector2,
-                            dvector2,
-                            energy4,
-                            denergy4,
-                            vector4,
+                            energy2, denergy2, vector2, dvector2, energy4, denergy4, vector4,
                             d_vector4,
                         ),
                         minkowski_dot_tangent(
-                            energy3,
-                            denergy3,
-                            vector3,
-                            d_vector3,
-                            energy4,
-                            denergy4,
-                            vector4,
+                            energy3, denergy3, vector3, d_vector3, energy4, denergy4, vector4,
                             d_vector4,
                         ),
                     ];
