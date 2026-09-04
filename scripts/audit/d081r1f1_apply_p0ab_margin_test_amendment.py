@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""Correct the P0AB support-margin test oracle without changing a gate.
+"""Correct the P0AB support-margin test oracle and instrument mass-shell failure.
 
 The failed first GREEN run compared the production support margin, computed
 from the exact `s` operation graph used by the support predicate, with an
 algebraically equivalent reconstruction `m_e^2 + 2 d12`. At large incoming
 electron momentum those binary64 operation graphs differ because the direct
 energy-momentum subtraction is cancellation-sensitive. This patch makes the
-test reproduce the admitted support-predicate operation order. The frozen
-`64*eps` internal gate and the separate `1e-7` D-080A cross-language gate are
-unchanged.
+test reproduce the admitted support-predicate operation order.
+
+The second GREEN run then exposed one massive-outgoing tangent invariant at a
+single sample. This amendment does not change that gate. It only reports the
+primal mass-shell residual, tangent terms, and conditioning scale needed to
+distinguish an implementation defect from a near-zero relative-ratio defect.
+The frozen `2e-12` invariant cap, `64*eps` internal margin gate, and separate
+`1e-7` D-080A cross-language gate are unchanged.
 """
 
 from __future__ import annotations
@@ -28,18 +33,21 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 
 def main() -> None:
     text = TEST.read_text(encoding="utf-8")
-    if "let rule = angular_rule(config).unwrap();" in text:
-        print("D-081R1F1 P0AB margin-test amendment: NOOP")
+    margin_applied = "let rule = angular_rule(config).unwrap();" in text
+    diagnostic_applied = "P0AB_MASS_SHELL_DIAGNOSTIC" in text
+    if margin_applied and diagnostic_applied:
+        print("D-081R1F1 P0AB margin-test diagnostic amendment: NOOP")
         return
 
-    text = replace_once(
-        text,
-        "use crate::f10_action_kinematics::F10CollisionConfig;\n",
-        "use crate::f10_action_kinematics::{F10CollisionConfig, angular_rule};\n",
-        "kinematic rule import",
-    )
+    if not margin_applied:
+        text = replace_once(
+            text,
+            "use crate::f10_action_kinematics::F10CollisionConfig;\n",
+            "use crate::f10_action_kinematics::{F10CollisionConfig, angular_rule};\n",
+            "kinematic rule import",
+        )
 
-    old = '''    let tangent = evaluate_elastic_tgamma_kinematic_tangent(F10ElasticTgammaInput {
+        old = '''    let tangent = evaluate_elastic_tgamma_kinematic_tangent(F10ElasticTgammaInput {
         p1: 2.0,
         temperature_gamma: 2.05,
         electron_mass: ELECTRON_MASS_MEV,
@@ -86,7 +94,7 @@ def main() -> None:
         ) <= 64.0 * f64::EPSILON
     );
 '''
-    new = '''    let config = F10CollisionConfig::default();
+        new = '''    let config = F10CollisionConfig::default();
     let target_momentum = 2.0_f64;
     let tangent = evaluate_elastic_tgamma_kinematic_tangent(F10ElasticTgammaInput {
         p1: target_momentum,
@@ -164,9 +172,51 @@ def main() -> None:
         tangent.minimum_supported_lambda_margin_relative,
     );
 '''
-    text = replace_once(text, old, new, "support-margin test oracle")
+        text = replace_once(text, old, new, "support-margin test oracle")
+
+    if not diagnostic_applied:
+        old_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
+        let massive_right =
+            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
+        assert!(
+            contribution_scaled(massive_left - massive_right, &[massive_left, massive_right])
+                <= INVARIANT_CAP,
+            "massive outgoing tangent invariant failed at sample {index}"
+        );
+'''
+        new_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
+        let massive_right =
+            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
+        let massive_residual = massive_left - massive_right;
+        let massive_ratio =
+            contribution_scaled(massive_residual, &[massive_left, massive_right]);
+        let primal_mass_shell = tangent.base.e4[index].powi(2)
+            - tangent.base.p4_magnitude[index].powi(2)
+            - mass_squared;
+        let primal_mass_shell_scale = tangent.base.e4[index].powi(2).abs()
+            + tangent.base.p4_magnitude[index].powi(2).abs()
+            + mass_squared.abs();
+        let primal_mass_shell_ratio =
+            primal_mass_shell.abs() / primal_mass_shell_scale.max(f64::MIN_POSITIVE);
+        if massive_ratio > INVARIANT_CAP {
+            eprintln!(
+                "P0AB_MASS_SHELL_DIAGNOSTIC index={index} e4={:.17e} p4={:.17e} de4={:.17e} dp4={:.17e} left={massive_left:.17e} right={massive_right:.17e} tangent_residual={massive_residual:.17e} tangent_ratio={massive_ratio:.17e} primal_residual={primal_mass_shell:.17e} primal_ratio={primal_mass_shell_ratio:.17e} energy_tangent_residual={:.17e}",
+                tangent.base.e4[index],
+                tangent.base.p4_magnitude[index],
+                tangent.d_e4[index],
+                tangent.d_p4_magnitude[index],
+                tangent.d_e2[index] - tangent.d_e3[index] - tangent.d_e4[index],
+            );
+        }
+        assert!(
+            massive_ratio <= INVARIANT_CAP,
+            "massive outgoing tangent invariant failed at sample {index}: ratio={massive_ratio:.17e}"
+        );
+'''
+        text = replace_once(text, old_massive, new_massive, "mass-shell diagnostic")
+
     TEST.write_text(text, encoding="utf-8")
-    print("D-081R1F1 P0AB margin-test amendment: CHANGED")
+    print("D-081R1F1 P0AB margin-test diagnostic amendment: CHANGED")
 
 
 if __name__ == "__main__":
