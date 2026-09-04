@@ -2,8 +2,7 @@
 
 use crate::f10_action_kinematics::electron_half_line_rule;
 use crate::f10_tgamma_tangent::{
-    F10TgammaTangentError, electron_half_line_tgamma_tangent,
-    electromagnetic_eos_tgamma_tangent,
+    F10TgammaTangentError, electromagnetic_eos_tgamma_tangent, electron_half_line_tgamma_tangent,
 };
 use crate::flrw::electromagnetic_eos;
 use serde_json::Value;
@@ -25,8 +24,7 @@ fn bit_array(value: &Value) -> Vec<f64> {
 }
 
 fn relative_error(actual: f64, expected: f64) -> f64 {
-    (actual - expected).abs()
-        / actual.abs().max(expected.abs()).max(f64::MIN_POSITIVE)
+    (actual - expected).abs() / actual.abs().max(expected.abs()).max(f64::MIN_POSITIVE)
 }
 
 fn fixture() -> Value {
@@ -132,8 +130,7 @@ fn qed_off_eos_tangent_matches_d080a_and_the_primal_eos() {
             );
         }
 
-        let thermodynamic_identity =
-            (tangent.base.rho + tangent.base.pressure) / temperature;
+        let thermodynamic_identity = (tangent.base.rho + tangent.base.pressure) / temperature;
         assert!(relative_error(tangent.d_pressure, thermodynamic_identity) <= 64.0 * f64::EPSILON);
         assert!(tangent.d2_rho.is_finite() && tangent.d2_rho > 0.0);
 

@@ -9,9 +9,7 @@
 use core::f64::consts::PI;
 
 use crate::f10_action_kinematics::electron_half_line_rule;
-use crate::flrw::{
-    ELECTRON_MASS_MEV, ElectromagneticEos, electromagnetic_eos,
-};
+use crate::flrw::{ELECTRON_MASS_MEV, ElectromagneticEos, electromagnetic_eos};
 
 const D2_RHO_SIMPSON_PANELS: usize = 4096;
 const D2_RHO_TAIL_E_FOLDS: f64 = 48.0;
@@ -51,8 +49,12 @@ pub(crate) fn electron_half_line_tgamma_tangent(
         .map_err(|_| F10TgammaTangentError::Foundation)?;
     if momentum.len() != order
         || weights.len() != order
-        || momentum.iter().any(|value| !value.is_finite() || *value < 0.0)
-        || weights.iter().any(|value| !value.is_finite() || *value <= 0.0)
+        || momentum
+            .iter()
+            .any(|value| !value.is_finite() || *value < 0.0)
+        || weights
+            .iter()
+            .any(|value| !value.is_finite() || *value <= 0.0)
     {
         return Err(F10TgammaTangentError::NonFiniteOutput);
     }
@@ -79,9 +81,7 @@ pub(crate) fn electron_half_line_tgamma_tangent(
     })
 }
 
-fn electron_pair_d2rho_dt2(
-    temperature_gamma_mev: f64,
-) -> Result<f64, F10TgammaTangentError> {
+fn electron_pair_d2rho_dt2(temperature_gamma_mev: f64) -> Result<f64, F10TgammaTangentError> {
     let ratio = ELECTRON_MASS_MEV / temperature_gamma_mev;
     if !ratio.is_finite() || ratio <= 0.0 {
         return Err(F10TgammaTangentError::NonFiniteOutput);
@@ -102,12 +102,9 @@ fn electron_pair_d2rho_dt2(
         let occupation = exponential_negative / (1.0 + exponential_negative);
         let blocking = occupation * (1.0 - occupation);
         let bracket = 3.0 * energy_over_temperature.powi(2)
-            + ratio.powi(2)
-                * (-2.0 + energy_over_temperature * (1.0 - 2.0 * occupation));
-        let integrand = momentum_over_temperature.powi(2)
-            * blocking
-            * bracket
-            * energy_over_temperature;
+            + ratio.powi(2) * (-2.0 + energy_over_temperature * (1.0 - 2.0 * occupation));
+        let integrand =
+            momentum_over_temperature.powi(2) * blocking * bracket * energy_over_temperature;
         if !integrand.is_finite() {
             return Err(F10TgammaTangentError::NonFiniteOutput);
         }
