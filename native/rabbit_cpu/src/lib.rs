@@ -12,10 +12,13 @@ mod electron_thermal_fd;
 mod f10_action_grid;
 mod f10_action_kinematics;
 mod f10_action_spectral;
+mod f10_action_tangent;
 mod f10_combined_action;
+mod f10_combined_action_jvp;
 mod f10_electron_action;
 mod f10_kernel_primitives;
 mod f10_packed_rhs;
+mod f10_packed_rhs_jvp;
 mod f10_self_action;
 mod flrw;
 mod isotropic_boltzmann;
@@ -43,6 +46,18 @@ mod f10_packed_rhs_preflight_tests;
 
 #[cfg(test)]
 mod f10_packed_rhs_holdout_tests;
+
+#[cfg(test)]
+mod f10_packed_rhs_jvp_order8_tests;
+
+#[cfg(test)]
+mod f10_packed_rhs_jvp_retained_calibration_tests;
+
+#[cfg(test)]
+mod f10_packed_rhs_jvp_retained_holdout_tests;
+
+#[cfg(test)]
+mod f10_packed_rhs_jvp_tests;
 
 #[cfg(test)]
 mod f10_packed_rhs_tests;

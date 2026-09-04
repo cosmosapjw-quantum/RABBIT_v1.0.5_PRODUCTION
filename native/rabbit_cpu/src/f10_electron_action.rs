@@ -10,6 +10,8 @@
 
 #![cfg_attr(not(test), allow(dead_code))]
 
+pub(crate) mod c_jvp;
+
 use core::f64::consts::PI;
 
 use crate::f10_action_grid::{F10ActionGrid, decode_cloglog_to_logit};

@@ -1,0 +1,59 @@
+{
+  "cargo": "cargo 1.94.1 (29ea6fb6a 2026-03-24)",
+  "claim_ceiling": "source compilation and exact-zero JVP preflight only; no numerical-equivalence, retained-state, holdout, solver, trajectory, endpoint, N_eff, performance, release, or publication claim",
+  "classification": "SOURCE_COMPILE_REPAIR_R1_GREEN_NUMERICAL_EQUIVALENCE_UNTESTED",
+  "contract_blob": "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221",
+  "failed_predecessor_run_id": "33830077340",
+  "failed_predecessor_tested_tree": "75fd8863a0d7353fed3ce35e320d6001f0f26698",
+  "log_sha256": {
+    "d081r1f0-repair-check.log": "455460660e365b1906409cb1422e0ffe16785ec152a8a91a604c98472168834b",
+    "d081r1f0-repair-clippy.log": "7383a7a3dfeda390859a6dc9c42be46059b691d75575a5628b17a028f32134f1",
+    "d081r1f0-repair-jvp-zero.log": "22f73c201133c50bf75c4ed7843415e4e9de9ca21ce906060c2eea0e38bbd3c4",
+    "d081r1f0-repair-primal-preflight.log": "a28fc71e15e88e00d8b5ec6919c5d1468f134e0dda8a694637890654b2b6a6d7",
+    "d081r1f0-repair-primal-tests.log": "14969d145e959f1ef83b7da165be6804e034bf601c20b5c0e141bfa96d727f1e"
+  },
+  "offline_vendor": {
+    "artifact_id": 9838506413,
+    "package_directories": 174,
+    "zip_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a"
+  },
+  "repair_scope": [
+    "permanent derivative module registration",
+    "Clippy-equivalent iterator rewrite preserving accumulation order",
+    "exact-zero diagnostic field coverage"
+  ],
+  "repair_script_blob": "35a81ca3b07070df8fc046fcf5755d943a7469f9",
+  "rustc": "rustc 1.94.1 (e408947bf 2026-03-25)",
+  "schema": "rabbit.d081r1f0.source_compile_repair_r1.v1",
+  "source_blobs": {
+    "native/rabbit_cpu/src/f10_action_tangent.rs": "e335077dff6c38482e4d9c0189f8c32a3383bef3",
+    "native/rabbit_cpu/src/f10_combined_action_jvp.rs": "e758434b5819bca9050987610b57a0daa12c4cca",
+    "native/rabbit_cpu/src/f10_electron_action.rs": "f1c25926100ae6904a95b180ac50a2f05cdcfeaf",
+    "native/rabbit_cpu/src/f10_electron_action/c_jvp.rs": "5226827c1a0b885dbf804d63990f2aafacc91851",
+    "native/rabbit_cpu/src/f10_packed_rhs_jvp.rs": "8c6450b568d466fa420dac498e87300713879505",
+    "native/rabbit_cpu/src/f10_packed_rhs_jvp_tests.rs": "4327b4b6c67350ee28e7fdc6155b0235089076c0",
+    "native/rabbit_cpu/src/f10_self_action.rs": "014db100470a01da7be67a9bbbad8f52cd79bfa3",
+    "native/rabbit_cpu/src/f10_self_action/c_jvp.rs": "e230341f5d06db59a222e856946e4476106bd030",
+    "native/rabbit_cpu/src/lib.rs": "9093f3d742b238eedc6071376a2e503201c7d4cb"
+  },
+  "tested_source_tree": "0733ce99aca149bec0c472082a5e585438ea5ee5",
+  "tests": {
+    "clippy": "all targets/all features with -D warnings",
+    "jvp": "exact-zero direction with full diagnostic structural coverage",
+    "primal_regression": "packed RHS preflight and packed RHS tests"
+  },
+  "trigger_head": "e0948ca6cd7c12345caa415c042b2f321526c385",
+  "untested": [
+    "nonzero analytic JVP",
+    "cross-language equivalence",
+    "linearity and additivity",
+    "nonzero first-law and symmetry gates",
+    "centered-difference witnesses",
+    "retained calibration",
+    "unseen holdout",
+    "mutations",
+    "solver and trajectory"
+  ],
+  "workflow_run_attempt": "1",
+  "workflow_run_id": "33831983598"
+}
