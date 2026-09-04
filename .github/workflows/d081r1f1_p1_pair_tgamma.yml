@@ -2,8 +2,14 @@ name: d081r1f1-p1-pair-tgamma
 on:
   push:
     branches: [research/d081r1f1-p1-collision-tgamma-jvp-green-20260905-r1]
+    paths:
+      - .github/workflows/d081r1f1_p1_pair_tgamma.yml
+      - native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs
+      - native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs
+      - native/rabbit_cpu/src/f10_electron_action.rs
+      - scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py
 permissions:
-  contents: write
+  contents: read
   actions: read
 jobs:
   pair:
@@ -20,15 +26,25 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-      - name: Verify historical authority
+          persist-credentials: false
+      - name: Pin the committed pair implementation and prospective tests
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          git merge-base --is-ancestor d39bc2311ca0fb07f36eb73c7c3e6c772cf64ea6 HEAD
+          git merge-base --is-ancestor 47a8a23fffaa216ed810f4908ea29a53aba11de1 HEAD
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action.rs)" = 45ce4f38d6db0bbf2620da493015fdc3e381e263
+          test "$(git hash-object scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py)" = 249a536f851beca59cde492277a8baf6ecc63760
           test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
           test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          grep -Fx 'pub(crate) mod tgamma_jvp;' native/rabbit_cpu/src/f10_electron_action.rs
+          test -z "$(git status --porcelain)"
+          echo "PAIR_REPLAY_HEAD=$(git rev-parse HEAD)"
+          echo "PAIR_REPLAY_TREE=$(git rev-parse HEAD^{tree})"
       - name: Exact Rust and lock-derived offline vendor
         shell: bash
         env:
@@ -46,29 +62,10 @@ jobs:
           echo '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f  /tmp/pair-vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz' | sha256sum -c -
           tar -xzf /tmp/pair-vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz -C /tmp/pair-vendor
           test "$(find /tmp/pair-vendor/vendor -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          test ! -e native/rabbit_cpu/.cargo/config.toml
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="pinned"\n[source.pinned]\ndirectory="/tmp/pair-vendor/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
-      - name: Verify or apply bounded child-module registration
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import subprocess
-          from pathlib import Path
-          p = Path('native/rabbit_cpu/src/f10_electron_action.rs')
-          text = p.read_text()
-          needle = 'pub(crate) mod tgamma_jvp;\n'
-          if needle in text:
-              assert text.count(needle) == 1
-              print('PAIR_REGISTRY_ALREADY_COMMITTED')
-          else:
-              assert subprocess.check_output(['git', 'hash-object', str(p)], text=True).strip() == 'f1c25926100ae6904a95b180ac50a2f05cdcfeaf'
-              anchor = 'pub(crate) mod c_jvp;\n'
-              assert text.count(anchor) == 1
-              p.write_text(text.replace(anchor, anchor + needle))
-              print('PAIR_REGISTRY_STAGED_REQUIRES_VERIFIED_COMMIT')
-          PY
-      - name: Deterministic D080B pair oracle and high-precision Pauli references
+      - name: Deterministic same-capsule D080B and 100-digit Pauli references
         shell: bash
         run: |
           set -euo pipefail
@@ -80,44 +77,29 @@ jobs:
           done
           cmp /tmp/pair-a.json /tmp/pair-b.json
           sha256sum /tmp/pair-a.json
-      - name: Pair GREEN and inherited gates
+      - name: Clean pair GREEN and inherited gates without source mutation
         shell: bash
         working-directory: native/rabbit_cpu
         env:
           D081R1F1_P1_PAIR_ORACLE: /tmp/pair-a.json
         run: |
           set -euo pipefail
-          cargo +1.94.1 fmt --all
-          git -C ../.. diff --name-only > /tmp/pair-format-paths
-          while IFS= read -r path; do
-            case "$path" in
-              native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs|native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs|native/rabbit_cpu/src/f10_electron_action.rs) ;;
-              *) echo "unexpected format change: $path"; exit 1;;
-            esac
-          done < /tmp/pair-format-paths
+          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/pair-replay-metadata.json
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 check --release --locked --offline
           cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture 2>&1 | tee /tmp/pair-green.log
-          grep -F 'test result: ok. 3 passed; 0 failed' /tmp/pair-green.log
-          cargo +1.94.1 test --locked --offline f10_electron_action_tests -- --nocapture
-          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture
-          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture
+          grep -F 'test result: ok. 3 passed; 0 failed; 0 ignored' /tmp/pair-green.log
+          cargo +1.94.1 test --locked --offline f10_electron_action_tests -- --nocapture 2>&1 | tee /tmp/pair-primal.log
+          grep -F 'test result: ok. 4 passed; 0 failed' /tmp/pair-primal.log
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture 2>&1 | tee /tmp/pair-c-jvp.log
+          grep -F 'test result: ok. 1 passed; 0 failed' /tmp/pair-c-jvp.log
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture 2>&1 | tee /tmp/pair-preflight.log
+          grep -F 'test result: ok. 3 passed; 0 failed' /tmp/pair-preflight.log
           cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
-          echo 'PASS_PAIR_ONLY_ORDER8_THERMAL_JVP_FULL_ELECTRON_JVP_OPEN'
-      - name: Preserve verified wiring and formatting then require clean replay
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --check
-          if git diff --quiet; then
-            echo 'CLEAN_TRIGGER_SHA_PAIR_GREEN'
-            exit 0
-          fi
-          git add native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs native/rabbit_cpu/src/f10_electron_action.rs
-          echo "TESTED_TREE=$(git write-tree)"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'style(d081r1f1): preserve verified pair-JVP wiring and formatting'
-          git fetch origin "$GITHUB_REF_NAME"
-          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          rm .cargo/config.toml
+          rmdir .cargo
+          git -C ../.. diff --exit-code
+          git -C ../.. diff --cached --exit-code
+          test -z "$(git -C ../.. status --porcelain)"
+          echo 'PASS_CLEAN_PAIR_ONLY_ORDER8_THERMAL_JVP_FULL_ELECTRON_JVP_OPEN'
+          printf 'Pair-only order-eight clean replay PASS at %s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
