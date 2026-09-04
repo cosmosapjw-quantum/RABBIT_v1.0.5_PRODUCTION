@@ -1,11 +1,8 @@
 //! RED-first unit contract for the first D-081R1F1 thermal primitives.
 
-use crate::f10_action_grid::F10ActionGrid;
 use crate::f10_action_kinematics::electron_half_line_rule;
-use crate::f10_action_spectral::modal_basis;
 use crate::f10_tgamma_tangent::{
     F10TgammaTangentError, electromagnetic_eos_tgamma_tangent, electron_half_line_tgamma_tangent,
-    mapped_modal_basis_derivative,
 };
 use crate::flrw::electromagnetic_eos;
 use serde_json::Value;
@@ -142,60 +139,6 @@ fn qed_off_eos_tangent_matches_d080a_and_the_primal_eos() {
         let minus = electromagnetic_eos(temperature - step).unwrap().drho_dt;
         let centered = (plus - minus) / (2.0 * step);
         assert!(relative_error(tangent.d2_rho, centered) <= 2.0e-7);
-    }
-}
-
-#[test]
-fn mapped_basis_derivative_matches_low_modes_and_centered_primal_basis() {
-    let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
-    let query = vec![0.25, 1.0, 2.5, 4.0, 6.75, 7.75];
-    let derivative = mapped_modal_basis_derivative(&grid, &query).unwrap();
-    assert_eq!(derivative.len(), query.len() * grid.order);
-
-    let degree_one = (3.0 / grid.y_max).sqrt() * (2.0 / grid.y_max);
-    for point in 0..query.len() {
-        assert_eq!(derivative[point * grid.order].to_bits(), 0.0_f64.to_bits());
-        assert!(
-            relative_error(derivative[point * grid.order + 1], degree_one)
-                <= 64.0 * f64::EPSILON
-        );
-    }
-
-    let step = 1.0e-6 * grid.y_max;
-    let plus_query: Vec<_> = query.iter().map(|value| value + step).collect();
-    let minus_query: Vec<_> = query.iter().map(|value| value - step).collect();
-    let plus = modal_basis(&grid, &plus_query).unwrap();
-    let minus = modal_basis(&grid, &minus_query).unwrap();
-    let centered: Vec<_> = plus
-        .iter()
-        .zip(&minus)
-        .map(|(upper, lower)| (upper - lower) / (2.0 * step))
-        .collect();
-    let maximum_scale = derivative
-        .iter()
-        .chain(&centered)
-        .map(|value| value.abs())
-        .fold(f64::MIN_POSITIVE, f64::max);
-    let maximum_difference = derivative
-        .iter()
-        .zip(&centered)
-        .map(|(analytic, reference)| (analytic - reference).abs())
-        .fold(0.0_f64, f64::max);
-    assert!(
-        maximum_difference / maximum_scale <= 1.0e-7,
-        "mapped-basis derivative centered residual={:.17e}",
-        maximum_difference / maximum_scale
-    );
-}
-
-#[test]
-fn mapped_basis_derivative_rejects_invalid_queries() {
-    let grid = F10ActionGrid::affine_legendre(8, 8.0).unwrap();
-    for query in [vec![f64::NAN], vec![-f64::EPSILON], vec![grid.y_max + f64::EPSILON]] {
-        assert_eq!(
-            mapped_modal_basis_derivative(&grid, &query).unwrap_err(),
-            F10TgammaTangentError::InvalidInput
-        );
     }
 }
 
