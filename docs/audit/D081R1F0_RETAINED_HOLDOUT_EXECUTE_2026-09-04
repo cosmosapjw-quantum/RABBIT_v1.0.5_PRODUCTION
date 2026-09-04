@@ -1,0 +1,20 @@
+D-081R1F0 retained holdout execution trigger
+
+Calibration receipt commit:
+7779e152ee1699baf1023f2a6a8e1a10d8aaf6e0
+
+Pre-output holdout test commit:
+34f2fa1e1398d0a4ec78870afe987faabd7a77ca
+
+Module registration commit:
+cc1251902d56a1f44231031df2121bd448c1041d
+
+Auxiliary SymPy/mpmath audit commit:
+22833160e0741a0403a322b31b65e94ccd964c5b
+
+Holdout workflow commit:
+7eb4faea2b0f8e2f6308c56df6f89865e02cd0bc
+
+The retained-holdout direction, thresholds, covariance identity, test source,
+and workflow were committed before this marker. No retained-holdout oracle or
+result was generated or inspected before this trigger commit.
