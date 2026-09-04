@@ -1,0 +1,158 @@
+{
+  "cargo_lock_git_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "ci": {
+    "job": "holdout",
+    "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+    "run_attempt": "1",
+    "run_id": "33817350700",
+    "trigger_sha": "7082349c48f49ccf295303d5da4781b3a43c626c",
+    "workflow": "d081r1e-state2000-holdout-admission"
+  },
+  "claim_ceiling": "unseen state-2000 static retained packed-RHS metrology only; no JVP, Jacobian, diffsol, trajectory, endpoint, N_eff, publication authority, or G-F10-INDEPENDENT-FLRW movement",
+  "classification": "PASS_WITH_RETAINED_ORDER60_CONDITIONED_PACKED_RHS_SCOPE",
+  "contract_commit": "d98d725c6e252180a4108fb572e97b6a90c00887",
+  "fixture_sha256": "1307f8ed25b36f3b212cbc627b650971389a6c2bb4d7759f6b0677dff1ec23ab",
+  "gated_metrics": {
+    "electron_modal_global_relative": 4.990343838935582e-10,
+    "maximum_step_impact": 2.4837132454381183e-05,
+    "maximum_step_impact_index": 56,
+    "python_first_law_residual": 0.0,
+    "rust_first_law_residual": 0.0,
+    "self_modal_global_relative": 2.9739002881251535e-09,
+    "total_modal_global_relative": 2.6507704133217447e-09
+  },
+  "generator_git_blob": "36fa0397744a25accaa16177e533ae1c2ecccb79",
+  "historical_source_commit": "78f5b091bd8de99bd8d0b1eddd8a0b7978f5da2b",
+  "holdout_authority_commit": "d22923fd9211a66a4c385c5752b372a879168ea9",
+  "prospective_caps": {
+    "electron_modal_global_relative": 1e-07,
+    "first_law_residual": 5e-13,
+    "maximum_step_impact": 0.001,
+    "self_modal_global_relative": 1e-07,
+    "total_modal_global_relative": 1e-07
+  },
+  "python_comparator_git_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "raw_diagnostics": {
+    "cloglog_chain": {
+      "global_relative": 0.0,
+      "max_absolute": 0.0,
+      "max_absolute_index": 0,
+      "max_local_relative": 0.0,
+      "max_local_relative_index": 0,
+      "max_ulp": 0,
+      "max_ulp_index": 0
+    },
+    "electron_modal": {
+      "global_relative": 4.990343838935582e-10,
+      "max_absolute": 8.917994223668539e-32,
+      "max_absolute_index": 59,
+      "max_local_relative": 0.00018700445773110592,
+      "max_local_relative_index": 158,
+      "max_ulp": 1593377172015,
+      "max_ulp_index": 158
+    },
+    "electron_native": {
+      "global_relative": 2.082353640270123e-06,
+      "max_absolute": 2.0892252942778728e-30,
+      "max_absolute_index": 60,
+      "max_local_relative": 0.00012968976812485717,
+      "max_local_relative_index": 99,
+      "max_ulp": 1154328009082,
+      "max_ulp_index": 99
+    },
+    "occupation": {
+      "global_relative": 0.0,
+      "max_absolute": 0.0,
+      "max_absolute_index": 0,
+      "max_local_relative": 0.0,
+      "max_local_relative_index": 0,
+      "max_ulp": 0,
+      "max_ulp_index": 0
+    },
+    "packed_rhs": {
+      "global_relative": 1.7227166281485807e-24,
+      "max_absolute": 5.353038281663558e-05,
+      "max_absolute_index": 56,
+      "max_local_relative": 0.004173981629785342,
+      "max_local_relative_index": 100,
+      "max_ulp": 30982978525394,
+      "max_ulp_index": 100
+    },
+    "pair_rate": {
+      "global_relative": 1.1469864386592908e-05,
+      "max_absolute": 6.2530330645060266e-30,
+      "max_absolute_index": 0,
+      "max_local_relative": 0.004173981629785375,
+      "max_local_relative_index": 100,
+      "max_ulp": 20228515598976,
+      "max_ulp_index": 100
+    },
+    "self_modal": {
+      "global_relative": 2.9739002881251535e-09,
+      "max_absolute": 2.3123648534560063e-31,
+      "max_absolute_index": 359,
+      "max_local_relative": 0.00013008037970947122,
+      "max_local_relative_index": 95,
+      "max_ulp": 1019541577647,
+      "max_ulp_index": 95
+    },
+    "self_native": {
+      "global_relative": 1.177727880817676e-05,
+      "max_absolute": 5.39551681731999e-30,
+      "max_absolute_index": 240,
+      "max_local_relative": 0.0032974946515053945,
+      "max_local_relative_index": 336,
+      "max_ulp": 15621033030782,
+      "max_ulp_index": 336
+    },
+    "spectral_rhs": {
+      "global_relative": 4.807530536805689e-05,
+      "max_absolute": 5.353038281663558e-05,
+      "max_absolute_index": 56,
+      "max_local_relative": 0.004173981629785342,
+      "max_local_relative_index": 100,
+      "max_ulp": 30982978525394,
+      "max_ulp_index": 100
+    },
+    "total_modal": {
+      "global_relative": 2.6507704133217447e-09,
+      "max_absolute": 2.675945133482444e-31,
+      "max_absolute_index": 119,
+      "max_local_relative": 0.0004684105150820825,
+      "max_local_relative_index": 359,
+      "max_ulp": 2860141093228,
+      "max_ulp_index": 359
+    },
+    "total_native": {
+      "global_relative": 1.1472083014261118e-05,
+      "max_absolute": 6.2542425952039414e-30,
+      "max_absolute_index": 0,
+      "max_local_relative": 0.004175872798846572,
+      "max_local_relative_index": 220,
+      "max_ulp": 20237739236992,
+      "max_ulp_index": 220
+    }
+  },
+  "runtime_identity": {
+    "numpy": "2.4.4",
+    "rust": "1.94.1",
+    "scipy": "1.17.1"
+  },
+  "schema": "rabbit.d081r1e.state2000_holdout_receipt.v1",
+  "source_head": "7082349c48f49ccf295303d5da4781b3a43c626c",
+  "state_git_blob": "cfb17344ae166c01c2e5bcb14acae0d968e49477",
+  "state_sha256": "780ad7c1388caec23f02012781717d43ffb85d96d4d501c40c504939e7c9a44d",
+  "structural_gates": {
+    "component_addition": "PASS",
+    "gl60_y30_binary64_identity": "PASS",
+    "matrix_correction_identity": "PASS",
+    "pair_average_one_half": "PASS",
+    "passive_elapsed_time": "PASS",
+    "spectral_error_decomposition": "PASS",
+    "spectral_error_decomposition_ratio": 2.3436362170894316e-12,
+    "strict_cloglog_chart": "PASS",
+    "support_rejection_count_identity": "PASS",
+    "two_budget_mutation_killed": "PASS"
+  },
+  "trajectory_core_git_blob": "465a73f0ce40f7149bebdc2d67103f388e2344d9"
+}
