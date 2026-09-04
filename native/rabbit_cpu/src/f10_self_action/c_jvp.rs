@@ -118,12 +118,7 @@ pub(crate) fn assemble_self_action_c_jvp(
         for sample in 0..sample_count {
             let y3 = batch.p3_magnitude[sample] / temperature_cm;
             let y4 = batch.p4_magnitude[sample] / temperature_cm;
-            if batch.support[sample]
-                && y3 > 0.0
-                && y3 < grid.y_max
-                && y4 > 0.0
-                && y4 < grid.y_max
-            {
+            if batch.support[sample] && y3 > 0.0 && y3 < grid.y_max && y4 > 0.0 && y4 < grid.y_max {
                 valid_positions.push(sample);
                 y3_valid.push(y3);
                 y4_valid.push(y4);
@@ -223,9 +218,7 @@ pub(crate) fn assemble_self_action_c_jvp(
             for mode in 0..grid.order {
                 leg_modes[0][mode] = incoming1_sum * native_basis[node_index * grid.order + mode];
                 leg_modes[1][mode] = (0..grid.order)
-                    .map(|p2_index| {
-                        p2_sums[p2_index] * native_basis[p2_index * grid.order + mode]
-                    })
+                    .map(|p2_index| p2_sums[p2_index] * native_basis[p2_index * grid.order + mode])
                     .sum();
                 leg_modes[2][mode] = valid_positions
                     .iter()
@@ -258,10 +251,7 @@ pub(crate) fn assemble_self_action_c_jvp(
     let native = native_action(grid, &modal, SPECIES_COUNT, temperature_cm)
         .map_err(|_| F10SelfActionError::Foundation)?;
     let moments = action_moments(grid, &native, temperature_cm)?;
-    if modal
-        .iter()
-        .chain(&native)
-        .any(|value| !value.is_finite())
+    if modal.iter().chain(&native).any(|value| !value.is_finite())
         || !event_energy_residual.is_finite()
         || !event_energy_absolute.is_finite()
     {

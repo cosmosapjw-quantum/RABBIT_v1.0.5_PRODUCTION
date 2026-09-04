@@ -7,11 +7,9 @@ use core::f64::consts::PI;
 use crate::f10_action_grid::F10ActionGrid;
 use crate::f10_action_tangent::{F10ActionTangentError, F10SpectralTangent};
 use crate::f10_combined_action::F10CombinedActionMoments;
-use crate::f10_combined_action_jvp::{
-    F10CombinedActionJvp, assemble_combined_action_c_jvp,
-};
+use crate::f10_combined_action_jvp::{F10CombinedActionJvp, assemble_combined_action_c_jvp};
 use crate::f10_electron_action::F10ElectronActionMoments;
-use crate::f10_electron_action::c_jvp::{F10ElectronActionJvp};
+use crate::f10_electron_action::c_jvp::F10ElectronActionJvp;
 use crate::f10_packed_rhs::{
     F10PackedRhs, F10PackedRhsConfig, F10PackedRhsError, evaluate_f10_packed_rhs,
 };
@@ -145,18 +143,17 @@ pub(crate) fn evaluate_f10_packed_rhs_c_jvp(
 
     let mut delta_rho_neutrino_by_flavour = [0.0_f64; PAIR_COUNT];
     let rho_prefactor = temperature_cm.powi(4) / (PI * PI);
-    for flavour in 0..PAIR_COUNT {
+    for (flavour, delta_rho) in delta_rho_neutrino_by_flavour.iter_mut().enumerate() {
         let mut integral = 0.0_f64;
         for node in 0..grid.order {
             integral += grid.weights[node]
                 * grid.nodes[node].powi(3)
                 * tangent.occupation_delta[flavour * grid.order + node];
         }
-        delta_rho_neutrino_by_flavour[flavour] = rho_prefactor * integral;
+        *delta_rho = rho_prefactor * integral;
     }
     let delta_rho_neutrino = delta_rho_neutrino_by_flavour.into_iter().sum::<f64>();
-    let delta_hubble_over_hubble =
-        0.5 * delta_rho_neutrino / base.diagnostics.rho_total;
+    let delta_hubble_over_hubble = 0.5 * delta_rho_neutrino / base.diagnostics.rho_total;
     if !delta_rho_neutrino.is_finite() || !delta_hubble_over_hubble.is_finite() {
         return Err(F10PackedRhsError::NonFiniteOutput);
     }
@@ -178,8 +175,7 @@ pub(crate) fn evaluate_f10_packed_rhs_c_jvp(
                 * (combined_action.native_total[particle * grid.order + node]
                     + combined_action.native_total[antiparticle * grid.order + node]);
             let derivative = delta_collision_rate / (hubble * chain)
-                - base.values[index]
-                    * (delta_hubble_over_hubble + tangent.log_chain_delta[index]);
+                - base.values[index] * (delta_hubble_over_hubble + tangent.log_chain_delta[index]);
             if !derivative.is_finite() {
                 return Err(F10PackedRhsError::NonFiniteOutput);
             }
@@ -189,11 +185,10 @@ pub(crate) fn evaluate_f10_packed_rhs_c_jvp(
 
     let base_qem = base.diagnostics.electromagnetic_energy_transfer;
     let delta_qem = combined_action.electromagnetic_energy_transfer;
-    let delta_temperature_derivative =
-        (delta_qem / hubble - (base_qem / hubble) * delta_hubble_over_hubble)
-            / base.diagnostics.drho_electromagnetic_dt;
-    let delta_elapsed_derivative =
-        -(1.0 / hubble) * delta_hubble_over_hubble;
+    let delta_temperature_derivative = (delta_qem / hubble
+        - (base_qem / hubble) * delta_hubble_over_hubble)
+        / base.diagnostics.drho_electromagnetic_dt;
+    let delta_elapsed_derivative = -(1.0 / hubble) * delta_hubble_over_hubble;
     values.push(delta_temperature_derivative);
     values.push(delta_elapsed_derivative);
     if values.len() != state_size || values.iter().any(|value| !value.is_finite()) {
@@ -201,8 +196,7 @@ pub(crate) fn evaluate_f10_packed_rhs_c_jvp(
     }
 
     let delta_neutrino_energy_transfer = combined_action.neutrino_energy_transfer;
-    let delta_electromagnetic_energy_transfer =
-        combined_action.electromagnetic_energy_transfer;
+    let delta_electromagnetic_energy_transfer = combined_action.electromagnetic_energy_transfer;
     let first_law_tangent_residual = combined_action.first_law_residual;
     Ok(F10PackedRhsJvp {
         base,

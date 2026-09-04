@@ -321,10 +321,7 @@ pub(crate) fn assemble_electron_action_c_jvp(
         .map_err(|_| F10ElectronActionError::Foundation)?;
     let moments = action_moments(grid, &native, temperature_cm)?;
     let first_law_residual = neutrino_energy_transfer + electromagnetic_energy_transfer;
-    if modal
-        .iter()
-        .chain(&native)
-        .any(|value| !value.is_finite())
+    if modal.iter().chain(&native).any(|value| !value.is_finite())
         || [
             neutrino_energy_transfer,
             electromagnetic_energy_transfer,

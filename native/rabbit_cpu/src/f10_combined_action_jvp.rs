@@ -9,12 +9,10 @@ use crate::f10_action_tangent::F10SpectralTangent;
 use crate::f10_combined_action::{
     F10CombinedActionConfig, F10CombinedActionError, F10CombinedActionMoments,
 };
-use crate::f10_electron_action::c_jvp::{
-    F10ElectronActionJvp, assemble_electron_action_c_jvp,
-};
 use crate::f10_electron_action::F10ElectronActionConfig;
-use crate::f10_self_action::c_jvp::{F10SelfActionJvp, assemble_self_action_c_jvp};
+use crate::f10_electron_action::c_jvp::{F10ElectronActionJvp, assemble_electron_action_c_jvp};
 use crate::f10_self_action::F10SelfActionConfig;
+use crate::f10_self_action::c_jvp::{F10SelfActionJvp, assemble_self_action_c_jvp};
 
 const PAIR_COUNT: usize = 3;
 const SPECIES_COUNT: usize = 6;
@@ -232,16 +230,13 @@ pub(crate) fn assemble_combined_action_c_jvp(
     let moments = action_moments(grid, &native_total, temperature_cm)?;
     let neutrino_energy_transfer = electron_action.neutrino_energy_transfer;
     let electromagnetic_energy_transfer = electron_action.electromagnetic_energy_transfer;
-    let first_law_scale = (neutrino_energy_transfer.abs()
-        + electromagnetic_energy_transfer.abs())
-    .max(f64::MIN_POSITIVE);
+    let first_law_scale = (neutrino_energy_transfer.abs() + electromagnetic_energy_transfer.abs())
+        .max(f64::MIN_POSITIVE);
     let first_law_residual =
         (neutrino_energy_transfer + electromagnetic_energy_transfer).abs() / first_law_scale;
     let self_event_energy_residual = self_action.event_energy_residual;
-    let self_event_energy_relative_residual = self_event_energy_residual.abs()
-        / self_action
-            .event_energy_absolute
-            .max(f64::MIN_POSITIVE);
+    let self_event_energy_relative_residual =
+        self_event_energy_residual.abs() / self_action.event_energy_absolute.max(f64::MIN_POSITIVE);
     let (charge_conjugation_residual, mu_tau_residual) =
         symmetry_residuals(&native_total, grid.order)?;
 

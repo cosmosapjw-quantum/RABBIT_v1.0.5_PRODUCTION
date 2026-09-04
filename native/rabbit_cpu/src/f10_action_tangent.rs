@@ -121,10 +121,7 @@ impl F10SpectralTangent {
         for pair in 0..PAIR_COUNT {
             for point in 0..point_count {
                 let value = (0..order)
-                    .map(|mode| {
-                        self.logit_modal[pair * order + mode]
-                            * basis[point * order + mode]
-                    })
+                    .map(|mode| self.logit_modal[pair * order + mode] * basis[point * order + mode])
                     .sum::<f64>();
                 if !value.is_finite() {
                     return Err(F10ActionTangentError::NonFiniteOutput);
