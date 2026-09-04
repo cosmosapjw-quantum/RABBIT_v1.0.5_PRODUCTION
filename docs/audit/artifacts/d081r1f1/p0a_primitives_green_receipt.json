@@ -1,0 +1,25 @@
+{
+  "claim_ceiling": "moving electron half-line quadrature and QED-off electromagnetic EOS T_gamma tangents only; no finite-mass collision kinematic tangent, collision JVP, packed-RHS T_gamma column, retained state, solver, trajectory, or G-F10 movement",
+  "classification": "PASS_WITH_MOVING_HALF_LINE_AND_QED_OFF_EOS_TGAMMA_PRIMITIVES_SCOPE",
+  "focused_tests": {
+    "failed": 0,
+    "passed": 3
+  },
+  "inherited_packed_rhs_preflight": "PASS",
+  "inherited_zero_jvp_regression": "PASS",
+  "numpy_version": "2.4.4",
+  "oracle_generator_blob": "3a90ae484a20fd8601c9db307ce5d5202343acca",
+  "oracle_sha256": "3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7",
+  "release_check": "PASS",
+  "rust_version": "1.94.1",
+  "schema": "rabbit.d081r1f1.p0a_primitives_green_receipt.v1",
+  "scipy_version": "1.17.1",
+  "source_blob": "0217768ba62b02d14a3c52ae68208fafc8c8d46c",
+  "strict_clippy": "PASS",
+  "test_blob": "f2642cf9a699290e2c97a7d6e8a12b980e5f8919",
+  "tested_source_tree": "0176b1cc0f382c1809398860aee1a50a149f8a8d",
+  "trigger_head": "fa8a279ae11b5afa35650eb7f78d8a476263ce16",
+  "vendor_archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "vendor_artifact_id": 9932329475,
+  "workflow_run_id": "33863304470"
+}

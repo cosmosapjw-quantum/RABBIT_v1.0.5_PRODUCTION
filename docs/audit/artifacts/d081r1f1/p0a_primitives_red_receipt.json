@@ -1,0 +1,11 @@
+{
+  "claim_ceiling": "compile RED and deterministic Python P0A oracle only; no Rust thermal primitive is implemented or admitted",
+  "classification": "PASS_EXPECTED_ABSENT_TGAMMA_PRIMITIVES_MODULE_RED",
+  "expected_error": "E0432 unresolved import crate::f10_tgamma_tangent",
+  "oracle_sha256": "3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7",
+  "schema": "rabbit.d081r1f1.p0a_primitives_red_receipt.v1",
+  "trigger_head": "735369714dcdd4545eec7ae967a930e2535662e4",
+  "vendor_archive_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "vendor_artifact_id": 9932329475,
+  "workflow_run_id": "33861819055"
+}
