@@ -1,0 +1,33 @@
+{
+  "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "claim_ceiling": "expected absent-child-module compiler RED for order-8 fixed-branch electron collision-action T_gamma JVP only; no production collision JVP, packed-RHS thermal column, retained state, solver, trajectory, endpoint, N_eff, performance, publication readiness, merge, or G-F10 movement",
+  "classification": "PASS_EXPECTED_ABSENT_ELECTRON_COLLISION_TGAMMA_JVP_CHILD_MODULE_RED",
+  "comparator_blob": "de44feee0aa484abe26976c7dc34c579643005b5",
+  "contract_blob": "ff568c9193de5e9f2fecb07c1694df3bf4ea5549",
+  "d080b_source_blob": "78489c43f3046db09d8ba2d96070124ed7b0aa91",
+  "exact_base_commit": "8c6fcf68186040313b6fd7407ff027205cfa1df8",
+  "module_registry_blob": "4ee830c065c4623bdc5486a83701d9f39c4a8ce1",
+  "observed_compiler_error": "E0432 unresolved import crate::f10_electron_action::tgamma_jvp",
+  "observed_unique_compiler_error_codes": [
+    "E0432"
+  ],
+  "p0a_repaired_source_blob": "8d731d9f88076375b73ac4eca2a6ac54e98e66c6",
+  "p0b_repaired_source_blob": "88717ed6206cae78599e805de79cf1b3f046443a",
+  "primal_electron_action_blob": "f1c25926100ae6904a95b180ac50a2f05cdcfeaf",
+  "prior_invalid_red_classification": "INVALID_RED_WITNESS_DUE_TO_CASCADING_E0282",
+  "prior_invalid_red_workflow_run_id": "33912116263",
+  "production_child_module_present": false,
+  "production_source_changed": false,
+  "red_test_blob": "93a7b248217be5c21dc95a8986d59dbf1412fa1f",
+  "retained_or_holdout_state_accessed": false,
+  "runtime": {
+    "rust": "1.94.1",
+    "vendor_artifact_id": 9932329475,
+    "vendor_package_directories": 174,
+    "vendor_tar_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f"
+  },
+  "schema": "rabbit.d081r1f1.p1_collision_tgamma_jvp_red_receipt.v1",
+  "trigger_head": "89ffea8023d89371f0ba6222d0a9e10dea8fb37f",
+  "trigger_tree": "cadac40a98b694a856a2c780ed267aad4a3cf5fa",
+  "workflow_run_id": "33912615948"
+}
