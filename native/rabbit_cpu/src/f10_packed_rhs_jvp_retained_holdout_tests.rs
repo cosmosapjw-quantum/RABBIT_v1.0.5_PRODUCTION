@@ -287,16 +287,25 @@ fn retained_state1200_holdout_and_mu_tau_covariance() {
         &result.combined_action.electron_action.native,
         &expected_electron_native,
     );
-    let total_native = difference_stats(&result.combined_action.native_total, &expected_total_native);
+    let total_native =
+        difference_stats(&result.combined_action.native_total, &expected_total_native);
     let packed = difference_stats(&result.values, &expected_jvp);
 
-    assert_below(self_modal.global_relative, modal_cap, "holdout self modal JVP");
+    assert_below(
+        self_modal.global_relative,
+        modal_cap,
+        "holdout self modal JVP",
+    );
     assert_below(
         electron_modal.global_relative,
         modal_cap,
         "holdout electron modal JVP",
     );
-    assert_below(total_modal.global_relative, modal_cap, "holdout total modal JVP");
+    assert_below(
+        total_modal.global_relative,
+        modal_cap,
+        "holdout total modal JVP",
+    );
     assert_below(packed.global_relative, packed_cap, "holdout packed-RHS JVP");
 
     let delta_rho_relative = scalar_relative(
@@ -368,13 +377,20 @@ fn retained_state1200_holdout_and_mu_tau_covariance() {
         .unwrap(),
         bits(&expected_branch["largest_matrix_roundoff_correction_bits"]).to_bits(),
     );
-    assert_eq!(branch_signature(&result.base.combined_action), expected_signature);
+    assert_eq!(
+        branch_signature(&result.base.combined_action),
+        expected_signature
+    );
 
     let witnesses = value["centered_witnesses"].as_array().unwrap();
     assert_eq!(witnesses.len(), 1);
     let witness = &witnesses[0];
     assert!(witness["state_valid"].as_bool().unwrap());
-    assert!(witness["same_support_and_correction_branch"].as_bool().unwrap());
+    assert!(
+        witness["same_support_and_correction_branch"]
+            .as_bool()
+            .unwrap()
+    );
     let epsilon = bits(&witness["epsilon_bits"]);
     let plus_state: Vec<f64> = state
         .iter()
@@ -429,14 +445,9 @@ fn retained_state1200_holdout_and_mu_tau_covariance() {
         "swapped full direction",
     );
 
-    let swapped_result = evaluate_f10_packed_rhs_c_jvp(
-        &grid,
-        ln_a,
-        &swapped_state,
-        &swapped_direction,
-        config,
-    )
-    .unwrap();
+    let swapped_result =
+        evaluate_f10_packed_rhs_c_jvp(&grid, ln_a, &swapped_state, &swapped_direction, config)
+            .unwrap();
     assert_eq!(
         branch_signature(&swapped_result.base.combined_action),
         expected_signature,
@@ -492,10 +503,8 @@ fn retained_state1200_holdout_and_mu_tau_covariance() {
         "packed-RHS mu/tau covariance",
     );
 
-    let covariance_delta_rho = scalar_relative(
-        swapped_result.delta_rho_neutrino,
-        result.delta_rho_neutrino,
-    );
+    let covariance_delta_rho =
+        scalar_relative(swapped_result.delta_rho_neutrino, result.delta_rho_neutrino);
     let covariance_delta_h = scalar_relative(
         swapped_result.delta_hubble_over_hubble,
         result.delta_hubble_over_hubble,
@@ -523,10 +532,8 @@ fn retained_state1200_holdout_and_mu_tau_covariance() {
         .zip(&swapped_full_direction)
         .map(|(base, tangent)| base - epsilon * tangent)
         .collect();
-    let swapped_plus =
-        evaluate_f10_packed_rhs(&grid, ln_a, &swapped_plus_state, config).unwrap();
-    let swapped_minus =
-        evaluate_f10_packed_rhs(&grid, ln_a, &swapped_minus_state, config).unwrap();
+    let swapped_plus = evaluate_f10_packed_rhs(&grid, ln_a, &swapped_plus_state, config).unwrap();
+    let swapped_minus = evaluate_f10_packed_rhs(&grid, ln_a, &swapped_minus_state, config).unwrap();
     assert_eq!(
         branch_signature(&swapped_plus.combined_action),
         expected_signature,

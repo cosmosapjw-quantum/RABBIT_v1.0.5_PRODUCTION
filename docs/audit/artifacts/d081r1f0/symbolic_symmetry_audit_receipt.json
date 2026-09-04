@@ -1,0 +1,81 @@
+{
+  "authority_status": "auxiliary-only; repository equations and executed Rust/Python receipts remain authoritative",
+  "ci": {
+    "repository": "cosmosapjw-quantum/RABBIT_v1.0.5_PRODUCTION",
+    "run_attempt": "1",
+    "run_id": "33844270726",
+    "trigger_sha": "c4c8375f08533bd69205f15a465a10a1a218cf94",
+    "workflow": "d081r1f0-retained-holdout"
+  },
+  "classification": "PASS_AUXILIARY_SYMPY_MPMATH_AUDIT",
+  "equivariance": {
+    "explicit_polynomial_map_residual": [
+      "0",
+      "0",
+      "0"
+    ],
+    "symmetric_direction_at_fixed_state_residual": [
+      "0",
+      "0",
+      "0"
+    ],
+    "symmetric_direction_without_fixed_state_counterexample": [
+      "0",
+      "-3",
+      "3"
+    ],
+    "tested_identity": "DF(Sx) S v = S DF(x) v"
+  },
+  "optional_tool_probes": {
+    "Singular": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "elan": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "lake": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "lean": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "octave": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "octave-cli": {
+      "available": false,
+      "path": null,
+      "probe": null
+    },
+    "sage": {
+      "available": false,
+      "path": null,
+      "probe": null
+    }
+  },
+  "ratio_bound": {
+    "binary64_allowance": "1.42108547152020037174224853515625e-14",
+    "conservative_propagated_bound": "0.00000000001998096227921888295304722997019562136913",
+    "exact_algebraic_identity_residual": "0",
+    "observed_difference": "0.000000000006818373463000173700419648433374322571928",
+    "passes": true,
+    "python_ratio": "0.000000002523750453583951327772750054085806195746",
+    "rust_ratio": "0.000000002530568827046951501473169702519180518318"
+  },
+  "runtime": {
+    "mpmath": "1.3.0",
+    "mpmath_dps": 80,
+    "sympy": "1.14.0"
+  },
+  "schema": "rabbit.d081r1f0.symbolic_symmetry_audit.v1"
+}
