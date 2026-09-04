@@ -1,0 +1,8 @@
+D-081R1F1 absent-API RED trigger
+
+Expected branch: research/d081r1f1-rust-tgamma-jvp-20260904
+Contract blob: 58eeaf38b9f4edd4c60a01d22d2e101a33b71812
+Expected missing module: f10_packed_rhs_tgamma_jvp
+Expected compiler diagnostic: E0432
+Production implementation: absent
+Retained state_2000 holdout: must remain unopened
