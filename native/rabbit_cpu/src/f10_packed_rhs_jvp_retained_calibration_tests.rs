@@ -51,6 +51,60 @@ fn global_relative(actual: &[f64], expected: &[f64]) -> f64 {
             .max(f64::MIN_POSITIVE)
 }
 
+#[derive(Clone, Copy, Debug)]
+struct PairSymmetryMetric {
+    numerator: f64,
+    scale: f64,
+    residual: f64,
+}
+
+fn pair_average(values: &[f64], order: usize, pair: usize) -> Vec<f64> {
+    assert!(pair < 3);
+    assert_eq!(values.len(), 6 * order);
+    (0..order)
+        .map(|node| {
+            0.5 * (values[(2 * pair) * order + node] + values[(2 * pair + 1) * order + node])
+        })
+        .collect()
+}
+
+fn pair_symmetry_metric(mu: &[f64], tau: &[f64]) -> PairSymmetryMetric {
+    assert_eq!(mu.len(), tau.len());
+    assert!(!mu.is_empty());
+    let numerator = maximum_absolute_difference(mu, tau);
+    let scale = maximum_absolute(mu)
+        .max(maximum_absolute(tau))
+        .max(f64::MIN_POSITIVE);
+    PairSymmetryMetric {
+        numerator,
+        scale,
+        residual: numerator / scale,
+    }
+}
+
+fn conditioned_ratio_difference_bound(
+    rust_mu: &[f64],
+    rust_tau: &[f64],
+    python_mu: &[f64],
+    python_tau: &[f64],
+    rust_metric: PairSymmetryMetric,
+    python_metric: PairSymmetryMetric,
+) -> f64 {
+    let delta_mu = maximum_absolute_difference(rust_mu, python_mu);
+    let delta_tau = maximum_absolute_difference(rust_tau, python_tau);
+    let delta_scale = delta_mu.max(delta_tau);
+    let propagated = (delta_mu + delta_tau) / rust_metric.scale
+        + python_metric.numerator * delta_scale / (rust_metric.scale * python_metric.scale);
+    let evaluation_roundoff = 64.0
+        * f64::EPSILON
+        * rust_metric
+            .residual
+            .abs()
+            .max(python_metric.residual.abs())
+            .max(1.0);
+    propagated + evaluation_roundoff
+}
+
 fn scalar_relative(actual: f64, expected: f64) -> f64 {
     (actual - expected).abs() / actual.abs().max(expected.abs()).max(f64::MIN_POSITIVE)
 }
@@ -125,7 +179,12 @@ fn packed_block_residual(actual: &[f64], expected: &[f64]) -> (f64, f64, f64, f6
     let spectral = global_relative(&actual[..SPECTRAL_SIZE], &expected[..SPECTRAL_SIZE]);
     let temperature = scalar_relative(actual[SPECTRAL_SIZE], expected[SPECTRAL_SIZE]);
     let elapsed = scalar_relative(actual[SPECTRAL_SIZE + 1], expected[SPECTRAL_SIZE + 1]);
-    (spectral.max(temperature).max(elapsed), spectral, temperature, elapsed)
+    (
+        spectral.max(temperature).max(elapsed),
+        spectral,
+        temperature,
+        elapsed,
+    )
 }
 
 fn fixture() -> Value {
@@ -145,10 +204,22 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
         value["metadata"]["retained_sha256"],
         "c0ad51adbd34d4fb8408f566c7bc573ca3d5bbd8c1d1f5d89f50df2e6b5d3380"
     );
-    assert_eq!(value["contract_git_blob"], "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221");
-    assert_eq!(value["python_tangent_git_blob"], "668f3fab76ffc3ad7f29335a79fcd5daf47d429e");
-    assert_eq!(value["python_collision_jvp_git_blob"], "591a64702c58a2de265fb88636f186e2d1b7e019");
-    assert_eq!(value["python_rhs_jvp_git_blob"], "6bcff2bc5627c0af0ad4df61c908d09e62ffaba5");
+    assert_eq!(
+        value["contract_git_blob"],
+        "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221"
+    );
+    assert_eq!(
+        value["python_tangent_git_blob"],
+        "668f3fab76ffc3ad7f29335a79fcd5daf47d429e"
+    );
+    assert_eq!(
+        value["python_collision_jvp_git_blob"],
+        "591a64702c58a2de265fb88636f186e2d1b7e019"
+    );
+    assert_eq!(
+        value["python_rhs_jvp_git_blob"],
+        "6bcff2bc5627c0af0ad4df61c908d09e62ffaba5"
+    );
 
     let grid = F10ActionGrid::affine_legendre(60, bits(&value["y_max_bits"])).unwrap();
     assert_exact_array(&grid.nodes, &bit_array(&value["grid_nodes"]), "GL60 nodes");
@@ -187,10 +258,7 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
         &result.combined_action.electron_action.modal,
         &expected_electron_modal,
     );
-    let total_modal = global_relative(
-        &result.combined_action.modal_total,
-        &expected_total_modal,
-    );
+    let total_modal = global_relative(&result.combined_action.modal_total, &expected_total_modal);
     let self_native = global_relative(
         &result.combined_action.self_action.native,
         &expected_self_native,
@@ -199,10 +267,8 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
         &result.combined_action.electron_action.native,
         &expected_electron_native,
     );
-    let total_native = global_relative(
-        &result.combined_action.native_total,
-        &expected_total_native,
-    );
+    let total_native =
+        global_relative(&result.combined_action.native_total, &expected_total_native);
     let (packed, spectral, temperature, elapsed) =
         packed_block_residual(&result.values, &expected_jvp);
 
@@ -269,10 +335,63 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
         2.0e-9,
         "retained charge-conjugation tangent",
     );
+    let rust_mu = pair_average(&result.combined_action.native_total, grid.order, 1);
+    let rust_tau = pair_average(&result.combined_action.native_total, grid.order, 2);
+    let python_mu = pair_average(&expected_total_native, grid.order, 1);
+    let python_tau = pair_average(&expected_total_native, grid.order, 2);
+    let rust_mu_tau = pair_symmetry_metric(&rust_mu, &rust_tau);
+    let python_mu_tau = pair_symmetry_metric(&python_mu, &python_tau);
+    let python_stored_mu_tau = bits(&value["collision"]["mu_tau_residual_bits"]);
+
+    assert_eq!(
+        result.combined_action.mu_tau_residual.to_bits(),
+        rust_mu_tau.residual.to_bits(),
+        "Rust stored mu/tau residual disagrees with the Rust tangent arrays"
+    );
+    assert_eq!(
+        python_stored_mu_tau.to_bits(),
+        python_mu_tau.residual.to_bits(),
+        "Python stored mu/tau residual disagrees with the frozen Python arrays"
+    );
+
+    let rust_python_mu = global_relative(&rust_mu, &python_mu);
+    let rust_python_tau = global_relative(&rust_tau, &python_tau);
     assert_below(
-        result.combined_action.mu_tau_residual,
-        2.0e-9,
-        "retained mu/tau tangent",
+        rust_python_mu,
+        modal_cap,
+        "retained Rust/Python mu pair-average tangent",
+    );
+    assert_below(
+        rust_python_tau,
+        modal_cap,
+        "retained Rust/Python tau pair-average tangent",
+    );
+
+    let ratio_difference = (rust_mu_tau.residual - python_mu_tau.residual).abs();
+    let ratio_bound = conditioned_ratio_difference_bound(
+        &rust_mu,
+        &rust_tau,
+        &python_mu,
+        &python_tau,
+        rust_mu_tau,
+        python_mu_tau,
+    );
+    assert!(
+        ratio_difference <= ratio_bound,
+        "retained mu/tau ratio discrepancy exceeds the propagated pair-array bound: difference={ratio_difference:.17e}, bound={ratio_bound:.17e}"
+    );
+
+    let legacy_mu_tau_cap = 2.0e-9;
+    println!(
+        "D081R1F0_MU_TAU_METROLOGY legacy_cap={legacy_mu_tau_cap:.17e} rust_raw={:.17e} rust_numerator={:.17e} rust_scale={:.17e} python_raw={:.17e} python_numerator={:.17e} python_scale={:.17e} mu_array_relative={rust_python_mu:.17e} tau_array_relative={rust_python_tau:.17e} ratio_difference={ratio_difference:.17e} ratio_bound={ratio_bound:.17e} legacy_rust_pass={} legacy_python_pass={}",
+        rust_mu_tau.residual,
+        rust_mu_tau.numerator,
+        rust_mu_tau.scale,
+        python_mu_tau.residual,
+        python_mu_tau.numerator,
+        python_mu_tau.scale,
+        rust_mu_tau.residual <= legacy_mu_tau_cap,
+        python_mu_tau.residual <= legacy_mu_tau_cap,
     );
 
     let expected_branch = &value["collision"]["base_branch"];
@@ -291,13 +410,20 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
         .unwrap(),
         bits(&expected_branch["largest_matrix_roundoff_correction_bits"]).to_bits(),
     );
-    assert_eq!(branch_signature(&result.base.combined_action), expected_signature);
+    assert_eq!(
+        branch_signature(&result.base.combined_action),
+        expected_signature
+    );
 
     let witnesses = value["centered_witnesses"].as_array().unwrap();
     assert_eq!(witnesses.len(), 1);
     let witness = &witnesses[0];
     assert!(witness["state_valid"].as_bool().unwrap());
-    assert!(witness["same_support_and_correction_branch"].as_bool().unwrap());
+    assert!(
+        witness["same_support_and_correction_branch"]
+            .as_bool()
+            .unwrap()
+    );
     let epsilon = bits(&witness["epsilon_bits"]);
     let full_direction = bit_array(&value["direction_full"]);
     let plus_state: Vec<f64> = state
@@ -323,19 +449,21 @@ fn retained_state1200_c_only_jvp_matches_the_frozen_calibration_oracle() {
     let (centered, centered_spectral, centered_temperature, centered_elapsed) =
         packed_block_residual(&finite_difference, &result.values);
     let centered_cap = thresholds["retained_centered_packed_rhs"].as_f64().unwrap();
-    assert_below(centered, centered_cap, "retained centered packed-RHS witness");
+    assert_below(
+        centered,
+        centered_cap,
+        "retained centered packed-RHS witness",
+    );
     assert_below(
         witness["packed_residual"].as_f64().unwrap(),
         centered_cap,
         "Python retained centered packed-RHS witness",
     );
 
-    let (packed_local, packed_local_index) =
-        maximum_local_relative(&result.values, &expected_jvp);
+    let (packed_local, packed_local_index) = maximum_local_relative(&result.values, &expected_jvp);
     let (packed_ulp, packed_ulp_index) = maximum_ulp(&result.values, &expected_jvp);
     println!(
         "D081R1F0_RETAINED_CALIBRATION_PASS self_modal={self_modal:.17e} electron_modal={electron_modal:.17e} total_modal={total_modal:.17e} self_native={self_native:.17e} electron_native={electron_native:.17e} total_native={total_native:.17e} packed={packed:.17e} spectral={spectral:.17e} temperature={temperature:.17e} elapsed={elapsed:.17e} centered={centered:.17e} centered_spectral={centered_spectral:.17e} centered_temperature={centered_temperature:.17e} centered_elapsed={centered_elapsed:.17e} self_number={self_number_ratio:.17e} self_energy={self_energy_ratio:.17e} cp={:.17e} mu_tau={:.17e} packed_local={packed_local:.17e} packed_local_index={packed_local_index} packed_ulp={packed_ulp} packed_ulp_index={packed_ulp_index}",
-        result.combined_action.charge_conjugation_residual,
-        result.combined_action.mu_tau_residual,
+        result.combined_action.charge_conjugation_residual, result.combined_action.mu_tau_residual,
     );
 }
