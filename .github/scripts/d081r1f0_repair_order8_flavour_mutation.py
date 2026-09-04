@@ -11,7 +11,8 @@ threshold and production formula unchanged.
 
 from pathlib import Path
 
-TARGET = Path("native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs")
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+TARGET = REPOSITORY_ROOT / "native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs"
 
 OLD = '''    let mut flavour_mutant = base.values.clone();
     for node in 0..grid.order {
