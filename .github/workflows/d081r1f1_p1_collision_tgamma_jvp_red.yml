@@ -28,7 +28,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
           git merge-base --is-ancestor 8c6fcf68186040313b6fd7407ff027205cfa1df8 HEAD
           test "$(git hash-object docs/audit/D081R1F1_P1_ELECTRON_COLLISION_TGAMMA_JVP_CONTRACT_2026-09-05.md)" = ff568c9193de5e9f2fecb07c1694df3bf4ea5549
-          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = dc52193b7aaef9b95293e2a5ca1551c0acdb8047
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = 93a7b248217be5c21dc95a8986d59dbf1412fa1f
           test "$(git hash-object native/rabbit_cpu/src/lib.rs)" = 4ee830c065c4623bdc5486a83701d9f39c4a8ce1
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action.rs)" = f1c25926100ae6904a95b180ac50a2f05cdcfeaf
           test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_tangent.rs)" = 8d731d9f88076375b73ac4eca2a6ac54e98e66c6
@@ -76,11 +76,10 @@ jobs:
           test "${status}" -ne 0
           grep -F 'error[E0432]' /tmp/p1-red.log
           grep -F 'f10_electron_action::tgamma_jvp' /tmp/p1-red.log
-          test "$(grep -Ec '^error\[E[0-9]+\]:' /tmp/p1-red.log)" -eq 1
-          if grep -E '^error\[E[0-9]+\]:' /tmp/p1-red.log | grep -Fv 'error[E0432]'; then
-            echo 'unexpected coded compiler error in RED witness' >&2
-            exit 1
-          fi
+          mapfile -t error_codes < <(grep -Eo 'error\[E[0-9]+\]' /tmp/p1-red.log | sort -u)
+          test "${#error_codes[@]}" -eq 1
+          test "${error_codes[0]}" = 'error[E0432]'
+          ! grep -Fq 'error[E0282]' /tmp/p1-red.log
           test -z "$(git -C ../.. status --short --untracked-files=no)"
 
       - name: Publish durable P1 RED receipt only
@@ -107,6 +106,8 @@ jobs:
               'trigger_tree': os.environ['TRIGGER_TREE'],
               'exact_base_commit': '8c6fcf68186040313b6fd7407ff027205cfa1df8',
               'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'prior_invalid_red_workflow_run_id': '33912116263',
+              'prior_invalid_red_classification': 'INVALID_RED_WITNESS_DUE_TO_CASCADING_E0282',
               'contract_blob': blob('docs/audit/D081R1F1_P1_ELECTRON_COLLISION_TGAMMA_JVP_CONTRACT_2026-09-05.md'),
               'red_test_blob': blob('native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs'),
               'module_registry_blob': blob('native/rabbit_cpu/src/lib.rs'),
@@ -116,6 +117,7 @@ jobs:
               'd080b_source_blob': blob('scripts/audit/_d080b_tgamma_collision.py'),
               'comparator_blob': blob('src/rabbit/decoupling/_independent_noqke.py'),
               'cargo_lock_blob': blob('native/rabbit_cpu/Cargo.lock'),
+              'observed_unique_compiler_error_codes': ['E0432'],
               'observed_compiler_error': 'E0432 unresolved import crate::f10_electron_action::tgamma_jvp',
               'production_child_module_present': False,
               'production_source_changed': False,
