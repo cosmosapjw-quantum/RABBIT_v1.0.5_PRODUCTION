@@ -66,6 +66,9 @@ mod f10_packed_rhs_tests;
 mod f10_self_action_tests;
 
 #[cfg(test)]
+mod f10_tgamma_tangent_tests;
+
+#[cfg(test)]
 mod electron_event_falsifiers;
 
 #[cfg(test)]
