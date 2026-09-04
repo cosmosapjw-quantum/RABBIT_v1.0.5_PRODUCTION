@@ -1,0 +1,20 @@
+D081R1F0_SOURCE_COMPILE_PREFLIGHT_V1
+
+workflow authority commit:
+eb0aa93f8776f8d220547b69c3a6c543a8841220
+
+scope:
+- register derivative submodules in the Actions worktree
+- exact Rust 1.94.1 offline compile
+- exact-zero c-direction JVP test
+- admitted primal packed-RHS regression tests
+- clippy -D warnings
+- publish tested-source-tree receipt on GREEN
+
+explicit exclusions:
+- no Python oracle generation
+- no nonzero JVP equivalence claim
+- no retained calibration
+- no unseen holdout
+- no mutation campaign
+- no solver or trajectory
