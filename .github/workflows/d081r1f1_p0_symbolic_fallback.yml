@@ -39,7 +39,7 @@ jobs:
           test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
           test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
           test "$(git hash-object docs/audit/artifacts/d080c/research_receipt.json)" = 1ebb9a854f1db42d76ae36cfbe0926b016b67b7e
-          test "$(git hash-object docs/audit/artifacts/d081r1f0/retained_holdout_verification_receipt.json)" = 01a87b4227fbe11e83412a5899a1eead69fbda3c
+          test "$(git hash-object docs/audit/artifacts/d081r1f0/retained_holdout_receipt.json)" = 01a87b4227fbe11e83412a5899a1eead69fbda3c
           test ! -e native/rabbit_cpu/src/f10_tgamma_tangent.rs
           test ! -e docs/audit/artifacts/d081r1f1/retained_calibration_verification_receipt.json
           test ! -e docs/audit/artifacts/d081r1f1/retained_holdout_verification_receipt.json
@@ -233,6 +233,7 @@ jobs:
               'd080a_tgamma_primitives_blob': 'c585d5865fd68a90a04a76ab540b8437fba8cfce',
               'd080b_tgamma_collision_blob': '78489c43f3046db09d8ba2d96070124ed7b0aa91',
               'd080c_receipt_blob': '1ebb9a854f1db42d76ae36cfbe0926b016b67b7e',
+              'd081r1f0_retained_holdout_receipt_blob': '01a87b4227fbe11e83412a5899a1eead69fbda3c',
               'oracle_script_blob': os.environ['SCRIPT_BLOB'],
               'workflow_blob': os.environ['WORKFLOW_BLOB'],
               'oracle_sha256': hashlib.sha256(oracle_path.read_bytes()).hexdigest(),
