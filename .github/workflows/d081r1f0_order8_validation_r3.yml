@@ -1,0 +1,193 @@
+name: d081r1f0-order8-validation-r3
+
+on:
+  push:
+    branches:
+      - research/d081r1f0-rust-c-only-jvp-20260904
+    paths:
+      - docs/audit/D081R1F0_ORDER8_R3_EXECUTE_2026-09-04
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  order8-r3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact trigger and frozen authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 8cef907e704149340774214f4da1bd28b79608e9 HEAD
+          test "$(git hash-object docs/audit/D081R1F0_RUST_C_ONLY_PACKED_RHS_JVP_CONTRACT_2026-09-04.md)" = ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/_d079_tangent_primitives.py)" = 668f3fab76ffc3ad7f29335a79fcd5daf47d429e
+          test "$(git hash-object scripts/audit/_d079_collision_jvp.py)" = 591a64702c58a2de265fb88636f186e2d1b7e019
+          test "$(git hash-object scripts/audit/_d079_rhs_jvp.py)" = 6bcff2bc5627c0af0ad4df61c908d09e62ffaba5
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          test -f native/rabbit_cpu/tests/fixtures/d081r1/generate_rust_c_only_jvp_oracle.py
+          test -f .github/scripts/d081r1f0_repair_order8_flavour_mutation.py
+          grep -Fx 'mod f10_packed_rhs_jvp_order8_tests;' native/rabbit_cpu/src/lib.rs
+
+      - name: Install exact Python and Rust tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1f0-order8-r3-venv
+          /tmp/d081r1f0-order8-r3-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt clippy
+          test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
+          test "$(cargo +1.94.1 --version)" = "cargo 1.94.1 (29ea6fb6a 2026-03-24)"
+
+      - name: Recover exact offline Rust vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9838506413/zip > /tmp/vendor.zip
+          echo '391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a  /tmp/vendor.zip' | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          vendor_dir="$(find /tmp/vendor-outer -type d -name vendor -print -quit)"
+          if [[ -z "${vendor_dir}" ]]; then
+            archive="$(find /tmp/vendor-outer -type f \( -name '*.tar.gz' -o -name '*.tgz' -o -name '*.tar.xz' -o -name '*.tar' -o -name '*.zip' \) -print -quit)"
+            case "${archive}" in
+              *.tar.gz|*.tgz) tar -xzf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar.xz) tar -xJf "${archive}" -C /tmp/vendor-expanded ;;
+              *.tar) tar -xf "${archive}" -C /tmp/vendor-expanded ;;
+              *.zip) unzip -q "${archive}" -d /tmp/vendor-expanded ;;
+              *) echo 'no supported vendor archive' >&2; exit 1 ;;
+            esac
+            vendor_dir="$(find /tmp/vendor-expanded -type d -name vendor -print -quit)"
+          fi
+          test -n "${vendor_dir}"
+          test "$(find "${vendor_dir}" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r0"\n[source.d081r0]\ndirectory="%s"\n[net]\noffline=true\n' "${vendor_dir}" > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Generate deterministic order-eight Python oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1f0-order8-r3-venv/bin/python
+          GEN=native/rabbit_cpu/tests/fixtures/d081r1/generate_rust_c_only_jvp_oracle.py
+          "$PY" -m py_compile "$GEN"
+          "$PY" "$GEN" --case order8 --output /tmp/order8-a.json
+          "$PY" "$GEN" --case order8 --output /tmp/order8-b.json
+          cmp /tmp/order8-a.json /tmp/order8-b.json
+          sha256sum /tmp/order8-a.json /tmp/order8-b.json
+
+      - name: Apply bounded mutation-metrology repair and verify GREEN
+        shell: bash
+        working-directory: native/rabbit_cpu
+        env:
+          D081R1F0_ORDER8_FIXTURE: /tmp/order8-a.json
+        run: |
+          set -euo pipefail
+          target='native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs'
+          python3 ../../.github/scripts/d081r1f0_repair_order8_flavour_mutation.py
+          cargo +1.94.1 fmt --all
+          mapfile -t changed < <(git -C ../.. diff --name-only)
+          printf 'changed=%s\n' "${changed[*]-}"
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "${target}"
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 metadata --locked --offline --format-version 1 >/tmp/d081r1f0-order8-r3-metadata.json
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_jvp_tests::zero_c_direction_is_bitwise_zero_without_changing_the_base_rhs \
+            -- --exact --nocapture
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_jvp_order8_tests -- --nocapture 2>&1 | tee /tmp/d081r1f0-order8-r3.log
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_preflight_tests::tests -- --nocapture
+          cargo +1.94.1 test --locked --offline \
+            f10_packed_rhs_tests::tests -- --nocapture
+          cargo +1.94.1 clippy --all-targets --all-features \
+            --locked --offline -- -D warnings
+
+      - name: Publish durable order-eight receipt and tested source
+        shell: bash
+        env:
+          RECEIPT: docs/audit/artifacts/d081r1f0/order8_verification_receipt.json
+          TESTED_SOURCE: native/rabbit_cpu/src/f10_packed_rhs_jvp_order8_tests.rs
+        run: |
+          set -euo pipefail
+          mkdir -p "$(dirname "${RECEIPT}")"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${TESTED_SOURCE}"
+          export TESTED_SOURCE_TREE="$(git write-tree)"
+          /tmp/d081r1f0-order8-r3-venv/bin/python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          fixture = Path('/tmp/order8-a.json')
+          log = Path('/tmp/d081r1f0-order8-r3.log')
+          text = log.read_text(encoding='utf-8', errors='replace')
+          match = re.search(r'D081R1F0_ORDER8_PASS\s+([^\n]+)', text)
+          if match is None:
+              raise SystemExit('missing order-eight metric line')
+          metrics = {}
+          for token in match.group(1).split():
+              key, value = token.split('=', 1)
+              metrics[key] = float(value)
+          payload = {
+              'schema': 'rabbit.d081r1f0.order8_jvp_verification.v2',
+              'classification': 'PASS_WITH_ORDER8_NONZERO_FIXED_BRANCH_C_ONLY_JVP_SCOPE_RETAINED_OPEN',
+              'trigger_head': os.environ['GITHUB_SHA'],
+              'tested_source_tree': os.environ['TESTED_SOURCE_TREE'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'contract_blob': 'ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221',
+              'fixture_sha256': hashlib.sha256(fixture.read_bytes()).hexdigest(),
+              'test_log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
+              'metrics': metrics,
+              'runtime': {
+                  'python': '3.12.3',
+                  'numpy': '2.4.4',
+                  'scipy': '1.17.1',
+                  'rust': '1.94.1',
+                  'offline_vendor_packages': 174,
+              },
+              'repairs': {
+                  'flavour_swap_checked_on_spectral_block': True,
+                  'physics_or_threshold_changed': False,
+              },
+              'claim_ceiling': 'order-eight nonzero static spectral-c JVP only; retained calibration and holdout, thermal input columns, full Jacobian, solver, trajectory, endpoint, N_eff, performance, publication, and F10 gate movement remain untested',
+          }
+          Path(os.environ['RECEIPT']).write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          git add "${RECEIPT}"
+          git diff --cached --check
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -eq 2
+          printf '%s\n' "${staged[@]}" | sort > /tmp/staged.txt
+          printf '%s\n' "${RECEIPT}" "${TESTED_SOURCE}" | sort > /tmp/expected.txt
+          cmp /tmp/staged.txt /tmp/expected.txt
+          git commit -m 'test(d081r1f0): publish order-eight nonzero JVP PASS receipt'
+          git push origin HEAD:research/d081r1f0-rust-c-only-jvp-20260904
