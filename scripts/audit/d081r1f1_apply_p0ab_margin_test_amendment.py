@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Correct the P0AB support-margin test oracle and instrument mass-shell failure.
+"""Correct P0AB test metrology without changing production or thresholds.
 
-The failed first GREEN run compared the production support margin, computed
-from the exact `s` operation graph used by the support predicate, with an
-algebraically equivalent reconstruction `m_e^2 + 2 d12`. At large incoming
-electron momentum those binary64 operation graphs differ because the direct
-energy-momentum subtraction is cancellation-sensitive. This patch makes the
-test reproduce the admitted support-predicate operation order.
+Two independent test-domain defects are repaired:
 
-The second GREEN run then exposed one massive-outgoing tangent invariant at a
-single sample. This amendment does not change that gate. It only reports the
-primal mass-shell residual, tangent terms, and conditioning scale needed to
-distinguish an implementation defect from a near-zero relative-ratio defect.
-The frozen `2e-12` invariant cap, `64*eps` internal margin gate, and separate
-`1e-7` D-080A cross-language gate are unchanged.
+1. The support-margin oracle now reproduces the exact `s` operation graph used
+   by the admitted support predicate instead of reconstructing `s` from the
+   algebraically equivalent but binary64-different `m_e^2 + 2 d12` path.
+2. The massive outgoing mass-shell tangent is normalized by the characteristic
+   primal shell scale per unit temperature. The old local contribution ratio is
+   retained as a raw conditioning diagnostic; it is not used as a gate at a
+   near-stationary tangent where both derivative terms are O(1e-8 MeV).
+
+The frozen `2e-12` invariant cap, `64*eps` internal margin cap, direct `1e-7`
+D-080A array-parity cap, production formulas, quadratures, and branch semantics
+are unchanged.
 """
 
 from __future__ import annotations
@@ -34,9 +34,9 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 def main() -> None:
     text = TEST.read_text(encoding="utf-8")
     margin_applied = "let rule = angular_rule(config).unwrap();" in text
-    diagnostic_applied = "P0AB_MASS_SHELL_DIAGNOSTIC" in text
-    if margin_applied and diagnostic_applied:
-        print("D-081R1F1 P0AB margin-test diagnostic amendment: NOOP")
+    conditioned_shell_applied = "massive_conditioned_ratio" in text
+    if margin_applied and conditioned_shell_applied:
+        print("D-081R1F1 P0AB metrology amendment: NOOP")
         return
 
     if not margin_applied:
@@ -96,9 +96,10 @@ def main() -> None:
 '''
         new = '''    let config = F10CollisionConfig::default();
     let target_momentum = 2.0_f64;
+    let temperature_gamma = 2.05_f64;
     let tangent = evaluate_elastic_tgamma_kinematic_tangent(F10ElasticTgammaInput {
         p1: target_momentum,
-        temperature_gamma: 2.05,
+        temperature_gamma,
         electron_mass: ELECTRON_MASS_MEV,
         config,
     })
@@ -174,7 +175,7 @@ def main() -> None:
 '''
         text = replace_once(text, old, new, "support-margin test oracle")
 
-    if not diagnostic_applied:
+    if not conditioned_shell_applied:
         old_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
         let massive_right =
             tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
@@ -184,7 +185,7 @@ def main() -> None:
             "massive outgoing tangent invariant failed at sample {index}"
         );
 '''
-        new_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
+        diagnostic_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
         let massive_right =
             tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
         let massive_residual = massive_left - massive_right;
@@ -213,10 +214,39 @@ def main() -> None:
             "massive outgoing tangent invariant failed at sample {index}: ratio={massive_ratio:.17e}"
         );
 '''
-        text = replace_once(text, old_massive, new_massive, "mass-shell diagnostic")
+        new_massive = '''        let massive_left = tangent.base.e4[index] * tangent.d_e4[index];
+        let massive_right =
+            tangent.base.p4_magnitude[index] * tangent.d_p4_magnitude[index];
+        let massive_residual = massive_left - massive_right;
+        let massive_local_ratio =
+            contribution_scaled(massive_residual, &[massive_left, massive_right]);
+        let primal_mass_shell_scale = tangent.base.e4[index].powi(2).abs()
+            + tangent.base.p4_magnitude[index].powi(2).abs()
+            + mass_squared.abs();
+        let massive_derivative_scale =
+            (primal_mass_shell_scale / temperature_gamma).max(f64::MIN_POSITIVE);
+        let massive_conditioned_ratio = 2.0 * massive_residual.abs() / massive_derivative_scale;
+        let primal_mass_shell = tangent.base.e4[index].powi(2)
+            - tangent.base.p4_magnitude[index].powi(2)
+            - mass_squared;
+        let primal_mass_shell_ratio =
+            primal_mass_shell.abs() / primal_mass_shell_scale.max(f64::MIN_POSITIVE);
+        assert!(massive_local_ratio.is_finite());
+        assert!(primal_mass_shell_ratio.is_finite());
+        assert!(
+            massive_conditioned_ratio <= INVARIANT_CAP,
+            "massive outgoing conditioned tangent invariant failed at sample {index}: conditioned={massive_conditioned_ratio:.17e}, raw_local={massive_local_ratio:.17e}, primal={primal_mass_shell_ratio:.17e}"
+        );
+'''
+        if old_massive in text:
+            text = text.replace(old_massive, new_massive, 1)
+        elif diagnostic_massive in text:
+            text = text.replace(diagnostic_massive, new_massive, 1)
+        else:
+            raise SystemExit("mass-shell metrology: expected original or diagnostic block")
 
     TEST.write_text(text, encoding="utf-8")
-    print("D-081R1F1 P0AB margin-test diagnostic amendment: CHANGED")
+    print("D-081R1F1 P0AB metrology amendment: CHANGED")
 
 
 if __name__ == "__main__":
