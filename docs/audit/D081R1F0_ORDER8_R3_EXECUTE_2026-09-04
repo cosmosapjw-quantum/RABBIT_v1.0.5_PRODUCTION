@@ -1,0 +1,6 @@
+D081R1F0_ORDER8_NONZERO_VALIDATION_R3
+predecessor_run_id=33833737293
+predecessor_failure=flavour-swap-mutant-normalized-by-heterogeneous-packed-scale
+repair=compare-flavour-swap-on-3n-spectral-output-block
+receipt_tree=stage-tested-source-before-git-write-tree
+holdout=forbidden
