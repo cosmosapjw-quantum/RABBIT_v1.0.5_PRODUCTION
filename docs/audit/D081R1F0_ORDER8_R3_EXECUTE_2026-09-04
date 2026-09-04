@@ -1,6 +1,6 @@
-D081R1F0_ORDER8_NONZERO_VALIDATION_R3
-predecessor_run_id=33833737293
-predecessor_failure=flavour-swap-mutant-normalized-by-heterogeneous-packed-scale
-repair=compare-flavour-swap-on-3n-spectral-output-block
+D081R1F0_ORDER8_NONZERO_VALIDATION_R4
+predecessor_run_id=33834312626
+predecessor_failure=repair-script-working-directory-path
+repair=resolve-target-from-script-repository-root
 receipt_tree=stage-tested-source-before-git-write-tree
 holdout=forbidden
