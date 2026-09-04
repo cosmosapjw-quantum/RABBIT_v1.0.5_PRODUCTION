@@ -1,7 +1,9 @@
 //! Order-eight nonzero validation for the D-081R1F0 spectral-c JVP.
 
 use crate::f10_action_grid::F10ActionGrid;
-use crate::f10_combined_action::{F10CombinedAction, F10CombinedActionConfig, assemble_combined_action};
+use crate::f10_combined_action::{
+    F10CombinedAction, F10CombinedActionConfig, assemble_combined_action,
+};
 use crate::f10_packed_rhs::{F10PackedRhsConfig, F10PackedRhsError, evaluate_f10_packed_rhs};
 use crate::f10_packed_rhs_jvp::evaluate_f10_packed_rhs_c_jvp;
 use serde_json::Value;
@@ -86,10 +88,22 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
     assert_eq!(value["schema"], "rabbit.d081r1f0.c_only_jvp_oracle.v1");
     assert_eq!(value["case"], "order8");
     assert_eq!(value["order"], 8);
-    assert_eq!(value["contract_git_blob"], "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221");
-    assert_eq!(value["python_tangent_git_blob"], "668f3fab76ffc3ad7f29335a79fcd5daf47d429e");
-    assert_eq!(value["python_collision_jvp_git_blob"], "591a64702c58a2de265fb88636f186e2d1b7e019");
-    assert_eq!(value["python_rhs_jvp_git_blob"], "6bcff2bc5627c0af0ad4df61c908d09e62ffaba5");
+    assert_eq!(
+        value["contract_git_blob"],
+        "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221"
+    );
+    assert_eq!(
+        value["python_tangent_git_blob"],
+        "668f3fab76ffc3ad7f29335a79fcd5daf47d429e"
+    );
+    assert_eq!(
+        value["python_collision_jvp_git_blob"],
+        "591a64702c58a2de265fb88636f186e2d1b7e019"
+    );
+    assert_eq!(
+        value["python_rhs_jvp_git_blob"],
+        "6bcff2bc5627c0af0ad4df61c908d09e62ffaba5"
+    );
 
     let order = 8_usize;
     let grid = F10ActionGrid::affine_legendre(order, bits(&value["y_max_bits"])).unwrap();
@@ -116,10 +130,8 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
         &result.combined_action.electron_action.modal,
         &expected_electron_modal,
     );
-    let total_modal_residual = global_relative(
-        &result.combined_action.modal_total,
-        &expected_total_modal,
-    );
+    let total_modal_residual =
+        global_relative(&result.combined_action.modal_total, &expected_total_modal);
     let self_native_residual = global_relative(
         &result.combined_action.self_action.native,
         &expected_self_native,
@@ -128,10 +140,8 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
         &result.combined_action.electron_action.native,
         &expected_electron_native,
     );
-    let total_native_residual = global_relative(
-        &result.combined_action.native_total,
-        &expected_total_native,
-    );
+    let total_native_residual =
+        global_relative(&result.combined_action.native_total, &expected_total_native);
     let packed_residual = global_relative(&result.values, &expected_jvp);
 
     assert_below(
@@ -220,8 +230,18 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
     assert_eq!(
         branch_signature(&result.base.combined_action),
         (
-            usize::try_from(expected_branch["whole_reaction_domain_rejections"].as_u64().unwrap()).unwrap(),
-            usize::try_from(expected_branch["matrix_roundoff_corrections"].as_u64().unwrap()).unwrap(),
+            usize::try_from(
+                expected_branch["whole_reaction_domain_rejections"]
+                    .as_u64()
+                    .unwrap()
+            )
+            .unwrap(),
+            usize::try_from(
+                expected_branch["matrix_roundoff_corrections"]
+                    .as_u64()
+                    .unwrap()
+            )
+            .unwrap(),
             bits(&expected_branch["largest_matrix_roundoff_correction_bits"]).to_bits(),
         )
     );
@@ -233,7 +253,11 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
     let mut best_collision = f64::INFINITY;
     for witness in value["centered_witnesses"].as_array().unwrap() {
         assert!(witness["state_valid"].as_bool().unwrap());
-        assert!(witness["same_support_and_correction_branch"].as_bool().unwrap());
+        assert!(
+            witness["same_support_and_correction_branch"]
+                .as_bool()
+                .unwrap()
+        );
         let epsilon = bits(&witness["epsilon_bits"]);
         let plus_state: Vec<f64> = state
             .iter()
@@ -247,8 +271,14 @@ fn order8_nonzero_jvp_matches_the_frozen_python_oracle() {
             .collect();
         let plus_rhs = evaluate_f10_packed_rhs(&grid, ln_a, &plus_state, config).unwrap();
         let minus_rhs = evaluate_f10_packed_rhs(&grid, ln_a, &minus_state, config).unwrap();
-        assert_eq!(branch_signature(&plus_rhs.combined_action), branch_signature(&result.base.combined_action));
-        assert_eq!(branch_signature(&minus_rhs.combined_action), branch_signature(&result.base.combined_action));
+        assert_eq!(
+            branch_signature(&plus_rhs.combined_action),
+            branch_signature(&result.base.combined_action)
+        );
+        assert_eq!(
+            branch_signature(&minus_rhs.combined_action),
+            branch_signature(&result.base.combined_action)
+        );
         let packed_fd: Vec<f64> = plus_rhs
             .values
             .iter()
@@ -342,14 +372,8 @@ fn order8_jvp_is_linear_and_frozen_mutations_are_load_bearing() {
         .collect();
     let second_result =
         evaluate_f10_packed_rhs_c_jvp(&grid, ln_a, &state, &second, config).unwrap();
-    let summed_result = evaluate_f10_packed_rhs_c_jvp(
-        &grid,
-        ln_a,
-        &state,
-        &summed_direction,
-        config,
-    )
-    .unwrap();
+    let summed_result =
+        evaluate_f10_packed_rhs_c_jvp(&grid, ln_a, &state, &summed_direction, config).unwrap();
     let expected_sum: Vec<f64> = base
         .values
         .iter()
@@ -387,7 +411,14 @@ fn order8_jvp_is_linear_and_frozen_mutations_are_load_bearing() {
     for node in 0..grid.order {
         flavour_mutant.swap(node, grid.order + node);
     }
-    assert!(global_relative(&flavour_mutant, &expected_jvp) > 5.0e-7);
+    let spectral_size = 3 * grid.order;
+    assert!(
+        global_relative(
+            &flavour_mutant[..spectral_size],
+            &expected_jvp[..spectral_size],
+        ) > 5.0e-7,
+        "flavour swap was hidden by heterogeneous non-spectral output scales"
+    );
 }
 
 #[test]

@@ -1,0 +1,33 @@
+{
+  "claim_ceiling": "order-eight nonzero static spectral-c JVP only; retained calibration and holdout, thermal input columns, full Jacobian, solver, trajectory, endpoint, N_eff, performance, publication, and F10 gate movement remain untested",
+  "classification": "PASS_WITH_ORDER8_NONZERO_FIXED_BRANCH_C_ONLY_JVP_SCOPE_RETAINED_OPEN",
+  "contract_blob": "ac7149fe5d5ec327cdc168d1eba7fe4a68ce3221",
+  "fixture_sha256": "1428f99add1557fd30603a63cb014b2cb1329046d4e63c3f82a014b4735211cb",
+  "metrics": {
+    "centered_collision": 1.3659909603560973e-10,
+    "centered_packed": 2.4803448696525214e-10,
+    "electron_modal": 1.5904619353968884e-15,
+    "electron_native": 5.051599490182453e-14,
+    "packed": 2.655660985913819e-16,
+    "self_modal": 3.534943830527521e-15,
+    "self_native": 1.6291980079549245e-13,
+    "total_modal": 1.88141363198962e-15,
+    "total_native": 8.73618149385313e-14
+  },
+  "repairs": {
+    "flavour_swap_checked_on_spectral_block": true,
+    "physics_or_threshold_changed": false
+  },
+  "runtime": {
+    "numpy": "2.4.4",
+    "offline_vendor_packages": 174,
+    "python": "3.12.3",
+    "rust": "1.94.1",
+    "scipy": "1.17.1"
+  },
+  "schema": "rabbit.d081r1f0.order8_jvp_verification.v2",
+  "test_log_sha256": "eecefe82bc7dfe7d87a4ed7f3c5f226e8f8f64e2053240686713394c4c7e4396",
+  "tested_source_tree": "d7ed42c6a80a912ba39549bf430c4f2526abbe59",
+  "trigger_head": "cdff9ae8187f0e8e66d4f0714ed6a06db0e60962",
+  "workflow_run_id": "33834594092"
+}
