@@ -1,0 +1,127 @@
+name: d081r1f1-p0ab-adversarial-repair-red
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-p0ab-adversarial-audit-repair-20260904-r1
+    paths:
+      - .github/workflows/d081r1f1_p0ab_adversarial_repair_red.yml
+      - docs/audit/D081R1F1_P0AB_ADVERSARIAL_REPAIR_CONTRACT_2026-09-04.md
+      - native/rabbit_cpu/src/f10_tgamma_adversarial_repair_tests.rs
+      - native/rabbit_cpu/src/lib.rs
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  red:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact trigger and frozen authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 9929596e1cf0351aba6e8e2b501ced89d1c80fb1 HEAD
+          test "$(git hash-object docs/audit/D081R1F1_RUST_TGAMMA_PACKED_RHS_JVP_CONTRACT_2026-09-04.md)" = 58eeaf38b9f4edd4c60a01d22d2e101a33b71812
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_tangent.rs)" = 0217768ba62b02d14a3c52ae68208fafc8c8d46c
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = aa5092ad4d1a37365a8a1354a6cce0f81c3c4412
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs)" = 14db5662106ad432d8236a97beccace85c2f6075
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          test ! -e docs/audit/artifacts/d081r1f1/p0ab_adversarial_repair_red_receipt.json
+
+      - name: Install exact Rust and refreshed offline vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt clippy
+          test "$(rustc +1.94.1 --version)" = "rustc 1.94.1 (e408947bf 2026-03-25)"
+          test "$(cargo +1.94.1 --version)" = "cargo 1.94.1 (29ea6fb6a 2026-03-24)"
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9932329475/zip > /tmp/vendor.zip
+          echo '2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640  /tmp/vendor.zip' | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          echo '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f  /tmp/vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz -C /tmp/vendor-expanded
+          test "$(find /tmp/vendor-expanded/vendor -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r1"\n[source.d081r1]\ndirectory="/tmp/vendor-expanded/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Verify expected repair RED
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          set +e
+          cargo +1.94.1 test --locked --offline f10_tgamma_adversarial_repair_tests -- --nocapture > /tmp/p0ab-red.log 2>&1
+          status=$?
+          set -e
+          cat /tmp/p0ab-red.log
+          test "${status}" -ne 0
+          grep -F 'electromagnetic_eos_tgamma_discrete_d2rho_dt2' /tmp/p0ab-red.log
+          grep -F 'electromagnetic_eos_tgamma_continuum_d2rho_dt2_reference' /tmp/p0ab-red.log
+          test -z "$(git -C ../.. status --short)"
+
+      - name: Publish durable expected-RED receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt='docs/audit/artifacts/d081r1f1/p0ab_adversarial_repair_red_receipt.json'
+          mkdir -p "$(dirname "${receipt}")"
+          export RECEIPT="${receipt}"
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          def blob(path: str) -> str:
+              return subprocess.check_output(['git', 'hash-object', path], text=True).strip()
+
+          payload = {
+              'schema': 'rabbit.d081r1f1.p0ab_adversarial_repair_red_receipt.v1',
+              'classification': 'PASS_EXPECTED_ABSENT_DISCRETE_EOS_AND_NORMALIZED_MARGIN_REPAIR_RED',
+              'trigger_head': os.environ['GITHUB_SHA'],
+              'trigger_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'contract_blob': blob('docs/audit/D081R1F1_P0AB_ADVERSARIAL_REPAIR_CONTRACT_2026-09-04.md'),
+              'test_blob': blob('native/rabbit_cpu/src/f10_tgamma_adversarial_repair_tests.rs'),
+              'base_integration_commit': '9929596e1cf0351aba6e8e2b501ced89d1c80fb1',
+              'expected_missing_apis': [
+                  'electromagnetic_eos_tgamma_discrete_d2rho_dt2',
+                  'electromagnetic_eos_tgamma_continuum_d2rho_dt2_reference',
+                  'minimum_support_margin_relative',
+                  'minimum_supported_lambda_margin_relative',
+              ],
+              'rust_version': '1.94.1',
+              'vendor_artifact_id': 9932329475,
+              'vendor_tar_sha256': '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f',
+              'production_source_changed': False,
+              'retained_or_holdout_state_accessed': False,
+              'claim_ceiling': 'expected RED for P0A/P0B adversarial primitive repair only; no GREEN implementation or downstream JVP claim',
+          }
+          Path(os.environ['RECEIPT']).write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          git add "${receipt}"
+          git diff --cached --check
+          test "$(git diff --cached --name-only)" = "${receipt}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(d081r1f1): publish adversarial P0A/P0B repair RED receipt'
+          git fetch origin research/d081r1f1-p0ab-adversarial-audit-repair-20260904-r1
+          test "$(git rev-parse FETCH_HEAD)" = "${GITHUB_SHA}"
+          git push origin HEAD:research/d081r1f1-p0ab-adversarial-audit-repair-20260904-r1

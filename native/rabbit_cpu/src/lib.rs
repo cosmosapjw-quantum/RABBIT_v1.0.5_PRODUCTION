@@ -74,6 +74,9 @@ mod f10_tgamma_tangent_tests;
 mod f10_tgamma_kinematic_tests;
 
 #[cfg(test)]
+mod f10_tgamma_adversarial_repair_tests;
+
+#[cfg(test)]
 mod electron_event_falsifiers;
 
 #[cfg(test)]
