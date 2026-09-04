@@ -57,11 +57,9 @@ pub(crate) fn stable_pauli_jvp(
     let [u1, u2, u3, u4] = logits;
     let [v1, v2, v3, v4] = direction;
     let phi = stable_pauli_gain_minus_loss(logits)?;
-    let log_gain = log_sigmoid(-u1) + log_sigmoid(-u2)
-        + log_sigmoid(u3) + log_sigmoid(u4);
+    let log_gain = log_sigmoid(-u1) + log_sigmoid(-u2) + log_sigmoid(u3) + log_sigmoid(u4);
     let gain = log_gain.exp();
-    let d_log_loss = sigmoid(-u1) * v1 + sigmoid(-u2) * v2
-        - sigmoid(u3) * v3 - sigmoid(u4) * v4;
+    let d_log_loss = sigmoid(-u1) * v1 + sigmoid(-u2) * v2 - sigmoid(u3) * v3 - sigmoid(u4) * v4;
     let d_affinity = v3 + v4 - v1 - v2;
     let result = phi * d_log_loss + gain * d_affinity;
     if !result.is_finite() {
@@ -78,29 +76,43 @@ pub(crate) fn assemble_pair_action_tgamma_jvp(
     config: F10ElectronActionConfig,
 ) -> Result<F10PairActionTgammaJvp, F10ElectronActionError> {
     validate_grid(grid)?;
-    if !temperature_cm.is_finite() || temperature_cm <= 0.0
-        || !temperature_gamma.is_finite() || temperature_gamma <= 0.0 {
+    if !temperature_cm.is_finite()
+        || temperature_cm <= 0.0
+        || !temperature_gamma.is_finite()
+        || temperature_gamma <= 0.0
+    {
         return Err(F10ElectronActionError::InvalidInput);
     }
-    if !config.matrix_roundoff_ulps.is_finite() || config.matrix_roundoff_ulps <= 0.0
-        || !config.electron_mass_mev.is_finite() || config.electron_mass_mev <= 0.0 {
+    if !config.matrix_roundoff_ulps.is_finite()
+        || config.matrix_roundoff_ulps <= 0.0
+        || !config.electron_mass_mev.is_finite()
+        || config.electron_mass_mev <= 0.0
+    {
         return Err(F10ElectronActionError::InvalidConfiguration);
     }
-    let rule = angular_rule(config.collision)
-        .map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
-    let angular_size = rule.incoming_mu.len().checked_mul(rule.final_mu.len())
+    let rule =
+        angular_rule(config.collision).map_err(|_| F10ElectronActionError::InvalidConfiguration)?;
+    let angular_size = rule
+        .incoming_mu
+        .len()
+        .checked_mul(rule.final_mu.len())
         .and_then(|x| x.checked_mul(rule.azimuth.len()))
         .ok_or(F10ElectronActionError::DimensionOverflow)?;
-    let size = SPECIES_COUNT.checked_mul(grid.order)
+    let size = SPECIES_COUNT
+        .checked_mul(grid.order)
         .ok_or(F10ElectronActionError::DimensionOverflow)?;
-    let family_size = PAIR_EVENT_COUNT.checked_mul(size)
+    let family_size = PAIR_EVENT_COUNT
+        .checked_mul(size)
         .ok_or(F10ElectronActionError::DimensionOverflow)?;
     let logits = decode_pair_logits(grid, pair_cloglog)?;
-    let basis = modal_basis(grid, &grid.nodes)
-        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let basis = modal_basis(grid, &grid.nodes).map_err(|_| F10ElectronActionError::Foundation)?;
     let p2: Vec<f64> = grid.nodes.iter().map(|y| temperature_cm * y).collect();
     let weights: Vec<f64> = grid.weights.iter().map(|w| temperature_cm * w).collect();
-    if p2.iter().chain(&weights).any(|x| !x.is_finite() || *x <= 0.0) {
+    if p2
+        .iter()
+        .chain(&weights)
+        .any(|x| !x.is_finite() || *x <= 0.0)
+    {
         return Err(F10ElectronActionError::InvalidInput);
     }
     let catalogue = f10_electron_events();
@@ -117,16 +129,25 @@ pub(crate) fn assemble_pair_action_tgamma_jvp(
 
     for node in 0..grid.order {
         let p1 = temperature_cm * grid.nodes[node];
-        let outer_weight = temperature_cm.powi(3) * grid.weights[node]
-            * grid.nodes[node].powi(2) / TWO_PI_SQUARED;
+        let outer_weight =
+            temperature_cm.powi(3) * grid.weights[node] * grid.nodes[node].powi(2) / TWO_PI_SQUARED;
         let batch = two_body_kinematics(F10KinematicInput {
-            p1, p2_nodes: &p2, p2_weights: &weights,
-            mass2: 0.0, mass3: config.electron_mass_mev,
-            mass4: config.electron_mass_mev, config: config.collision,
-        }).map_err(|_| F10ElectronActionError::Kinematics)?;
+            p1,
+            p2_nodes: &p2,
+            p2_weights: &weights,
+            mass2: 0.0,
+            mass3: config.electron_mass_mev,
+            mass4: config.electron_mass_mev,
+            config: config.collision,
+        })
+        .map_err(|_| F10ElectronActionError::Kinematics)?;
         let count = batch.support.len();
-        if count != grid.order.checked_mul(angular_size)
-            .ok_or(F10ElectronActionError::DimensionOverflow)? {
+        if count
+            != grid
+                .order
+                .checked_mul(angular_size)
+                .ok_or(F10ElectronActionError::DimensionOverflow)?
+        {
             return Err(F10ElectronActionError::Kinematics);
         }
         support.extend_from_slice(&batch.support);
@@ -136,26 +157,41 @@ pub(crate) fn assemble_pair_action_tgamma_jvp(
             let mut rates = vec![0.0_f64; count];
             let u1 = logits[pair_index(event.target) * grid.order + node];
             for sample in 0..count {
-                let matrix = f10_electron_matrix(event.target, event.category,
-                    invariant_products(&batch, sample), config.electron_mass_mev,
-                    batch.support[sample], config.matrix_roundoff_ulps)?;
+                let matrix = f10_electron_matrix(
+                    event.target,
+                    event.category,
+                    invariant_products(&batch, sample),
+                    config.electron_mass_mev,
+                    batch.support[sample],
+                    config.matrix_roundoff_ulps,
+                )?;
                 corrected.push(matrix.corrected);
-                if !batch.support[sample] { continue; }
+                if !batch.support[sample] {
+                    continue;
+                }
                 let measure = f10_event_measure(F10EventMeasureInput {
-                    p1, p2: batch.p2[sample], e2: batch.e2[sample],
+                    p1,
+                    p2: batch.p2[sample],
+                    e2: batch.e2[sample],
                     phase_space: batch.phase_space[sample],
-                    quadrature_weight: batch.quadrature_weight[sample], outer_weight,
+                    quadrature_weight: batch.quadrature_weight[sample],
+                    outer_weight,
                 })?;
                 let p2_node = sample / angular_size;
                 let u2 = logits[pair_index(event.target.cp_partner()) * grid.order + p2_node];
                 let u3 = -batch.e3[sample] / temperature_gamma;
                 let u4 = -batch.e4[sample] / temperature_gamma;
                 // Incoming spectra and geometry are fixed: only outgoing bath logits move.
-                let direction = [0.0, 0.0,
+                let direction = [
+                    0.0,
+                    0.0,
                     (batch.e3[sample] / temperature_gamma) / temperature_gamma,
-                    (batch.e4[sample] / temperature_gamma) / temperature_gamma];
-                let primal = measure * matrix.value * stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
-                let tangent = measure * matrix.value * stable_pauli_jvp([u1, u2, u3, u4], direction)?;
+                    (batch.e4[sample] / temperature_gamma) / temperature_gamma,
+                ];
+                let primal =
+                    measure * matrix.value * stable_pauli_gain_minus_loss([u1, u2, u3, u4])?;
+                let tangent =
+                    measure * matrix.value * stable_pauli_jvp([u1, u2, u3, u4], direction)?;
                 if !primal.is_finite() || !tangent.is_finite() {
                     return Err(F10ElectronActionError::NonFiniteOutput);
                 }
@@ -179,12 +215,16 @@ pub(crate) fn assemble_pair_action_tgamma_jvp(
                     let value = if first {
                         incoming1 * basis[node * grid.order + mode]
                     } else {
-                        (0..grid.order).map(|j| incoming2[j] * basis[j * grid.order + mode]).sum::<f64>()
+                        (0..grid.order)
+                            .map(|j| incoming2[j] * basis[j * grid.order + mode])
+                            .sum::<f64>()
                     };
                     let base_value = if first {
                         base_incoming1 * basis[node * grid.order + mode]
                     } else {
-                        (0..grid.order).map(|j| base_incoming2[j] * basis[j * grid.order + mode]).sum::<f64>()
+                        (0..grid.order)
+                            .map(|j| base_incoming2[j] * basis[j * grid.order + mode])
+                            .sum::<f64>()
                     };
                     modal[row * grid.order + mode] += value;
                     base_modal[row * grid.order + mode] += base_value;
@@ -197,23 +237,47 @@ pub(crate) fn assemble_pair_action_tgamma_jvp(
         .map_err(|_| F10ElectronActionError::Foundation)?;
     let base_native = native_action(grid, &base_modal, SPECIES_COUNT, temperature_cm)
         .map_err(|_| F10ElectronActionError::Foundation)?;
-    let family_native = native_action(grid, &family_modal, PAIR_EVENT_COUNT * SPECIES_COUNT, temperature_cm)
-        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let family_native = native_action(
+        grid,
+        &family_modal,
+        PAIR_EVENT_COUNT * SPECIES_COUNT,
+        temperature_cm,
+    )
+    .map_err(|_| F10ElectronActionError::Foundation)?;
     let neutrino_energy_transfer = energy_by_family.iter().map(|q| q[0]).sum::<f64>();
     let electromagnetic_energy_transfer = energy_by_family.iter().map(|q| q[1]).sum::<f64>();
     let first_law_residual = (neutrino_energy_transfer + electromagnetic_energy_transfer).abs()
-        / (neutrino_energy_transfer.abs() + electromagnetic_energy_transfer.abs()).max(f64::MIN_POSITIVE);
-    if modal.iter().chain(&native).chain(&base_modal).chain(&base_native)
-        .chain(&family_modal).chain(&family_native).any(|x| !x.is_finite())
+        / (neutrino_energy_transfer.abs() + electromagnetic_energy_transfer.abs())
+            .max(f64::MIN_POSITIVE);
+    if modal
+        .iter()
+        .chain(&native)
+        .chain(&base_modal)
+        .chain(&base_native)
+        .chain(&family_modal)
+        .chain(&family_native)
+        .any(|x| !x.is_finite())
         || energy_by_family.iter().flatten().any(|x| !x.is_finite())
-        || !first_law_residual.is_finite() {
+        || !first_law_residual.is_finite()
+    {
         return Err(F10ElectronActionError::NonFiniteOutput);
     }
     Ok(F10PairActionTgammaJvp {
-        base_modal, base_native, modal, native,
+        base_modal,
+        base_native,
+        modal,
+        native,
         family_names: events.iter().map(|&event| family_name(event)).collect(),
-        family_modal, family_native, energy_by_family,
-        measure_modal: vec![0.0; size], matrix_modal: vec![0.0; size], projection_modal: vec![0.0; size],
-        support, corrected, neutrino_energy_transfer, electromagnetic_energy_transfer, first_law_residual,
+        family_modal,
+        family_native,
+        energy_by_family,
+        measure_modal: vec![0.0; size],
+        matrix_modal: vec![0.0; size],
+        projection_modal: vec![0.0; size],
+        support,
+        corrected,
+        neutrino_energy_transfer,
+        electromagnetic_energy_transfer,
+        first_law_residual,
     })
 }
