@@ -1,0 +1,22 @@
+{
+  "cargo_lock_blob": "a1b5035da5c20712d1a2a4ab077da255ff94a014",
+  "claim_ceiling": "durable absent-API RED only; no implementation, numerical equivalence, retained state, solver, trajectory, or gate movement claim",
+  "classification": "PASS_EXPECTED_ABSENT_TGAMMA_JVP_API_RED",
+  "compiler_log_sha256": "460e46f82683e90d0c7e80d1c151e50fc8ae78105b3f07b03ac7af08f225a72a",
+  "contract_blob": "58eeaf38b9f4edd4c60a01d22d2e101a33b71812",
+  "expected_error_code": "E0432",
+  "holdout_oracle_generated": false,
+  "missing_module": "f10_packed_rhs_tgamma_jvp",
+  "offline_vendor_artifact": 9838506413,
+  "offline_vendor_packages": 174,
+  "offline_vendor_zip_sha256": "391b45bbf6446dc9144bc39321723eda18240d7c8751f45887f9492ffc66f78a",
+  "parent_closeout": "c29b6d26599da0bead66482373d8ec2cdc8f06c4",
+  "production_source_committed": false,
+  "rust": "1.94.1",
+  "schema": "rabbit.d081r1f1.absent_api_red.v1",
+  "state_2000_opened": false,
+  "temporary_source_restored": true,
+  "trigger_head": "7f31ff4f16a8928196b0c0711150aabb6260a36e",
+  "trigger_tree": "314f2d20a07209326a9bc2bd06fa794ed9540191",
+  "workflow_run_id": "33850384502"
+}

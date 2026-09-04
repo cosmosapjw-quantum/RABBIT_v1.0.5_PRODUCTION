@@ -1,0 +1,264 @@
+name: d081r1f1-p0-symbolic-fallback
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-rust-tgamma-jvp-20260904
+    paths:
+      - docs/audit/D081R1F1_P0_SYMBOLIC_FALLBACK_EXECUTE_2026-09-04
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  p0-symbolic-fallback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact trigger and frozen authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 8446b23c69ce91d74301122b4a5e006a3f4977f4 HEAD
+          test "$(git hash-object docs/audit/D081R1F1_RUST_TGAMMA_PACKED_RHS_JVP_CONTRACT_2026-09-04.md)" = 58eeaf38b9f4edd4c60a01d22d2e101a33b71812
+          test "$(git hash-object docs/audit/artifacts/d081r1f1/absent_api_red_receipt.json)" = 5ac1aced2f7417bb317ebb1267dcce8d014172c7
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
+          test "$(git hash-object docs/audit/artifacts/d080c/research_receipt.json)" = 1ebb9a854f1db42d76ae36cfbe0926b016b67b7e
+          test "$(git hash-object docs/audit/artifacts/d081r1f0/retained_holdout_receipt.json)" = 01a87b4227fbe11e83412a5899a1eead69fbda3c
+          test ! -e native/rabbit_cpu/src/f10_tgamma_tangent.rs
+          test ! -e docs/audit/artifacts/d081r1f1/retained_calibration_verification_receipt.json
+          test ! -e docs/audit/artifacts/d081r1f1/retained_holdout_verification_receipt.json
+
+      - name: Install exact SymPy and mpmath runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1f1-symbolic-venv
+          /tmp/d081r1f1-symbolic-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            sympy==1.14.0 mpmath==1.3.0
+
+      - name: Execute deterministic SymPy and mpmath oracle twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY=/tmp/d081r1f1-symbolic-venv/bin/python
+          ORACLE=scripts/audit/d081r1f1_p0_symbolic_fallback.py
+          "$PY" -m py_compile "$ORACLE"
+          "$PY" "$ORACLE" --output /tmp/d081r1f1-p0-symbolic-a.json | tee /tmp/d081r1f1-p0-symbolic-a.log
+          "$PY" "$ORACLE" --output /tmp/d081r1f1-p0-symbolic-b.json | tee /tmp/d081r1f1-p0-symbolic-b.log
+          cmp /tmp/d081r1f1-p0-symbolic-a.json /tmp/d081r1f1-p0-symbolic-b.json
+          grep -Fx D081R1F1_P0_SYMBOLIC_FALLBACK_PASS /tmp/d081r1f1-p0-symbolic-a.log
+          sha256sum /tmp/d081r1f1-p0-symbolic-a.json /tmp/d081r1f1-p0-symbolic-b.json
+
+      - name: Attempt auxiliary Octave, Singular, SageMath, and Lean-mathlib checks
+        shell: bash
+        run: |
+          set -u
+          STATUS=/tmp/d081r1f1-auxiliary-status.tsv
+          : > "$STATUS"
+          record() { printf '%s\t%s\t%s\n' "$1" "$2" "$3" >> "$STATUS"; }
+
+          set +e
+          timeout 180 sudo apt-get update -qq
+          apt_update_status=$?
+          if [[ $apt_update_status -eq 0 ]]; then
+            record apt-index PASS ubuntu-24.04
+          else
+            record apt-index FAILED "exit-${apt_update_status}"
+          fi
+
+          if ! command -v octave >/dev/null 2>&1 && [[ $apt_update_status -eq 0 ]]; then
+            timeout 900 sudo apt-get install -y --no-install-recommends octave
+          fi
+          if command -v octave >/dev/null 2>&1; then
+            octave --quiet --no-gui --eval 'T=1.7; h=1e-5; q=0.83; k=2.31; rho=@(x) x.^4+0.31*x.^2+2.7; H=@(x) sqrt(k*rho(x)); P=@(x) 0.37*x.^2+0.19*x+0.07; F=@(x) P(x)./(H(x)*q); fd=(F(T+h)-F(T-h))/(2*h); rt=4*T^3+0.62*T; ht=rt/(2*rho(T)); exact=(0.74*T+0.19)/(H(T)*q)-F(T)*ht; rel=abs(fd-exact)/max([1,abs(fd),abs(exact)]); assert(rel<1e-7); fprintf("D081R1F1_OCTAVE_PASS residual=%.17e\n",rel);' >/tmp/d081r1f1-octave.log 2>&1
+            status=$?
+            if [[ $status -eq 0 ]]; then
+              record octave PASS "$(octave --version | head -n1 | tr ' ' '_')"
+            else
+              record octave EXECUTION_FAILED "exit-${status}"
+            fi
+          else
+            record octave PROVISION_FAILED command-unavailable
+          fi
+
+          if ! command -v Singular >/dev/null 2>&1 && [[ $apt_update_status -eq 0 ]]; then
+            timeout 600 sudo apt-get install -y --no-install-recommends singular
+          fi
+          if command -v Singular >/dev/null 2>&1; then
+            cat >/tmp/d081r1f1-singular.sing <<'SINGULAR'
+          ring r=0,(T),dp;
+          poly H=T^3+2*T+1;
+          poly P=2*T^4-T^2+3*T+7;
+          poly product_rule=diff(P*H,T)-(diff(P,T)*H+P*diff(H,T));
+          if (product_rule != 0) { exit(1); }
+          poly quotient_numerator=diff(P,T)*H-P*diff(H,T);
+          poly reconstructed=diff(P,T)*H-P*diff(H,T);
+          if (quotient_numerator-reconstructed != 0) { exit(2); }
+          print("D081R1F1_SINGULAR_PASS");
+          quit;
+          SINGULAR
+            Singular -q /tmp/d081r1f1-singular.sing >/tmp/d081r1f1-singular.log 2>&1
+            status=$?
+            if [[ $status -eq 0 ]]; then
+              record singular PASS "$(Singular --version | head -n1 | tr ' ' '_')"
+            else
+              record singular EXECUTION_FAILED "exit-${status}"
+            fi
+          else
+            record singular PROVISION_FAILED command-unavailable
+          fi
+
+          if ! command -v sage >/dev/null 2>&1 && [[ $apt_update_status -eq 0 ]]; then
+            timeout 900 sudo apt-get install -y --no-install-recommends sagemath
+          fi
+          if command -v sage >/dev/null 2>&1; then
+            sage -c 'var("T q"); H=T^2+T+1; P=2*T^3-T+4; lhs=diff(P/H,T); rhs=diff(P,T)/H-P*diff(H,T)/H^2; assert bool((lhs-rhs).simplify_full()==0); print("D081R1F1_SAGE_PASS")' >/tmp/d081r1f1-sage.log 2>&1
+            status=$?
+            if [[ $status -eq 0 ]]; then
+              record sagemath PASS "$(sage --version | head -n1 | tr ' ' '_')"
+            else
+              record sagemath EXECUTION_FAILED "exit-${status}"
+            fi
+          else
+            record sagemath PROVISION_FAILED command-unavailable-or-bounded-install-failed
+          fi
+
+          export ELAN_HOME=/tmp/d081r1f1-elan
+          export PATH="$ELAN_HOME/bin:$PATH"
+          timeout 240 bash -c 'curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.19.0' >/tmp/d081r1f1-elan.log 2>&1
+          elan_status=$?
+          if [[ $elan_status -eq 0 && -x "$ELAN_HOME/bin/lake" ]]; then
+            rm -rf /tmp/d081r1f1-lean
+            mkdir -p /tmp/d081r1f1-lean/D081R1F1
+            cat >/tmp/d081r1f1-lean/lean-toolchain <<'EOF'
+          leanprover/lean4:v4.19.0
+          EOF
+            cat >/tmp/d081r1f1-lean/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+          package «d081r1f1» where
+            version := v!"0.1.0"
+          require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.19.0"
+          @[default_target]
+          lean_lib D081R1F1
+          EOF
+            cat >/tmp/d081r1f1-lean/D081R1F1/Basic.lean <<'EOF'
+          import Mathlib
+
+          theorem quotient_tangent_identity
+              (H Ht P Pt q : ℝ) (hH : H ≠ 0) (hq : q ≠ 0) :
+              (Pt * H - P * Ht) / (H^2 * q) =
+                Pt / (H * q) - (P / (H * q)) * (Ht / H) := by
+            field_simp [hH, hq] <;> ring
+          EOF
+            (
+              cd /tmp/d081r1f1-lean
+              timeout 1200 lake update &&
+              timeout 1200 lake exe cache get &&
+              timeout 300 lake env lean D081R1F1/Basic.lean
+            ) >/tmp/d081r1f1-lean-mathlib.log 2>&1
+            status=$?
+            if [[ $status -eq 0 ]]; then
+              record lean-mathlib PASS lean-4.19.0_mathlib-v4.19.0
+            else
+              record lean-mathlib EXECUTION_OR_PROVISION_FAILED "exit-${status}"
+            fi
+          else
+            record lean-mathlib PROVISION_FAILED "elan-exit-${elan_status}"
+          fi
+          set -e
+
+          /tmp/d081r1f1-symbolic-venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+
+          rows = []
+          for line in Path('/tmp/d081r1f1-auxiliary-status.tsv').read_text().splitlines():
+              tool, status, detail = line.split('\t', 2)
+              rows.append({'tool': tool, 'status': status, 'detail': detail})
+          Path('/tmp/d081r1f1-auxiliary-status.json').write_text(
+              json.dumps(rows, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(rows, sort_keys=True))
+          PY
+
+      - name: Publish durable P0 symbolic fallback receipt
+        shell: bash
+        env:
+          RECEIPT: docs/audit/artifacts/d081r1f1/p0_symbolic_fallback_receipt.json
+        run: |
+          set -euo pipefail
+          git fetch origin research/d081r1f1-rust-tgamma-jvp-20260904
+          test "$(git rev-parse origin/research/d081r1f1-rust-tgamma-jvp-20260904)" = "${GITHUB_SHA}"
+          mkdir -p "$(dirname "$RECEIPT")"
+          export TESTED_SOURCE_TREE="$(git rev-parse HEAD^{tree})"
+          export SCRIPT_BLOB="$(git hash-object scripts/audit/d081r1f1_p0_symbolic_fallback.py)"
+          export WORKFLOW_BLOB="$(git hash-object .github/workflows/d081r1f1_p0_symbolic_fallback.yml)"
+          /tmp/d081r1f1-symbolic-venv/bin/python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          oracle_path = Path('/tmp/d081r1f1-p0-symbolic-a.json')
+          oracle = json.loads(oracle_path.read_text())
+          auxiliary = json.loads(Path('/tmp/d081r1f1-auxiliary-status.json').read_text())
+          payload = {
+              'schema': 'rabbit.d081r1f1.p0_symbolic_fallback_receipt.v1',
+              'classification': 'PASS_WITH_SYMPY_MPMATH_P0_IDENTITIES_AND_BOUNDED_AUXILIARY_TOOL_ATTEMPTS',
+              'trigger_head': os.environ['GITHUB_SHA'],
+              'tested_source_tree': os.environ['TESTED_SOURCE_TREE'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'contract_blob': '58eeaf38b9f4edd4c60a01d22d2e101a33b71812',
+              'absent_api_red_receipt_blob': '5ac1aced2f7417bb317ebb1267dcce8d014172c7',
+              'd080a_tgamma_primitives_blob': 'c585d5865fd68a90a04a76ab540b8437fba8cfce',
+              'd080b_tgamma_collision_blob': '78489c43f3046db09d8ba2d96070124ed7b0aa91',
+              'd080c_receipt_blob': '1ebb9a854f1db42d76ae36cfbe0926b016b67b7e',
+              'd081r1f0_retained_holdout_receipt_blob': '01a87b4227fbe11e83412a5899a1eead69fbda3c',
+              'oracle_script_blob': os.environ['SCRIPT_BLOB'],
+              'workflow_blob': os.environ['WORKFLOW_BLOB'],
+              'oracle_sha256': hashlib.sha256(oracle_path.read_bytes()).hexdigest(),
+              'oracle': oracle,
+              'auxiliary_tool_matrix': auxiliary,
+              'wolfram_attempts': {
+                  'context': 'BLOCKED_EXTERNAL_HTTP_502',
+                  'language_evaluator': 'BLOCKED_EXTERNAL_HTTP_502',
+                  'wolfram_alpha': 'BLOCKED_EXTERNAL_HTTP_502',
+              },
+              'retained_or_holdout_state_accessed': False,
+              'production_source_changed': False,
+              'claim_ceiling': 'P0 symbolic and dimensional identities plus bounded auxiliary CAS/formal-tool attempts only; Rust thermal primitives, collision and packed-RHS JVPs, retained calibration, unseen holdout, solver, trajectory, endpoint, N_eff, performance, publication, and F10 gate movement remain open',
+          }
+          Path(os.environ['RECEIPT']).write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RECEIPT"
+          git diff --cached --check
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -eq 1
+          test "${staged[0]}" = "$RECEIPT"
+          git commit -m 'test(d081r1f1): publish P0 symbolic fallback receipt'
+          git push origin HEAD:research/d081r1f1-rust-tgamma-jvp-20260904

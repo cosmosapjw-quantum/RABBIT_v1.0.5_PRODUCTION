@@ -1,0 +1,168 @@
+name: d081r1f1-p0ab-python-invariant-diagnostic
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-p0ab-adversarial-audit-repair-20260904-r1
+    paths:
+      - .github/workflows/d081r1f1_p0ab_python_mass_shell_diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact diagnostic authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 9929596e1cf0351aba6e8e2b501ced89d1c80fb1 HEAD
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py)" = 1eb3669a69b14400f1db49a7fcf8ece18dfebb36
+
+      - name: Generate deterministic Python oracle and report all tangent invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/d081r1f1-p0ab-python-invariant-venv
+          /tmp/d081r1f1-p0ab-python-invariant-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
+          PY=/tmp/d081r1f1-p0ab-python-invariant-venv/bin/python
+          "$PY" scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-a.json
+          "$PY" scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-b.json
+          cmp /tmp/p0b-a.json /tmp/p0b-b.json
+          "$PY" - <<'PY'
+          import json
+          import math
+          import struct
+          from fractions import Fraction
+
+          payload = json.load(open('/tmp/p0b-a.json', encoding='utf-8'))
+          data = payload['kinematics']
+
+          def scalar_bits(name):
+              encoded = data[name]
+              return struct.unpack('>d', struct.pack('>Q', int(encoded, 16)))[0]
+
+          def decode(name):
+              return [
+                  struct.unpack('>d', struct.pack('>Q', int(encoded, 16)))[0]
+                  for encoded in data[name]['bits']
+              ]
+
+          support = [bool(value) for value in data['support']]
+          temperature = scalar_bits('temperature_bits')
+          mass = scalar_bits('electron_mass_bits')
+          arrays = {name: decode(name) for name in (
+              'base_e2', 'base_e3', 'base_e4',
+              'base_p3_magnitude', 'base_p4_magnitude',
+              'base_d12', 'base_d13', 'base_d14',
+              'base_d23', 'base_d24', 'base_d34',
+              'd_e2', 'd_e3', 'd_e4',
+              'd_p3_magnitude', 'd_p4_magnitude',
+              'd_d12', 'd_d13', 'd_d14',
+              'd_d23', 'd_d24', 'd_d34',
+          )}
+
+          maxima = [(-1.0, -1, 0.0, 0.0, 0.0) for _ in range(6)]
+          target_index = 27028
+          target_report = None
+
+          for index, accepted in enumerate(support):
+              if not accepted:
+                  continue
+              e2 = arrays['base_e2'][index]
+              e3 = arrays['base_e3'][index]
+              e4 = arrays['base_e4'][index]
+              p3 = arrays['base_p3_magnitude'][index]
+              p4 = arrays['base_p4_magnitude'][index]
+              d12 = arrays['base_d12'][index]
+              d13 = arrays['base_d13'][index]
+              d14 = arrays['base_d14'][index]
+              d23 = arrays['base_d23'][index]
+              d24 = arrays['base_d24'][index]
+              d34 = arrays['base_d34'][index]
+              de2 = arrays['d_e2'][index]
+              de3 = arrays['d_e3'][index]
+              de4 = arrays['d_e4'][index]
+              dp3 = arrays['d_p3_magnitude'][index]
+              dp4 = arrays['d_p4_magnitude'][index]
+              dd12 = arrays['d_d12'][index]
+              dd13 = arrays['d_d13'][index]
+              dd14 = arrays['d_d14'][index]
+              dd23 = arrays['d_d23'][index]
+              dd24 = arrays['d_d24'][index]
+              dd34 = arrays['d_d34'][index]
+
+              residuals = [
+                  de2 - de3 - de4,
+                  de3 - dp3,
+                  2.0 * (e4 * de4 - p4 * dp4),
+                  dd12 - dd34,
+                  dd13 + dd14 - dd12,
+                  dd23 + dd24 - dd12,
+              ]
+              scales = [
+                  (abs(e2) + abs(e3) + abs(e4)) / temperature,
+                  (abs(e3) + abs(p3)) / temperature,
+                  (e4 * e4 + p4 * p4 + mass * mass) / temperature,
+                  (abs(d12) + abs(d34)) / temperature,
+                  (abs(d13) + abs(d14) + abs(d12)) / temperature,
+                  (abs(d23) + abs(d24) + abs(d12)) / temperature,
+              ]
+              local_terms = [
+                  [de2, de3, de4],
+                  [de3, dp3],
+                  [e4 * de4, p4 * dp4],
+                  [dd12, dd34],
+                  [dd13, dd14, dd12],
+                  [dd23, dd24, dd12],
+              ]
+              labels = ['energy', 'massless', 'massive', 'd12_d34', 'd13_d14_d12', 'd23_d24_d12']
+              for component, (residual, scale, terms) in enumerate(zip(residuals, scales, local_terms)):
+                  conditioned = abs(residual) / max(scale, float.fromhex('0x1.0p-1022'))
+                  raw_local = abs(residual) / max(sum(abs(value) for value in terms), float.fromhex('0x1.0p-1022'))
+                  exact_term_residual = sum((Fraction.from_float(value) for value in terms[:-1]), Fraction(0)) - Fraction.from_float(terms[-1])
+                  exact_ratio = float(abs(exact_term_residual) / Fraction.from_float(scale)) if scale > 0.0 else math.inf
+                  if conditioned > maxima[component][0]:
+                      maxima[component] = (conditioned, index, raw_local, exact_ratio, residual)
+                  if index == target_index and component == 5:
+                      target_report = (labels[component], conditioned, raw_local, exact_ratio, residual, scale, tuple(terms))
+
+          labels = ['energy', 'massless', 'massive', 'd12_d34', 'd13_d14_d12', 'd23_d24_d12']
+          for label, item in zip(labels, maxima):
+              conditioned, index, raw_local, exact_ratio, residual = item
+              print(
+                  'P0AB_PYTHON_INVARIANT_MAX '
+                  f'label={label} index={index} conditioned={conditioned:.17e} '
+                  f'raw_local={raw_local:.17e} exact_binary64_term_ratio={exact_ratio:.17e} '
+                  f'residual={residual:.17e}'
+              )
+          if target_report is not None:
+              label, conditioned, raw_local, exact_ratio, residual, scale, terms = target_report
+              print(
+                  'P0AB_PYTHON_TARGET_INVARIANT '
+                  f'label={label} index={target_index} conditioned={conditioned:.17e} '
+                  f'raw_local={raw_local:.17e} exact_binary64_term_ratio={exact_ratio:.17e} '
+                  f'residual={residual:.17e} scale={scale:.17e} '
+                  f'term0={terms[0]:.17e} term1={terms[1]:.17e} term2={terms[2]:.17e}'
+              )
+          assert all(math.isfinite(item[0]) for item in maxima)
+          PY

@@ -1,0 +1,22 @@
+{
+  "base_integration_commit": "9929596e1cf0351aba6e8e2b501ced89d1c80fb1",
+  "claim_ceiling": "expected RED for P0A/P0B adversarial primitive repair only; no GREEN implementation or downstream JVP claim",
+  "classification": "PASS_EXPECTED_ABSENT_DISCRETE_EOS_AND_NORMALIZED_MARGIN_REPAIR_RED",
+  "contract_blob": "876ad9a7cc2d8edacc37d4f6abbadcbc91410d13",
+  "expected_missing_apis": [
+    "electromagnetic_eos_tgamma_discrete_d2rho_dt2",
+    "electromagnetic_eos_tgamma_continuum_d2rho_dt2_reference",
+    "minimum_support_margin_relative",
+    "minimum_supported_lambda_margin_relative"
+  ],
+  "production_source_changed": false,
+  "retained_or_holdout_state_accessed": false,
+  "rust_version": "1.94.1",
+  "schema": "rabbit.d081r1f1.p0ab_adversarial_repair_red_receipt.v1",
+  "test_blob": "3a979bcf63ebd204c9cef55b9c7838b8a4c561bf",
+  "trigger_head": "c3f95d40f5dc357b2d2106f06e465141075eb867",
+  "trigger_tree": "11280f3ea5b55f6f65247eca4fa2cd9c12e2e43e",
+  "vendor_artifact_id": 9932329475,
+  "vendor_tar_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f",
+  "workflow_run_id": "33878216934"
+}

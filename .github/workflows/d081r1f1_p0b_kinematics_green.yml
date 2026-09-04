@@ -1,0 +1,217 @@
+name: d081r1f1-p0b-kinematics-green
+
+on:
+  push:
+    branches:
+      - research/d081r1f1-p0b-tgamma-kinematics-20260904
+    paths:
+      - .github/workflows/d081r1f1_p0b_kinematics_green.yml
+      - scripts/audit/d081r1f1_apply_p0b_kinematic_wiring.py
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  p0b-green:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      BRANCH: research/d081r1f1-p0b-tgamma-kinematics-20260904
+      RECEIPT: docs/audit/artifacts/d081r1f1/p0b_kinematics_green_receipt.json
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src:.
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact trigger, RED receipt, and repaired P0B substrate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test "${GITHUB_REF_NAME}" = "${BRANCH}"
+          git merge-base --is-ancestor 7df1abb8d115e54c68c8d0c279c2c580d036c087 HEAD
+          test "$(git hash-object docs/audit/artifacts/d081r1f1/p0b_kinematics_red_receipt.json)" = 5c186c8df84ed5718e287f4ac5ea0bd2137debe6
+          test "$(git hash-object docs/audit/artifacts/d081r1f1/p0a_integration_receipt.json)" = 4b1d490084a3150107cc9b451110098a58ae0513
+          test "$(git hash-object docs/audit/D081R1F1_RUST_TGAMMA_PACKED_RHS_JVP_CONTRACT_2026-09-04.md)" = 58eeaf38b9f4edd4c60a01d22d2e101a33b71812
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_tangent.rs)" = 0217768ba62b02d14a3c52ae68208fafc8c8d46c
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = 1d40f9dec0b5cea9c1eaff1e2c76673fdf7b2510
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs)" = c6f06b4e55c1c0d09bd9f66c99158c049eb034a8
+          test "$(git hash-object scripts/audit/d081r1f1_apply_p0b_kinematic_wiring.py)" = 1544578e3609d692fb0445daa69e6d92850e7169
+          test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          red = json.loads(Path('docs/audit/artifacts/d081r1f1/p0b_kinematics_red_receipt.json').read_text())
+          assert red['classification'] == 'PASS_EXPECTED_ABSENT_TGAMMA_KINEMATIC_PRIMITIVES_RED'
+          assert red['workflow_run_id'] == '33865634643'
+          assert red['production_kinematic_source_committed'] is False
+          PY
+          test ! -e "${RECEIPT}"
+
+      - name: Generate deterministic inherited P0A oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = 3.12.3
+          python3 -m venv /tmp/d081r1f1-p0b-green-venv
+          /tmp/d081r1f1-p0b-green-venv/bin/python -m pip install \
+            --disable-pip-version-check --only-binary=:all: \
+            numpy==2.4.4 scipy==1.17.1
+          PY=/tmp/d081r1f1-p0b-green-venv/bin/python
+          GEN=scripts/audit/d081r1f1_p0a_tgamma_primitives_oracle.py
+          "$PY" "$GEN" --output /tmp/p0a-green-a.json
+          "$PY" "$GEN" --output /tmp/p0a-green-b.json
+          cmp /tmp/p0a-green-a.json /tmp/p0a-green-b.json
+          echo '3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7  /tmp/p0a-green-a.json' | sha256sum -c -
+          echo '3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7  /tmp/p0a-green-b.json' | sha256sum -c -
+
+      - name: Install exact Rust and refreshed offline vendor
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.94.1 --profile minimal
+          rustup component add --toolchain 1.94.1 rustfmt clippy
+          test "$(rustc +1.94.1 --version)" = 'rustc 1.94.1 (e408947bf 2026-03-25)'
+          test "$(cargo +1.94.1 --version)" = 'cargo 1.94.1 (29ea6fb6a 2026-03-24)'
+          mkdir -p /tmp/vendor-outer /tmp/vendor-expanded
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9932329475/zip > /tmp/vendor.zip
+          echo '2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640  /tmp/vendor.zip' | sha256sum -c -
+          unzip -q /tmp/vendor.zip -d /tmp/vendor-outer
+          echo '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f  /tmp/vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/vendor-outer/d081r1-cargo-vendor-a1b5035.tar.gz -C /tmp/vendor-expanded
+          test "$(find /tmp/vendor-expanded/vendor -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 174
+          mkdir -p native/rabbit_cpu/.cargo
+          printf '[source.crates-io]\nreplace-with="d081r1"\n[source.d081r1]\ndirectory="/tmp/vendor-expanded/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
+
+      - name: Apply bounded production wiring and format
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/audit/d081r1f1_apply_p0b_kinematic_wiring.py
+          cd native/rabbit_cpu
+          cargo +1.94.1 fmt --all
+          cd ../..
+          mapfile -t changed < <(git diff --name-only)
+          printf 'changed=%s\n' "${changed[*]-}"
+          for path in "${changed[@]}"; do
+            case "${path}" in
+              native/rabbit_cpu/src/f10_tgamma_kinematics.rs|native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs|native/rabbit_cpu/src/lib.rs) ;;
+              *) echo "unexpected changed path: ${path}" >&2; exit 1 ;;
+            esac
+          done
+          grep -F 'mod f10_tgamma_kinematics;' native/rabbit_cpu/src/lib.rs
+          grep -F 'mod f10_tgamma_kinematic_tests;' native/rabbit_cpu/src/lib.rs
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_tangent.rs)" = 0217768ba62b02d14a3c52ae68208fafc8c8d46c
+
+      - name: Execute P0B GREEN and inherited regressions
+        shell: bash
+        working-directory: native/rabbit_cpu
+        env:
+          D081R1F1_P0A_ORACLE: /tmp/p0a-green-a.json
+        run: |
+          set -euo pipefail
+          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/p0b-metadata.json
+          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 test --locked --offline f10_tgamma_kinematic_tests -- --nocapture 2>&1 | tee /tmp/p0b-test.log
+          grep -F 'test result: ok. 2 passed; 0 failed' /tmp/p0b-test.log
+          cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture 2>&1 | tee /tmp/p0a-regression.log
+          grep -F 'test result: ok. 3 passed; 0 failed' /tmp/p0a-regression.log
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+
+      - name: Publish verified P0B source and receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_head="$(git ls-remote origin "refs/heads/${BRANCH}" | cut -f1)"
+          test "${remote_head}" = "${GITHUB_SHA}"
+          git add \
+            native/rabbit_cpu/src/f10_tgamma_kinematics.rs \
+            native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs \
+            native/rabbit_cpu/src/lib.rs
+          export TESTED_SOURCE_TREE="$(git write-tree)"
+          mkdir -p "$(dirname "${RECEIPT}")"
+          export SOURCE_BLOB="$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)"
+          export TEST_BLOB="$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs)"
+          export LIB_BLOB="$(git hash-object native/rabbit_cpu/src/lib.rs)"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          log = Path('/tmp/p0b-test.log')
+          text = log.read_text(encoding='utf-8', errors='replace')
+          if 'test result: ok. 2 passed; 0 failed' not in text:
+              raise SystemExit('focused P0B test result missing')
+          payload = {
+              'schema': 'rabbit.d081r1f1.p0b_kinematics_green.v1',
+              'classification': 'PASS_WITH_MAPPED_BASIS_AND_FIXED_BRANCH_ELASTIC_TGAMMA_KINEMATICS_SCOPE',
+              'trigger_head': os.environ['GITHUB_SHA'],
+              'tested_source_tree': os.environ['TESTED_SOURCE_TREE'],
+              'workflow_run_id': os.environ['GITHUB_RUN_ID'],
+              'p0b_red_receipt_blob': '5c186c8df84ed5718e287f4ac5ea0bd2137debe6',
+              'p0a_integration_receipt_blob': '4b1d490084a3150107cc9b451110098a58ae0513',
+              'contract_blob': '58eeaf38b9f4edd4c60a01d22d2e101a33b71812',
+              'cargo_lock_blob': 'a1b5035da5c20712d1a2a4ab077da255ff94a014',
+              'source_blob': os.environ['SOURCE_BLOB'],
+              'test_blob': os.environ['TEST_BLOB'],
+              'module_registry_blob': os.environ['LIB_BLOB'],
+              'p0a_facade_blob': '0217768ba62b02d14a3c52ae68208fafc8c8d46c',
+              'rust': '1.94.1',
+              'numpy': '2.4.4',
+              'scipy': '1.17.1',
+              'p0a_oracle_sha256': '3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7',
+              'vendor_artifact_id': 9932329475,
+              'vendor_zip_sha256': '2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640',
+              'vendor_archive_sha256': '85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f',
+              'vendor_packages': 174,
+              'focused_tests': {'passed': 2, 'failed': 0},
+              'release_check': 'PASS',
+              'strict_clippy': 'PASS',
+              'inherited_p0a_tests': {'passed': 3, 'failed': 0},
+              'inherited_r1f0_zero_jvp_regression': 'PASS',
+              'inherited_packed_rhs_preflight': 'PASS',
+              'branch_semantics': {
+                  'support_indicator_tangent': 'EXACT_ZERO_ON_FIXED_BRANCH',
+                  'support_mismatch': 'NONDIFFERENTIABLE_DISCRETE_EVENT',
+                  'minimum_support_margin_positive': True,
+                  'minimum_lambda_margin_positive': True,
+              },
+              'compiler_test_log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
+              'retained_or_holdout_state_accessed': False,
+              'claim_ceiling': 'mapped-Legendre basis derivative and fixed-support finite-electron-mass elastic kinematic T_gamma tangent only; no matrix-element, Pauli, projection, collision-action or packed-RHS thermal JVP, retained state, solver, trajectory, endpoint, N_eff, performance, publication, merge, or G-F10 movement',
+          }
+          Path(os.environ['RECEIPT']).write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          git add "${RECEIPT}"
+          git diff --cached --check
+          mapfile -t staged < <(git diff --cached --name-only)
+          test "${#staged[@]}" -ge 2
+          test "${#staged[@]}" -le 4
+          for path in "${staged[@]}"; do
+            case "${path}" in
+              native/rabbit_cpu/src/f10_tgamma_kinematics.rs|native/rabbit_cpu/src/f10_tgamma_kinematic_tests.rs|native/rabbit_cpu/src/lib.rs|"${RECEIPT}") ;;
+              *) echo "unexpected staged path: ${path}" >&2; exit 1 ;;
+            esac
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(d081r1f1): publish P0B kinematic GREEN receipt'
+          git fetch origin "${BRANCH}"
+          test "$(git rev-parse FETCH_HEAD)" = "${GITHUB_SHA}"
+          git push origin HEAD:"${BRANCH}"

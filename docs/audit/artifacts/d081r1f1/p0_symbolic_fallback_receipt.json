@@ -1,0 +1,127 @@
+{
+  "absent_api_red_receipt_blob": "5ac1aced2f7417bb317ebb1267dcce8d014172c7",
+  "auxiliary_tool_matrix": [
+    {
+      "detail": "ubuntu-24.04",
+      "status": "PASS",
+      "tool": "apt-index"
+    },
+    {
+      "detail": "GNU_Octave,_version_8.4.0",
+      "status": "PASS",
+      "tool": "octave"
+    },
+    {
+      "detail": "Singular_for_x86_64-Linux_version_4.3.2_(4330,_64_bit)_Apr__1_2024_04:44:00",
+      "status": "PASS",
+      "tool": "singular"
+    },
+    {
+      "detail": "command-unavailable-or-bounded-install-failed",
+      "status": "PROVISION_FAILED",
+      "tool": "sagemath"
+    },
+    {
+      "detail": "lean-4.19.0_mathlib-v4.19.0",
+      "status": "PASS",
+      "tool": "lean-mathlib"
+    }
+  ],
+  "claim_ceiling": "P0 symbolic and dimensional identities plus bounded auxiliary CAS/formal-tool attempts only; Rust thermal primitives, collision and packed-RHS JVPs, retained calibration, unseen holdout, solver, trajectory, endpoint, N_eff, performance, publication, and F10 gate movement remain open",
+  "classification": "PASS_WITH_SYMPY_MPMATH_P0_IDENTITIES_AND_BOUNDED_AUXILIARY_TOOL_ATTEMPTS",
+  "contract_blob": "58eeaf38b9f4edd4c60a01d22d2e101a33b71812",
+  "d080a_tgamma_primitives_blob": "c585d5865fd68a90a04a76ab540b8437fba8cfce",
+  "d080b_tgamma_collision_blob": "78489c43f3046db09d8ba2d96070124ed7b0aa91",
+  "d080c_receipt_blob": "1ebb9a854f1db42d76ae36cfbe0926b016b67b7e",
+  "d081r1f0_retained_holdout_receipt_blob": "01a87b4227fbe11e83412a5899a1eead69fbda3c",
+  "oracle": {
+    "claim_ceiling": "independent P0 symbolic identities, dimensional consistency, and 80-digit toy-function differentiation only; no Rust thermal primitive, collision JVP, packed-RHS JVP, retained calibration, unseen holdout, solver, trajectory, endpoint, N_eff, performance, publication, or F10 gate movement",
+    "classification": "PASS_WITH_SYMPY_MPMATH_P0_IDENTITIES_ONLY",
+    "dimension_checks": {
+      "elapsed_primal": true,
+      "elapsed_tangent": true,
+      "hubble_feedback": true,
+      "photon_numerator_tangent_transfer": true,
+      "photon_numerator_transfer": true,
+      "photon_row_primal": true,
+      "photon_row_tangent_denominator": true,
+      "photon_row_tangent_direct": true,
+      "spectral_primal": true,
+      "spectral_tangent_direct": true,
+      "spectral_tangent_feedback": true
+    },
+    "dimension_ledger_mev_powers": {
+      "F_c": 0,
+      "F_c_T": -1,
+      "F_elapsed": -1,
+      "F_elapsed_T": -2,
+      "F_gamma": 1,
+      "F_gamma_T": 0,
+      "H": 1,
+      "H_T_over_H": -1,
+      "N_gamma": 4,
+      "N_gamma_T": 3,
+      "Q": 5,
+      "Q_T": 4,
+      "Tgamma": 1,
+      "chi_gamma": 3,
+      "chi_gamma_T": 2,
+      "p": 4,
+      "rho": 4,
+      "spectral_numerator": 1,
+      "spectral_numerator_T": 0
+    },
+    "maximum_numeric_relative_residual": "2.108439588646104644869714810254003801541992276473701510015552605021629e-81",
+    "numeric_cap": "9.999999999999999945760458322718770483861773853142937347685398030505949e-56",
+    "numeric_relative_residuals": {
+      "elapsed_row_reciprocal": "0.0",
+      "fermi_dirac_chain_rule": "2.800271328670607731467589982368598798922958492191634817989405803544351e-82",
+      "first_law_transfer_tangent": "0.0",
+      "hubble_log_derivative": "1.054219794323052322434857405127001900770996138236850755007776302510814e-81",
+      "moving_half_line_node": "1.054219794323052322434857405127001900770996138236850755007776302510814e-81",
+      "moving_half_line_weight": "2.016481139117202249515156164312805081522931890439547299578729708272493e-81",
+      "moving_linear_interpolant": "0.0",
+      "moving_mapped_basis": "0.0",
+      "photon_numerator": "0.0",
+      "photon_row_quotient": "2.108439588646104644869714810254003801541992276473701510015552605021629e-81",
+      "spectral_row_quotient": "4.612211600163353910652501147430633315873108104786222053159021323484813e-82"
+    },
+    "production_rust_imported_or_executed": false,
+    "retained_or_holdout_state_accessed": false,
+    "runtime": {
+      "mpmath": "1.3.0",
+      "mpmath_decimal_digits": 80,
+      "python": "3.12.3",
+      "sympy": "1.14.0"
+    },
+    "schema": "rabbit.d081r1f1.p0_symbolic_fallback.v1",
+    "symbolic_checks": {
+      "elapsed_row_reciprocal": "PASS",
+      "fermi_dirac_chain_rule": "PASS",
+      "first_law_transfer_tangent": "PASS",
+      "hubble_log_derivative": "PASS",
+      "moving_half_line_node": "PASS",
+      "moving_half_line_weight": "PASS",
+      "moving_linear_interpolant": "PASS",
+      "moving_mapped_basis": "PASS",
+      "photon_numerator": "PASS",
+      "photon_row_quotient": "PASS",
+      "spectral_row_quotient": "PASS"
+    },
+    "wolfram_status": "BLOCKED_EXTERNAL_HTTP_502"
+  },
+  "oracle_script_blob": "5abc983fbc9b473c3bcc85b6e1d70a60a8b2d757",
+  "oracle_sha256": "0ba0e95a3b06e5297f0132eed771bbb3527b17b79e993d798730bf43ed19f60d",
+  "production_source_changed": false,
+  "retained_or_holdout_state_accessed": false,
+  "schema": "rabbit.d081r1f1.p0_symbolic_fallback_receipt.v1",
+  "tested_source_tree": "77a25e7db3561a752d50a7ec3ae3953aed6ce90f",
+  "trigger_head": "0efdcb00dafcf3afa5aaf20c756a544ae052b391",
+  "wolfram_attempts": {
+    "context": "BLOCKED_EXTERNAL_HTTP_502",
+    "language_evaluator": "BLOCKED_EXTERNAL_HTTP_502",
+    "wolfram_alpha": "BLOCKED_EXTERNAL_HTTP_502"
+  },
+  "workflow_blob": "516fec4cb10d0b0ae2e394e0574f3637c7c74be4",
+  "workflow_run_id": "33856427099"
+}

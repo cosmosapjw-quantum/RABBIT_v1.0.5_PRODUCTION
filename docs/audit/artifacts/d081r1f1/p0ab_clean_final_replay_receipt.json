@@ -1,0 +1,48 @@
+{
+  "canonical_repair_ancestor": "3f8b07bbb2894d7a2ff8667f82646a6285a992ca",
+  "claim_ceiling": "clean exact-SHA replay of repaired P0A/P0B primitives only; no collision-action or packed-RHS T_gamma JVP, retained state, solver, trajectory, endpoint, N_eff, performance, publication readiness, merge, or G-F10 movement",
+  "classification": "PASS_CLEAN_FINAL_HEAD_P0A_P0B_REPLAY_SCOPE",
+  "gates": {
+    "adversarial_repair_tests": "PASS",
+    "deterministic_p0a_oracle": "PASS",
+    "deterministic_p0b_oracle": "PASS",
+    "direct_python_d080a_parity": "PASS",
+    "no_source_mutation": "PASS",
+    "p0a_focused_tests": "PASS",
+    "p0b_focused_tests": "PASS",
+    "packed_rhs_preflight": "PASS",
+    "r1f0_zero_jvp_regression": "PASS",
+    "release_check": "PASS",
+    "strict_clippy": "PASS"
+  },
+  "oracle_generator_blobs": {
+    "p0a": "3a90ae484a20fd8601c9db307ce5d5202343acca",
+    "p0b": "1eb3669a69b14400f1db49a7fcf8ece18dfebb36"
+  },
+  "oracle_sha256": {
+    "p0a": "3e0941c8649895c0ee3c1c2e98abd949a1d2fafbf0d7dcf1ff39f41825ce0fa7",
+    "p0b": "b145b898d4e2160c2fd72c3abc5830f7afaf85b03511b5a0b8ce0b4426c9a32d"
+  },
+  "retained_or_holdout_state_accessed": false,
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.3",
+    "rust": "1.94.1",
+    "scipy": "1.17.1",
+    "vendor_artifact_id": 9932329475,
+    "vendor_package_directories": 174,
+    "vendor_tar_sha256": "85bbaa8819e938baebb08a5db297300ffd9cacb5fed430a8ff84d5836830b65f"
+  },
+  "schema": "rabbit.d081r1f1.p0ab_clean_final_replay_receipt.v1",
+  "source_blobs": {
+    "adversarial_tests": "cae0a2ab38d1caae58138acf11fbeb146a6dbaad",
+    "kinematics": "88717ed6206cae78599e805de79cf1b3f046443a",
+    "lib": "d212266d3a0f07c543d6d84d04d0db68d9899524",
+    "p0a_tests": "f2642cf9a699290e2c97a7d6e8a12b980e5f8919",
+    "p0b_tests": "14db5662106ad432d8236a97beccace85c2f6075",
+    "tgamma": "8d731d9f88076375b73ac4eca2a6ac54e98e66c6"
+  },
+  "trigger_head": "46a21c4c80ea61bedd18d4d3ff34a418a9c6f9d6",
+  "trigger_tree": "4cec6ce6d1df61a050c5d55a9b67e476ab284eb0",
+  "workflow_run_id": "33910355563"
+}
