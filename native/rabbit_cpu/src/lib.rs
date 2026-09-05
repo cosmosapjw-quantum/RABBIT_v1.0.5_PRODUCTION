@@ -35,6 +35,9 @@ mod thermal_weak;
 mod tier1_lrs;
 
 #[cfg(test)]
+mod f10_elastic_measure_matrix_tests;
+
+#[cfg(test)]
 mod f10_action_foundations_tests;
 
 #[cfg(test)]
