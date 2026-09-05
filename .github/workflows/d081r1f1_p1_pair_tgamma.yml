@@ -1,12 +1,13 @@
 name: d081r1f1-p1-pair-and-elastic-prefactors
 on:
   push:
-    branches: [agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1]
+    branches: [agent/rabbit-elastic-measure-matrix-20260905T050300Z-r1]
     paths:
       - .github/workflows/d081r1f1_p1_pair_tgamma.yml
       - native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
       - native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
       - native/rabbit_cpu/src/lib.rs
+      - scripts/audit/d081r1f1_elastic_signed_cas.py
 permissions:
   contents: read
   actions: read
@@ -20,6 +21,7 @@ jobs:
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
+      CARGO_TARGET_DIR: /tmp/elastic-target
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -31,9 +33,9 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$GITHUB_REF_NAME" = 'agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1'
-          git merge-base --is-ancestor 381b05ba269a5db791f80845fd06eb60f9e0d09b HEAD
-          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = "$(git rev-parse 381b05ba269a5db791f80845fd06eb60f9e0d09b:native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)"
+          test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-measure-matrix-20260905T050300Z-r1'
+          git merge-base --is-ancestor 44afa19181e48a3d4ad4fcaa2ee9fe20ee7f5f27 HEAD
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs)" = 25b4a9a102964b9f7639d62651057c78d462a803
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
           test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
@@ -76,19 +78,33 @@ jobs:
             /tmp/pair-python/bin/python scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-${suffix}.json
           done
           for name in pair p0a p0b; do cmp /tmp/${name}-a.json /tmp/${name}-b.json; sha256sum /tmp/${name}-a.json; done
-          /tmp/pair-python/bin/python - <<'PY'
-          import sympy as s
-          T=s.symbols('T', positive=True)
-          C,K,a,b,c,m=s.symbols('C K a b c m')
-          w,p,r,e=[s.Function(n)(T) for n in ('w','p','r','e')]
-          dw=C*(s.diff(w,T)*p**2*r/e+2*w*p*s.diff(p,T)*r/e+w*p**2*s.diff(r,T)/e-w*p**2*r*s.diff(e,T)/e**2)
-          d12,d34,d14,d23,d13=[s.Function(n)(T) for n in ('d12','d34','d14','d23','d13')]
-          dm=K*(a*(s.diff(d12,T)*d34+d12*s.diff(d34,T))+b*(s.diff(d14,T)*d23+d14*s.diff(d23,T))-c*m**2*s.diff(d13,T))
-          residuals=[s.simplify(s.diff(C*w*p**2*r/e,T)-dw),s.simplify(s.diff(K*(a*d12*d34+b*d14*d23-c*m**2*d13),T)-dm)]
-          assert residuals == [0,0], residuals
-          print('SYMPY_EXACT_ELASTIC_PRODUCT_RULES', residuals)
-          PY
-      - name: Elastic GREEN with unchanged pair and primitive regressions
+          /tmp/pair-python/bin/python scripts/audit/d081r1f1_elastic_signed_cas.py | tee /tmp/elastic-cas.json
+      - name: Replay immutable missing-API RED before signed candidate gates
+        shell: bash
+        working-directory: native/rabbit_cpu
+        run: |
+          set -euo pipefail
+          git -C ../.. worktree add --detach /tmp/elastic-red 381b05ba269a5db791f80845fd06eb60f9e0d09b
+          echo "RED_HEAD=$(git -C /tmp/elastic-red rev-parse HEAD)"
+          echo "RED_TREE=$(git -C /tmp/elastic-red rev-parse HEAD^{tree})"
+          set +e
+          cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests -- --nocapture > /tmp/elastic-red.log 2>&1
+          code=$?
+          set -e
+          cat /tmp/elastic-red.log
+          echo "RED_EXIT=$code"
+          test "$code" -eq 101
+          python3 - <<'PYRED'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/elastic-red.log').read_text()
+          codes = re.findall(r'^error\[(E[0-9]+)\]', log, re.M)
+          assert codes == ['E0432'], codes
+          assert 'f10_elastic_prefactor_tangent' in log
+          print('PASS_EXPECTED_MISSING_API_RED')
+          PYRED
+          git -C /tmp/elastic-red diff --exit-code
+      - name: Signed elastic candidate gates then inherited regressions
         shell: bash
         working-directory: native/rabbit_cpu
         env:
@@ -98,10 +114,10 @@ jobs:
         run: |
           set -euo pipefail
           cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/elastic-metadata.json
-          cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 check --release --locked --offline
-          cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture 2>&1 | tee /tmp/elastic-green.log
-          grep -F 'test result: ok. 2 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
+          cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture --test-threads=1 2>&1 | tee /tmp/elastic-green.log
+          grep -F 'test result: ok. 4 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
+          cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_kinematic_tests -- --nocapture
