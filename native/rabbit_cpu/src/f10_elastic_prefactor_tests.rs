@@ -33,7 +33,9 @@ const SIGNED_SCALAR_CAP: f64 = 128.0 * f64::EPSILON;
 fn signed_scalar_check(label: &str, actual: f64, expected: f64, scale: f64) {
     let absolute = (actual - expected).abs();
     let relative = absolute / scale;
-    eprintln!("SIGNED_SCALAR {label} actual={actual:.17e} expected={expected:.17e} absolute={absolute:.17e} contribution_scale={scale:.17e} relative={relative:.17e} cap={SIGNED_SCALAR_CAP:.17e}");
+    eprintln!(
+        "SIGNED_SCALAR {label} actual={actual:.17e} expected={expected:.17e} absolute={absolute:.17e} contribution_scale={scale:.17e} relative={relative:.17e} cap={SIGNED_SCALAR_CAP:.17e}"
+    );
     assert!(actual.is_finite() && expected.is_finite() && scale > 0.0);
     assert!(relative <= SIGNED_SCALAR_CAP, "{label}: {relative:.17e}");
 }
@@ -44,20 +46,42 @@ fn elastic_signed_scalar_cas_references() {
     let pi4 = core::f64::consts::PI.powi(4);
     for head_on in [true, false] {
         let (a, b, da, db, phase, dphase, w, dw, parts) = if head_on {
-            (9.0, 6.0, 18.0 / 5.0, 2.0, 1.0 / 3.0, 2.0 / 45.0,
-             1.0 / 240.0, 197.0 / 36000.0,
-             [1.0 / 480.0, 1.0 / 240.0, 1.0 / 1800.0, -1.0 / 750.0])
+            (
+                9.0,
+                6.0,
+                18.0 / 5.0,
+                2.0,
+                1.0 / 3.0,
+                2.0 / 45.0,
+                1.0 / 240.0,
+                197.0 / 36000.0,
+                [1.0 / 480.0, 1.0 / 240.0, 1.0 / 1800.0, -1.0 / 750.0],
+            )
         } else {
-            (1.0, 10.0 / 11.0, -2.0 / 5.0, -202.0 / 605.0,
-             1.0 / 11.0, -18.0 / 605.0, 1.0 / 880.0, 469.0 / 484000.0,
-             [1.0 / 1760.0, 1.0 / 880.0, -9.0 / 24200.0, -1.0 / 2750.0])
+            (
+                1.0,
+                10.0 / 11.0,
+                -2.0 / 5.0,
+                -202.0 / 605.0,
+                1.0 / 11.0,
+                -18.0 / 605.0,
+                1.0 / 880.0,
+                469.0 / 484000.0,
+                [1.0 / 1760.0, 1.0 / 880.0, -9.0 / 24200.0, -1.0 / 2750.0],
+            )
         };
         let input = F10EventMeasureInput {
-            p1: 1.0, p2: 4.0, e2: 5.0, phase_space: phase,
-            quadrature_weight: 1.0, outer_weight: 1.0,
+            p1: 1.0,
+            p2: 4.0,
+            e2: 5.0,
+            phase_space: phase,
+            quadrature_weight: 1.0,
+            outer_weight: 1.0,
         };
         let dt = F10MeasureTangent {
-            d_p2: 2.0, d_e2: 8.0 / 5.0, d_phase_space: dphase,
+            d_p2: 2.0,
+            d_e2: 8.0 / 5.0,
+            d_phase_space: dphase,
             d_quadrature_weight: 0.5,
         };
         let (primal_w, derivative_w) = event_measure_tangent(input, dt).unwrap();
@@ -65,13 +89,28 @@ fn elastic_signed_scalar_cas_references() {
         signed_scalar_check("W", primal_w, w / pi4, w / pi4);
         signed_scalar_check("W_T", derivative_w, dw / pi4, scale);
         let zero = F10MeasureTangent {
-            d_p2: 0.0, d_e2: 0.0, d_phase_space: 0.0, d_quadrature_weight: 0.0,
+            d_p2: 0.0,
+            d_e2: 0.0,
+            d_phase_space: 0.0,
+            d_quadrature_weight: 0.0,
         };
         let directions = [
-            F10MeasureTangent { d_quadrature_weight: dt.d_quadrature_weight, ..zero },
-            F10MeasureTangent { d_p2: dt.d_p2, ..zero },
-            F10MeasureTangent { d_phase_space: dt.d_phase_space, ..zero },
-            F10MeasureTangent { d_e2: dt.d_e2, ..zero },
+            F10MeasureTangent {
+                d_quadrature_weight: dt.d_quadrature_weight,
+                ..zero
+            },
+            F10MeasureTangent {
+                d_p2: dt.d_p2,
+                ..zero
+            },
+            F10MeasureTangent {
+                d_phase_space: dt.d_phase_space,
+                ..zero
+            },
+            F10MeasureTangent {
+                d_e2: dt.d_e2,
+                ..zero
+            },
         ];
         for (i, direction) in directions.into_iter().enumerate() {
             let (_, actual) = event_measure_tangent(input, direction).unwrap();
@@ -81,46 +120,88 @@ fn elastic_signed_scalar_cas_references() {
             assert!(actual.abs() / scale > SIGNED_SCALAR_CAP);
         }
         let inv = F10InvariantProducts {
-            d12: a, d13: a - b, d14: b, d23: b, d24: 9.0 + a - b, d34: a,
+            d12: a,
+            d13: a - b,
+            d14: b,
+            d23: b,
+            d24: 9.0 + a - b,
+            d34: a,
         };
         let dinv = F10InvariantProducts {
-            d12: da, d13: da - db, d14: db, d23: db, d24: da - db, d34: da,
+            d12: da,
+            d13: da - db,
+            d14: db,
+            d23: db,
+            d24: da - db,
+            d34: da,
         };
         // Explicit twelve-family reference routing, independent of helper routing.
         for (target, electron, anti) in [
-            (F10Species::NuE, true, false), (F10Species::NuMu, false, false),
-            (F10Species::NuTau, false, false), (F10Species::AntiNuE, true, true),
-            (F10Species::AntiNuMu, false, true), (F10Species::AntiNuTau, false, true),
+            (F10Species::NuE, true, false),
+            (F10Species::NuMu, false, false),
+            (F10Species::NuTau, false, false),
+            (F10Species::AntiNuE, true, true),
+            (F10Species::AntiNuMu, false, true),
+            (F10Species::AntiNuTau, false, true),
         ] {
-            for category in [F10ElectronCategory::ElasticMinus, F10ElectronCategory::ElasticPlus] {
-                let l0 = if electron { 0.5 + SIN2_THETA_W } else { -0.5 + SIN2_THETA_W };
+            for category in [
+                F10ElectronCategory::ElasticMinus,
+                F10ElectronCategory::ElasticPlus,
+            ] {
+                let l0 = if electron {
+                    0.5 + SIN2_THETA_W
+                } else {
+                    -0.5 + SIN2_THETA_W
+                };
                 let r0 = SIN2_THETA_W;
                 let swap = anti != (category == F10ElectronCategory::ElasticPlus);
                 let (left, right) = if swap { (r0, l0) } else { (l0, r0) };
                 let common = 64.0 * G_F_MEV_MINUS_2.powi(2);
-                let terms = [2.0 * left * left * a * da, 2.0 * right * right * b * db,
-                    -9.0 * left * right * (da - db)];
+                let terms = [
+                    2.0 * left * left * a * da,
+                    2.0 * right * right * b * db,
+                    -9.0 * left * right * (da - db),
+                ];
                 let reduced = (2.0 * left * left * a - 9.0 * left * right) * da
                     + (2.0 * right * right * b + 9.0 * left * right) * db;
                 let expected = if head_on {
                     (324.0 / 5.0) * left * left + 24.0 * right * right - (72.0 / 5.0) * left * right
                 } else {
-                    -(4.0 / 5.0) * left * left - (808.0 / 1331.0) * right * right + (72.0 / 121.0) * left * right
+                    -(4.0 / 5.0) * left * left - (808.0 / 1331.0) * right * right
+                        + (72.0 / 121.0) * left * right
                 };
                 let scale = common * terms.into_iter().map(f64::abs).sum::<f64>();
-                let (matrix, derivative) = elastic_matrix_tangent(
-                    target, category, inv, dinv, 3.0, true, ULP_BUDGET,
-                ).unwrap();
-                assert_eq!(matrix, f10_electron_matrix(target, category, inv, 3.0, true, ULP_BUDGET).unwrap());
+                let (matrix, derivative) =
+                    elastic_matrix_tangent(target, category, inv, dinv, 3.0, true, ULP_BUDGET)
+                        .unwrap();
+                assert_eq!(
+                    matrix,
+                    f10_electron_matrix(target, category, inv, 3.0, true, ULP_BUDGET).unwrap()
+                );
                 assert!(matrix.value > 0.0 && !matrix.corrected);
-                signed_scalar_check(&format!("M_T_{head_on}_{target:?}_{category:?}"), derivative, common * expected, scale);
+                signed_scalar_check(
+                    &format!("M_T_{head_on}_{target:?}_{category:?}"),
+                    derivative,
+                    common * expected,
+                    scale,
+                );
                 signed_scalar_check("reduced_AB", derivative, common * reduced, scale);
-                if !head_on { assert!(derivative < 0.0, "signed tangent clipping"); }
+                if !head_on {
+                    assert!(derivative < 0.0, "signed tangent clipping");
+                }
             }
         }
-        let zero_weight = F10EventMeasureInput { quadrature_weight: 0.0, ..input };
+        let zero_weight = F10EventMeasureInput {
+            quadrature_weight: 0.0,
+            ..input
+        };
         let (_, nonzero) = event_measure_tangent(zero_weight, directions[0]).unwrap();
-        signed_scalar_check("zero_weight_nonzero_direction", nonzero, parts[0] / pi4, scale);
+        signed_scalar_check(
+            "zero_weight_nonzero_direction",
+            nonzero,
+            parts[0] / pi4,
+            scale,
+        );
     }
 }
 
@@ -129,15 +210,34 @@ fn elastic_zero_raw_matrix_requires_nondifferentiable_discrete_event() {
     // Scalar-helper boundary input, not an on-shell finite-mass event claim.
     // The admitted primal accepts raw=0; varying d13 gives raw_T != 0.
     let zero = F10InvariantProducts {
-        d12: 0.0, d13: 0.0, d14: 0.0, d23: 0.0, d24: 0.0, d34: 0.0,
+        d12: 0.0,
+        d13: 0.0,
+        d14: 0.0,
+        d23: 0.0,
+        d24: 0.0,
+        d34: 0.0,
     };
     let tangent = F10InvariantProducts { d13: 1.0, ..zero };
-    let base = f10_electron_matrix(F10Species::NuE, F10ElectronCategory::ElasticMinus,
-        zero, 3.0, true, ULP_BUDGET).unwrap();
+    let base = f10_electron_matrix(
+        F10Species::NuE,
+        F10ElectronCategory::ElasticMinus,
+        zero,
+        3.0,
+        true,
+        ULP_BUDGET,
+    )
+    .unwrap();
     assert_eq!(base.value, 0.0);
     assert!(!base.corrected);
-    let result = elastic_matrix_tangent(F10Species::NuE, F10ElectronCategory::ElasticMinus,
-        zero, tangent, 3.0, true, ULP_BUDGET);
+    let result = elastic_matrix_tangent(
+        F10Species::NuE,
+        F10ElectronCategory::ElasticMinus,
+        zero,
+        tangent,
+        3.0,
+        true,
+        ULP_BUDGET,
+    );
     eprintln!("RAW_ZERO_NONZERO_DIRECTION base={base:?} candidate={result:?}");
     let error = result.expect_err("NONDIFFERENTIABLE_DISCRETE_EVENT required at raw=0, raw_T!=0");
     assert!(format!("{error:?}").contains("NondifferentiableDiscreteEvent"));
