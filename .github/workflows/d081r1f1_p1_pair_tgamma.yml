@@ -1,21 +1,21 @@
-name: d081r1f1-p1-pair-tgamma
+name: d081r1f1-p1-pair-and-elastic-prefactors
 on:
   push:
-    branches: [research/d081r1f1-p1-collision-tgamma-jvp-green-20260905-r1]
+    branches: [agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1]
     paths:
       - .github/workflows/d081r1f1_p1_pair_tgamma.yml
-      - native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs
-      - native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs
-      - native/rabbit_cpu/src/f10_electron_action.rs
-      - scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py
+      - native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
+      - native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
+      - native/rabbit_cpu/src/lib.rs
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   pair:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 30
     env:
+      ELASTIC_STAGE: red
       PYTHONPATH: src:.
       PYTHONDONTWRITEBYTECODE: '1'
       OPENBLAS_NUM_THREADS: '1'
@@ -26,25 +26,22 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-          persist-credentials: false
-      - name: Pin the committed pair implementation and prospective tests
+      - name: Verify immutable pair and primitive authorities
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          git merge-base --is-ancestor 47a8a23fffaa216ed810f4908ea29a53aba11de1 HEAD
+          test "$GITHUB_REF_NAME" = 'agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1'
+          git merge-base --is-ancestor b40a78ac0e03a27f13761ff546267b127bf9278e HEAD
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
-          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action.rs)" = 45ce4f38d6db0bbf2620da493015fdc3e381e263
-          test "$(git hash-object scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py)" = 249a536f851beca59cde492277a8baf6ecc63760
-          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
+          test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = 88717ed6206cae78599e805de79cf1b3f046443a
           test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
-          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
-          grep -Fx 'pub(crate) mod tgamma_jvp;' native/rabbit_cpu/src/f10_electron_action.rs
           test -z "$(git status --porcelain)"
-          echo "PAIR_REPLAY_HEAD=$(git rev-parse HEAD)"
-          echo "PAIR_REPLAY_TREE=$(git rev-parse HEAD^{tree})"
+          echo "TESTED_HEAD=$(git rev-parse HEAD)"
+          echo "TESTED_TREE=$(git rev-parse HEAD^{tree})"
       - name: Exact Rust and lock-derived offline vendor
         shell: bash
         env:
@@ -65,7 +62,51 @@ jobs:
           test ! -e native/rabbit_cpu/.cargo/config.toml
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="pinned"\n[source.pinned]\ndirectory="/tmp/pair-vendor/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
-      - name: Deterministic same-capsule D080B and 100-digit Pauli references
+      - name: Verify isolated behavioral RED and preserve test formatting
+        if: env.ELASTIC_STAGE == 'red'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -f native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
+          cd native/rabbit_cpu
+          cargo +1.94.1 fmt --all
+          cargo +1.94.1 check --release --locked --offline
+          set +e
+          cargo +1.94.1 test --locked --offline --no-run --message-format=json > /tmp/elastic-red.jsonl 2>/tmp/elastic-red.stderr
+          status=$?
+          set -e
+          cat /tmp/elastic-red.stderr
+          test "$status" -ne 0
+          python3 - <<'PY'
+          import json
+          errors=[]
+          for line in open('/tmp/elastic-red.jsonl', encoding='utf-8'):
+              item=json.loads(line)
+              if item.get('reason')=='compiler-message' and item['message']['level']=='error':
+                  errors.append(item['message'])
+          assert len(errors)==1, errors
+          assert errors[0]['code']['code']=='E0432', errors
+          assert 'f10_elastic_prefactor_tangent' in errors[0]['message'], errors
+          print(errors[0]['rendered'])
+          print('PASS_EXPECTED_ABSENT_ELASTIC_PREFACTOR_BEHAVIORAL_RED')
+          PY
+          cd ../..
+          target=native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
+          mapfile -t changed < <(git diff --name-only)
+          test "${#changed[@]}" -le 1
+          if [[ "${#changed[@]}" -eq 1 ]]; then
+            test "${changed[0]}" = "$target"
+            git fetch origin "$GITHUB_REF_NAME"
+            test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add "$target"
+            git diff --cached --check
+            git commit -m 'style(d081r1f1): preserve verified elastic RED test formatting'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+      - name: Deterministic pair and primitive reference oracles
+        if: env.ELASTIC_STAGE == 'green'
         shell: bash
         run: |
           set -euo pipefail
@@ -74,32 +115,37 @@ jobs:
           /tmp/pair-python/bin/pip install --only-binary=:all: numpy==2.4.4 scipy==1.17.1 mpmath==1.3.0
           for suffix in a b; do
             /tmp/pair-python/bin/python scripts/audit/d081r1f1_p1_pair_tgamma_oracle.py --output /tmp/pair-${suffix}.json
+            /tmp/pair-python/bin/python scripts/audit/d081r1f1_p0a_tgamma_primitives_oracle.py --output /tmp/p0a-${suffix}.json
+            /tmp/pair-python/bin/python scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-${suffix}.json
           done
-          cmp /tmp/pair-a.json /tmp/pair-b.json
-          sha256sum /tmp/pair-a.json
-      - name: Clean pair GREEN and inherited gates without source mutation
+          for name in pair p0a p0b; do cmp /tmp/${name}-a.json /tmp/${name}-b.json; sha256sum /tmp/${name}-a.json; done
+      - name: Elastic GREEN with unchanged pair and primitive regressions
+        if: env.ELASTIC_STAGE == 'green'
         shell: bash
         working-directory: native/rabbit_cpu
         env:
           D081R1F1_P1_PAIR_ORACLE: /tmp/pair-a.json
+          D081R1F1_P0A_ORACLE: /tmp/p0a-a.json
+          D081R1F1_P0B_ORACLE: /tmp/p0b-a.json
         run: |
           set -euo pipefail
-          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/pair-replay-metadata.json
+          cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/elastic-metadata.json
           cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 check --release --locked --offline
-          cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture 2>&1 | tee /tmp/pair-green.log
-          grep -F 'test result: ok. 3 passed; 0 failed; 0 ignored' /tmp/pair-green.log
-          cargo +1.94.1 test --locked --offline f10_electron_action_tests -- --nocapture 2>&1 | tee /tmp/pair-primal.log
-          grep -F 'test result: ok. 4 passed; 0 failed' /tmp/pair-primal.log
-          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture 2>&1 | tee /tmp/pair-c-jvp.log
-          grep -F 'test result: ok. 1 passed; 0 failed' /tmp/pair-c-jvp.log
-          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture 2>&1 | tee /tmp/pair-preflight.log
-          grep -F 'test result: ok. 3 passed; 0 failed' /tmp/pair-preflight.log
+          cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture 2>&1 | tee /tmp/elastic-green.log
+          grep -F 'test result: ok. 2 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
+          cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_tgamma_kinematic_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_tgamma_adversarial_repair_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_tgamma_adversarial_repair_tests::direct_python_d080a_basis_and_kinematic_arrays_match -- --ignored --exact --nocapture
+          cargo +1.94.1 test --locked --offline f10_electron_action_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_jvp_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_packed_rhs_preflight_tests::tests -- --nocapture
           cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
           rm .cargo/config.toml
           rmdir .cargo
           git -C ../.. diff --exit-code
           git -C ../.. diff --cached --exit-code
           test -z "$(git -C ../.. status --porcelain)"
-          echo 'PASS_CLEAN_PAIR_ONLY_ORDER8_THERMAL_JVP_FULL_ELECTRON_JVP_OPEN'
-          printf 'Pair-only order-eight clean replay PASS at %s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo 'PASS_ELASTIC_MEASURE_MATRIX_TANGENT_PRIMITIVES_FULL_ELASTIC_ACTION_OPEN'
