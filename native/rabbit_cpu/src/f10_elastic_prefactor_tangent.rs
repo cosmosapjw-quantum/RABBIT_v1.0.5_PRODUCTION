@@ -112,9 +112,11 @@ pub(crate) fn elastic_matrix_tangent(
         -left * right * d_interference,
     ];
     let derivative = 64.0 * G_F_MEV_MINUS_2.powi(2) * terms.into_iter().sum::<f64>();
-    if derivative.is_finite() {
-        Ok((base, derivative))
-    } else {
-        Err(F10KernelError::NonFiniteInput)
+    if !derivative.is_finite() {
+        return Err(F10KernelError::NonFiniteInput);
     }
+    if base.value == 0.0 && derivative != 0.0 {
+        return Err(F10KernelError::NondifferentiableDiscreteEvent);
+    }
+    Ok((base, derivative))
 }

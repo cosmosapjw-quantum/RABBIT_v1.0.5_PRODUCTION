@@ -174,6 +174,7 @@ pub(crate) enum F10KernelError {
     InvalidCoefficient,
     InvalidRoundoffBudget,
     MateriallyNegativeMatrix,
+    NondifferentiableDiscreteEvent,
     InvalidMeasureDomain,
     UnknownSpecies,
     UnknownCategory,
