@@ -21,7 +21,7 @@ jobs:
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
-      CARGO_TARGET_DIR: /tmp/elastic-target
+      CARGO_TARGET_DIR: /tmp/elastic-green-target
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -89,7 +89,7 @@ jobs:
           echo "RED_HEAD=$(git -C /tmp/elastic-red rev-parse HEAD)"
           echo "RED_TREE=$(git -C /tmp/elastic-red rev-parse HEAD^{tree})"
           set +e
-          cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests::elastic_zero_raw_matrix_requires_nondifferentiable_discrete_event -- --exact --nocapture > /tmp/elastic-red.log 2>&1
+          CARGO_TARGET_DIR=/tmp/elastic-red-target cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests::elastic_zero_raw_matrix_requires_nondifferentiable_discrete_event -- --exact --nocapture > /tmp/elastic-red.log 2>&1
           code=$?
           set -e
           cat /tmp/elastic-red.log
