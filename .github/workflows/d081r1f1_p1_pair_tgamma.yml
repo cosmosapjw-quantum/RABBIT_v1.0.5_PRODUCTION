@@ -1,14 +1,16 @@
 name: d081r1f1-p1-pair-and-elastic-prefactors
 on:
   push:
-    branches: [agent/rabbit-elastic-zero-raw-kink-20260905T060854Z-r1]
+    branches: [agent/rabbit-elastic-d080b-direct-parity-20260905T073647Z-r1]
     paths:
       - .github/workflows/d081r1f1_p1_pair_tgamma.yml
       - native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
       - native/rabbit_cpu/src/f10_kernel_primitives.rs
       - native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
       - native/rabbit_cpu/src/lib.rs
-      - scripts/audit/d081r1f1_elastic_signed_cas.py
+      - scripts/audit/d081r1f1_elastic_d080b_direct.py
+      - native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs
+      - docs/audit/D081R1F1_ELASTIC_D080B_DIRECT_PARITY_V1_CONTRACT_2026-09-05.md
 permissions:
   contents: read
   actions: read
@@ -23,18 +25,23 @@ jobs:
       OMP_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
       CARGO_TARGET_DIR: /tmp/elastic-green-target
+      D081R1F1_ELASTIC_DIRECT_DIR: /tmp/elastic-direct-evidence
+      D081R1F1_ELASTIC_DIRECT_PYTHON: /tmp/pair-python/bin/python
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Verify failed predecessor and exact repair candidate
+      - name: Verify immutable kink repair, oracle authority and exact candidate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-zero-raw-kink-20260905T060854Z-r1'
+          test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-d080b-direct-parity-20260905T073647Z-r1'
+          git merge-base --is-ancestor f3be9c62203e9c380c348ad2589ee742d7cc023a HEAD
+          test "$(git rev-parse f3be9c62203e9c380c348ad2589ee742d7cc023a^{tree})" = cb92cf283db55817919c5aee51466ab1a9fc3bf1
+          test "$(git rev-parse 73f545b586c4c5435078a9a0134f1b94fcc5dfab^{tree})" = 60d1bbea972b4d7f5c54f1144aa086c09599f250
           git merge-base --is-ancestor 5bb6db204b38375c2adcf5e6dace0cfb698963dc HEAD
           test "$(git rev-parse 5bb6db204b38375c2adcf5e6dace0cfb698963dc^{tree})" = 3523d21fb0a5988e6747eb91970fab9b929f9411
           test "$(git rev-parse 4cdd840d86aabc2ea2d13af6ac3db0b99154d918^{tree})" = f4a06089431200a9c1eb5080514624364d6def33
@@ -50,7 +57,27 @@ jobs:
           test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = 88717ed6206cae78599e805de79cf1b3f046443a
           test "$(git hash-object scripts/audit/_d080b_tgamma_collision.py)" = 78489c43f3046db09d8ba2d96070124ed7b0aa91
           test "$(git hash-object native/rabbit_cpu/Cargo.lock)" = a1b5035da5c20712d1a2a4ab077da255ff94a014
+          test "$(git hash-object docs/audit/D081R1F1_ZERO_RAW_KINK_MINIMAL_REPAIR_RECEIPT_2026-09-05.json)" = 948f04d8ea5e866ee460d896bbafe556c9679bf1
+          test "$(git hash-object scripts/audit/_d080_tgamma_primitives.py)" = c585d5865fd68a90a04a76ab540b8437fba8cfce
+          test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
+          test "$(git hash-object docs/audit/D081R1F1_P1_ELECTRON_COLLISION_TGAMMA_JVP_CONTRACT_2026-09-05.md)" = ff568c9193de5e9f2fecb07c1694df3bf4ea5549
+          # Current bridge/comparator pins are calculated from files before commit.
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs)" = bdda0d22b1bf4e5f78234c3733f8e06328a73fba
+          test "$(git hash-object scripts/audit/d081r1f1_elastic_d080b_direct.py)" = a0c2ba1d07286ddba497054d78c3666ef7ba340e
+          test "$(git hash-object docs/audit/D081R1F1_ELASTIC_D080B_DIRECT_PARITY_V1_CONTRACT_2026-09-05.md)" = fe72beae2f745f672aa41c03b0e61e76244184f5
+          git diff --exit-code f3be9c62203e9c380c348ad2589ee742d7cc023a HEAD -- native/rabbit_cpu/src ':!native/rabbit_cpu/src/lib.rs' ':!native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs'
+          python3 - <<'PYLIB'
+          from pathlib import Path
+          import subprocess
+          path = 'native/rabbit_cpu/src/lib.rs'
+          base = subprocess.check_output(['git', 'show', 'f3be9c62203e9c380c348ad2589ee742d7cc023a:' + path]).decode()
+          registration = '#[cfg(test)]\nmod f10_elastic_d080b_direct_tests;\n\n'
+          assert Path(path).read_text().replace(registration, '', 1) == base
+          PYLIB
           test -z "$(git status --porcelain)"
+          mkdir -p "$D081R1F1_ELASTIC_DIRECT_DIR"
+          git show --no-patch --format=fuller HEAD > "$D081R1F1_ELASTIC_DIRECT_DIR/tested-commit.txt"
+          git rev-parse HEAD HEAD^{tree} > "$D081R1F1_ELASTIC_DIRECT_DIR/tested-identities.txt"
           echo "TESTED_HEAD=$(git rev-parse HEAD)"
           echo "TESTED_TREE=$(git rev-parse HEAD^{tree})"
       - name: Exact Rust and lock-derived offline vendor
@@ -73,7 +100,7 @@ jobs:
           test ! -e native/rabbit_cpu/.cargo/config.toml
           mkdir -p native/rabbit_cpu/.cargo
           printf '[source.crates-io]\nreplace-with="pinned"\n[source.pinned]\ndirectory="/tmp/pair-vendor/vendor"\n[net]\noffline=true\n' > native/rabbit_cpu/.cargo/config.toml
-      - name: Deterministic pair and primitive references plus exact product rules
+      - name: Frozen D080A/B arrays and inherited deterministic references
         shell: bash
         run: |
           set -euo pipefail
@@ -86,33 +113,8 @@ jobs:
             /tmp/pair-python/bin/python scripts/audit/d081r1f1_p0b_tgamma_kinematics_oracle.py --output /tmp/p0b-${suffix}.json
           done
           for name in pair p0a p0b; do cmp /tmp/${name}-a.json /tmp/${name}-b.json; sha256sum /tmp/${name}-a.json; done
-          /tmp/pair-python/bin/python scripts/audit/d081r1f1_elastic_signed_cas.py | tee /tmp/elastic-cas.json
-      - name: Reproduce the preserved zero-raw behavioral RED
-        shell: bash
-        working-directory: native/rabbit_cpu
-        run: |
-          set -euo pipefail
-          git -C ../.. worktree add --detach /tmp/elastic-red 4cdd840d86aabc2ea2d13af6ac3db0b99154d918
-          echo "RED_HEAD=$(git -C /tmp/elastic-red rev-parse HEAD)"
-          echo "RED_TREE=$(git -C /tmp/elastic-red rev-parse HEAD^{tree})"
-          set +e
-          CARGO_TARGET_DIR=/tmp/elastic-red-target cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests::elastic_zero_raw_matrix_requires_nondifferentiable_discrete_event -- --exact --nocapture > /tmp/elastic-red.log 2>&1
-          code=$?
-          set -e
-          cat /tmp/elastic-red.log
-          echo "RED_EXIT=$code"
-          test "$code" -eq 101
-          python3 - <<'PYRED'
-          import re
-          from pathlib import Path
-          log = Path('/tmp/elastic-red.log').read_text()
-          assert not re.findall(r'^error\[(E[0-9]+)\]', log, re.M)
-          assert 'NONDIFFERENTIABLE_DISCRETE_EVENT required at raw=0, raw_T!=0' in log
-          assert 'test result: FAILED. 0 passed; 1 failed; 0 ignored;' in log
-          print('PASS_EXPECTED_ZERO_RAW_BEHAVIORAL_RED')
-          PYRED
-          git -C /tmp/elastic-red diff --exit-code
-      - name: Kink repair and signed scalar gates then inherited regressions
+          /tmp/pair-python/bin/python scripts/audit/d081r1f1_elastic_d080b_direct.py generate --directory "$D081R1F1_ELASTIC_DIRECT_DIR" | tee "$D081R1F1_ELASTIC_DIRECT_DIR/oracle-generation.log"
+      - name: Direct prefactor comparison then unchanged 33 regressions and tool gates
         shell: bash
         working-directory: native/rabbit_cpu
         env:
@@ -124,12 +126,14 @@ jobs:
           cargo +1.94.1 metadata --locked --offline --format-version 1 > /tmp/elastic-metadata.json
           run_tests() {
             local expected="$1" ignored="$2" filter="$3"
+            local log="$D081R1F1_ELASTIC_DIRECT_DIR/${filter//::/_}"
             shift 3
-            cargo +1.94.1 test --locked --offline "$filter" -- --list "$@" | tee /tmp/elastic-list.log
-            test "$(grep -c ': test$' /tmp/elastic-list.log)" -eq "$((expected + ignored))"
-            cargo +1.94.1 test --locked --offline "$filter" -- --nocapture --test-threads=1 "$@" 2>&1 | tee /tmp/elastic-tests.log
-            grep -F "test result: ok. ${expected} passed; 0 failed; ${ignored} ignored;" /tmp/elastic-tests.log
+            cargo +1.94.1 test --locked --offline "$filter" -- --list "$@" | tee "${log}-list.log"
+            test "$(grep -c ': test$' "${log}-list.log")" -eq "$((expected + ignored))"
+            cargo +1.94.1 test --locked --offline "$filter" -- --nocapture --test-threads=1 "$@" 2>&1 | tee "${log}-tests.log"
+            grep -F "test result: ok. ${expected} passed; 0 failed; ${ignored} ignored;" "${log}-tests.log"
           }
+          run_tests 2 0 f10_elastic_d080b_direct_tests
           run_tests 4 0 f10_elastic_prefactor_tests
           run_tests 3 0 f10_electron_action_tgamma_jvp_red_tests
           run_tests 10 0 f10_kernel_primitives::tests
@@ -140,16 +144,33 @@ jobs:
           run_tests 4 0 f10_electron_action_tests
           run_tests 1 0 f10_packed_rhs_jvp_tests
           run_tests 3 0 f10_packed_rhs_preflight_tests::tests
-          cargo +1.94.1 check --release --locked --offline
+          cargo +1.94.1 check --release --locked --offline 2>&1 | tee "$D081R1F1_ELASTIC_DIRECT_DIR/release.log"
           echo 'PASS_RELEASE_CHECK'
-          cargo +1.94.1 fmt --all -- --check
+          cargo +1.94.1 fmt --all -- --check 2>&1 | tee "$D081R1F1_ELASTIC_DIRECT_DIR/fmt.log"
           echo 'PASS_FMT_CHECK'
-          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings
+          cargo +1.94.1 clippy --all-targets --all-features --locked --offline -- -D warnings 2>&1 | tee "$D081R1F1_ELASTIC_DIRECT_DIR/clippy.log"
           echo 'PASS_STRICT_CLIPPY'
           rm .cargo/config.toml
           rmdir .cargo
           git -C ../.. diff --exit-code
           git -C ../.. diff --cached --exit-code
           test -z "$(git -C ../.. status --porcelain)"
-          echo 'PASS_ZERO_RAW_KINK_REPAIR_EXISTING_REGRESSION_SCOPE'
-          echo "Zero-raw kink repair and existing regression suite PASS at $GITHUB_SHA. Coupling reuse, per-call measure components, full direct D080B prefactor parity and production mutation battery remain open. No full elastic/P1, retained, solver or endpoint claim." >> "$GITHUB_STEP_SUMMARY"
+          echo 'PASS_D080B_DIRECT_PREFACTOR_AND_EXISTING_33_REGRESSIONS'
+          echo "Direct measure/matrix prefactor parity in two physical batches and 12 routes, plus existing 33 regressions PASS at $GITHUB_SHA. Production sources unchanged. No full collision-action, elastic/P1, thermal RHS, retained, solver or F10 claim." >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve arrays, masks, metrics and first failure
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$D081R1F1_ELASTIC_DIRECT_DIR"
+          rustfmt +1.94.1 --edition 2024 --emit stdout native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs > "$D081R1F1_ELASTIC_DIRECT_DIR/bridge-format-output.rs"
+          git diff --exit-code
+          tar -czf /tmp/elastic-d080b-direct-evidence.tar.gz -C "$D081R1F1_ELASTIC_DIRECT_DIR" .
+          sha256sum /tmp/elastic-d080b-direct-evidence.tar.gz
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: elastic-d080b-direct-${{ github.sha }}
+          path: /tmp/elastic-d080b-direct-evidence.tar.gz
+          if-no-files-found: error
+          retention-days: 90
