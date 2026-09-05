@@ -18,6 +18,24 @@ pub(crate) struct F10MeasureTangent {
     pub(crate) d_quadrature_weight: f64,
 }
 
+/// Preserve primal kernel errors while distinguishing a nonsmooth tangent request.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum F10ElasticMatrixTangentError {
+    Kernel(F10KernelError),
+    NondifferentiableDiscreteEvent,
+}
+
+impl core::fmt::Display for F10ElasticMatrixTangentError {
+    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::Kernel(error) => write!(formatter, "{error:?}"),
+            Self::NondifferentiableDiscreteEvent => {
+                formatter.write_str("NONDIFFERENTIABLE_DISCRETE_EVENT")
+            }
+        }
+    }
+}
+
 /// Analytic derivative at fixed target momentum and outer quadrature weight.
 /// No division by p2, phase space or quadrature weight: their zeros are allowed.
 pub(crate) fn event_measure_tangent(
@@ -55,6 +73,7 @@ pub(crate) fn event_measure_tangent(
 
 /// Fixed-mass elastic derivative with the primal CP/correction convention.
 /// A corrected or unsupported primal branch has exactly zero tangent.
+/// An uncorrected raw zero with nonzero tangent has no fixed-branch derivative.
 /// Branch identity across a finite witness is checked by the caller, not smoothed.
 pub(crate) fn elastic_matrix_tangent(
     target: F10Species,
@@ -64,9 +83,11 @@ pub(crate) fn elastic_matrix_tangent(
     electron_mass: f64,
     support: bool,
     roundoff_ulps: f64,
-) -> Result<(F10MatrixValue, f64), F10KernelError> {
+) -> Result<(F10MatrixValue, f64), F10ElasticMatrixTangentError> {
     if category == F10ElectronCategory::Pair {
-        return Err(F10KernelError::UnknownCategory);
+        return Err(F10ElasticMatrixTangentError::Kernel(
+            F10KernelError::UnknownCategory,
+        ));
     }
     if [
         tangent.d12,
@@ -79,7 +100,9 @@ pub(crate) fn elastic_matrix_tangent(
     .into_iter()
     .any(|value| !value.is_finite())
     {
-        return Err(F10KernelError::NonFiniteInput);
+        return Err(F10ElasticMatrixTangentError::Kernel(
+            F10KernelError::NonFiniteInput,
+        ));
     }
     let base = f10_electron_matrix(
         target,
@@ -88,7 +111,8 @@ pub(crate) fn elastic_matrix_tangent(
         electron_mass,
         support,
         roundoff_ulps,
-    )?;
+    )
+    .map_err(F10ElasticMatrixTangentError::Kernel)?;
     if !support || base.corrected {
         return Ok((base, 0.0));
     }
@@ -112,9 +136,15 @@ pub(crate) fn elastic_matrix_tangent(
         -left * right * d_interference,
     ];
     let derivative = 64.0 * G_F_MEV_MINUS_2.powi(2) * terms.into_iter().sum::<f64>();
-    if derivative.is_finite() {
-        Ok((base, derivative))
-    } else {
-        Err(F10KernelError::NonFiniteInput)
+    if !derivative.is_finite() {
+        return Err(F10ElasticMatrixTangentError::Kernel(
+            F10KernelError::NonFiniteInput,
+        ));
     }
+    // Exact boundary, not an epsilon band. Negative derivatives at positive
+    // primal values remain valid; corrected/unsupported branches returned above.
+    if base.value == 0.0 && derivative != 0.0 {
+        return Err(F10ElasticMatrixTangentError::NondifferentiableDiscreteEvent);
+    }
+    Ok((base, derivative))
 }
