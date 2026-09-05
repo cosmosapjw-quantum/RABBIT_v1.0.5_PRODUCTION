@@ -62,7 +62,7 @@ jobs:
           test "$(git hash-object src/rabbit/decoupling/_independent_noqke.py)" = de44feee0aa484abe26976c7dc34c579643005b5
           test "$(git hash-object docs/audit/D081R1F1_P1_ELECTRON_COLLISION_TGAMMA_JVP_CONTRACT_2026-09-05.md)" = ff568c9193de5e9f2fecb07c1694df3bf4ea5549
           # Current bridge/comparator pins are calculated from files before commit.
-          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs)" = dcf3206f2dde22f226911c759d40132c2cc8b135
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs)" = c5c6931b2c8cd40ecbcb47d722901df738a93c7b
           test "$(git hash-object scripts/audit/d081r1f1_elastic_d080b_direct.py)" = a0c2ba1d07286ddba497054d78c3666ef7ba340e
           test "$(git hash-object docs/audit/D081R1F1_ELASTIC_D080B_DIRECT_PARITY_V1_CONTRACT_2026-09-05.md)" = fe72beae2f745f672aa41c03b0e61e76244184f5
           git diff --exit-code f3be9c62203e9c380c348ad2589ee742d7cc023a HEAD -- native/rabbit_cpu/src ':!native/rabbit_cpu/src/lib.rs' ':!native/rabbit_cpu/src/f10_elastic_d080b_direct_tests.rs'

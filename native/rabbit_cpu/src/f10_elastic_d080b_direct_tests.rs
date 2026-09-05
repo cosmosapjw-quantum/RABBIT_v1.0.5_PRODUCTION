@@ -21,6 +21,8 @@ use crate::f10_tgamma_kinematics::{
     F10ElasticTgammaInput, evaluate_elastic_tgamma_kinematic_tangent,
 };
 
+type InputBatch = ([usize; 4], Vec<bool>, Vec<bool>, BTreeMap<String, Vec<f64>>);
+
 fn scalar(value: &Value) -> f64 {
     f64::from_bits(u64::from_str_radix(value.as_str().unwrap(), 16).unwrap())
 }
@@ -83,12 +85,7 @@ fn export(mode: &str) {
         let temperature_gamma = scalar(&case["temperature"]);
         let electron_mass = scalar(&case["electron_mass"]);
         let outer_weight = scalar(&case["outer_weight"]);
-        let (shape, support, tangent_support, input): (
-            [usize; 4],
-            Vec<bool>,
-            Vec<bool>,
-            BTreeMap<String, Vec<f64>>,
-        ) = if mode == "same_input" {
+        let (shape, support, tangent_support, input): InputBatch = if mode == "same_input" {
             (
                 serde_json::from_value(case["shape"].clone()).unwrap(),
                 serde_json::from_value(case["support"].clone()).unwrap(),
@@ -153,11 +150,11 @@ fn export(mode: &str) {
         assert_eq!(tangent_support.len(), n);
         assert!(input.values().all(|values| values.len() == n));
         let mut measure = [Vec::new(), Vec::new()];
-        for index in 0..n {
+        for (index, &p2) in input["p2"].iter().enumerate() {
             let result = event_measure_tangent(
                 F10EventMeasureInput {
                     p1,
-                    p2: input["p2"][index],
+                    p2,
                     e2: input["e2"][index],
                     phase_space: input["phase_space"][index],
                     quadrature_weight: input["quadrature_weight"][index],
