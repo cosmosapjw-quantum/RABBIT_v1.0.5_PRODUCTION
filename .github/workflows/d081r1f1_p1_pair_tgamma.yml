@@ -36,7 +36,7 @@ jobs:
           test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-zero-raw-kink-repair-20260905-r1'
           git merge-base --is-ancestor 5bb6db204b38375c2adcf5e6dace0cfb698963dc HEAD
           test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs)" = 7ace3a29ce63901ec34586ac6a7b8e17c170ca25
-          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = a6c71add6557859b5c5cdb10f72eeec059d05788
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = d937da641ce8071916ac6bd543acbe5227b7957d
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
           test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
@@ -56,6 +56,10 @@ jobs:
           rustup component add --toolchain 1.94.1 rustfmt clippy
           test "$(rustc +1.94.1 --version)" = 'rustc 1.94.1 (e408947bf 2026-03-25)'
           test "$(cargo +1.94.1 --version)" = 'cargo 1.94.1 (29ea6fb6a 2026-03-24)'
+          git show 5bb6db204b38375c2adcf5e6dace0cfb698963dc:native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs > /tmp/elastic-original-tests.rs
+          rustup run 1.94.1 rustfmt --edition 2024 /tmp/elastic-original-tests.rs
+          cmp /tmp/elastic-original-tests.rs native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
+          echo 'PASS_TEST_CHANGE_IS_EXACT_RUSTFMT_ONLY'
           mkdir -p /tmp/pair-vendor-outer /tmp/pair-vendor
           gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/9932329475/zip > /tmp/pair-vendor.zip
           echo '2fa7b64275f5ec435b8dab3b9876dce79227bb1d12a5da552f67059e6a240640  /tmp/pair-vendor.zip' | sha256sum -c -
@@ -118,11 +122,7 @@ jobs:
           cargo +1.94.1 check --release --locked --offline
           cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture --test-threads=1 2>&1 | tee /tmp/elastic-green.log
           grep -F 'test result: ok. 4 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
-          if ! cargo +1.94.1 fmt --all -- --check; then
-            echo 'FORMAT_CHECK_FAILED_NO_SOURCE_MUTATION'
-            rustup run 1.94.1 rustfmt --edition 2024 --emit stdout src/f10_elastic_prefactor_tests.rs
-            exit 1
-          fi
+          cargo +1.94.1 fmt --all -- --check
           cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_kernel_primitives::tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture
