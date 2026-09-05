@@ -101,7 +101,7 @@ fn exact_measure_references_keep_all_four_terms_and_zero_direction() {
             p2: 0.0, e2: 0.0, phase_space: 0.0, quadrature_weight: 0.0,
         }).unwrap();
         assert_eq!(zero.derivative.to_bits(), 0.0_f64.to_bits());
-        assert!(zero.components.iter().all(|x| x.to_bits() == 0.0_f64.to_bits()));
+        assert!(zero.components.iter().all(|x: &f64| x.to_bits() == 0.0_f64.to_bits()));
     }
 }
 
