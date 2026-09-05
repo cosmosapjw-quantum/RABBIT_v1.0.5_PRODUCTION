@@ -56,10 +56,22 @@ fn export(mode: &str) {
     ))
     .unwrap();
     let config = F10CollisionConfig::default();
-    assert_eq!(oracle["config"]["incoming_polar_order"], config.incoming_polar_order);
-    assert_eq!(oracle["config"]["final_polar_order"], config.final_polar_order);
-    assert_eq!(oracle["config"]["final_azimuth_order"], config.final_azimuth_order);
-    assert_eq!(oracle["config"]["electron_radial_order"], config.electron_radial_order);
+    assert_eq!(
+        oracle["config"]["incoming_polar_order"],
+        config.incoming_polar_order
+    );
+    assert_eq!(
+        oracle["config"]["final_polar_order"],
+        config.final_polar_order
+    );
+    assert_eq!(
+        oracle["config"]["final_azimuth_order"],
+        config.final_azimuth_order
+    );
+    assert_eq!(
+        oracle["config"]["electron_radial_order"],
+        config.electron_radial_order
+    );
     let roundoff_ulps = oracle["config"]["matrix_roundoff_ulps"].as_f64().unwrap();
     assert_eq!(roundoff_ulps, 1024.0);
     let cases = oracle["cases"].as_array().unwrap();
@@ -179,10 +191,21 @@ fn export(mode: &str) {
                 let base = invariants(&input, index, "");
                 let direction = invariants(&input, index, "d_");
                 let primal = f10_electron_matrix(
-                    target, category, base, electron_mass, supported, roundoff_ulps,
+                    target,
+                    category,
+                    base,
+                    electron_mass,
+                    supported,
+                    roundoff_ulps,
                 );
                 let result = elastic_matrix_tangent(
-                    target, category, base, direction, electron_mass, supported, roundoff_ulps,
+                    target,
+                    category,
+                    base,
+                    direction,
+                    electron_mass,
+                    supported,
+                    roundoff_ulps,
                 );
                 let (derivative, refusal, label) = match result {
                     Ok((_, derivative)) => (Some(derivative), false, "Ok".to_owned()),
@@ -190,8 +213,13 @@ fn export(mode: &str) {
                         (None, true, "NondifferentiableDiscreteEvent".to_owned())
                     }
                     Err(error) => {
-                        failures.push(json!([case_index, route["target"], route["category"],
-                                             index, format!("{error:?}")]));
+                        failures.push(json!([
+                            case_index,
+                            route["target"],
+                            route["category"],
+                            index,
+                            format!("{error:?}")
+                        ]));
                         (None, false, format!("{error:?}"))
                     }
                 };
@@ -243,18 +271,28 @@ fn export(mode: &str) {
         &outputs,
     )
     .unwrap();
-    assert!(failures.is_empty(), "first helper failure: {:?}", failures.first());
+    assert!(
+        failures.is_empty(),
+        "first helper failure: {:?}",
+        failures.first()
+    );
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
     let status = Command::new(std::env::var("D081R1F1_ELASTIC_DIRECT_PYTHON").unwrap())
         .current_dir(&root)
-        .env("PYTHONPATH", format!("{}:{}", root.join("src").display(), root.display()))
+        .env(
+            "PYTHONPATH",
+            format!("{}:{}", root.join("src").display(), root.display()),
+        )
         .arg("scripts/audit/d081r1f1_elastic_d080b_direct.py")
         .args(["compare", "--directory"])
         .arg(&directory)
         .args(["--mode", mode])
         .status()
         .unwrap();
-    assert!(status.success(), "{mode} direct numerical comparison failed: {status}");
+    assert!(
+        status.success(),
+        "{mode} direct numerical comparison failed: {status}"
+    );
 }
 
 #[test]
