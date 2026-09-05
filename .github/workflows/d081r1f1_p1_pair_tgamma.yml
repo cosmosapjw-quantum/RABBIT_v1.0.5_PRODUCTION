@@ -1,7 +1,7 @@
 name: d081r1f1-p1-pair-and-elastic-prefactors
 on:
   push:
-    branches: [agent/rabbit-elastic-measure-matrix-20260905T050300Z-r1]
+    branches: [agent/rabbit-elastic-zero-raw-kink-repair-20260905-r1]
     paths:
       - .github/workflows/d081r1f1_p1_pair_tgamma.yml
       - native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
@@ -28,14 +28,15 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Verify immutable pair, primitive and behavioral RED authorities
+      - name: Verify failed predecessor and exact repair candidate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-measure-matrix-20260905T050300Z-r1'
-          git merge-base --is-ancestor 44afa19181e48a3d4ad4fcaa2ee9fe20ee7f5f27 HEAD
-          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs)" = 25b4a9a102964b9f7639d62651057c78d462a803
+          test "$GITHUB_REF_NAME" = 'agent/rabbit-elastic-zero-raw-kink-repair-20260905-r1'
+          git merge-base --is-ancestor 5bb6db204b38375c2adcf5e6dace0cfb698963dc HEAD
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs)" = 7ace3a29ce63901ec34586ac6a7b8e17c170ca25
+          test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = a6c71add6557859b5c5cdb10f72eeec059d05788
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
           test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
@@ -79,16 +80,16 @@ jobs:
           done
           for name in pair p0a p0b; do cmp /tmp/${name}-a.json /tmp/${name}-b.json; sha256sum /tmp/${name}-a.json; done
           /tmp/pair-python/bin/python scripts/audit/d081r1f1_elastic_signed_cas.py | tee /tmp/elastic-cas.json
-      - name: Replay immutable missing-API RED before signed candidate gates
+      - name: Reproduce the preserved zero-raw behavioral RED
         shell: bash
         working-directory: native/rabbit_cpu
         run: |
           set -euo pipefail
-          git -C ../.. worktree add --detach /tmp/elastic-red 381b05ba269a5db791f80845fd06eb60f9e0d09b
+          git -C ../.. worktree add --detach /tmp/elastic-red 4cdd840d86aabc2ea2d13af6ac3db0b99154d918
           echo "RED_HEAD=$(git -C /tmp/elastic-red rev-parse HEAD)"
           echo "RED_TREE=$(git -C /tmp/elastic-red rev-parse HEAD^{tree})"
           set +e
-          cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests -- --nocapture > /tmp/elastic-red.log 2>&1
+          cargo +1.94.1 test --manifest-path /tmp/elastic-red/native/rabbit_cpu/Cargo.toml --locked --offline f10_elastic_prefactor_tests::elastic_zero_raw_matrix_requires_nondifferentiable_discrete_event -- --exact --nocapture > /tmp/elastic-red.log 2>&1
           code=$?
           set -e
           cat /tmp/elastic-red.log
@@ -98,13 +99,13 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/elastic-red.log').read_text()
-          codes = re.findall(r'^error\[(E[0-9]+)\]', log, re.M)
-          assert codes == ['E0432'], codes
-          assert 'f10_elastic_prefactor_tangent' in log
-          print('PASS_EXPECTED_MISSING_API_RED')
+          assert not re.findall(r'^error\[(E[0-9]+)\]', log, re.M)
+          assert 'NONDIFFERENTIABLE_DISCRETE_EVENT required at raw=0, raw_T!=0' in log
+          assert 'test result: FAILED. 0 passed; 1 failed; 0 ignored;' in log
+          print('PASS_EXPECTED_ZERO_RAW_BEHAVIORAL_RED')
           PYRED
           git -C /tmp/elastic-red diff --exit-code
-      - name: Signed elastic candidate gates then inherited regressions
+      - name: Kink repair and signed scalar gates then inherited regressions
         shell: bash
         working-directory: native/rabbit_cpu
         env:
@@ -117,8 +118,13 @@ jobs:
           cargo +1.94.1 check --release --locked --offline
           cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture --test-threads=1 2>&1 | tee /tmp/elastic-green.log
           grep -F 'test result: ok. 4 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
-          cargo +1.94.1 fmt --all -- --check
+          if ! cargo +1.94.1 fmt --all -- --check; then
+            echo 'FORMAT_CHECK_FAILED_NO_SOURCE_MUTATION'
+            rustup run 1.94.1 rustfmt --edition 2024 --emit stdout src/f10_elastic_prefactor_tests.rs
+            exit 1
+          fi
           cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture
+          cargo +1.94.1 test --locked --offline f10_kernel_primitives::tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_kinematic_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_adversarial_repair_tests -- --nocapture
@@ -132,5 +138,5 @@ jobs:
           git -C ../.. diff --exit-code
           git -C ../.. diff --cached --exit-code
           test -z "$(git -C ../.. status --porcelain)"
-          echo 'PASS_ELASTIC_MEASURE_MATRIX_TANGENT_PRIMITIVES_FULL_ELASTIC_ACTION_OPEN'
-          echo "Elastic prefactor replay PASS at $GITHUB_SHA; full elastic action remains open." >> "$GITHUB_STEP_SUMMARY"
+          echo 'PASS_ZERO_RAW_KINK_REPAIR_EXISTING_REGRESSION_SCOPE'
+          echo "Zero-raw kink repair and existing regression suite PASS at $GITHUB_SHA. Coupling reuse, per-call measure components, full direct D080B prefactor parity and production mutation battery remain open. No full elastic/P1, retained, solver or endpoint claim." >> "$GITHUB_STEP_SUMMARY"
