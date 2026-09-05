@@ -47,6 +47,9 @@ mod f10_electron_action_tests;
 mod f10_electron_action_tgamma_jvp_red_tests;
 
 #[cfg(test)]
+mod f10_elastic_prefactor_tests;
+
+#[cfg(test)]
 mod f10_packed_rhs_preflight_tests;
 
 #[cfg(test)]
