@@ -15,6 +15,7 @@ mod f10_action_spectral;
 mod f10_action_tangent;
 mod f10_combined_action;
 mod f10_combined_action_jvp;
+mod f10_elastic_prefactor_tangent;
 mod f10_electron_action;
 mod f10_kernel_primitives;
 mod f10_packed_rhs;
@@ -45,6 +46,9 @@ mod f10_electron_action_tests;
 
 #[cfg(test)]
 mod f10_electron_action_tgamma_jvp_red_tests;
+
+#[cfg(test)]
+mod f10_elastic_prefactor_tests;
 
 #[cfg(test)]
 mod f10_packed_rhs_preflight_tests;
