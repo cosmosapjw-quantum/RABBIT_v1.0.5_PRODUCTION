@@ -60,11 +60,28 @@ fn elastic_pauli_and_moving_location_match_centered_primal() {
         })
         .unwrap();
         let base = &tangent.base;
+        let envelope_h = temperature * 1.0e-3;
+        let envelope_plus = batch(p1, temperature + envelope_h);
+        let envelope_minus = batch(p1, temperature - envelope_h);
+        assert_eq!(
+            base.support, envelope_plus.support,
+            "NONDIFFERENTIABLE_DISCRETE_EVENT"
+        );
+        assert_eq!(
+            base.support, envelope_minus.support,
+            "NONDIFFERENTIABLE_DISCRETE_EVENT"
+        );
         let mut actual = Vec::new();
         let mut indices = Vec::new();
         for i in 0..base.support.len() {
             let y3 = base.p3_magnitude[i] / 2.0;
-            if base.support[i] && y3 > 0.0 && y3 < grid.y_max {
+            let y3_plus = envelope_plus.p3_magnitude[i] / 2.0;
+            let y3_minus = envelope_minus.p3_magnitude[i] / 2.0;
+            if base.support[i]
+                && [y3, y3_plus, y3_minus]
+                    .into_iter()
+                    .all(|query| query > 0.0 && query < grid.y_max)
+            {
                 let value = elastic_pauli_location_tangent(
                     &grid,
                     &target_logits,
