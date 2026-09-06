@@ -6,6 +6,8 @@ on:
       - .github/workflows/d081r1f1_p1_pair_tgamma.yml
       - native/rabbit_cpu/src/f10_elastic_prefactor_tangent.rs
       - native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs
+      - native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs
+      - native/rabbit_cpu/src/f10_elastic_pauli_tests.rs
       - native/rabbit_cpu/src/lib.rs
 permissions:
   contents: read
@@ -34,7 +36,7 @@ jobs:
           test "$GITHUB_REF_NAME" = 'agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1'
           git merge-base --is-ancestor 381b05ba269a5db791f80845fd06eb60f9e0d09b HEAD
           test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = "$(git rev-parse 381b05ba269a5db791f80845fd06eb60f9e0d09b:native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)"
-          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 6a6348d69db951650b3dafd92a651dab4801d578
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = e112e7f54fbebaa2b508465944fcbc1e79d14f70
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
           test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
           test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = 88717ed6206cae78599e805de79cf1b3f046443a
@@ -102,6 +104,8 @@ jobs:
           cargo +1.94.1 check --release --locked --offline
           cargo +1.94.1 test --locked --offline f10_elastic_prefactor_tests -- --nocapture 2>&1 | tee /tmp/elastic-green.log
           grep -F 'test result: ok. 2 passed; 0 failed; 0 ignored' /tmp/elastic-green.log
+          cargo +1.94.1 test --locked --offline f10_elastic_pauli_tests -- --nocapture 2>&1 | tee /tmp/elastic-pauli-green.log
+          grep -F 'test result: ok. 2 passed; 0 failed; 0 ignored' /tmp/elastic-pauli-green.log
           cargo +1.94.1 test --locked --offline f10_electron_action_tgamma_jvp_red_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_tangent_tests -- --nocapture
           cargo +1.94.1 test --locked --offline f10_tgamma_kinematic_tests -- --nocapture
@@ -116,5 +120,5 @@ jobs:
           git -C ../.. diff --exit-code
           git -C ../.. diff --cached --exit-code
           test -z "$(git -C ../.. status --porcelain)"
-          echo 'PASS_ELASTIC_MEASURE_MATRIX_TANGENT_PRIMITIVES_FULL_ELASTIC_ACTION_OPEN'
-          echo "Elastic prefactor replay PASS at $GITHUB_SHA; full elastic action remains open." >> "$GITHUB_STEP_SUMMARY"
+          echo 'PASS_ELASTIC_PREFACTORS_AND_PAULI_LOCATION_FULL_ELASTIC_ACTION_OPEN'
+          echo "Elastic prefactors and sample Pauli/location replay PASS at $GITHUB_SHA; projection, energy-weight and full elastic action remain open." >> "$GITHUB_STEP_SUMMARY"
