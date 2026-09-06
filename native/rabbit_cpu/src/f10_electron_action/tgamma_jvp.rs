@@ -4,6 +4,91 @@
 #![cfg_attr(not(test), allow(dead_code))]
 
 use super::*;
+use crate::f10_action_spectral::{interpolate, modal_coefficients};
+use crate::f10_tgamma_kinematics::mapped_modal_basis_derivative;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct F10ElasticPauliLocationTangent {
+    pub(crate) logits: [f64; 4],
+    pub(crate) d_outgoing_logit: f64,
+    pub(crate) base: f64,
+    pub(crate) derivative: f64,
+}
+
+/// Differentiate one elastic Pauli factor at fixed incoming neutrino spectrum.
+/// The outgoing neutrino logit moves only because its spectral query location
+/// changes; electron/positron bath logits include both energy and temperature.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn elastic_pauli_location_tangent(
+    grid: &F10ActionGrid,
+    target_logits: &[f64],
+    incoming_logit: f64,
+    electron_energy: f64,
+    d_electron_energy: f64,
+    outgoing_bath_energy: f64,
+    d_outgoing_bath_energy: f64,
+    temperature_gamma: f64,
+    outgoing_y: f64,
+    d_outgoing_y: f64,
+) -> Result<F10ElasticPauliLocationTangent, F10ElectronActionError> {
+    if target_logits.len() != grid.order
+        || !incoming_logit.is_finite()
+        || !electron_energy.is_finite()
+        || !d_electron_energy.is_finite()
+        || !outgoing_bath_energy.is_finite()
+        || !d_outgoing_bath_energy.is_finite()
+        || !temperature_gamma.is_finite()
+        || temperature_gamma <= 0.0
+        || !outgoing_y.is_finite()
+        || !d_outgoing_y.is_finite()
+    {
+        return Err(F10ElectronActionError::InvalidInput);
+    }
+    let outgoing_logit = interpolate(grid, target_logits, &[outgoing_y])
+        .map_err(|_| F10ElectronActionError::Foundation)?[0];
+    let coefficients =
+        modal_coefficients(grid, target_logits).map_err(|_| F10ElectronActionError::Foundation)?;
+    let derivative_basis = mapped_modal_basis_derivative(grid, &[outgoing_y])
+        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let d_spectral_location = coefficients
+        .iter()
+        .zip(&derivative_basis)
+        .map(|(coefficient, derivative)| coefficient * derivative)
+        .sum::<f64>()
+        * d_outgoing_y;
+    let inverse_temperature = temperature_gamma.recip();
+    let electron_logit = -electron_energy * inverse_temperature;
+    let outgoing_bath_logit = -outgoing_bath_energy * inverse_temperature;
+    let d_electron_logit =
+        -d_electron_energy * inverse_temperature + electron_energy * inverse_temperature.powi(2);
+    let d_outgoing_bath_logit = -d_outgoing_bath_energy * inverse_temperature
+        + outgoing_bath_energy * inverse_temperature.powi(2);
+    let logits = [
+        incoming_logit,
+        electron_logit,
+        outgoing_logit,
+        outgoing_bath_logit,
+    ];
+    let base = stable_pauli_gain_minus_loss(logits)?;
+    let derivative = stable_pauli_jvp(
+        logits,
+        [
+            0.0,
+            d_electron_logit,
+            d_spectral_location,
+            d_outgoing_bath_logit,
+        ],
+    )?;
+    if !d_spectral_location.is_finite() || !base.is_finite() || !derivative.is_finite() {
+        return Err(F10ElectronActionError::NonFiniteOutput);
+    }
+    Ok(F10ElasticPauliLocationTangent {
+        logits,
+        d_outgoing_logit: d_spectral_location,
+        base,
+        derivative,
+    })
+}
 
 #[derive(Clone, Debug)]
 pub(crate) struct F10PairActionTgammaJvp {
