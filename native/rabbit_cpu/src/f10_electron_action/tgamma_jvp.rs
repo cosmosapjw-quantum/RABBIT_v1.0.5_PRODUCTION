@@ -46,8 +46,8 @@ pub(crate) fn elastic_pauli_location_tangent(
     }
     let outgoing_logit = interpolate(grid, target_logits, &[outgoing_y])
         .map_err(|_| F10ElectronActionError::Foundation)?[0];
-    let coefficients = modal_coefficients(grid, target_logits)
-        .map_err(|_| F10ElectronActionError::Foundation)?;
+    let coefficients =
+        modal_coefficients(grid, target_logits).map_err(|_| F10ElectronActionError::Foundation)?;
     let derivative_basis = mapped_modal_basis_derivative(grid, &[outgoing_y])
         .map_err(|_| F10ElectronActionError::Foundation)?;
     let d_spectral_location = coefficients
@@ -59,8 +59,8 @@ pub(crate) fn elastic_pauli_location_tangent(
     let inverse_temperature = temperature_gamma.recip();
     let electron_logit = -electron_energy * inverse_temperature;
     let outgoing_bath_logit = -outgoing_bath_energy * inverse_temperature;
-    let d_electron_logit = -d_electron_energy * inverse_temperature
-        + electron_energy * inverse_temperature.powi(2);
+    let d_electron_logit =
+        -d_electron_energy * inverse_temperature + electron_energy * inverse_temperature.powi(2);
     let d_outgoing_bath_logit = -d_outgoing_bath_energy * inverse_temperature
         + outgoing_bath_energy * inverse_temperature.powi(2);
     let logits = [
@@ -72,7 +72,12 @@ pub(crate) fn elastic_pauli_location_tangent(
     let base = stable_pauli_gain_minus_loss(logits)?;
     let derivative = stable_pauli_jvp(
         logits,
-        [0.0, d_electron_logit, d_spectral_location, d_outgoing_bath_logit],
+        [
+            0.0,
+            d_electron_logit,
+            d_spectral_location,
+            d_outgoing_bath_logit,
+        ],
     )?;
     if !d_spectral_location.is_finite() || !base.is_finite() || !derivative.is_finite() {
         return Err(F10ElectronActionError::NonFiniteOutput);
