@@ -36,7 +36,7 @@ jobs:
           test "$GITHUB_REF_NAME" = 'agent/rabbit-p1-elastic-rate-tangent-20260905-gpt6-r1'
           git merge-base --is-ancestor 381b05ba269a5db791f80845fd06eb60f9e0d09b HEAD
           test "$(git hash-object native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)" = "$(git rev-parse 381b05ba269a5db791f80845fd06eb60f9e0d09b:native/rabbit_cpu/src/f10_elastic_prefactor_tests.rs)"
-          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = e112e7f54fbebaa2b508465944fcbc1e79d14f70
+          test "$(git hash-object native/rabbit_cpu/src/f10_electron_action/tgamma_jvp.rs)" = 2232ddfa16c0fb1bc09792f0478d1e76829ad3d7
           test "$(git hash-object native/rabbit_cpu/src/f10_electron_action_tgamma_jvp_red_tests.rs)" = aa1628dfb38d0d26bea699e971271083c907337e
           test "$(git hash-object native/rabbit_cpu/src/f10_kernel_primitives.rs)" = 03b0427820b5802540f6217391fe58ffff437ffc
           test "$(git hash-object native/rabbit_cpu/src/f10_tgamma_kinematics.rs)" = 88717ed6206cae78599e805de79cf1b3f046443a
